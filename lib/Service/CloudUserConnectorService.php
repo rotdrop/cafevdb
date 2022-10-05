@@ -70,7 +70,7 @@ class CloudUserConnectorService
   const USER_SQL_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE ascii_bin AS gid,
+SELECT CONVERT((CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE ascii_bin) USING utf8mb4) AS gid,
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
@@ -81,7 +81,7 @@ WITH CHECK OPTION';
 SQL SECURITY DEFINER
 VIEW %1$s AS
 SELECT m.user_id_slug AS uid,
-       CONCAT(_ascii "%2$s:", p.id) COLLATE ascii_bin AS gid
+       CONVERT((CONCAT(_ascii "%2$s:", p.id) COLLATE ascii_bin) USING utf8mb4) AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
 LEFT JOIN Projects p ON p.id = pp.project_id
@@ -105,12 +105,12 @@ WHERE pp.musician_id in
 SQL SECURITY DEFINER
 VIEW %1$s AS
 SELECT m.id AS id,
-       CAST(m.user_id_slug AS CHAR CHARACTER SET utf8mb4) AS uid,
-       CAST(m.user_id_slug AS CHAR CHARACTER SET utf8mb4) AS username,
+       CONVERT(m.user_id_slug USING utf8mb4) AS uid,
+       CONVERT(m.user_id_slug USING utf8mb4) AS username,
        m.user_passphrase AS password,
        CONCAT_WS(" ", IF(m.nick_name IS NULL
                          OR m.nick_name = "", m.first_name, m.nick_name), m.sur_name) AS name,
-       m.email AS email,
+       CONVERT(m.email USING utf8mb4) AS email,
        NULL AS quota,
        NULL AS home,
        COALESCE(m.cloud_account_deactivated, 0) AS inactive,
@@ -802,5 +802,4 @@ SELECT t.* FROM " . $table . " t";
       );
     }
   }
-
-};
+}

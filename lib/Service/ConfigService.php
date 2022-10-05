@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,12 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use \Throwable;
+use \RuntimeException;
+use \DateTimeZone;
+use \NumberFormatter;
+use \DateTimeImmutable;
 
 use OCP\IUser;
 use OCP\IGroup;
@@ -49,14 +55,13 @@ use OCA\CAFEVDB\Exceptions;
  * @todo This is called on boot without user, determine why.
  *
  * @bug This class is too big.
- *
  */
 class ConfigService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  /****************************************************************************
+  /*-**************************************************************************
    *
    * Class constants.
    *
@@ -74,8 +79,9 @@ class ConfigService
 
   const DEFAULT_LOCALE = 'en_US';
 
-  /*
-   ****************************************************************************
+  const APP_LOGO = 'logo-greyf.svg';
+
+  /*-**************************************************************************
    *
    * Some configuration constants
    *
@@ -116,6 +122,24 @@ class ConfigService
     [ 'uri' => 'other', 'public' => true ],
     [ 'uri' => 'management', 'public' => false ],
     [ 'uri' => 'finance', 'public' => false ],
+  ];
+
+  const BANK_ACCOUNT_OWNER = 'bankAccountOwner';
+  const BANK_ACCOUNT_IBAN = 'bankAccountIBAN';
+  const BANK_ACCOUNT_BLZ = 'bankAccountBLZ';
+  const BANK_ACCOUNT_BIC = 'bankAccountBIC';
+  const BANK_ACCOUNT_NAME = 'bankAccountBankName';
+  const BANK_ACCOUNT_CREDITOR_IDENTIFIER = 'bankAccountCreditorIdentifier';
+  const BANK_ACCOUNT_BANK_HOLIDAYS = 'bankAccountBankHolidays';
+
+  const BANK_ACCOUNT_CONFIG_KEYS = [
+    self::BANK_ACCOUNT_OWNER,
+    self::BANK_ACCOUNT_IBAN,
+    self::BANK_ACCOUNT_BLZ,
+    self::BANK_ACCOUNT_BIC,
+    self::BANK_ACCOUNT_NAME,
+    self::BANK_ACCOUNT_CREDITOR_IDENTIFIER,
+    self::BANK_ACCOUNT_BANK_HOLIDAYS
   ];
 
   const DOCUMENT_TYPE_CONSTANT = 'constant';
@@ -276,25 +300,29 @@ class ConfigService
   /** @var IAppContainer */
   private $appContainer;
 
+  /**
+   * {@inheritdoc}
+   *
+   * @SuppressWarnings(PHPMD.Superglobals)
+   */
   public function __construct(
-    $appName
-    , IConfig $containerConfig
-    , IUserSession $userSession
-    , IUserManager $userManager
-    , IGroupManager $groupManager
-    , ISubAdmin $groupSubAdmin
-    , EncryptionService $encryptionService
-    , ISecureRandom $secureRandom
-    , IURLGenerator $urlGenerator
-    , IL10NFactory $l10NFactory
-    , IDateTimeZone $dateTimeZone
-    , ILogger $logger
-    , IAppContainer $appContainer
-    , IDateTimeFormatter $dateTimeFormatter
-    , ITimeFactory $timeFactory
-    , IL10N $l
+    string $appName,
+    IConfig $containerConfig,
+    IUserSession $userSession,
+    IUserManager $userManager,
+    IGroupManager $groupManager,
+    ISubAdmin $groupSubAdmin,
+    EncryptionService $encryptionService,
+    ISecureRandom $secureRandom,
+    IURLGenerator $urlGenerator,
+    IL10NFactory $l10NFactory,
+    IDateTimeZone $dateTimeZone,
+    ILogger $logger,
+    IAppContainer $appContainer,
+    IDateTimeFormatter $dateTimeFormatter,
+    ITimeFactory $timeFactory,
+    IL10N $l,
   ) {
-
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
     $this->userSession = $userSession;
@@ -323,62 +351,81 @@ class ConfigService
     $this->encryptionCache = [];
   }
 
+  /** @return IAppContainer */
   public function getAppContainer():IAppContainer
   {
     return $this->appContainer;
   }
 
-  public function getTimeFactory()
+  /** @return ITimeFactory */
+  public function getTimeFactory():ITimeFactory
   {
     return $this->timeFactory;
   }
 
-  public function getAppConfig()
+  /** @return IConfig */
+  public function getAppConfig():IConfig
   {
     return $this->getCloudConfig();
   }
 
-  public function getCloudConfig()
+  /** @return IConfig */
+  public function getCloudConfig():IConfig
   {
     return $this->containerConfig;
   }
 
-  public function getAppName() {
+  /** @return string */
+  public function getAppName():string
+  {
     return $this->appName;
   }
 
-  public function appPrefix($id, $join = '-')
+  /**
+   * @param string $id Given something.
+   *
+   * @param string $join Default '-'.
+   *
+   * @return string The $id prefixed by the app-name, joined with a dash.
+   */
+  public function appPrefix(string $id, string $join = '-'):string
   {
     return $this->appName . $join . $id;
   }
 
-  public function getIcon()
+  /** @return string Image web-path to the app-icon. */
+  public function getIcon():string
   {
     // @@todo make it configurable
-    return $this->urlGenerator->imagePath($this->appName, 'logo-greyf.svg');
+    return $this->urlGenerator->imagePath($this->appName, self::APP_LOGO);
   }
 
+  /** @return IUserSession */
   public function getUserSession():IUserSession
   {
     return $this->userSession;
   }
 
+  /** @return IUserManager */
   public function getUserManager():IUserManager
   {
     return $this->userManager;
   }
 
+  /** @return IGroupManager */
   public function getGroupManager():IGroupManager
   {
     return $this->groupManager;
   }
 
+  /** @return ISubAdmin */
   public function getSubAdminManager():ISubAdmin
   {
     return $this->groupSubAdmin;
   }
 
-  public function getUrlGenerator()
+  /** @return IURLGenerator */
+  public function getUrlGenerator():IURLGenerator
   {
     return $this->urlGenerator;
   }
@@ -401,6 +448,7 @@ class ConfigService
     return $this->user;
   }
 
+  /** @return string */
   public function getUserId():?string
   {
     $user = $this->getUser();
@@ -410,7 +458,7 @@ class ConfigService
   /**
    * Install a new user id.
    *
-   * @parm string $userId
+   * @param string $userId The user id to install.
    *
    * @return null|IUser old user.
    */
@@ -422,7 +470,7 @@ class ConfigService
   /**
    * Install a new user.
    *
-   * @parm null|IUser $user
+   * @param null|IUser $user
    *
    * @return null|IUser old user.
    */
@@ -437,12 +485,14 @@ class ConfigService
     return $oldUser;
   }
 
-  public function getL10n()
+  /** @return IL10N */
+  public function getL10n():IL10N
   {
     return $this->l;
   }
 
-  public function getAppL10n()
+  /** @return IL10N */
+  public function getAppL10n():IL10N
   {
     if (empty($this->appL10n)) {
       $appLocale = $this->getAppLocale();
@@ -454,24 +504,42 @@ class ConfigService
     return $this->appL10n;
   }
 
-  public function getGroupId()
+  /** @return string The orchestra orga-group id. */
+  public function getGroupId():string
   {
     return $this->getAppValue(self::USER_GROUP_KEY);
   }
 
-  public function getGroup($groupId = null)
+  /**
+   * @param null|string $groupId
+   *
+   * @return null|IGroup The group for the given id or the orchetra group.
+   */
+  public function getGroup(?string $groupId = null):?IGroup
   {
     empty($groupId) && ($groupId = $this->getGroupId());
     return empty($groupId) ? null : $this->groupManager->get($groupId);
   }
 
-  public function groupExists($groupId = null)
+  /**
+   * @param null|string $groupId Use the orchestra group if null.
+   *
+   * @return bool
+   */
+  public function groupExists($groupId = null):bool
   {
     empty($groupId) && ($groupId = $this->getGroupId());
     return !empty($groupId) && $this->groupManager->groupExists($groupId);
   }
 
-  public function inGroup($userId = null, $groupId = null)
+  /**
+   * @param null|string $userId Use the current user if null.
+   *
+   * @param null|string $groupId then Use orchestra group if null.
+   *
+   * @return bool
+   */
+  public function inGroup(?string $userId = null, ?string $groupId = null):bool
   {
     empty($userId) && ($userId = $this->getUserId());
     empty($groupId) && ($groupId = $this->getGroupId());
@@ -481,7 +549,14 @@ class ConfigService
     return $this->groupManager->isInGroup($userId, $groupId);
   }
 
-  public function isSubAdminOfGroup($userId = null, $groupId = null)
+  /**
+   * @param null|string $userId Use the current user if null.
+   *
+   * @param null|string $groupId then Use orchestra group if null.
+   *
+   * @return bool
+   */
+  public function isSubAdminOfGroup($userId = null, $groupId = null):bool
   {
     $user = empty($userId) ? $this->user : $this->userManager->get($userId);
     $group = empty($groupId) ? $this->getGroup() : $this->groupManager->get($groupId);
@@ -495,7 +570,9 @@ class ConfigService
   /**
    * Return all the sub-admins of the given or the configured orchestra group.
    *
-   * @param null|string $groupId
+   * @param null|string $groupId then Use orchestra group if null.
+   *
+   * @return array
    */
   public function getGroupSubAdmins(?string $groupId = null): array
   {
@@ -540,20 +617,39 @@ class ConfigService
     $groupId = $this->getSubAdminGroupId();
     return $this->groupManager->isInGroup($userId, $groupId);
   }
+
   /*
-   ****************************************************************************
+   *-**************************************************************************
    *
    * unencrypted cloud config space
    *
    */
 
-  public function getUserValue($key, $default = null, $userId = null)
+  /**
+   * @param string $key Config key.
+   *
+   * @param mixed $default Default value.
+   *
+   * @param null|string $userId Use the current user if null.
+   *
+   * @return mixed
+   */
+  public function getUserValue(string $key, mixed $default = null, ?string $userId = null)
   {
     empty($userId) && ($userId = $this->getUserId());
     return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
   }
 
-  public function setUserValue($key, $value, $userId = null)
+  /**
+   * @param string $key Config key.
+   *
+   * @param mixed $value Value to set.
+   *
+   * @param null|string $userId Use the current user if null.
+   *
+   * @return mixed
+   */
+  public function setUserValue(string $key, mixed $value, ?string $userId = null)
   {
     empty($userId) && ($userId = $this->getUserId());
     return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
@@ -561,80 +657,147 @@ class ConfigService
 
   /**
    * A short-cut, redirecting to the stock functions for the app.
+   *
+   * @param string $key Config key.
+   *
+   * @param mixed $default Default value.
+   *
+   * @return mixed
    */
-  public function getAppValue($key, $default = null)
+  public function getAppValue(string $key, mixed $default = null)
   {
     return $this->containerConfig->getAppValue($this->appName, $key, $default);
   }
 
   /**
    * A short-cut, redirecting to the stock functions for the app.
+   *
+   * @param string $key Config key.
+   *
+   * @param mixed $value Value to set.
+   *
+   * @return mixed
    */
-  public function setAppValue($key, $value)
+  public function setAppValue(string $key, mixed $value)
   {
     return $this->containerConfig->setAppValue($this->appName, $key, $value);
   }
 
   /**
    * A short-cut, redirecting to the stock functions for the app.
+   *
+   * @param string $key Config key.
+   *
+   * @return void
    */
-  public function deleteAppValue($key)
+  public function deleteAppValue(string $key):void
   {
-    return $this->containerConfig->deleteAppValue($this->appName, $key);
+    $this->containerConfig->deleteAppValue($this->appName, $key);
   }
 
   /*
-   ****************************************************************************
+   *-**************************************************************************
    *
    * encrypted config space
    *
    */
-  public function encryptionService()
+
+  /** @return EncryptionService */
+  public function encryptionService():EncryptionService
   {
     return $this->encryptionService;
   }
 
-  public function setUserEncryptionKey($key)
+  /**
+   * @param string $key Encryption key to set.
+   *
+   * @return void
+   */
+  public function setUserEncryptionKey(string $key):void
   {
-    return $this->encryptionService->setUserEncryptionKey($key);
+    $this->encryptionService->setUserEncryptionKey($key);
   }
 
-  public function getUserEncryptionKey()
+  /** @return null|string */
+  public function getUserEncryptionKey():?string
   {
     return $this->encryptionService->getUserEncryptionKey();
   }
 
-  public function setAppEncryptionKey($key)
+  /**
+   * @param string $key Encryption key to set.
+   *
+   * @return void
+   */
+  public function setAppEncryptionKey(string $key):void
   {
-    return $this->encryptionService->setAppEncryptionKey($key);
+    $this->encryptionService->setAppEncryptionKey($key);
   }
 
-  public function getAppEncryptionKey()
+  /** @return null|string */
+  public function getAppEncryptionKey():?string
   {
     return $this->encryptionService->getAppEncryptionKey();
   }
 
-  public function encrypt($value)
+  /**
+   * @param null|string $value Value to encrypt.
+   *
+   * @return null|string Encrypted value.
+   */
+  public function encrypt(?string $value):?string
   {
     return $this->encryptionService->getAppCryptor()->encrypt($value);
   }
 
-  public function decrypt($value)
+  /**
+   * @param null|string $value Value to decrypt.
+   *
+   * @return null|string Decrypted value.
+   */
+  public function decrypt(?string $value):?string
   {
     return $this->encryptionService->getAppCryptor()->decrypt($value);
   }
 
+  /**
+   * @param null|string $value Value to verify.
+   *
+   * @param null|string $hash Hash to verify against.
+   *
+   * @return bool \true if either hash or value are empty or if the hash could
+   * be verified.
+   */
   public function verifyHash($value, $hash)
   {
     return $this->encryptionService->verifyHash($value, $hash);
   }
 
-  public function computeHash($value)
+  /**
+   * @param string $value The value to hash.
+   *
+   * @return string The hash of $value.
+   */
+  public function computeHash(string $value):string
   {
     return $this->encryptionService->computeHash($value);
   }
 
-  public function encryptionKeyValid($encryptionKey)
+  /**
+   * Check the validity of the encryption key. In order to do so we fetch
+   * an encrypted representation of the key from the OC config space
+   * and try to decrypt that key with the given key. If the decrypted
+   * key matches our key, then we accept the key.
+   *
+   * @param null|string $encryptionKey Key to check.
+   *
+   * @return bool
+   *
+   * @throws Exceptions\EncryptionKeyException
+   *
+   * @see EncryptionService::encryptionKeyValid()
+   */
+  public function encryptionKeyValid(?string $encryptionKey):bool
   {
     return $this->encryptionService->encryptionKeyValid($encryptionKey);
   }
@@ -648,9 +811,11 @@ class ConfigService
    *
    * @param bool $ignoreLock Only to be used while changing the encryption key.
    *
+   * @return mixed
+   *
    * @throws Exceptions\ConfigLockedException
    */
-  public function getConfigValue(string $key, $default = null, bool $ignoreLock = false)
+  public function getConfigValue(string $key, mixed $default = null, bool $ignoreLock = false)
   {
     if (!isset($this->encryptionCache[$key])) {
       $value = $this->encryptionService->getConfigValue($key, $default, $ignoreLock);
@@ -671,11 +836,11 @@ class ConfigService
    * @param bool $ignoreLock Default false. Ignore the configuration lock. The
    * lock is set while changing the encryption key.
    *
-   * @throws Exceptions\ConfigLockedException
-   *
    * @return bool Success or not.
+   *
+   * @throws Exceptions\ConfigLockedException
    */
-  public function setConfigValue(string $key, $value, bool $ignoreLock = false)
+  public function setConfigValue(string $key, mixed $value, bool $ignoreLock = false)
   {
     //$this->logInfo("enckey: ". $this->encryptionService->appEncryptionKey);
     if ($this->encryptionService->setConfigValue($key, $value, $ignoreLock)) {
@@ -685,18 +850,26 @@ class ConfigService
     return false;
   }
 
-  public function deleteConfigValue($key)
+  /**
+   * Delete the value for the given key.
+   *
+   * @param string $key Config key.
+   *
+   * @return void
+   */
+  public function deleteConfigValue(string $key):void
   {
     unset($this->encryptionCache[$key]);
-    return $this->deleteAppValue($key);
+    $this->deleteAppValue($key);
   }
 
-  public function getAppKeys()
+  /** @return array All config keys for the app. */
+  public function getAppKeys():array
   {
     return array_values(
       array_filter(
         $this->containerConfig->getAppKeys($this->appName),
-        function($k) { return strpos('::', $k) === false; }
+        fn($k) => strpos('::', $k) === false
       )
     );
   }
@@ -720,8 +893,12 @@ class ConfigService
    * Flush all configuration values to the database, possibly encrypting
    * them.T his is only meant for use during re-cryption of config value when
    * changing the encryption key. Hence we enforce "ignoreLock: true".
+   *
+   * @param array $override Values which override the configured values.
+   *
+   * @return void
    */
-  public function encryptConfigValues(array $override = [])
+  public function encryptConfigValues(array $override = []):void
   {
     $this->encryptionCache = array_merge($this->encryptionCache, $override);
     $appKeys = $this->getAppKeys();
@@ -749,9 +926,13 @@ class ConfigService
    */
 
   /**
-   * Would rather belong to the EncryptionService
+   * Would rather belong to the EncryptionService.
+   *
+   * @param int $length Length of random string.
+   *
+   * @return string
    */
-  public function generateRandomBytes($length = 30)
+  public function generateRandomBytes(int $length = 30):string
   {
     return $this->secureRandom->generate($length, ISecureRandom::CHAR_HUMAN_READABLE);
   }
@@ -774,9 +955,8 @@ class ConfigService
    * @param callable $callback function.
    *
    * @return mixed Whatever the callback-functoni returns.
-   *
    */
-  public function sudo($uid, $callback)
+  public function sudo(string $uid, callable $callback)
   {
     $oldUser = $this->setUserId($uid);
     if (empty($oldUser)) {
@@ -784,9 +964,9 @@ class ConfigService
     }
     try {
       $result = $callback($uid);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->setUser($oldUser);
-      throw new \RuntimeException('Caught an execption during sudo to "' . $uid . '".', 0, $t);
+      throw new RuntimeException('Caught an execption during sudo to "' . $uid . '".', 0, $t);
     }
     $this->setUser($oldUser);
 
@@ -794,12 +974,13 @@ class ConfigService
   }
 
   /*
-   ****************************************************************************
+   *-**************************************************************************
    *
    * date time timezone locale
    *
    */
 
+  /** @return IDateTimeFormatter */
   public function dateTimeFormatter():IDateTimeFormatter
   {
     return $this->dateTimeFormatter;
@@ -810,9 +991,9 @@ class ConfigService
    *
    * @param bool|int $timeStamp
    *
-   * @return \DateTimeZone
+   * @return DateTimeZone
    */
-  public function getDateTimeZone($timeStamp = false):\DateTimeZone
+  public function getDateTimeZone(mixed $timeStamp = false):DateTimeZone
   {
     return $this->dateTimeZone->getTimeZone($timeStamp);
   }
@@ -852,6 +1033,8 @@ class ConfigService
   /**
    * Get the configured app locale. Used to implement consistent currency
    * symbols and some "localized" folder names.
+   *
+   * @return string
    */
   public function getAppLocale():string
   {
@@ -864,6 +1047,11 @@ class ConfigService
 
   /**
    * Return the language part of the current or given locale.
+   *
+   * @param null|string $locale The locale to use, if null the current
+   * user's locale.
+   *
+   * @return string
    */
   public function getLanguage(?string $locale = null):string
   {
@@ -875,15 +1063,19 @@ class ConfigService
   }
 
   /**
-   * Return the language part of the current or given locale.
+   * @return string The language part of the current or given locale.
    */
   public function getAppLanguage():string
   {
     return $this->getLanguage($this->getAppLocale());
   }
 
-  /**Return an array of supported country-codes and names*/
-  public function localeCountryNames($locale = null)
+  /**
+   * @param null|string $locale Locale to use, if null the current user's locale.
+   *
+   * @return array An array of supported country-codes and names.
+   */
+  public function localeCountryNames(?string $locale = null):array
   {
     if (!$locale) {
       $locale = $this->getLocale();
@@ -901,8 +1093,12 @@ class ConfigService
     return $countryCodes;
   }
 
-  /**Return an array of supported languages indexed by language code*/
-  public function localeLanguageNames($locale = null)
+  /**
+   * @param null|string $locale Locale to use, if null the current user's locale.
+   *
+   * @return array An array of supported languages indexed by language code.
+   */
+  public function localeLanguageNames($locale = null):array
   {
     if (empty($locale)) {
       $locale = $this->getLocale();
@@ -933,21 +1129,41 @@ class ConfigService
     return $result;
   }
 
-  public function findAvailableLanguages($app = 'core') {
+  /**
+   * @param string $app The app with the translations.
+   *
+   * @return array
+   *
+   * @see IL10NFactory::findAvailableLanguages()
+   */
+  public function findAvailableLanguages(string $app = 'core'):array
+  {
     return $this->l10NFactory->findAvailableLanguages($app);
   }
 
-  public function findAvailableLocales() {
+  /**
+   * @return array
+   *
+   * @see IL10NFactory::findAvailableLocales()
+   */
+  public function findAvailableLocales():array
+  {
     return $this->l10NFactory->findAvailableLocales();
   }
 
   /**
    * Transliterate the given string to the given or default locale.
    *
+   * @param string $string The string to work on.
+   *
+   * @param null|string $locale Locale to use, use app-locale if null.
+   *
+   * @return string
+   *
    * @todo We should define a user-independent locale based on the
    * location of the orchestra.
    */
-  public function transliterate(string $string, $locale = null):string
+  public function transliterate(string $string, ?string $locale = null):string
   {
     $oldlocale = setlocale(LC_CTYPE, '0');
     empty($locale) && $locale = $this->getAppLocale();
@@ -957,23 +1173,31 @@ class ConfigService
     return $result;
   }
 
-  /** Return the currency symbol for the given or the app's locale. */
-  public function currencySymbol($locale = null)
+  /**
+   * @param null|string $locale Locale to use, use app-locale if null.
+   *
+   * @return The currency symbol for the given or the app's locale.
+   */
+  public function currencySymbol($locale = null):string
   {
     if (empty($locale)) {
       $locale = $this->getAppLocale();
     }
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    $fmt = new NumberFormatter($locale, \NumberFormatter::CURRENCY);
     return $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
   }
 
-  /** Return the currency 3-letter ISO code for the given or the app's locale */
-  public function currencyIsoCode($locale = null)
+  /**
+   * @param null|string $locale Locale to use, use app-locale if null.
+   *
+   * @return string The currency 3-letter ISO code for the given or the app's locale.
+   */
+  public function currencyIsoCode($locale = null):string
   {
     if (empty($locale)) {
       $locale = $this->getAppLocale();
     }
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    $fmt = new NumberFormatter($locale, \NumberFormatter::CURRENCY);
     return $fmt->getTextAttribute(\NumberFormatter::CURRENCY_CODE);
   }
 
@@ -981,23 +1205,39 @@ class ConfigService
    * Convert $value to a currency value in the given or the user's locale. The
    * currency symbol, however, always refers to the fixed app locale as we
    * really do not want to implement stock-exchange things.
+   *
+   * @param mixed $value Value to format.
+   *
+   * @param null|string $locale Locale to use, use user-locale if null.
+   *
+   * @return string
    */
-  public function moneyValue($value, $locale = null)
+  public function moneyValue(mixed $value, ?string $locale = null):string
   {
     if (empty($locale)) {
       $locale = $this->getLocale();
     }
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    $fmt = new NumberFormatter($locale, \NumberFormatter::CURRENCY);
     $result = $fmt->formatCurrency((float)$value, $this->currencyIsoCode());
 
     return $result;
   }
 
-  /** Convert a float value in the given or default locale */
-  public function floatValue($value, $decimals = 4, $locale = null)
+  /**
+   * Convert a float value in the given or default locale.
+   *
+   * @param mixed $value Value to format.
+   *
+   * @param int $decimals Number of decimal places.
+   *
+   * @param null|string $locale Locale to use, use user-locale if null.
+   *
+   * @return string
+   */
+  public function floatValue(mixed $value, int $decimals = 4, ?string $locale = null):string
   {
     empty($locale) && $locale = $this->getLocale();
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+    $fmt = new NumberFormatter($locale, \NumberFormatter::DECIMAL);
     $result = $fmt->format((float)$value);
     return $result;
   }
@@ -1018,9 +1258,9 @@ class ConfigService
   public function formatTimeStamp($date = null, ?string $format = null, ?\DateTimeZone $timeZone = null):string
   {
     if ($date === null) {
-      $date = new \DateTimeImmutable;
-    } else if (!($date instanceof \DateTimeInterface)) {
-      $date = (new \DateTimeImmutable())->setTimestamp($date);
+      $date = new DateTimeImmutable;
+    } elseif (!($date instanceof \DateTimeInterface)) {
+      $date = (new DateTimeImmutable())->setTimestamp($date);
     }
 
     if (empty($format)) {
@@ -1043,11 +1283,6 @@ class ConfigService
    */
   public function timeStamp(?string $format = null, ?\DateTimeZone $timeZone = null):string
   {
-    return $this->formatTimeStamp(new \DateTimeImmutable, $format, $timeZone);
+    return $this->formatTimeStamp(new DateTimeImmutable, $format, $timeZone);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

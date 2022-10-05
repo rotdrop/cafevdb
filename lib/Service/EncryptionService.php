@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
@@ -37,12 +38,17 @@ use OCA\CAFEVDB\Events\EncryptionServiceBound as EncryptionServiceBoundEvent;
 
 use OCA\CAFEVDB\Crypto;
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
+
 /**
  * This kludge is here as long as our slightly over-engineered
  * "missing-translation" event-handler is in action.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class FakeL10N
 {
+  /** {@inheritdoc} */
   public function t($text, $parameters = [])
   {
     if (!is_array($parameters)) {
@@ -125,18 +131,19 @@ class EncryptionService
   /** @var Crypto\AsymmetricCryptorInterface */
   private $userAsymmetricCryptor;
 
+  /** {@inheritdoc} */
   public function __construct(
-    $appName
-    , AuthorizationService $authorization
-    , IConfig $containerConfig
-    , IUserSession $userSession
-    , Crypto\AsymmetricKeyService $asymKeyService
-    , Crypto\CryptoFactoryInterface $cryptoFactory
-    , IHasher $hasher
-    , ICredentialsStore $credentialsStore
-    , IEventDispatcher $eventDispatcher
-    , ILogger $logger
-    , IL10N $l10n
+    string $appName,
+    AuthorizationService $authorization,
+    IConfig $containerConfig,
+    IUserSession $userSession,
+    Crypto\AsymmetricKeyService $asymKeyService,
+    Crypto\CryptoFactoryInterface $cryptoFactory,
+    IHasher $hasher,
+    ICredentialsStore $credentialsStore,
+    IEventDispatcher $eventDispatcher,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->appName = $appName;
     $this->containerConfig = $containerConfig;
@@ -174,8 +181,14 @@ class EncryptionService
   /**
    * Bind $this to the given userId and password, for instance during
    * listeners for password-change etc.
+   *
+   * @param string $userId User id to bind.
+   *
+   * @param string $password Userpassword for binding.
+   *
+   * @return void
    */
-  public function bind(string $userId, string $password)
+  public function bind(string $userId, string $password):void
   {
     $this->logDebug('BINDING TO ' . $userId . ' PW LEN ' . strlen($password));
     $this->userId = $userId;
@@ -188,6 +201,8 @@ class EncryptionService
 
   /**
    * Test if we a bound to a user
+   *
+   * @return bool
    */
   public function bound():bool
   {
@@ -198,28 +213,30 @@ class EncryptionService
       && $this->userAsymmetricCryptor->canEncrypt();
   }
 
-  /**
-   * Return bound user id
-   */
-  public function getUserId()
+  /** @return null|string Bound user id if any. */
+  public function getUserId():?string
   {
     return $this->bound() ? $this->userId : null;
   }
 
-  public function getAppEncryptionKey()
+  /** @return string App encryption key */
+  public function getAppEncryptionKey():?string
   {
     return $this->appCryptor->getEncryptionKey();
   }
 
-  public function setAppEncryptionKey($key)
+  /**
+   * @param null|string $key Install the given encryption key for the app.
+   *
+   * @return void
+   */
+  public function setAppEncryptionKey(?string $key):void
   {
     //$this->logInfo('Installing encryption key '.$key);
     $this->appCryptor->setEncryptionKey($key);
   }
 
-  /**
-   * @return Crypto\ICryptor
-   */
+  /** @return Crypto\ICryptor */
   public function getAppCryptor():Crypto\ICryptor
   {
     return $this->appCryptor;
@@ -241,18 +258,20 @@ class EncryptionService
    * @param bool $forceNewKeyPair Generate a new key pair even if an
    * old one is found.
    *
+   * @return void
+   *
    * @throws Exceptions\EncryptionKeyException
    */
-  public function initUserKeyPair($forceNewKeyPair = false)
+  public function initUserKeyPair(bool $forceNewKeyPair = false):void
   {
-    $e = null;
+    $exception = null;
     try {
       $this->asymKeyService->initEncryptionKeyPair($this->userId, $this->userPassword, $forceNewKeyPair);
-    } catch (Exceptions\EncryptionException $e) {
+    } catch (Exceptions\EncryptionException $exception) {
       // Gracefully accept a broken key-pair if the app-encryption key is empty.
       try {
         $userKey = $this->getUserEncryptionKey();
-        $e = null;
+        $exception = null;
         if (empty($userKey)) {
           // after all, this means that all values are unencrypted, so be graceful here
           $this->asymKeyService->initEncryptionKeyPair($this->userId, $this->userPassword, forceNewKeyPair: true);
@@ -263,15 +282,20 @@ class EncryptionService
       }
     }
     $this->userAsymmetricCryptor = $this->asymKeyService->getCryptor($this->userId);
-    if (!empty($e)) {
+    if (!empty($exception)) {
       $this->userAsymmetricCryptor
         ->setPrivateKey(null)
         ->setPublicKey(null);
-      throw $e;
+      throw $exception;
     }
   }
 
-  public function initAppKeyPair($forceNewKeyPair = false)
+  /**
+   * @param bool $forceNewKeyPair Whether to force regeneration.
+   *
+   * @return void
+   */
+  public function initAppKeyPair(bool $forceNewKeyPair = false):void
   {
     $group = $this->getAppValue('usergroup');
     $encryptionKey = $this->getAppEncryptionKey();
@@ -282,25 +306,29 @@ class EncryptionService
     }
     $group = '@' . $group;
 
-    $e = null;
+    $exception = null;
     try {
       $this->asymKeyService->initEncryptionKeyPair($group, $encryptionKey, $forceNewKeyPair);
-    } catch (Exceptions\EncryptionException $e) {
+    } catch (Exceptions\EncryptionException $exception) {
       // empty, see below
     }
     $this->appAsymmetricCryptor = $this->asymKeyService->getCryptor($group);
-    if (!empty($e)) {
+    if (!empty($exception)) {
       $this->appAsymmetricCryptor->setPrivateKey(null);
       $this->appAsymmetricCryptor->setPublicKey(null);
-      throw $e;
+      throw $exception;
     }
     // remove any pending notifications for the (forced) regeneration of the
     // shared orchestra key.
     $this->asymKeyService->removeRecryptionRequestNotification($group);
   }
 
-  /** Restore a potential backup e.g. after recryption failure. */
-  public function restoreAppKeyPair()
+  /**
+   * Restore a potential backup e.g. after recryption failure.
+   *
+   * @return void
+   */
+  public function restoreAppKeyPair():void
   {
     $group = $this->getAppValue('usergroup');
     $encryptionKey = $this->getAppEncryptionKey();
@@ -321,14 +349,17 @@ class EncryptionService
    * data is removed.
    *
    * @param string $userId
+   *
+   * @return void
    */
-  public function deleteUserKeyPair($userId)
+  public function deleteUserKeyPair(string $userId):void
   {
-    $this->logDebug('REMOVING ENCRYPTION DATA FOR USER ' . $login);
+    $this->logDebug('REMOVING ENCRYPTION DATA FOR USER ' . $userId);
     $this->asymKeyService->deleteEncryptionKeyPair($userId);
   }
 
-  public function getUserEncryptionKey()
+  /** @return null|string */
+  public function getUserEncryptionKey():?string
   {
     return $this->getSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, null);
   }
@@ -336,23 +367,27 @@ class EncryptionService
   /**
    * Set the encryption key for the current or the given user.
    *
-   * @param string $key Encryption key
+   * @param null|string $key Encryption key.
    *
    * @param null|string $userId A potentially different than the
    * currently logged in user.
+   *
+   * @return void
    */
-  public function setUserEncryptionKey($key, ?string $userId = null)
+  public function setUserEncryptionKey(?string $key, ?string $userId = null):void
   {
-    return $this->setSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, $key, $userId);
+    $this->setSharedPrivateValue(self::USER_ENCRYPTION_KEY_KEY, $key, $userId);
   }
 
   /**
    * Initialize the global symmetric app encryption key used to
    * encrypt shared data.
    *
+   * @return bool \true on success.
+   *
    * @throws Exceptions\EncryptionKeyException
    */
-  public function initAppEncryptionKey()
+  public function initAppEncryptionKey():bool
   {
     if (!$this->bound()) {
       throw new Exceptions\EncryptionKeyException($this->l->t('Cannot initialize global encryption key without bound user credentials.'));
@@ -386,11 +421,15 @@ class EncryptionService
    * public key of key-pair. Throw an exception if $this is not bound
    * to a user and password, see self::bind().
    *
-   * @return string Decrypt config value.
+   * @param string $key Config key.
+   *
+   * @param mixed $default Default value.
+   *
+   * @return string Decrypted config value.
    *
    * @throws Exceptions\EncryptionKeyException
    */
-  public function getSharedPrivateValue($key, $default = null)
+  public function getSharedPrivateValue(string $key, mixed $default = null)
   {
     return $this->asymKeyService->getSharedPrivateValue($this->userId, $key, $default);
   }
@@ -406,12 +445,12 @@ class EncryptionService
    * @param null|string $userId Potentitally different than logged in
    * user id.
    *
-   * @return string Encrypted value.
+   * @return void
    *
    * @throws Exceptions\EncryptionKeyException
    * @throws Exceptions\EncryptionFailedException
    */
-  public function setSharedPrivateValue(string $key, $value, ?string $userId = null)
+  public function setSharedPrivateValue(string $key, mixed $value, ?string $userId = null):void
   {
     if (empty($userId)) {
       if (!$this->bound()) {
@@ -428,7 +467,7 @@ class EncryptionService
    * and try to decrypt that key with the given key. If the decrypted
    * key matches our key, then we accept the key.
    *
-   * @param string $encrytionKey
+   * @param null|string $encryptionKey Key to check.
    *
    * @return bool
    *
@@ -469,27 +508,70 @@ class EncryptionService
     return $match;
   }
 
-  public function getAppValue($key, $default = null)
+  /**
+   * A short-cut, redirecting to the stock functions for the app.
+   *
+   * @param string $key Config key.
+   *
+   * @param mixed $default Default value.
+   *
+   * @return mixed
+   */
+  public function getAppValue(string $key, mixed $default = null)
   {
     return $this->containerConfig->getAppValue($this->appName, $key, $default);
   }
 
-  public function setAppValue($key, $value)
+  /**
+   * A short-cut, redirecting to the stock functions for the app.
+   *
+   * @param string $key Config key.
+   *
+   * @param mixed $value Value to set.
+   *
+   * @return mixed
+   */
+  public function setAppValue(string $key, mixed $value)
   {
     return $this->containerConfig->setAppValue($this->appName, $key, $value);
   }
 
-  public function getUserValue($userId, $key, $default = null)
+  /**
+   * @param string $userId Use the current user if null.
+   *
+   * @param string $key Config key.
+   *
+   * @param mixed $default Default value.
+   *
+   * @return mixed
+   */
+  public function getUserValue(string $userId, string $key, mixed $default = null)
   {
     return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
   }
 
-  public function setUserValue($userId, $key, $value)
+  /**
+   * @param string $userId Use the current user if null.
+   *
+   * @param string $key Config key.
+   *
+   * @param mixed $value Value to set.
+   *
+   * @return mixed
+   */
+  public function setUserValue(string $userId, string $key, mixed $value)
   {
     return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
   }
 
-  public function deleteUserValue($userId, $key)
+  /**
+   * @param string $userId Use the current user if null.
+   *
+   * @param string $key Config key.
+   *
+   * @return mixed
+   */
+  public function deleteUserValue(string $userId, string $key)
   {
     return $this->containerConfig->deleteUserValue($userId, $this->appName, $key);
   }
@@ -503,9 +585,11 @@ class EncryptionService
    *
    * @param bool $ignoreLock
    *
+   * @return mixed
+   *
    * @throws Exceptions\ConfigLockedException
    */
-  public function getConfigValue($key, $default = null, bool $ignoreLock = false)
+  public function getConfigValue(string $key, mixed $default = null, bool $ignoreLock = false)
   {
     if (!$ignoreLock && !empty($this->getAppValue(self::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not retrieving value for ' . $key);
@@ -543,9 +627,11 @@ class EncryptionService
    *
    * @param bool $ignoreLock
    *
+   * @return bool
+   *
    * @throws Exceptions\ConfigLockedException
    */
-  public function setConfigValue(string $key, $value, bool $ignoreLock = false)
+  public function setConfigValue(string $key, mixed $value, bool $ignoreLock = false):bool
   {
     if (!$ignoreLock && !empty($this->getAppValue(self::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not storing value for config-key ' . $key);
@@ -568,18 +654,26 @@ class EncryptionService
     return true;
   }
 
-  public function verifyHash($value, $hash)
+  /**
+   * @param null|string $value Value to verify.
+   *
+   * @param null|string $hash Hash to verify against.
+   *
+   * @return bool \true if either hash or value are empty or if the hash could
+   * be verified.
+   */
+  public function verifyHash(?string $value, $hash):bool
   {
     return $value === null || empty($hash) || $this->hasher->verify($value, $hash);
   }
 
-  public function computeHash($value)
+  /**
+   * @param string $value The value to hash.
+   *
+   * @return string The hash of $value.
+   */
+  public function computeHash(string $value):string
   {
     return $this->hasher->hash($value);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -1,68 +1,104 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Publicsabare how to add multiple alarms License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
 
+use \DateTimeInterface;
+use \DateTimeZone;
+use \DateInterval;
+use \DateTimeImmutable;
+use \Exception;
+use \InvalidArgumentException;
+
+use Sabre\VObject;
+use Sabre\VObject\Component\VCalendar;
+use Sabre\VObject\Component\VAlarm;
+use Sabre\VObject\Component\VTodo;
+use Sabre\VObject\Component as VComponent;
+use Sabre\VObject\Property\ICalendar;
+
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
 
-// Operation/Builder for VCalendar objects
+/** Operation/Builder for VCalendar objects */
 class VCalendarService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  /** @var OC_Calendar_Object */
   private $legacyCalendarObject;
 
   const VTODO = 'VTODO';
   const VEVENT = 'VEVENT';
+
   const ALARM_ACTION_DISPLAY = 'DISPLAY';
   const ALARM_ACTION_AUDIO = 'AUDIO';
   const ALARM_ACTION_EMAIL = 'EMAIL';
   const ALARM_ACTION_PROCEDURE = 'PROCEDURE';
 
+  const VALARM_FROM_START = 'START';
+  const VALARM_FROM_END = 'END';
+
+  const VTODO_STATUS_IN_PROCESS = 'IN-PROCESS';
+  const VTODO_STATUS_COMPLETED = 'COMPLETED';
+  const VTODO_STATUS_NEEDS_ACTION = 'NEEDS-ACTION';
+
+  /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
-    OC_Calendar_Object $legacyCalendarObject
+    OC_Calendar_Object $legacyCalendarObject,
   ) {
     $this->configService = $configService;
     $this->legacyCalendarObject = $legacyCalendarObject;
   }
 
-  /**Validate the given request-data which is an associative array.
+  /**
+   * Validate the given request-data which is an associative array.
+   *
+   * @param array $eventData Legacy request event data.
+   *
+   * @param string $kind What kind of event to create.
    *
    * @return array|false Array of error messages or false on success
    */
-  public function validateRequest($eventData, string $kind = self::VEVENT) {
+  public function validateRequest(array $eventData, string $kind = self::VEVENT)
+  {
     switch ($kind) {
-    case self::VEVENT:
-      return $this->legacyCalendarObject->validateRequest($eventData);
-    case self::VTODO:
-      return $this->validateVTodoRequest($eventData);
-    default:
-      return null;
+      case self::VEVENT:
+        return $this->legacyCalendarObject->validateRequest($eventData);
+      case self::VTODO:
+        return $this->validateVTodoRequest($eventData);
+      default:
+        return null;
     }
   }
 
   /**
+   * @param array $vObjectData HTTP request submitted event data.
+   *
+   * @param string $kind What kind of object to create.
+   * ```
    * $eventData = [
    *   'title' => 'Title',
    *   'description' => 'Text',
@@ -75,141 +111,334 @@ class VCalendarService
    *   'totime' => '00:00:00',
    *   'calendar' => 'calendarId',
    *   'repeat' => 'doesnotrepeat',
+   *   'alarm' => [ [ 'START => -3600 ], [ 'END' => 1800 ], ]
+   *   'participants' => [
+   *     'organizer' => [ 'name' => NAME, 'email' => EMAIL ],
+   *     'attendees' => [
+   *       [
+   *         'name' => NAME,
+   *         'email' => EMAIL,
+   *         'role' => 'PARTICIPANT',
+   *         'partstat' => 'NEEDS-ACTION',
+   *         'language' => ...
+   *       ], ...
+   *     ]
    * ];
    *
-   * $taskData = array('summary' => $title, // required
-   *                   'related' => other VObject's UID // optional
-   *                   'due' => date('d-m-Y', $timeStamp), // required
-   *                   'start' => date('d-m-Y'), // optional
-   *                   'location' => 'Cyber-Space', // optional
-   *                   'categories' => $categories, // optional
-   *                   'description' => $description, // optional
-   *                   'calendar' => $calendarId, // required
-   *                   'starred' => true, // optional
-   *                   'alarm' => $alarm); // optional
+   * $taskData = [
+   *   'summary' => $title, // required
+   *   'related' => other VComponent's UID // optional
+   *   'due' => date('d-m-Y', $timeStamp), // required
+   *   'status' => 'TASK_NEEDS_ACTION ', // e.g.
+   *   'start' => date('d-m-Y'), // optional
+   *   'location' => 'Cyber-Space', // optional
+   *   'categories' => $categories, // optional
+   *   'description' => $description, // optional
+   *   'calendar' => $calendarId, // required
+   *   'allday' => true, // optional
+   *   'alarm' => $alarm,
+   * ]; // optional
+   * ```.
    *
+   * @return null|VCalendar
    */
-  public function createVCalendarFromRequest($vObjectData, string $kind = self::VEVENT) {
+  public function createVCalendarFromRequest(array $vObjectData, string $kind = self::VEVENT):?VCalendar
+  {
     switch ($kind) {
-    case self::VEVENT:
-      return $this->createVEventFromRequest($vObjectData);
-    case 'VTODO':
-      return $this->createVTodoFromRequest($vObjectData);
-    default:
-      return null;
+      case self::VEVENT:
+        return $this->createVEventFromRequest($vObjectData);
+      case 'VTODO':
+        return $this->createVTodoFromRequest($vObjectData);
+      default:
+        return null;
     }
   }
 
-  private function createVEventFromRequest($objectData)
+  /**
+   * @param array $objectData Calendar object description from HTTP request.
+   *
+   * @return null|VCalendar
+   */
+  private function createVEventFromRequest(array $objectData):?VCalendar
   {
     $vObject = $this->legacyCalendarObject->createVCalendarFromRequest($objectData);
-    if (empty($vObject) || empty($objectData['alarm'])) {
+    if (empty($vObject) || empty($vObject->VEVENT)) {
       return $vObject;
     }
-    if (!empty($request['alarm'])) {
-      $vObjet->VEVENT->VALARM = $this->createVAlarmFromSeconds($vObject, $request['alarm'], $request['summary']);
-    }
+    $this->addVAlarmsFromRequest($vObject, $vObject->VEVENT, $objectData);
+    $this->addParticipants($vObject, $vObject->VEVENT, $objectData);
+    $this->addRelations($vObject, $vObject->VEVENT, $objectData);
+
     return $vObject;
   }
 
-  public function updateVCalendarFromRequest($vCalendar, $objectData, string $kind = self::VEVENT) {
-    switch ($kind) {
-    case self::VEVENT:
-      return $this->updateVEventFromRequest($vCalendar, $objectData);
-    case 'VTODO':
-      return $this->updateVTodoFromRequest($vCalendar, $objectData);
-    default:
-      return null;
+  /**
+   * Add one or multiple participans to the given VTodo or VEvent.
+   *
+   * @param VCalendar $vRoot Root document of the $vComponent.
+   *
+   * @param VComponent $vComponent A VTodo ar a VEvent.
+   *
+   * @param array $objectData
+   * ```
+   * [ ...
+   *   'participants' => [
+   *     'organizer' => [ 'name' => NAME, 'email' => EMAIL ],
+   *     'attendees' => [
+   *       [
+   *         'name' => NAME,
+   *         'email' => EMAIL,
+   *         'role' => 'PARTICIPANT',
+   *         'partstat' => 'NEEDS-ACTION',
+   *         'language' => ...
+   *       ], ...
+   *     ],
+   *   ], ...
+   * ]
+   * ```
+   *
+   * @return void
+   */
+  public function addParticipants(VCalendar $vRoot, VComponent $vComponent, array $objectData):void
+  {
+    $organizer = $objectData['participants']['organizer'] ?? [];
+    if (!empty($organizer)) {
+      $vComponent->ORGANIZER = 'mailto:' . $organizer['email'];
+      $vComponent->ORGANIZER['CN'] = $organizer['name'];
+    }
+    $attendees = $objectData['participants']['attendees'] ?? [];
+    if (empty($attendees)) {
+      return;
+    }
+    unset($vComponent->ATTENDEE);
+    foreach ($attendees as $attendee) {
+      $vComponent->add(
+        'ATTENDEE',
+        'mailto:' . $attendee['email'], [
+          'CN' => $attendee['name'],
+          'CUTYPE' => $attendee['cutype'] ?? 'INDIVIDUAL',
+          'PARTSTAT' => $attendee['partstat'] ?? 'NEEDS-ACTION',
+          'ROLE' => $attendee['role'] ?? 'REQ-PARTICIPANT',
+          'RSVP' => $attendee['rsvp'] ?? false,
+          'LANGUAGE' => $attendee['language'] ?? $this->getLanguage($this->appLocale()),
+        ]
+      );
     }
   }
 
-  private function updateVEventFromRequest($vCalendar, $objectData)
+  /**
+   * Add one or multiple relations to the given VTodo or VEvent.
+   *
+   * @param VCalendar $vRoot Root document of the $vComponent.
+   *
+   * @param VComponent $vComponent A VTodo ar a VEvent.
+   *
+   * @param array $objectData
+   * ```
+   * [ ..., 'related' => [ UIDs, ... ], ... ]
+   * [ ...,
+   *   'related' => [
+   *     'SIBLING' => [ UIDs, ... ],
+   *     'CHILD' => [ UIDs, ... ],
+   *     'PARENT' => [ UIDs, ... ],
+   *   ], ...
+   * ]
+   * ```
+   *
+   * @return void
+   */
+  public function addRelations(VCalendar $vRoot, VComponent $vComponent, array $objectData):void
+  {
+    if (empty($objectData['related'])) {
+      return;
+    }
+    $related = $objectData['related'];
+    if (empty(array_intersect(array_keys($related), ['PARENT', 'CHILD', 'SIBLING']))) {
+      $related = [ 'PARENT' => $related ];
+    }
+    $ownUid = $vComponent->UID;
+    unset($vComponent->{'RELATED-TO'});
+    foreach ($related as $relType => $uids) {
+      foreach ($uids as $uid) {
+        if ($uid == $ownUid) {
+          continue; // gracefully ignore
+        }
+        $vComponent->add(
+          'RELATED-TO',
+          $uid, [
+            'RELTYPE' => $relType,
+          ],
+        );
+      }
+    }
+  }
+
+  /**
+   * Add one or multiple alarms to the given VTodo or VEvent. Any existing
+   * alarms will be removed.
+   *
+   * @param VCalendar $vRoot Root document of the $vComponent.
+   *
+   * @param VComponent $vComponent A VTodo ar a VEvent.
+   *
+   * @param array $objectData Calendar object description from HTTP
+   * request. If it has an array element with key 'alarm' then this may be the
+   * number of alarm seconds or an array of seconds in which case multiple
+   * alarms will be added. Negative values are counted relative to the end of
+   * the event and reach to the feature (<- is that true?).
+   *
+   * @return void
+   */
+  public function addVAlarmsFromRequest(VCalendar $vRoot, VComponent $vComponent, array $objectData):void
+  {
+    unset($vComponent->VALARM);
+    $alarmData = is_array($objectData['alarm']) ? $objectData['alarm'] : [ $objectData['alarm'] ?? null ];
+    foreach ($alarmData as $alarmDatum) {
+      if (is_array($alarmDatum)) {
+        foreach ($alarmDatum as $related => $seconds) {
+        }
+      } else {
+        $seconds = $alarmDatum;
+        $related = null;
+      }
+      $vAlarm = $this->createVAlarmFromSeconds($vRoot, $seconds, $related, $objectData['summary']);
+      if (!empty($vAlarm)) {
+        $vComponent->add($vAlarm);
+      }
+    }
+  }
+
+  /**
+   * @param VCalendar $vCalendar Sabre calendar object.
+   *
+   * @param array $objectData Calendar object description from HTTP request.
+   *
+   * @param string $kind What kind of object to create.
+   *
+   * @return null|VCalendar
+   */
+  public function updateVCalendarFromRequest(VCalendar $vCalendar, array $objectData, string $kind = self::VEVENT):?VCalendar
+  {
+    switch ($kind) {
+      case self::VEVENT:
+        return $this->updateVEventFromRequest($vCalendar, $objectData);
+      case 'VTODO':
+        return $this->updateVTodoFromRequest($vCalendar, $objectData);
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * @param VCalendar $vCalendar
+   *
+   * @param array $objectData Calendar object description from HTTP request.
+   *
+   * @return null|VCalendar
+   */
+  private function updateVEventFromRequest(VCalendar $vCalendar, array $objectData):VCalendar
   {
     $vCalendar = $this->legacyCalendarObject->updateVCalendarFromRequest($objectData, $vCalendar);
     if (empty($vCalendar) || empty($objectData['alarm'])) {
       return $vCalendar;
     }
-    if (!empty($request['alarm'])) {
-      $vCalendar->VEVENT->VALARM = $this->createVAlarmFromSeconds($vCalendar, $request['alarm'], $request['summary']);
-    } else {
-      unset($vOBJECT->VEVENT->{'VALARM'});
-    }
+    $this->addVAlarmsFromRequest($vCalendar, $vCalendar->VEVENT, $objectData);
+    $this->addParticipants($vCalendar, $vCalendar->VEVENT, $objectData);
+    $this->addRelations($vCalendar, $vCalendar->VEVENT, $objectData);
+
     return $vCalendar;
   }
 
-  public function legacyEventObject()
+  /**
+   * @return OC_Calendar_Object The old Owncloud inherited calendar object.
+   *
+   * @todo Get rid of it.
+   */
+  public function legacyEventObject():OC_Calendar_Object
   {
     return $this->legacyCalendarObject;
   }
 
-  public static function getVCalendar($stuff)
+  /**
+   * @param mixed $stuff String or array or an VCalendar object.
+   *
+   * @return VCalendar
+   */
+  public static function getVCalendar(mixed $stuff):VCalendar
   {
     $data = null;
     if (is_array($stuff) && isset($stuff['calendardata'])) {
       $data = $stuff['calendardata'];
-    } else if (is_string($stuff)) {
+    } elseif (is_string($stuff)) {
       $data = $stuff;
-    } else if ($stuff instanceof \Sabre\VObject\Component\VCalendar) {
+    } elseif ($stuff instanceof VCalendar) {
       return $stuff;
     }
     if (empty($data)) {
       return null;
     }
-    return \Sabre\VObject\Reader::read($stuff['calendardata']);
+    if ($data instanceof VCalendar) {
+      return $data;
+    }
+    return VObject\Reader::read($data);
   }
 
-  /**Return a reference to the object contained in a Sabre VCALENDAR
+  /**
+   * Return a reference to the object contained in a Sabre VCALENDAR
    * object. This is a reference to allow for modification of the
    * $vCalendar object.
    *
-   * @param $vCalendar VCalendar object.
+   * @param VCalendar $vCalendar VCalendar object.
    *
    * @return A reference to the inner object.
    */
-  public static function &getVObject(&$vCalendar)
+  public static function &getVObject(VCalendar &$vCalendar):VComponent
   {
     if (isset($vCalendar->VEVENT)) {
       $vobject = &$vCalendar->VEVENT;
-    } else if (isset($vCalendar->VTODO)) {
+    } elseif (isset($vCalendar->VTODO)) {
       $vobject = &$vCalendar->VTODO;
-    } else if (isset($vCalendar->VJOURNAL)) {
+    } elseif (isset($vCalendar->VJOURNAL)) {
       $vobject = &$vCalendar->VJOURNAL;
-    } else if (isset($vCalendar->VCARD)) {
+    } elseif (isset($vCalendar->VCARD)) {
       $vobject = &$vCalendar->VCARD;
     } else {
-      throw new \Exception('Called with empty or no VObject');
+      throw new Exception('Called with empty or no VComponent');
     }
     return $vobject;
   }
 
-  /**Return the type of the respective calendar object.
+  /**
+   * Return the type of the respective calendar object.
    *
-   * @param $vCalendar
+   * @param VCalendar $vCalendar Sabre DAV calendar object.
    *
    * @return string Either VEVENT, VTODO, VJOURNAL or VCARD.
    */
-  public static function getVObjectType($vCalendar)
+  public static function getVObjectType(VCalendar $vCalendar):string
   {
     if (isset($vCalendar->VEVENT)) {
       return 'VEVENT';
-    } else if (isset($vCalendar->VTODO)) {
+    } elseif (isset($vCalendar->VTODO)) {
       return 'VTODO';
-    } else if (isset($vCalendar->VJOURNAL)) {
+    } elseif (isset($vCalendar->VJOURNAL)) {
       return 'JVOURNAL';
-    } else if (isset($vCalendar->VCARD)) {
+    } elseif (isset($vCalendar->VCARD)) {
       return 'VCARD';
     } else {
-      throw new \InvalidArgumentException('Called with empty of no VObject');
+      throw new InvalidArgumentException('Called with empty of no VComponent');
     }
     return null;
   }
 
-  /**Return the category list for the given object
+  /**
+   * Return the category list for the given object
    *
-   * @param $vCalendar Sabe vCalendar object
+   * @param VCalendar $vCalendar Sabe vCalendar object.
    *
-   * @return An array with the categories for the object. */
-  public static function getCategories($vCalendar)
+   * @return An array with the categories for the object.
+   */
+  public static function getCategories(VCalendar $vCalendar):array
   {
     // get the inner object
     $vObject = self::getVObject($vCalendar);
@@ -217,7 +446,16 @@ class VCalendarService
     return isset($vObject->CATEGORIES) ? $vObject->CATEGORIES->getParts() : [];
   }
 
-  public static function setCategories(&$vCalendar, $categories)
+  /**
+   * @param VCalendar $vCalendar Object reference.
+   *
+   * @param array $categories Array of strings.
+   *
+   * @return VCalendar Pass through of $vCalendar.
+   *
+   * @todo Check whether we really need a reference here.xy
+   */
+  public static function setCategories(VCalendar &$vCalendar, array $categories):VCalendar
   {
     // get the inner object
     $vObject = self::getVObject($vCalendar);
@@ -225,7 +463,12 @@ class VCalendarService
     return $vCalendar;
   }
 
-  public static function getUid($vCalendar)
+  /**
+   * @param VCalendar $vCalendar Sabre calendar object.
+   *
+   * @return null|string The UID of $vCalendar.
+   */
+  public static function getUid(VCalendar $vCalendar):?string
   {
     // get the inner object
     $vObject = self::getVObject($vCalendar);
@@ -233,15 +476,30 @@ class VCalendarService
     return isset($vObject->UID) ? $vObject->UID : null;
   }
 
-  public static function setUid(&$vCalendar, $uid)
+  /**
+   * @param VCalendar $vCalendar Object reference.
+   *
+   * @param string $uid The uid to set.
+   *
+   * @return VCalendar Pass through of $vCalendar.
+   *
+   * @todo Check whether we really need a reference here.xy
+   */
+  public static function setUid(VCalendar &$vCalendar, string $uid):VCalendar
   {
     // get the inner object
     $vObject = self::getVObject($vCalendar);
-    $vObject->UID = $summary;
+    $vObject->UID = $uid;
+
     return $vCalendar;
   }
 
-  public static function getSummary($vCalendar)
+  /**
+   * @param VCalendar $vCalendar Sabre calendar object.
+   *
+   * @return null|string The summary comment of $vCalendar.
+   */
+  public static function getSummary(VCalendar $vCalendar):?string
   {
     // get the inner object
     $vObject = self::getVObject($vCalendar);
@@ -249,15 +507,30 @@ class VCalendarService
     return isset($vObject->SUMMARY) ? $vObject->SUMMARY : null;
   }
 
-  public static function setSummary(&$vCalendar, $summary)
+  /**
+   * @param VCalendar $vCalendar Object reference.
+   *
+   * @param null|string $summary The summary to set.
+   *
+   * @return VCalendar Pass through of $vCalendar.
+   *
+   * @todo Check whether we really need a reference here.xy
+   */
+  public static function setSummary(VCalendar &$vCalendar, ?string $summary):VCalendar
   {
     // get the inner object
     $vObject = self::getVObject($vCalendar);
     $vObject->SUMMARY = $summary;
+
     return $vCalendar;
   }
 
-  public static function getDescription($vCalendar)
+  /**
+   * @param VCalendar $vCalendar Sabre calendar object.
+   *
+   * @return null|string The summary comment of $vCalendar.
+   */
+  public static function getDescription(VCalendar $vCalendar):?string
   {
     // get the inner object
     $vObject = self::getVObject($vCalendar);
@@ -265,7 +538,16 @@ class VCalendarService
     return isset($vObject->DESCRIPTION) ? $vObject->DESCRIPTION : null;
   }
 
-  public static function setDescription(&$vCalendar, $description)
+  /**
+   * @param VCalendar $vCalendar Object reference.
+   *
+   * @param null|string $description The description to set.
+   *
+   * @return VCalendar Pass through of $vCalendar.
+   *
+   * @todo Check whether we really need a reference here.xy
+   */
+  public static function setDescription(VCalendar &$vCalendar, ?string $description):VCalendar
   {
     // get the inner object
     $vObject = self::getVObject($vCalendar);
@@ -273,7 +555,12 @@ class VCalendarService
     return $vCalendar;
   }
 
-  public static function getDTEnd($vCalendar)
+  /**
+   * @param VCalendar $vCalendar Object reference.
+   *
+   * @return mixed DTEND property if set, otherwise DTSTART + duration.
+   */
+  public static function getDTEnd(VCalendar $vCalendar):ICalendar\DateTime
   {
     $vObject = self::getVObject($vCalendar);
     if ($vObject->DTEND) {
@@ -299,7 +586,14 @@ class VCalendarService
     return $dtEnd;
   }
 
-  private function validateVTodoRequest($todoData)
+  /**
+   * Validate the given request-data which is an associative array.
+   *
+   * @param array $todoData Legacy request event data.
+   *
+   * @return array|false Array of error messages or false on success
+   */
+  private function validateVTodoRequest(array $todoData)
   {
     $requiredKeys = [
       'summary',
@@ -307,7 +601,7 @@ class VCalendarService
       'start'
     ];
     $errArr = [];
-    foreach($requiredKeys as $key) {
+    foreach ($requiredKeys as $key) {
       if (empty($todoData[$key])) {
         $errArr[$key] = true;
       }
@@ -315,57 +609,72 @@ class VCalendarService
     return empty($errArr) ? false : $errArr;
   }
 
-  /*
-   * $taskData = array('summary' => $title, // required
-   *                   'related' => other VObject's UID // optional
-   *                   'due' => date('d-m-Y', $timeStamp), // required
-   *                   'start' => date('d-m-Y'), // optional
-   *                   'location' => 'Cyber-Space', // optional
-   *                   'categories' => $categories, // optional
-   *                   'description' => $description, // optional
-   *                   'calendar' => $calendarId, // required
-   *                   'starred' => true, // optional
-   *                   'alarm' => $alarm); // optional
+  /**
+   * @param array $todoData Calendar object description from HTTP request.
+   * ```
+   * $taskData = [
+   *   'summary' => $title, // required
+   *   'related' => other VComponent's UID // optional
+   *   'due' => date('d-m-Y', $timeStamp), // required
+   *   'status' => 'TASK_NEEDS_ACTION ', // e.g.
+   *   'start' => date('d-m-Y'), // optional
+   *   'location' => 'Cyber-Space', // optional
+   *   'categories' => $categories, // optional
+   *   'description' => $description, // optional
+   *   'calendar' => $calendarId, // required
+   *   'allday' => true, // optional
+   *   'alarm' => $alarm,
+   * ]; // optional
+   * ```.
    *
-   * @return  \Sabre\VObject\Component\VCalendar|null
+   * @return VCalendar|null
    */
-  private function createVTodoFromRequest($todoData)
+  private function createVTodoFromRequest(array $todoData):?VCalendar
   {
     if (!empty($this->validateVTodoRequest($todoData))) {
       return null;
     }
 
-    $vCalendar = new \Sabre\VObject\Component\VCalendar();
+    $vCalendar = new VCalendar;
     $vCalendar->PRODID = "Nextloud cafevdb " . $this->appVersion();
     $vCalendar->VERSION = '2.0';
 
     $vTodo = $vCalendar->createComponent('VTODO');
 
-    $vTodo->CREATED = new \DateTime('now', new \DateTimeZone('UTC'));
+    $vTodo->CREATED = new DateTimeImmutable('now', new DateTimeZone('UTC'));
 
-    $vTodo->UID = \Sabre\VObject\UUIDUtil::getUUID();
+    $vTodo->UID = VObject\UUIDUtil::getUUID();
 
     $vCalendar->add($vTodo);
 
     return $this->updateVTodoFromRequest($vCalendar, $todoData);
   }
 
-  /**Update task from request.
+  /**
+   * Update task from request.
    *
-   * $taskData = array('summary' => $title, // required
-   *                   'related' => other VObject's UID // optional
-   *                   'due' => date('d-m-Y', $timeStamp), // required
-   *                   'start' => date('d-m-Y'), // optional
-   *                   'location' => 'Cyber-Space', // optional
-   *                   'categories' => $categories, // optional
-   *                   'description' => $description, // optional
-   *                   'calendar' => $calendarId, // required
-   *                   'starred' => true, // optional
-   *                   'alarm' => $alarm); // optional
+   * @param VCalendar $vCalendar Sabre calendar object.
    *
-   * @return Sabre\VObject\Component\VCalendar|null
+   * @param array $request HTTP request data.
+   * ```
+   * $taskData = [
+   *   'summary' => $title, // required
+   *   'related' => other VComponent's UID // optional
+   *   'due' => date('d-m-Y', $timeStamp), // required
+   *   'status' => 'TASK_NEEDS_ACTION ', // e.g.
+   *   'start' => date('d-m-Y'), // optional
+   *   'location' => 'Cyber-Space', // optional
+   *   'categories' => $categories, // optional
+   *   'description' => $description, // optional
+   *   'calendar' => $calendarId, // required
+   *   'allday' => true, // optional
+   *   'alarm' => $alarm,
+   * ]; // optional
+   * ```.
+   *
+   * @return VCalendar|null
    */
-  private function updateVTodoFromRequest($vCalendar, $request)
+  private function updateVTodoFromRequest(VCalendar $vCalendar, array $request):VCalendar
   {
     if (!empty($this->validateVTodoRequest($request))) {
       return null;
@@ -374,25 +683,40 @@ class VCalendarService
     $vTodo = $vCalendar->VTODO;
     $timezone = $this->getDateTimeZone();
 
-    $vTodo->{'LAST-MODIFIED'} = new \DateTime('now', new \DateTimeZone('UTC'));
-    $vTodo->DTSTAMP = new \DateTime('now', new \DateTimeZone('UTC'));
+    $vTodo->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $vTodo->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
     $vTodo->SUMMARY = $request['summary'];
 
     if (!empty($request['due'])) {
-      $vTodo->DUE = new \DateTime($request['due'], $timezone);
+      $due = new DateTimeImmutable($request['due'], $timezone);
+      if ($request['allday']) {
+        $due = $due->setTime(0, 0, 0);
+        $vTodo->DUE = $due;
+        $vTodo->DUE['VALUE'] = 'DATE';
+      } else {
+        $vTodo->DUE = $due;
+      }
     }
     if (!empty($request['start'])) {
-      $vTodo->DTSTART = new \DateTime($request['start'], $timezone);
+      $dtStart = new DateTimeImmutable($request['start'], $timezone);
+      if ($request['allday']) {
+        $dtStart = $dtStart->setTime(0, 0, 0);
+        $vTodo->DTSTART = $dtStart;
+        $vTodo->DTSTART['VALUE'] = 'DATE';
+      } else {
+        $vTodo->DTSTART = $dtStart;
+      }
     }
 
     $optionalKeys = [
       'priority' => 'PRIORITY',
-      'related' => 'RELATED-TO',
       'description' => 'DESCRIPTION',
       'location' => 'LOCATION',
+      'status' => 'STATUS',
     ];
-    foreach($optionalKeys as $rqKey => $vKey) {
-      if (!empty($request[$rqKey]) && $request[$rqKey]) {
+    foreach ($optionalKeys as $rqKey => $vKey) {
+      if (!empty($request[$rqKey])) {
         $vTodo->{$vKey} = $request[$rqKey];
       } else {
         unset($vTodo->{$vKey});
@@ -403,25 +727,40 @@ class VCalendarService
     if (!empty($request['categories'])) {
       $categories = explode(',', $request['categories']);
     }
-    if(count($categories)){
+    if (count($categories)) {
       $vTodo->CATEGORIES = $categories;
-    } else{
+    } else {
       unset($vTodo->{'CATEGORIES'});
     }
 
-    if (!empty($request['alarm'])) {
-      $vTodo->VALARM = $this->createVAlarmFromSeconds($vCalendar, -$request['alarm'], $request['summary']);
-    } else {
-      unset($vTodo->{'VALARM'});
-    }
-
-    $vCalendar->VTODO = $vTodo;
+    $this->addVAlarmsFromRequest($vCalendar, $vCalendar->VTODO, $request);
+    $this->addParticipants($vCalendar, $vCalendar->VTODO, $request);
+    $this->addRelations($vCalendar, $vCalendar->VTODO, $request);
 
     return $vCalendar;
   }
 
-  private function createVAlarmFromSeconds($vCalendar, $seconds, $description = null, $action = self::ALARM_ACTION_DISPLAY)
-  {
+  /**
+   * @param VCalendar $vCalendar CalDAV root document.
+   *
+   * @param int $seconds Alarm seconds.
+   *
+   * @param null|string $related Either START or END, if null negative seconds
+   * count from the end, positive from the start.
+   *
+   * @param null|string $description Alarm description.
+   *
+   * @param string $action What to do with the alarm.
+   *
+   * @return null|VAlarm
+   */
+  private function createVAlarmFromSeconds(
+    VCalendar $vCalendar,
+    int $seconds,
+    ?string $related = null,
+    ?string $description = null,
+    string $action = self::ALARM_ACTION_DISPLAY,
+  ):?VAlarm {
     if (empty($seconds)) {
       return null;
     }
@@ -436,31 +775,30 @@ END:VALARM
     $inverted = $seconds < 0;
     if ($inverted) {
       $seconds = -$seconds;
-      $sign = '-';
-      $related = 'END';
+      $related = $related ?? self::VALARM_FROM_END;
     } else {
-      $sign = '';
-      $related = 'START';
+      $related = $related ?? self::VALARM_FROM_START;
     }
     $vAlarm = $vCalendar->createComponent('VALARM');
     $vAlarm->DESCRIPTION = !empty($description) ? $description : $this->l->t('Default Event Notification');
     $vAlarm->ACTION = $action;
-    $dinterval = new \DateTime();
-    $dinterval->add(new \DateInterval('PT'.$seconds.'S'));
-    $interval = $dinterval->diff(new \DateTime);
-    $alarmValue = sprintf('%sP%s%s%s%s',
-                          $interval->format('%r'),
-                          $interval->format('%d') > 0 ? $interval->format('%dD') : null,
-                          ($interval->format('%h') > 0 || $interval->format('%i') > 0) ? 'T' : null,
-                          $interval->format('%h') > 0 ? $interval->format('%hH') : null,
-                          $interval->format('%i') > 0 ? $interval->format('%iM') : null);
-    $vAlarm->add('TRIGGER', $sign.$alarmValue, [ 'VALUE' => 'DURATION', 'RELATED' => $related ]);
+    if ($inverted) {
+      $dinterval = (new DateTimeImmutable)->add(new DateInterval('PT' . ($seconds + 1) . 'S'));
+    } else {
+      $dinterval = (new DateTimeImmutable)->sub(new DateInterval('PT' . $seconds . 'S'));
+    }
+    $interval = $dinterval->diff(new DateTimeImmutable);
+    $alarmValue = sprintf(
+      '%sP%s%s%s%s',
+      $interval->format('%r'),
+      $interval->format('%d') > 0 ? $interval->format('%dD') : null,
+      ($interval->format('%h') > 0 || $interval->format('%i') > 0) ? 'T' : null,
+      $interval->format('%h') > 0 ? $interval->format('%hH') : null,
+      $interval->format('%i') > 0 ? $interval->format('%iM') : null);
+    $vAlarm->add('TRIGGER', $alarmValue, [ 'VALUE' => 'DURATION', 'RELATED' => $related ]);
+
+    // $this->logInfo('TRY CREATE ALARM ' . $vAlarm->TRIGGER . ' SECONDS ' . ($inverted ? '-' : '') . $seconds);
 
     return $vAlarm;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

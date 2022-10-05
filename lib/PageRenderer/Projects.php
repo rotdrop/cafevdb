@@ -451,7 +451,7 @@ class Projects extends PMETableViewBase
               $instrumentNames = $this->instruments;
             } else {
               $instrumentsIndex = $k - 1;
-              $instruments = explode(',', $row['qf'.$instrumentsIndex]);
+              $instruments = Util::explode(',', $row['qf'.$instrumentsIndex], Util::OMIT_EMPTY_FIELDS|Util::TRIM);
               $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
             }
 

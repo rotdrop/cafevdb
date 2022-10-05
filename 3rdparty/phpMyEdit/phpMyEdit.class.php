@@ -5278,6 +5278,7 @@ class phpMyEdit
 			if ($this->col_has_datemask($k)) {
 				if ($fn == '') {
 					$stamps[$fd] = false;
+					$fn = null;
 				} else {
 					// Convert back to a date/time object understood by mySQL
 					$stamps[$fd] = $this->makeTimeStampFromUser($fn);

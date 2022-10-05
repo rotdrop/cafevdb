@@ -575,6 +575,8 @@ class PersonalSettingsController extends Controller
                                          [ $realValue, ]));
       }
       break;
+    case 'bankAccountBankHolidays':
+      return $this->setSimpleConfigValue($parameter, $value);
     case 'bankAccountOwner':
     case 'bankAccountBLZ':
     case 'bankAccountIBAN':

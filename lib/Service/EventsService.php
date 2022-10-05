@@ -4,24 +4,28 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use \Exception;
+use \DateTimeImmutable;
+use \DateTimeZone;
 
 use OCA\DAV\Events\CalendarUpdatedEvent;
 use OCA\DAV\Events\CalendarDeletedEvent;
@@ -40,6 +44,7 @@ use OCA\CAFEVDB\Common\Util;
 
 /**
  * Events and tasks handling.
+ *
  * @todo
  * - cleanup-jobs for orphan events
  */
@@ -47,6 +52,14 @@ class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+
+  const VALARM_FROM_START = VCalendarService::VALARM_FROM_START;
+  const VALARM_FROM_END = VCalendarService::VALARM_FROM_END;
+
+  const TASK_IN_PROCESS = VCalendarService::VTODO_STATUS_IN_PROCESS;
+  const TASK_COMPLETED = VCalendarService::VTODO_STATUS_COMPLETED;
+  const TASK_NEEDS_ACTION = VCalendarService::VTODO_STATUS_NEEDS_ACTION;
+
 
   /** @var EntityManager */
   protected $entityManager;
@@ -60,12 +73,13 @@ class EventsService
   /** @var VCalendarService */
   private $vCalendarService;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , EntityManager $entityManager
-    , ProjectService $projectService
-    , CalDavService $calDavService
-    , VCalendarService $vCalendarService
+    ConfigService $configService,
+    EntityManager $entityManager,
+    ProjectService $projectService,
+    CalDavService $calDavService,
+    VCalendarService $vCalendarService,
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -77,9 +91,8 @@ class EventsService
   }
 
   /**
-   * event->getObjectData() returns
-   *
-   * @code
+   * @param CalendarObjectCreatedEvent $event $event->getObjectData() returns
+   * ```
    * [
    *   'uri'           => $row['uri'],
    *   'lastmodified'  => $row['lastmodified'],
@@ -90,9 +103,11 @@ class EventsService
    *   'component'     => strtolower($row['componenttype']),
    *   'classification'=> (int)$row['classification']
    * ];
-   * @endcode
+   * ```.
+   *
+   * @return void
    */
-  public function onCalendarObjectCreated(CalendarObjectCreatedEvent $event)
+  public function onCalendarObjectCreated(CalendarObjectCreatedEvent $event):void
   {
     $objectData = $event->getObjectData();
     $calendarIds = $this->defaultCalendars();
@@ -107,7 +122,12 @@ class EventsService
     $this->syncCalendarObject($objectData, false);
   }
 
-  public function onCalendarObjectUpdated(CalendarObjectUpdatedEvent $event)
+  /**
+   * @param CalendarObjectUpdatedEvent $event Event object.
+   *
+   * @return void
+   */
+  public function onCalendarObjectUpdated(CalendarObjectUpdatedEvent $event):void
   {
     $objectData = $event->getObjectData();
     $calendarIds = $this->defaultCalendars();
@@ -122,7 +142,12 @@ class EventsService
     $this->syncCalendarObject($objectData);
   }
 
-  public function onCalendarObjectDeleted(CalendarObjectDeletedEvent $event)
+  /**
+   * @param CalendarObjectDeletedEvent $event Event object.
+   *
+   * @return void
+   */
+  public function onCalendarObjectDeleted(CalendarObjectDeletedEvent $event):void
   {
     $objectData = $event->getObjectData();
     $calendarIds = $this->defaultCalendars();
@@ -134,7 +159,12 @@ class EventsService
     $this->deleteCalendarObject($objectData);
   }
 
-  public function onCalendarDeleted(CalendarDeletedEvent $event)
+  /**
+   * @param CalendarDeletedEvent $event Event object.
+   *
+   * @return void
+   */
+  public function onCalendarDeleted(CalendarDeletedEvent $event):void
   {
     if (!$this->inGroup()) {
       return;
@@ -148,7 +178,7 @@ class EventsService
          ->execute();
 
     // remove from config-space if found
-    foreach(ConfigService::CALENDARS as $cal) {
+    foreach (ConfigService::CALENDARS as $cal) {
       $uri = $cal['uri'];
       $calendarId = $this->getCalendarId($uri);
       if ($event->getCalendarId() == $calendarId) {
@@ -158,12 +188,17 @@ class EventsService
     }
   }
 
-  public function onCalendarUpdated(CalendarUpdatedEvent $event)
+  /**
+   * @param CalendarUpdatedEvent $event Event object.
+   *
+   * @return void
+   */
+  public function onCalendarUpdated(CalendarUpdatedEvent $event):void
   {
     if (!$this->inGroup()) {
       return;
     }
-    foreach(ConfigService::CALENDARS as $cal) {
+    foreach (ConfigService::CALENDARS as $cal) {
       $uri = $cal['uri'];
       $calendarId = $this->getCalendarId($uri);
       if ($event->getCalendarId() == $calendarId) {
@@ -171,7 +206,7 @@ class EventsService
         $calendarData = $event->getCalendarData();
         if (empty($displayName)) {
           $this->setCalendarDisplayName($uri, $calendarData['displayname']);
-        } else if ($displayName != $calendarData['displayname']) {
+        } elseif ($displayName != $calendarData['displayname']) {
           // revert the change
           $this->calDavService->displayName($calendarId, $displayName);
         }
@@ -180,7 +215,12 @@ class EventsService
     }
   }
 
-  public function onProjectDeleted(BeforeProjectDeletedEvent $event)
+  /**
+   * @param BeforeProjectDeletedEvent $event Event object.
+   *
+   * @return void
+   */
+  public function onProjectDeleted(BeforeProjectDeletedEvent $event):void
   {
     $projectId = $event->getProjectId();
     $projectEvents = $this->projectEvents($projectId);
@@ -193,7 +233,7 @@ class EventsService
       // still used?
       if (count($this->eventProjects($eventUri)) === 0) {
         $calId = $event->getCalendarId();
-        $this->calDavService->deleteCalendarObject($calId, $uri);
+        $this->calDavService->deleteCalendarObject($calId, $eventUri);
       } else {
         // update categories
         $this->unchain($projectId, $eventUri);
@@ -201,7 +241,12 @@ class EventsService
     }
   }
 
-  public function onProjectUpdated(PreProjectUpdatedEvent $event)
+  /**
+   * @param PreProjectUpdatedEvent $event Event object.
+   *
+   * @return void
+   */
+  public function onProjectUpdated(PreProjectUpdatedEvent $event):void
   {
     $events = $this->projectEvents($event->getProjectId());
     $oldName = $event->getOldData()['name'];
@@ -226,20 +271,31 @@ class EventsService
     }
   }
 
-  /** @return Entities\ProjectEvent[] */
+  /**
+   * @param string $eventURI CalDAV URI.
+   *
+   * @return Entities\ProjectEvent[]
+   */
   private function eventProjects(string $eventURI):array
   {
     return $this->findBy(['eventUri' => $eventURI]);
   }
 
-  /** @return Entities\ProjectEvent[] */
+  /**
+   * @param int|Entities\Project $projectOrId Database entity or its id.
+   *
+   * @return Entities\ProjectEvent[]
+   */
   private function projectEvents($projectOrId):array
   {
     return $this->findBy(['project' => $projectOrId, 'type' => 'VEVENT']);
   }
 
   /**
-   * Augment database entity by calendar data.
+   * Augment the database entity by calendar data.
+   *
+   * @param Entities\ProjectEvent $projectEvent Database entity.
+   *
    * @return array|null Returns null if the calendar object cannot be
    * found, otherwise an array
    * ```
@@ -256,7 +312,7 @@ class EventsService
    * ]
    * ```
    */
-  private function makeEvent(Entities\ProjectEvent $projectEvent)
+  private function makeEvent(Entities\ProjectEvent $projectEvent):?array
   {
     $event = [];
     $event['projectid'] = $projectEvent->getProject()->getId();
@@ -265,12 +321,12 @@ class EventsService
     $event['calendarid'] = $projectEvent->getCalendarId();
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
-      $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new \Exception())->getTraceAsString());
+      $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());
       if (false) {
         // clean up orphaned events
         try {
           $this->unregister($event['projectid'], $event['uri']);
-        } catch  (\Throwable $t) {
+        } catch (\Throwable $t) {
           $this->logException($t);
         }
       }
@@ -296,8 +352,8 @@ class EventsService
     } else {
       // the following is not overly correct, but make a prettier
       // display:
-      $start = new \DateTimeImmutable($start->format('Y-m-d H:i:s'), $timeZone);
-      $end = new \DateTimeImmutable($end->format('Y-m-d H:i:s'), $timeZone);
+      $start = new DateTimeImmutable($start->format('Y-m-d H:i:s'), $timeZone);
+      $end = new DateTimeImmutable($end->format('Y-m-d H:i:s'), $timeZone);
     }
 
     $event['start'] = $start;
@@ -315,8 +371,16 @@ class EventsService
   /**
    * Fetch one specific event and convert start and end to DateTime,
    * also determine allDay.
+   *
+   * @param int $projectId
+   *
+   * @param string $eventURI CalDAV URI.
+   *
+   * @return null|array
+   *
+   * @see makeEvent()
    */
-  public function fetchEvent($projectId, $eventURI)
+  public function fetchEvent(int $projectId, string $eventURI):?array
   {
     $projectEvent = $this->find(['project' => $projectId, 'eventUri' => $eventURI]);
     if (empty($projectEvent)) {
@@ -331,16 +395,14 @@ class EventsService
    * stamps from the data-base are converted to PHP DateTime()-objects
    * with UTC time-zone.
    *
-   * @param $projectId The numeric id of the project.
+   * @param int $projectId The numeric id of the project.
    *
    * @return array Event-data as generated by self::makeEvent().
    */
-  public function events($projectId)
+  public function events(int $projectId):array
   {
     // fetch the relevant data from the pivot-table
     $projectEvents = $this->projectEvents($projectId);
-
-    $utc = new \DateTimeZone("UTC");
 
     $events = [];
     foreach ($projectEvents as $projectEvent) {
@@ -363,21 +425,22 @@ class EventsService
   }
 
   /**
-   * Form start and end date and time in given timezone and locale,
-   * return is an array
-   *
-   * array('start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ...)
+   * Form start and end date and time in given timezone and locale.
    *
    * @param array $eventObject The corresponding event object from fetchEvent() or events().
    *
-   * @param string $timezone Explicit time zone to use, otherwise fetched
+   * @param null|string $timezone Explicit time zone to use, otherwise fetched
    * from user-settings.
    *
-   * @param $locale Explicit language setting to use, otherwise
+   * @param null|string $locale Explicit language setting to use, otherwise
    * fetched from user-settings.
    *
+   * @return array
+   * ```
+   * [ 'start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ... ]
+   * ```
    */
-  private function eventTimes($eventObject, $timezone = null, $locale = null)
+  private function eventTimes(array$eventObject, ?string $timezone = null, ?string $locale = null):array
   {
     if ($timezone === null) {
       $timezone = $this->getTimezone();
@@ -419,8 +482,20 @@ class EventsService
     ];
   }
 
-  /**Form a brief event date in the given locale. */
-  public function briefEventDate($eventObject, $timezone = null, $locale = null)
+  /**
+   * Form a brief event date in the given locale.
+   *
+   * @param array $eventObject The corresponding event object from fetchEvent() or events().
+   *
+   * @param null|string $timezone Explicit time zone to use, otherwise fetched
+   * from user-settings.
+   *
+   * @param null|string $locale Explicit language setting to use, otherwise
+   * fetched from user-settings.
+   *
+   * @return string
+   */
+  public function briefEventDate(array $eventObject, ?string $timezone = null, ?string $locale = null):string
   {
     $times = $this->eventTimes($eventObject, $timezone, $locale);
 
@@ -432,8 +507,20 @@ class EventsService
     return $datestring;
   }
 
-  /**Form a "brief long" event date in the given locale. */
-  public function longEventDate($eventObject, $timezone = null, $locale = null)
+  /**
+   * Form a "brief long" event date in the given locale.
+   *
+   * @param array $eventObject The corresponding event object from fetchEvent() or events().
+   *
+   * @param null|string $timezone Explicit time zone to use, otherwise fetched
+   * from user-settings.
+   *
+   * @param null|string $locale Explicit language setting to use, otherwise
+   * fetched from user-settings.
+   *
+   * @return string
+   */
+  public function longEventDate(array $eventObject, ?string $timezone = null, ?string $locale = null):string
   {
     $times = $this->eventTimes($eventObject, $timezone, $locale);
 
@@ -463,17 +550,15 @@ class EventsService
    * contain events which do not belong to any id mentioned in
    * $calendarIds and be tagged by the key '__other__'.
    *
-   * @param $projectEvents List returned by self::events().
+   * @param array $projectEvents List returned by self::events().
    *
-   * @param $calendarIds Array with calendar sorting order, giving
+   * @param array $calendarIds Array with calendar sorting order, giving
    * the ids of the wanted calendars in the wanted order.
    *
-   * @return Associative array with calendarnames as keys.
+   * @return array Associative array with calendarnames as keys.
    */
-  public function eventMatrix($projectEvents, $calendarIds)
+  public function eventMatrix(array $projectEvents, array $calendarIds):array
   {
-    $calendarNames = [];
-
     $result = [];
 
     $shareOwnerId = $this->shareOwnerId();
@@ -511,6 +596,14 @@ class EventsService
   /**
    * Form an array with the most relevant event data.
    *
+   * @param array $eventObject The corresponding event object from fetchEvent() or events().
+   *
+   * @param null|string $timezone Explicit time zone to use, otherwise fetched
+   * from user-settings.
+   *
+   * @param null|string $locale Explicit language setting to use, otherwise
+   * fetched from user-settings.
+   *
    * @return array
    * ```
    * [
@@ -521,7 +614,7 @@ class EventsService
    * ]
    * ```
    */
-  private function eventData($eventObject, $timezone = null, $locale = null)
+  private function eventData(array $eventObject, ?string $timezone = null, ?string $locale = null):array
   {
     // $vcalendar = self::getVCalendar($eventObject);
     // $vobject = self::getVObject($vcalendar);
@@ -550,7 +643,7 @@ class EventsService
    * @param null|string|array $calendarIds null to get the events from all
    * calendars or the 'uri' component from OCA\CAFEVDB\Service\ConfigService::CALENDARS.
    *
-   * @param null|string $timeZone
+   * @param null|string $timezone
    *
    * @param null|string $locale
    *
@@ -563,13 +656,13 @@ class EventsService
    * ]
    * ```
    */
-  public function projectEventData($projectId, $calendarIds = null, $timezone = null, $locale = null)
+  public function projectEventData(int $projectId, mixed $calendarIds = null, ?string $timezone = null, ?string $locale = null):array
   {
     $events = $this->events($projectId);
 
     if ($calendarIds === null || $calendarIds === false) {
       $calendarIds = $this->defaultCalendars(true);
-    } else if (!is_array($calendarIds)) {
+    } elseif (!is_array($calendarIds)) {
       $calendarIds = [ $calendarIds ];
     }
 
@@ -644,8 +737,14 @@ class EventsService
     return $result;
   }
 
-  /** Return the IDs of the default calendars. */
-  public function defaultCalendars($public = false)
+  /**
+   * @param bool $public Hide non-public calendars.
+   *
+   * @return array The IDs of the default calendars.
+   *
+   * @see ConfigService::CALENDARS
+   */
+  public function defaultCalendars(bool $public = false):array
   {
     $result = [];
     foreach (ConfigService::CALENDARS as $cal) {
@@ -657,33 +756,62 @@ class EventsService
     return $result;
   }
 
-  /** Return the configured calendar id. */
-  private function getCalendarId($uri)
+  /**
+   * @param string $uri Calendar tag.
+   *
+   * @return null|string Return the configured calendar id.
+   */
+  private function getCalendarId(string $uri):?string
   {
     return $this->getConfigValue($uri.'calendar'.'id');
   }
 
-  /** Delete the configured calendar id. */
-  private function deleteCalendarId($uri)
+  /**
+   * Delete the configured calendar id.
+   *
+   * @param string $uri Calendar tag.
+   *
+   * @return void
+   */
+  private function deleteCalendarId(string $uri):void
   {
-    return $this->deleteConfigValue($uri.'calendar'.'id');
+    $this->deleteConfigValue($uri.'calendar'.'id');
   }
 
-  /** Return the configured calendar display name. */
-  private function getCalendarDisplayName($uri)
+  /**
+   * Return the configured calendar display name.
+   *
+   * @param string $uri Calendar tag.
+   *
+   * @return string
+   */
+  private function getCalendarDisplayName(string $uri):string
   {
     return $this->getConfigValue($uri.'calendar');
   }
 
-  /** Return the configured calendar display name. */
-  private function setCalendarDisplayName($uri, $displayName)
+  /**
+   * Set the configured calendar display name.
+   *
+   * @param string $uri Calendar tag.
+   *
+   * @param string $displayName Value to set.
+   *
+   * @return bool
+   */
+  private function setCalendarDisplayName(string $uri, string $displayName):bool
   {
     return $this->setConfigValue($uri.'calendar', $displayName);
   }
 
   /**
-   * Parse the respective event and make sure the ProjectEvents
+   * Parse the respective event data and make sure the ProjectEvents
    * table is uptodate.
+   *
+   * @param array $objectData Calendar object data provided by event.
+   *
+   * @param bool $unregister Whether to unregister the event from projects not
+   * mentioned in its category list.
    *
    * @return array
    * ```
@@ -693,12 +821,12 @@ class EventsService
    * ]
    * ```
    */
-  public function syncCalendarObject($objectData, $unregister = true)
+  public function syncCalendarObject(array $objectData, bool $unregister = true):array
   {
     $eventURI   = $objectData['uri'];
     $calId      = $objectData['calendarid'];
     $calURI     = $objectData['calendaruri'];
-    $eventData  = $objectData['calendardata'];
+    // $eventData  = $objectData['calendardata'];
     $vCalendar  = VCalendarService::getVCalendar($objectData);
     $categories = VCalendarService::getCategories($vCalendar);
     $eventUID   = VCalendarService::getUid($vCalendar);
@@ -731,10 +859,14 @@ class EventsService
   /**
    * Remove the calendar object from the join table as the calendar
    * object is no more.
+   *
+   * @param array $objectData Event provided object data.
+   *
+   * @return void
    */
-  private function deleteCalendarObject($objectData)
+  private function deleteCalendarObject(array $objectData):void
   {
-    $eventURI   = $objectData['uri'];
+    $eventURI = $objectData['uri'];
     foreach ($this->eventProjects($eventURI) as $projectEvent) {
       $this->unregister($projectEvent->getProject(), $eventURI);
     }
@@ -743,22 +875,23 @@ class EventsService
   /**
    * Unconditionally register the given event with the given project.
    *
-   * @param int|Project $projectId The project or its id.
+   * @param int|Entities\Project $projectOrId The project or its id.
    * @param string $eventURI The event key (external key).
    * @param string $eventUID The event UID.
    * @param int $calendarId The id of the calender the event belongs to.
-   * @param string $calendarUri The URI of the calender the event belongs to.
+   * @param string $calendarURI The URI of the calender the event belongs to.
    * @param string $type The event type (VEVENT, VTODO, VJOURNAL, VCARD).
    *
    * @return bool true if the event has been newly registered.
    */
-  private function register($projectOrId,
-                            string $eventURI,
-                            string $eventUID,
-                            int $calendarId,
-                            string $calendarURI,
-                            string $type)
-  {
+  private function register(
+    $projectOrId,
+    string $eventURI,
+    string $eventUID,
+    int $calendarId,
+    string $calendarURI,
+    string $type,
+  ) {
     /** @var Entities\ProjectEvent $entity */
     $entity = $this->findOneBy(['project' => $projectOrId, 'eventUri' => $eventURI]);
     if (empty($entity)) {
@@ -805,12 +938,13 @@ class EventsService
    * project, and remove the project-name from the event's categories
    * list.
    *
-   * @param $projectId The project key.
-   * @param $eventURI The event uri.
+   * @param int|Entities\Project $projectId The project key.
    *
-   * @return undefined
+   * @param string $eventURI The event uri.
+   *
+   * @return mixed
    */
-  public function unchain($projectId, $eventURI)
+  public function unchain(int $projectId, string $eventURI)
   {
     $projectEvent = $this->find(['project' => $projectId, 'eventUri' => $eventURI]);
     $calendarId = $projectEvent->getCalendarId();
@@ -832,12 +966,13 @@ class EventsService
   /**
    * Test if the given event is linked to the given project.
    *
-   * @param $projectId The project key.
-   * @param $eventURI The event key (external key).
+   * @param int $projectId The project key.
    *
-   * @return bool @c true if the event is registered, otherwise false.
+   * @param string $eventURI The event key (external key).
+   *
+   * @return bool \true if the event is registered, otherwise false.
    */
-  private function isRegistered($projectId, $eventURI)
+  private function isRegistered(int $projectId, string $eventURI):bool
   {
     //return !empty($this->find(['project' => $projectId, 'eventUri' => $eventURI]));
     return $this->count(['project' => $projectId, 'eventUri' => $eventURI]) > 0;
@@ -848,7 +983,8 @@ class EventsService
    * $request is a post-array. One example, in order to create a
    * simple task:
    *
-   * @code
+   * @param array $taskData Passed on to VCalendarService::createVCalendarFromRequest()
+   * ```
    * [
    *   'description' => $title, // required
    *   'related' => other VObject's UID // optional
@@ -861,15 +997,18 @@ class EventsService
    *   'starred' => true, // optional
    *   'alarm' => $alarm, // optional
    * ]
-   * @endcode
+   * ```
    *
-   * We also support adding a reminder: 'alarm' => unset or interval
-   * in seconds (i.e. time-stamp diff). The function may throw
-   * errors.
+   * We also support adding a reminder: 'alarm' => ALARMSPEC.
+   * ALARMSPEC can be
+   * - null, 0 no alarm
+   * - int The alarm interval in seconds
+   * - [ RELATED => int ] where RELATED is either START or END.
+   *   Negative values reach in the past relative to RELATED.
    *
    * @return array task-uri, task-uid on success, null on error.
    * ```
-   * [ 'uri' => TASK_URI, 'uid' => TASK_UID ]
+   * [ 'uri' => TASK_URI, 'uid' => TASK_UID, 'task' => TASK_OBJECT ]
    * ```
    */
   public function newTask(array $taskData):?array
@@ -886,19 +1025,22 @@ class EventsService
       $taskObject = $this->calDavService->getCalendarObject($taskData['calendar'], $taskUri);
       if (!empty($taskObject)) {
         $vCalendar  = VCalendarService::getVCalendar($taskObject);
+        $taskObject['calendardata'] = $vCalendar;
         $taskUid   = VCalendarService::getUid($vCalendar);
-        return [ 'uri' => $taskUri, 'uid' => $taskUid ];
+        return [ 'uri' => $taskUri, 'uid' => $taskUid, 'task' => $taskObject ];
       }
     }
-    return NULL;
+    return null;
   }
 
   /**
    * Inject a new event into the given calendar.
    *
+   * @param array $eventData Passed on to VCalendarService::createVCalendarFromRequest()
+   *
    * One example, in order to create a simple non-repeating event:
    *
-   * @code
+   * ```
    * [
    *   'summary' => TITLE,
    *   'from' => dd-mm-yyyy,
@@ -910,7 +1052,7 @@ class EventsService
    *   'repeat' => 'doesnotrepeat',
    *   'calendar' => CALID
    * ]
-   * @endcode
+   * ```
    *
    * We also support adding a reminder: 'alarm' => unset or interval
    * in seconds (i.e. time-stamp diff). The function may throw
@@ -918,10 +1060,10 @@ class EventsService
    *
    * @return array|null event-uri, event-uid or null on error.
    * ```
-   * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID ]
+   * [ 'uri' => EVENT_URI, 'uid' => EVENT_UID, 'event' => EVENT_OBJECT ]
    * ```
    */
-  public function newEvent(array $eventData): ?array
+  public function newEvent(array $eventData):?array
   {
     if (empty($eventData['calendar'])) {
       return null;
@@ -936,22 +1078,229 @@ class EventsService
       if (!empty($eventObject)) {
         $vCalendar  = VCalendarService::getVCalendar($eventObject);
         $eventUid   = VCalendarService::getUid($vCalendar);
-        return [ 'uri' => $eventUri, 'uid' => $eventUid ];
+        $eventObject['calendardata'] = $vCalendar;
+        return [ 'uri' => $eventUri, 'uid' => $eventUid, 'event' => $eventObject ];
       }
     }
-    return NULL;
+    return null;
   }
 
   /**
    * Delete a calendar object given by its URI or UID.
    *
+   * @param mixed $calId Numeric calendar id.
+   *
    * @param string $objectIdentifier Either the URI or the UID of the
    * object. If the identifier ends with '.ics' it is assumed to be an URI,
    * other a UID.
+   *
+   * @return void
    */
-  public function deleteCalendarEntry($calId, $objectIdentifier)
+  public function deleteCalendarEntry(mixed $calId, string $objectIdentifier):void
   {
-    return $this->calDavService->deleteCalendarObject($calId, $objectIdentifier);
+    $this->calDavService->deleteCalendarObject($calId, $objectIdentifier);
+  }
+
+  /**
+   * Update the calendar entry contained in $object, i.e. write it back to the server.
+   *
+   * @param array $object Modified event object, previously obtained by findCalendarEntry().
+   *
+   * @param array $changeSet Array of changes to apply.
+   *
+   * @return void
+   *
+   * @see CalDavService::updateCalendarObject()
+   */
+  public function updateCalendarEntry(array $object, array $changeSet = []):void
+  {
+    $vCalendar  = VCalendarService::getVCalendar($object);
+    if (!empty($changeSet)) {
+      if (!empty($vCalendar->VEVENT)) {
+        $this->logInfo('EVENT ' . print_r(array_keys($object), true));
+        $this->updateCalendarEvent($object, $changeSet);
+      } elseif (!empty($vCalendar->VTODO)) {
+        $this->updateCalendarTask($object, $changeSet);
+      }
+    } else {
+      $objectURI = $object['uri'];
+      $calendarId = $object['calendarid'];
+      $this->calDavService->updateCalendarObject($calendarId, $objectURI, $vCalendar);
+    }
+  }
+
+  /**
+   * @param array $event Event object to  modify, previously obtained by findCalendarEntry().
+   *
+   * @param null|string $status Status to set.
+   *
+   * @param null|int $percentComplete Percent completed to set.
+   *
+   * @param null|DateTimeImmutable $dateCompleted The date of completion, if
+   * non-null percent completed is set to 100 and the status also to
+   * COMPLETED.
+   *
+   * @return void
+   */
+  public function setCalendarTaskStatus(
+    array $event,
+    ?string $status = null,
+    ?int $percentComplete = null,
+    ?DateTimeImmutable $dateCompleted = null,
+  ):void {
+
+    $eventURI = $event['uri'];
+    $calendarId = $event['calendarid'];
+    $vCalendar  = VCalendarService::getVCalendar($event);
+
+    if ($dateCompleted !== null) {
+      $status = self::TASK_COMPLETED;
+    }
+    if ($status == self::TASK_COMPLETED) {
+      $percentComplete = 100;
+    }
+    if ($percentComplete == 100) {
+      $status = self::TASK_COMPLETED;
+      if (empty($dateCompleted)) {
+        $dateCompleted = new DateTimeImmutable;
+      }
+    } elseif ($percentComplete == 0) {
+      $status = self::TASK_NEEDS_ACTION;
+      $dateCompleted = false;
+    } else {
+      $status = self::TASK_IN_PROCESS;
+      $dateCompleted = false;
+    }
+
+    if ($status == self::TASK_COMPLETED) {
+      if (empty($dateCompleted)) {
+        $dateCompleted = new DateTimeImmutable;
+      }
+    } elseif ($status == self::TASK_NEEDS_ACTION || $status == self::TASK_IN_PROCESS) {
+      $dateCompleted = false;
+    }
+
+    $vTodo = $vCalendar->VTODO;
+
+    if ($status !== null) {
+      $vTodo->STATUS = $status;
+      if ($status == self::TASK_COMPLETED) {
+        // remove alarms
+        unset($vTodo->VALARM);
+      }
+    }
+    if ($percentComplete !== null) {
+      $vTodo->{'PERCENT-COMPLETE'} = $percentComplete;
+    }
+    if ($dateCompleted !== null) {
+      if ($dateCompleted === false) {
+        unset($vTodo->COMPLETED);
+      } else {
+        $vTodo->COMPLETED = $dateCompleted;
+      }
+    }
+
+    $this->calDavService->updateCalendarObject($calendarId, $eventURI, $vCalendar);
+  }
+
+  /**
+   * Update the event entry contained in $event, modify it and write it back
+   * to the server.
+   *
+   * @param array $event To be modified event object according to $changeSet.
+   *
+   * @param array $changeSet Array of changes to apply.
+   *
+   * @return void
+   *
+   * @see CalDavService::updateCalendarObject()
+   */
+  public function updateCalendarEvent(array $event, array $changeSet = []):void
+  {
+    $eventURI = $event['uri'];
+    $calendarId = $event['calendarid'];
+    $vCalendar  = VCalendarService::getVCalendar($event);
+
+    $vEvent = $vCalendar->VEVENT;
+
+    if (!empty($changeSet['start']) || !empty($changeSet['end'])) {
+      $timezone = $this->getDateTimeZone();
+      if (array_key_exists('allday', $changeSet)) {
+        $allDay = !empty($changeSet['allday']);
+      } else {
+        $dateValue = $vEvent->DTSTART['VALUE'];
+        $dtStart = DateTimeImmutable::createFromInterface($vEvent->DTSTART);
+        $allDay = ($dtStart == $dtStart->setTime(0, 0, 0) && $dateValue == 'DATE');
+      }
+      foreach (['start', 'end'] as $key) {
+        if (!empty($changeSet[$key])) {
+          $eventProperty = 'DT' . strtoupper($key);
+          if ($allDay) {
+            $date = $changeSet[$key]->setTime(0, 0, 0);
+            $vEvent->{$eventProperty} = $date;
+            $vEvent->{$eventProperty}['VALUE'] = 'DATE';
+          } else {
+            $date = $changeSet[$key]->setTimezone($timezone);
+          }
+        }
+      }
+    }
+    if (array_key_exists('alarm', $changeSet)) {
+      $this->vCalendarService->addVAlarmsFromRequest($vCalendar, $vEvent, $changeSet);
+    }
+    if (!empty($changeSet['summary'])) {
+      $this->vCalendarService->setSummary($vCalendar, $changeSet['summary']);
+    }
+    if (array_key_exists('description', $changeSet)) {
+      $this->vCalendarService->setDescription($vCalendar, $changeSet['description']);
+    }
+    if (array_key_exists('related', $changeSet)) {
+      $this->vCalendarService->addRelations($vCalendar, $vEvent, $changeSet);
+    }
+
+    $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
+    $this->calDavService->updateCalendarObject($calendarId, $eventURI, $vCalendar);
+  }
+
+  /**
+   * Update the task entry contained in $event, modify it and write it back
+   * to the server.
+   *
+   * @param array $task To be modified event object according to $changeSet.
+   *
+   * @param array $changeSet Array of changes to apply.
+   *
+   * @return void
+   *
+   * @see CalDavService::updateCalendarObject()
+   */
+  public function updateCalendarTask(array $task, array $changeSet = []):void
+  {
+    $taskURI = $task['uri'];
+    $calendarId = $task['calendarid'];
+    $vCalendar  = VCalendarService::getVCalendar($task);
+
+    $vTodo = $vCalendar->VTODO;
+
+    if (array_key_exists('alarm', $changeSet)) {
+      $this->vCalendarService->addVAlarmsFromRequest($vCalendar, $vTodo, $changeSet);
+    }
+    if (!empty($changeSet['summary'])) {
+      $this->vCalendarService->setSummary($vCalendar, $changeSet['summary']);
+    }
+    if (array_key_exists('description', $changeSet)) {
+      $this->vCalendarService->setDescription($vCalendar, $changeSet['description']);
+    }
+    if (array_key_exists('related', $changeSet)) {
+      $this->vCalendarService->addRelations($vCalendar, $vTodo, $changeSet);
+    }
+
+    $vTodo->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+    $vTodo->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
+    $this->calDavService->updateCalendarObject($calendarId, $taskURI, $vCalendar);
   }
 
   /**
@@ -964,13 +1313,41 @@ class EventsService
    * other a UID.
    *
    * @return array|null
+   *
+   * @see CalDavService::getCalendarObject()
    */
-  public function findCalendarEntry($calId, $objectIdentifier)
+  public function findCalendarEntry(mixed $calId, string $objectIdentifier)
   {
-    return $this->calDavService->getCalendarObject($calId, $objectIdentifier);
+    $event = $this->calDavService->getCalendarObject($calId, $objectIdentifier);
+
+    $vCalendar = VCalendarService::getVCalendar($event);
+    $event['calendardata'] = $vCalendar;
+
+    return $event;
   }
 
-  public function playground() {
+  /**
+   * @param array $event To be cloned event array obtained form
+   * findCalendarEntry().
+   *
+   * @return array The cloned event.
+   *
+   * @bug The existance of this function is caused by $event not being a class
+   * instance.
+   */
+  public static function cloneCalendarEntry(array $event):array
+  {
+    foreach ($event as $key => $value) {
+      $event[$key] = is_object($value) ? clone($value) : $value;
+    }
+    return $event;
+  }
+
+  /**
+   * @return void
+   */
+  public function playground():void
+  {
 
     $eventData = [
       'summary' => 'Title',
@@ -1007,12 +1384,5 @@ class EventsService
     $this->logError('TodoError' . print_r($errors, true));
     $vCalendar = $this->vCalendarService->createVCalendarFromRequest($taskData, VCalendarService::VTODO);
     $this->logError('VTODO VCalendar entry' . print_r($vCalendar, true));
-
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

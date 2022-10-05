@@ -188,9 +188,6 @@ group-administrator for the group `%s\'.',
       $encrkey = $encryptionkey;
       $encrkeyhash = $encryptionkeyhash;
       $error   = $cfgchk[$key]['message'];
-      if ($error != '') {
-            $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
-      }
 
       if (!empty($encrkey)) {
         $ok    = 'set';
@@ -207,6 +204,10 @@ group-administrator for the group `%s\'.',
         $tok   = $l->t('is not set');
         $value = '';
         $text  = $missingtext[$key];
+      }
+
+      if ($error != '') {
+            $text .= '<p>'.$l->t('Additional diagnostic message:').'<br/>'.'<div class="errormessage">'.nl2br($error).'</div>';
       }
 
       echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">

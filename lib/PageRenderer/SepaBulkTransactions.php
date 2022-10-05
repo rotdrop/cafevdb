@@ -4,21 +4,21 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
@@ -148,15 +148,16 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
   private $project = null;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , FinanceService $financeService
-    , SepaBulkTransactionService $bulkTransactionService
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    FinanceService $financeService,
+    SepaBulkTransactionService $bulkTransactionService,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->financeService = $financeService;
@@ -166,23 +167,21 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $this->initCrypto();
   }
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     return $this->l->t('Bulk-transactions for project "%s"', array($this->projectName));
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true)
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
-    $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
-    $expertMode      = $this->expertMode;
 
     $projectMode = $this->projectId > 0;
-    if ($projectMode)  {
+    if ($projectMode) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
     }
 
@@ -193,7 +192,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'direct-change',
       'show-hide-disabled',
     ];
-
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -260,7 +258,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         ],
       ],
     ];
-    if ($this->addOperation()){
+    if ($this->addOperation()) {
       $opts['display']['tabs'] = false;
     }
 
@@ -272,7 +270,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       static $oddBulkTransaction = false;
 
       $bulkTransactionId = $row['qf'.$pme->fdn['id']];
-      $compositePaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+      // $compositePaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
 
       $cssClasses = ['bulk-transaction'];
       if ($lastBulkTransactionId != $bulkTransactionId) {
@@ -301,7 +299,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       static $lastBulkTransactionId = -1;
 
       $bulkTransactionId = $row['qf'.$pme->fdn['id']];
-      $compositePaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+      // $compositePaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
 
       if ($lastBulkTransactionId != $bulkTransactionId) {
         if ($lastBulkTransactionId > 0) {
@@ -387,12 +385,12 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'table' => self::MUSICIANS_TABLE,
           'column' => 'id',
           'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
-	  'description' => [
-	    'columns' => [ '$table.id', self::musicianPublicNameSql() ],
-	    'divs' => [ ': ' ],
-	    'ifnull' => [ false, false ],
-	    'cast' => [ 'CHAR', false ],
-	  ],
+          'description' => [
+            'columns' => [ '$table.id', self::musicianPublicNameSql() ],
+            'divs' => [ ': ' ],
+            'ifnull' => [ false, false ],
+            'cast' => [ 'CHAR', false ],
+          ],
           'filters' => (!$projectMode
                         ? null
                         : parent::musicianInProjectSql($this->projectId)),
@@ -403,7 +401,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'postfix' => '</div></div>',
           'popup' => 'data',
         ],
-    ]);
+      ]);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'bank_account_id', [
@@ -510,6 +508,22 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'name' => $this->l->t('Date of Submission'),
         'tooltip' => $this->toolTipsService['bulk-transaction-date-of-submission'],
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
+        'display|ACP' => [
+          'attributes' => function($op, $k, $row, $pme) {
+            return empty($row['qf' . $k]) ? [] : [ 'readonly' => true ];
+          },
+          'postfix' => function($op, $pos, $k, $row, $pme) {
+            $checked = empty($row['qf' . $k]) ? '' : 'checked';
+            return '<input id="pme-submit-date-lock"
+  type="checkbox"
+  ' . $checked . '
+  class="pme-input pme-input-lock lock-unlock"
+/><label
+    class="pme-input pme-input-lock lock-unlock"
+    title="'.$this->toolTipsService['pme:input:lock-unlock'].'"
+    for="pme-submit-date-lock"></label>';
+          },
+        ],
       ]);
 
     $opts['fdd']['due_date'] = array_merge(
@@ -552,7 +566,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           ],
         ];
         $html = '';
-        foreach($actions as $key => $action) {
+        foreach ($actions as $key => $action) {
           $html .=<<<__EOT__
 <li class="nav tooltip-left inline-block tooltip-auto">
   <a class="nav {$key} tooltip-auto"
@@ -580,8 +594,8 @@ __EOT__;
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteTrigger' ];
 
-    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts)  {
-      if (empty($row['qf'.$submitIdx])) {
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts) {
+      if ($this->expertMode || empty($row['qf'.$submitIdx])) {
         $pme->options = $opts['options'];
       } else {
         $pme->options = 'LFV';
@@ -600,9 +614,31 @@ __EOT__;
 
   /**
    * Use ORM to actually delete stuff.
+   *
+   * PhpMyEdit calls the trigger (callback) with the following arguments:
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated.
    */
-  public function beforeDeleteTrigger($pme, $op, $step, $oldValues, &$changed, &$newValues)
-  {
+  public function beforeDeleteTrigger(
+    PHPMyEdit $pme,
+    string $op,
+    string $step,
+    array &$oldValues,
+    array &$changed,
+    array &$newValues,
+  ):bool {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
     /** @var Entities\SepaBulkTransaction $bulkTransaction */
@@ -655,7 +691,15 @@ __EOT__;
     return true;
   }
 
-  private function isBulkTransactionRow($row, $pme)
+  /**
+   * @param array $row Row data from PME.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @return bool Whether this table row refers to a bulk-tranaction (\true)
+   * or its split transactions (\false).
+   */
+  private function isBulkTransactionRow(array $row, PHPMyEdit $pme)
   {
     $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
     return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
@@ -664,10 +708,31 @@ __EOT__;
   /**
    * Print only the values for the bulk-transaction row
    *
+   * @param mixed $value Value passed on from PME.
+   *
+   * @param string $action Curent PME-action.
+   *
+   * @param int $k Current PME fdd index.
+   *
+   * @param array $row Row data from PME.
+   *
+   * @param array $recordId Record-id of current row.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @return string HTML fragment.
+   *
    * @todo: if the search results (e.g. for the amount) do not contain
    * the composite row, then the missing data should also be printed.
    */
-  public function bulkTransactionRowOnly($value, $action, $k, $row, $recordId, $pme) {
+  public function bulkTransactionRowOnly(
+    mixed $value,
+    string $action,
+    int $k,
+    array $row,
+    array $recordId,
+    PHPMyEdit $pme,
+  ):string {
     if ($this->isBulkTransactionRow($row, $pme)) {
       return $value;
     } else {

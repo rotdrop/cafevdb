@@ -1,23 +1,25 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Settings;
@@ -29,7 +31,14 @@ use OCP\ILogger;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
 
-class Personal implements ISettings {
+/**
+ * Personal settings.
+ *
+ * @todo These contain tons of group-sub-admin settings. Perhaps rework with
+ * admin settings delegation.
+ */
+class Personal implements ISettings
+{
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   const ERROR_TEMPLATE = "errorpage";
@@ -46,12 +55,13 @@ class Personal implements ISettings {
   /** @var \OCP\IUserSession */
   private $userSession;
 
+  /** {@inheritdoc} */
   public function __construct(
-    $appName
-    , $userId
-    , AuthorizationService $authorizationService
-    , IUserSession $userSession
-    , ILogger $logger
+    string $appName,
+    string $userId,
+    AuthorizationService $authorizationService,
+    IUserSession $userSession,
+    ILogger $logger,
   ) {
     $this->appName = $appName;
     $this->userId = $userId;
@@ -60,7 +70,9 @@ class Personal implements ISettings {
     $this->logger = $logger;
   }
 
-  public function getForm() {
+  /** {@inheritdoc} */
+  public function getForm()
+  {
     if (!$this->authorizationService->authorized($this->userId)) {
       return new TemplateResponse(
         $this->appName,
@@ -73,29 +85,15 @@ class Personal implements ISettings {
     return \OC::$server->query(PersonalForm::class)->getForm();
   }
 
-  /**
-   * @return string the section ID, e.g. 'sharing'
-   * @since 9.1
-   */
-  public function getSection() {
+  /** {@inheritdoc} */
+  public function getSection()
+  {
     return $this->appName;
   }
 
-  /**
-   * @return int whether the form should be rather on the top or bottom of
-   * the admin section. The forms are arranged in ascending order of the
-   * priority values. It is required to return a value between 0 and 100.
-   *
-   * E.g.: 70
-   * @since 9.1
-   */
-  public function getPriority() {
-    // @@todo could be made a configure option.
+  /** {@inheritdoc} */
+  public function getPriority()
+  {
     return 50;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

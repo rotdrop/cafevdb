@@ -71,6 +71,12 @@ class UpdateGeoCodingCache extends Command
       ->setName('cafevdb:geo-coding:update')
       ->setDescription('Update geo-coding cache')
       ->addOption(
+        'limit',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'Limit the number updates. Defaults to 1.',
+      )
+      ->addOption(
         'country',
         null,
         InputOption::VALUE_REQUIRED,
@@ -98,7 +104,7 @@ class UpdateGeoCodingCache extends Command
         'list',
         null,
         InputOption::VALUE_REQUIRED,
-        "Arguemnt is one of 'countries', 'cities', 'continents', 'languages' in order to trigger printing the available objects in the data-base",
+        "Argument is one of 'countries', 'cities', 'continents', 'languages' in order to trigger printing the available objects in the data-base",
       )
       ->addOption(
         'sanitize',
@@ -120,18 +126,22 @@ class UpdateGeoCodingCache extends Command
     /** @var GeoCodingService $geoCodingService */
     $geoCodingService = $this->appContainer->get(GeoCodingService::class);
 
-    $countries = explode(',', $input->getOption('country'));
+    $limit = $input->getOption('limit') ?? 1;
+    $countries = array_filter(explode(',', $input->getOption('country')));
     // $cities = explode(',', $input->getOption('city'));
     // $continents = explode(',',  $input->getOption('continent'));
-    // $languages = explode(',', $input->getOption('language'));
+    $languages = array_filter(explode(',', $input->getOption('language')));
 
     $list = $input->getOption('list');
-    switch ($list) {
-      case 'languages':
-        $output->writeln(implode(', ', $geoCodingService->getLanguages()));
-        break;
-      default:
-        break;
+    if (!empty($list)) {
+      switch ($list) {
+        case 'languages':
+          $output->writeln(implode(', ', $geoCodingService->getLanguages()));
+          break;
+        default:
+          break;
+      }
+      return 0;
     }
 
     $sanitize = $input->getOption('sanitize');
@@ -188,44 +198,22 @@ class UpdateGeoCodingCache extends Command
         default:
           break;
       }
+      return 0;
+    } // sanitize
+
+
+    $geoLanguages = $geoCodingService->getLanguages();
+    $output->writeln('Languages ' .print_r($geoLanguages, true) . ' ' . print_r($languages, true));
+    if (!empty($languages)) {
+      $geoLanguages = array_intersect($geoLanguages, $languages);
     }
-
-    // $totals = 0;
-
-    // $projects = $projectService->fetchAll();
-
-    // /** @var Entities\Project $project */
-    // foreach ($projects as $project) {
-    //   /** @var Entities\ProjectParticipant $participant */
-    //   $totals += $project->getParticipants()->count();
-    // }
-
-    // $section0 = $output->section();
-    // $section1 = $output->section();
-    // $section2 = $output->section();
-
-    // $progress0 = new ProgressBar($section0);
-    // $progress1 = new ProgressBar($section1);
-    // $progress2 = new ProgressBar($section2);
-
-    // $progress0->start(count($projects));
-    // $progress2->start($totals);
-    // foreach ($projects as $project) {
-    //   $participants = $project->getParticipants();
-    //   $progress1->start($participants->count());
-    //   foreach ($participants as $participant) {
-    //     if ($participant->isDeleted() || $participant->getMusician()->isDeleted()) {
-    //       continue;
-    //     }
-    //     $projectService->ensureParticipantFolder($project, $participant->getMusician(), dry: false);
-    //     $progress1->advance();
-    //     $progress2->advance();
-    //   }
-    //   $progress1->finish();
-    //   $progress0->advance();
-    // }
-    // $progress2->finish();
-    // $progress0->finish();
+    foreach ($geoLanguages as $lang) {
+      $output->writeln('Update language ' . $lang);
+      $geoCodingService->updateCountriesForLanguage($lang);
+      if (!$geoCodingService->updatePostalCodes($lang, $limit)) {
+        return 1;
+      }
+    }
 
     return 0;
   }
