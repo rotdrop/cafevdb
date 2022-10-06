@@ -279,9 +279,10 @@ class MailingListsService
    * @param null|string $resource A particular resource. If null the entire
    * list config is returned.
    *
-   * @return null|array The list configuration.
+   * @return null|mixed The list configuration. If a single resource
+   * is requested, then only the value of the resourfce.
    */
-  public function getListConfig(string $fqdnName, ?string $resource = null):?array
+  public function getListConfig(string $fqdnName, ?string $resource = null)
   {
     $response = $this->restClient->get(
       '/3.1/lists/' . $fqdnName . '/config' . (empty($resource) ? '' : '/' . $resource), [
@@ -636,9 +637,9 @@ class MailingListsService
    *
    * @param string $role Subscription role (member vs. moderator vs owner).
    *
-   * @return array The subscription info.
+   * @return bool|array The subscription info.
    */
-  public function getSubscription(string $listId, string $subscriptionAddress, string $role = self::ROLE_MEMBER):array
+  public function getSubscription(string $listId, string $subscriptionAddress, string $role = self::ROLE_MEMBER)
   {
     $listId = $this->ensureListId($listId);
     if (empty($listId)) {
