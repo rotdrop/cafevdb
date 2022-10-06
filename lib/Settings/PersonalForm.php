@@ -214,6 +214,7 @@ class PersonalForm
         'filtervisibility' => $this->getUserValue('filtervisibility', 'off'),
         'restorehistory' => $this->getUserValue('restorehistory', 'off'),
         'directchange' => $this->getUserValue('directchange', 'off'),
+        'deselectInvisibleMiscRecs' => $this->getUserValue('deselectInvisibleMiscRecs', 'off'),
         'showdisabled' => $this->getUserValue('showdisabled', 'off'),
         'expertMode' => $this->getUserValue('expertmode', 'off'),
         'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),

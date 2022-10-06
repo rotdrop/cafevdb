@@ -81,7 +81,7 @@ $routes = [
 /** @var \OCA\CAFEVDB\Service\OrganizationalRolesService $rolesService */
 
 ?>
-<span class="actions project-actions dropdown-container dropdown-no-hover tooltip-auto"
+<span class="actions project-actions dropdown-container dropdown-no-hover tooltip-right"
       title="<?php echo $toolTips['project-actions']; ?>"
       data-project-id="<?php p($projectId); ?>"
       data-project-name="<?php p($projectName); ?>"

@@ -64,7 +64,7 @@ class EmailFormController extends Controller
   /** @var ISession */
   private $session;
 
-  /** @var ParameterService */
+  /** @var RequestParameterService */
   private $parameterService;
 
   /** @var IURLGenerator */
@@ -135,6 +135,24 @@ class EmailFormController extends Controller
     ?int $bulkTransactionId = null,
     ?string $emailTemplate = null
   ):DataResponse {
+
+    // try to fetch filter information from the base-table if possible.
+    $idx = $this->parameterService['memberStatusFddIndex'];
+    $memberStatusFilter = $this->parameterService[$this->pme->cgiSysName('qf' . $idx . '_idx')];
+
+    $idx = $this->parameterService['instrummentsFddIndex'];
+    $instrumentsFilter = $this->parameterService[$this->pme->cgiSysName('qf' . $idx . '_idx')];
+
+    $this->logInfo('MEMBER / INSTRUMENTS ' . print_r($memberStatusFilter, true) . ' / ' . print_r($instrumentsFilter, true));
+    $recipientsFilterCGI = $this->parameterService->getParam(RecipientsFilter::POST_TAG, []);
+    if (!empty($instrumentsFilter)) {
+      $recipientsFilterCGI['instrumentsFilter'] = $instrumentsFilter;
+    }
+    if (!empty($memberStatusFilter)) {
+      $recipientsFilterCGI['memberStatusFilter'] = $memberStatusFilter;
+    }
+    $this->parameterService->setParam(RecipientsFilter::POST_TAG, $recipientsFilterCGI);
+
     /** @var Composer $composer */
     $composer = $this->appContainer->query(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
