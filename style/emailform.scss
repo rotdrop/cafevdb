@@ -20,6 +20,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+$editorHeight: 20em;
+
 .ui-dialog.emailform {
   overflow:hidden;
   max-height: 90%;
@@ -550,6 +552,14 @@
           justify-content:space-between;
           align-items:baseline;
 
+          // tweak editor height etc.
+          #message-text ~ .ck-editor .ck-editor__editable {
+            min-height: calc($editorHeight - var(--ck-form-header-height));
+          }
+          #message-text ~ .tox.tox-tinymce {
+            height:$editorHeight;
+          }
+
           fieldset.email-composition.page {
             margin-bottom:1em;
             flex: 1 0 auto;
@@ -1069,9 +1079,7 @@ span.error.contents.item.substitutions {
  *
  */
 div.emailform.statuspage {
-  dl, dt, dd {
-    all:revert;
-  }
+  @import 'error-dialogs.scss';
 }
 
 /*

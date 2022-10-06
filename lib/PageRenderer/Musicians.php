@@ -639,7 +639,7 @@ make sure that the musicians are also automatically added to the
     ];
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
 
-    $this->makeJoinTableField(
+    list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
     $opts['fdd'][$this->joinTableFieldName(self::INSTRUMENTS_TABLE, 'sort_order')] = [
@@ -684,6 +684,7 @@ make sure that the musicians are also automatically added to the
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
+    $memberStatusFddIndex = count($opts['fdd']);
     $opts['fdd']['member_status'] = [
       'name'    => strval($this->l->t('Member Status')),
       'tab'     => [ 'id' => [ 'orchestra' ] ],
@@ -1057,11 +1058,11 @@ make sure that the musicians are also automatically added to the
           switch ($newVals['mailing_list'] ?? '') {
             case 'invite':
               $this->logInfo('SHOULD INVITE TO MAILING LIST');
-              $this->listsService->invite($list, $musician->getEmailAddress(), $musician->getPublicName(firstNameFirst: true));
+              $this->listsService->invite($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
               break;
             case 'subscribe':
               $this->logInfo('SHOULD SUBSCRIBE TO MAILING LIST');
-              $this->listsService->subscribe($list, $musician->getEmailAddress(), $musician->getPublicName(firstNameFirst: true));
+              $this->listsService->subscribe($list, $musician->getEmail(), $musician->getPublicName(firstNameFirst: true));
               break;
             default:
               $this->logInfo('LEAVING MAILING LIST SUBSCRIPTION ALONE');
@@ -1094,6 +1095,9 @@ make sure that the musicians are also automatically added to the
       }
       return true;
     };
+
+    $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
+    $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
     $opts = $this->mergeDefaultOptions($opts);
 

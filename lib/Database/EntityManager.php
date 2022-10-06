@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Database;
 
 use \RuntimeException;
+use \InvalidArgumentException;
 
 use OCP\IRequest;
 use OCP\ILogger;
@@ -55,6 +56,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Annotations\PsrCachedReader;
 use OCA\CAFEVDB\Wrapped\Doctrine as Doctrine;
 use OCA\CAFEVDB\Wrapped\Gedmo;
 
+use OCA\CAFEVDB\Wrapped\DoctrineExtensions;
+
 use function class_exists;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
@@ -74,6 +77,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Functions;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ClassMetadataDecorator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\ReservedWordQuoteStrategy;
 
@@ -592,11 +596,14 @@ class EntityManager extends EntityManagerDecorator
   private function registerCustomFunctions(Configuration $config):void
   {
     // $config->addCustomStringFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\Oro\ORM\Query\AST\Functions\Numeric\TimestampDiff::class);
-    $config->addCustomDatetimeFunction('timestampdiff', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\TimestampDiff::class);
-    $config->addCustomStringFunction('greatest', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Greatest::class);
-    $config->addCustomStringFunction('year', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\Year::class);
-    $config->addCustomStringFunction('group_concat', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\GroupConcat::class);
-    $config->addCustomStringFunction('if', \OCA\CAFEVDB\Wrapped\DoctrineExtensions\Query\Mysql\IfElse::class);
+    $config->addCustomDatetimeFunction('timestampdiff', DoctrineExtensions\Query\Mysql\TimestampDiff::class);
+    $config->addCustomStringFunction('greatest', DoctrineExtensions\Query\Mysql\Greatest::class);
+    $config->addCustomStringFunction('year', DoctrineExtensions\Query\Mysql\Year::class);
+    $config->addCustomStringFunction('group_concat', DoctrineExtensions\Query\Mysql\GroupConcat::class);
+    $config->addCustomStringFunction('if', DoctrineExtensions\Query\Mysql\IfElse::class);
+    $config->addCustomStringFunction('regexp', DoctrineExtensions\Query\Mysql\Regexp::class);
+    $config->addCustomStringFunction('bin2uuid', Functions\BinToUuid::class);
+    $config->addCustomStringFunction('convert', Functions\ConvertUsing::class);
   }
 
   /**
@@ -941,10 +948,10 @@ class EntityManager extends EntityManagerDecorator
    *
    * @param callable|IUndoable $action Action to register.
    *
-   * @param null|callable $undo The associated undo-action. If
-   * $actionm instanceof IUndoable then the $undo action is
-   * ignored. It should rather be specified while constructing the
-   * IUndoable instance.
+   * @param null|callable $undo The associated undo-action. If $actionm
+   * instanceof IUndoable then the $undo action is ignored. It should rather
+   * be specified while constructing the IUndoable instance. The $undo
+   * callable receives the return value of the $action callable as argument.
    *
    * @return UndoableRunQueue  Return the run-queue for  easy chaining
    * via UndoableRunQueue::register().
@@ -978,7 +985,7 @@ class EntityManager extends EntityManagerDecorator
   public function executePreCommitActions()
   {
     if (!$this->isOwnTransactionActive()) {
-      throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot register pre-commit actions.'));
+      throw new Exceptions\DatabaseTransactionNotActiveException($this->l->t('There is no active database transaction, cannot execute pre-commit actions.'));
     }
     $level = $this->getOwnTransactionNestingLevel() - 1;
     $actions = $this->preCommitActions[$level] ?? null;
@@ -1185,7 +1192,7 @@ class EntityManager extends EntityManagerDecorator
     } elseif ($action instanceof IUndoable) {
       $this->preFlushActions->register($action);
     } else {
-      throw new RuntimeException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+      throw new InvalidArgumentException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
     }
     return $this->preFlushActions;
   }

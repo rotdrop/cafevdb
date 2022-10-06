@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -41,7 +41,7 @@ const myConfig = {
   // theme_advanced_resizing: true,
   // theme_advanced_resizing_use_cookie : false,
   theme: 'silver',
-  language: 'en',
+  language: globalState.language || 'en',
   //    width: 300,
   //    height: 100,
   //    forced_root_block : '',
@@ -50,12 +50,11 @@ const myConfig = {
   browser_spellcheck: true,
   gecko_spellcheck: true,
   file_picker_types: 'file image media',
-  // relative_urls: false,
   // convert_urls: false,
   relative_urls: true,
-  suffix: '.min',
   base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
-  // document_base_url: 'https://fritz.claus-justus-heine.info:8888/owncloud8/index.php/apps/cafevdb/',
+  // document_base_url: OC.appswebroots[appName] + '/3rdparty/tinymce',
+  suffix: '.min',
 
   setup(editor) {
     console.debug('tinyMCE::setup()');
@@ -79,9 +78,9 @@ const myConfig = {
     // instance -- we try to be clever and only forward if the size
     // actually has changed.
     const mceWindow = inst.getWin();
-    const mceContainer = inst.getContainer();
-    console.debug(mceContainer);
-    const ambientContainer = $(mceContainer).closest('.resize-target, .ui-dialog-content');
+    const $mceContainer = $(inst.getContainer());
+    console.debug($mceContainer);
+    const ambientContainer = $mceContainer.closest('.resize-target, .ui-dialog-content');
     mceWindow.oldWidth = [-1, -1];
     mceWindow.oldHeight = [-1, -1];
     mceWindow.onresize = function(e) {
@@ -104,6 +103,12 @@ const myConfig = {
         }
       }
     };
+
+    inst.on('blur', function(event) {
+      // FIXME: how the heck get the element the editor is attached to????
+      $mceContainer.prev().trigger('blur');
+    });
+
     console.debug('Resolve mceDeferred');
     $('#' + inst.id).data('mceDeferred').resolve(inst.id);
   },
@@ -115,7 +120,7 @@ const myConfig = {
     'save table directionality template paste textcolor emoticons', // emoticons smileys contextmenu
   ],
   // content_css: 'css/content.css',
-  toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullscreen | forecolor backcolor emoticons | code', // emoticons
+  toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | pastetext | link image | print preview media fullscreen | forecolor backcolor emoticons | code', // emoticons
   style_formats_merge: true,
   style_formats: [
     {
@@ -169,6 +174,11 @@ const myGetConfig = function(plusConfig) {
   if (typeof plusConfig === 'undefined') {
     plusConfig = {};
   }
+  // NOTE: This must return the initial nonce as the nonce is part of
+  // the CSP policy and thus configured when the page is
+  // loaded. Although the request token changes while after while the
+  // nonce value must be the one of the CSP policy and thus based on
+  // the initial request token.
   const nonceConfig = {
     nonce: () => globalState.initialNonce,
   };
@@ -185,7 +195,12 @@ const myInit = function(lang) {
   myConfig.language = lang;
   const allconfig = myGetConfig({
     selector: 'textarea.wysiwyg-editor',
-    nonce: () => globalState.nonce,
+    // NOTE: This must return the initial nonce as the nonce is part of
+    // the CSP policy and thus configured when the page is
+    // loaded. Although the request token changes while after while the
+    // nonce value must be the one of the CSP policy and thus based on
+    // the initial request token.
+    nonce: () => globalState.initialNonce,
   });
   // console.info('Try init tinymce');
   // console.info('tinymce: ', window.tinymce);

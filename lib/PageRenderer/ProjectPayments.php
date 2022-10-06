@@ -1382,11 +1382,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $paymentId = $newValues[$rowTagKey] ?? $newValues[$paymentIdKey];
       if (empty($paymentId)) {
         $paymentId = 0; // flag key generation
+        $newValues[$paymentIdKey] = $newValues[$rowTagKey] = $paymentId;
+      } else {
+        $newValues[$paymentIdKey] =
+          $newValues[$rowTagKey] =
+          $oldValues[$paymentIdKey] =
+          $oldValues[$rowTagKey] = $paymentId;
       }
-      $newValues[$paymentIdKey] =
-        $newValues[$rowTagKey] =
-        $oldValues[$paymentIdKey] =
-        $oldValues[$rowTagKey] = $paymentId;
+
+      $this->logInfo('COMPOSITE ' . $compositeKey);
 
       // extract project-id, field-id, receivable_key from the composite-option-key select
       list($projectId, $fieldId, $receivableKey) = explode(
@@ -1395,7 +1399,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         3
       );
 
-      foreach (['new', 'old'] as $dataSet) {
+      $dataSets = $paymentId === 0 ? [ 'new' ] : [ 'old', 'new' ];
+      foreach ($dataSets as $dataSet) {
         ${$dataSet . 'Values'} = array_merge(
           ${$dataSet . 'Values'}, [
             $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'musician_id') => $musicianId,
@@ -1420,6 +1425,19 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         }
       }
       unset($value); // break reference
+
+      $unsetTags = [];
+      // handled on the composite-level
+      $unsetTags[] = 'supporting_document_id';
+
+      // handled on the composite-level
+      $unsetTags[] = 'balance_document_sequence';
+
+      foreach ($unsetTags as $tag) {
+        unset($newValues[$tag]);
+        unset($oldValues[$tag]);
+        Util::unsetValue($changed, $tag);
+      }
     } else {
       // Composite payment
 
@@ -1431,10 +1449,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
       $unsetTags = [];
       // remove supporting_document_id as it is handled separately by direct
-      // db manipulation.a
+      // db manipulation.
       $unsetTags[] = 'supporting_document_id';
 
-      // handled on the entity-level
+      // handled on the split-level
       $unsetTags[] = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence');
 
       foreach ($unsetTags as $tag) {
@@ -1444,9 +1462,22 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       }
     }
 
+    $nullables = [
+      'sepa_transaction_id',
+      'balance_document_sequence',
+      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence'),
+    ];
+    foreach ($nullables as $key) {
+      foreach (['old', 'new'] as $dataSet) {
+        if (array_key_exists($key, ${$dataSet . 'Values'}) && empty(${$dataSet . 'Values'}[$key])) {
+          ${$dataSet . 'Values'}[$key] = null;
+        }
+      }
+    }
+
     $changed = [];
     foreach (array_unique(array_merge(array_keys($oldValues), array_keys($newValues))) as $key) {
-      if (isset($oldValues[$key]) !== isset($newValues[$key])
+      if (array_key_exists($key, $oldValues) !== array_key_exists($key, $newValues)
           || ($oldValues[$key]??null) !== ($newValues[$key]??null)) {
         $changed[] = $key;
       }

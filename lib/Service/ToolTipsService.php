@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -310,6 +310,9 @@ institute.'),
       'direct-change' => $this->l->t('If enabled, clicking on a data-row in a table view opens the "change
 dialog" for the respective record. If disabled, clicking on a data-row will open the "view dialog".'),
 
+      'deselect-invisible-misc-recs' => $this->l->t(
+        'If checked the row selection markers (for email, bank-transfers and the like) of invisible records will be unset if the "select all" or "deselect all" button at the top of the table or clicked.'),
+
       'email-account-distribute' => $this->l->t('Distribute the email account credentials to all members of the orchestra group. The credentials will be encrypted using an OpenSSL public key owned by the respective user and stored in the pre-user preferences table.'),
 
 
@@ -519,6 +522,12 @@ field. If left blank, every logged in user is allowed to change this field.'),
         'projects' => [
           'edit-project-instrumentation-numbers' => $this->l->t('Edit the instrumentation numbers in a dialog window. It is possible to specify which instruments are needed and how many, with an optional sub-division into voices.'),
           'edit-project-participant-fields' => $this->l->t('Edit the extra participant fields in a dialog window. The "extra fields" can be used to collect additional data like twin-room preferences, special diets, additional fees and much more!'),
+          'public-downloads' => [
+            'create' => $this->l->t('Create the download folder and generate a public share link.'),
+            'clipboard' => $this->l->t('Copy the share-link to the clipboard'),
+            'delete' => $this->l->t('Delete the download share. This will make it impossible to access the data using any previously generated share-link. Note that this of course does not delete the data in the cloud, it just invalidates the public web-link.'),
+            'expiration-date' => $this->l->t('Set the expiration date for the link. The default expiration date is the end of the year where the project is performed.'),
+          ],
         ],
         'instrument-insurances' => [
           'instrument-holder' => $this->l->t('The person who actually uses or "has" this instrument or insured object.'),
@@ -1192,6 +1201,13 @@ and contact the treasurer for further instructions.',
       'documenttemplatesfolder' => $this->l->t('Shared folder for document templates.'),
       'projectsfolder' => $this->l->t('Shared folder for per-project data.'),
       'projectparticipantsfolder' => $this->l->t('Shared folder for per-project per-participant data'),
+      'projectpostersfolder' => $this->l->t('Shared folder for flyers and posters'),
+      'projectpublicdownloadsfolder' => $this->l->t(
+        'Link-shared folder for data needed by participants.'
+        . ' In particular, this can be used for music-sheet downloads.'
+        . ' The folder is automatically created and shared when the project is created.'
+        . ' During mail-merge of emails the shared-link is available as ${GLOBAL::PARTICIPANTS_DOWNLOADS_URL}.'
+        ),
       'projectsbalancefolder' => $this->l->t('Shared folder for the financial balances, probably used after the project is finished.'),
 
       'settings' => [

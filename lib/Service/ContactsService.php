@@ -494,8 +494,8 @@ class ContactsService
     if ($musician['language']) {
       $vcard->add('LANG', $musician['language']);
     }
-    if ($musician->getEmailAddress()) {
-      $vcard->add('EMAIL', $musician->getEmailAddress());
+    if ($musician->getEmail()) {
+      $vcard->add('EMAIL', $musician->getEmail());
     }
     if ($musician['MobilePhone']) {
       $vcard->add('TEL', $musician['mobilePhone'], ['TYPE' => [ 'cell', 'voice' ] ]);

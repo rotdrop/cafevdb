@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Logging;
@@ -33,6 +34,7 @@ use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
 
+/** DBAL logger implementation which logs to the cloud log. */
 class CloudLogger implements SQLLogger
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -52,11 +54,12 @@ class CloudLogger implements SQLLogger
   /** @var float|null */
   public $start = null;
 
+  /** {@inheritdoc} */
   public function __construct(
-    EncryptionService $encryptionService
-    , IEventDispatcher $eventDispatcher
-    , LoggerInterface $logger
-    , IL10N $l10n
+    EncryptionService $encryptionService,
+    IEventDispatcher $eventDispatcher,
+    LoggerInterface $logger,
+    IL10N $l10n,
   ) {
     $this->encryptionService = $encryptionService;
     $this->eventDispatcher = $eventDispatcher;
@@ -83,8 +86,10 @@ class CloudLogger implements SQLLogger
    * Enable logging.
    *
    * @param bool $enable Optional, defaults to true.
+   *
+   * @return void
    */
-  public function enable(bool $enable = true)
+  public function enable(bool $enable = true):void
   {
     $this->enabled = $enable;
   }
@@ -93,8 +98,10 @@ class CloudLogger implements SQLLogger
    * Disable logging.
    *
    * @param bool $disable Optional, defaults to true.
+   *
+   * @return void
    */
-  public function disable($disable = true)
+  public function disable(bool $disable = true):void
   {
     $this->enable(!$disable);
   }
@@ -108,7 +115,7 @@ class CloudLogger implements SQLLogger
    *
    * @return void
    */
-  public function startQuery($sql, ?array $params = null, ?array $types = null)
+  public function startQuery($sql, ?array $params = null, ?array $types = null):void
   {
     if (!$this->enabled) {
       return;
@@ -136,5 +143,4 @@ class CloudLogger implements SQLLogger
     $this->currentQuery = null;
     $this->start = null;
   }
-
 }

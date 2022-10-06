@@ -145,6 +145,16 @@ msgstr ""
 
 #: lib/EmailForm/Composer.php:235
 #, php-format
+msgid "STREET_NUMBER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:235
+#, php-format
+msgid "STREET_AND_NUMBER"
+msgstr ""
+
+#: lib/EmailForm/Composer.php:235
+#, php-format
 msgid "SUR_NAME"
 msgstr ""
 

@@ -23,7 +23,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-class Version20220914210000 extends SupportMultipleEmailAddresses {};
+class Version20220928233000 extends SupportMultipleEmailAddresses {};
 
 // Local Variables: ***
 // c-basic-offset: 2 ***

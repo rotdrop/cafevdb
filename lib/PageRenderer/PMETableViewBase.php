@@ -129,6 +129,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const COMP_KEY_SEP = '-';
   const VALUES_TABLE_SEP = '@';
 
+  const MASTER_FIELD_SUFFIX = '__master_key_';
+
   /**
    * MySQL/MariaDB column quote.
    */
@@ -851,10 +853,17 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // leave time-stamps to the ORM "behaviors"
     Util::unsetValue($changed, 'updated');
 
+    $this->changeSetSize = count($changed);
+
     $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
 
     $changeSets = [];
     foreach ($changed as $field) {
+      if (str_ends_with($field, self::MASTER_FIELD_SUFFIX)) {
+        Util::unsetValue($changed, $field);
+        --$this->changeSetSize;
+        continue;
+      }
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
@@ -862,10 +871,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
     $masterTable = null;
     $masterEntity = null; // cache for a reference to the master entity
-    foreach ($this->joinStructure as $table => $joinInfo) {
-      $this->debug('TABLE ' . $table);
+    foreach ((empty($changeSets) ? [] : $this->joinStructure) as $table => $joinInfo) {
       $changeSet = $changeSets[$table]??[];
       if (empty($changeSet)) {
+        $this->debug('TABLE ' . $table . ' HAS EMPTY CHANGESET');
         continue;
       }
       if ($joinInfo['flags'] & self::JOIN_READONLY) {
@@ -874,8 +883,10 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             --$this->changeSetSize;
           }
         }
+        $this->debug('TABLE ' . $table . ' IS SET READONLY');
         continue;
       }
+      $this->debug('TABLE ' . $table . ' HAS CHANGESET ' . print_r($changeSet, true));
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         // fill the identifier keys as they are left out for
         // convenience in $this->joinStructure
@@ -1244,13 +1255,23 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               $this->debug('ADD ID ' . print_r($id, true));
               $entityId = $meta->extractKeyValues($id);
               $this->debug('ENTITIY ID '.print_r($entityId, true));
-              $entity = new $entityClass;
-              foreach ($entityId as $key => $value) {
-                if (is_numeric($value) && $value <= 0) {
-                  // treat this as autoincrement or otherwise auto-generated ids
-                  continue;
+
+              // maybe already there caused by ORM persist cascading
+              $entity = $this->find($entityId);
+              $needPersist = false;
+              if (empty($entity)) {
+                $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
+                $entity = new $entityClass;
+                foreach ($entityId as $key => $value) {
+                  if (is_numeric($value) && $value <= 0) {
+                    // treat this as autoincrement or otherwise auto-generated ids
+                    continue;
+                  }
+                  $entity[$key] = $value;
                 }
-                $entity[$key] = $value;
+                $needPersist = true;
+              } else {
+                $this->debug('ENTITY ALREADY THERE: ' . $entityClass . '@' . implode(',', $entityId));
               }
 
               // set further properties ...
@@ -1262,7 +1283,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               }
 
               // persist
-              $this->persist($entity);
+              if ($needPersist) {
+                $this->persist($entity);
+              }
 
               // flush in order to trigger auto-increment
               $this->flush();
@@ -1281,7 +1304,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
                 if ($pivotColumn === false) {
                   // assume that the 'column' component contains the keys.
                   $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
-                  $masterField = $this->joinTableMasterFieldName($joinInfo);
+                  $masterField = self::joinTableMasterFieldName($joinInfo);
                   $newvals[$masterField] = $newvals[$keyField] = $identifierColumnValues[$key];
                 } else if (!is_array($pivotColumn)) {
                   $newvals[$pivotColumn] = $identifierColumnValues[$key];
@@ -1454,6 +1477,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->debug('NEWVALS '.print_r($newvals, true));
     $changeSets = [];
     foreach ($changed as $field) {
+      if (str_ends_with($field, self::MASTER_FIELD_SUFFIX)) {
+        Util::unsetValue($changed, $field);
+        --$this->changeSetSize;
+        continue;
+      }
       $fieldInfo = $this->joinTableField($field);
       $changeSets[$fieldInfo['table']][$fieldInfo['column']] = $field;
     }
@@ -1674,7 +1702,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           }
         }
 
-        $this->debug('MULTIPLE VALUS '.print_r($multipleValues, true));
+        $this->debug('MULTIPLE VALUES '.print_r($multipleValues, true));
 
         // Add new entities
         foreach ($identifier[$multiple] as $new) {
@@ -1682,9 +1710,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           $ids = $addIdentifier[$new];
           foreach ($ids as $id) {
             $entityId = $meta->extractKeyValues($id);
-            $entity = new $entityClass;
-            foreach ($entityId as $key => $value) {
-              $entity[$key] = $value;
+
+            // maybe already there caused by ORM persist cascading
+            $entity = $this->find($entityId);
+            $needPersist = false;
+            if (empty($entity)) {
+              $this->debug('GENERATE NEW ENTITY OF CLASS ' . $entityClass);
+              $entity = new $entityClass;
+              foreach ($entityId as $key => $value) {
+                $entity[$key] = $value;
+              }
+              $needPersist = true;
+            } else {
+              $this->debug('ENTITY ALREADY THERE: ' . $entityClass . '@' . implode(',', $entityId));
             }
 
             // set further properties ...
@@ -1699,7 +1737,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
 
             // persist
-            $this->persist($entity);
+            if ($needPersist) {
+              $this->persist($entity);
+            }
 
             // flush in order to trigger auto-increment
             $this->flush();
@@ -1717,7 +1757,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               if ($pivotColumn === false) {
                 // assume that the 'column' component contains the keys.
                 $keyField = $this->joinTableFieldName($joinInfo, $joinInfo['column']);
-                $masterField = $this->joinTableMasterFieldName($joinInfo);
+                $masterField = self::joinTableMasterFieldName($joinInfo);
                 $newvals[$masterField] = $newvals[$keyField] = $identifierColumnValues[$key];
               } else if (!is_array($pivotColumn)) {
                 $newvals[$pivotColumn] = $identifierColumnValues[$key];
@@ -1756,7 +1796,12 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         }
 
         if (!($joinInfo['flags'] & self::JOIN_REMOVE_EMPTY) || !empty($entity[$joinInfo['column']])) {
-          $this->persist($entity);
+          try {
+            $this->persist($entity);
+            $this->flush();
+          } catch (\OCA\CAFEVDB\Wrapped\Doctrine\ORM\ORMInvalidArgumentException $e) {
+            $this->logException($e);
+          }
         }
 
         // if this is the master table, then we need also to fetch the
@@ -2033,7 +2078,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }
       $grouped[$table] = $group;
       $orderBy[$table] = $groupOrderBy;
-      $fieldName = $this->joinTableMasterFieldName($table);
+      $fieldName = self::joinTableMasterFieldName($table);
       $opts['fdd'][$fieldName] = [
         'tab' => 'all',
         'name' => $fieldName,
@@ -2092,15 +2137,17 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * @param string|array $tableInfo @see joinTableFieldName().
    *
    * @return string
+   *
+   * @see OCA\CAFEVDB\Controller\SepaBulkTransactionsController::generateBulkTransaction()
    */
-  protected function joinTableMasterFieldName($tableInfo)
+  public static function joinTableMasterFieldName($tableInfo)
   {
     if (is_array($tableInfo)) {
       $table = $tableInfo['table'];
     } else {
       $table = $tableInfo;
     }
-    return $table.'_key';
+    return $table . self::MASTER_FIELD_SUFFIX;
   }
 
   /**
@@ -2209,7 +2256,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         ],
       ];
     } else {
-      $masterFieldName = $this->joinTableMasterFieldName($tableInfo);
+      $masterFieldName = self::joinTableMasterFieldName($tableInfo);
       $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
       if ($joinIndex === false) {
         $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
@@ -2454,7 +2501,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   public function ensureUserIdSlug($pme, $op, $step, &$oldValues, &$changed, &$newValues)
   {
     $tag = 'user_id_slug';
-    if (!empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
+    if (!empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
       $tag = $this->joinTableFieldName(self::MUSICIANS_TABLE, $tag);
     }
     if (empty($newValues[$tag])) {
@@ -2485,7 +2532,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected function musicianFromRow($row, ?PHPMyEdit $pme)
   {
     $pme = $pme?:$this->pme;
-    $joinTable = !empty($pme->fdn[$this->joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
+    $joinTable = !empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
     $data = [];
     foreach ($pme->fds as $idx => $label) {
       if (isset($row['qf' . $idx . '_idx'])) {
@@ -2538,13 +2585,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         switch ($column) {
           case 'email':
             try {
-              $musician->setEmailAddress($value, $musician);
+              $musician->setEmail($value, $musician);
             } catch (\Throwable $t) {
               $this->logException($t);
               /** @var Service\MusicianService $musicianService */
               $musicianService = $this->di(Service\MusicianService::class);
               $value = $musicianService->generateDisabledEmailAddress($musician);
-              $musician->setEmailAddress($value);
+              $musician->setEmail($value);
             }
             break;
           case 'user_id_slug':

@@ -140,7 +140,7 @@ function emailTabResize(dialogWidget, panelHolder) {
 }
 
 function updateComposerElements($emailForm, elements) {
-  elements = elements || ['TO'];
+  elements = elements || ['to'];
   if (!Array.isArray(elements)) {
     elements = [elements];
   }
@@ -171,6 +171,7 @@ function updateComposerElements($emailForm, elements) {
           rcpts = numRcpts === 0 ? toSpan.data('placeholder') : rcpts.join(', ');
           const title = toSpan.data('titleIntro') + '<br>' + rcpts;
 
+          toSpan.cafevTooltip('dispose');
           toSpan.html(rcpts);
           toSpan.attr('title', title);
           toSpan.cafevTooltip();
@@ -245,7 +246,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     t(appName, 'Click on the names to move the respective person to the other box'));
   dualSelect.addClass('tooltip-top');
 
-  if ($recipientsSelect.attr('readonly')) {
+  if ($recipientsSelect.prop('readonly')) {
     $dualListBoxContainer.find('input, select, button').readonly(true);
   }
 
@@ -492,7 +493,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
         const $radio = $(this);
         basicRecipientsSetContainer.toggleClass($radio.val(), $radio.prop('checked'));
       });
-      updateComposerElements(form, ['TO', 'subjectTag']);
+      updateComposerElements(form, ['to', 'subjectTag']);
       return false;
     });
 
@@ -505,7 +506,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       applyRecipientsFilter.call(this, event, {
         cleanup: () => readonlyFilterControls(false),
       });
-      updateComposerElements(form, ['TO', 'subjectTag']);
+      updateComposerElements(form, ['to', 'subjectTag']);
     });
 
   // initialization
@@ -592,7 +593,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
   {
     // @todo why is this so separated from rest???
-    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
+    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
 
     $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
     $('#cafevdb-sent-messages-selector').chosen({ disable_search_threshold: 10 });
@@ -1094,7 +1095,6 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       $.post(generateComposerUrl('preview'), post)
         .fail(function(xhr, textStatus, errorThrown) {
           Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
-            Page.busyIcon(false);
             let debugText = '';
             if (data.caption !== undefined) {
               debugText += '<div class="error caption">' + data.caption + '</div>';
@@ -1102,11 +1102,20 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             if (data.message !== undefined) {
               debugText += data.message;
             }
-            debugOutput.html(debugText);
-
-            if (data.message) {
-              debugOutput.html(data.message);
+            const hasPreviewMessages = data.requestData && data.requestData.previewData;
+            if (hasPreviewMessages) {
+              debugText += data.requestData.previewData;
             }
+            debugOutput.html(debugText);
+            debugOutput.find('.for-dialog').addClass('hidden');
+
+            Page.busyIcon(false);
+
+            if (hasPreviewMessages) {
+              dialogHolder.tabs('option', 'active', 2);
+            }
+
+            $.fn.cafevTooltip.remove();
           });
         })
         .done(function(data) {
@@ -2074,7 +2083,7 @@ function emailFormPopup(post, modal, single, afterInit) {
               WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
             }
             if (when === 'after') {
-              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'), undefined, '20em');
+              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
             }
           });
           DialogUtils.customCloseButton(dialogHolder, function(event, container) {
@@ -2144,7 +2153,7 @@ function emailFormPopup(post, modal, single, afterInit) {
                 return true;
               }
 
-              updateComposerElements(emailForm, ['TO', 'subjectTag']);
+              updateComposerElements(emailForm, ['to', 'subjectTag']);
 
               return true;
             },

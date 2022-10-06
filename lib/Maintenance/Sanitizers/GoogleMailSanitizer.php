@@ -183,7 +183,7 @@ class GoogleMailSanitizer extends AbstractSanitizer
     $otherEntity = $matching->first();
     if ($this->entity->isPrimaryAddress() || $otherEntity->isPrimaryAddress()) {
       // cancel removal, this is the primary email address
-      $this->addMessage(sprintf('Refusing to remove the primary email address "%s".', $this->entity->getMusician()->getEmailAddress()), self::VERBOSITY_VERBOSE);
+      $this->addMessage(sprintf('Refusing to remove the primary email address "%s".', $this->entity->getMusician()->getEmail()), self::VERBOSITY_VERBOSE);
 
       $this->persist($this->entity);
       $musician->getEmailAddresses()->set($this->entity->getAddress(), $this->entity);

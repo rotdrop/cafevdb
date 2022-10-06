@@ -1,23 +1,25 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -33,6 +35,10 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
+
+use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * SepaBulkTransaction
@@ -44,6 +50,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\DiscriminatorColumn(name="sepa_transaction", type="EnumSepaTransaction")
  * @ORM\DiscriminatorMap({null="SepaBulkTransaction","debit_note"="SepaDebitNote", "bank_transfer"="SepaBankTransfer"})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository")
+ *
+ * @ORM\HasLifecycleCallbacks
  */
 class SepaBulkTransaction implements \ArrayAccess
 {
@@ -165,7 +173,9 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   private $payments;
 
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->sepaTransactionData = new ArrayCollection();
     $this->payments = new ArrayCollection();
@@ -184,11 +194,11 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set sepaTransactionData.
    *
-   * @param int $sepaTransactionData
+   * @param Collection $sepaTransactionData
    *
    * @return SepaBulkTransaction
    */
-  public function setSepaTransactionData($sepaTransactionData):SepaBulkTransaction
+  public function setSepaTransactionData(Collection $sepaTransactionData):SepaBulkTransaction
   {
     $this->sepaTransactionData = $sepaTransactionData;
 
@@ -321,11 +331,11 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set submissionEventUri.
    *
-   * @param string $submissionEventUri
+   * @param null|string $submissionEventUri
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionEventUri($submissionEventUri):SepaBulkTransaction
+  public function setSubmissionEventUri(?string $submissionEventUri):SepaBulkTransaction
   {
     $this->submissionEventUri = $submissionEventUri;
 
@@ -345,11 +355,11 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set submissionEventUid.
    *
-   * @param string $submissionEventUid
+   * @param null|string $submissionEventUid
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionEventUid($submissionEventUid):SepaBulkTransaction
+  public function setSubmissionEventUid(?string $submissionEventUid):SepaBulkTransaction
   {
     $this->submissionEventUid = $submissionEventUid;
 
@@ -369,11 +379,11 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set submissionTaskUri.
    *
-   * @param string $submissionTaskUri
+   * @param null|string $submissionTaskUri
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionTaskUri($submissionTaskUri):SepaBulkTransaction
+  public function setSubmissionTaskUri(?string $submissionTaskUri):SepaBulkTransaction
   {
     $this->submissionTaskUri = $submissionTaskUri;
 
@@ -393,11 +403,11 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set submissionTaskUid.
    *
-   * @param string $submissionTaskUid
+   * @param null|string $submissionTaskUid
    *
    * @return SepaBulkTransaction
    */
-  public function setSubmissionTaskUid($submissionTaskUid):SepaBulkTransaction
+  public function setSubmissionTaskUid(?string $submissionTaskUid):SepaBulkTransaction
   {
     $this->submissionTaskUid = $submissionTaskUid;
 
@@ -417,11 +427,11 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set dueEventUri.
    *
-   * @param string $dueEventUri
+   * @param null|string $dueEventUri
    *
    * @return SepaBulkTransaction
    */
-  public function setDueEventUri($dueEventUri):SepaBulkTransaction
+  public function setDueEventUri(?string $dueEventUri):SepaBulkTransaction
   {
     $this->dueEventUri = $dueEventUri;
 
@@ -441,11 +451,11 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * Set dueEventUid.
    *
-   * @param string $dueEventUid
+   * @param null|string $dueEventUid
    *
    * @return SepaBulkTransaction
    */
-  public function setDueEventUid($dueEventUid):SepaBulkTransaction
+  public function setDueEventUid(?string $dueEventUid):SepaBulkTransaction
   {
     $this->dueEventUid = $dueEventUid;
 
@@ -490,6 +500,8 @@ class SepaBulkTransaction implements \ArrayAccess
    * Get the payment for the specified musician
    *
    * @param int|Muscian $musician Musician-id or entity.
+   *
+   * @return null|CompositePayment
    */
   public function getPayment($musician):?CompositePayment
   {
@@ -506,10 +518,66 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
+   * @return The sum of all contained split transactions.
+   */
+  public function totals():float
+  {
+    $totals = 0.0;
+    /** @var CompositePayment $payment */
+    foreach ($this->payments as $payment) {
+      $totals += $payment->getAmount();
+    }
+    return $totals;
+  }
+
+  /**
    * Return the number of related ProjectPayment entities.
+   *
+   * @return int
    */
   public function usage():int
   {
     return $this->payments->count();
+  }
+
+  /**
+   * @var null|array
+   *
+   * The array of changed field values.
+   */
+  private $preUpdateValue = [];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PreUpdate
+   */
+  public function preUpdate(Event\PreUpdateEventArgs $event)
+  {
+    $field = 'submitDate';
+    if ($event->hasChangedField($field)) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      // $entityManager = EntityManager::getDecorator($event->getEntityManager());
+      $oldValue = $event->getOldValue($field);
+      // $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($entityManager, $this, $oldValue, $event->getNewValue($field)));
+      $this->preUpdateValue[$field] = $oldValue;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PostUpdate
+   */
+  public function postUpdate(Event\LifecycleEventArgs $event)
+  {
+    $field = 'submitDate';
+    if (array_key_exists($field, $this->preUpdateValue)) {
+      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
+      $entityManager = EntityManager::getDecorator($event->getEntityManager());
+      $entityManager->dispatchEvent(new Events\PostChangeSepaBulkTransactionSubmitDate(
+        $entityManager, $this, $this->preUpdateValue[$field]));
+      unset($this->preUpdateValue[$field]);
+    }
   }
 }

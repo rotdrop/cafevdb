@@ -52,6 +52,7 @@ trait InitialStateTrait {
 
     $tooltips   = $this->getUserValue('tooltips', '');
     $directChg  = $this->getUserValue('directchange', '');
+    $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', '');
     $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
     $expertMode = $this->getUserValue('expertmode');
 
@@ -91,6 +92,7 @@ trait InitialStateTrait {
       'PHPMyEdit',
       [
         'directChange' => ($directChg == "on" ? true : false),
+        'deselectInvisibleMiscRecs' => ($deselectInvisible == 'on' ? true : false),
         'selectChosen' => true,
         'filterSelectPlaceholder' => $l->t("Select a filter option."),
         'filterSelectNoResult' => $l->t("No values match."),

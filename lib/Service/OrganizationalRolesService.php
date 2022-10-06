@@ -84,7 +84,7 @@ class OrganizationalRolesService
     }
     $musician = $participant->getMusician();
     $data = [
-      'email' => $musician->getEmailAddress(),
+      'email' => $musician->getEmail(),
       'name' => $musician->getPublicName(true),
       'street' => $musician->getStreet(),
       'streetNumber' => $musician->getStreetNumber(),
@@ -364,7 +364,7 @@ class OrganizationalRolesService
     $contacts = [];
     foreach ($users as $user) {
       if ($this->groupManager()->isSubAdminofGroup($user, $group)) {
-        $contacts[] = [ $adminUser->getDisplayName(), $adminUser->getEmailAddress() ];
+        $contacts[] = [ $adminUser->getDisplayName(), $adminUser->getEmail() ];
       }
     }
     return $contacts;

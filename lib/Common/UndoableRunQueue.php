@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Common;
+
+use \InvalidArgumentException;
 
 use OCP\ILogger;
 use OCP\IL10N;
@@ -52,10 +54,11 @@ class UndoableRunQueue
   /** @var array<int,\Throwable> */
   protected $undoExceptions = [];
 
+  /** {@inheritdoc} */
   public function __construct(
-    IAppContainer $appContainer
-    , ILogger $logger
-    , IL10N $l10n
+    IAppContainer $appContainer,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->appContainer = $appContainer;
     $this->logger = $logger;
@@ -64,16 +67,36 @@ class UndoableRunQueue
 
   /**
    * Register the given action in the run-queue.
+   *
+   * @param callable|IUndoable $action The action to be registered.
+   *
+   * @param null|callable $undo The undo action if $action is a mere callable.
+   *
+   * @return UndoableRunQueue
+   *
+   * @throw InvalidArgumentException If $action is neither a callable nor an
+   * IUndoable.
    */
-  public function register(IUndoable $action):UndoableRunQueue
+  public function register(mixed $action, ?callable $undo = null):UndoableRunQueue
   {
+    if (is_callable($action)) {
+      $action = new GenericUndoable($action, $undo);
+    } elseif ($action instanceof IUndoable) {
+      // fallthrouh
+    } else {
+      throw new InvalidArgumentException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+    }
     $action->initialize($this->appContainer);
     $this->actionQueue[] = $action; // at end
     return $this;
   }
 
-  /** Clears the action queue and the undo stack. */
-  public function clearActionQueue()
+  /**
+   * Clears the action queue and the undo stack.
+   *
+   * @return void
+   */
+  public function clearActionQueue():void
   {
     $this->actionQueue = [];
     $this->undoStack = null;
@@ -124,8 +147,10 @@ class UndoableRunQueue
    * Run all undo-actions on the undo stack. The run-queue will
    * continue even if exceptions occur during undo. At completion the
    * undo-queue is empty.
+   *
+   * @return void
    */
-  public function executeUndo()
+  public function executeUndo():void
   {
     while (!empty($this->undoStack)) {
       $action = array_shift($this->undoStack);
@@ -202,8 +227,10 @@ class UndoableRunQueue
 
   /**
    * Reset the queue in order to be executed again.
+   *
+   * @return void
    */
-  public function reset()
+  public function reset():void
   {
     $this->runQueueExceptions = [];
     $this->undoExceptions = [];

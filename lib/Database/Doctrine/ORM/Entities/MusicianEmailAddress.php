@@ -83,7 +83,13 @@ class MusicianEmailAddress implements \ArrayAccess
    */
   public function getAddress():string
   {
-    return $this->address;
+    return strtolower($this->address);
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->musician->getPublicName(firstNameFirst: true) . ' <' . $this->address . '>';
   }
 
   /**
@@ -94,6 +100,7 @@ class MusicianEmailAddress implements \ArrayAccess
   public function setAddress(?string $address):MusicianEmailAddress
   {
     if (!empty($address)) {
+      $address = strtolower($address);
       if (!self::validateAddress($address)) {
         throw new InvalidArgumentException('Email-address "' . $address . '" fails validation.');
       }
@@ -111,7 +118,7 @@ class MusicianEmailAddress implements \ArrayAccess
   }
 
   /**
-   * @param int|Musician $musican
+   * @param int|Musician $musician
    *
    * @return MusicianEmailAddress
    */
@@ -128,7 +135,7 @@ class MusicianEmailAddress implements \ArrayAccess
    */
   public function isPrimaryAddress():bool
   {
-    return $this->musician->getEmailAddress() == $this->address;
+    return $this->musician->getEmail() == $this->address;
   }
 
   /**
@@ -203,6 +210,7 @@ class MusicianEmailAddress implements \ArrayAccess
    */
   public function prePersist(Event\LifecycleEventArgs $event)
   {
+    $this->address = strtolower($this->address);
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
     $this->musician->getEmailAddresses()->set($this->address, $this);
     $entityManager = EntityManager::getDecorator($event->getEntityManager());

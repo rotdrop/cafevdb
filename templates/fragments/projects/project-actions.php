@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -81,7 +81,7 @@ $routes = [
 /** @var \OCA\CAFEVDB\Service\OrganizationalRolesService $rolesService */
 
 ?>
-<span class="actions project-actions dropdown-container dropdown-no-hover tooltip-auto"
+<span class="actions project-actions dropdown-container dropdown-no-hover tooltip-right"
       title="<?php echo $toolTips['project-actions']; ?>"
       data-project-id="<?php p($projectId); ?>"
       data-project-name="<?php p($projectName); ?>"

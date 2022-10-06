@@ -122,12 +122,16 @@ class MailingListsController extends Controller
         $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_REJECT, 'test reason');
         break;
       case self::OPERATION_RELOAD:
-        // just fetch the status
         break;
       default:
         return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));
     }
-    $status = $this->listsService->getSubscriptionStatus($list, $email);
+    try {
+      $status = $this->listsService->getSubscriptionStatus($list, $email);
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      $status = 'unknown';
+    }
     return self::dataResponse([
       'status' =>  $status,
     ]);

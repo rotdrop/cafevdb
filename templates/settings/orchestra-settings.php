@@ -23,8 +23,14 @@
 
 namespace OCA\CAFEVDB;
 
-use \OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use \OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
+use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
+use Cmixin\BusinessDay;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\GeoCodingService;
+
+/** @var GeoCodingService $geoCodingService */
 
 $off = $orchestra == '' ? 'disabled' : '';
 $countries = [];
@@ -34,6 +40,51 @@ foreach ($localeCountryNames as $country => $name) {
     $option['flags'] = PageNavigation::SELECTED;
   }
   $countries[] = $option;
+}
+
+BusinessDay::enable([
+  Carbon::class,
+  CarbonImmutable::class,
+]);
+
+$holidayRegions = array_map(fn($x) => strtoupper($x), CarbonImmutable::getHolidaysAvailableRegions());
+
+$holidayOptions = [];
+if (!empty($appLocale)) {
+  $country = locale_get_region($appLocale);
+  $holidayRegions = array_filter($holidayRegions, fn($holiday) => str_starts_with($holiday, $country));
+
+  $nationalTag = $country . '-NATIONAL';
+  $nationalKey = array_search($nationalTag, $holidayRegions);
+  if ($nationalKey !== false) {
+    unset($holidayRegions[$nationalKey]);
+    array_unshift($holidayRegions, $nationalTag);
+    if (empty($bankAccountBankHolidays)) {
+      $bankAccountBankHolidays = $nationalTag;
+    }
+  }
+
+  $regionNames = $geoCodingService->getRegionNames($country);
+  \OCP\Util::writeLog('cafevdb', 'REGIONS ' . print_r($regionNames, true), \OCP\Util::INFO);
+
+  $holidayOptions = [];
+  foreach ($holidayRegions as $region) {
+    if ($region == $nationalTag) {
+      $name = $l->t('national holidays');
+    } else {
+      list(, $regionIso) = explode('-', $region);
+      $name = $regionNames[$regionIso] ?? $region;
+    }
+    $option = [
+      'name' => $name,
+      'value' =>  $region,
+      'group' => $localeCountryNames[$country],
+    ];
+    if ($region === $bankAccountBankHolidays) {
+      $option['flags'] = PageNavigation::SELECTED;
+    }
+    $holidayOptions[] = $option;
+  }
 }
 
 ?>
@@ -145,6 +196,13 @@ foreach ($localeCountryNames as $country => $name) {
              value="<?php echo $_['bankAccountCreditorIdentifier']; ?>"
              title="<?php echo $l->t('Creditor identifier of the orchestra'); ?>"
              placeholder="<?php echo $l->t('orchestra\'s CI'); ?>"/><br/>
+      <select class="bankAccountBankHolidays"
+              id="bankAccountBankHolidays"
+              name="bankAccountBankHolidays"
+              title="<?php echo $l->t('Bank-holidays to take into account when generating bulk bank transactions.'); ?>"
+      >
+        <?php echo PageNavigation::selectOptions($holidayOptions); ?>
+      </select><br/>
     </fieldset>
     <h4><?php echo $l->t('Document templates'); ?></h4>
     <fieldset <?php echo $off; ?> class="chosen-dropup document-template">

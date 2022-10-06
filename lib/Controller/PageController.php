@@ -283,6 +283,7 @@ class PageController extends Controller {
     $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
     $restoreHist  = $this->getUserValue('restorehistory', 'off');
     $directChg    = $this->getUserValue('directchange', 'off');
+    $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', 'off');
     $showDisabled = $this->getUserValue('showdisabled', 'off');
     $expertMode   = $this->getUserValue('expertmode', false);
     $pageRows     = $this->getUserValue('pagerows', 20);
@@ -357,6 +358,7 @@ class PageController extends Controller {
       'restorehistory' => $restoreHist,
       'filtervisibility' => $usrFiltVis,
       'directchange' => $directChg,
+      'deselectInvisibleMiscRecs' => $deselectInvisible,
       'showdisabled' => $showDisabled,
       'pagerows' => $pageRows,
     ];

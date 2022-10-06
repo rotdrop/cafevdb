@@ -35,10 +35,11 @@
   <rule ref="rulesets/naming.xml">
     <exclude name="ShortVariable"/>
     <exclude name="LongVariable"/>
+    <exclude name="BooleanGetMethodName"/>
   </rule>
   <rule ref="rulesets/naming.xml/ShortVariable">
     <properties>
-      <property name="exceptions" value="l,fp,id,k,op,x,i,j,k,l,a,b"/>
+      <property name="exceptions" value="a,b,l,fp,i,id,j,k,l,op,qb,tz,x"/>
     </properties>
   </rule>
   <rule ref="rulesets/naming.xml/LongVariable">

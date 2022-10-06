@@ -181,6 +181,7 @@ class PersonalSettingsController extends Controller
     case 'restorehistory':
     case 'filtervisibility':
     case 'directchange':
+    case 'deselectInvisibleMiscRecs':
     case 'showdisabled':
     case 'expertmode':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
@@ -575,6 +576,8 @@ class PersonalSettingsController extends Controller
                                          [ $realValue, ]));
       }
       break;
+    case 'bankAccountBankHolidays':
+      return $this->setSimpleConfigValue($parameter, $value);
     case 'bankAccountOwner':
     case 'bankAccountBLZ':
     case 'bankAccountIBAN':
@@ -1151,6 +1154,7 @@ class PersonalSettingsController extends Controller
     case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
     case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
     case ConfigService::PROJECT_POSTERS_FOLDER:
+    case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
     case ConfigService::FINANCE_FOLDER:
     case ConfigService::TRANSACTIONS_FOLDER:
     case ConfigService::BALANCES_FOLDER:
@@ -1191,6 +1195,9 @@ class PersonalSettingsController extends Controller
       case ConfigService::PROJECT_POSTERS_FOLDER:
         $this->setConfigValue($parameter, $real);
         return self::valueResponse($real, $this->l->t('Posters-folder set to "%s".', $real));
+      case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
+        $this->setConfigValue($parameter, $real);
+        return self::valueResponse($real, $this->l->t('Participants downloads-folder set to "%s".', $real));
       case ConfigService::BALANCES_FOLDER:
       case ConfigService::TRANSACTIONS_FOLDER:
         $prefixFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
@@ -1689,7 +1696,9 @@ class PersonalSettingsController extends Controller
     case 'emailpassword':
     case 'emailfromname':
       return $this->setSimpleConfigValue($parameter, $realValue ?? $value, reportValue: $reportValue ?? null, furtherData: $furtherData ?? []);
-
+    case 'bulkEmailPrivacyNotice':
+      $value = $this->fuzzyInputService->purifyHTML($value);
+      return $this->setSimpleConfigValue($parameter, $value);
     case 'cloudAttachmentAlwaysLink':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
       if ($realValue === null) {

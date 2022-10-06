@@ -34,7 +34,7 @@ import { toolTipsInit } from './cafevdb.js';
 import { setPersonalUrl, setAppUrl, getUrl } from './settings-urls.js';
 import fileDownload from './file-download.js';
 import { makePlaceholder as selectPlaceholder } from './select-utils.js';
-
+import * as WysiwygEditor from './wysiwyg-editor.js';
 import { updateCreditsTimer } from './personal-settings.js';
 
 require('../legacy/nextcloud/jquery/showpassword.js');
@@ -578,6 +578,7 @@ const afterLoad = function(container) {
     });
     sharedFolder('projectparticipantsfolder');
     sharedFolder('projectpostersfolder');
+    sharedFolder('projectpublicdownloadsfolder');
     sharedFolder('transactionsfolder');
     sharedFolder('balancesfolder');
     sharedFolder('documenttemplatesfolder', function(element, css, data, value, msg) {
@@ -850,6 +851,10 @@ const afterLoad = function(container) {
         'input.attachmentLinkExpirationLimit',
       ].join(','));
 
+      const $bulkEmailPrivacyNotice = container.find('textarea.bulk-email-privacy-notice');
+      console.info('PRIV NOTICE', $bulkEmailPrivacyNotice);
+      WysiwygEditor.addEditor($bulkEmailPrivacyNotice);
+
       blurInputs.on('blur', function(event) {
         const $this = $(this);
         const name = $this.attr('name');
@@ -884,6 +889,34 @@ const afterLoad = function(container) {
       });
 
       simpleSetHandler(container.find('#announcements-mailing-list-autoconf'), 'click');
+    }
+
+    {
+      const container = emailContainer.find('form.bulk-email-privacy-notice');
+      console.log('************', container);
+
+      const $bulkEmailPrivacyNotice = container.find('textarea.bulk-email-privacy-notice');
+      console.info('PRIV NOTICE', $bulkEmailPrivacyNotice);
+      WysiwygEditor.addEditor($bulkEmailPrivacyNotice);
+
+      $bulkEmailPrivacyNotice.on('blur', function(event) {
+        const $this = $(this);
+        const name = $this.attr('name');
+        const value = $this.val();
+        $.post(
+          setAppUrl(name), { value })
+          .fail(function(xhr, status, errorThrown) {
+            Notification.messages(Ajax.failMessage(xhr, status, errorThrown));
+          })
+          .done(function(data) {
+            console.info('DATA', data);
+            if (data[name] && data[name] !== value) {
+              $this.val(data[name]);
+            }
+            Notification.messages(data.message);
+          });
+        return false;
+      });
     }
 
     {
@@ -1129,6 +1162,8 @@ const afterLoad = function(container) {
         fail: Ajax.handleError,
       },
     );
+
+    simpleSetValueHandler($('select[name="bankAccountBankHolidays"]'), 'change', msg);
   }
 
   {

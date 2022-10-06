@@ -631,7 +631,7 @@ class ProjectParticipants extends PMETableViewBase
     ]);
 
     // Use $fdd defined above after tweaking its values
-    $this->makeJoinTableField(
+    list($instrumentsFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id', $fdd);
 
     // kind of a hack, in principle this should go to the global join structure
@@ -895,6 +895,9 @@ class ProjectParticipants extends PMETableViewBase
         'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians'], ],
       ],
       'valueGroups' => $this->instrumentInfo['idGroups'],
+      'filter' => [
+        'having' => true,
+      ],
     ];
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
 
@@ -931,7 +934,7 @@ class ProjectParticipants extends PMETableViewBase
     /* Make "Status" a set, 'soloist','conductor','noemail', where in
      * general the first two imply the last.
      */
-    $this->makeJoinTableField(
+    list($memberStatusFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'member_status',
       [
         'name'    => $this->l->t('Member Status'),
@@ -1326,6 +1329,9 @@ class ProjectParticipants extends PMETableViewBase
       }
       return true;
     };
+
+    $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
+    $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
     $opts = $this->mergeDefaultOptions($opts);
 

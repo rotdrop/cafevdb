@@ -106,9 +106,9 @@ class UserStorage
   }
 
   /**
-   * @return IUser The current user
+   * @return null|IUser The current user
    */
-  public function user():IUser
+  public function user():?IUser
   {
     return $this->user;
   }
@@ -180,6 +180,50 @@ class UserStorage
   }
 
   /**
+   * Walk the given $pathOrFolder and apply the callable to each found node.
+   *
+   * @param string|Folder $pathOrFolder Folder-path or \OCP\Files\Folder instance.
+   *
+   * @param null|callable $callback The callback receives two arguments, the
+   * current file-system node and the recursion depth.
+   *
+   * @return int The number of plain files found during the walk.
+   */
+  public function folderWalk(mixed $pathOrFolder, ?callable $callback = null, int $depth = 0):int
+  {
+    /** @var \OCP\Files\File $node */
+    if (!($pathOrFolder instanceof Folder)) {
+      $folder = $this->getFolder($pathOrFolder);
+    } else {
+      $folder = $pathOrFolder;
+    }
+
+    if (empty($folder)) {
+      return 0;
+    }
+
+    if (!empty($callback)) {
+      $callback($folder, $depth);
+    }
+    ++$depth;
+
+    $numberOfFiles = 0;
+    $folderContents = $folder->getDirectoryListing();
+    /** @var Node $node */
+    foreach ($folderContents as $node) {
+      if ($node->getType() == FileInfo::TYPE_FILE) {
+        if (!empty($callback)) {
+          $callback($node, $depth);
+        }
+        ++$numberOfFiles;
+      } else {
+        $numberOfFiles += $this->folderWalk($node, $callback, $depth);
+      }
+    }
+    return $numberOfFiles;
+  }
+
+  /**
    * Recursively add all files in all sub-directories to the zip archive.
    *
    * @param Folder $folder The folder to archive.
@@ -188,6 +232,8 @@ class UserStorage
    * path-names in order to form the archive name.
    *
    * @param ZipStream $zipStream Archive creation backend.
+   *
+   * @return void
    */
   private function archiveFolderRecursively(Folder $folder, int $parentsToStrip, ZipStream $zipStream):void
   {
@@ -305,6 +351,8 @@ class UserStorage
    * is written to the log but otherwise the error is ignored.
    *
    * @param string $path The path to the file to delete.
+   *
+   * @return void
    */
   public function delete(string $path):void
   {
@@ -385,6 +433,8 @@ class UserStorage
    *
    * @param string $newPath The path to move to.
    *
+   * @return void
+   *
    * @throws Exception If renaming fails.
    */
   public function rename(string $oldPath, string $newPath):void
@@ -404,6 +454,8 @@ class UserStorage
    * @param string $oldPath The source path.
    *
    * @param string $newPath The destination path.
+   *
+   * @return void
    *
    * @throws Exception If something goes wrong.
    */

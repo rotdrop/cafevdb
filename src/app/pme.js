@@ -40,7 +40,11 @@ import checkInvalidInputs from './check-invalid-inputs.js';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import pmeQueryLogMenu from './pme-querylog.js';
-import { deselectAll as selectDeselectAll, widget as selectWidget } from './select-utils.js';
+import {
+  deselectAll as selectDeselectAll,
+  widget as selectWidget,
+  getControlObject as getSelectConstrolObject,
+} from './select-utils.js';
 import * as qs from 'qs';
 import {
   sys as pmeSys,
@@ -1390,6 +1394,8 @@ function installInputSelectize(containerSel, onlyClass) {
     }
     // console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
     $self.selectize(selectizeOptions);
+    const selectizeInstance = getSelectConstrolObject($self);
+    selectizeInstance.$control_input.removeAttr('autofill');
     const $selectWidget = selectWidget($self);
     const toolTip = $self.attr('title') || $self.attr('data-original-title');
     if (toolTip) {
@@ -1472,7 +1478,7 @@ const installTabHandler = function(containerSel, changeCallback) {
 
   if (typeof changeCallback !== 'function') {
     changeCallback = function() {
-      CAFEVDB.toolTipsInit(container);
+      // CAFEVDB.toolTipsInit(container); THIS SHOULD NOT BE NEEDED?
     };
   }
 

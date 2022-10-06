@@ -681,7 +681,7 @@ class SepaDebitMandatesController extends Controller
 
     $templateParameters = [
       'projectId' => $projectId,
-      'projectName' => $project ? $project->getName() : null,
+      'projectName' => !empty($project) ? $project->getName() : null,
 
         'musicianId' => $musicianId,
       'musicianName' => $musician->getPublicName(),

@@ -4,28 +4,32 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr;
 use \OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Exceptions\DatabaseException;
 
+/** Trait for entity repositories which adds kind of a symbolic query "language". */
 trait FindLikeTrait
 {
   use LogTrait;
@@ -52,23 +56,22 @@ trait FindLikeTrait
    * but the criterias may contain '%' or '*', in which case a LIKE
    * comparison is used.
    *
-   * @param array $criteria Search criteria
+   * @param array $criteria Search criteria.
    *
-   * @param array $orderBy Order-by criteria
+   * @param array $orderBy Order-by criteria.
    *
-   * @param int|null $limit
+   * @param int|null $limit Limit on the number of results.
    *
-   * @param int|null $offset
+   * @param int|null $offset Offset into the result set.
    *
    * @return array
-   *
    */
   public function findLike(
-    array $criteria
-    , ?array $orderBy = null
-    , ?int $limit = null
-    , ?int $offset = null): array
-  {
+    array $criteria,
+    ?array $orderBy = null,
+    ?int $limit = null,
+    ?int $offset = null,
+  ): array {
     $qb = $this->createQueryBuilder('table');
     $andX = $qb->expr()->andX();
     foreach ($criteria as $key => &$value) {
@@ -94,12 +97,11 @@ trait FindLikeTrait
    * but the criterias may contain '%' or '*', in which case a LIKE
    * comparison is used.
    *
-   * @param array $criteria Search criteria
+   * @param array $criteria Search criteria.
    *
-   * @return null|Object
-   *
+   * @return null|object
    */
-  public function findOneLike($criteria)
+  public function findOneLike(array $criteria)
   {
     $results = $this->findLike($criteria, null, 1, null);
     if (count($results) == 1) {
@@ -112,13 +114,13 @@ trait FindLikeTrait
   /**
    * Adds an order-by phrase and limits to the given query-builder.
    *
-   * @parm ORM\QueryBuilder $qb
+   * @param ORM\QueryBuilder $qb The ORM query builder instance.
    *
-   * @param array $orderBy Order-by criteria
+   * @param null|array $orderBy Order-by criteria.
    *
-   * @param int|null $limit
+   * @param int|null $limit Limit the number of results.
    *
-   * @param int|null $offset
+   * @param int|null $offset Offset into the result set.
    *
    * @param string|null $alias Table alias to prepend to the
    * field-names in $orderBy. The alias is not added if the field
@@ -126,8 +128,13 @@ trait FindLikeTrait
    *
    * @return ORM\QueryBuilder
    */
-  protected static function addOrderBy(ORM\QueryBuilder $qb, ?array $orderBy = null, ?int $limit = null, ?int $offset = null, ?string $alias = null): ORM\QueryBuilder
-  {
+  protected static function addOrderBy(
+    ORM\QueryBuilder $qb,
+    ?array $orderBy = null,
+    ?int $limit = null,
+    ?int $offset = null,
+    ?string $alias = null
+  ): ORM\QueryBuilder {
     foreach ($orderBy??[] as $key => $dir) {
       if (strpos($key, '.') === false && !empty($alias)) {
         $key = $alias . '.' . $key;
@@ -185,7 +192,17 @@ trait FindLikeTrait
    * - supports Collections\Criteria, these are applied at the end.
    *
    * - support group-functions in order to collect grouped data, e.g.
-   *   ```[ foo.bar@GROUP_CONCAT(%s) => '%SEARCH%' ]```
+   *   ```
+   *   [ foo.bar@GROUP_CONCAT(%s) => '%SEARCH%' ]
+   *   ```
+   *   Such search criteria will end up in the having clause.
+   *
+   * - support ordinary-functions in the where part with the syntax
+   *   ```
+   *   [ foo.bar#BIN_TO_UUID(%s) => '%SEARCH%' ]
+   *   ```
+   *   The difference to the '@' syntax is that these criteria will end up in
+   *   the WHERE clause.
    *
    * - support explicit type specification for "complicated" cases where a
    *   mere string conversion would leads to wrong results, e.g.
@@ -195,10 +212,22 @@ trait FindLikeTrait
    * In order to filter by empty collections a left-join with the
    * main-table is performed.
    *
+   * @param array $criteria Search criteria.
+   *
+   * @param null|array $orderBy Order-by criteria.
+   *
+   * @param int|null $limit Limit on the number of results.
+   *
+   * @param int|null $offset Offset into the result set.
+   *
    * @return array The found entities.
    */
-  public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
-  {
+  public function findBy(
+    array $criteria,
+    ?array $orderBy = null,
+    $limit = null,
+    $offset = null,
+  ) {
     $queryParts = $this->prepareFindBy($criteria, $orderBy);
 
     // The stock findBy() / findOneBy() functions do not use query-hints, see
@@ -231,8 +260,12 @@ trait FindLikeTrait
 
   /**
    * Count the number of rows which would be returned.
+   *
+   * @param array $criteria Search criteria.
+   *
+   * @return int The number of found entities.
    */
-  public function count(array $criteria)
+  public function count(array $criteria):int
   {
     $queryParts = $this->prepareFindBy($criteria);
 
@@ -255,6 +288,17 @@ trait FindLikeTrait
     return $qb->getQuery()->getSingleScalarResult();
   }
 
+  /**
+   * Find just one or no entity matching the criteria.
+   *
+   * @param array $criteria Search criteria.
+   *
+   * @param null|array $orderBy Order-by criteria.
+   *
+   * @return null|object The single result or null.
+   *
+   * @see findBy()
+   */
   public function findOneBy(array $criteria, ?array $orderBy = null)
   {
     $result = $this->findBy($criteria, $orderBy, 1, 0);
@@ -262,7 +306,15 @@ trait FindLikeTrait
   }
 
   /**
-   * Parse the criteria
+   * Parse the criteria.
+   *
+   * @param array $criteria Search criteria.
+   *
+   * @param null|array $orderBy Order-by criteria.
+   *
+   * @return null|object The single result or null.
+   *
+   * @see findBy()
    */
   protected function prepareFindBy(array $criteria, ?array $orderBy = null)
   {
@@ -271,7 +323,7 @@ trait FindLikeTrait
     // filter out instances of criteria
     $collectionCriteria = [];
     foreach ($criteria as $key => $value) {
-      if ($value instanceof Collections\Criteria ) {
+      if ($value instanceof Collections\Criteria) {
         $collectionCriteria[] = $value;
         unset($criteria[$key]);
       }
@@ -288,7 +340,13 @@ trait FindLikeTrait
       $groupFunction = null;
       $fctPos = strpos($key, '@');
       if ($fctPos !== false) {
-        $groupFunction = substr($key, $fctPos+1);
+        $groupFunction = substr($key, $fctPos + 1);
+        $key = substr($key, 0, $fctPos);
+      }
+      $sqlFunction = null;
+      $fctPos = strpos($key, '#');
+      if ($fctPos !== false) {
+        $sqlFunction = substr($key, $fctPos +1);
         $key = substr($key, 0, $fctPos);
       }
       $fieldType = null;
@@ -308,6 +366,7 @@ trait FindLikeTrait
         'literal' => false,
         'index' => count($whereCriteria) + count($havingCriteria),
         'groupFunction' => $groupFunction,
+        'sqlFunction' => $sqlFunction,
       ];
 
       if (preg_match('/^[!=<>&|()]+/', $key, $matches)) {
@@ -348,13 +407,13 @@ trait FindLikeTrait
             $pos = strpos($operators, $abbr);
             if ($pos === 0) {
               if (!empty($criterion['comparator'])) {
-                throw new \Exception('Comparison for key "' . $key . '" already set to "' . $criterion['comparator'] . '".');
+                throw new DatabaseException('Comparison for key "' . $key . '" already set to "' . $criterion['comparator'] . '".');
               }
               if ($abbr == '=' && $value === null) {
-                throw new \Exception('Comparison with null is undefined, only equality is allowed.');
+                throw new DatabaseException('Comparison with null is undefined, only equality is allowed.');
               }
               if (is_array($value)) {
-                throw new \Exception('Array-valued comparisons are not allowed.');
+                throw new DatabaseException('Array-valued comparisons are not allowed.');
               }
               $operators = substr($operators, strlen($abbr));
               $criterion['comparator'] = $comparator;
@@ -442,20 +501,37 @@ trait FindLikeTrait
    * been initialized with the main table alias 'mainTable' and
    * already contain the select part.
    *
+   * @param ORM\QueryBuilder $qb The ORM query builder instance.
+   *
+   * @param array $queryParts As returned by prepareFindByWhere().
+   *
+   * @param int|null $limit Limit the number of results.
+   *
+   * @param int|null $offset Offset into the result set.
+   *
+   * @return ORM\QueryBuilder
+   *
    * @todo Field-type deduction for set-parameter only works for the
    * main-table ATM. This could probably be cured by reading the
    * meta-data for all join tables.
+   *
+   * PHPMD cannot handle dynamic variable names
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   * @SuppressWarnings(PHPMD.UnusedLocalVariable)
    */
   protected function generateFindByWhere(
-    ORM\QueryBuilder $qb
-    , array $queryParts
-    , ?int $limit = null
-    , ?int $offset = null
-  ) {
+    ORM\QueryBuilder $qb,
+    array $queryParts,
+    ?int $limit = null,
+    ?int $offset = null,
+  ):ORM\QueryBuilder {
+
     // unpack parameter array
-    foreach ($queryParts as $key => $part) {
-      ${$key} = $part;
-    }
+    // foreach ($queryParts as $key => $part) {
+    //   ${$key} = $part;
+    // }
+    extract($queryParts);
 
     foreach (['where', 'having'] as $conditionType) {
 
@@ -483,7 +559,8 @@ trait FindLikeTrait
               ];
               $groupExpression[++$groupLevel] = $expression;
             } else {
-              $expression = array_pop($groupExpression); $groupLevel--;
+              $expression = array_pop($groupExpression);
+              $groupLevel--;
               $junctor = $expression['junctor'];
               $components = $expression['components'];
               $compositeExpr = call_user_func_array([ $qb->expr(), $junctor ], $components);
@@ -504,12 +581,14 @@ trait FindLikeTrait
           $param = str_replace('.', '_', $field) . '_' . $criterion['index'];
           if (!empty($criterion['groupFunction'])) {
             $field = sprintf($criterion['groupFunction'], $field);
+          } elseif (!empty($criterion['sqlFunction'])) {
+            $field = sprintf($criterion['sqlFunction'], $field);
           }
           $comparator = $criterion['comparator'] ?? 'eq';
           if ($value === null) {
             $criterion['literal'] = true;
             $expr = $qb->expr()->isNull($field);
-          } else if (is_array($value)) {
+          } elseif (is_array($value)) {
             // special case empty array:
             // - in principle always FALSE (nothing is in an empty set)
             // - FIELD == NULL ? NULL in any given set would be FALSE, we
@@ -519,12 +598,22 @@ trait FindLikeTrait
               // unfortunately, a literal 0 just cannot be modelled with the query builder
               $expr = $qb->expr()->eq(1, 0);
             } else {
-              $expr = $qb->expr()->in($field, ':' . $param);
+              // array values could contain wildcards
+              $value = str_replace('*', '%', $value);
+              if (!empty(array_filter($value, fn($x) => strpos($x, '%') !== false))) {
+                $value = implode('|', array_map(fn($x) => str_replace('%', '.*', preg_quote($x)), $value));
+                $value = '^' . $value . '$';
+                $expr = $qb->expr()->eq(new Expr\Func('REGEXP', [ $field, ':' . $param ]), 1);
+                $criterion['value'] = $value;
+              } else {
+                $expr = $qb->expr()->in($field, ':' . $param);
+              }
             }
-          } else if (is_string($value)) {
+          } elseif (is_string($value)) {
             $value = str_replace('*', '%', $value);
             if (strpos($value, '%') !== false) {
               $expr = $qb->expr()->like($field, ':' . $param);
+              $criterion['value'] = $value;
             } else {
               $expr = $qb->expr()->$comparator($field, ':' . $param);
             }
@@ -539,7 +628,8 @@ trait FindLikeTrait
 
         // closing parenthesis maybe omitted at end, can be arbitrary many
         while ($groupLevel >= 0) {
-          $expression = array_pop($groupExpression); $groupLevel--;
+          $expression = array_pop($groupExpression);
+          $groupLevel--;
           $junctor = $expression['junctor'];
           $components = $expression['components'];
           $compositeExpr = call_user_func_array([ $qb->expr(), $junctor ], $components);
@@ -553,7 +643,7 @@ trait FindLikeTrait
       }
 
       foreach ($criteria[$conditionType] as $criterion) {
-        if ($criterion['literal'])  {
+        if ($criterion['literal']) {
           continue;
         }
         $field = $criterion['field'];
@@ -576,8 +666,10 @@ trait FindLikeTrait
         $fieldType = null;
         if ($criterion['fieldType'] !== null) {
           $fieldType = $criterion['fieldType'];
-        } else if ($tableAlias == 'mainTable') {
-          if (!is_array($value)) {
+        } elseif ($tableAlias == 'mainTable') {
+          if (!is_array($value)
+              && empty($criterion['groupFunction'])
+              && empty($criterion['sqlFunction'])) {
             // try to deduce the type as this is NOT done by ORM here
             $fieldType = $this->getClassMetadata()->getTypeOfField($column);
           }
@@ -594,7 +686,6 @@ trait FindLikeTrait
 
     return $qb;
   }
-
 }
 
 // Local Variables: ***

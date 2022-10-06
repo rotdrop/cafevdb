@@ -226,6 +226,20 @@ use OCA\CAFEVDB\Common\Util;
         </label>
       </fieldset>
     </form>
+    <h4><?php echo $l->t('Bulk Email Privacy Notice'); ?></h4>
+    <form class="bulk-email-privacy-notice">
+      <fieldset class="bulk-email-privacy-notice">
+        <legend><?php p($l->t('This is the notice attached to all bulk-emails which are not directed to a mailing list or project-participants. The idea is to give the recipients information why they receive the message and how they can prevent further messages if they consider such messages as spam.')); ?></legend>
+        <div class="bulk-email-privacy-notice container">
+          <textarea class="bulk-email-privacy-notice wysiwyg"
+                    name="bulkEmailPrivacyNotice"
+                    cols="60"
+                    rows="10">
+            <?php p($bulkEmailPrivacyNotice); ?>
+          </textarea>
+        </div>
+      </fieldset>
+    </form>
     <h4><?php p($l->t('Mailing List Service')); ?></h4>
     <form class="mailing-list">
       <fieldset class="web-interface">

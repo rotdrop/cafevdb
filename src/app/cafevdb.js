@@ -24,6 +24,10 @@
 import { globalState, appName, $, jQuery } from './globals.js';
 import { urlDecode } from './url-decode.js';
 import { token as pmeToken } from './pme-selectors.js';
+import {
+  backGroundPromise as toolTipsBackgroundPromise,
+  rejectBackgroundPromise as rejectToolTipsBackgroundPromise,
+} from './jquery-cafevdb-tooltips.js';
 
 require('cafevdb.scss');
 
@@ -261,6 +265,10 @@ const snapperClose = function() {
  * @todo This function performs too much work and is too unstructured.
  */
 const toolTipsInit = function(containerSel) {
+
+  console.time('TOOLTIPS');
+  rejectToolTipsBackgroundPromise();
+
   if (typeof containerSel === 'undefined') {
     containerSel = '#content.app-' + appName;
   }
@@ -330,6 +338,12 @@ const toolTipsInit = function(containerSel) {
   } else {
     $.fn.cafevTooltip.disable();
   }
+
+  toolTipsBackgroundPromise
+    .done((maxJobs) => console.info('TOOLTIP JOBS HANDLED', maxJobs))
+    .fail((maxJobs) => console.info('RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs));
+
+  console.timeEnd('TOOLTIPS');
 };
 
 export {

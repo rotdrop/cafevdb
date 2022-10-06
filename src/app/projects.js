@@ -33,11 +33,17 @@ import * as Notification from './notification.js';
 import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import * as Events from './events.js';
 import * as Email from './email.js';
-import { data as pmeData, sys as pmeSys } from './pme-selectors.js';
+import {
+  data as pmeData,
+  sys as pmeSys,
+  classSelector as pmeClassSelector,
+  formSelector as pmeFormSelector,
+} from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
 import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
+import setBusyIndicators from './busy-indicators.js';
 
 require('projects.scss');
 
@@ -399,6 +405,109 @@ const pmeFormInit = function(containerSel) {
         }
       });
   }
+
+  const updateLinkShareControls = function($control, data) {
+    Notification.messages(data.message);
+    const $controlContainer = $control.closest(pmeClassSelector('', 'cell-wrapper'));
+    const empty = !data.share;
+    const tooltip = [data.folder, data.share].filter((x) => !!x).join('<br/>');
+    const $anchor = $controlContainer.find('a.url');
+    $controlContainer.toggleClass('empty', empty).toggleClass('has-content', !empty);
+    $anchor.attr('href', data.share).find('.content').html(data.share);
+    $anchor.cafevTooltip('dispose').attr('title', tooltip).cafevTooltip();
+    if (data.expires) {
+      const date = new Date(data.expires.date.substring(0, 10));
+      console.info('EXPIRES', date, date.toLocaleDateString());
+      const $expires = $controlContainer.find('.share-expiration-date');
+      $expires.val(date.toLocaleDateString());
+      $expires.datepicker('setDate', date);
+    }
+  };
+
+  const $downloadShareContainer = $form.find('.download-share');
+
+  $downloadShareContainer.find('.operation.button.create-share-link')
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+      const projectId = $form.find('input[name="projectId"]').val();
+      setBusyIndicators(true, $container, false);
+      $.post(
+        generateUrl('projects/' + projectId + '/share/downloads'))
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {
+            setBusyIndicators(false, $container, false);
+          });
+        })
+        .done(function(data, textStatus, request) {
+          updateLinkShareControls($this, data);
+          PHPMyEdit.submitOuterForm($container.closest(pmeFormSelector));
+          setBusyIndicators(false, $container, false);
+        });
+      return false;
+    });
+
+  $downloadShareContainer.find('.operation.button.delete-share-link')
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+      const projectId = $form.find('input[name="projectId"]').val();
+      setBusyIndicators(true, $container, true);
+      $.ajax({
+        url: generateUrl('projects/' + projectId + '/share/downloads'),
+        type: 'DELETE',
+      })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {
+            setBusyIndicators(false, $container, true);
+          });
+        })
+        .done(function(data, textStatus, request) {
+          updateLinkShareControls($this, data);
+          PHPMyEdit.submitOuterForm($container.closest(pmeFormSelector));
+          setBusyIndicators(false, $container, true);
+        });
+      return false;
+    });
+
+  $downloadShareContainer
+    .off('blur', 'input.share-expiration-date')
+    .on('blur', 'input.share-expiration-date', function(event) {
+      const $this = $(this);
+      const projectId = $form.find('input[name="projectId"]').val();
+      setBusyIndicators(true, $container, true);
+      console.info('DATE', $this.val(), $this.datepicker('getDate'));
+      $.ajax({
+        url: generateUrl('projects/' + projectId + '/share/downloads'),
+        type: 'PATCH',
+        data: {
+          expirationDate: $this.val(),
+        },
+      })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {
+            setBusyIndicators(false, $container, true);
+          });
+        })
+        .done(function(data, textStatus, request) {
+          updateLinkShareControls($this, data);
+          PHPMyEdit.submitOuterForm($container.closest(pmeFormSelector));
+          setBusyIndicators(false, $container, true);
+        });
+      return false;
+    });
+
+  $downloadShareContainer.find('.operation.button.copy-to-clipboard')
+    .off('click')
+    .on('click', function(event) {
+      const $controlContainer = $(this).closest(pmeClassSelector('', 'cell-wrapper'));
+      const url = $controlContainer.find('a.url.external').attr('href');
+      navigator.clipboard.writeText(url).then(function() {
+        Notification.showTemporary(t(appName, 'Share-link has been copied to the clipboard.'));
+      }, function(reason) {
+        Notification.showTemporary(t(appName, 'Failed copying share-link to the clipboard: {reason}.', { reason }));
+      });
+    });
 
   $form.find('.mailing-list-dropdown .list-action').on('click', function(event) {
     const $this = $(this);

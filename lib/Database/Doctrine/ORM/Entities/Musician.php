@@ -222,22 +222,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $birthday;
 
   /**
-   * @var MusicianEmailAddress
+   * @var string
    *
-   * The primary email address.
-   *
-   * @ORM\OneToOne(targetEntity="MusicianEmailAddress")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="id", referencedColumnName="musician_id"),
-   *   @ORM\JoinColumn(name="email", referencedColumnName="address", nullable=false)
-   * )
+   * @ORM\Column(type="string", length=254, nullable=true, options={"collation"="ascii_general_ci"})
    */
   private $email;
 
   /**
    * @var Collection All email addresses.
    *
-   * @ORM\OneToMany(targetEntity="MusicianEmailAddress", mappedBy="musician", cascade={"remove"}, orphanRemoval=true, indexBy="address")
+   * @ORM\OneToMany(targetEntity="MusicianEmailAddress", mappedBy="musician", cascade={"remove","persist"}, orphanRemoval=true, indexBy="address")
    */
   private $emailAddresses;
 
@@ -722,13 +716,21 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * @param MusicianEmailAddress $email
+   * Set the principal email address as address-entity. Updates also the
+   * plain-text field $email.
+   *
+   * @param null|MusicianEmailAddress $principalEmailAddress
    *
    * @return Musician
    */
-  public function setEmail(MusicianEmailAddress $email):Musician
+  public function setPrincipalEmailAddress(?MusicianEmailAddress $principalEmailAddress):Musician
   {
-    $this->email = $email;
+    if (empty($principalEmailAddress)) {
+      $this->email = null;
+    } else {
+      $this->email = $principalEmailAddress->getAddress();
+      $this->emailAddresses->set($this->email, $principalEmailAddress);
+    }
 
     return $this;
   }
@@ -736,39 +738,39 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @return MusicianEmailAddress
    */
-  public function getEmail():MusicianEmailAddress
+  public function getPrincipalEmailAddress():?MusicianEmailAddress
   {
-    return $this->email;
+    return $this->emailAddresses->get($this->email);
   }
 
   /**
-   * Set email.
+   * Set email. Update related associations, add to the collection of all
+   * emails if not already there and set the principal email address.
    *
-   * @param string|MusicianEmailAddress $email
+   * @param null|string $email
    *
    * @return Musician
    */
-  public function setEmailAddress(mixed $email):Musician
+  public function setEmail(?string $email):Musician
   {
-    if ($email instanceof MusicianEmailAddress) {
-      $this->email = $email;
+    if (empty($email)) {
+      $this->email = null;
       return $this;
     }
-    if (!is_string($email)) {
-      throw new InvalidArgumentException('Argument must be either an email address or an email address entitiy');
-    }
+    $email = strtolower($email);
+    $this->email = $email;
+    // check by key
     if ($this->emailAddresses->containsKey($email)) {
-      $this->email = $this->emailAddresses->get($email);
       return $this;
     }
+    // if indexing is broken seach through the collection
     $emails = $this->emailAddresses->filter(fn(MusicianEmailAddress $addressEntity) => $addressEntity->getAddress() == $email);
     if (count($emails) === 1) {
-      $this->email = $emails->first();
       return $this;
     }
+    // otherwise make a new entity
     $addressEntity = new MusicianEmailAddress($email, $this);
     $this->emailAddresses->set($email, $addressEntity);
-    $this->email = $addressEntity;
 
     return $this;
   }
@@ -778,9 +780,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return null|string
    */
-  public function getEmailAddress():?string
+  public function getEmail():?string
   {
-    return !empty($this->email) ? $this->email->getAddress() : null;
+    if ($this->email === null) {
+      return $this->email;
+    } else {
+      return strtolower($this->email);
+    }
   }
 
   /**
@@ -805,6 +811,68 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getEmailAddresses():Collection
   {
     return $this->emailAddresses;
+  }
+
+  /**
+   * Add a new email-address to the collection
+   *
+   * @param string|MusicianEmailAddress $email
+   *
+   * @return Musician $this for easy chaining
+   */
+  public function addEmailAddress(mixed $email):Musician
+  {
+    if ($email instanceof MusicianEmailAddress) {
+      /** @var MusicianEmailAddress $email */
+      $this->emailAddresses->set($email->getAddress(), $email);
+      return $this;
+    }
+    // check by key
+    if ($this->emailAddresses->containsKey($email)) {
+      return $this; // already there
+    }
+    // if indexing is broken seach through the collection
+    $emails = $this->emailAddresses->filter(fn(MusicianEmailAddress $addressEntity) => $addressEntity->getAddress() == $email);
+    if (count($emails) === 1) {
+      return $this; // already there
+    }
+    // otherwise make a new entity
+    $addressEntity = new MusicianEmailAddress($email, $this);
+    $this->emailAddresses->set($email, $addressEntity);
+
+    return $this;
+  }
+
+  /**
+   * Remove the given email address.
+   *
+  * @param string|MusicianEmailAddress $email
+   *
+   * @return Musician $this for easy chaining
+   */
+  public function removeEmailAddress(mixed $email):Musician
+  {
+    if ($email instanceof MusicianEmailAddress) {
+      $email = $email->getAddress();
+    }
+    if ($this->email == $email) {
+      // violates not-null constraint but allow here for intermediate updates.
+      $this->email = null;
+      $this->principalEmailAddress = null;
+    }
+    // check by key
+    if ($this->emailAddresses->containsKey($email)) {
+      $this->emailAddresses->remove($email);
+      return $this;
+    }
+    // if indexing is broken seach through the collection
+    foreach ($this->emailAddresses as $existingAddress) {
+      if ($existingAddress->getAddress() == $email) {
+        $this->emailAddresses->removeElement($existingAddress);
+        return $this;
+      }
+    }
+    return $this;
   }
 
   /**
@@ -1421,6 +1489,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * {@inheritdoc}
+   *
+   * @ORM\PrePersist
+   */
+  public function prePersist(Event\LifecycleEventArgs $event)
+  {
+    $this->email = strtolower($this->email);
+  }
+
+  /**
    * @var null|array
    *
    * The array of changed field values.
@@ -1472,5 +1550,15 @@ class Musician implements \ArrayAccess, \JsonSerializable
       $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->preUpdateValue[$field], $this->email));
       unset($this->preUpdateValue[$field]);
     }
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $name = $this->getPublicName(firstNameFirst: true);
+    if (!empty($this->userIdSlug)) {
+      $name .= ' (' . $this->userIdSlug . ')';
+    }
+    return $name;
   }
 }

@@ -237,7 +237,7 @@ class MusicianValidationController extends Controller
               );
               continue;
             }
-            $recipient = $emailRecord->mailbox.'@'.$emailRecord->host;
+            $recipient = strtolower($emailRecord->mailbox.'@'.$emailRecord->host);
             if (!$phpMailer->validateAddress($recipient)) {
               $message[] = $this->l->t(
                 'Validation failed for: %s. ',
@@ -430,7 +430,7 @@ class MusicianValidationController extends Controller
           $duplicatesPropability = 0.0;
 
           $commsMatch = (
-            (!empty($email) && $email == $musician->getEmailAddress())
+            (!empty($email) && $email == $musician->getEmail())
             || (!empty($fixedLinePhone) && $fixedLinePhone == $musician->getFixedLinePhone())
             || (!empty($mobilePhone) && $mobilePhone == $musician->getMobilePhone()));
 
