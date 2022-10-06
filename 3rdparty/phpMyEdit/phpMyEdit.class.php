@@ -165,6 +165,7 @@ class phpMyEdit
 	public $groupby_rec; // values of the group-by fields
 	public $groupby_where; // whether to use groupby field in single record retrieval
 	public $mrecs;     // array of custom-multi records selected
+	public $deselect_invisible_mrecs; // deselect non-visible mrecs when +/- action is issued
 	public $inc;		// number of records to display
 	public $total_recs; // total number of records available
 	public $fm;		// first record to display
@@ -1663,7 +1664,7 @@ class phpMyEdit
 						}
 					}
 					if (isset($ov['oper']) &&
-						strtoupper($ov['oper']) == 'NOT' || $ov['oper'] == '!') {
+						(strtoupper($ov['oper']) == 'NOT' || $ov['oper'] == '!')) {
 						if ($inner_null) {
 							$tmp_ov_val = sprintf('NOT (%s)', $tmp_ov_val);
 						} else {
@@ -4939,6 +4940,12 @@ class phpMyEdit
 				echo '</td>',"\n";
 			}
 			echo '</tr>',"\n";
+		} // row loop
+
+		if ($this->nav_custom_multi()
+			&& ($this->operation == '+' || $this->operation == '-')
+			&& $this->misc_deselect_invisible) {
+			$this->mrecs = [];
 		}
 
 		echo '</tbody></table>',"\n"; // end of table rows listing
@@ -6442,6 +6449,7 @@ class phpMyEdit
 		$this->miscphp	 = $opts['misc']['php'] ?? null;
 		$this->misccss   = $opts['misc']['css']['major'] ?? null;
 		$this->misccss2  = $opts['misc']['css']['minor'] ?? null;
+		$this->misc_deselect_invisible = $opts['misc']['deselect_invisible'] ?? false;
 		if (empty($this->misccss)) {
 			$this->misccss = 'misc';
 		} else if (is_array($this->misccss)) {

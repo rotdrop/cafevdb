@@ -50,6 +50,7 @@ class DefaultOptions extends \ArrayObject implements IOptions
       'misc' => [
         'php' => function() { return true; },
         'css' => [ 'major' => 'misc', 'minor' => 'email' ],
+        'deselect_invisible' => false,
       ],
       'labels' => [
         'Misc' => 'Em@il',
