@@ -237,7 +237,7 @@ class MusicianValidationController extends Controller
               );
               continue;
             }
-            $recipient = $emailRecord->mailbox.'@'.$emailRecord->host;
+            $recipient = strtolower($emailRecord->mailbox.'@'.$emailRecord->host);
             if (!$phpMailer->validateAddress($recipient)) {
               $message[] = $this->l->t(
                 'Validation failed for: %s. ',
