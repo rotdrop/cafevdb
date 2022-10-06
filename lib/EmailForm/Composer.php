@@ -2458,7 +2458,7 @@ Störung.';
       $this->addFileAttachment(
         $phpMailer,
         $messageId,
-        $file->getConten(),
+        $file->getContent(),
         $attachment['name'],
         $encoding,
         $attachment['type'],
