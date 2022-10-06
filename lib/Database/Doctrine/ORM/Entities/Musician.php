@@ -757,6 +757,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
       $this->email = null;
       return $this;
     }
+    $email = strtolower($email);
     $this->email = $email;
     // check by key
     if ($this->emailAddresses->containsKey($email)) {
@@ -781,7 +782,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function getEmail():?string
   {
-    return $this->email;
+    if ($this->email === null) {
+      return $this->email;
+    } else {
+      return strtolower($this->email);
+    }
   }
 
   /**
@@ -1481,6 +1486,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
     return array_merge($this->toArray(), [
       'publicName' => $this->getPublicName(true),
     ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @ORM\PrePersist
+   */
+  public function prePersist(Event\LifecycleEventArgs $event)
+  {
+    $this->email = strtolower($this->email);
   }
 
   /**

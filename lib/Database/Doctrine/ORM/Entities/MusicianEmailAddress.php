@@ -83,7 +83,7 @@ class MusicianEmailAddress implements \ArrayAccess
    */
   public function getAddress():string
   {
-    return $this->address;
+    return strtolower($this->address);
   }
 
   /** {@inheritdoc} */
@@ -100,6 +100,7 @@ class MusicianEmailAddress implements \ArrayAccess
   public function setAddress(?string $address):MusicianEmailAddress
   {
     if (!empty($address)) {
+      $address = strtolower($address);
       if (!self::validateAddress($address)) {
         throw new InvalidArgumentException('Email-address "' . $address . '" fails validation.');
       }
@@ -209,6 +210,7 @@ class MusicianEmailAddress implements \ArrayAccess
    */
   public function prePersist(Event\LifecycleEventArgs $event)
   {
+    $this->address = strtolower($this->address);
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
     $this->musician->getEmailAddresses()->set($this->address, $this);
     $entityManager = EntityManager::getDecorator($event->getEntityManager());
