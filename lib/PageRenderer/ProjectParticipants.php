@@ -895,6 +895,9 @@ class ProjectParticipants extends PMETableViewBase
         'join' => [ 'reference' => $this->joinTables[self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians'], ],
       ],
       'valueGroups' => $this->instrumentInfo['idGroups'],
+      'filter' => [
+        'having' => true,
+      ],
     ];
     $fdd['values|ACP'] = array_merge($fdd['values'], [ 'filters' => '$table.deleted IS NULL' ]);
 

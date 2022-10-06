@@ -190,6 +190,25 @@ const documentReady = function() {
     return false;
   });
 
+  container.on('change', '.deselect-invisible-misc-recs', function(event) {
+    const self = $(this);
+    const checked = self.prop('checked');
+    $.post(setPersonalUrl('deselectInvisibleMiscRecs'), { value: checked })
+      .done(function(data) {
+        showMessage(data.message);
+        console.log(data);
+      })
+      .fail(function(xhr, status, errorThrown) {
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        // console.error(data);
+      });
+    if (globalState.PHPMyEdit !== undefined) {
+      globalState.PHPMyEdit.deselectInvisibleMiscRecs = checked;
+    }
+    $('.personal-settings input[type="checkbox"].deselect-invisible-misc-recs').prop('checked', checked);
+    return false;
+  });
+
   container.on('change', '.showdisabled', function(event) {
     const self = $(this);
     const checked = self.prop('checked');

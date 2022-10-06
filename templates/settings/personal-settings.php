@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -67,6 +67,17 @@ namespace OCA\CAFEVDB;
            class="<?php p($toolTipClass); ?>"
            title="<?php echo $directchgtitle; ?>">
       <?php echo $l->t('Quick Change-Dialog') ?>
+    </label>
+    <br />
+    <input id="deselect-invisible-misc-recs"
+           type="checkbox"
+           class="checkbox deselect-invisible-misc-recs <?php p($toolTipClass); ?>"
+           name="deselect_invisible_mrecs" <?php echo $deselectInvisibleMRecs == 'on' ? 'checked="checked"' : ''; ?>
+    />
+    <label for="deselect-invisible-misc-recs"
+           class="<?php p($toolTipClass); ?>"
+           title="<?php echo $toolTips['deselect-invisible-misc-recs']; ?>">
+      <?php echo $l->t('Deselect Invisible') ?>
     </label>
     <br />
     <div class="table-pagerows settings-control">

@@ -181,6 +181,7 @@ class PersonalSettingsController extends Controller
     case 'restorehistory':
     case 'filtervisibility':
     case 'directchange':
+    case 'deselectInvisibleMiscRecs':
     case 'showdisabled':
     case 'expertmode':
       $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);

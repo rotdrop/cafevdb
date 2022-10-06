@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -309,6 +309,9 @@ institute.'),
 
       'direct-change' => $this->l->t('If enabled, clicking on a data-row in a table view opens the "change
 dialog" for the respective record. If disabled, clicking on a data-row will open the "view dialog".'),
+
+      'deselect-invisible-misc-recs' => $this->l->t(
+        'If checked the row selection markers (for email, bank-transfers and the like) of invisible records will be unset if the "select all" or "deselect all" button at the top of the table or clicked.'),
 
       'email-account-distribute' => $this->l->t('Distribute the email account credentials to all members of the orchestra group. The credentials will be encrypted using an OpenSSL public key owned by the respective user and stored in the pre-user preferences table.'),
 
