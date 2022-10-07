@@ -155,7 +155,7 @@ class InstrumentInsuranceService
     if (!empty($insuranceEnd)) {
       // to get the diff right -- $insuranceEnd is the last day where the
       // instrument was included by into the insurance, we have to add one
-      // day. E.g.: Start 01.07.YYYY, end 31.07.ZZZZ should yield one year and
+      // day. E.g.: Start 01.07.YYYY, end 30.06.ZZZZ should yield one year and
       // not 365 days.
       $endDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceEnd), $timeZone)->modify('+1 day');
       $endDistance = $dueDate->diff($endDate);
