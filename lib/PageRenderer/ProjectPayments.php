@@ -285,10 +285,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     return $this->l->t('Payments for project "%s"', [ $this->projectName ]);
   }
 
-  /** {@inheritdoc} */
+  /**
+   * {@inheritdoc}
+   *
+   * @SuppressWarnings(PHPMD.LongVariable)
+   */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
+    $projectId       = $this->projectId;
 
     $projectMode = $this->projectId > 0;
     if (!$projectMode) {
@@ -1401,7 +1406,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
+  public function beforeUpdateSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
@@ -1559,7 +1564,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeInsertSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
+  public function beforeInsertSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
@@ -1733,7 +1738,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   }
 
   /**
-   *  Decide whether the current row refers to the composite payment or to a "split" project-payment.
+   * Decide whether the current row refers to the composite payment or to a "split" project-payment
    *
    * @param array $row
    *
@@ -1777,7 +1782,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $composite = $where === 'composite';
     $component = $where === 'component';
     if (($compositeRow && $composite) || (!$compositeRow && $component)) {
-      return $value;
+      return (string)$value;
     }
     return '';
   }
@@ -1837,6 +1842,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           }
           $project = $project??$fieldDatum->getProject();
         }
+        // $dateOfReceipt = $row['qf'.$pme->fdn['date_of_receipt']];
+        // $subject = Util::dashesToCamelCase($row['qf'.$pme->fdn['subject']], capitalizeFirstCharacter: true, dashes: ' _-');
 
         $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $userIdSlug);
 
