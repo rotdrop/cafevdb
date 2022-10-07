@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \DateTimeZone;
 use \DateTimeImmutable as DateTime;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -135,7 +136,7 @@ class InstrumentInsuranceService
    */
   private function yearFraction(\DateTimeInterface $insuranceStart, ?\DateTimeInterface $insuranceEnd, \DateTimeInterface $dueDate)
   {
-    $timeZone = $this->getDateTimeZone();
+    $timeZone = new DateTimeZone('UTC'); // $this->getDateTimeZone();
     $startDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceStart), $timeZone);
     $dueDate = self::convertToTimezoneDate(self::convertToDateTime($dueDate), $timeZone);
 
@@ -265,7 +266,7 @@ class InstrumentInsuranceService
    * starts at January 2nd, then the fees charged in year Y are for
    * Y/01/02 - (Y+1)/01/01.
    *
-    * @param int $musicianId Database entit id.
+   * @param int|Entities\Musician $musicianOrId Database entity or id.
    *
    * @param string|DateTime $date
    *
@@ -274,7 +275,7 @@ class InstrumentInsuranceService
    *
    * @return float Insurance fees computed.
    */
-  public function insuranceFee(int $musicianId, $date = null, ?array &$dueInterval = null):float
+  public function insuranceFee(mixed $musicianOrId, $date = null, ?array &$dueInterval = null):float
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
@@ -282,7 +283,7 @@ class InstrumentInsuranceService
     }
     $date = self::convertToTimezoneDate($date, $timeZone);
 
-    $payables = $this->billableInsurances($musicianId);
+    $payables = $this->billableInsurances($musicianOrId);
 
     $fee = 0.0;
     /** @var \DateTimeInterface $minDueDate */
