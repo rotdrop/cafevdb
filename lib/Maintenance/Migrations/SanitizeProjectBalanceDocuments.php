@@ -42,7 +42,7 @@ class SanitizeProjectBalanceDocuments extends AbstractMigration
     ],
     self::TRANSACTIONAL => [
       // Create the root nodes
-      'INSERT INTO DatabaseStorageDirectories (`id`, `storage_id`, `name`, `updated`)
+      'INSERT IGNORE INTO DatabaseStorageDirectories (`id`, `storage_id`, `name`, `updated`)
 SELECT p.id,
   CONCAT("/finance/balances/projects/", p.name),
   "",
@@ -53,7 +53,7 @@ ON pb.project_id = p.id
 WHERE pb.project_id IS NOT NULL
 GROUP BY p.id',
       // Create the subfolders
-      'INSERT INTO DatabaseStorageDirectories (`id`, `parent_id`, `name`, `updated`)
+      'INSERT IGNORE INTO DatabaseStorageDirectories (`id`, `parent_id`, `name`, `updated`)
 SELECT 1000 * p.id + pb.sequence,
   p.id,
   CONCAT_WS("-", p.name, LPAD(pb.sequence, 3, "0")),
@@ -62,9 +62,9 @@ FROM ProjectBalanceSupportingDocuments pb
 LEFT JOIN Projects p
 ON pb.project_id = p.id',
       //Join table with actual documents
-      'INSERT INTO database_storage_directory_encrypted_file (database_storage_directory_id, encrypted_file_id)
+      'INSERT IGNORE INTO database_storage_directory_encrypted_file (database_storage_directory_id, encrypted_file_id)
 SELECT 1000 * jt.project_id + jt.sequence, jt.encrypted_file_id
-FROM project_balance_supporting_document_encrypted_file',
+FROM project_balance_supporting_document_encrypted_file jt',
       // Link the supporting document folders to the projects
       'UPDATE Projects p
 LEFT JOIN DatabaseStorageDirectories dsd
@@ -78,19 +78,6 @@ WHERE dsd.id IS NOT NULL',
   public function description():string
   {
     return $this->l->t('Cleanup supporting documents for the financial balance of projects');
-  }
-
-  /** {@inheritdoc} */
-  public function execute():bool
-  {
-    if (!parent::execute()) {
-      return false;
-    }
-    // static::$sql[self::TRANSACTIONAL] = [];
-    // static::$sql[self::STRUCTURAL] = [
-    // DROP ALL UNNEEDED DATA
-    // ];
-    // return parent::execute();
   }
 };
 
