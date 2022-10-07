@@ -561,6 +561,30 @@ class Project implements \ArrayAccess
   }
 
   /**
+   * Set financialBalanceDocumentsFolder.
+   *
+   * @param DatabaseStorageDirectory $financialBalanceDocumentsFolder
+   *
+   * @return Project
+   */
+  public function setFinancialBalanceDocumentsFolder(DatabaseStorageDirectory $financialBalanceDocumentsFolder):Project
+  {
+    $this->financialBalanceDocumentsFolder = $financialBalanceDocumentsFolder;
+
+    return $this;
+  }
+
+  /**
+   * Get financialBalanceDocumentsFolder.
+   *
+   * @return ArrayCollection
+   */
+  public function getFinancialBalanceDocumentsFolder():DatabaseStorageDirectory
+  {
+    return $this->financialBalanceDocumentsFolder;
+  }
+
+  /**
    * Set participantInstruments.
    *
    * @param ArrayCollection $participantInstruments
