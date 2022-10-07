@@ -136,7 +136,7 @@ class Instruments extends PMETableViewBase
   }
 
   /** Show the underlying table. */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectName     = $this->projectName;

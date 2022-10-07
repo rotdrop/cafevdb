@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2020, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,27 +24,39 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+/** Page-renderer interface. */
 interface IPageRenderer extends IRenderer
 {
-  /** Short title for heading. */
+  /**
+   * Short title for heading.
+   *
+   * @return string
+   */
   public function shortTitle();
 
-  /** Header text informations. */
+  /**
+   * Header text informations.
+   *
+   * @return string
+   */
   public function headerText();
 
-  /** Set table-navigation enable/disable. */
-  public function navigation($enable);
+  /**
+   * Set table-navigation enable/disable.
+   *
+   * @param bool $enable
+   *
+   * @return void
+   */
+  public function navigation(bool $enable):void;
 
   /**
    * Run underlying table-manager (phpMyEdit for now).
    *
    * @param array $options Override options. Otherwise the state
    * set by render(false) are used.
+   *
+   * @return void
    */
-  public function execute($options = []);
+  public function execute(array $options = []):void;
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -174,7 +174,7 @@ class Projects extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectName     = $this->projectName;
