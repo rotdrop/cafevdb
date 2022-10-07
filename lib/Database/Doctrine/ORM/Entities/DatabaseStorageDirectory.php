@@ -91,4 +91,119 @@ class DatabaseStorageDirectory implements \ArrayAccess
    * @ORM\JoinTable
    */
   protected $documents;
+
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->databaseStorageDirectories = new ArrayCollection;
+    $this->documents = new ArrayCollection;
+  }
+
+  /** @return null|int */
+  public function getId():?int
+  {
+    return $this->id;
+  }
+
+  /**
+   * @param null|int $id
+   *
+   * @return DatabaseStorageDirectory
+   */
+  public function setId(?int $id):DatabaseStorageDirectory
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
+  /** @return null|string */
+  public function getStorageId():?string
+  {
+    return $this->storageId;
+  }
+
+  /**
+   * @param null|string $storageId
+   *
+   * @return DatabaseStorageDirectory
+   */
+  public function setStorageId(?string $storageId):DatabaseStorageDirectory
+  {
+    $this->storageId = $storageId;
+
+    return $this;
+  }
+
+  /** @return null|string */
+  public function getName():?string
+  {
+    return $this->name;
+  }
+
+  /**
+   * @param null|string $name
+   *
+   * @return DatabaseStorageDirectory
+   */
+  public function setName(?string $name):DatabaseStorageDirectory
+  {
+    $this->name = $name;
+
+    return $this;
+  }
+
+  /** @return null|DatabaseStorageDirectory */
+  public function getParent():?DatabaseStorageDirectory
+  {
+    return $this->parent;
+  }
+
+  /**
+   * @param null|DatabaseStorageDirectory $parent
+   *
+   * @return DatabaseStorageDirectory
+   */
+  public function setParent(?DatabaseStorageDirectory $parent):DatabaseStorageDirectory
+  {
+    $this->parent = $parent;
+
+    return $this;
+  }
+
+  /** @return Collection */
+  public function getDatabaseStorageDirectories():Collection
+  {
+    return $this->databaseStorageDirectories;
+  }
+
+  /**
+   * @param Collection $databaseStorageDirectories
+   *
+   * @return DatabaseStorageDirectory
+   */
+  public function setDatabaseStorageDirectories(Collection $databaseStorageDirectories):DatabaseStorageDirectory
+  {
+    $this->databaseStorageDirectories = $databaseStorageDirectories;
+
+    return $this;
+  }
+
+  /** @return Collection */
+  public function getDocuments():Collection
+  {
+    return $this->documents;
+  }
+
+  /**
+   * @param Collection $documents
+   *
+   * @return DatabaseStorageDirectory
+   */
+  public function setDocuments(Collection $documents):DatabaseStorageDirectory
+  {
+    $this->documents = $documents;
+
+    return $this;
+  }
 }
