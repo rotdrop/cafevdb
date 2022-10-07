@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \RuntimeException;
 use \DateTimeImmutable as DateTime;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -61,12 +62,13 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   /** @var \DateTimeZone */
   private $timeZone;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , InstrumentInsuranceService $insuranceService
-    , ToolTipsService $toolTipsService
-    , EntityManager $entityManager
-    , ProgressStatusService $progressStatusService
+    ConfigService $configService,
+    InstrumentInsuranceService $insuranceService,
+    ToolTipsService $toolTipsService,
+    EntityManager $entityManager,
+    ProgressStatusService $progressStatusService,
   ) {
     parent::__construct($entityManager, $progressStatusService);
 
@@ -82,7 +84,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   /**
    * {@inheritdoc}
    */
-  static public function slug():string
+  public static function slug():string
   {
     return self::t('insurance');
   }
@@ -97,7 +99,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     /** @var Entities\ProjectParticipantFieldDataOption $managementOption */
     $managementOption = $this->serviceFeeField->getManagementOption();
     if (empty($managementOption)) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $this->l->t(
           'Unable to find management option for participant field "%s".',
           $this->serviceFeeField->getName()
@@ -110,10 +112,10 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       if ($managementDate->getTimestamp() < $startingDate->getTimestamp()) {
         $startingDate = $managementDate;
       }
-    } else if (!empty($managementDate)) {
+    } elseif (!empty($managementDate)) {
       $startingDate = $managementDate;
-    } else if (empty($startingDate)) {
-      $startingDate = new \DateTimeImmutable;
+    } elseif (empty($startingDate)) {
+      $startingDate = new DateTime;
     }
     $startingDate = $startingDate->setTimezone($this->timeZone);
     $managementOption->setLimit($startingDate->getTimestamp());
@@ -191,9 +193,10 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
     if (!$openingBalance) {
       // "now" should in principle just do ...
-      $referenceDate = new \DateTimeImmutable($year.'-06-01');
+      $referenceDate = new DateTime($year.'-06-01');
 
       // Compute the actual fee
+      $dueInterval = null;
       $fee = $this->insuranceService->insuranceFee($musician, $referenceDate, $dueInterval);
 
       // Generate the overview letter as supporting document
@@ -256,16 +259,16 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           ]);
         }
         switch ($updateStrategy) {
-        case self::UPDATE_STRATEGY_REPLACE:
-          break;
-        case self::UPDATE_STRATEGY_EXCEPTION:
-          throw new Exceptions\EnduserNotificationException(end($notices));
-          break;
-        case self::UPDATE_STRATEGY_SKIP:
-          $skipped = true;
-          break;
-        default:
-          throw new \RuntimeException($this->l->t('Unknonw update strategy: "%s".', $updateStrategy));
+          case self::UPDATE_STRATEGY_REPLACE:
+            break;
+          case self::UPDATE_STRATEGY_EXCEPTION:
+            throw new Exceptions\EnduserNotificationException(end($notices));
+            break;
+          case self::UPDATE_STRATEGY_SKIP:
+            $skipped = true;
+            break;
+          default:
+            throw new RuntimeException($this->l->t('Unknonw update strategy: "%s".', $updateStrategy));
         }
       }
       if (!$skipped) {
@@ -290,9 +293,9 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
               owner: $musician
             );
             $datum->setSupportingDocument($supportingDocument);
-          } else if (true || $fee != $datum->getOptionValue()) {
+          } elseif (true || $fee != $datum->getOptionValue()) {
             // @todo FIXME: only update letter if fee changes?
-            $fileData = $supportingDocument
+            $supportingDocument
               ->setFileName($overviewFilename)
               ->setMimeType('application/pdf')
               ->setSize(strlen($overviewLetter))
@@ -303,7 +306,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
             $datum->setDeleted(null);
             $datum->setOptionValue($fee);
             $added = true;
-          } else if ($fee != $datum->getOptionValue()) {
+          } elseif ($fee != $datum->getOptionValue()) {
             $datum->setOptionValue($fee);
             $changed = true;
           }
@@ -326,7 +329,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   {
     $timeZone = $this->getDateTimeZone();
     if ($receivable === null) {
-      $year = (int)(new \DateTimeImmutable)->setTimezone($timeZone)->format('Y');
+      $year = (int)(new DateTime)->setTimezone($timeZone)->format('Y');
     } else {
       $year = (int)$receivable->getData();
       if ($year == 0) {
