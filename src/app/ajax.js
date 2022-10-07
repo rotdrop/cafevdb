@@ -203,7 +203,6 @@ Error Data: ${print_r(failData, true)}
   case ajaxHttpStatus.BAD_REQUEST:
   case ajaxHttpStatus.NOT_FOUND:
   case ajaxHttpStatus.CONFLICT:
-  case ajaxHttpStatus.PRECONDITION_FAILED:
   case ajaxHttpStatus.INTERNAL_SERVER_ERROR: {
     if (failData.error && ajaxHttpStatus[xhr.status] !== t(appName, failData.error)) {
       info += ': '
@@ -238,6 +237,33 @@ Error Data: ${print_r(failData, true)}
     }
     break;
   }
+  case ajaxHttpStatus.PRECONDITION_FAILED:
+    // a simple page reload may help
+    callbacks.cleanup = function() {
+      window.location.reload();
+    };
+    if (failData.error && ajaxHttpStatus[xhr.status] !== t(appName, failData.error)) {
+      info += ': '
+        + '<span class="bold error toastify name">'
+        + t(appName, failData.error)
+        + '</span>';
+    }
+    if (failData.message) {
+      if (!Array.isArray(failData.message)) {
+        failData.message = [failData.message];
+      }
+      for (const msg of failData.message) {
+        info += '<div class="' + appName + ' error toastify">' + msg + '</div>';
+      }
+    }
+    info += `<div class="error general">
+This can happen when your device has been put to sleep (close the lid,
+switch off your phone or tablet) for a longer time. In this case a
+certain security token could not be refreshed regularly which may
+produce the error your see. A simple page reload may help. This is
+done automatically when cloud click "ok" or close this dialog window.
+</div>`;
+    break;
   case ajaxHttpStatus.UNAUTHORIZED: {
     // no point in continuing, direct the user to the login page
     callbacks.cleanup = function() {
