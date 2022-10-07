@@ -2790,7 +2790,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           break;
         case $this->joinTableFieldName(self::MUSICIAN_INSTRUMENTS_TABLE, 'instrument_id'):
           foreach (explode(self::VALUES_SEP, Util::removeSpaces($value)) as $instrumentId) {
-            $categories[] = $this->instrumentInfo['byId'][$instrumentId];
+            $categories[] = $this->instrumentInfo['byId'][$instrumentId] ?? null;
           }
           break;
         case $this->joinTableFieldName(self::MUSICIAN_EMAILS_TABLE, 'address'):
@@ -2839,7 +2839,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
         $this->logError('NO MUSICIAN FOR ROW ' . $musicianId . ' ' . print_r($row, true));
       }
     }
-    return [ 'musician' => $musician, 'categories' => $categories ];
+    return [ 'musician' => $musician, 'categories' => array_filter($categories) ];
   }
 
   /**
