@@ -73,7 +73,7 @@ namespace OCA\CAFEVDB;
     <input id="deselect-invisible-misc-recs"
            type="checkbox"
            class="checkbox deselect-invisible-misc-recs <?php p($toolTipClass); ?>"
-           name="deselect_invisible_mrecs" <?php echo $deselectInvisibleMRecs == 'on' ? 'checked="checked"' : ''; ?>
+           name="deselect_invisible_misc_recs" <?php echo $deselectInvisibleMiscRecs == 'on' ? 'checked="checked"' : ''; ?>
     />
     <label for="deselect-invisible-misc-recs"
            class="<?php p($toolTipClass); ?>"
