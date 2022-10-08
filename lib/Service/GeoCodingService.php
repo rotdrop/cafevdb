@@ -1192,10 +1192,10 @@ class GeoCodingService
    *
    * @param string $language Language to update, use current user's language if not given.
    *
-   * @return array If country is not given all available regions, otherwise
+   * @return null|array If country is not given all available regions, otherwise
    * the regions of the respective country.
    */
-  public function getRegionNames(?string $country = null, ?string $language = null):array
+  public function getRegionNames(?string $country = null, ?string $language = null):?array
   {
     if (!$language) {
       $locale = $this->getLocale();
