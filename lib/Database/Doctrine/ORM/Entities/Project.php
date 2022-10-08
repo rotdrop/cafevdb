@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class Project implements \ArrayAccess
 {
@@ -173,7 +174,9 @@ class Project implements \ArrayAccess
    */
   private $financialBalanceDocumentsFolder;
 
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->instrumentationNumbers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
@@ -188,6 +191,7 @@ class Project implements \ArrayAccess
     $this->financialBalanceSupportingDocuments = new ArrayCollection();
   }
 
+  /** {@inheritdoc} */
   public function __clone()
   {
     if ($this->id) {
@@ -207,7 +211,7 @@ class Project implements \ArrayAccess
     }
 
     // clone all participant fields
-    foreach ($oldParticipantFields as $oldParticipantField)  {
+    foreach ($oldParticipantFields as $oldParticipantField) {
       /** @var ProjectParticipantField $participantField */
       $participantField = clone $oldParticipantField;
       $participantField->setProject($this);
@@ -219,6 +223,8 @@ class Project implements \ArrayAccess
 
   /**
    * Set id.
+   *
+   * @param int $id Entity id.
    *
    * @return Project
    */
@@ -242,11 +248,11 @@ class Project implements \ArrayAccess
   /**
    * Set year.
    *
-   * @param int $year
+   * @param null|int $year
    *
    * @return Project
    */
-  public function setYear($year)
+  public function setYear(?int $year):Project
   {
     $this->year = $year;
 
@@ -266,11 +272,11 @@ class Project implements \ArrayAccess
   /**
    * Set name.
    *
-   * @param string $name
+   * @param null|string $name
    *
    * @return Project
    */
-  public function setName($name)
+  public function setName(?string $name):Project
   {
     $this->name = $name;
 
@@ -337,11 +343,11 @@ class Project implements \ArrayAccess
   /**
    * Set webPages.
    *
-   * @param ArrayCollection $webPages
+   * @param Collection $webPages
    *
    * @return Project
    */
-  public function setWebPages($webPages)
+  public function setWebPages(Collection $webPages):Project
   {
     $this->webPages = $webPages;
 
@@ -361,11 +367,11 @@ class Project implements \ArrayAccess
   /**
    * Set participantFields.
    *
-   * @param ArrayCollection $participantFields
+   * @param Collection $participantFields
    *
    * @return Project
    */
-  public function setParticipantFields($participantFields):Project
+  public function setParticipantFields(Collection $participantFields):Project
   {
     $this->participantFields = $participantFields;
 
@@ -385,11 +391,11 @@ class Project implements \ArrayAccess
   /**
    * Set participantFieldsData.
    *
-   * @param ArrayCollection $participantFieldsData
+   * @param Collection $participantFieldsData
    *
    * @return Project
    */
-  public function setParticipantFieldsData($participantFieldsData):Project
+  public function setParticipantFieldsData(Collection $participantFieldsData):Project
   {
     $this->participantFieldsData = $participantFieldsData;
 
@@ -409,11 +415,11 @@ class Project implements \ArrayAccess
   /**
    * Set participants.
    *
-   * @param ArrayCollection $participants
+   * @param Collection $participants
    *
    * @return Project
    */
-  public function setParticipants($participants):Project
+  public function setParticipants(Collection $participants):Project
   {
     $this->participants = $participants;
 
@@ -433,11 +439,11 @@ class Project implements \ArrayAccess
   /**
    * Set sepaDebitMandates.
    *
-   * @param ArrayCollection $sepaDebitMandates
+   * @param Collection $sepaDebitMandates
    *
    * @return Project
    */
-  public function setSepaDebitMandates($sepaDebitMandates):Project
+  public function setSepaDebitMandates(Collection $sepaDebitMandates):Project
   {
     $this->sepaDebitMandates = $sepaDebitMandates;
 
@@ -457,11 +463,11 @@ class Project implements \ArrayAccess
   /**
    * Set instrumentationNumbers.
    *
-   * @param ArrayCollection $instrumentationNumbers
+   * @param Collection $instrumentationNumbers
    *
    * @return Project
    */
-  public function setInstrumentationNumbers($instrumentationNumbers)
+  public function setInstrumentationNumbers(Collection $instrumentationNumbers):Project
   {
     $this->instrumentationNumbers = $instrumentationNumbers;
 
@@ -636,6 +642,8 @@ class Project implements \ArrayAccess
    * Return the number of "serious" items which "use" this entity. For
    * project participant this is (for now) the number of payments. In
    * the long run: only open payments/receivables should count.
+   *
+   * @return int
    */
   public function usage():int
   {
