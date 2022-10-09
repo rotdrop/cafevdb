@@ -56,7 +56,9 @@ class CloudUserConnectorService
   const USER_SQL_PREFIX = 'Nextcloud';
   const PERSONALIZED_PREFIX = 'Personalized';
 
-  const GROUP_ID_PREFIX = '%2$s:';
+  const GROUP_ID_SEPARATOR = '_'; // more or less the only unsuspicies character ...
+
+  const GROUP_ID_PREFIX = '%2$s' . self::GROUP_ID_SEPARATOR;
 
   /**
    * @var string
@@ -81,7 +83,7 @@ WITH CHECK OPTION';
 SQL SECURITY DEFINER
 VIEW %1$s AS
 SELECT m.user_id_slug AS uid,
-       CONVERT((CONCAT(_ascii "%2$s:", p.id) COLLATE ascii_bin) USING utf8mb4) AS gid
+       CONVERT((CONCAT(_ascii "%2$s' . self::GROUP_ID_SEPARATOR . '", p.id) COLLATE ascii_bin) USING utf8mb4) AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
 LEFT JOIN Projects p ON p.id = pp.project_id
