@@ -275,7 +275,7 @@ class ProjectParticipants extends PMETableViewBase
    *
    * @todo Much of this is really CTOR stuff.
    */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectName     = $this->projectName;

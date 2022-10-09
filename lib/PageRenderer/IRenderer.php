@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +24,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+/** HTML Renderer interface. */
 interface IRenderer
 {
   /**
@@ -30,13 +32,18 @@ interface IRenderer
    * html code to stdout.
    *
    * @param bool $execute Kind of dry-run if set to false.
+   *
+   * @return void
    */
-  public function render(bool $execute = true);
+  public function render(bool $execute = true):void;
 
+  /** @return string */
   public function cssPrefix():string;
 
+  /** @return string */
   public function cssClass():string;
 
+  /** @return bool */
   public function needPhpSession():bool;
 }
 

@@ -175,7 +175,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   }
 
   /** {@inheritdoc} */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectId       = $this->projectId;

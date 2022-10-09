@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -75,7 +75,7 @@ class InsuranceRates extends PMETableViewBase
   }
 
   /** Show the underlying table. */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectName     = $this->projectName;

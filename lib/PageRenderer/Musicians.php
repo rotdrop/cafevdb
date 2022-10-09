@@ -255,7 +255,7 @@ make sure that the musicians are also automatically added to the
   }
 
   /** {@inheritdoc} */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectName     = $this->projectName;
