@@ -85,6 +85,7 @@ const PHPMyEdit = PMEState.PHPMyEdit;
 const pmeDefaultSelector = PMEState.defaultSelector;
 const pmePrefix = PMEState.prefix;
 const pmeOpenDialogs = PMEState.openDialogs;
+const pmePageRenderer = PMEState.pageRenderer;
 
 /**
  * Generate the jQuery object corresponding to the inner container
@@ -1955,6 +1956,7 @@ export {
   pmePushCancellable as pushCancellable,
   pmeHalt as halt,
   pmeIsHalted as halted,
+  pmePageRenderer as pageRenderer,
 };
 
 // Local Variables: ***

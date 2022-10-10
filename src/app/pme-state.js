@@ -49,6 +49,14 @@ const PHPMyEdit = {
   openDialogs: {},
 
   stopped: false,
+
+  pageRenderer: {
+    masterFieldSuffix: '__master_key',
+    valuesTableSep: '@',
+    joinKeySep: ':',
+    compKeySep: '-',
+    joinFieldNameSeparator: ':',
+  },
 };
 
 PHPMyEdit.dialogCSSId = PHPMyEdit.pmePrefix + '-table-dialog';
@@ -65,6 +73,7 @@ const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.pmePrefix;
 const PMEPrefix = pmePrefix.toUpperCase();
 const pmeOpenDialogs = PHPMyEdit.openDialogs;
+const pmePageRenderer = PHPMyEdit.pageRenderer;
 
 export {
   globalState,
@@ -74,6 +83,7 @@ export {
   pmePrefix as prefix,
   PMEPrefix as ucPrefix,
   pmeOpenDialogs as openDialogs,
+  pmePageRenderer as pageRenderer,
 };
 
 // Local Variables: ***
