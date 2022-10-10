@@ -196,18 +196,18 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   private $oldProjectBalanceSupportingDocument;
 
   /**
-   * @var ProjectBalanceSupportingDocument
+   * @var DatabaseStorageDirectory
    *
    * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", fetch="EXTRA_LAZY")
    */
-  private $projectBalanceSupportingDocument;
+  private $projectBalanceDocumentsFolder;
 
   /** {@inheritdoc} */
   public function __construct()
   {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
-    $this->projectBalanceSupportingDocuments = new ArrayCollection;
+    $this->projectBalanceDocumentsFolders = new ArrayCollection;
   }
 
   /**
@@ -533,8 +533,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    */
   public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
   {
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
-      $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
+    if (!empty($this->projectBalanceDocumentsFolder) && !empty($this->supportingDocument)) {
+      $this->projectBalanceDocumentsFolder->removeDocument($this->supportingDocument);
     }
 
     if (!empty($this->supportingDocument)) {
@@ -547,8 +547,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       $this->supportingDocument->link();
     }
 
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
-      $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
+    if (!empty($this->projectBalanceDocumentsFolder) && !empty($this->supportingDocument)) {
+      $this->projectBalanceDocumentsFolder->addDocument($this->supportingDocument);
     }
 
     return $this;
@@ -565,37 +565,37 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set projectBalanceSupportingDocument.
+   * Set projectBalanceDocumentsFolder.
    *
-   * @param ProjectBalanceSupportingDocument $projectBalanceSupportingDocument
+   * @param DatabaseStorageDirectory $projectBalanceDocumentsFolder
    *
    * @return ProjectPayment
    */
-  public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $projectBalanceSupportingDocument):CompositePayment
+  public function setProjectBalanceDocumentsFolder(?DatabaseStorageDirectory $projectBalanceDocumentsFolder):CompositePayment
   {
-    if (!empty($this->projectBalanceSupportingDocument)) {
+    if (!empty($this->projectBalanceDocumentsFolder)) {
       /** @var ProjectPayment $part */
       foreach ($this->projectPayments as $part) {
-        if ($part->getProjectBalanceSupportingDocument() == $this->projectBalanceSupportingDocument) {
-          $part->setProjectBalanceSupportingDocument(null);
+        if ($part->getProjectBalanceDocumentsFolder() == $this->projectBalanceDocumentsFolder) {
+          $part->setProjectBalanceDocumentsFolder(null);
         }
       }
       if (!empty($this->supportingDocument)) {
-        $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
+        $this->projectBalanceDocumentsFolder->removeDocument($this->supportingDocument);
       }
     }
 
-    $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
+    $this->projectBalanceDocumentsFolder = $projectBalanceDocumentsFolder;
 
-    if (!empty($this->projectBalanceSupportingDocument)) {
+    if (!empty($this->projectBalanceDocumentsFolder)) {
       if (!empty($this->supportingDocument)) {
-        $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
+        $this->projectBalanceDocumentsFolder->addDocument($this->supportingDocument);
       }
 
       /** @var ProjectPayment $part */
       foreach ($this->projectPayments as $part) {
-        if (empty($part->getProjectBalanceSupportingDocument())) {
-          $part->setProjectBalanceSupportingDocument($this->projectBalanceSupportingDocument);
+        if (empty($part->getProjectBalanceDocumentsFolder())) {
+          $part->setProjectBalanceDocumentsFolder($this->projectBalanceDocumentsFolder);
         }
       }
     }
@@ -604,18 +604,18 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Get projectBalanceSupportingDocument.
+   * Get projectBalanceDocumentsFolder.
    *
-   * @return ?ProjectBalanceSupportingDocument
+   * @return ?DatabaseStorageDirectory
    */
-  public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
+  public function getProjectBalanceDocumentsFolder():?DatabaseStorageDirectory
   {
-    return $this->projectBalanceSupportingDocument;
+    return $this->projectBalanceDocumentsFolder;
   }
 
   /**
    * Automatic subject generation from receivables and linked
-   * ProjectBalanceSupportingDocument's. The routine applies the supplied
+   * DatabaseStorageDirectory's. The routine applies the supplied
    * transliteration routine such that the result only contains valid
    * characters for a potential bank transaction data-set. It also tries to
    * group and compactify payments which carry the same prefix assuming the
@@ -634,14 +634,14 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       $transliterate = fn(string $x) => $x;
     }
 
-    // collect the ProjectBalanceSupportingDocument's
-    $balanceDocuments = [ $this->projectBalanceSupportingDocument ];
+    // collect the DatabaseStorageDirectory's
+    $balanceDocuments = [ $this->projectBalanceDocumentsFolder ];
     /** @var ProjectPayment $projectPayment */
     foreach ($this->projectPayments as $projectPayment) {
-      $balanceDocuments[] = $projectPayment->getProjectBalanceSupportingDocument();
+      $balanceDocuments[] = $projectPayment->getProjectBalanceDocumentsFolder();
     }
     $balanceSequences =  array_map(
-      fn(ProjectBalanceSupportingDocument $document) => $document->getSequence(),
+      fn(DatabaseStorageDirectory $document) => substr($document->getName() ?? '000', -3),
       array_filter($balanceDocuments),
     );
     sort($balanceSequences, SORT_NUMERIC);
