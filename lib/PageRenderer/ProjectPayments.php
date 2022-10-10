@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
+
+use \InvalidArgumentException;
+use \BadFunctionCallException;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -237,18 +240,19 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ],
   ];
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , ProjectService $projectService
-    , ProjectParticipantFieldsService $participantFieldsService
-    , FinanceService $financeService
-    , UserStorage $userStorage
-    , DatabaseStorageUtil $databaseStorageUtil
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ProjectService $projectService,
+    ProjectParticipantFieldsService $participantFieldsService,
+    FinanceService $financeService,
+    UserStorage $userStorage,
+    DatabaseStorageUtil $databaseStorageUtil,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectService = $projectService;
@@ -264,23 +268,20 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $this->initCrypto();
   }
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     return $this->l->t('Payments for project "%s"', [ $this->projectName ]);
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
-    $instruments     = $this->instruments;
-    $recordsPerPage  = $this->recordsPerPage;
 
     $projectMode = $this->projectId > 0;
     if (!$projectMode) {
-      throw new \InvalidArgumentException('Project-id and/or -name must be given.');
+      throw new InvalidArgumentException('Project-id and/or -name must be given.');
     }
 
     $opts            = [];
@@ -335,7 +336,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       static $oddCompositePayment = false;
 
       $compositePaymentId = $row['qf'.$pme->fdn['id']];
-      $projectPaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
+      // $projectPaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
 
       $cssClasses = ['composite-payment'];
       if ($lastCompositeId != $compositePaymentId) {
@@ -405,8 +406,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             'name' => $this->l->t('Display all columns'),
           ],
         ],
-    ]);
-    if ($this->addOperation()){
+      ]);
+    if ($this->addOperation()) {
       $opts['display']['tabs'] = false;
     }
 
@@ -741,7 +742,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'filters' => ('$table.deleted IS NULL'
                         . ' AND $table.data_type = \''.FieldType::SERVICE_FEE."'"
                         . ' AND NOT $table.key = CAST(\'\0\' AS BINARY(16))'
-                        . ($projectMode ? ' AND $table.project_id = '.$projectId : '')),
+                        . ($projectMode ? ' AND $table.project_id = '.$this->projectId : '')),
         ],
         'values2glue' => '<br/>',
         'display' => [
@@ -771,7 +772,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
          IN (SELECT DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", ppfd.project_id, ppfd.field_id, BIN2UUID(ppfd.option_key))
   FROM ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' ppfd
   WHERE ppfd.musician_id = (SELECT cp.musician_id FROM ' . self::COMPOSITE_PAYMENTS_TABLE . ' cp WHERE cp.id = $record_id[id])'
-      . ($projectMode ? ' AND ppfd.project_id = '.$projectId : '')
+      . ($projectMode ? ' AND ppfd.project_id = '.$this->projectId : '')
       . ')';
 
     $opts['fdd']['supporting_document_id'] = [
@@ -845,7 +846,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             $filesAppLink = '';
           }
           return $filesAppLink
-            . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:payment:document'].'" href="'.$downloadLink.'">' . $fileName . '.' . $extension . '</a>';
+            . '<a class="download-link ajax-download tooltip-auto"
+   title="'.$this->toolTipsService['project-payments:payment:document'].'"
+   href="'.$downloadLink.'">' . $fileName . '.' . $extension . '</a>';
         } else {
           return $value;
         }
@@ -1068,7 +1071,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             }
             return $this->compositeRowOnly($value, $action, $k, $row, $recordId, $pme);
           },
-      ]),
+        ]),
     );
 
     $this->makeJoinTableField(
@@ -1092,8 +1095,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'css'  => [ 'postfix' => [ 'bank-account-iban', ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'encryption' => [
-          'encrypt' => function($value) { return $this->ormEncrypt($value); },
-          'decrypt' => function($value) { return $this->ormDecrypt($value); },
+          'encrypt' => fn($value) => $this->ormEncrypt($value),
+          'decrypt' => fn($value) => $this->ormDecrypt($value),
         ],
         'display' => [
           'popup' => function($data) {
@@ -1138,7 +1141,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       if (false && !empty($bulkTransactionId)) {
         $pme->options = 'LVF';
         if ($op !== 'select') {
-          throw new \BadFunctionCallException(
+          throw new BadFunctionCallException(
             $this->l->t('Payments resulting from direct debit transfers cannot be changed.')
           );
         }
@@ -1279,7 +1282,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteDoDeleteSubPayments' ];
 
     if ($projectMode) {
-      $opts['filters'] = 'FIND_IN_SET('.$projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
+      $opts['filters'] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
     }
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
@@ -1296,8 +1299,21 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   /**
    * Sub-payment aware delete.
    *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeDeleteDoDeleteSubPayments(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  public function beforeDeleteDoDeleteSubPayments(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
@@ -1356,8 +1372,22 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
      [ProjectPayments:subject] => sadfgdsafasd,sdafdasfas
      [ProjectPayments:id] => 976,978
      [ProjectParticipantFieldsDataOptions:composite_key] => 18-224-82fad011-04a6-11ec-9e3f-04e261401ed5,18-224-82fb239c-04a6-11ec-9e3f-04e261401ed5 )
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateSanitizeFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function beforeUpdateSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
@@ -1500,8 +1530,22 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    * parts have to be added afterwards.
    *
    * Copying sub-transactions is supported.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeInsertSanitizeFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function beforeInsertSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
@@ -1615,34 +1659,106 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   /**
    * Print only the values for the composite row.
    *
+   * @param mixed $value Value passed on from PME.
+   *
+   * @param string $action Curent PME-action.
+   *
+   * @param int $k Current PME fdd index.
+   *
+   * @param array $row Row data from PME.
+   *
+   * @param array $recordId Record-id of current row.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @return string HTML fragment.
+   *
    * @todo: if the search results (e.g. for the amount) do not contain
    * the composite row, then the missing data should also be printed.
    */
-  public function compositeRowOnly($value, $action, $k, $row, $recordId, $pme)
-  {
+  public function compositeRowOnly(
+    mixed $value,
+    string $action,
+    int $k,
+    array $row,
+    array $recordId,
+    PHPMyEdit $pme,
+  ) {
     return $this->selectiveRowDisplay('composite', $value, $action, $k, $row, $recordId, $pme);
   }
 
   /**
    * Print only the values for the component row.
    *
+   * @param mixed $value Value passed on from PME.
+   *
+   * @param string $action Curent PME-action.
+   *
+   * @param int $k Current PME fdd index.
+   *
+   * @param array $row Row data from PME.
+   *
+   * @param array $recordId Record-id of current row.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @return string HTML fragment.
+   *
    * @todo: if the search results (e.g. for the amount) do not contain
    * the composite row, then the missing data should also be printed.
    */
-  public function componentRowOnly($value, $action, $k, $row, $recordId, $pme)
-  {
+  public function componentRowOnly(
+    mixed $value,
+    string $action,
+    int $k,
+    array $row,
+    array $recordId,
+    PHPMyEdit $pme,
+  ) {
     return $this->selectiveRowDisplay('component', $value, $action, $k, $row, $recordId, $pme);
   }
 
-  /** Decide whether the current row refers to the composite payment or to a "split" project-payment */
-  private function isCompositeRow($row, $pme)
+  /**
+   *  Decide whether the current row refers to the composite payment or to a "split" project-payment.
+   *
+   * @param array $row
+   *
+   * @param PHPMyEdit $pme
+   *
+   * @return bool
+   */
+  private function isCompositeRow(array $row, PHPMyEdit $pme):bool
   {
     $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
     return $this->isCompositeRowTag($rowTag);
   }
 
-  private function selectiveRowDisplay($where, $value, $action, $k, $row, $recordId, $pme)
-  {
+  /**
+   * @param string $where
+   *
+   * @param mixed $value Value passed on from PME.
+   *
+   * @param string $action Curent PME-action.
+   *
+   * @param int $k Current PME fdd index.
+   *
+   * @param array $row Row data from PME.
+   *
+   * @param array $recordId Record-id of current row.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @return string HTML fragment.
+   */
+  private function selectiveRowDisplay(
+    string $where,
+    mixed $value,
+    string $action,
+    int $k,
+    array $row,
+    array $recordId,
+    PHPMyEdit $pme,
+  ):string {
     $compositeRow = $this->isCompositeRow($row, $pme);
     $composite = $where === 'composite';
     $component = $where === 'component';
@@ -1655,9 +1771,29 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
   /**
    * Callback-hook for download-link display (view, delete, list)
+   *
+   * @param mixed $value Value passed on from PME.
+   *
+   * @param string $action Curent PME-action.
+   *
+   * @param int $k Current PME fdd index.
+   *
+   * @param array $row Row data from PME.
+   *
+   * @param array $recordId Record-id of current row.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @return string HTML fragment.
    */
-  private function createSupportingDocumentsDownload($value, $action, $k, $row, $recordId, $pme)
-  {
+  private function createSupportingDocumentsDownload(
+    mixed $value,
+    string $action,
+    int $k,
+    array $row,
+    array $recordId,
+    PHPMyEdit $pme,
+  ):string {
     $musicianId = $row['qf'.$pme->fdn['musician_id']];
     if ($this->isCompositeRow($row, $pme)) {
       $receivables = Util::explode(self::VALUES_SEP, $row['qf'.$k.'_idx']);
@@ -1682,13 +1818,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             $this->logError('Cannot find field-datum for musician ' . $musicianId . ' and option-key ' . $optionKey);
             continue;
           }
-          if (!empty($document = $fieldDatum->getSupportingDocument())) {
+          $document = $fieldDatum->getSupportingDocument();
+          if (!empty($document)) {
             $supportingDocuments[] = $document;
           }
           $project = $project??$fieldDatum->getProject();
         }
-        $dateOfReceipt = $row['qf'.$pme->fdn['date_of_receipt']];
-        $subject = Util::dashesToCamelCase($row['qf'.$pme->fdn['subject']], capitalizeFirstCharacter: true, dashes: ' _-');
 
         $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $userIdSlug);
 
@@ -1702,7 +1837,14 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           : $this->getDocumentsFolderName() . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName();
         $filesAppAnchor = $this->getFilesAppAnchor(null, $fieldDatum->getMusician(), project: $project, subFolder: $subFolder);
         $downloadLink = $this->databaseStorageUtil->getDownloadLink($supportingDocuments, $fileName);
-        return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . '</span><span class="pme-cell-content">' . '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>' . '</a></span></div>';
+        return '<div class="flex-container"><span class="pme-cell-prefix">'
+          . $filesAppAnchor
+          . '</span><span class="pme-cell-content">'
+          . '<a class="download-link ajax-download tooltip-auto"
+   title="'.$this->toolTipsService['project-payments:receivable:document'].'"
+   href="'.$downloadLink.'">'
+          . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">' . $value . '</div></div>'
+          . '</a></span></div>';
       }
     }
 
@@ -1727,7 +1869,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     if (!empty($fileInfo)) {
       $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['file'], $fileInfo['baseName']);
-      $downloadAnchor = '<a class="download-link ajax-download tooltip-auto" title="'.$this->toolTipsService['project-payments:receivable:document'].'" href="'.$downloadLink.'">' . $valueHtml . '</a>';
+      $downloadAnchor = '<a class="download-link ajax-download tooltip-auto"
+   title="'.$this->toolTipsService['project-payments:receivable:document'].'"
+   href="'.$downloadLink.'">' . $valueHtml . '</a>';
     } else {
       $downloadAnchor = $valueHtml;
     }
