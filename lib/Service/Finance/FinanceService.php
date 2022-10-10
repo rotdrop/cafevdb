@@ -522,7 +522,7 @@ class FinanceService
       'categories' => $categories,
       'description' => $description,
       'calendar' => $calendarId,
-      'priority' => 99, // will get a star if != 0
+      'priority' => 9, // will get a star if != 0
       'alarm' => $alarm,
     ];
 
