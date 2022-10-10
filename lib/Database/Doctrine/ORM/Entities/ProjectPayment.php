@@ -113,7 +113,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", fetch="EXTRA_LAZY")
    */
-  private $projectBalanceDocumentsFolder;
+  private $balanceDocumentsFolder;
 
   public function __construct() {
     $this->arrayCTOR();
@@ -297,19 +297,19 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setReceivable(ProjectParticipantFieldDatum $receivable):ProjectPayment
   {
-    if (!empty($this->projectBalanceDocumentsFolder) && !empty($this->receivable)) {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->projectBalanceDocumentsFolder->removeDocument($supportingDocument);
+        $this->balanceDocumentsFolder->removeDocument($supportingDocument);
       }
     }
 
     $this->receivable = $receivable;
 
-    if (!empty($this->projectBalanceDocumentsFolder) && !empty($this->receivable)) {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->projectBalanceDocumentsFolder->addDocument($supportingDocument);
+        $this->balanceDocumentsFolder->addDocument($supportingDocument);
       }
     }
 
@@ -351,27 +351,27 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set projectBalanceDocumentsFolder.
+   * Set balanceDocumentsFolder.
    *
-   * @param DatabaseStorageDirectory $projectBalanceDocumentsFolder
+   * @param DatabaseStorageDirectory $balanceDocumentsFolder
    *
    * @return ProjectPayment
    */
-  public function setProjectBalanceDocumentsFolder(?DatabaseStorageDirectory $projectBalanceDocumentsFolder):ProjectPayment
+  public function setBalanceDocumentsFolder(?DatabaseStorageDirectory $balanceDocumentsFolder):ProjectPayment
   {
-    if (!empty($this->projectBalanceDocumentsFolder) && !empty($this->receivable)) {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->projectBalanceDocumentsFolder->removeDocument($supportingDocument);
+        $this->balanceDocumentsFolder->removeDocument($supportingDocument);
       }
     }
 
-    $this->projectBalanceDocumentsFolder = $projectBalanceDocumentsFolder;
+    $this->balanceDocumentsFolder = $balanceDocumentsFolder;
 
-    if (!empty($this->projectBalanceDocumentsFolder) && !empty($this->receivable)) {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->projectBalanceDocumentsFolder->addDocument($supportingDocument);
+        $this->balanceDocumentsFolder->addDocument($supportingDocument);
       }
     }
 
@@ -379,13 +379,13 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Get projectBalanceDocumentsFolder.
+   * Get balanceDocumentsFolder.
    *
    * @return ?DatabaseStorageDirectory
    */
-  public function getProjectBalanceDocumentsFolder():?DatabaseStorageDirectory
+  public function getBalanceDocumentsFolder():?DatabaseStorageDirectory
   {
-    return $this->projectBalanceDocumentsFolder;
+    return $this->balanceDocumentsFolder;
   }
 
   /** \JsonSerializable interface */

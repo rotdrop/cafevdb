@@ -200,14 +200,14 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", fetch="EXTRA_LAZY")
    */
-  private $projectBalanceDocumentsFolder;
+  private $balanceDocumentsFolder;
 
   /** {@inheritdoc} */
   public function __construct()
   {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
-    $this->projectBalanceDocumentsFolders = new ArrayCollection;
+    $this->balanceDocumentsFolders = new ArrayCollection;
   }
 
   /**
@@ -533,8 +533,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    */
   public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
   {
-    if (!empty($this->projectBalanceDocumentsFolder) && !empty($this->supportingDocument)) {
-      $this->projectBalanceDocumentsFolder->removeDocument($this->supportingDocument);
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
+      $this->balanceDocumentsFolder->removeDocument($this->supportingDocument);
     }
 
     if (!empty($this->supportingDocument)) {
@@ -547,8 +547,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       $this->supportingDocument->link();
     }
 
-    if (!empty($this->projectBalanceDocumentsFolder) && !empty($this->supportingDocument)) {
-      $this->projectBalanceDocumentsFolder->addDocument($this->supportingDocument);
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
+      $this->balanceDocumentsFolder->addDocument($this->supportingDocument);
     }
 
     return $this;
@@ -565,37 +565,37 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set projectBalanceDocumentsFolder.
+   * Set balanceDocumentsFolder.
    *
-   * @param DatabaseStorageDirectory $projectBalanceDocumentsFolder
+   * @param DatabaseStorageDirectory $balanceDocumentsFolder
    *
    * @return ProjectPayment
    */
-  public function setProjectBalanceDocumentsFolder(?DatabaseStorageDirectory $projectBalanceDocumentsFolder):CompositePayment
+  public function setBalanceDocumentsFolder(?DatabaseStorageDirectory $balanceDocumentsFolder):CompositePayment
   {
-    if (!empty($this->projectBalanceDocumentsFolder)) {
+    if (!empty($this->balanceDocumentsFolder)) {
       /** @var ProjectPayment $part */
       foreach ($this->projectPayments as $part) {
-        if ($part->getProjectBalanceDocumentsFolder() == $this->projectBalanceDocumentsFolder) {
-          $part->setProjectBalanceDocumentsFolder(null);
+        if ($part->getBalanceDocumentsFolder() == $this->balanceDocumentsFolder) {
+          $part->setBalanceDocumentsFolder(null);
         }
       }
       if (!empty($this->supportingDocument)) {
-        $this->projectBalanceDocumentsFolder->removeDocument($this->supportingDocument);
+        $this->balanceDocumentsFolder->removeDocument($this->supportingDocument);
       }
     }
 
-    $this->projectBalanceDocumentsFolder = $projectBalanceDocumentsFolder;
+    $this->balanceDocumentsFolder = $balanceDocumentsFolder;
 
-    if (!empty($this->projectBalanceDocumentsFolder)) {
+    if (!empty($this->balanceDocumentsFolder)) {
       if (!empty($this->supportingDocument)) {
-        $this->projectBalanceDocumentsFolder->addDocument($this->supportingDocument);
+        $this->balanceDocumentsFolder->addDocument($this->supportingDocument);
       }
 
       /** @var ProjectPayment $part */
       foreach ($this->projectPayments as $part) {
-        if (empty($part->getProjectBalanceDocumentsFolder())) {
-          $part->setProjectBalanceDocumentsFolder($this->projectBalanceDocumentsFolder);
+        if (empty($part->getBalanceDocumentsFolder())) {
+          $part->setBalanceDocumentsFolder($this->balanceDocumentsFolder);
         }
       }
     }
@@ -604,13 +604,13 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Get projectBalanceDocumentsFolder.
+   * Get balanceDocumentsFolder.
    *
    * @return ?DatabaseStorageDirectory
    */
-  public function getProjectBalanceDocumentsFolder():?DatabaseStorageDirectory
+  public function getBalanceDocumentsFolder():?DatabaseStorageDirectory
   {
-    return $this->projectBalanceDocumentsFolder;
+    return $this->balanceDocumentsFolder;
   }
 
   /**
@@ -635,10 +635,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     }
 
     // collect the DatabaseStorageDirectory's
-    $balanceDocuments = [ $this->projectBalanceDocumentsFolder ];
+    $balanceDocuments = [ $this->balanceDocumentsFolder ];
     /** @var ProjectPayment $projectPayment */
     foreach ($this->projectPayments as $projectPayment) {
-      $balanceDocuments[] = $projectPayment->getProjectBalanceDocumentsFolder();
+      $balanceDocuments[] = $projectPayment->getBalanceDocumentsFolder();
     }
     $balanceSequences =  array_map(
       fn(DatabaseStorageDirectory $document) => substr($document->getName() ?? '000', -3),
