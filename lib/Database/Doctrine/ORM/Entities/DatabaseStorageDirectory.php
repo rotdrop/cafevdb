@@ -92,11 +92,32 @@ class DatabaseStorageDirectory implements \ArrayAccess
    */
   protected $documents;
 
+
+  /**
+   * @var Collection
+   *
+   * Optional linked project payments.
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="balanceDocumentsFolder", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  private $projectPayments;
+
+  /**
+   * @var Collection
+   *
+   * Optional linked composite payments.
+   *
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="balanceDocumentsFolder", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  private $compositePayments;
+
   /** {@inheritdoc} */
   public function __construct()
   {
     $this->databaseStorageDirectories = new ArrayCollection;
     $this->documents = new ArrayCollection;
+    $this->projectPayments = new ArrayCollection();
+    $this->compositePayments = new ArrayCollection();
   }
 
   /** @return null|int */
@@ -251,5 +272,60 @@ class DatabaseStorageDirectory implements \ArrayAccess
       $file->unlink();
     }
     return $this;
+  }
+
+
+  /**
+   * Set projectPayments.
+   *
+   * @param Collection $projectPayments
+   *
+   * @return SepaDebitMandate
+   */
+  public function setProjectPayments(?Collection $projectPayments):ProjectBalanceSupportingDocument
+  {
+    if (empty($projectPayments)) {
+      $projectPayments = new ArrayCollection;
+    }
+    $this->projectPayments = $projectPayments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectPayments.
+   *
+   * @return Collection
+   */
+  public function getProjectPayments():Collection
+  {
+    return $this->projectPayments;
+  }
+
+  /**
+   * Set compositePayments.
+   *
+   * @param Collection $compositePayments
+   *
+   * @return SepaDebitMandate
+   */
+  public function setCompositePayments(?Collection $compositePayments):ProjectBalanceSupportingDocument
+  {
+    if (empty($compositePayments)) {
+      $compositePayments = new ArrayCollection;
+    }
+    $this->compositePayments = $compositePayments;
+
+    return $this;
+  }
+
+  /**
+   * Get compositePayments.
+   *
+   * @return Collection
+   */
+  public function getCompositePayments():Collection
+  {
+    return $this->compositePayments;
   }
 }

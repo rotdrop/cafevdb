@@ -198,7 +198,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * @var DatabaseStorageDirectory
    *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", inversedBy="compositePayments", fetch="EXTRA_LAZY")
    */
   private $balanceDocumentsFolder;
 

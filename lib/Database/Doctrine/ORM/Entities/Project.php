@@ -357,7 +357,7 @@ class Project implements \ArrayAccess
   /**
    * Get webPages.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getWebPages()
   {
@@ -477,7 +477,7 @@ class Project implements \ArrayAccess
   /**
    * Get instrumentationNumbers.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getInstrumentationNumbers()
   {
@@ -501,7 +501,7 @@ class Project implements \ArrayAccess
   /**
    * Get payments.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getPayments():Collection
   {
@@ -525,35 +525,11 @@ class Project implements \ArrayAccess
   /**
    * Get sentEmail.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getSentEmail():Collection
   {
     return $this->sentEmail;
-  }
-
-  /**
-   * Set financialBalanceSupportingDocuments.
-   *
-   * @param Collection $financialBalanceSupportingDocuments
-   *
-   * @return Project
-   */
-  public function setFinancialBalanceSupportingDocuments(Collection $financialBalanceSupportingDocuments):Project
-  {
-    $this->financialBalanceSupportingDocuments = $financialBalanceSupportingDocuments;
-
-    return $this;
-  }
-
-  /**
-   * Get financialBalanceSupportingDocuments.
-   *
-   * @return ArrayCollection
-   */
-  public function getFinancialBalanceSupportingDocuments():Collection
-  {
-    return $this->financialBalanceSupportingDocuments;
   }
 
   /**
@@ -563,7 +539,10 @@ class Project implements \ArrayAccess
    */
   public function getFinancialBalanceSupportingDocumentsChanged():?\DateTimeInterface
   {
-    return $this->financialBalanceSupportingDocumentsChanged;
+    if (!empty($this->financialBalanceDocumentsFolder)) {
+      return $this->financialBalanceDocumentsFolder->getUpdated();
+    }
+    return (new DateTimeImmutable())->setTimestamp(1);
   }
 
   /**
@@ -583,12 +562,28 @@ class Project implements \ArrayAccess
   /**
    * Get financialBalanceDocumentsFolder.
    *
-   * @return ArrayCollection
+   * @return null|DatabaseStorageDirectory
    */
-  public function getFinancialBalanceDocumentsFolder():DatabaseStorageDirectory
+  public function getFinancialBalanceDocumentsFolder():?DatabaseStorageDirectory
   {
     return $this->financialBalanceDocumentsFolder;
   }
+
+  /**
+   * Recurse to the balance documents folder and return its contents. Return
+   * an empty collection if there is no such folder.
+   *
+   * @return Collection
+   */
+  public function getFinancialBalanceSupportingDocuments():Collection
+  {
+    if (empty($this->financialBalanceDocumentsFolder)) {
+      \OCP\Util::writeLog('ORM', __METHOD__ . ' no folder', \OCP\Util::INFO);
+      return new ArrayCollection;
+    }
+    return $this->financialBalanceDocumentsFolder->getDatabaseStorageDirectories();
+  }
+
 
   /**
    * Set participantInstruments.
@@ -607,7 +602,7 @@ class Project implements \ArrayAccess
   /**
    * Get participantInstruments.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getParticipantInstruments():Collection
   {
@@ -631,7 +626,7 @@ class Project implements \ArrayAccess
   /**
    * Get calendarEvents.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getCalendarEvents():Collection
   {

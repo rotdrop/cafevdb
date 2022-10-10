@@ -90,6 +90,7 @@ class EncryptedFile extends File
       $this->addOwner($owner);
     }
     $this->projectBalanceSupportingDocuments = new ArrayCollection;
+    $this->databaseStorageDirectories = new ArrayCollection;
   }
 
   /**
