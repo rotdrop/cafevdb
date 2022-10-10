@@ -427,26 +427,33 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Return the field's name translated to the app's locale.
+   * @param string $name Name to sanitize.
+   *
+   * @return string Sanitized file-name, no dots, no slashes, no spaces
+   */
+  public static function sanitizeFileName(string $name):string
+  {
+    $name = Util::normalizeSpaces($name);
+    $name = preg_replace([ '|\s*/\s*|', '/[.]/', '/\s*/' ], [ '-', '_', '' ], $name);
+
+    return $name;
+  }
+
+  /**
+   * Sanitize the field name s.t. it is suitable as a file-system entry.
    */
   public function getFileSystemFieldName(Entities\ProjectParticipantField $field)
   {
     assert($field->isFileSystemContext());
-    return $field->getName();
-    // return $this->entityManager->getLocalizedFieldValue($field, 'name', [
-    //   $this->appL10n()->getLocaleCode(),
-    //   ConfigService::DEFAULT_LOCALE,
-    // ]);
+
+    return self::sanitizeFileName($field->getName());
   }
 
   public function getFileSystemOptionLabel(Entities\ProjectParticipantFieldDataOption $option)
   {
     assert($option->isFileSystemContext());
-    return $option->getLabel();
-    // return $this->entityManager->getLocalizedFieldValue($option, 'label', [
-    //   $this->appL10n()->getLocaleCode(),
-    //   ConfigService::DEFAULT_LOCALE,
-    // ]);
+
+    return self::sanitizeFileName($option->getLabel());
   }
 
   /**
