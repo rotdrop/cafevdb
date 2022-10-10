@@ -40,6 +40,7 @@ import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import selectValues from './select-values.js';
+import { pageRenderer } from './pme-state.js';
 import {
   sys as pmeSys,
   formSelector as pmeFormSelector,
@@ -659,7 +660,10 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     const label = nameParts[0];
     const fieldId = nameParts[1];
     // const column = nameParts[2];
-    const groupFieldName = label + '@' + fieldId + ':' + 'option_key';
+    const groupFieldName = label
+          + pageRenderer.valuesTableSep + fieldId
+          + pageRenderer.joinFieldNameSeparator + 'option'
+          + pageRenderer.masterFieldSuffix;
     console.log('group id name', groupFieldName);
     self.data('groupField', form.find('[name="' + groupFieldName + '"]'));
     self.data('fieldId', fieldId);
