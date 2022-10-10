@@ -472,6 +472,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'select' => 'D',
         'input' => 'M',
         'input|C' => 'R',
+        'default|C' => $this->musicianId,
         'values' => [
           'description' => [
             'columns' => [ self::musicianPublicNameSql() ],
@@ -1162,6 +1163,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($musicianReceivableFilter) {
 
+        $this->logInfo('RECORD ID ' . print_r($pme->rec, true) . ' op ' . $op);
 
         $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
         $rowTag = $row['qf'.$rowTagIndex];
@@ -1170,6 +1172,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $pme->fdd[$balanceDocumentSequenceIndex]['select'] = $this->isCompositeRowTag($rowTag) ? 'M' : 'D';
 
         if ($this->listOperation()) {
+          $this->logInfo('LIST OPERATION');
           return true;
         }
 
@@ -1188,7 +1191,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $compositeBalanceDocumentSequenceIndex = $pme->fdn['balance_document_sequence'];
 
         if ($this->isCompositeRowTag($rowTag)) {
-          $this->logInfo('COMPOSITE ROW');
+          $this->debug('COMPOSITE ROW');
           $pme->fdd[$receivableKeyIndex]['input'] = 'HR';
           $pme->fdd[$amountIndex]['input'] = 'M';
           $pme->fdd[$paymentsAmountIndex]['input'] = 'HR';
@@ -1222,7 +1225,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             }
           }
         } else {
-          $this->logDebug('COMPONENT ROW');
+          $this->debug('COMPONENT ROW');
           $pme->fdd[$receivableKeyIndex]['select'] = 'D';
           $pme->fdd[$receivableKeyIndex]['values']['filters'] = $musicianReceivableFilter;
           $pme->fdd[$paymentsIdIndex]['input'] = 'RH';
@@ -1748,7 +1751,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
    *
    * @param PHPMyEdit $pme The phpMyEdit instance.
    *
-   * @return string HTML fragment.
+   * @return null|string HTML fragment or null.
    */
   private function selectiveRowDisplay(
     string $where,
@@ -1758,13 +1761,12 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     array $row,
     array $recordId,
     PHPMyEdit $pme,
-  ):string {
+  ):?string {
     $compositeRow = $this->isCompositeRow($row, $pme);
     $composite = $where === 'composite';
     $component = $where === 'component';
     if (($compositeRow && $composite) || (!$compositeRow && $component)) {
       return $value;
-    } else {
     }
     return '';
   }
