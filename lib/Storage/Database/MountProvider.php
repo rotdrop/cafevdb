@@ -117,12 +117,13 @@ class MountProvider implements IMountProvider
 
     /** @var UserStorage $userStorage */
     $userStorage = $this->di(UserStorage::class);
-    if (empty($userStorage->user())) {
-      $userStorage->setUser($user);
-    }
+
+    // we have to install the correct user into our UserStorage support class on each call.
+    $userStorage->setUser($user);
+
     $node = $userStorage->get($sharedFolder);
     if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
-      $this->logException(new \Exception('No shared folder for ' . $userId));
+      $this->logException(new \Exception('No shared folder "' . $sharedFolder. '" for ' . $userId));
       --self::$recursionLevel;
       return [];
     }
