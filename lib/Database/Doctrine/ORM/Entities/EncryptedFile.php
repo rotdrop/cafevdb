@@ -199,4 +199,57 @@ class EncryptedFile extends File
     }
     return $this;
   }
+
+  /**
+   * Set databaseStorageDirectories.
+   *
+   * @param Collection $databaseStorageDirectories
+   *
+   * @return EncryptedFile
+   */
+  public function setDatabaseStorageDirectories(Collection $supportingDocuments):EncryptedFile
+  {
+    $this->databaseStorageDirectories = $supportingDocuments;
+    return $this;
+  }
+
+  /**
+   * Get databaseStorageDirectories.
+   *
+   * @return null|DatabaseStorageDirectory
+   */
+  public function getDatabaseStorageDirectories():Collection
+  {
+    return $this->databaseStorageDirectories;
+  }
+
+  /**
+   * Add one document container.
+   *
+   * @param DatabaseStorageDirectory $entity
+   *
+   * @return EncryptedFile
+   */
+  public function addDatabaseStorageDirectory(DatabaseStorageDirectory $entity):EncryptedFile
+  {
+    if (!$this->databaseStorageDirectories->contains($entity)) {
+      $this->databaseStorageDirectories->add($entity);
+    }
+    return $this;
+  }
+
+  /**
+   * Remove one document container.
+   *
+   * @param DatabaseStorageDirectory $entity
+   *
+   * @return null|DatabaseStorageDirectory
+   */
+  public function removeDatabaseStorageDirectory(DatabaseStorageDirectory $entity):EncryptedFile
+  {
+    if ($this->databaseStorageDirectories->contains($entity)) {
+      $this->databaseStorageDirectories->removeElement($entity);
+    }
+    return $this;
+  }
 }

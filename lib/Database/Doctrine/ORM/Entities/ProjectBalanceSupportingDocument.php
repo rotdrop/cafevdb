@@ -106,7 +106,7 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    *
    * Optional linked project payments.
    *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectBalanceSupportingDocument", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="oldProjectBalanceSupportingDocument", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
   private $projectPayments;
 
@@ -115,7 +115,7 @@ class ProjectBalanceSupportingDocument implements \ArrayAccess
    *
    * Optional linked composite payments.
    *
-   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="projectBalanceSupportingDocument", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="oldProjectBalanceSupportingDocument", cascade={"persist"}, fetch="EXTRA_LAZY")
    */
   private $compositePayments;
 

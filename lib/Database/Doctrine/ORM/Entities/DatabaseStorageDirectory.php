@@ -87,7 +87,7 @@ class DatabaseStorageDirectory implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="databaseStorageDirectories", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="databaseStorageDirectories", cascade={"persist"}, indexBy="id", fetch="EXTRA_LAZY")
    * @ORM\JoinTable
    */
   protected $documents;
@@ -204,6 +204,52 @@ class DatabaseStorageDirectory implements \ArrayAccess
   {
     $this->documents = $documents;
 
+    return $this;
+  }
+
+  /**
+   * Add the given file to the list of supporting documents if not already present.
+   *
+   * This increases the link-count of the file and add this entity to the
+   * container collection of the encrypted file.
+   *
+   * @param EncryptedFile $file
+   *
+   * @return ProjectBalanceSupportingDocument
+   */
+  public function addDocument(EncryptedFile $file):DatabaseStorageDirectory
+  {
+    if (empty($file->getId())) {
+      throw new RuntimeException('The supporting document does not have an id.');
+    }
+    if (!$this->documents->containsKey($file->getId())) {
+      $file->link();
+      $file->addDatabaseStorageDirectory($this);
+      $this->documents->set($file->getId(), $file);
+    }
+    return $this;
+  }
+
+  /**
+   * Remove the given file from the list of supporting documents.
+   *
+   * This also decrements the link count of the file and removes $this from
+   * the collection of document containes of the encrypted file entity.
+   *
+   * @param EncryptedFile $file
+   *
+   * @return ProjectBalanceSupportingDocument
+   */
+  public function removeDocument(EncryptedFile $file):DatabaseStorageDirectory
+  {
+    if (empty($file->getId())) {
+      throw new RuntimeException('The supporting document does not have an id.');
+    }
+    if ($this->documents->containsKey($file->getId())) {
+      $this->documents->remove($file->getId());
+      $file->removeDatabaseStorageDirectory($this);
+      $file->unlink();
+    }
     return $this;
   }
 }

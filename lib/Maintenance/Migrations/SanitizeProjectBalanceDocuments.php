@@ -39,6 +39,12 @@ class SanitizeProjectBalanceDocuments extends AbstractMigration
       'ALTER TABLE Projects ADD COLUMN IF NOT EXISTS financial_balance_documents_folder_id INT DEFAULT NULL',
       'ALTER TABLE Projects ADD CONSTRAINT FK_A5E5D1F2ABE5D3E5 FOREIGN KEY IF NOT EXISTS (financial_balance_documents_folder_id) REFERENCES DatabaseStorageDirectories (id)',
       'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_A5E5D1F2ABE5D3E5 ON Projects (financial_balance_documents_folder_id)',
+      'ALTER TABLE CompositePayments ADD project_balance_supporting_document_id INT DEFAULT NULL',
+      'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C5DA42B6B FOREIGN KEY (project_balance_supporting_document_id) REFERENCES DatabaseStorageDirectories (id)',
+      'CREATE INDEX IDX_65D9920C5DA42B6B ON CompositePayments (project_balance_supporting_document_id)',
+      'ALTER TABLE ProjectPayments ADD project_balance_supporting_document_id INT DEFAULT NULL',
+      'ALTER TABLE ProjectPayments ADD CONSTRAINT FK_F6372AE25DA42B6B FOREIGN KEY (project_balance_supporting_document_id) REFERENCES DatabaseStorageDirectories (id)',
+      'CREATE INDEX IDX_F6372AE25DA42B6B ON ProjectPayments (project_balance_supporting_document_id)',
     ],
     self::TRANSACTIONAL => [
       // Create the root nodes

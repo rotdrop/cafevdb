@@ -193,6 +193,13 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *   @ORM\JoinColumn(name="balance_document_sequence", referencedColumnName="sequence", nullable=true)
    * )
    */
+  private $oldProjectBalanceSupportingDocument;
+
+  /**
+   * @var ProjectBalanceSupportingDocument
+   *
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", fetch="EXTRA_LAZY")
+   */
   private $projectBalanceSupportingDocument;
 
   /** {@inheritdoc} */
