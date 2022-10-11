@@ -42,7 +42,7 @@ trait DateTimeTrait
    */
   public static function ensureDate(?DateTimeInterface $dateTime):DateTimeInterface
   {
-    return $dateTime ?? (new DateTimeImmutable)->setTimestamp(1);
+    return $dateTime ?? new DateTimeImmutable('@1');
   }
 
   /**
