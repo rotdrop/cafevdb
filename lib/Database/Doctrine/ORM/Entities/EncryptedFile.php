@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,9 @@ class EncryptedFile extends File
    */
   private $databaseStorageDirEntries;
 
-  public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null) {
+  /** {@inheritdoc} */
+  public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null)
+  {
     parent::__construct($fileName, null, $mimeType);
     $this->owners = new ArrayCollection;
     $data = $data ?? '';
@@ -146,6 +148,8 @@ class EncryptedFile extends File
   public function removeOwner(Musician $musician):EncryptedFile
   {
     $this->owners->remove($musician->getId());
+
+    return $this;
   }
 
   /**
@@ -155,9 +159,10 @@ class EncryptedFile extends File
    *
    * @return EncryptedFile
    */
-  public function setDatabaseStorageDirectories(Collection $supportingDocuments):EncryptedFile
+  public function setDatabaseStorageDirectories(Collection $databaseStorageDirectories):EncryptedFile
   {
-    $this->databaseStorageDirectories = $supportingDocuments;
+    $this->databaseStorageDirectories = $databaseStorageDirectories;
+
     return $this;
   }
 
@@ -204,7 +209,7 @@ class EncryptedFile extends File
   /**
    * Set databaseStorageDirEntries.
    *
-   * @param Collection $databaseStorageDirEntries
+   * @param Collection $dirEntries
    *
    * @return EncryptedFile
    */
@@ -227,7 +232,7 @@ class EncryptedFile extends File
   /**
    * Add one document container.
    *
-   * @param DatabaseStorageDirectory $entity
+   * @param DatabaseStorageFile $entity
    *
    * @return EncryptedFile
    */
@@ -242,7 +247,7 @@ class EncryptedFile extends File
   /**
    * Remove one document container.
    *
-   * @param DatabaseStorageDirectory $entity
+   * @param DatabaseStorageFile $entity
    *
    * @return null|DatabaseStorageDirectory
    */

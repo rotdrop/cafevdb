@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use OCP\Image as CloudImage;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
@@ -63,9 +65,13 @@ class Image extends File
   private $height;
 
   /**
-   * Allow construction from a cloud image obejct
+   * Allow construction from a cloud image obejct.
+   *
+   * @param null|string $fileName
+   *
+   * @param null|CloudImage $image
    */
-  public function __construct($fileName = null, ?\OCP\Image $image = null)
+  public function __construct(?string $fileName = null, ?CloudImage $image = null)
   {
     parent::__construct($fileName, $image->data(), $image->mimeType());
     $this->setWidth($image->width())
@@ -75,11 +81,11 @@ class Image extends File
   /**
    * Set $width.
    *
-   * @param int $imageData
+   * @param int $width
    *
    * @return Image
    */
-  public function setWidth(int $width = -1)
+  public function setWidth(int $width = -1):Image
   {
     $this->width = $width;
 
@@ -99,11 +105,11 @@ class Image extends File
   /**
    * Set $height.
    *
-   * @param int $imageData
+   * @param int $height
    *
    * @return Image
    */
-  public function setHeight(int $height= -1)
+  public function setHeight(int $height = -1):Image
   {
     $this->height = $height;
 

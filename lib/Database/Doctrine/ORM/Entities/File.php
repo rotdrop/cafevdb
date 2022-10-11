@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,6 +46,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
  * @ORM\DiscriminatorMap({"generic"="File","encrypted"="EncryptedFile","image"="Image"})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\FilesRepository")
+ *
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class File implements \ArrayAccess
 {
@@ -130,7 +132,9 @@ class File implements \ArrayAccess
    */
   private $updated;
 
-  public function __construct($fileName = null, $data = null, $mimeType = null) {
+  /** {@inheritdoc} */
+  public function __construct($fileName = null, $data = null, $mimeType = null)
+  {
     $this->arrayCTOR();
     $this->setFileName($fileName);
     $this->setMimeType($mimeType);
@@ -269,6 +273,10 @@ class File implements \ArrayAccess
 
   /**
    * Set only the dir-name
+   *
+   * @param string $dirName
+   *
+   * @return File
    */
   public function setDirName(string $dirName):File
   {
@@ -278,6 +286,8 @@ class File implements \ArrayAccess
 
   /**
    * Get the dir-part of the file-name
+   *
+   * @return null|string
    */
   public function getDirName():?string
   {
@@ -285,7 +295,11 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set only the base-name
+   * Set only the base-name.
+   *
+   * @param string $baseName
+   *
+   * @return File
    */
   public function setBaseName(string $baseName):File
   {
@@ -294,7 +308,11 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Get the dir-part of the file-name
+   * Get the dir-part of the file-name.
+   *
+   * @param null|string $extension
+   *
+   * @return null|string
    */
   public function getBaseName(?string $extension = null):?string
   {
@@ -352,11 +370,11 @@ class File implements \ArrayAccess
   /**
    * Set $size.
    *
-   * @param int $fileData
+   * @param int $size
    *
    * @return File
    */
-  public function setSize(int $size= -1):File
+  public function setSize(int $size = -1):File
   {
     $this->size = $size;
 
@@ -376,7 +394,7 @@ class File implements \ArrayAccess
   /**
    * Set FileData.
    *
-   * @param FileData $data
+   * @param FileData $fileData
    *
    * @return File
    */
