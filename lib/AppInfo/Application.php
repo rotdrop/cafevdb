@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2014-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2014-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,10 @@
 
 namespace OCA\CAFEVDB\AppInfo;
 
-/**********************************************************
+use SimpleXMLElement;
+use Exception;
+
+/*-*********************************************************
  *
  * Bootstrap
  *
@@ -99,28 +102,34 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCP\Files\Config\IMountProviderCollection;
 use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 
+/** {@inheritdoc} */
 class Application extends App implements IBootstrap
 {
   /** @var string */
   protected $appName;
 
-  public function __construct (array $urlParams = [])
+  /** {@inheritdoc} */
+  public function __construct(array $urlParams = [])
   {
-    $infoXml = new \SimpleXMLElement(file_get_contents(__DIR__ . '/../../appinfo/info.xml'));
+    $infoXml = new SimpleXMLElement(file_get_contents(__DIR__ . '/../../appinfo/info.xml'));
     $this->appName = (string)$infoXml->id;
     parent::__construct($this->appName, $urlParams);
   }
 
-  // Called later than "register".
+  /**
+   * {@inheritdoc}
+   *
+   * Called later than "register".
+   */
   public function boot(IBootContext $context): void
   {
     $context->injectFn(function(
-      $userId
-      , AuthorizationService $authorizationService
-      , IURLGenerator $urlGenerator
-      , INavigationManager $navigationManager
+      $userId,
+      AuthorizationService $authorizationService,
+      IURLGenerator $urlGenerator,
+      INavigationManager $navigationManager,
     ) {
-      if ($authorizationService->authorized($userId))  {
+      if ($authorizationService->authorized($userId)) {
         $navigationManager->add([
           'id' => $this->appName,
           'name' => 'CAFeVDB',
@@ -133,9 +142,9 @@ class Application extends App implements IBootstrap
     });
 
     $context->injectFn(function(
-      $userId
-      , AuthorizationService $authorizationService
-      , ISettingsManager $settingsManager
+      $userId,
+      AuthorizationService $authorizationService,
+      ISettingsManager $settingsManager,
     ) {
       if ($authorizationService->authorized($userId)) {
         $settingsManager->registerSection('personal', PersonalSection::class);
@@ -169,18 +178,22 @@ class Application extends App implements IBootstrap
     });
   }
 
-  // Called earlier than boot, so anything initialized in the
-  // "boot()" method must not be used here.
+  /**
+   * {@inheritdoc}
+   *
+   * Called earlier than boot, so anything initialized in the
+   * "boot()" method must not be used here.
+   */
   public function register(IRegistrationContext $context): void
   {
-    if ((@include_once __DIR__ . '/../Common/Functions.php') === false) {
-      throw new \Exception('Cannot include common functions.');
+    if ((include_once __DIR__ . '/../Common/Functions.php') === false) {
+      throw new Exception('Cannot include common functions.');
     }
-    if ((@include_once __DIR__ . '/../../vendor/autoload.php') === false) {
-      throw new \Exception('Cannot include autoload. Did you run install dependencies using composer?');
+    if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
+      throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
     }
-    if ((@include_once __DIR__ . '/../../vendor-wrapped/autoload.php') === false) {
-      throw new \Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
+    if ((include_once __DIR__ . '/../../vendor-wrapped/autoload.php') === false) {
+      throw new Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
     }
 
     /* Doctrine DBAL needs a factory to be constructed. */
@@ -210,10 +223,4 @@ class Application extends App implements IBootstrap
 
     $context->registerNotifierService(\OCA\CAFEVDB\Notifications\Notifier::class);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
