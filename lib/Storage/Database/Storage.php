@@ -131,6 +131,8 @@ class Storage extends AbstractStorage
     foreach ($this->findFiles($dirName) as $node) {
       if ($node instanceof Entities\File) {
         $updated = $node->getUpdated();
+      } elseif ($node instanceof Entities\DatabaseStorageDirEntry) {
+        $updated = $node->getUpdated();
       } elseif ($node instanceof DirectoryNode) {
         $nodeName = $node->name;
         $updated = $node->minimalModificationTime ?? (new DateTimeImmutable('@1'));
