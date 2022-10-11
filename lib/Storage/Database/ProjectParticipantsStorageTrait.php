@@ -105,15 +105,24 @@ trait ProjectParticipantsStorageTrait
    *
    * @param string $userIdSlug
    *
+   * @param null|string $extension
+   *
    * @return string
    */
-  protected function getLegacyPaymentRecordFileName(int $compositePaymentId, string $userIdSlug):string
-  {
+  protected function getLegacyPaymentRecordFileName(
+    int $compositePaymentId,
+    string $userIdSlug,
+    ?string $extension = null,
+  ):string {
     // TRANSLATORS: file-name
-    return $this->getAppL10n()->t('PaymentRecord-%1$s-%2$d', [
+    $fileName =  $this->getAppL10n()->t('PaymentRecord-%1$s-%2$d', [
       Util::dashesToCamelCase($userIdSlug, true, '_-.'),
       $compositePaymentId,
     ]);
+    if (!empty($extension)) {
+      $fileName .= '.' . $extension;
+    }
+    return $fileName;
   }
 
   /**
@@ -121,12 +130,16 @@ trait ProjectParticipantsStorageTrait
    *
    * @param Entities\CompositePayment $compositePayment
    *
+   * @param null|string $extension
+   *
    * @return string
    */
-  protected function getPaymentRecordFileName(Entities\CompositePayment $compositePayment):string
-  {
+  protected function getPaymentRecordFileName(
+    Entities\CompositePayment $compositePayment,
+    ?string $extension = null,
+  ):string {
     $userIdSlug = $compositePayment->getMusician()->getUserIdSlug();
-    return $this->getLegacyPaymentRecordFileName($compositePayment->getId(), $userIdSlug);
+    return $this->getLegacyPaymentRecordFileName($compositePayment->getId(), $userIdSlug, $extension);
   }
 
   /**
@@ -145,10 +158,15 @@ trait ProjectParticipantsStorageTrait
    *
    * @param string $debitMandateReference
    *
+   * @param null|string $extension
+   *
    * @return string
    */
-  protected function getLegacyDebitMandateFileName(string $debitMandateReference):string
+  protected function getLegacyDebitMandateFileName(string $debitMandateReference, ?string $extension = null):string
   {
+    if (!empty($extension)) {
+      $debitMandateReference .= '.' . $extension;
+    }
     return $debitMandateReference;
   }
 
@@ -157,10 +175,12 @@ trait ProjectParticipantsStorageTrait
    *
    * @param Entities\SepaDebitMandate $debitMandate
    *
+   * @param null|string $extension
+   *
    * @return string
    */
-  protected function getDebitMandateFileName(Entities\SepaDebitMandate $debitMandate):string
+  protected function getDebitMandateFileName(Entities\SepaDebitMandate $debitMandate, ?string $extension = null):string
   {
-    return $this->getLegacyDebitMandateFileName($debitMandate->getMandateReference());
+    return $this->getLegacyDebitMandateFileName($debitMandate->getMandateReference(), $extension);
   }
 }

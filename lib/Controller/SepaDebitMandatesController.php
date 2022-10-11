@@ -1319,14 +1319,11 @@ class SepaDebitMandatesController extends Controller
 
       if ($writtenMandate->getNumberOfLinks() == 1) {
         // only tweak the file name if we are the only user.
-        $writtenMandateFileName = $this->getDebitMandateFileName($debitMandate);
         $extension = Util::fileExtensionFromMimeType($mimeType);
         if (empty($extension) && !empty($file['name'])) {
           $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         }
-        if (!empty($extension)) {
-          $writtenMandateFileName .= '.' . $extension;
-        }
+        $writtenMandateFileName = $this->getDebitMandateFileName($debitMandate, $extension);
         $originalFileName = $writtenMandate->getFileName();
         if (!empty($originalFileName) && $originalFileName != $writtenMandateFileName) {
           $writtenMandate->setOriginalFileName($originalFileName);

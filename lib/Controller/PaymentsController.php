@@ -250,10 +250,7 @@ class PaymentsController extends Controller
             if (empty($extension) && !empty($file['name'])) {
               $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             }
-            $supportingDocumentFileName = $this->getPaymentRecordFileName($compositePayment);
-            if (!empty($extension)) {
-              $supportingDocumentFileName = $supportingDocumentFileName . '.' . $extension;
-            }
+            $supportingDocumentFileName = $this->getPaymentRecordFileName($compositePayment, $extension);
             $originalFileName = $supportingDocument->getFileName();
             if (!empty($originalFileName) && $originalFileName != $supportingDocumentFileName) {
               $supportingDocument->setOriginalFileName($originalFileName);
