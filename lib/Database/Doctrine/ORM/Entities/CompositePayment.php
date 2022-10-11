@@ -185,17 +185,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   private $supportingDocument;
 
   /**
-   * @var ProjectBalanceSupportingDocument
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectBalanceSupportingDocument", inversedBy="compositePayments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="balance_document_sequence", referencedColumnName="sequence", nullable=true)
-   * )
-   */
-  private $oldProjectBalanceSupportingDocument;
-
-  /**
    * @var DatabaseStorageDirectory
    *
    * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", inversedBy="compositePayments", fetch="EXTRA_LAZY")

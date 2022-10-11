@@ -147,8 +147,6 @@ GROUP BY __t1.id',
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.project_id) ORDER BY __t1.id) AS project_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.field_id) ORDER BY __t1.id) AS field_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.receivable_key) ORDER BY __t1.id) AS receivable_key,
-  GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.balance_document_sequence) ORDER BY __t1.id) AS balance_document_sequence,
-  GROUP_CONCAT(DISTINCT __t1.balance_document_sequence ORDER BY __t1.id) AS balance_document_sequence_values,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.balance_documents_folder_id) ORDER BY __t1.id) AS balance_documents_folder_id,
   GROUP_CONCAT(DISTINCT __t1.balance_documents_folder_id ORDER BY __t1.id) AS balance_documents_folder_ids,
   GROUP_CONCAT(DISTINCT __t1.project_id) AS project_ids,
@@ -167,8 +165,6 @@ SELECT
   __t2.project_id,
   __t2.field_id,
   __t2.receivable_key,
-  __t2.balance_document_sequence,
-  __t2.balance_document_sequence AS balance_document_sequence_values,
   __t2.balance_documents_folder_id,
   __t2.balance_documents_folder_id AS balance_documents_folder_ids,
   __t2.project_id AS project_ids,
@@ -226,20 +222,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ],
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
-    ],
-    self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE => [
-      'entity' => Entities\ProjectBalanceSupportingDocument::class,
-      'identifier' => [
-        'project_id' => [
-          'table' => self::PROJECT_PAYMENTS_TABLE,
-          'column' => 'project_id',
-        ],
-        'sequence' => [
-          'table' => self::PROJECT_PAYMENTS_TABLE,
-          'column' => 'balance_document_sequence',
-        ],
-      ],
-      'column' => 'sequence',
     ],
     // link only the balance directies via their parent_id
     self::DATABASE_STORAGE_DIRECTORIES_TABLE => [
@@ -879,210 +861,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       },
     ];
 
-    //////////////////////// old
-
-    $opts['fdd']['balance_document_sequence'] = [
-      'name' => $this->l->t('Composite Project Balance'),
-      'tab' => [ 'id' => 'booking' ],
-      'css' => [
-        'postfix' => [
-          'allow-empty',
-          'project-balance-documents',
-          'chosen-dropup',
-          'squeeze-subsequent-lines',
-          'clip-long-text',
-        ],
-      ],
-      'input|LF' => 'HR',
-      'select' => 'D',
-      'sql' => '$main_table.$field_name',
-      'values' => [
-        'table' => self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE,
-        'column' => 'sequence',
-        'join' => [ 'reference' => $this->joinTables[self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE], ],
-        'description' => [
-          'columns' => [ 'LPAD($table.sequence, 3, "0")', ],
-          'divs' => [ -1 => $this->projectName . '-', 0 => '/', ],
-          'ifnull' => [ false ],
-          'cast' => [ false ],
-        ],
-        'data' => 'CONCAT("' . $this->projectName . '", "-", LPAD($table.sequence, 3, "0"), "/")',
-        // 'filters' => '$table.project_id = $record_id[project_id]',
-      ],
-      'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
-      'display' => [
-        'prefix' => function($op, $pos, $k, $row, $pme) {
-          if (!$this->isCompositeRow($row, $pme)) {
-            return null;
-          }
-          $value = $row['qf' . $k . '_idx'];
-          if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
-            return null;
-          }
-
-          $documentPathChain = [ $this->getProjectBalancesPath() ];
-          if ($this->project->getType() == ProjectType::TEMPORARY) {
-            $documentPathChain[] = $this->project->getYear();
-          };
-          $documentPathChain[] = $this->project->getName();
-          $documentPathChain[] = $this->getSupportingDocumentsFolderName();
-
-          $documentParentPath = implode('/', $documentPathChain);
-          $filesAppTarget = md5($documentParentPath);
-          if (!empty($value)) {
-            if (is_numeric($value)) {
-              $value = sprintf('%s-%03d', $this->projectName, $value);
-            }
-          }
-
-          try {
-            $filesAppParentLink = $this->userStorage->getFilesAppLink($documentParentPath, subDir: true);
-            $filesAppLink = empty($value)
-              ? $filesAppParentLink
-              : $filesAppParentLink . '/' . $value;
-          } catch (\OCP\Files\NotFoundException $e) {
-            $this->logInfo('No file found for ' . $documentParentPath);
-              $filesAppParentLink = $filesAppLink = '';
-          }
-
-          $filesAppAnchor = '
-<a href="' . $filesAppLink . '"
-   data-parent-link="' . Util::htmlEscape($filesAppParentLink) . '"
-   target=" . $filesAppTarget . "
-   title="' . $this->toolTipsService['page-renderer:project-payments:project-balance:open'] . '"
-   class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
-></a>';
-
-          return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">'
-            . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
-        },
-        'postfix' => function($op, $pos, $k, $row, $pme) {
-          return '</div></div></span></div>';
-        },
-      ],
-    ];
-
-    $this->makeJoinTableField(
-      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence', [
-        'name' => $this->l->t('Parts Project Balances'),
-        'tab' => [ 'id' => 'booking' ],
-        'css' => [
-          'postfix' => [
-            'allow-empty',
-            'project-balance-documents',
-            'chosen-dropup',
-            'squeeze-subsequent-lines',
-            'clip-long-text',
-          ],
-        ],
-        'select' => 'D',
-        'sql|LF' => 'IF(
-  ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%",
-  CONCAT_WS(
-    ",",
-    $main_table.balance_document_sequence,
-    ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.balance_document_sequence_values
-  ),
-  $join_col_fqn)',
-        'sql' => 'IF(
-  ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%",
-  ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.balance_document_sequence_values,
-  $join_col_fqn)',
-        'values' => [
-          'table' => self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE,
-          'column' => 'sequence',
-          'join' => [ 'reference' => $this->joinTables[self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE], ],
-          'description' => [
-            'columns' => [ 'LPAD($table.sequence, 3, "0")', ],
-            'divs' => [ -1 => $this->projectName . '-', 0 => '/', ],
-            'ifnull' => [ false ],
-            'cast' => [ false ],
-          ],
-          'data' => 'CONCAT("' . $this->projectName . '", "-", LPAD($table.sequence, 3, "0"), "/")',
-          // 'filters' => '$table.project_id = $record_id[project_id]',
-        ],
-        'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
-          if ($this->isCompositeRow($row, $pme)) {
-            $value = str_replace(', ', '<br/>', $value);
-          }
-          return $value;
-        },
-        'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
-        'display' => [
-          'popup' => function($cellData, $k, $row, $pme) {
-            if ($this->isCompositeRow($row, $pme)) {
-              return $cellData;
-            } else {
-              return $pme->fdd[$k]['tooltip'];
-            }
-          },
-          'prefix' => function($op, $pos, $k, $row, $pme) {
-
-            if ($this->isCompositeRow($row, $pme)) {
-              if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($row['qf' . $k . '_idx'])) {
-                return null;
-              }
-              $value = null;
-            } else {
-              $value = $row['qf' . $k];
-              if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
-                return null;
-              }
-            }
-
-            $documentPathChain = [ $this->getProjectBalancesPath() ];
-            if ($this->project->getType() == ProjectType::TEMPORARY) {
-              $documentPathChain[] = $this->project->getYear();
-            };
-            $documentPathChain[] = $this->project->getName();
-            $documentPathChain[] = $this->getSupportingDocumentsFolderName();
-
-            $documentParentPath = implode('/', $documentPathChain);
-            $filesAppTarget = md5($documentParentPath);
-            if (!empty($value)) {
-              if (is_numeric($value)) {
-                $value = sprintf('%s-%03d', $this->projectName, $value);
-              }
-            }
-
-            try {
-              $filesAppParentLink = $this->userStorage->getFilesAppLink($documentParentPath, subDir: true);
-              $filesAppLink = empty($value)
-                ? $filesAppParentLink
-                : $filesAppParentLink . '/' . $value;
-            } catch (\OCP\Files\NotFoundException $e) {
-              $this->logInfo('No file found for ' . $documentParentPath);
-              $filesAppParentLink = $filesAppLink = '';
-            }
-
-            $filesAppAnchor = '
-<a href="' . $filesAppLink . '"
-   data-parent-link="' . Util::htmlEscape($filesAppParentLink) . '"
-   target=" . $filesAppTarget . "
-   title="' . $this->toolTipsService['page-renderer:project-payments:project-balance:open'] . '"
-   class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
-></a>';
-
-            if ($this->isCompositeRow($row, $pme)) {
-              return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">'
-                . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
-            } else {
-              return '<div class="flex-container"><span class="pme-cell-prefix">' . $filesAppAnchor . ' </span><span class="pme-cell-content">';
-            }
-          },
-          'postfix' => function($op, $pos, $k, $row, $pme) {
-            if ($this->isCompositeRow($row, $pme)) {
-              return '</div></div></span></div>';
-            } else {
-              return '</span></div>';
-            }
-          },
-        ],
-      ],
-    );
-
-    //////////////////////// new
-
     $opts['fdd']['balance_documents_folder_id'] = [
       'name' => $this->l->t('Composite Project Balance'),
       'tab' => [ 'id' => 'booking' ],
@@ -1278,8 +1056,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ],
     );
 
-    /////////////////////////
-
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
       array_merge(
@@ -1434,6 +1210,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           $pme->fdd[$subjectIndex]['input'] = 'M';
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
           $pme->fdd[$balanceDocumentSequenceIndex]['input'] = 'R';
+          $pme->fdd[$balanceDocumentsFolderIdIndex]['input'] = 'R';
           $pme->fdd[$compositeBalanceDocumentSequenceIndex]['input'] = '';
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = '';
 
@@ -1481,12 +1258,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           foreach ($pme->fdn as $fieldName => $fieldIndex) {
             if ($fieldName == 'date_of_receipt') {
               $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
-              continue;
-            } elseif ($fieldName == 'balance_document_sequence') {
-              continue;
-            } elseif ($fieldName == $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence')) {
-              continue;
-            } elseif ($fieldName == $this->joinTableFieldName(self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE, 'sequence')) {
               continue;
             } elseif ($fieldName == 'balance_documents_folder_id') {
               continue;

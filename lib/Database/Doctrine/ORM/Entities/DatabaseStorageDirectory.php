@@ -236,7 +236,7 @@ class DatabaseStorageDirectory implements \ArrayAccess
    *
    * @param EncryptedFile $file
    *
-   * @return ProjectBalanceSupportingDocument
+   * @return DatabaseStorageDirectory
    */
   public function addDocument(EncryptedFile $file):DatabaseStorageDirectory
   {
@@ -259,7 +259,7 @@ class DatabaseStorageDirectory implements \ArrayAccess
    *
    * @param EncryptedFile $file
    *
-   * @return ProjectBalanceSupportingDocument
+   * @return DatabaseStorageDirectory
    */
   public function removeDocument(EncryptedFile $file):DatabaseStorageDirectory
   {
@@ -280,9 +280,9 @@ class DatabaseStorageDirectory implements \ArrayAccess
    *
    * @param Collection $projectPayments
    *
-   * @return SepaDebitMandate
+   * @return DatabaseStorageDirectory
    */
-  public function setProjectPayments(?Collection $projectPayments):ProjectBalanceSupportingDocument
+  public function setProjectPayments(?Collection $projectPayments):DatabaseStorageDirectory
   {
     if (empty($projectPayments)) {
       $projectPayments = new ArrayCollection;
@@ -307,9 +307,9 @@ class DatabaseStorageDirectory implements \ArrayAccess
    *
    * @param Collection $compositePayments
    *
-   * @return SepaDebitMandate
+   * @return DatabaseStorageDirectory
    */
-  public function setCompositePayments(?Collection $compositePayments):ProjectBalanceSupportingDocument
+  public function setCompositePayments(?Collection $compositePayments):DatabaseStorageDirectory
   {
     if (empty($compositePayments)) {
       $compositePayments = new ArrayCollection;

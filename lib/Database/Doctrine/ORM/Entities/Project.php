@@ -150,24 +150,6 @@ class Project implements \ArrayAccess
   private $sentEmail;
 
   /**
-   * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="project", indexBy="sequence", fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"sequence" = "ASC"})
-   */
-  private $financialBalanceSupportingDocuments;
-
-  /**
-   * @var \DateTimeImmutable
-   *
-   * Tracks changes in the supporting documents collection, in particular
-   * deletions.
-   *
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   */
-  private $financialBalanceSupportingDocumentsChanged;
-
-  /**
    * @var DatabaseStorageDirectory
    *
    * @ORM\OneToOne(targetEntity="DatabaseStorageDirectory", fetch="EXTRA_LAZY")
@@ -188,7 +170,6 @@ class Project implements \ArrayAccess
     $this->compositePayments = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->sentEmail = new ArrayCollection();
-    $this->financialBalanceSupportingDocuments = new ArrayCollection();
   }
 
   /** {@inheritdoc} */

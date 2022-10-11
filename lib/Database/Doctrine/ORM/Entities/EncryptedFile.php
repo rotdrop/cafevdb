@@ -63,14 +63,6 @@ class EncryptedFile extends File
   /**
    * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="documents")
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="documentsChanged")
-   */
-  private $projectBalanceSupportingDocuments;
-
-  /**
-   * @var Collection
-   *
    * @ORM\ManyToMany(targetEntity="DatabaseStorageDirectory", mappedBy="documents")
    * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
@@ -89,7 +81,6 @@ class EncryptedFile extends File
     if (!empty($owner)) {
       $this->addOwner($owner);
     }
-    $this->projectBalanceSupportingDocuments = new ArrayCollection;
     $this->databaseStorageDirectories = new ArrayCollection;
   }
 
@@ -146,59 +137,6 @@ class EncryptedFile extends File
   public function removeOwner(Musician $musician):EncryptedFile
   {
     $this->owners->remove($musician->getId());
-  }
-
-  /**
-   * Set projectBalanceSupportingDocuments.
-   *
-   * @param Collection $projectBalanceSupportingDocuments
-   *
-   * @return EncryptedFile
-   */
-  public function setProjectBalanceSupportingDocuments(Collection $supportingDocuments):EncryptedFile
-  {
-    $this->projectBalanceSupportingDocuments = $supportingDocuments;
-    return $this;
-  }
-
-  /**
-   * Get projectBalanceSupportingDocuments.
-   *
-   * @return null|ProjectBalanceSupportingDocument
-   */
-  public function getProjectBalanceSupportingDocuments():Collection
-  {
-    return $this->projectBalanceSupportingDocuments;
-  }
-
-  /**
-   * Add one document container.
-   *
-   * @param ProjectBalanceSupportingDocument $entity
-   *
-   * @return EncryptedFile
-   */
-  public function addProjectBalanceSupportingDocument(ProjectBalanceSupportingDocument $entity):EncryptedFile
-  {
-    if (!$this->projectBalanceSupportingDocuments->contains($entity)) {
-      $this->projectBalanceSupportingDocuments->add($entity);
-    }
-    return $this;
-  }
-
-  /**
-   * Remove one document container.
-   *
-   * @param ProjectBalanceSupportingDocument $entity
-   *
-   * @return null|ProjectBalanceSupportingDocument
-   */
-  public function removeProjectBalanceSupportingDocument(ProjectBalanceSupportingDocument $entity):EncryptedFile
-  {
-    if ($this->projectBalanceSupportingDocuments->contains($entity)) {
-      $this->projectBalanceSupportingDocuments->removeElement($entity);
-    }
-    return $this;
   }
 
   /**
