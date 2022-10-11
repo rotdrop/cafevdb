@@ -223,4 +223,34 @@ class EncryptedFile extends File
   {
     return $this->databaseStorageDirEntries;
   }
+
+  /**
+   * Add one document container.
+   *
+   * @param DatabaseStorageDirectory $entity
+   *
+   * @return EncryptedFile
+   */
+  public function addDatabaseStorageDirEntry(DatabaseStorageFile $entity):EncryptedFile
+  {
+    if (!$this->databaseStorageDirEntries->contains($entity)) {
+      $this->databaseStorageDirEntries->add($entity);
+    }
+    return $this;
+  }
+
+  /**
+   * Remove one document container.
+   *
+   * @param DatabaseStorageDirectory $entity
+   *
+   * @return null|DatabaseStorageDirectory
+   */
+  public function removeDatabaseStorageDirEntry(DatabaseStorageFile $entity):EncryptedFile
+  {
+    if ($this->databaseStorageDirEntries->contains($entity)) {
+      $this->databaseStorageDirEntries->removeElement($entity);
+    }
+    return $this;
+  }
 }
