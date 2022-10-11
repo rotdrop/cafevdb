@@ -44,6 +44,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions\Exception;
 
+// phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+
 /**
  * Storage implementation for data-base storage, including access to
  * encrypted entities.
@@ -122,28 +124,35 @@ class Storage extends AbstractStorage
     $directory = $this->fileFromFileName($dirName);
     if ($directory instanceof DirectoryNode) {
       $date = $directory->minimalModificationTime ?? (new DateTimeImmutable('@1'));
+    } elseif ($directory instanceof Entities\DatabaseStorageFolder) {
+      $date = $directory->getUpdated();
     } else {
       $date = new DateTimeImmutable('@1');
     }
 
     // maybe we should skip the read-dir for performance reasons.
     /** @var Entities\File $node */
-    foreach ($this->findFiles($dirName) as $node) {
+    foreach ($this->findFiles($dirName) as $nodeName => $node) {
       if ($node instanceof Entities\File) {
         $updated = $node->getUpdated();
-      } elseif ($node instanceof Entities\DatabaseStorageDirEntry) {
-        $updated = $node->getUpdated();
       } elseif ($node instanceof DirectoryNode) {
-        $nodeName = $node->name;
         $updated = $node->minimalModificationTime ?? (new DateTimeImmutable('@1'));
         if ($nodeName != '.') {
-          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $node->name);
+          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $nodeName);
+          if ($recursiveModificationTime > $updated) {
+            $updated = $recursiveModificationTime;
+          }
+        }
+      } elseif ($node instanceof Entities\DatabaseStorageDirEntry) {
+        $updated = $node->getUpdated();
+        if ($nodeName != '.' && $node instanceof Entities\DatabaseStorageFolder) {
+          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $nodeName);
           if ($recursiveModificationTime > $updated) {
             $updated = $recursiveModificationTime;
           }
         }
       } else {
-        $this->logError('Unknown directory entry in ' .$dirName);
+        $this->logError('Unknown directory entry in ' . $dirName);
         $updated = new DateTimeImmutable('@1');
       }
       if ($updated > $date) {
@@ -254,7 +263,7 @@ class Storage extends AbstractStorage
    *
    * @param string $name The path-name to work on.
    *
-   * @return null|string|Entities\File
+   * @return null|Entities\EncryptedFile|Entities\DatabaseStorageDirEntry|DirectoryNode
    */
   public function fileFromFileName(string $name)
   {
@@ -414,9 +423,14 @@ class Storage extends AbstractStorage
     if ($path === '' || $path == self::PATH_SEPARATOR) {
       return true;
     }
-    if ($this->fileFromFileName($path) instanceof DirectoryNode) {
+    $dirEntry = $this->fileFromFileName($path);
+
+    if ($dirEntry instanceof DirectoryNode
+        || $dirEntry instanceof Entities\DatabaseStorageFolder
+    ) {
       return true;
     }
+    // @todo the following should probably be removed
     if (!empty($this->filesRepository->findOneLike([ 'fileName' => trim($path, self::PATH_SEPARATOR) . self::PATH_SEPARATOR . '%' ]))) {
       return true;
     }
