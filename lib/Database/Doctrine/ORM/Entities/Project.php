@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeImmutable;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
@@ -523,7 +525,7 @@ class Project implements \ArrayAccess
     if (!empty($this->financialBalanceDocumentsFolder)) {
       return $this->financialBalanceDocumentsFolder->getUpdated();
     }
-    return (new DateTimeImmutable())->setTimestamp(1);
+    return new DateTimeImmutable('@1');
   }
 
   /**

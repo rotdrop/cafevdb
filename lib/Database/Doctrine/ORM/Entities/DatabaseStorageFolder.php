@@ -44,26 +44,14 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   /**
    * @var Collection
    *
-   * Optional linked project payments.
-   *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="balanceDocumentsFolder", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="DatabaseStorageDirEntry", cascade={"all"}, mappedBy="parent")
    */
-  protected $projectPayments;
-
-  /**
-   * @var Collection
-   *
-   * Optional linked composite payments.
-   *
-   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="balanceDocumentsFolder", cascade={"persist"}, fetch="EXTRA_LAZY")
-   */
-  protected $compositePayments;
+  protected $directoryEntries;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
-    $this->projectPayments = new ArrayCollection();
-    $this->compositePayments = new ArrayCollection();
+    $this->directoryEntries = new ArrayCollection;
   }
   // phpcs:enable
 
@@ -77,7 +65,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    * @throws Exceptions\DatabaseException It is an error if $name already
    * exists and is not a folder.
    */
-  protected function addSubFolder(string $name):DatabaseStorageFolder
+  public function addSubFolder(string $name):DatabaseStorageFolder
   {
     $existing = $this->directoryEntries->filter(
       fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $name
@@ -229,5 +217,24 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   public function getSubFolders():Collection
   {
     return $this->directoryEntries->filter(fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry instanceof DatabaseStorageFolder);
+  }
+
+
+  /** @return Collection */
+  public function getDirectoryEntries():Collection
+  {
+    return $this->directoryEntries;
+  }
+
+  /**
+   * @param Collection $databaseStorageDirectories
+   *
+   * @return DatabaseStorageDirEntry
+   */
+  public function setDirectoryEntries(Collection $directoryEntries):DatabaseStorageDirEntry
+  {
+    $this->directoryEntries = $directoryEntries;
+
+    return $this;
   }
 }

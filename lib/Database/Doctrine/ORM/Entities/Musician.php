@@ -375,7 +375,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * @Gedmo\Timestampable(on={"update","change"}, field={"photo.updated"})
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */
-  private $updated;
+  protected $updated;
 
   /** {@inheritdoc} */
   public function __construct()

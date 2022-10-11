@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Common\Util;
  *
  * @ORM\Table(name="CompositePayments")
  *    uniqueConstraints={@ORM\UniqueConstraint(columns={"notification_message_id"})}
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository")
  *
  * @ORM\HasLifecycleCallbacks
  */
@@ -188,7 +188,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * @var DatabaseStorageFolder
    *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="compositePayments", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
   private $balanceDocumentsFolder;
 
@@ -524,7 +524,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
   {
     if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
-      $fileName = $this->getPaymentRecordFileName($this);
+      $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
       $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
     }
 
@@ -539,7 +539,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     }
 
     if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
-      $fileName = $this->getPaymentRecordFileName($this);
+      $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
       $this->balanceDocumentsFolder->addDocument($this->supportingDocument, $fileName);
     }
 
@@ -573,7 +573,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
         }
       }
       if (!empty($this->supportingDocument)) {
-        $fileName = $this->getPaymentRecordFileName($this);
+        $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+
         $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
       }
     }
@@ -582,8 +583,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
 
     if (!empty($this->balanceDocumentsFolder)) {
       if (!empty($this->supportingDocument)) {
-        $fileName = $this->getPaymentRecordFileName($this);
-        $this->balanceDocumentsFolder->addDocument($this->supportingDocument, fileName);
+        $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+        $this->balanceDocumentsFolder->addDocument($this->supportingDocument, $fileName);
       }
 
       /** @var ProjectPayment $part */

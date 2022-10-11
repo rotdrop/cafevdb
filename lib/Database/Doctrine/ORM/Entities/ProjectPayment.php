@@ -122,7 +122,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * @var DatabaseStorageFolder
    *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="projectPayments", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
   private $balanceDocumentsFolder;
 

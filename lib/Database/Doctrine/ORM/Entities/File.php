@@ -335,8 +335,11 @@ class File implements \ArrayAccess
    */
   public function setExtension(string $extension):File
   {
-    $pathInfo = pathinfo($this->fileName);
-    $this->fileName = $pathInfo['dirname'] . self::PATH_SEPARATOR . $pathInfo['filename'] . '.' . $extension;
+    $pathInfo = pathinfo($this->fileName ?? '');
+    $this->fileName = $pathInfo['filename'] . '.' . $extension;
+    if ($pathInfo['dirname'] != '.') {
+      $this->fileName = $pathInfo['dirname'] . self::PATH_SEPARATOR . $this->fileName;
+    }
 
     return $this;
   }

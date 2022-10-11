@@ -79,17 +79,9 @@ class DatabaseStorageDirEntry implements \ArrayAccess
    */
   protected $parent;
 
-  /**
-   * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="DatabaseStorageDirEntry", mappedBy="parent")
-   */
-  protected $directoryEntries;
-
   /** {@inheritdoc} */
   public function __construct()
   {
-    $this->directoryEntries = new ArrayCollection;
   }
 
   /** @return null|int */
@@ -150,24 +142,6 @@ class DatabaseStorageDirEntry implements \ArrayAccess
     if (!empty($this->parent)) {
       $this->parent->directoryEntries->add($this);
     }
-
-    return $this;
-  }
-
-  /** @return Collection */
-  public function getDirectoryEntries():Collection
-  {
-    return $this->databaseStorageDirectories;
-  }
-
-  /**
-   * @param Collection $databaseStorageDirectories
-   *
-   * @return DatabaseStorageDirEntry
-   */
-  public function setDirectoryEntries(Collection $databaseStorageDirectories):DatabaseStorageDirEntry
-  {
-    $this->databaseStorageDirectories = $databaseStorageDirectories;
 
     return $this;
   }
