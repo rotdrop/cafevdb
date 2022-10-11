@@ -130,7 +130,7 @@ class File implements \ArrayAccess
    * @Gedmo\Timestampable(on={"update","change"}, field="fileData")
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */
-  private $updated;
+  protected $updated;
 
   /** {@inheritdoc} */
   public function __construct($fileName = null, $data = null, $mimeType = null)
@@ -303,7 +303,14 @@ class File implements \ArrayAccess
    */
   public function setBaseName(string $baseName):File
   {
-    $this->fileName = ($this->getDirName()??'') . self::PATH_SEPARATOR . trim($baseName, self::PATH_SEPARATOR);
+    $pathInfo = pathinfo($this->fileName);
+
+    $this->fileName = trim(
+      $pathInfo['dirname'] .  self::PATH_SEPARATOR
+      . trim($baseName, self::PATH_SEPARATOR),
+      self::PATH_SEPARATOR
+    );
+
     return $this;
   }
 
@@ -317,6 +324,33 @@ class File implements \ArrayAccess
   public function getBaseName(?string $extension = null):?string
   {
     return is_string($this->fileName) ? basename($this->fileName, $extension) : null;
+  }
+
+  /**
+   * Set only the extension.
+   *
+   * @param string $extension
+   *
+   * @return File
+   */
+  public function setExtension(string $extension):File
+  {
+    $pathInfo = pathinfo($this->fileName);
+    $this->fileName = $pathInfo['dirname'] . self::PATH_SEPARATOR . $pathInfo['filename'] . '.' . $extension;
+
+    return $this;
+  }
+
+  /**
+   * Get the extension-part of the file-name.
+   *
+   * @param null|string $extension
+   *
+   * @return null|string
+   */
+  public function getExtension(?string $extension = null):?string
+  {
+    return is_string($this->fileName) ? pathinfo($this->fileName, PATHINFO_EXTENSION) : null;
   }
 
   /**
