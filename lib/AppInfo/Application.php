@@ -36,6 +36,7 @@ use Exception;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\IAppContainer;
 
 use OCP\AppFramework\App;
 use OCP\IL10N;
@@ -105,6 +106,9 @@ use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 /** {@inheritdoc} */
 class Application extends App implements IBootstrap
 {
+  /** @var IAppContainer */
+  protected static $appContainer;
+
   /** @var string */
   protected $appName;
 
@@ -116,6 +120,27 @@ class Application extends App implements IBootstrap
     parent::__construct($this->appName, $urlParams);
   }
 
+  /** {@inheritdoc} */
+  public function __destruct()
+  {
+    self::$appContainer = null;
+  }
+
+  /**
+   * Static query of a service through the app container.
+   *
+   * @param string $service
+   *
+   * @return mixed
+   */
+  public static function get(string $service)
+  {
+    if (!(self::$appContainer instanceof IAppContainer)) {
+      throw new Exception('Dependency injection not possible, app-container is empty.');
+    }
+    return self::$appContainer->get($service);
+  }
+
   /**
    * {@inheritdoc}
    *
@@ -123,6 +148,8 @@ class Application extends App implements IBootstrap
    */
   public function boot(IBootContext $context): void
   {
+    self::$appContainer = $this->getContainer();
+
     $context->injectFn(function(
       $userId,
       AuthorizationService $authorizationService,
