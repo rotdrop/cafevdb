@@ -51,6 +51,7 @@ class PaymentsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
+  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
 
   public const DOCUMENT_ACTION_UPLOAD = 'upload';
   public const DOCUMENT_ACTION_DELETE = 'delete';
@@ -243,18 +244,15 @@ class PaymentsController extends Controller
               break;
           }
 
-          $this->persist($supportingDocument);
-          $compositePayment->setSupportingDocument($supportingDocument);
-
-          if ($supportingDocument->getNumberOfLinks() ==  1) {
+          if ($supportingDocument->getNumberOfLinks() == 0) {
             // only tweak the file name if we are the only user.
-            $supportingDocumentFileName = basename($supportingDocumentFileName);
             $extension = Util::fileExtensionFromMimeType($mimeType);
-            if (empty($extension) && $file['name']) {
+            if (empty($extension) && !empty($file['name'])) {
               $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             }
+            $supportingDocumentFileName = $this->getPaymentRecordFileName($compositePayment);
             if (!empty($extension)) {
-              $supportingDocumentFileName = pathinfo($supportingDocumentFileName, PATHINFO_FILENAME) . '.' . $extension;
+              $supportingDocumentFileName = $supportingDocumentFileName . '.' . $extension;
             }
             $originalFileName = $supportingDocument->getFileName();
             if (!empty($originalFileName) && $originalFileName != $supportingDocumentFileName) {
@@ -263,6 +261,10 @@ class PaymentsController extends Controller
             $supportingDocument->setFileName($supportingDocumentFileName);
           }
 
+          $this->persist($supportingDocument);
+          $this->flush(); // we need the file id
+
+          $compositePayment->setSupportingDocument($supportingDocument);
           $this->flush();
 
           $this->entityManager->commit();
