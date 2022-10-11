@@ -60,6 +60,10 @@ class ProjectPayments extends PMETableViewBase
   const TEMPLATE = 'project-payments';
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
   const DEBIT_NOTES_TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
+  const SPLIT_DATABASE_STORAGE_ENTRIES_TABLE =
+    self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'split';
+  const COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE =
+    self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'composite';
 
   const ROW_TAG_PREFIX = '0;';
 
@@ -184,10 +188,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     self::PROJECTS_TABLE => [
       'entity' => Entities\Project::class,
       'identifier' => [
-        'id' => [
-          'table' => self::PROJECT_PAYMENTS_TABLE,
-          'column' => 'project_id',
-        ],
+        'id' => 'project_id',
       ],
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
@@ -200,10 +201,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'table' => self::PROJECT_PAYMENTS_TABLE,
           'column' => 'field_id',
         ],
-        'project_id' => [
-          'table' => self::PROJECT_PAYMENTS_TABLE,
-          'column' => 'project_id',
-        ]
+        'project_id' => 'project_id',
       ],
       'column' => 'id',
     ],
@@ -223,9 +221,24 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
     ],
-    // link only the balance directies via their parent_id
-    self::DATABASE_STORAGE_DIRECTORIES_TABLE => [
-      'entity' => Entities\DatabaseStorageDirectory::class,
+    // link only the balance directories via their parent_id
+    self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'composite' => [
+      'entity' => Entities\DatabaseStorageFolder::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'parent_id' => [
+          'table' => self::PROJECTS_TABLE,
+          'column' => 'financial_balance_documents_folder_id',
+        ],
+        'id' => 'balance_documents_folder_id',
+      ],
+      'column' => 'id',
+    ],
+
+    // link only the balance directories via their parent_id
+    self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'split' => [
+      'entity' => Entities\DatabaseStorageFolder::class,
+      'flags' => self::JOIN_READONLY,
       'identifier' => [
         'parent_id' => [
           'table' => self::PROJECTS_TABLE,
@@ -317,7 +330,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     // up the table by joining self::PROJECT_PAYMENTS_TABLE.
     $opts['sort_field'] = [
       '-date_of_receipt',
-      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'project_id'),
+      'project_id',
       'musician_id',
       'id',
       $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag'),
@@ -875,11 +888,11 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       ],
       'input|LF' => 'HR',
       'select' => 'D',
-      'sql' => '$main_table.$field_name',
+      'sql' => '$join_col_fqn', // '$main_table.$field_name',
       'values' => [
-        'table' => self::DATABASE_STORAGE_DIRECTORIES_TABLE,
+        'table' => self::DATABASE_STORAGE_DIR_ENTRIES_TABLE,
         'column' => 'id',
-        'join' => [ 'reference' => $this->joinTables[self::DATABASE_STORAGE_DIRECTORIES_TABLE], ],
+        'join' => [ 'reference' => $this->joinTables[self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE], ],
         'description' => [
           'columns' => [ '$table.name', ],
           'divs' => [ 0 => '/', ],
@@ -895,7 +908,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           if (!$this->isCompositeRow($row, $pme)) {
             return null;
           }
-          $value = $row['qf' . $k . '_idx'];
+          $value = $row['qf' . ($k + 1)];
           if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
             return null;
           }
@@ -943,6 +956,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ];
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE, 'name');
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id', [
         'name' => $this->l->t('Parts Project Balances'),
         'tab' => [ 'id' => 'booking' ],
@@ -969,9 +985,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   ' . $this->joinTables[self::PROJECT_PAYMENTS_TABLE] . '.balance_documents_folder_ids,
   $join_col_fqn)',
         'values' => [
-          'table' => self::DATABASE_STORAGE_DIRECTORIES_TABLE,
+          'table' => self::DATABASE_STORAGE_DIR_ENTRIES_TABLE,
           'column' => 'id',
-          'join' => [ 'reference' => $this->joinTables[self::DATABASE_STORAGE_DIRECTORIES_TABLE], ],
+          'join' => [ 'reference' => $this->joinTables[self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE], ],
           'description' => [
             'columns' => [ '$table.name', ],
             'divs' => [ 0 => '/', ],
@@ -1004,7 +1020,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
               }
               $value = null;
             } else {
-              $value = $row['qf' . $k];
+              $value = $row['qf' . ($k + 1)];
               if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
                 return null;
               }
@@ -1055,6 +1071,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         ],
       ],
     );
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE, 'name');
 
     $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_BULK_TRANSACTIONS_TABLE, 'created',
@@ -1168,9 +1187,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
         $rowTag = $row['qf'.$rowTagIndex];
 
-        $balanceDocumentSequenceIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence')];
-        $pme->fdd[$balanceDocumentSequenceIndex]['select'] = $this->isCompositeRowTag($rowTag) ? 'M' : 'D';
-
         $balanceDocumentsFolderIdIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id')];
         $pme->fdd[$balanceDocumentsFolderIdIndex]['select'] = $this->isCompositeRowTag($rowTag) ? 'M' : 'D';
 
@@ -1191,7 +1207,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $paymentsSubjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
         $imbalanceIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'imbalance')];
         $supportingDocumentIndex = $pme->fdn['supporting_document_id'];
-        $compositeBalanceDocumentSequenceIndex = $pme->fdn['balance_document_sequence'];
         $compositeBalanceDocumentsFolderIdIndex = $pme->fdn['balance_documents_folder_id'];
 
         if ($this->isCompositeRowTag($rowTag)) {
@@ -1209,9 +1224,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           ];
           $pme->fdd[$subjectIndex]['input'] = 'M';
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
-          $pme->fdd[$balanceDocumentSequenceIndex]['input'] = 'R';
           $pme->fdd[$balanceDocumentsFolderIdIndex]['input'] = 'R';
-          $pme->fdd[$compositeBalanceDocumentSequenceIndex]['input'] = '';
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = '';
 
           if ($this->copyOperation()) {
@@ -1242,10 +1255,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           $pme->fdd[$imbalanceIndex]['input'] = 'HR';
           $pme->fdd[$musicianIdIndex]['input'] = 'R';
           $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
-          $pme->fdd[$compositeBalanceDocumentSequenceIndex]['input'] = 'HR';
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = 'HR';
 
-          $pme->fdd[$balanceDocumentSequenceIndex]['name'] = $this->l->t('Project Balance');
           $pme->fdd[$balanceDocumentsFolderIdIndex]['name'] = $this->l->t('Project Balance');
         }
 
@@ -1263,7 +1274,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
               continue;
             } elseif ($fieldName == $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id')) {
               continue;
-            } elseif ($fieldName == $this->joinTableFieldName(self::DATABASE_STORAGE_DIRECTORIES_TABLE, 'id')) {
+            } elseif ($fieldName == $this->joinTableFieldName(self::DATABASE_STORAGE_DIR_ENTRIES_TABLE, 'id')) {
               continue;
             }
             // $this->logInfo('NAME: ' . $fieldName . ' => ' . $fieldIndex);
@@ -1473,7 +1484,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $unsetTags[] = 'supporting_document_id';
 
       // handled on the composite-level
-      $unsetTags[] = 'balance_document_sequence';
+      $unsetTags[] = 'balance_document_folder_id';
 
       foreach ($unsetTags as $tag) {
         unset($newValues[$tag]);
@@ -1495,7 +1506,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       $unsetTags[] = 'supporting_document_id';
 
       // handled on the split-level
-      $unsetTags[] = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence');
+      $unsetTags[] = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id');
 
       foreach ($unsetTags as $tag) {
         unset($newValues[$tag]);
@@ -1506,8 +1517,8 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
 
     $nullables = [
       'sepa_transaction_id',
-      'balance_document_sequence',
-      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_document_sequence'),
+      'balance_documents_folder_id',
+      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'),
     ];
     foreach ($nullables as $key) {
       foreach (['old', 'new'] as $dataSet) {

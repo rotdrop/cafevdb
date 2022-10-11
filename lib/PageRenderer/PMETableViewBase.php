@@ -119,7 +119,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
   const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
   const PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
-  const DATABASE_STORAGE_DIRECTORIES_TABLE = 'DatabaseStorageDirectories';
+  const DATABASE_STORAGE_DIR_ENTRIES_TABLE = 'DatabaseStorageDirEntries';
   const INSTRUMENTS_TABLE = 'Instruments';
   const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
   const PROJECT_PAYMENTS_TABLE = 'ProjectPayments';
@@ -2382,7 +2382,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * [ INDEX, FIELDNAME ]
    * ```
    */
-  protected function makeJoinTableField(array &$fieldDescriptionData, $tableInfo, string $column, array $fdd)
+  protected function makeJoinTableField(array &$fieldDescriptionData, $tableInfo, string $column, array $fdd = [])
   {
     if (is_string($tableInfo) && isset($fdd['values']['join'])) {
       $defaultFDD = [
@@ -2417,6 +2417,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           'join' => [ 'reference' => $joinIndex, ],
         ],
       ];
+      if (empty($fdd)) {
+        $defaultFDD['input'] = 'HRS';
+      }
     }
     $fieldName = $this->joinTableFieldName($tableInfo, $column);
     $index = count($fieldDescriptionData);
