@@ -36,17 +36,20 @@ class ConvertBalanceDocumentsToDirEntries extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      // 'ALTER TABLE Projects ADD COLUMN IF NOT EXISTS financial_balance_documents_folder_id INT DEFAULT NULL',
-      // 'ALTER TABLE Projects ADD CONSTRAINT FK_A5E5D1F2ABE5D3E5 FOREIGN KEY IF NOT EXISTS (financial_balance_documents_folder_id) REFERENCES DatabaseStorageDirectories (id)',
-      // 'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_A5E5D1F2ABE5D3E5 ON Projects (financial_balance_documents_folder_id)',
+      'ALTER TABLE Projects ADD COLUMN IF NOT EXISTS financial_balance_documents_folder_id INT DEFAULT NULL',
+      'ALTER TABLE Projects DROP FOREIGN KEY IF EXISTS FK_A5E5D1F2ABE5D3E5',
+      'ALTER TABLE Projects ADD CONSTRAINT FK_A5E5D1F2ABE5D3E5 FOREIGN KEY IF NOT EXISTS (financial_balance_documents_folder_id) REFERENCES DatabaseStorageDirEntries (id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_A5E5D1F2ABE5D3E5 ON Projects (financial_balance_documents_folder_id)',
 
-      // 'ALTER TABLE CompositePayments ADD COLUMN IF NOT EXISTS balance_documents_folder_id INT DEFAULT NULL',
-      // 'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C5323D5BB FOREIGN KEY IF NOT EXISTS (balance_documents_folder_id) REFERENCES DatabaseStorageDirectories (id)',
-      // 'CREATE INDEX IF NOT EXISTS IDX_65D9920C5323D5BB ON CompositePayments (balance_documents_folder_id)',
+      'ALTER TABLE CompositePayments ADD COLUMN IF NOT EXISTS balance_documents_folder_id INT DEFAULT NULL',
+      'ALTER TABLE CompositePayments DROP FOREIGN KEY IF EXISTS FK_65D9920C8A034ED2',
+      'ALTER TABLE CompositePayments ADD CONSTRAINT FK_65D9920C8A034ED2 FOREIGN KEY IF NOT EXISTS (balance_documents_folder_id) REFERENCES DatabaseStorageDirEntries (id)',
+      'CREATE INDEX IF NOT EXISTS IDX_65D9920C8A034ED2 ON CompositePayments (balance_documents_folder_id)',
 
-      // 'ALTER TABLE ProjectPayments ADD COLUMN IF NOT EXISTS balance_documents_folder_id INT DEFAULT NULL',
-      // 'ALTER TABLE ProjectPayments ADD CONSTRAINT FK_F6372AE25323D5BB FOREIGN KEY IF NOT EXISTS (balance_documents_folder_id) REFERENCES DatabaseStorageDirectories (id)',
-      // 'CREATE INDEX IF NOT EXISTS IDX_F6372AE25323D5BB ON ProjectPayments (balance_documents_folder_id)',
+      'ALTER TABLE ProjectPayments ADD COLUMN IF NOT EXISTS balance_documents_folder_id INT DEFAULT NULL',
+      'ALTER TABLE ProjectPayments DROP FOREIGN KEY IF EXISTS FK_F6372AE28A034ED2',
+      'ALTER TABLE ProjectPayments ADD CONSTRAINT FK_F6372AE28A034ED2 FOREIGN KEY IF NOT EXISTS (balance_documents_folder_id) REFERENCES DatabaseStorageDirEntries (id)',
+      'CREATE INDEX IF NOT EXISTS IDX_F6372AE28A034ED2 ON ProjectPayments (balance_documents_folder_id)',
     ],
     self::TRANSACTIONAL => [
       // Create the root nodes
@@ -94,9 +97,27 @@ ON jt.encrypted_file_id = f.id',
   {
     return $this->l->t('Convert supporting documents for the financial balance of projects to generic directory entries');
   }
-};
 
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+  /** {@inheritdoc} */
+  public function execute():bool
+  {
+    if (!parent::execute()) {
+      return false;
+    }
+
+    return true;
+
+    // danger zone:
+
+    self::$sql[self::STRUCTURAL] = [
+      'DROP INDEX IF EXISTS IDX_65D9920C166D1F9C6A022FD1 ON CompositePayments',
+      'ALTER TABLE CompositePayments DROP COLUMN IF EXISTS balance_document_sequence',
+      'ALTER TABLE Projects DROP COLUMN IF EXISTS financial_balance_supporting_documents_changed',
+      'DROP INDEX IF EXISTS IDX_F6372AE2166D1F9C6A022FD1 ON ProjectPayments',
+      'ALTER TABLE ProjectPayments DROP COLUMN IF EXISTS balance_document_sequence',
+    ];
+    self::$sql[self::TRANSACTIONAL] = [];
+
+    return parent::execute();
+  }
+}

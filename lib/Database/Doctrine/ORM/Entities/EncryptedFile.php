@@ -63,15 +63,7 @@ class EncryptedFile extends File
   /**
    * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="DatabaseStorageDirectory", mappedBy="documents")
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
-   */
-  private $databaseStorageDirectories;
-
-  /**
-   * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="DatabaseStorageFile", mappedBy="file")
+   * @ORM\OneToMany(targetEntity="DatabaseStorageFile", mappedBy="file", cascade={"persist"})
    * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
   private $databaseStorageDirEntries;
@@ -91,7 +83,6 @@ class EncryptedFile extends File
     if (!empty($owner)) {
       $this->addOwner($owner);
     }
-    $this->databaseStorageDirectories = new ArrayCollection;
     $this->databaseStorageDirEntries = new ArrayCollection;
   }
 
@@ -153,60 +144,6 @@ class EncryptedFile extends File
   }
 
   /**
-   * Set databaseStorageDirectories.
-   *
-   * @param Collection $databaseStorageDirectories
-   *
-   * @return EncryptedFile
-   */
-  public function setDatabaseStorageDirectories(Collection $databaseStorageDirectories):EncryptedFile
-  {
-    $this->databaseStorageDirectories = $databaseStorageDirectories;
-
-    return $this;
-  }
-
-  /**
-   * Get databaseStorageDirectories.
-   *
-   * @return null|DatabaseStorageDirectory
-   */
-  public function getDatabaseStorageDirectories():Collection
-  {
-    return $this->databaseStorageDirectories;
-  }
-
-  /**
-   * Add one document container.
-   *
-   * @param DatabaseStorageDirectory $entity
-   *
-   * @return EncryptedFile
-   */
-  public function addDatabaseStorageDirectory(DatabaseStorageDirectory $entity):EncryptedFile
-  {
-    if (!$this->databaseStorageDirectories->contains($entity)) {
-      $this->databaseStorageDirectories->add($entity);
-    }
-    return $this;
-  }
-
-  /**
-   * Remove one document container.
-   *
-   * @param DatabaseStorageDirectory $entity
-   *
-   * @return null|DatabaseStorageDirectory
-   */
-  public function removeDatabaseStorageDirectory(DatabaseStorageDirectory $entity):EncryptedFile
-  {
-    if ($this->databaseStorageDirectories->contains($entity)) {
-      $this->databaseStorageDirectories->removeElement($entity);
-    }
-    return $this;
-  }
-
-  /**
    * Set databaseStorageDirEntries.
    *
    * @param Collection $dirEntries
@@ -222,7 +159,7 @@ class EncryptedFile extends File
   /**
    * Get databaseStorageDirEntries.
    *
-   * @return null|DatabaseStorageDirectory
+   * @return Collection
    */
   public function getDatabaseStorageDirEntries():Collection
   {
@@ -249,7 +186,7 @@ class EncryptedFile extends File
    *
    * @param DatabaseStorageFile $entity
    *
-   * @return null|DatabaseStorageDirectory
+   * @return EncryptedFile
    */
   public function removeDatabaseStorageDirEntry(DatabaseStorageFile $entity):EncryptedFile
   {

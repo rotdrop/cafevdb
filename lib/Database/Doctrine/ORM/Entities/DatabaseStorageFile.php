@@ -30,6 +30,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
+
 /**
  * File-name entry for a database-backed file.
  *
@@ -37,10 +39,13 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  */
 class DatabaseStorageFile extends DatabaseStorageDirEntry
 {
+  /** @var string */
+  protected static $type = DirEntryType::FILE;
+
   /**
-   * @var null|DatabaseStorageDirectory
+   * @var EncryptedFile
    *
-   * @ORM\ManyToOne(targetEntity="EncryptedFile", inversedBy="databaseStorageDirEntries")
+   * @ORM\ManyToOne(targetEntity="EncryptedFile", inversedBy="databaseStorageDirEntries", cascade={"persist"})
    */
   protected $file;
 
@@ -59,11 +64,21 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   /**
    * @param null|EncryptedFile $file
    *
-   * @return DatabaseStorageDirectory
+   * @return DatabaseStorageFile
    */
-  public function setFile(?EncryptedFile $file):DatabaseStorageDirectory
+  public function setFile(?EncryptedFile $file):DatabaseStorageFile
   {
+    if (!empty($this->file)) {
+      $this->file->unlink();
+      $this->file->removeDatabaseStorageDirEntry($this);
+    }
+
     $this->file = $file;
+
+    if (!empty($this->file)) {
+      $this->file->link();
+      $this->file->addDatabaseStorageDirEntry($this);
+    }
 
     return $this;
   }

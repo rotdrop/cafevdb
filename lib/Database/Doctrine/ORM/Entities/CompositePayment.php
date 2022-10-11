@@ -56,6 +56,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\FactoryTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait; // filename of supporting document.
 
   const SUBJECT_PREFIX_LIMIT = 16;
   const SUBJECT_PREFIX_SEPARATOR = ' / ';
@@ -185,9 +186,9 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   private $supportingDocument;
 
   /**
-   * @var DatabaseStorageDirectory
+   * @var DatabaseStorageFolder
    *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", inversedBy="compositePayments", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="compositePayments", fetch="EXTRA_LAZY")
    */
   private $balanceDocumentsFolder;
 
@@ -523,7 +524,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
   {
     if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
-      $this->balanceDocumentsFolder->removeDocument($this->supportingDocument);
+      $fileName = $this->getPaymentRecordFileName($this);
+      $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
     }
 
     if (!empty($this->supportingDocument)) {
@@ -537,7 +539,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     }
 
     if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
-      $this->balanceDocumentsFolder->addDocument($this->supportingDocument);
+      $fileName = $this->getPaymentRecordFileName($this);
+      $this->balanceDocumentsFolder->addDocument($this->supportingDocument, $fileName);
     }
 
     return $this;
@@ -556,11 +559,11 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set balanceDocumentsFolder.
    *
-   * @param DatabaseStorageDirectory $balanceDocumentsFolder
+   * @param DatabaseStorageFolder $balanceDocumentsFolder
    *
    * @return ProjectPayment
    */
-  public function setBalanceDocumentsFolder(?DatabaseStorageDirectory $balanceDocumentsFolder):CompositePayment
+  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder):CompositePayment
   {
     if (!empty($this->balanceDocumentsFolder)) {
       /** @var ProjectPayment $part */
@@ -570,7 +573,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
         }
       }
       if (!empty($this->supportingDocument)) {
-        $this->balanceDocumentsFolder->removeDocument($this->supportingDocument);
+        $fileName = $this->getPaymentRecordFileName($this);
+        $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
       }
     }
 
@@ -578,7 +582,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
 
     if (!empty($this->balanceDocumentsFolder)) {
       if (!empty($this->supportingDocument)) {
-        $this->balanceDocumentsFolder->addDocument($this->supportingDocument);
+        $fileName = $this->getPaymentRecordFileName($this);
+        $this->balanceDocumentsFolder->addDocument($this->supportingDocument, fileName);
       }
 
       /** @var ProjectPayment $part */
@@ -595,16 +600,16 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Get balanceDocumentsFolder.
    *
-   * @return ?DatabaseStorageDirectory
+   * @return ?DatabaseStorageFolder
    */
-  public function getBalanceDocumentsFolder():?DatabaseStorageDirectory
+  public function getBalanceDocumentsFolder():?DatabaseStorageFolder
   {
     return $this->balanceDocumentsFolder;
   }
 
   /**
    * Automatic subject generation from receivables and linked
-   * DatabaseStorageDirectory's. The routine applies the supplied
+   * DatabaseStorageFolder's. The routine applies the supplied
    * transliteration routine such that the result only contains valid
    * characters for a potential bank transaction data-set. It also tries to
    * group and compactify payments which carry the same prefix assuming the
@@ -623,14 +628,14 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       $transliterate = fn(string $x) => $x;
     }
 
-    // collect the DatabaseStorageDirectory's
+    // collect the DatabaseStorageFolder's
     $balanceDocuments = [ $this->balanceDocumentsFolder ];
     /** @var ProjectPayment $projectPayment */
     foreach ($this->projectPayments as $projectPayment) {
       $balanceDocuments[] = $projectPayment->getBalanceDocumentsFolder();
     }
     $balanceSequences =  array_map(
-      fn(DatabaseStorageDirectory $document) => substr($document->getName() ?? '000', -3),
+      fn(DatabaseStorageFolder $document) => substr($document->getName() ?? '000', -3),
       array_filter($balanceDocuments),
     );
     sort($balanceSequences, SORT_NUMERIC);

@@ -120,9 +120,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private $projectParticipant;
 
   /**
-   * @var DatabaseStorageDirectory
+   * @var DatabaseStorageFolder
    *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageDirectory", inversedBy="projectPayments", fetch="EXTRA_LAZY")
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="projectPayments", fetch="EXTRA_LAZY")
    */
   private $balanceDocumentsFolder;
 
@@ -366,11 +366,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set balanceDocumentsFolder.
    *
-   * @param DatabaseStorageDirectory $balanceDocumentsFolder
+   * @param DatabaseStorageFolder $balanceDocumentsFolder
    *
    * @return ProjectPayment
    */
-  public function setBalanceDocumentsFolder(?DatabaseStorageDirectory $balanceDocumentsFolder):ProjectPayment
+  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder):ProjectPayment
   {
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
@@ -394,9 +394,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Get balanceDocumentsFolder.
    *
-   * @return ?DatabaseStorageDirectory
+   * @return ?DatabaseStorageFolder
    */
-  public function getBalanceDocumentsFolder():?DatabaseStorageDirectory
+  public function getBalanceDocumentsFolder():?DatabaseStorageFolder
   {
     return $this->balanceDocumentsFolder;
   }

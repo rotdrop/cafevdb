@@ -30,6 +30,8 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
+
 /**
  * Generic directory entry for a database-backed file.
  *
@@ -50,6 +52,9 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   use CAFEVDB\Traits\UpdatedAtEntity;
   use CAFEVDB\Traits\CreatedAtEntity;
 
+  /** @var string */
+  protected static $type = DirEntryType::GENERIC;
+
   /**
    * @var int
    *
@@ -67,9 +72,9 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   protected $name;
 
   /**
-   * @var null|DatabaseStorageDirectory
+   * @var DatabaseStorageFolder
    *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageDirEntry", inversedBy="directoryEntries")
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="directoryEntries")
    * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
   protected $parent;
@@ -96,9 +101,9 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   /**
    * @param null|int $id
    *
-   * @return DatabaseStorageDirectory
+   * @return DatabaseStorageDirEntry
    */
-  public function setId(?int $id):DatabaseStorageDirectory
+  public function setId(?int $id):DatabaseStorageDirEntry
   {
     $this->id = $id;
 
@@ -114,29 +119,37 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   /**
    * @param null|string $name
    *
-   * @return DatabaseStorageDirectory
+   * @return DatabaseStorageDirEntry
    */
-  public function setName(?string $name):DatabaseStorageDirectory
+  public function setName(?string $name):DatabaseStorageDirEntry
   {
     $this->name = $name;
 
     return $this;
   }
 
-  /** @return null|DatabaseStorageDirectory */
-  public function getParent():?DatabaseStorageDirectory
+  /** @return null|DatabaseStorageDirEntry */
+  public function getParent():?DatabaseStorageFolder
   {
     return $this->parent;
   }
 
   /**
-   * @param null|DatabaseStorageDirectory $parent
+   * @param null|DatabaseStorageDirEntry $parent
    *
-   * @return DatabaseStorageDirectory
+   * @return DatabaseStorageFolder
    */
-  public function setParent(?DatabaseStorageDirectory $parent):DatabaseStorageDirectory
+  public function setParent(?DatabaseStorageFolder $parent):DatabaseStorageDirEntry
   {
+    if (!empty($this->parent)) {
+      $this->parent->directoryEntries->removeElement($this);
+    }
+
     $this->parent = $parent;
+
+    if (!empty($this->parent)) {
+      $this->parent->directoryEntries->add($this);
+    }
 
     return $this;
   }
@@ -150,12 +163,18 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   /**
    * @param Collection $databaseStorageDirectories
    *
-   * @return DatabaseStorageDirectory
+   * @return DatabaseStorageDirEntry
    */
-  public function setDirectoryEntries(Collection $databaseStorageDirectories):DatabaseStorageDirectory
+  public function setDirectoryEntries(Collection $databaseStorageDirectories):DatabaseStorageDirEntry
   {
     $this->databaseStorageDirectories = $databaseStorageDirectories;
 
     return $this;
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return static::$type . ':' . $this->name;
   }
 }

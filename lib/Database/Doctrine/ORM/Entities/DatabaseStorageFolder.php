@@ -25,7 +25,10 @@
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 use OCA\CAFEVDB\Exceptions;
 
 /**
@@ -35,6 +38,35 @@ use OCA\CAFEVDB\Exceptions;
  */
 class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {
+  /** @var string */
+  protected static $type = DirEntryType::FOLDER;
+
+  /**
+   * @var Collection
+   *
+   * Optional linked project payments.
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="balanceDocumentsFolder", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  protected $projectPayments;
+
+  /**
+   * @var Collection
+   *
+   * Optional linked composite payments.
+   *
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="balanceDocumentsFolder", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  protected $compositePayments;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
+    $this->projectPayments = new ArrayCollection();
+    $this->compositePayments = new ArrayCollection();
+  }
+  // phpcs:enable
+
   /**
    * Add a new sub-folder. It is ok if the folder already exists.
    *
@@ -48,7 +80,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   protected function addSubFolder(string $name):DatabaseStorageFolder
   {
     $existing = $this->directoryEntries->filter(
-      fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name !== $name
+      fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $name
     );
     if ($existing->count() > 1) {
       throw new Exceptions\DatabaseException('Directory entry "' . $name . '" already exists multiple times in directory ' . $this->id);
@@ -83,7 +115,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   public function removeSubFolder(string $name):DatabaseStorageFolder
   {
     $existing = $this->directoryEntries->filter(
-      fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name !== $name
+      fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $name
     );
     if ($existing->count() > 1) {
       throw new Exceptions\DatabaseException('Directory entry "' . $name . '" already exists multiple times in directory ' . $this->id);
@@ -118,12 +150,12 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   public function addDocument(EncryptedFile $file, ?string $fileName = null):?DatabaseStorageFile
   {
     if (empty($file->getId())) {
-      throw new RuntimeException('The supporting document does not have an id.');
+      throw new Exceptions\DatabaseException('The supporting document does not have an id.');
     }
     $fileId = $file->getId();
     $fileName = $fileName ?? $file->getFileName();
     $existing = $this->directoryEntries->filter(
-      fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name !== $fileName
+      fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $fileName
     );
     if ($existing->count() > 1) {
       throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists multiple times in directory ' . $this->id);
@@ -131,20 +163,17 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     if ($existing->count() == 1) {
       /** @var DatabaseStorageFile $dirEntry */
       $dirEntry = $existing->first();
-      if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->file->getId() != $fileId)  {
+      if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile()->getId() != $fileId)  {
         throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
       }
       return $dirEntry;
     }
 
     // need a new one
-    $file->link();
     $dirEntry = (new DatabaseStorageFile)
       ->setFile($file)
       ->setName($fileName)
       ->setParent($this);
-    $this->directoryEntries->add($dirEntry);
-    $file->addDatabaseStorageDirEntry($dirEntry);
 
     return $dirEntry;
   }
@@ -169,7 +198,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     $fileId = $file->getId();
     $fileName = $fileName ?? $file->getFileName();
     $existing = $this->directoryEntries->filter(
-      fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name !== $fileName
+      fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $fileName
     );
     if ($existing->count() > 1) {
       throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" exists multiple times in directory ' . $this->id);
@@ -180,15 +209,25 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
 
     /** @var DatabaseStorageFile $dirEntry */
     $dirEntry = $existing->first();
-    if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->file->getId() != $fileId)  {
+    if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile()->getId() != $fileId)  {
       throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
     }
 
-    $this->directoryEntries->removeElement($dirEntry);
-    $dirEntry->parent = null;
-    $file->removeDatabaseStorageDirEntry($dirEntry);
-    $file->unlink();
+    $dirEntry->setParent(null);
+    $dirEntry->setFile(null);
 
     return $this;
+  }
+
+  /** @return The directory entries which are files. */
+  public function getDocuments():Collection
+  {
+    return $this->directoryEntries->filter(fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry instanceof DatabaseStorageFile);
+  }
+
+  /** @return The directory entries which are directories. */
+  public function getSubFolders():Collection
+  {
+    return $this->directoryEntries->filter(fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry instanceof DatabaseStorageFolder);
   }
 }

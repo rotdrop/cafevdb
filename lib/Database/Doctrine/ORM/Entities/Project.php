@@ -150,9 +150,9 @@ class Project implements \ArrayAccess
   private $sentEmail;
 
   /**
-   * @var DatabaseStorageDirectory
+   * @var DatabaseStorageFolder
    *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageDirectory", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
   private $financialBalanceDocumentsFolder;
 
@@ -529,11 +529,11 @@ class Project implements \ArrayAccess
   /**
    * Set financialBalanceDocumentsFolder.
    *
-   * @param DatabaseStorageDirectory $financialBalanceDocumentsFolder
+   * @param DatabaseStorageFolder $financialBalanceDocumentsFolder
    *
    * @return Project
    */
-  public function setFinancialBalanceDocumentsFolder(DatabaseStorageDirectory $financialBalanceDocumentsFolder):Project
+  public function setFinancialBalanceDocumentsFolder(DatabaseStorageFolder $financialBalanceDocumentsFolder):Project
   {
     $this->financialBalanceDocumentsFolder = $financialBalanceDocumentsFolder;
 
@@ -543,9 +543,9 @@ class Project implements \ArrayAccess
   /**
    * Get financialBalanceDocumentsFolder.
    *
-   * @return null|DatabaseStorageDirectory
+   * @return null|DatabaseStorageFolder
    */
-  public function getFinancialBalanceDocumentsFolder():?DatabaseStorageDirectory
+  public function getFinancialBalanceDocumentsFolder():?DatabaseStorageFolder
   {
     return $this->financialBalanceDocumentsFolder;
   }
@@ -562,7 +562,7 @@ class Project implements \ArrayAccess
       \OCP\Util::writeLog('ORM', __METHOD__ . ' no folder', \OCP\Util::INFO);
       return new ArrayCollection;
     }
-    return $this->financialBalanceDocumentsFolder->getDatabaseStorageDirectories();
+    return $this->financialBalanceDocumentsFolder->getSubFolders();
   }
 
 
