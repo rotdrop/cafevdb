@@ -121,6 +121,8 @@ class phpMyEdit
 	const TRIGGER_PRE = 'pre';
 	const TRIGGER_CANCEL = 'cancel';
 
+	const OPT_HAVING = 'having';
+
 	const OPERATION_FILTER = 'filter';
 	const OPERATION_LIST = 'list';
 	const OPERATION_CHANGE = 'change';
@@ -225,7 +227,7 @@ class phpMyEdit
 	public $tabs_by_id;    // TAB indices by Id
 	public $tabs_by_name;  // TAB indices by Id
 	public $timer = null;	// phpMyEdit_timer object
-	public $sd; var $ed;	// sql start and end delimiters '`' in case of MySQL
+	public $sd; public $ed;	// sql start and end delimiters '`' in case of MySQL
 
 	// Predefined variables
 	public $comp_ops  = array('<'=>'<','<='=>'<=','='=>'=','>='=>'>=','>'=>'>');
@@ -297,7 +299,7 @@ class phpMyEdit
 
 	function col_has_sql($k)	{ return isset($this->fdd[$k]['sql']); }
 	function col_has_sqlw($k)	{ return isset($this->fdd[$k]['sqlw']) && !$this->virtual($k); }
-	function col_needs_having($k) { return !empty($this->fdd[$k][self::OPERATION_FILTER]['having']); }
+	function col_needs_having($k) { return !empty($this->fdd[$k][self::OPERATION_FILTER][self::OPT_HAVING]); }
 	function col_has_join($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['join']); }
 	function col_has_description($k) { return !empty($this->fdd[$k][self::FDD_VALUES]['description']); }
 	function col_has_values($k) {
@@ -1490,25 +1492,29 @@ class phpMyEdit
 		unset($v);
 		switch (strtoupper($parts[self::QPARTS_TYPE])) {
 		case self::SQL_SELECT:
+			if (!empty($parts[self::QPARTS_HAVING])) {
+				// we have to add additional fields mentioned in the having part
+				$parts = $this->add_SQL_having_fields($parts);
+			}
 			$ret  = 'SELECT ';
 			$ret .= $parts[self::QPARTS_SELECT];
 			$ret .= ' FROM '.$parts[self::QPARTS_FROM];
-			if (!empty($parts[self::QPARTS_WHERE]) > 0) {
+			if (!empty($parts[self::QPARTS_WHERE])) {
 				$ret .= ' WHERE '.$parts[self::QPARTS_WHERE];
 			}
-			if (!empty($parts[self::QPARTS_GROUPBY]) > 0) {
+			if (!empty($parts[self::QPARTS_GROUPBY])) {
 				$ret .= ' GROUP BY '.$parts[self::QPARTS_GROUPBY];
 			}
-			if (!empty($parts[self::QPARTS_HAVING]) > 0) {
+			if (!empty($parts[self::QPARTS_HAVING])) {
 				$ret .= ' HAVING '.$parts[self::QPARTS_HAVING];
 			}
-			if (!empty($parts[self::QPARTS_ORDERBY]) > 0) {
+			if (!empty($parts[self::QPARTS_ORDERBY])) {
 				$ret .= ' ORDER BY '.$parts[self::QPARTS_ORDERBY];
 			}
-			if (!empty($parts[self::QPARTS_LIMIT]) > 0) {
+			if (!empty($parts[self::QPARTS_LIMIT])) {
 				$ret .= ' '.$parts[self::QPARTS_LIMIT];
 			}
-			if (!empty($parts[self::QPARTS_PROCEDURE]) > 0) {
+			if (!empty($parts[self::QPARTS_PROCEDURE])) {
 				$ret .= ' PROCEDURE '.$parts[self::QPARTS_PROCEDURE];
 			}
 			break;
@@ -1718,6 +1724,57 @@ class phpMyEdit
 
 		return $where;
 	} /* }}} */
+
+	/**
+	 * Extract the fields used in the having clause. The problem is
+	 * that HAVING may only reference fields used in the "GROUP BY"
+	 * and "SELECT" clauses. This is in particular a problem for the
+	 * "COUNT(*)" queries as these typically to not reference any
+	 * fields explicitly.
+	 *
+	 * @param string $queryPart
+	 *
+	 * @return array
+	 */
+	function get_SQL_query_fields($queryPart):array
+	{
+		$sd = '\\' . $this->sd . '?';
+		$ed = '\\' . $this->ed . '?';
+
+		$mainTableRe = $sd . self::MAIN_ALIAS . $ed . '\\.' . $sd . '\\w+' . $ed;
+		$joinTableRe = $sd . self::JOIN_ALIAS . '[0-9]+' . $ed . '\\.' . $sd . '\\w+' . $ed;
+
+		$matches = [];
+		preg_match_all('/(' . $mainTableRe . '|' . $joinTableRe . ')/', $queryPart, $matches);
+
+		$matches = array_shift($matches);
+		sort($matches);
+		$matches = array_unique($matches);
+
+		return $matches;
+	}
+
+	function add_SQL_having_fields(array $qparts)
+	{
+		$havingFields = $this->get_SQL_query_fields($qparts[self::QPARTS_HAVING]);
+		if (!empty($qparts[self::QPARTS_GROUPBY])) {
+			$groupByFields = $this->get_SQL_query_fields($qparts[self::QPARTS_GROUPBY]);
+			$havingFields = array_diff($havingFields, $groupByFields);
+		}
+		if (!empty($havingFields)) {
+			sort($havingFields);
+			$qparts[self::QPARTS_SELECT] .= ', '
+				. implode(
+					', ',
+					array_map(
+						fn($field, $index) => $field . ' AS having_dummy_' . $index,
+						$havingFields,
+						array_keys($havingFields)
+					)
+				);
+		}
+		return $qparts;
+	}
 
 	function get_SQL_having_query_opts($qp = null, $text = 0) /* {{{ */
 	{
@@ -4107,19 +4164,19 @@ class phpMyEdit
 		$groupBy = @$this->get_SQL_groupby_query_opts();
 		$count_parts = array(
 			self::QPARTS_TYPE	 => self::SQL_SELECT,
-			self::QPARTS_SELECT => 'COUNT(*)',
+			self::QPARTS_SELECT => 'COUNT(*) AS count',
 			self::QPARTS_FROM	 => @$this->get_SQL_join_clause(),
 			self::QPARTS_GROUPBY => $groupBy,
 			self::QPARTS_WHERE	 => @$this->get_SQL_where_from_query_opts(),
 			self::QPARTS_HAVING => $this->get_SQL_having_query_opts()
-			);
+		);
 		$query = $this->get_SQL_main_list_query($count_parts);
 		if (!empty($groupBy)) {
-			$query = "SELECT COUNT(*) FROM (".$query.") PMEcount0";
+			$query = "SELECT COUNT(*) AS count FROM (".$query.") PMEcount0";
 		}
 		$res = $this->myquery($query, __LINE__);
-		$row = $this->sql_fetch($res, 'n');
-		$this->total_recs = $row[0];
+		$row = $this->sql_fetch($res, 'a');
+		$this->total_recs = $row['count'];
 	} /* }}} */
 
 	function filter_heading() /* {{{ */
@@ -6416,8 +6473,8 @@ class phpMyEdit
 
 		// HAVING filters
 		$this->having = array('AND' => false, 'OR' => false);
-		if (isset($opts['having'])) {
-			$filters = $opts['having'];
+		if (isset($opts[self::OPT_HAVING])) {
+			$filters = $opts[self::OPT_HAVING];
 			if (!is_array($filters)) {
 				$filters = array('AND' => array($filters), 'OR' => false);
 			}
