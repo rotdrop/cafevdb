@@ -411,7 +411,7 @@ trait ParticipantFieldsTrait
                   $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
                   break;
                 } catch (\OCP\Files\NotFoundException $e) {
-                  $this->logInfo('No file found for ' . $filesAppPath);
+                  $this->logDebug('No file found for ' . $filesAppPath);
                   array_pop($pathChain);
                 }
               }
@@ -1837,7 +1837,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
         break;
       } catch (\OCP\Files\NotFoundException $e) {
-        $this->logInfo('No file found for ' . $filesAppPath);
+        $this->logDebug('No file found for ' . $filesAppPath);
         array_pop($pathChain);
       }
     }

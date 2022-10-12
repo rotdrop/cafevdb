@@ -189,7 +189,7 @@ trait ParticipantFileFieldsTrait
       try {
         $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
       } catch (\OCP\Files\NotFoundException $e) {
-        $this->logInfo('No file found for ' . $filesAppPath);
+        $this->logDebug('No file found for ' . $filesAppPath);
         $filesAppLink = $filesAppLinkParticipant;
       }
     } else {
