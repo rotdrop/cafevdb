@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +23,10 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
 
 use OCP\Files as CloudFiles;
 
@@ -105,14 +110,16 @@ class ProjectParticipantFieldsService
   /** @var EntityManager */
   protected $entityManager;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , EntityManager $entityManager
+    ConfigService $configService,
+    EntityManager $entityManager,
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Just return a flat array with the class names of the implemented
@@ -127,7 +134,12 @@ class ProjectParticipantFieldsService
     return $generatorsFactory->findGenerators();
   }
 
-  public function resolveReceivableGenerator($value)
+  /**
+   * @param string $value Receivables generator class name or short tag.
+   *
+   * @return string The full class-name of the generator.
+   */
+  public function resolveReceivableGenerator(string $value):string
   {
     $generators = $this->recurringReceivablesGenerators();
     if (!empty($generators[$value])) {
@@ -141,7 +153,7 @@ class ProjectParticipantFieldsService
       }
     }
     if (!preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/', $value)) {
-      throw new \RuntimeException($this->l->t('Generator "%s" does not appear to be valid PHP class name.', $value));
+      throw new RuntimeException($this->l->t('Generator "%s" does not appear to be valid PHP class name.', $value));
     }
     $this->di($value); // try to actually find it
 
@@ -151,9 +163,11 @@ class ProjectParticipantFieldsService
   /**
    * Fetch all monetary fields for the given project.
    *
-   * @param $project
+   * @param Entities\Project $project
+   *
+   * @return iterable
    */
-  public function monetaryFields(Entities\Project $project)
+  public function monetaryFields(Entities\Project $project):iterable
   {
     // $participantFields = $project['participantFields'];
 
@@ -176,11 +190,11 @@ class ProjectParticipantFieldsService
   /**
    * Fetch all generator fields for the given project.
    *
-   * @param $project
+   * @param Entities\Project $project
    *
-   * @return Collections\Collection
+   * @return iterable
    */
-  public function generatedFields(Entities\Project $project):Collections\Collection
+  public function generatedFields(Entities\Project $project):iterable
   {
     // return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
     //   'multiplicity' => Multiplicity::RECURRING
@@ -201,39 +215,56 @@ class ProjectParticipantFieldsService
    * @param bool $distinct Split multi-select options into grouped
    * parts. Note that options with Multiplicity::RECURRING are always
    * split.
+   *
+   * @return array
    */
-  public function monetarySelectOptions(Entities\Project $project, bool $distinct = false)
+  public function monetarySelectOptions(Entities\Project $project, bool $distinct = false):array
   {
     $nonRecurringGroup = $this->l->t('One-time Receivables');
     $selectOptions = [];
     /** @var Entities\ProjectParticipantField $field */
     foreach ($this->monetaryFields($project) as $field) {
       switch ($field->getMultiplicity()) {
-      case Multiplicity::SIMPLE:
-      case Multiplicity::SINGLE:
-        // always only a single option
-        $selectOptions[] = [
-          'group' => $nonRecurringGroup,
-          'name' => $field->getName(),
-          'value' => $field->getId(), // list of keys?
-          'data' => [], // relevant data from field definition
-        ];
-        break;
-      case Multiplicity::MULTIPLE:
-      case Multiplicity::GROUPOFPEOPLE:
-      case Multiplicity::GROUPSOFPEOPLE:
-      case Multiplicity::PARALLEL:
-        if (!$distinct) {
-          // only a single option
+        case Multiplicity::SIMPLE:
+        case Multiplicity::SINGLE:
+          // always only a single option
           $selectOptions[] = [
             'group' => $nonRecurringGroup,
             'name' => $field->getName(),
             'value' => $field->getId(), // list of keys?
             'data' => [], // relevant data from field definition
           ];
-        } else {
+          break;
+        case Multiplicity::MULTIPLE:
+        case Multiplicity::GROUPOFPEOPLE:
+        case Multiplicity::GROUPSOFPEOPLE:
+        case Multiplicity::PARALLEL:
+          if (!$distinct) {
+            // only a single option
+            $selectOptions[] = [
+              'group' => $nonRecurringGroup,
+              'name' => $field->getName(),
+              'value' => $field->getId(), // list of keys?
+              'data' => [], // relevant data from field definition
+            ];
+          } else {
+            // option groups with multiple options
+            $group = sprintf('%s "%s"', $this->l->t($field->getMultiplicity()->getValue()), $field->getName());
+            /** @var Entities\ProjectParticipantFieldDataOption $option */
+            foreach ($field->getSelectableOptions() as $option) {
+              $selectOptions[] = [
+                'group' => $group,
+                'name' => $option->getLabel(),
+                'value' => $option->getKey(),
+                'data' => [], // ? needed ?
+                'groupData' => [], // relevant data from field definition
+              ];
+            }
+          }
+          break;
+        case Multiplicity::RECURRING:
           // option groups with multiple options
-          $group = sprintf('%s "%s"', $this->l->t($field->getMultiplicity()->getValue()), $field->getName());
+          $group = $this->l->t('Recurring "%s"', $field->getName());
           /** @var Entities\ProjectParticipantFieldDataOption $option */
           foreach ($field->getSelectableOptions() as $option) {
             $selectOptions[] = [
@@ -244,22 +275,7 @@ class ProjectParticipantFieldsService
               'groupData' => [], // relevant data from field definition
             ];
           }
-        }
-        break;
-      case Multiplicity::RECURRING:
-        // option groups with multiple options
-        $group = $this->l->t('Recurring "%s"', $field->getName());
-        /** @var Entities\ProjectParticipantFieldDataOption $option */
-        foreach ($field->getSelectableOptions() as $option) {
-          $selectOptions[] = [
-            'group' => $group,
-            'name' => $option->getLabel(),
-            'value' => $option->getKey(),
-            'data' => [], // ? needed ?
-            'groupData' => [], // relevant data from field definition
-          ];
-        }
-        break;
+          break;
       }
     }
     return $selectOptions;
@@ -275,7 +291,7 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\Musician $musician
    *
-   * @param null|Entities\Project
+   * @param null|Entities\Project $project
    *
    * @return array
    * ```
@@ -285,7 +301,7 @@ class ProjectParticipantFieldsService
    * ]
    * ```
    */
-  static public function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null)
+  public static function participantMonetaryObligations(Entities\Musician $musician, ?Entities\Project $project = null):array
   {
     $obligations = [
       'sum' => 0.0, // total sum
@@ -320,81 +336,89 @@ class ProjectParticipantFieldsService
    * Internal function: given a surcharge choice compute the
    * associated amount of money and return that as float.
    *
-   * @key string|null $key Key from the participant-fields data table. $key may
+   * @param string|null $key Key from the participant-fields data table. $key may
    * be a comma-separated list of keys.
    *
-   * @param string|null $value Value form the participant-fields data table
+   * @param string|null $value Value form the participant-fields data table.
    *
    * @param Entities\ProjectParticipantField $participantField Field definition.
+   *
+   * @return float
    */
-  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField)
+  public function participantFieldSurcharge(?string $key, ?string $value, Entities\ProjectParticipantField $participantField):float
   {
     switch ($participantField->getMultiplicity()) {
-    case Multiplicity::SIMPLE():
-      return (float)$value;
-    case Multiplicity::GROUPOFPEOPLE():
-      if (empty($key)) {
-        break;
-      }
-      return (float)$participantField->getDataOptions()->first()['data'];
-    case Multiplicity::SINGLE():
-      if (empty($key)) {
-        break;
-      }
-      /** @var Entities\ProjectParticipantFieldDataOption */
-      $dataOption = $participantField->getDataOptions()->first();
-      // Non empty value means "yes".
-      if ((string)$dataOption['key'] != $key) {
-        $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$dataOption['key'].'"');
-      }
-      return (float)$dataOption['data'];
-    case Multiplicity::GROUPSOFPEOPLE():
-    case Multiplicity::MULTIPLE():
-      if (empty($key)) {
-        break;
-      }
-      foreach ($participantField->getDataOptions() as $dataOption) {
-        if ((string)$dataOption['key'] == $key) {
-          return (float)$dataOption['data'];
+      case Multiplicity::SIMPLE():
+        return (float)$value;
+      case Multiplicity::GROUPOFPEOPLE():
+        if (empty($key)) {
+          break;
         }
-      }
-      $this->logError('No data item for multiple choice key "'.$key.'"');
-      return 0.0;
-    case Multiplicity::PARALLEL():
-      if (empty($key)) {
-        break;
-      }
-      $keys = Util::explode(',', $key);
-      $found = false;
-      $amount = 0.0;
-      foreach($participantField->getDataOptions() as $dataOption) {
-        if (array_search((string)$dataOption['key'], $keys) !== false) {
-          $amount += (float)$dataOption['data'];
-          $found = true;
+        return (float)$participantField->getDataOptions()->first()['data'];
+      case Multiplicity::SINGLE():
+        if (empty($key)) {
+          break;
         }
-      }
-      if (!$found) {
-        $this->logError('No data item for parallel choice key "'.$key.'"');
-      }
-      return $amount;
-    case Multiplicity::RECURRING():
-      if (empty($key) || empty($value)) {
-        break;
-      }
-      // $keys = Util::explode(',', $key);
-      $values = Util::explodeIndexed($value);
+        /** @var Entities\ProjectParticipantFieldDataOption */
+        $dataOption = $participantField->getDataOptions()->first();
+        // Non empty value means "yes".
+        if ((string)$dataOption['key'] != $key) {
+          $this->logWarn('Stored value "'.$key.'" unequal to stored key "'.$dataOption['key'].'"');
+        }
+        return (float)$dataOption['data'];
+      case Multiplicity::GROUPSOFPEOPLE():
+      case Multiplicity::MULTIPLE():
+        if (empty($key)) {
+          break;
+        }
+        foreach ($participantField->getDataOptions() as $dataOption) {
+          if ((string)$dataOption['key'] == $key) {
+            return (float)$dataOption['data'];
+          }
+        }
+        $this->logError('No data item for multiple choice key "'.$key.'"');
+        return 0.0;
+      case Multiplicity::PARALLEL():
+        if (empty($key)) {
+          break;
+        }
+        $keys = Util::explode(',', $key);
+        $found = false;
+        $amount = 0.0;
+        foreach ($participantField->getDataOptions() as $dataOption) {
+          if (array_search((string)$dataOption['key'], $keys) !== false) {
+            $amount += (float)$dataOption['data'];
+            $found = true;
+          }
+        }
+        if (!$found) {
+          $this->logError('No data item for parallel choice key "'.$key.'"');
+        }
+        return $amount;
+      case Multiplicity::RECURRING():
+        if (empty($key) || empty($value)) {
+          break;
+        }
+        // $keys = Util::explode(',', $key);
+        $values = Util::explodeIndexed($value);
 
-      $amount = 0.0;
-      foreach ($values as $key => $value) {
-        $amount += $value;
-      }
-      return $amount;
+        $amount = 0.0;
+        foreach ($values as $key => $value) {
+          $amount += $value;
+        }
+        return $amount;
     }
     return 0.0;
   }
 
   /**
    * Determine whether a multiplicity-type combination is supported.
+   *
+   * @param string $multiplicity
+   *
+   * @param string $type
+   *
+   * @return bool
    */
   public static function isSupportedType(string $multiplicity, string $type):bool
   {
@@ -412,6 +436,13 @@ class ProjectParticipantFieldsService
     return self::UNSUPPORTED;
   }
 
+  /**
+   * @param string $multiplicity
+   *
+   * @param string $dataType
+   *
+   * @return string
+   */
   public static function defaultTabId(string $multiplicity, string $dataType):string
   {
     switch ($dataType) {
@@ -441,15 +472,26 @@ class ProjectParticipantFieldsService
 
   /**
    * Sanitize the field name s.t. it is suitable as a file-system entry.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @return string
    */
-  public function getFileSystemFieldName(Entities\ProjectParticipantField $field)
+  public function getFileSystemFieldName(Entities\ProjectParticipantField $field):string
   {
     assert($field->isFileSystemContext());
 
     return self::sanitizeFileName($field->getName());
   }
 
-  public function getFileSystemOptionLabel(Entities\ProjectParticipantFieldDataOption $option)
+  /**
+   * Sanitize the option label s.t. it is suitable as a file-system entry.
+   *
+   * @param Entities\ProjectParticipantFieldDataOption $option
+   *
+   * @return string
+   */
+  public function getFileSystemOptionLabel(Entities\ProjectParticipantFieldDataOption $option):string
   {
     assert($option->isFileSystemContext());
 
@@ -463,6 +505,8 @@ class ProjectParticipantFieldsService
    * @param Entities\ProjectParticipantFieldDatum $datum
    *
    * @param bool $dry If \false actually also created the folder.
+   *
+   * @return null|string
    */
   public function getFieldFolderPath(Entities\ProjectParticipantFieldDatum $datum, bool $dry = true):?string
   {
@@ -492,25 +536,20 @@ class ProjectParticipantFieldsService
 
     $fieldName = $this->getFileSystemFieldName($field);
 
-    /** @var UserStorage $userStorage */
-    $userStorage = $this->di(UserStorage::class);
-
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
 
     $participantFolder = $projectService->ensureParticipantFolder($field->getProject(), $musician, dry: $dry);
 
     switch ($field->getDataType()) {
-      case DataType::CLOUD_FOLDER: {
+      case DataType::CLOUD_FOLDER:
         return $participantFolder . UserStorage::PATH_SEP . $fieldName;
-      }
-      case DataType::CLOUD_FILE: {
+      case DataType::CLOUD_FILE:
         $subDirPrefix = ($field->getMultiplicity() == Multiplicity::SIMPLE)
           ? ''
           : UserStorage::PATH_SEP . $fieldName;
 
         return $participantFolder . $subDirPrefix;
-      }
     }
     return null;
   }
@@ -520,6 +559,8 @@ class ProjectParticipantFieldsService
    * referenced files are returned as cloud file-node or DB
    * file-entity. Dates are converted to \DateTimeImmutable. Float
    * values to float, int to int, boolean to boolean.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $datum
    *
    * @return mixed
    */
@@ -531,41 +572,52 @@ class ProjectParticipantFieldsService
     $field = $datum->getField();
 
     switch ($field->getDataType()) {
-    case DataType::BOOLEAN:
-      return boolval($value);
-    case DataType::DATE:
-    case DataType::DATETIME:
-      return Util::convertToDateTime($value);
-    case DataType::FLOAT:
-    case DataType::SERVICE_FEE:
-      return floatval($value);
-    case DataType::INTEGER:
-      return intval($value);
-    case DataType::CLOUD_FILE:
-      $folderPath = $this->getFieldFolderPath($datum, dry: false);
-      $filePath = $folderPath . UserStorage::PATH_SEP . $value;
-      $file = $this->di(UserStorage::class)->getFile($filePath);
-      return $file;
-    case DataType::CLOUD_FOLDER:
-      $folderPath = $this->getFieldFolderPath($datum, dry: false);
-      return $this->di(UserStorage::class)->getFolder($folderPath);
-    case DataType::DB_FILE:
-      if (empty($value)) {
-        return null;
-      }
-      return $this->getDatabaseRepository(Entities\EncryptedFile::class)->find($value);
-    case DataType::TEXT:
-    case DataType::HTML:
-    default:
-      return $value;
+      case DataType::BOOLEAN:
+        return boolval($value);
+      case DataType::DATE:
+      case DataType::DATETIME:
+        return Util::convertToDateTime($value);
+      case DataType::FLOAT:
+      case DataType::SERVICE_FEE:
+        return floatval($value);
+      case DataType::INTEGER:
+        return intval($value);
+      case DataType::CLOUD_FILE:
+        $folderPath = $this->getFieldFolderPath($datum, dry: false);
+        $filePath = $folderPath . UserStorage::PATH_SEP . $value;
+        $file = $this->di(UserStorage::class)->getFile($filePath);
+        return $file;
+      case DataType::CLOUD_FOLDER:
+        $folderPath = $this->getFieldFolderPath($datum, dry: false);
+        return $this->di(UserStorage::class)->getFolder($folderPath);
+      case DataType::DB_FILE:
+        if (empty($value)) {
+          return null;
+        }
+        return $this->getDatabaseRepository(Entities\EncryptedFile::class)->find($value);
+      case DataType::TEXT:
+      case DataType::HTML:
+      default:
+        return $value;
     }
   }
 
+  /**
+   * Gernarate a formatted string for the given value.
+   *
+   * @param null|Entities\ProjectParticipantFieldDatum $datum
+   *
+   * @param string $dateFormat
+   *
+   * @param int $floatPrecision
+   *
+   * @return string
+   */
   public function printEffectiveFieldDatum(
-    ?Entities\ProjectParticipantFieldDatum $datum
-    , string $dateFormat = 'long'
-    , int $floatPrecision = 2
-  ) {
+    ?Entities\ProjectParticipantFieldDatum $datum,
+    string $dateFormat = 'long',
+    int $floatPrecision = 2,
+  ):string {
     if (empty($datum)) {
       return '';
     }
@@ -607,21 +659,23 @@ class ProjectParticipantFieldsService
   /**
    * Return the row with the key matching the argument $key.
    *
-   * @param sting $key Allowed values key to search for
+   * @param string $key Allowed values key to search for.
    *
    * @param array $values Exploded allowed values data.
    *
    * @return null|array The matching row if found or null.
    */
-  public static function findDataOption($key, array $values):?array
+  public static function findDataOption(string $key, array $values):?array
   {
     return $values[$key]?:null;
   }
 
   /**
    * Prototype for allowed values, i.e. multiple-value options.
+   *
+   * @return array
    */
-  public static function dataOptionPrototype()
+  public static function dataOptionPrototype():array
   {
     return [
       'key' => false,
@@ -636,8 +690,16 @@ class ProjectParticipantFieldsService
 
   /**
    * Explode the given json encoded string into a PHP array.
+   *
+   * @param mixed $values
+   *
+   * @param bool $addProto
+   *
+   * @param bool $trimInactive
+   *
+   * @return array
    */
-  public function explodeDataOptions($values, $addProto = true, $trimInactive = false)
+  public function explodeDataOptions(mixed $values, bool $addProto = true, bool $trimInactive = false):array
   {
     $options = empty($values) ? [] : (is_array($values) ? $values : json_decode($values, true));
     if (is_string($options)) {
@@ -652,9 +714,10 @@ class ProjectParticipantFieldsService
       ];
     }
     if (isset($options[-1])) {
-      throw new \Exception(
-        $this->l->t('Option index -1 should not be present here, options: %s',
-                    print_r($options, true)));
+      throw new Exception(
+        $this->l->t(
+          'Option index -1 should not be present here, options: %s',
+          print_r($options, true)));
     }
     $options = array_values($options);
     $protoType = $this->dataOptionPrototype();
@@ -663,9 +726,10 @@ class ProjectParticipantFieldsService
     foreach ($options as $option) {
       $keys = array_keys($option);
       if ($keys !== $protoKeys) {
-        throw new \InvalidArgumentException(
-          $this->l->t('Prototype keys "%s" and options keys "%s" differ',
-                      [ implode(',', $protoKeys), implode(',', $keys) ])
+        throw new InvalidArgumentException(
+          $this->l->t(
+            'Prototype keys "%s" and options keys "%s" differ',
+            [ implode(',', $protoKeys), implode(',', $keys) ])
         );
       }
       if ($trimInactive && !empty($option['deleted'])) {
@@ -687,18 +751,17 @@ class ProjectParticipantFieldsService
    *   [ 'key' => KEY2, ... ],
    * ]
    * ```
-   *
    * as JSON for storing in the database. As a side-effect missing
    * keys are generated and empty missing fields are inserted.
    *
-   * @param array As explained above.
+   * @param array $options As explained above.
    *
    * @return string JSON encoded data.
    */
-  public function implodeDataOptions($options)
+  public function implodeDataOptions(array $options):string
   {
     if (isset($options[-1])) {
-      throw new \Exception($this->l->t('Option index -1 should not be present here, options: %s', print_r($options, true)));
+      throw new Exception($this->l->t('Option index -1 should not be present here, options: %s', print_r($options, true)));
     }
     $proto = $this->dataOptionPrototype();
     foreach ($options as &$option) {
@@ -712,19 +775,27 @@ class ProjectParticipantFieldsService
 
   /**
    * Just forward to Repositories\ProjectParticipantFieldsRepository
+   *
+   * @param int $id
+   *
+   * @return null|Entities\ProjectParticipantField
    */
-  public function find($id):?Entities\ProjectParticipantField
+  public function find(int $id):?Entities\ProjectParticipantField
   {
     return $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($id);
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Just forward to Repositories\ProjectParticipantFieldsRepository
+   *
+   * @see OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy()
    */
   public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null):Collection
   {
     return $this->getDatabaseRepository(Entities\ProjectParticipantField::class)
-                ->findBy($criteria, $orderBy, $lmit, $offset);
+      ->findBy($criteria, $orderBy, $limit, $offset);
   }
 
   /**
@@ -741,7 +812,7 @@ class ProjectParticipantFieldsService
   {
     if ($groupOptionProvider instanceof Entities\ProjectParticipantFieldDatum) {
       $groupKey = $groupOptionProvider->getOptionKey();
-    } else if ($groupOptionProvider instanceof Entities\ProjectParticipantFieldDataOption) {
+    } elseif ($groupOptionProvider instanceof Entities\ProjectParticipantFieldDataOption) {
       $groupKey = $groupOptionProvider->getKey();
     }
 
@@ -749,26 +820,29 @@ class ProjectParticipantFieldsService
     $multipliciy = $groupField->getMultiplicity();
     if ($multipliciy != Multiplicity::GROUPOFPEOPLE
         && $multipliciy != Multiplicity::GROUPSOFPEOPLE) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $this->l->t('Field "%s" is not a group of participants field.', $groupField->getName()));
     }
 
-    // @todo The getBytes() MUST NOT BE NECESSARY
     $groupMembers = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)
-                         ->findBy([ 'optionKey' => $groupKey ]);
+      ->findBy([ 'optionKey' => $groupKey ]);
 
     return $groupMembers;
   }
 
   /**
    * Find the members of all groups for the given option, indexed by the option-key.
+   *
+   * @param Entities\ProjectParticipantField $groupField
+   *
+   * @return array
    */
-  public function findGroupMembers(Entities\ProjectParticipantField $groupField)
+  public function findGroupMembers(Entities\ProjectParticipantField $groupField):array
   {
     $multipliciy = $groupField->getMultiplicity();
     if ($multipliciy != Multiplicity::GROUPOFPEOPLE
         && $multipliciy != Multiplicity::GROUPSOFPEOPLE) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $this->l->t('Field "%s" is not a group of participants field.', $groupField->getName()));
     }
 
@@ -782,10 +856,21 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Select a field with matching names from a collection of fields
+   * Select a field with matching names from a collection of fields.
+   *
+   * @param Collections\Collection $things
+   *
+   * @param string $fieldName
+   *
+   * @param bool $singleResult
+   *
+   * @return null|Collections\Collection
    */
-  public function filterByFieldName(Collections\Collection $things, string $fieldName, $singleResult = true)
-  {
+  public function filterByFieldName(
+    Collections\Collection $things,
+    string $fieldName,
+    bool $singleResult = true,
+  ):?Collections\Collection {
     if ($things->isEmpty()) {
       return $singleResult ? null :  new Collections\ArrayCollection;
     }
@@ -803,7 +888,7 @@ class ProjectParticipantFieldsService
         }
         return false;
       });
-    } else if ($things->first() instanceof Entities\ProjectParticipantFieldDataOption) {
+    } elseif ($things->first() instanceof Entities\ProjectParticipantFieldDataOption) {
       /** @var Entities\ProjectParticipantFieldDataOption $option */
       $remaining = $things->filter(function($option) use ($fieldNames) {
         $field = $option->getField();
@@ -815,7 +900,7 @@ class ProjectParticipantFieldsService
         }
         return false;
       });
-    } else if ($things->first() instanceof Entities\ProjectParticipantFieldDatum) {
+    } elseif ($things->first() instanceof Entities\ProjectParticipantFieldDatum) {
 
       /** @var Entities\ProjectParticipantFieldDatum $datum */
       $remaining = $things->filter(function($datum) use ($fieldNames) {
@@ -829,12 +914,12 @@ class ProjectParticipantFieldsService
         return false;
       });
     } else {
-      throw new \RuntimeException($this->l->t('Only "field" collections can be filtered, not instances of "%s".', get_class($things->first())));
+      throw new RuntimeException($this->l->t('Only "field" collections can be filtered, not instances of "%s".', get_class($things->first())));
     }
     if ($singleResult) {
       if ($remaining->count() == 1) {
         return $remaining->first();
-      } else if ($remaining->isEmpty()) {
+      } elseif ($remaining->isEmpty()) {
         return null;
       }
     }
@@ -843,9 +928,23 @@ class ProjectParticipantFieldsService
 
   /**
    * Create a field with given name and type. The field returned is not yet persisted.
+   *
+   * @param string $name
+   *
+   * @param Multiplicity $multiplicity
+   *
+   * @param DataType $dataType
+   *
+   * @param null|string $tooltip
+   *
+   * @return null|Entities\ProjectParticipantField
    */
-  public function createField($name, Multiplicity $multiplicity, DataType $dataType, $tooltip = null):?Entities\ProjectParticipantField
-  {
+  public function createField(
+    string $name,
+    Multiplicity $multiplicity,
+    DataType $dataType,
+    ?string $tooltip = null,
+  ):?Entities\ProjectParticipantField {
     if ($multiplicity != Multiplicity::SIMPLE) {
       return null;
     }
@@ -862,6 +961,8 @@ class ProjectParticipantFieldsService
             ->setTooltip($tooltip)
             ->setField($field);
     $field->getDataOptions()->set($option->getKey(), $option);
+
+    return $field;
   }
 
   /**
@@ -880,7 +981,7 @@ class ProjectParticipantFieldsService
     if (!($fieldOrId instanceof Entities\ProjectParticipantField)) {
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldOrId);
       if (empty($field)) {
-        throw new \RuntimeException($this->l->t('Unable to find participant field for id "%s"', $pme->rec));
+        throw new RuntimeException($this->l->t('Unable to find participant field for id "%s"', $fieldOrId));
       }
     } else {
       $field = $fieldOrId;
@@ -922,8 +1023,12 @@ class ProjectParticipantFieldsService
   /**
    * Generate all use-folders with an optional README.md if the field has type
    * CLOUD_FOLDER.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @return void
    */
-  public function handlePersistField(Entities\ProjectParticipantField $field)
+  public function handlePersistField(Entities\ProjectParticipantField $field):void
   {
     // check if we have to do something
     if ($field->getDataType() != DataType::CLOUD_FOLDER) {
@@ -956,15 +1061,28 @@ class ProjectParticipantFieldsService
         }));
     }
     $this->entityManager->registerPreCommitAction(
-      new Common\GenericUndoable(function() use (&$needsFlush) { $needsFlush && $this->flush(); })
+      new Common\GenericUndoable(function() use (&$needsFlush) {
+        $needsFlush && $this->flush();
+      })
     );
   }
 
   /**
    * Update the README.md file with a changed tooltip if the field has type CLOUD_FOLDER
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param null|string $oldTooltip
+   *
+   * @param null|string $newTooltip
+   *
+   * @return void
    */
-  public function handleChangeFieldTooltip(Entities\ProjectParticipantField $field, ?string $oldTooltip, ?string $newTooltip)
-  {
+  public function handleChangeFieldTooltip(
+    Entities\ProjectParticipantField $field,
+    ?string $oldTooltip,
+    ?string $newTooltip,
+  ):void {
     // check if we have to do something
     $isHandledField = $field->getDataType() == DataType::CLOUD_FOLDER
       || ($field->getDataType() == DataType::CLOUD_FILE && $field->getMultiplicity() != Multiplicity::SIMPLE);
@@ -996,10 +1114,21 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Update the README.md file with a changed tooltip if the field has type CLOUD_FOLDER
+   * Update the README.md file with a changed tooltip if the field has type CLOUD_FOLDER.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param null|DataType $oldType
+   *
+   * @param null|DataType $newType
+   *
+   * @return void
    */
-  public function handleChangeFieldType(Entities\ProjectParticipantField $field, ?DataType $oldType, ?DataType $newType)
-  {
+  public function handleChangeFieldType(
+    Entities\ProjectParticipantField $field,
+    ?DataType $oldType,
+    ?DataType $newType,
+  ):void {
     if ($newType == $oldType) {
       return;
     }
@@ -1012,64 +1141,66 @@ class ProjectParticipantFieldsService
     $needsFlush = false;
 
     switch ($newType) {
-    case DataType::CLOUD_FOLDER:
-      // try to create any missing folder
-      /** @var Entities\ProjectParticipant $participant */
-      foreach ($field->getProject()->getParticipants() as $participant) {
-        $musician = $participant->getMusician();
+      case DataType::CLOUD_FOLDER:
+        // try to create any missing folder
+        /** @var Entities\ProjectParticipant $participant */
+        foreach ($field->getProject()->getParticipants() as $participant) {
+          $musician = $participant->getMusician();
 
-        $this->entityManager->registerPreCommitAction(
-          new Common\UndoableFolderCreate(
-            fn() => $this->doGetFieldFolderPath($field, $musician),
-            gracefully: true,
-          )
-        )->register(
-          new Common\UndoableTextFileUpdate(
-            fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
-            gracefully: true,
-            content: $readMe,
-          )
-        )->register(
-          new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
-            $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
-          }));
-      }
-      break;
-    case DataType::CLOUD_FILE:
-      foreach ($field->getProject()->getParticipants() as $participant) {
-        $musician = $participant->getMusician();
-        $this->entityManager->registerPreCommitAction(
-          new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
-            $needsFlush = $this->populateCloudFileField($field, $musician, flush: false) || $needsFlush;
-          })
-        );
-      }
-      break;
+          $this->entityManager->registerPreCommitAction(
+            new Common\UndoableFolderCreate(
+              fn() => $this->doGetFieldFolderPath($field, $musician),
+              gracefully: true,
+            )
+          )->register(
+            new Common\UndoableTextFileUpdate(
+              fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
+              gracefully: true,
+              content: $readMe,
+            )
+          )->register(
+            new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+              $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
+            }));
+        }
+        break;
+      case DataType::CLOUD_FILE:
+        foreach ($field->getProject()->getParticipants() as $participant) {
+          $musician = $participant->getMusician();
+          $this->entityManager->registerPreCommitAction(
+            new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+              $needsFlush = $this->populateCloudFileField($field, $musician, flush: false) || $needsFlush;
+            })
+          );
+        }
+        break;
     }
     switch ($oldType) {
-    case DataType::CLOUD_FOLDER:
-      // try to remove essentially empty folders
-      /** @var Entities\ProjectParticipant $participant */
-      foreach ($field->getProject()->getParticipants() as $participant) {
-        $musician = $participant->getMusician();
+      case DataType::CLOUD_FOLDER:
+        // try to remove essentially empty folders
+        /** @var Entities\ProjectParticipant $participant */
+        foreach ($field->getProject()->getParticipants() as $participant) {
+          $musician = $participant->getMusician();
 
-        // currently we only remove empty (READMEs are ignored) folders, also in
-        // order to mitigate user-errors: if deleting the field in error it can
-        // be added again and the files are still there.
+          // currently we only remove empty (READMEs are ignored) folders, also in
+          // order to mitigate user-errors: if deleting the field in error it can
+          // be added again and the files are still there.
 
-        // this has to be precomputed, as this belongs to the old field type.
-        $field->setDataType($oldType);
-        $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
-        $field->setDataType($newType);
+          // this has to be precomputed, as this belongs to the old field type.
+          $field->setDataType($oldType);
+          $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
+          $field->setDataType($newType);
 
-        $this->entityManager->registerPreCommitAction(
-          new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
-        );
-      }
-      break;
+          $this->entityManager->registerPreCommitAction(
+            new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
+          );
+        }
+        break;
     }
     $this->entityManager->registerPreCommitAction(
-      new Common\GenericUndoable(function() use (&$needsFlush) { $needsFlush && $this->flush(); })
+      new Common\GenericUndoable(function() use (&$needsFlush) {
+        $needsFlush && $this->flush();
+      })
     );
   }
 
@@ -1084,10 +1215,16 @@ class ProjectParticipantFieldsService
    * @param bool $flush If \true call flush as needed, otherwise just report
    * back the need for flush with the return value. Defaults to \true.
    *
+   * @param null|Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
    * @return true \true if flush is needed repectively if something has been changed, \false otherwise.
    */
-  public function populateCloudFolderField(Entities\ProjectParticipantField $field, Entities\Musician $musician, bool $flush = true, ?Entities\ProjectParticipantFieldDatum &$fieldDatum = null):bool
-  {
+  public function populateCloudFolderField(
+    Entities\ProjectParticipantField $field,
+    Entities\Musician $musician,
+    bool $flush = true,
+    ?Entities\ProjectParticipantFieldDatum &$fieldDatum = null
+  ):bool {
     $needsFlush = false;
 
     if ($field->getDataType() != DataType::CLOUD_FOLDER) {
@@ -1183,7 +1320,7 @@ class ProjectParticipantFieldsService
    * @param bool $flush If true call flush as needed, otherwise just report
    * back the need for flush with the return value.
    *
-   * @param array $fieldData The field-data for the field and musician
+   * @param array $fieldData The field-data for the field and musician.
    *
    * @return true \true if flush is needed repectively if something has been changed, \false otherwise.
    */
@@ -1287,8 +1424,12 @@ class ProjectParticipantFieldsService
 
   /**
    * Called via ORM events as pre-remove hook.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @return void
    */
-  public function handleRemoveField(Entities\ProjectParticipantField $field)
+  public function handleRemoveField(Entities\ProjectParticipantField $field):void
   {
     // check if we have to do something
     if ($field->getDataType() != DataType::CLOUD_FOLDER) {
@@ -1315,11 +1456,19 @@ class ProjectParticipantFieldsService
    * run-queue. In case of an error the change is undone, i.e. the files are
    * renamed back.
    *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param string $oldName
+   *
+   * @param string $newName
+   *
+   * @return void
+   *
    * @todo
    * - perhaps we should do a read-dir instead or additionally
    * - handle "soft-deleted" entities
    */
-  public function handleRenameField(Entities\ProjectParticipantField $field, string $oldName, string $newName)
+  public function handleRenameField(Entities\ProjectParticipantField $field, string $oldName, string $newName):void
   {
     if ($oldName == $newName) {
       return;
@@ -1389,7 +1538,16 @@ class ProjectParticipantFieldsService
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
   }
 
-  public function handleRenameOption(Entities\ProjectParticipantFieldDataOption $option, string $oldLabel, string $newLabel)
+  /**
+   * @param Entities\ProjectParticipantFieldDataOption $option
+   *
+   * @param string $oldLabel
+   *
+   * @param string $newLabel
+   *
+   * @return void
+   */
+  public function handleRenameOption(Entities\ProjectParticipantFieldDataOption $option, string $oldLabel, string $newLabel):void
   {
     if ($oldLabel == $newLabel) {
       return;
@@ -1408,7 +1566,6 @@ class ProjectParticipantFieldsService
 
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
-    $project = $field->getProject();
 
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($option->getFieldData() as $fieldDatum) {
@@ -1434,10 +1591,4 @@ class ProjectParticipantFieldsService
 
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
