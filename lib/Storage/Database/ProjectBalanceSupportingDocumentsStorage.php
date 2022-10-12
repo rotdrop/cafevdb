@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Constants;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -158,52 +159,38 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       return $this->files[$dirName];
     }
 
+    /** @var Entities\DatabaseStorageFolder $folderDirEntry */
+
     if (empty($dirName)) {
-      $rootFolder = $this->project->getFinancialBalanceDocumentsFolder();
-      $this->files[$dirName]['.'] = $rootFolder ?? new DirectoryNode('.', new DateTimeImmutable('@1'));
-      if (empty($rootFolder)) {
+      $folderDirEntry = $this->project->getFinancialBalanceDocumentsFolder();
+      $this->files[$dirName]['.'] = $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1'));
+      if (empty($folderDirEntry)) {
         return $this->files[$dirName];
       }
     } else {
-      $this->files[$dirName]['.'] = $this->fileFromFileName($dirName);
+      $folderDirEntry = $this->fileFromFileName($dirName);
+      $this->files[$dirName]['.'] = $folderDirEntry;
     }
 
     // the mount provider currently disables soft-deleteable filter ...
     $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
-    $documents = $this->project->getFinancialBalanceSupportingDocuments();
+    $dirEntries = $folderDirEntry->getDirectoryEntries();
 
-    // $this->logInfo('NUMBER OF DOCUMENTS FOUND ' . count($documents));
+    foreach ($dirEntries as $dirEntry) {
 
-    /** @var Entities\DatabaseStorageFolder $documentFolder */
-    foreach ($documents as $documentFolder) {
+      $baseName = $dirEntry->getName();
+      $fileName = $this->buildPath($dirName . self::PATH_SEPARATOR . $baseName);
+      list('basename' => $baseName) = self::pathInfo($fileName);
 
-      $documentFileName = $documentFolder->getName();
-
-      // $this->logInfo('DOCUMENT ' . $documentFileName);
-
-      list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($documentFileName) . self::PATH_SEPARATOR . '_');
-      // $this->logInfo('FILE DIR NAME ' . $fileDirName);
-
-      if (empty($dirName) || str_starts_with($fileDirName, $dirName)) {
-        if ($fileDirName != $dirName) {
-          // add a directory entry, $dirName is actually just the root ''
-          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-          $this->files[$dirName][$baseName] = $documentFolder;
-        } else {
-          // add entries for all files in the directory
-          $documentFiles = $documentFolder->getDocuments();
-          /** @var Entities\DatabaseStorageFile $dirEntry */
-          foreach ($documentFiles as $dirEntry) {
-            // enforce the "correct" file-name
-            $baseName = $dirEntry->getName();
-            $fileName = $this->buildPath($documentFileName . self::PATH_SEPARATOR . $baseName);
-            list('basename' => $baseName) = self::pathInfo($fileName);
-            // $this->logInfo('ADD ' . $dirName . ' || ' . $baseName);
-            $this->files[$dirName][$baseName] = $dirEntry;
-          }
-          break; // stop after first matching directory
-        }
+      if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
+        /** @var Entities\DatabaseStorageFolder $dirEntry */
+        // add a directory entry
+        $baseName .= self::PATH_SEPARATOR;
+        $this->files[$dirName][$baseName] = $dirEntry;
+      } else {
+        /** @var Entities\DatabaseStorageFile $dirEntry */
+        $this->files[$dirName][$baseName] = $dirEntry;
       }
     }
 
@@ -340,6 +327,19 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 
+  // /**
+  //  * @param string $baseName
+  //  *
+  //  * @return bool
+  //  */
+  // private static function isReadMe(string $baseName):bool
+  // {
+  //   // Readme.md.ocTransferId950400209.part
+  //   return strtolower($baseName) == strtolower(Constants::README_NAME)
+  //     || (str_starts_with(strtolower($baseName), strtolower(Constants::README_NAME))
+  //         && str_ends_with($baseName, '.part'));
+  // }
+
   /**
    * {@inheritdoc}
    *
@@ -354,6 +354,8 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
    */
   public function rename($path1, $path2)
   {
+    // $this->logInfo('P1 - P2 ' . $path1 . ' - ' . $path2);
+
     $path1 = $this->buildPath($path1);
     $path2 = $this->buildPath($path2);
     list('dirname' => $dirName1, /* 'basename' => $baseName1 */) = self::pathinfo($path1);
@@ -364,8 +366,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     $sequence2 = $this->isContainerDirectory($path2);
 
     if (($sequence1 === null) !== ($sequence2 === null)) {
-      // illegal, regular files can only reside inside the top-level directories.
-      // $this->logInfo('ILLEGAL RENAME');
+      // balance folder may only be rename to balance folders
       return false;
     }
 
@@ -416,11 +417,19 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       return false;
     }
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
-    $sequence = $this->isContainerDirectory($dirName);
-    if ($sequence === false) {
-      // $this->logInfo('NO SEQUENCE  ' . $path);
+
+    if ($this->isContainerDirectory($path) !== null) {
+      // $this->logInfo('CONTAINER DIR CHCEK ' . $path);
       return false;
     }
+
+    // $isReadMe = $this->isReadMe($baseName);
+    // $sequence = $this->isContainerDirectory($dirName);
+    // if ($sequence === false && !$isReadMe) {
+    //   // $this->logInfo('NO SEQUENCE  ' . $path);
+    //   return false;
+    // }
+
     /** @var Entities\DatabaseStorageFile $dirEntry */
     $dirEntry = $this->fileFromFileName($path);
     $this->entityManager->beginTransaction();
@@ -547,8 +556,3 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
