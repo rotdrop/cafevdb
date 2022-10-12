@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,28 +27,43 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 /** Small trait-class to fix seom CGI-names. */
 trait ParticipantFieldsCgiNameTrait
 {
-  static protected function participantFieldTableName($fieldId)
+  /**
+   * @param int $fieldId
+   *
+   * @return string
+   */
+  protected static function participantFieldTableName(int $fieldId):string
   {
     return self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE.self::VALUES_TABLE_SEP.$fieldId;
   }
 
-  static protected function participantFieldValueFieldName($fieldId)
+  /**
+   * @param int $fieldId
+   *
+   * @return string
+   */
+  protected static function participantFieldValueFieldName(int $fieldId):string
   {
     return self::joinTableFieldName(self::participantFieldTableName($fieldId), 'option_value');
   }
 
-  static protected function participantFieldKeyFieldName($fieldId)
+  /**
+   * @param int $fieldId
+   *
+   * @return string
+   */
+  protected static function participantFieldKeyFieldName(int $fieldId):string
   {
     return self::joinTableFieldName(self::participantFieldTableName($fieldId), 'option_key');
   }
 
-  static protected function participantFieldOptionsTableName($fieldId)
+  /**
+   * @param int $fieldId
+   *
+   * @return string
+   */
+  protected static function participantFieldOptionsTableName(int $fieldId):string
   {
     return self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.self::VALUES_TABLE_SEP.$fieldId;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
