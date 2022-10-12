@@ -61,14 +61,18 @@ trait ParticipantTotalFeesTrait
         'tab'      => [ 'id' => $financeTab ],
         'name'     => $this->l->t('Total Project Fees'),
         'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
-        'sort'    => false,
-        'options' => 'VDL', // wrong in change mode
+        'sort'    => true,
+        'options' => 'VDFL', // wrong in change mode
         'input' => 'VR',
+        'select|FL' => 'N',
         'sql' => 'IF($join_col_fqn IS NULL,
   0.0,
   SUM($join_col_fqn)
   * COUNT(DISTINCT $join_table.id)
   / COUNT($join_table.id))',
+        'filter' => [
+          'having' => true,
+        ],
         'php' => function($amountPaid, $op, $k, $row, $recordId, $pme) use ($monetaryFields) {
 
           // $musicianId = $recordId['musician_id'];
