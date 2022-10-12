@@ -225,12 +225,18 @@ window.addEventListener('DOMContentLoaded', () => {
           const nameRegExp = new RegExp('^(?:' + this.projectName + '-?)?' + '(\\d{3}|XXX)$');
           const sequenceMatch = name.match(nameRegExp);
           if (!sequenceMatch) {
-            showError(t(appName, 'The name of the new document in support must match the format "{projectName}-XXX" where "XXX" is a placeholder for 3 decimal digits or a literatl "XXX" in which case the next available sequence number is chosen automatically.', this));
+            showError(t(appName, 'The name of the new document in support must match the format "{projectName}-XXX" where "XXX" is a placeholder for 3 decimal digits or a literal "XXX" in which case the next available sequence number is chosen automatically.', this));
           }
           let sequence = sequenceMatch[1];
           if (sequence === 'XXX') {
             const sequences = [];
             for (const file of this.fileList.files) {
+              if (file.mimetype !== 'httpd/unix-directory') {
+                continue;
+              }
+              if (!file.name.match(nameRegExp)) {
+                continue;
+              }
               sequences.push(+file.name.substr(file.name.length - 3));
             }
             sequences.sort((a, b) => a - b);
@@ -261,7 +267,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (!isProjectBalanceSupportingDocumentsFolder(dirInfo, projectName)) {
           if (this.savedMenuItems) {
-            // the WOPI requests send to the richdocuments do not
+            // the WOPI requests sent to the richdocuments do not
             // contain enough authentication to access our data-base.
             const menuItems = dirInfo.mountType === 'cafevdb-database'
               ? this.savedMenuItems.filter((item) => !item.id.match('richdocuments') && item.id !== 'folder')
@@ -276,7 +282,11 @@ window.addEventListener('DOMContentLoaded', () => {
         this.menuData.actionHandler = this.menuData.actionHandler.bind(this.menuData);
         this.menuData.fileList = menu.fileList;
 
-        menu._menuItems = [];
+        const menuItems = this.savedMenuItems
+          ? this.savedMenuItems.filter((item) => !item.id.match('richdocuments') && item.id !== 'folder')
+          : [];
+        menu._menuItems = menuItems;
+
         menu.addMenuEntry(this.menuData);
       },
       attach(menu) {
@@ -288,7 +298,7 @@ window.addEventListener('DOMContentLoaded', () => {
           menu.render = function() {
             menuRender.apply(this);
             if (isProjectBalanceSupportingDocumentsFolder(this.fileList.dirInfo)) {
-              this.$el.find('ul li:first').remove();
+              // this.$el.find('ul li:first').remove();
             }
           }.bind(menu);
 
