@@ -561,7 +561,6 @@ class Project implements \ArrayAccess
   public function getFinancialBalanceSupportingDocuments():Collection
   {
     if (empty($this->financialBalanceDocumentsFolder)) {
-      \OCP\Util::writeLog('ORM', __METHOD__ . ' no folder', \OCP\Util::INFO);
       return new ArrayCollection;
     }
     return $this->financialBalanceDocumentsFolder->getSubFolders();
