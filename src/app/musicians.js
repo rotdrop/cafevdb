@@ -296,10 +296,10 @@ const contactValidation = function(container) {
           );
           $mailingListOperations.each(function(index) {
             const $this = $(this);
-            $this.prop('disabled', $this.is(':hidden')
-                       || ($this.hasClass('expert-mode-only')
-                           && !$('body').hasClass('cafevdb-expert-mode')));
-            $this.toggleClass('disabled', $this.is(':hidden'));
+            const visible = $this.hasClass('status-' + status + '-visible');
+            const disabled = !visible || ($this.hasClass('expert-mode-only') && !$('body').hasClass('cafevdb-expert-mode'));
+            $this.prop('disabled', disabled);
+            $this.toggleClass('disabled', disabled);
           });
         });
       return false;
