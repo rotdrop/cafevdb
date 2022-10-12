@@ -1139,7 +1139,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
           // explode key values
           $selfValues = [];
           foreach (['old', 'new'] as $dataSet) {
-            $dataValues = ${$dataSet.'vals'};
+            $dataValues = ${$dataSet . 'Values'};
             $selfValues[$dataSet] = Util::explode(self::VALUES_SEP, $dataValues[$selfField]);
           }
           $selfValues['del'] = array_diff($selfValues['old'], $selfValues['new']);
