@@ -1395,11 +1395,11 @@ __EOT__;
   }
 
   /**
-   * @param int $fieldId
+   * @param null|int $fieldId May be null in add mode.
    *
    * @return iterable All option kleys for the given field.
    */
-  private function optionKeys(int $fieldId):iterable
+  private function optionKeys(?int $fieldId):iterable
   {
     return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)->optionKeys($fieldId);
   }
@@ -1581,7 +1581,7 @@ __EOT__;
    * is one single text input for a new name which triggers creation
    * of a new input row from the JS change event.
    *
-   * @param int $fieldId Id of the current field in change mode.
+   * @param null|int $fieldId Id of the current field in change mode, may be null in add mode.
    *
    * @param int $numberOfOptions The number of already set options s.t. the
    * placeholder row can generator indices for new options.
@@ -1592,7 +1592,7 @@ __EOT__;
    *
    * @return string HTML data for the generator button.
    */
-  private function dataOptionGeneratorHtml(int $fieldId, int $numberOfOptions, mixed $generatorItem):string
+  private function dataOptionGeneratorHtml(?int $fieldId, int $numberOfOptions, mixed $generatorItem):string
   {
     $pfx = $this->pme->cgiDataName('data_options');
     $html = '
@@ -1769,7 +1769,7 @@ __EOT__;
    *
    * @param string $op
    *
-   * @param int $fieldId
+   * @param null|int $fieldId May be null in add mode.
    *
    * @param null|string $multiplicity
    *
@@ -1780,7 +1780,7 @@ __EOT__;
   private function showDataOptions(
     mixed $value,
     string $op,
-    int $fieldId,
+    ?int $fieldId,
     ?string $multiplicity = null,
     ?string $dataType = null,
   ):string {
@@ -2042,13 +2042,13 @@ __EOT__;
    *
    * @param mixed $dataOptions
    *
-   * @param string $multiplicity
+   * @param null|string $multiplicity May be null in add mode.
    *
-   * @param string $dataType
+   * @param null|string $dataType May be null in add mode.
    *
    * @return array
    */
-  private function getAllowedSingleValue(mixed $dataOptions, string $multiplicity, string $dataType):array
+  private function getAllowedSingleValue(mixed $dataOptions, ?string $multiplicity, ?string $dataType):array
   {
     $allowed = $this->participantFieldsService->explodeDataOptions($dataOptions, false);
     $entry = null;
@@ -2078,9 +2078,9 @@ __EOT__;
    *
    * @param null|string $toolTip
    *
-   * @param string $multiplicity
+   * @param null|string $multiplicity May be null in add mode.
    *
-   * @param string $dataType
+   * @param null|string $dataType May be null in add mode.
    *
    * @param string $multiplicityVariant The multiplicity-variant this is emitted for.
    *
@@ -2090,8 +2090,8 @@ __EOT__;
     mixed $dataOptions,
     string $op,
     ?string $toolTip,
-    string $multiplicity,
-    string $dataType,
+    ?string $multiplicity,
+    ?string $dataType,
     string $multiplicityVariant,
   ):string {
     list($entry, $allowed) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
