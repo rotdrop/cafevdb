@@ -986,11 +986,11 @@ class SepaBankAccounts extends PMETableViewBase
   }
 
   /**
-   * @param array $participantFields
+   * @param iterable $participantFields
    *
    * @return array
    */
-  private function tableTabs(array $participantFields = []):array
+  private function tableTabs(iterable $participantFields = []):array
   {
     $tabs = [
       [
@@ -1020,6 +1020,10 @@ received so far'),
         continue;
       }
 
+      if ($extraTab == 'finance') {
+        $extraTab = self::AMOUNT_TAB_ID;
+      }
+
       foreach ($tabs as $tab) {
         if ($extraTab == $tab['id']
             || $extraTab == $this->l->t($tab['id'])
@@ -1029,6 +1033,7 @@ received so far'),
           break;
         }
       }
+
       if (!empty($extraTab)) {
         $newTab = [
           'id' => $extraTab,
@@ -1267,6 +1272,11 @@ received so far'),
         return $tab['id'];
       }
     }
+
+    if ($idOrName == 'finance') {
+      $this->logInfo('FINANCE TAB');
+    }
+
     return $idOrName;
   }
 }
