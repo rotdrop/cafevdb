@@ -458,11 +458,11 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * @param string $name Name to sanitize.
+   * @param null|string $name Name to sanitize.
    *
    * @return string Sanitized file-name, no dots, no slashes, no spaces
    */
-  public static function sanitizeFileName(string $name):string
+  public static function sanitizeFileName(?string $name):string
   {
     $name = Util::normalizeSpaces($name);
     $name = preg_replace([ '|\s*/\s*|', '/[.]/', '/\s*/' ], [ '-', '_', '' ], $name);
