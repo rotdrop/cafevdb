@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -139,17 +140,20 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $sepaDebitMandate = null;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|int|Project $project
    *
    * @return ProjectParticipant
    */
@@ -173,7 +177,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|int|Musician $musician
    *
    * @return ProjectParticipant
    */
@@ -197,11 +201,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set registration.
    *
-   * @param bool $registration
+   * @param null|bool $registration
    *
    * @return ProjectParticipant
    */
-  public function setRegistration($registration):ProjectParticipant
+  public function setRegistration(?bool $registration):ProjectParticipant
   {
     $this->registration = $registration;
 
@@ -221,11 +225,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set projectInstruments.
    *
-   * @param bool $projectInstruments
+   * @param Collection $projectInstruments
    *
    * @return ProjectParticipant
    */
-  public function setProjectInstruments($projectInstruments):ProjectParticipant
+  public function setProjectInstruments(Collection $projectInstruments):ProjectParticipant
   {
     $this->projectInstruments = $projectInstruments;
 
@@ -249,7 +253,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setParticipantFieldsData($participantFieldsData):ProjectParticipant
+  public function setParticipantFieldsData(Collection $participantFieldsData):ProjectParticipant
   {
     $this->participantFieldsData = $participantFieldsData;
 
@@ -284,7 +288,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return null|ProjectParticipantFieldDatum
    */
-  public function getParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
+  public function getParticipantFieldsDatum(mixed $key):?ProjectParticipantFieldDatum
   {
     return $this->getByUuid($this->participantFieldsData, $key, 'optionKey');
   }
@@ -296,7 +300,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setPayments($payments):ProjectParticipant
+  public function setPayments(Collection $payments):ProjectParticipant
   {
     $this->payments = $payments;
 
@@ -316,7 +320,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set sepaBankAccount.
    *
-   * @param SepaBankAccount|null sepaBankAccount
+   * @param null|SepaBankAccount $sepaBankAccount
    *
    * @return ProjectParticipant
    */
@@ -340,7 +344,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set sepaDebitMandate.
    *
-   * @param SepaDebitMandate|null sepaDebitMandate
+   * @param null|SepaDebitMandate $sepaDebitMandate
    *
    * @return ProjectParticipant
    */
@@ -369,9 +373,11 @@ class ProjectParticipant implements \ArrayAccess
   private $preUpdateValue = [];
 
   /**
-   * @ORM\PreUpdate
-   *
    * @param Event\PreUpdateEventArgs $event
+   *
+   * @return void
+   *
+   * @ORM\PreUpdate
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
@@ -386,9 +392,11 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * @ORM\PostUpdate
-   *
    * @param Event\LifecycleEventArgs $event
+   *
+   * @return void
+   *
+   * @ORM\PostUpdate
    */
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
@@ -405,6 +413,8 @@ class ProjectParticipant implements \ArrayAccess
    * Return the number of "serious" items which "use" this entity. For
    * project participant this is (for now) the number of payments. In
    * the long run: only open payments/receivables should count.
+   *
+   * @return int
    */
   public function usage():int
   {
