@@ -68,6 +68,14 @@ class EncryptedFile extends File
    */
   private $databaseStorageDirectories;
 
+  /**
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="DatabaseStorageFile", mappedBy="file")
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
+   */
+  private $databaseStorageDirEntries;
+
   public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null) {
     parent::__construct($fileName, null, $mimeType);
     $this->owners = new ArrayCollection;
@@ -82,6 +90,7 @@ class EncryptedFile extends File
       $this->addOwner($owner);
     }
     $this->databaseStorageDirectories = new ArrayCollection;
+    $this->databaseStorageDirEntries = new ArrayCollection;
   }
 
   /**
@@ -190,5 +199,28 @@ class EncryptedFile extends File
       $this->databaseStorageDirectories->removeElement($entity);
     }
     return $this;
+  }
+
+  /**
+   * Set databaseStorageDirEntries.
+   *
+   * @param Collection $databaseStorageDirEntries
+   *
+   * @return EncryptedFile
+   */
+  public function setDatabaseStorageDirEntries(Collection $dirEntries):EncryptedFile
+  {
+    $this->databaseStorageDirEntries = $dirEntries;
+    return $this;
+  }
+
+  /**
+   * Get databaseStorageDirEntries.
+   *
+   * @return null|DatabaseStorageDirectory
+   */
+  public function getDatabaseStorageDirEntries():Collection
+  {
+    return $this->databaseStorageDirEntries;
   }
 }
