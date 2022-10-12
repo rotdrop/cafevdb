@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use Exception;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
 /**
  * Field definition for total fees and salaries for
@@ -34,7 +37,23 @@ trait ParticipantTotalFeesTrait
 {
   use ParticipantFieldsCgiNameTrait;
 
-  protected function makeTotalFeesField(&$fdd, $monetaryFields, $financeTab)
+  /**
+   * Create a "virtual" total-fees field with a summary of the total amount to
+   * pay or receive, the amount already paid and the reminaing amount. This is
+   * used in both "directions", so values to be received by the orchestra are
+   * positive, values to pay to participants are negative.
+   *
+   * @param array $fdd Field description data.
+   *
+   * @param iterable $monetaryFields
+   *
+   * @param string $financeTab The tab to move the field to.
+   *
+   * @return void
+   *
+   * @see ProjectParticipantFieldsService::monetaryFields()
+   */
+  protected function makeTotalFeesField(array &$fdd, iterable $monetaryFields, string $financeTab):void
   {
     $this->makeJoinTableField(
       $fdd, self::PROJECT_PAYMENTS_TABLE, 'amount',
@@ -52,7 +71,7 @@ trait ParticipantTotalFeesTrait
   / COUNT($join_table.id))',
         'php' => function($amountPaid, $op, $k, $row, $recordId, $pme) use ($monetaryFields) {
 
-          $musicianId = $recordId['musician_id'];
+          // $musicianId = $recordId['musician_id'];
 
           $amountInvoiced = 0.0;
           /** @var Entities\ProjectParticipantField $participantField */
@@ -64,7 +83,7 @@ trait ParticipantTotalFeesTrait
             foreach ($fieldValues as $fieldName => &$fieldValue) {
               $label = $this->joinTableFieldName($table, 'option_'.$fieldName);
               if (!isset($pme->fdn[$label])) {
-                throw new \Exception($this->l->t('Data for monetary field "%s" not found', $label));
+                throw new Exception($this->l->t('Data for monetary field "%s" not found', $label));
               }
               $rowIndex = $pme->fdn[$label];
               $qf = 'qf'.$rowIndex;
@@ -100,8 +119,3 @@ trait ParticipantTotalFeesTrait
       ]);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
