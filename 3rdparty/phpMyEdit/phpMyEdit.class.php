@@ -4533,6 +4533,17 @@ class phpMyEdit
 		$this->qfn != $this->prev_qfn && $this->fm = 0;
 
 		/*
+		 * Main list_table() query
+		 *
+		 * Each row of the HTML table is one record from the SQL query. We must
+		 * perform this query before filter printing, because we want to use
+		 * $this->sql_field_len() function. We will also fetch the first row to get
+		 * the field names.
+		 */
+		$qparts = $this->get_SQL_main_list_query_parts();
+		$query = $this->get_SQL_main_list_query($qparts);
+
+		/*
 		 * If user is allowed to Change/Delete records, we need an extra column
 		 * to allow users to select a record
 		 */
@@ -4570,14 +4581,26 @@ class phpMyEdit
 		}
 		echo '</div>'."\n";
 
+		echo '<div class="'.$this->getCSSclass('main-container').'">'."\n";
+
+		$mainTableClasses = [
+			$this->getCSSclass('main'),
+		];
 		if ($this->tabs_enabled()) {
-			$tab_class = $this->cur_tab < 0 ? ' tab-all' : ' tab-'.$this->cur_tab;
-		} else {
-			$tab_class = '';
+			$mainTableClasses[] = $this->cur_tab < 0 ? 'tab-all' : ' tab-' . $this->cur_tab;
+		}
+		if ($this->filter_enabled() || $this->display['query'] === 'always') {
+			$mainTableClasses[] = $this->getCSSclass($this->filter_operation() ? 'filter-visible' : 'filter-hidden');
+		}
+		if ($this->display['sort']) {
+			$mainTableClasses[] = $this->getCssClass(
+				(!empty($qparts[self::QPARTS_ORDERBY]) && $this->display['sort'] && !$this->default_sort())
+				? 'sortinfo-visible'
+				: 'sortinfo-hidden'
+			);
 		}
 
-		echo '<div class="'.$this->getCSSclass('main-container').'">'."\n";
-		echo '<table class="',$this->getCSSclass('main'),$tab_class,'" summary="',$this->tb,'">',"\n";
+		echo '<table class="' . implode(' ', $mainTableClasses) . '" summary="' . $this->tb . '">' . "\n";
 		echo '<thead><tr class="',$this->getCSSclass('header'),'">',"\n";
 		/*
 		 * System (navigation, selection) columns counting
@@ -4632,6 +4655,10 @@ class phpMyEdit
 			$forward  = in_array("$k", $this->sfn, true);
 			$backward = in_array("-$k", $this->sfn, true);
 			$sorted	  = $forward || $backward;
+
+			if ($k == 46) {
+			}
+
 			if ($sorted) {
 				// Then we need also our index in the sorting hirarchy
 				$search_key = $forward ? "$k" : "-$k";
@@ -4695,17 +4722,6 @@ class phpMyEdit
 			}
 		}
 		echo '</tr></thead><tbody>',"\n";
-
-		/*
-		 * Main list_table() query
-		 *
-		 * Each row of the HTML table is one record from the SQL query. We must
-		 * perform this query before filter printing, because we want to use
-		 * $this->sql_field_len() function. We will also fetch the first row to get
-		 * the field names.
-		 */
-		$qparts = $this->get_SQL_main_list_query_parts();
-		$query = $this->get_SQL_main_list_query($qparts);
 
 		// filter
 		if ($this->filter_operation() || $this->display['query'] === 'always') $this->filter_heading();
