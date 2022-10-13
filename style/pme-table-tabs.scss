@@ -21,12 +21,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@mixin showTableTab($tabId, $prefix: "&") {
+@mixin tableTabDisplay($tabId, $display, $prefix: "&", $postfix: "") {
   #{$prefix}.tab-#{$tabId} {
-    th.tab-#{$tabId}, td.tab-#{$tabId} {
-      display:table-cell;
+    th.tab-#{$tabId}#{$postfix}, td.tab-#{$tabId}#{$postfix} {
+      display:#{$display};
     }
   }
+}
+
+@mixin showTableTab($tabId, $prefix: "&") {
+  @include tableTabDisplay($tabId, "table-cell", $prefix);
 }
 
 /* needs more work */

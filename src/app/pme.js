@@ -1690,13 +1690,15 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
   container.on('click', tableSel + ' input.' + pmeHide, function(event) {
     event.stopImmediatePropagation(); // don't submit, not necessary
 
-    const table = container.find(tableSel);
-    const form = container.find(formSel);
+    const $table = container.find(tableSel);
+    const $form = container.find(formSel);
 
     $(this).addClass(hiddenClass);
-    table.find('tr.' + pmeFilter).addClass(hiddenClass);
-    table.find('input.' + pmeSearch).removeClass(hiddenClass);
-    form.find('input[name="' + pmeSys('fl') + '"]').val(0);
+
+    $table.addClass(pmeFilter + '-hidden').removeClass(pmeFilter + '-visible');
+    $table.find('tr.' + pmeFilter).addClass(hiddenClass);
+    $table.find('input.' + pmeSearch).removeClass(hiddenClass);
+    $form.find('input[name="' + pmeSys('fl') + '"]').val(0);
 
     container.trigger('pmetable:layoutchange');
 
@@ -1707,13 +1709,15 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
   container.on('click', tableSel + ' input.' + pmeSearch, function(event) {
     event.stopImmediatePropagation(); // don't submit, not necessary
 
-    const table = container.find(tableSel);
-    const form = container.find(formSel);
+    const $table = container.find(tableSel);
+    const $form = container.find(formSel);
 
     $(this).addClass(hiddenClass);
-    table.find('tr.' + pmeFilter).removeClass(hiddenClass);
-    table.find('input.' + pmeHide).removeClass(hiddenClass);
-    form.find('input[name="' + pmeSys('fl') + '"]').val(1);
+
+    $table.removeClass(pmeFilter + '-hidden').addClass(pmeFilter + '-visible');
+    $table.find('tr.' + pmeFilter).removeClass(hiddenClass);
+    $table.find('input.' + pmeHide).removeClass(hiddenClass);
+    $form.find('input[name="' + pmeSys('fl') + '"]').val(1);
 
     // maybe re-style chosen select-boxes
     let reattachChosen = false;
@@ -1722,7 +1726,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     const selector = pmeClassSelectors(
       pfx + ' ' + 'div.chosen-container',
       ['filter', 'comp-filter']);
-    table.find(selector).each(function(idx) {
+    $table.find(selector).each(function(idx) {
       if ($(this).width() === 0 || $(this).width() === 60) {
         $(this).prev().chosen('destroy');
         reattachChosen = true;

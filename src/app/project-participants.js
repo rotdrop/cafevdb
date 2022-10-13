@@ -662,8 +662,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     // const column = nameParts[2];
     const groupFieldName = label
           + pageRenderer.valuesTableSep + fieldId
-          + pageRenderer.joinFieldNameSeparator + 'option'
-          + pageRenderer.masterFieldSuffix;
+          + pageRenderer.joinFieldNameSeparator + 'option_key';
     console.log('group id name', groupFieldName);
     self.data('groupField', form.find('[name="' + groupFieldName + '"]'));
     self.data('fieldId', fieldId);
@@ -714,16 +713,16 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     } else {
       if (!musicianSelectedPrev && !musicianSelectedCur && curSelected.length > 0) {
         // add current record
-        console.log('add record', musicianId);
+        console.debug('group add record', musicianId);
         SelectUtils.optionByValue($self, musicianId).prop('selected', true);
         changed = true;
       }
       if (added.length === 1) {
         const singleNewOption = SelectUtils.optionByValue($self, added[0]);
-        console.log('other people group option', singleNewOption);
-        console.log('key', musicianId);
+        console.debug('other people group option', singleNewOption);
+        console.debug('key', musicianId);
         const data = singleNewOption.data('data');
-        console.log('option data', data);
+        console.debug('option data', data);
         if (parseInt(data.groupId) !== -1) {
           console.log('group: ', data.groupId);
           selectGroup($self, data.groupId);
@@ -749,7 +748,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     curSelected = $self.val() || [];
     $self.data('selected', curSelected);
 
-    console.info('DATA', $self.data());
+    console.debug('DATA', $self.data());
 
     const groupId = $self.data('groupField').val();
     const limit = groupId ? $self.data('groups')[groupId].limit : -1;
@@ -834,7 +833,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   form.find('.mailing-list.project .subscription-dropdown .subscription-action-reload').trigger('click');
 
   const pmeForm = container.find(pmeFormSelector);
-  console.info('PME FORM', pmeForm, pmeFormSelector);
+  console.debug('PME FORM', pmeForm, pmeFormSelector);
 
   // adding musicians
   pmeForm

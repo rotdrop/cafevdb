@@ -38,6 +38,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 
+use OCA\CAFEVDB\Common\Util;
+
 /** File related per-participant-fields. */
 trait ParticipantFileFieldsTrait
 {
@@ -151,10 +153,15 @@ trait ParticipantFileFieldsTrait
       if (!empty($dbPathName)) {
         $dbPathInfo = pathinfo($dbPathName);
         $dbFileName = $dbPathInfo['basename'];
-        $dbExtension = $dbPathInfo['extension'];
+        $dbExtension = $dbPathInfo['extension'] ?? null;
       } else {
+        $dbFileName = $fileBase;
+      }
+      if (empty($dbExtension)) {
         $dbExtension = Util::fileExtensionFromMimeType($file->getMimeType());
-        $dbFileName = $fileBase . '.' . $dbExtension;
+      }
+      if (!empty($dbExtension)) {
+        $dbFileName .= '.' . $dbExtension;
       }
     }
     if ($overrideFileName) {

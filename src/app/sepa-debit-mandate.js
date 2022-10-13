@@ -1084,6 +1084,10 @@ const mandateValidatePMEWorker = function(event, validateLockCB) {
   let changed = $element.attr('name');
   changed = inputMapping[changed];
 
+  if (!changed) {
+    return;
+  }
+
   const mandateData = {
     changed,
   };
@@ -1698,13 +1702,13 @@ const mandateReady = function(selector, parameters, resizeCB) {
     }
   });
 
-  $pmeTable.find('input[type="text"].pme-input').not('.revocation-date')
+  $pmeTable.find('input[type="text"].pme-input').not('.revocation-date, .participant-field')
     .on('blur', validateInput);
 
-  $pmeTable.find('select.pme-input').not('.project-participant')
+  $pmeTable.find('select.pme-input').not('.project-participant, .participant-field')
     .on('change', validateInput);
 
-  $pmeTable.find('input[type="checkbox"].pme-input')
+  $pmeTable.find('input[type="checkbox"].pme-input').not('.participant-field')
     .on('change', validateInput);
 
   const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);

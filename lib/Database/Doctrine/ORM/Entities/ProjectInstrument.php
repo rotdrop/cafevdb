@@ -290,9 +290,9 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Get projectParticipant.
    *
-   * @return int
+   * @return null|ProjectParticipant
    */
-  public function getProjectParticipant()
+  public function getProjectParticipant():?ProjectParticipant
   {
     return $this->projectParticipant;
   }

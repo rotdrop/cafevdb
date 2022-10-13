@@ -171,7 +171,8 @@ class SepaDebitMandatesController extends Controller
       ],
     ];
 
-    if ($changed != 'bankAccountIBAN' && (!empty($IBAN) && (empty($BLZ)) || empty($BIC))) {
+    if ($changed != 'bankAccountIBAN'
+        && !empty($IBAN) && str_starts_with($IBAN, 'DE') && (empty($BLZ) || empty($BIC))) {
       // re-run the IBAN validation
       $validations[] = [
         'changed' => 'bankAccountIBAN',
@@ -187,6 +188,7 @@ class SepaDebitMandatesController extends Controller
 
       $changed = $validation['changed'];
       $value = $validation['value'];
+      $initialValue = $value;
       $initiator = $validation['initiator'];
 
       $newValidations = [];
@@ -492,8 +494,10 @@ class SepaDebitMandatesController extends Controller
               ]));
       }
 
-      $message[] = $this->l->t(
-        'Value for "%s" set to "%s".', [ $changed, $value ]);
+      if ($initialValue != $value) {
+        $message[] = $this->l->t(
+          'Value for "%s" set to "%s".', [ $changed, $value ]);
+      }
       $result[$changed] = $value;
 
       foreach ($newValidations as $validation) {

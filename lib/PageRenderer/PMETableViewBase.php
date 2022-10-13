@@ -24,9 +24,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use \ArrayObject;
-use \Exception;
-use \RuntimeException;
+use ArrayObject;
+use Exception;
+use RuntimeException;
+use UnexpectedValueException;
 
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -233,6 +234,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *   ...
    * ]
    * ```
+   *
+   * @see defineJoinStructure()
    */
   protected $joinStructure = [];
 
