@@ -233,6 +233,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *   ...
    * ]
    * ```
+   *
+   * @see defineJoinStructure()
    */
   protected $joinStructure = [];
 
