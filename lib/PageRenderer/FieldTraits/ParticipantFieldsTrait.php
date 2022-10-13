@@ -78,6 +78,9 @@ trait ParticipantFieldsTrait
   /** @var string */
   protected static $toolTipsPrefix = 'page-renderer:participant-fields:display';
 
+  /** @var bool */
+  protected $expertMode;
+
   /**
    * For each extra field add one dedicated join table entry
    * which is pinned to the respective field-id.
@@ -93,9 +96,11 @@ trait ParticipantFieldsTrait
    * [ JOIN_STRUCTURE_FRAGMENT, GENERATOR(&$fdd) ]
    * ```
    *
-   * @todo Joining many tables with multiple rows per join key is a
-   * performance hit. Maybe all those joins should be replaced by
-   * only a single one by using IF-clauses inside the GROUP_CONCAT().
+   * @note Joining many tables with multiple rows per join key is a
+   * performance hit. Therefore there is only a single join and the respective
+   * field is selected by an IF-clause inside the group functions. The problem
+   * with the multiple joins is that they form a tensor-product of the tables
+   * wich rather quickly leads to a memory blow-up.
    */
   public function renderParticipantFields(
     iterable $participantFields,
@@ -336,6 +341,30 @@ trait ParticipantFieldsTrait
                   ]);
                 // $invoiceFdd = &$fieldDescData[$invoiceFddName];
 
+                // yet another field to support summing up totals
+                /* list($fddTotalAmountInvoicedIndex, $fddTotalAmountInvoicedName) = */
+                $this->makeJoinTableField(
+                  $fieldDescData, $tableName, 'sub_totals_invoiced',
+                  Util::arrayMergeRecursive(
+                    $extraFddBase, [
+                      'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
+                      'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                      'select' => 'N',
+                      'sql' => 'CAST(
+  GROUP_CONCAT(
+    DISTINCT
+    IF($join_table.field_id = ' . $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
+  )
+  AS DECIMAL(7, 2)
+)',
+                      'php' => fn($value) => $this->moneyValue($value),
+                      'align' => 'right',
+                      'values' => [
+                        'column' => 'option_value',
+                      ],
+                    ])
+                  );
+
                 $valueFdd['php|VDLF'] = function(
                   $optionValue,
                   $op,
@@ -439,7 +468,7 @@ trait ParticipantFieldsTrait
                       $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
                       break;
                     } catch (\OCP\Files\NotFoundException $e) {
-                      $this->logInfo('No file found for ' . $filesAppPath);
+                      $this->logDebug('No file found for ' . $filesAppPath);
                       array_pop($pathChain);
                     }
                   }
@@ -798,6 +827,33 @@ trait ParticipantFieldsTrait
                 $keyFdd['php|VDLF'] = function($value) {
                   return $this->moneyValue($value);
                 };
+
+                // yet another field to support summing up totals
+                /* list($fddTotalAmountInvoicedIndex, $fddTotalAmountInvoicedName) = */
+                $this->makeJoinTableField(
+                  $fieldDescData, $tableName, 'sub_totals_invoiced',
+                  Util::arrayMergeRecursive(
+                    $extraFddBase, [
+                      'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
+                      'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                      'select' => 'T',
+                      'sql' => 'IF(
+  GROUP_CONCAT(
+    DISTINCT
+    IF($join_table.field_id = '. $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
+    SEPARATOR ""
+  ) IS NULL,
+  0,
+  CAST(' . $dataValue . ' AS DECIMAL(7,2))
+)',
+                      'php' => fn($value) => $this->moneyValue($value),
+                      'align' => 'right',
+                      'values' => [
+                        'column' => 'option_key',
+                      ],
+                    ])
+                  );
+
                 break;
               case FieldType::DATE:
               case FieldType::DATETIME:
@@ -1020,6 +1076,54 @@ trait ParticipantFieldsTrait
                 }
                 unset($keyFdd['mask']);
                 $keyFdd['escape'] = false;
+
+                // yet another field to support summing up totals
+                if ($multiplicity == FieldMultiplicity::MULTIPLE) {
+                  $optionValueSql = 'IF(
+  $join_table.field_id = ' . $fieldId . '
+  AND $join_table.deleted IS NULL
+  AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn,
+  ' . $this->joinTables[$optionsTableName] . '.data,
+  NULL
+)';
+                  $sql = 'CAST(GROUP_CONCAT(DISTINCT ' . $optionValueSql . ') AS DECIMAL(7, 2))';
+                } else {
+                  // comparatively difficult because of the many multi-valued joins.x
+
+                  $optionValueSql = 'IF(
+  $join_table.field_id = ' . $fieldId . '
+  AND $join_table.deleted IS NULL
+  AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn,
+  CAST(' . $this->joinTables[$optionsTableName] . '.data AS DECIMAL(7, 2)),
+  NULL
+)';
+                  $optionKeySql = 'IF(
+  $join_table.field_id = ' . $fieldId . '
+  AND $join_table.deleted IS NULL
+  AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn,
+  $join_col_fqn,
+  NULL
+)';
+                  $sql = 'CAST(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . ') AS DECIMAL(7, 2))';
+                }
+
+                $this->makeJoinTableField(
+                  $fieldDescData, $tableName, 'sub_totals_invoiced',
+                  Util::arrayMergeRecursive(
+                    $extraFddBase, [
+                      'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
+                      'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                      'select' => 'T',
+                      'align' => 'right',
+                      'php' => fn($value) => $this->moneyValue($value),
+                      'sql' => $sql,
+                      'values' => [
+                        'column' => 'option_key',
+                        'encode' => 'BIN2UUID(%s)',
+                      ],
+                    ])
+                  );
+
                 // fall through
               default:
                 $keyFdd['values2'] = $values2;
@@ -1082,6 +1186,50 @@ trait ParticipantFieldsTrait
                   'orderby' => '$table.created DESC, $table.option_key ASC',
                   'encode' => 'BIN2UUID(%s)',
                 ]);
+            }
+
+            if ($dataType == FieldType::SERVICE_FEE) {
+
+              // yet another field to support summing up totals
+              $optionValueSql = 'IF(
+  $join_table.field_id = ' . $fieldId . '
+  AND $join_table.deleted IS NULL
+  AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn
+  AND $join_table.option_value IS NOT NULL
+  AND $join_table.option_value <> "",
+  CAST($join_table.option_value AS DECIMAL(7, 2)),
+  NULL
+)';
+              // in contrast to Multiplicity::PARALLEL and ::MULTIPLE the
+              // value varies from participant to participant and ist stored
+              // in the data table.
+              $optionKeySql = 'IF(
+  $join_table.field_id = ' . $fieldId . '
+  AND $join_table.deleted IS NULL
+  AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn
+  AND $join_table.option_value IS NOT NULL
+  AND $join_table.option_value <> "",
+  $join_col_fqn,
+  NULL
+)';
+
+              /* list($fddTotalAmountInvoicedIndex, $fddTotalAmountInvoicedName) = */
+              $this->makeJoinTableField(
+                $fieldDescData, $tableName, 'sub_totals_invoiced',
+                Util::arrayMergeRecursive(
+                  $extraFddBase, [
+                    'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
+                    'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                    'select' => 'T',
+                    'align' => 'right',
+                    'php' => fn($value) => $this->moneyValue($value),
+                    'sql' => 'CAST(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . ') AS DECIMAL(7, 2))',
+                    'values' => [
+                      'column' => 'option_key',
+                      'encode' => 'BIN2UUID(%s)',
+                    ],
+                  ])
+              );
             }
 
             foreach ($dataOptions as $dataOption) {
@@ -1537,16 +1685,49 @@ WHERE pp.project_id = $this->projectId",
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
-                  'postfix' => ('</span><span class="allowed-option-separator money">&nbsp;</span>'
-                                .'<span class="allowed-option-value money">'.$money.'</span></span>'),
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $keyFddIndex) {
+                    $selectedKey = $row['qf'.$keyFddIndex];
+                    $active = empty($selectedKey) ? '' : ' selected';
+                    return '</span><span class="allowed-option-separator money">&nbsp;</span>'
+                      .'<span class="allowed-option-value money">'.$money.'</span></span>';
+                    },
                 ]);
               $groupMemberFdd['display|ACP'] = array_merge(
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<label class="'.implode(' ', $css).'">',
-                  'postfix' => ($this->allowedOptionLabel('', $fieldData, $dataType, 'selected')
-                                .'</label>'),
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $keyFddIndex) {
+                    $selectedKey = $row['qf'.$keyFddIndex];
+                    $active = ($op == 'display' && empty($selectedKey)) ? '' : 'selected';
+                    return $this->allowedOptionLabel('', $fieldData, $dataType, $active)
+                      .'</label>';
+                    },
                 ]);
+
+              // yet another field to support summing up totals
+              $this->makeJoinTableField(
+                $fieldDescData, $tableName, 'sub_totals_invoiced',
+                Util::arrayMergeRecursive(
+                  $extraFddBase, [
+                    'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
+                    'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                    'select' => 'T',
+                    'sql' => 'IF(
+  GROUP_CONCAT(
+    DISTINCT
+    IF($join_table.field_id = '. $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
+    SEPARATOR ""
+  ) IS NULL,
+  0,
+  CAST(' . $fieldData . ' AS DECIMAL(7,2))
+)',
+                    'php' => fn($value) => $this->moneyValue($value),
+                    'align' => 'right',
+                    'values' => [
+                      'column' => 'option_key',
+                    ],
+                  ])
+              );
             }
 
             // in filter mode mask out all non-group-members
@@ -1761,6 +1942,33 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                   'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
                 ],
               ]);
+
+            if ($dataType === FieldType::SERVICE_FEE) {
+              // yet another field to support summing up totals
+              $optionValueSql = 'IF(
+  $join_table.field_id = ' . $fieldId . '
+  AND $join_table.deleted IS NULL
+  AND ' . $this->joinTables[$optionsTableName] . '.key = $join_col_fqn,
+  ' . $this->joinTables[$optionsTableName] . '.data,
+  NULL
+)';
+              $this->makeJoinTableField(
+                $fieldDescData, $tableName, 'sub_totals_invoiced',
+                Util::arrayMergeRecursive(
+                  $extraFddBase, [
+                    'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
+                    'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                    'select' => 'T',
+                    'align' => 'right',
+                    'php' => fn($value) => $this->moneyValue($value),
+                    'sql' => 'CAST(GROUP_CONCAT(DISTINCT ' . $optionValueSql . ') AS DECIMAL(7, 2))',
+                    'values' => [
+                      'column' => 'option_key',
+                      'encode' => 'BIN2UUID(%s)',
+                    ],
+                  ])
+              );
+            }
 
             break;
         }
@@ -2148,6 +2356,8 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           // $oldGroupId = $oldValues[$keyName];
           $newGroupId = $newValues[$keyName];
 
+          $this->logInfo('NEW GROUP ID ' . $newGroupId);
+
           $max = PHP_INT_MAX;
           $label = $this->l->t('unknown');
           if ($multiplicity == FieldMultiplicity::GROUPOFPEOPLE) {
@@ -2159,7 +2369,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             $newDataOption = $participantField->getDataOption($newGroupId);
             $max = $newDataOption['limit'];
             $label = $newDataOption['label'];
-            // $this->logInfo('OPTION: ' . $newGroupId . ' ' . Functions\dump($newDataOption));
+            $this->logInfo('OPTION: ' . $newGroupId . ' ' . Functions\dump($newDataOption));
           }
 
           // $oldMembers = Util::explode(',', $oldValues[$groupFieldName]);
