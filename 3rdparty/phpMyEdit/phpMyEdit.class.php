@@ -1636,20 +1636,23 @@ class phpMyEdit
 		return $join_clause;
 	} /* }}} */
 
-	function get_SQL_where_from_query_opts($qp = null, $text = 0) /* {{{ */
+	function get_SQL_where_from_query_opts($text = 0) /* {{{ */
 	{
-		if ($qp == null) {
-			$qp = $this->query_opts;
-		}
+		$qp = $this->query_opts;
 		$where = array();
-		foreach ($qp as $field => $ov) {
-			if (is_numeric($field)) {
+		foreach ($qp as $k => $ov) {
+			if (empty($ov['fqn'])) {
+				// $ov is an array defining ORed conditions
 				$tmp_where = array();
-				foreach ($ov as $field2 => $ov2) {
+				foreach ($ov as $ov2) {
+					$fqn = $text ? $this->fdd[$k]['name'] : $ov2['fqn'];
+					$field2 = sprintf($ov2['fqnTemplate'], $fqn);
 					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2['value']);
 				}
 				$where[] = '('.implode(' OR ', $tmp_where).')';
 			} else {
+				$fqn = $text ? $this->fdd[$k]['name'] : $ov['fqn'];
+				$field = sprintf($ov['fqnTemplate'], $fqn);
 				if (is_array($ov['value'])) {
 					$tmp_ov_val = '';
 					$inner_null = false;
@@ -1776,20 +1779,23 @@ class phpMyEdit
 		return $qparts;
 	}
 
-	function get_SQL_having_query_opts($qp = null, $text = 0) /* {{{ */
+	function get_SQL_having_query_opts($text = 0) /* {{{ */
 	{
-		if ($qp == null) {
-			$qp = $this->query_group_opts;
-		}
+		$qp = $this->query_group_opts;
 		$having = array();
-		foreach ($qp as $field => $ov) {
-			if (is_numeric($field)) {
+		foreach ($qp as $k => $ov) {
+			if (empty($ov['fqn'])) {
+				// $ov is an array defining ORed conditions
 				$tmp_where = array();
-				foreach ($ov as $field2 => $ov2) {
+				foreach ($ov as $ov2) {
+					$fqn = $text ? $this->fdd[$k]['name'] : $ov2['fqn'];
+					$field2 = sprintf($ov2['fqnTemplate'], $fqn);
 					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2['value']);
 				}
 				$having[] = '('.implode(' OR ', $tmp_where).')';
 			} else {
+				$fqn = $text ? $this->fdd[$k]['name'] : $ov['fqn'];
+				$field = sprintf($ov['fqnTemplate'], $fqn);
 				if (is_array($ov['value'])) {
 					$tmp_ov_val = '';
 					foreach ($ov['value'] as $ov_val) {
@@ -1808,8 +1814,7 @@ class phpMyEdit
 						if ($inner_null) {
 							$tmp_ov_val = sprintf('NOT (%s)', $tmp_ov_val);
 						} else {
-							$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))',
-												  $field, $tmp_ov_val);
+							$tmp_ov_val = sprintf('(%s IS NULL OR NOT (%s))', $field, $tmp_ov_val);
 						}
 					}
 					$having[] = "($tmp_ov_val)";
@@ -1904,9 +1909,13 @@ class phpMyEdit
 						$m[$key] = addslashes($m[$key]);
 					}
 					$fqn = $this->fqn($k, $fqn_flags);
-					$qo[$fqn] = array('value' => $m);
+					$qo[$k] = [
+						'fqn' => $fqn,
+						'fqnTemplate' => '%s',
+						'value' => $m,
+					];
 					if ($not) {
-						$qo[$fqn]['oper'] = 'NOT';
+						$qo[$k]['oper'] = 'NOT';
 					}
 					//error_log(print_r($qo, true));
 				} else {
@@ -1923,8 +1932,12 @@ class phpMyEdit
 					}
 					$fqn_flags = $fqn_flags ??
 							   (isset($this->fdd[$k][self::FDD_VALUES]['description']) ? self::OMIT_DESC : self::COOKED);
-					$qo[$this->fqn($k, $fqn_flags)] =
-						array('oper' => $qf_op, 'value' => "($qf_val)"); // )
+					$qo[$k] = [
+						'fqn' => $this->fqn($k, $fqn_flags),
+						'fqnTemplate' => '%s',
+						'oper' => $qf_op,
+						'value' => "($qf_val)",
+					];
 				}
 			} else if (isset($mi)) {
 				if ($mi == '*') {
@@ -1936,7 +1949,12 @@ class phpMyEdit
 					continue;
 				}
 				$afilter = addslashes($mi);
-				$qo[$this->fqn($k, $fqn_flags ?? self::OMIT_DESC|self::OMIT_SQL)] = array('oper'	=> '=', 'value' => "'$afilter'");
+				$qo[$k] = [
+					'fqn' => $this->fqn($k, $fqn_flags ?? self::OMIT_DESC|self::OMIT_SQL),
+					'fqnTemplate' => '%s',
+					'oper' => '=',
+					'value' => "'$afilter'",
+				];
 				$this->qfn .= '&'.$this->cgi['prefix']['sys'].$li.'='.rawurlencode($mi);
 			} else if (isset($m)) {
 				if ($m == '*') {
@@ -1950,7 +1968,12 @@ class phpMyEdit
 				if ($this->fdd[$k][self::FDD_SELECT] == 'N') {
 					$afilter = addslashes($m);
 					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
-					$qo[$this->fqn($k, $fqn_flags ?? self::COOKED)] = array('oper' => $mc, 'value' => "'$afilter'");
+					$qo[$k] = [
+						'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
+						'fqnTemplate' => '%s',
+						'oper' => $mc,
+						'value' => "'$afilter'",
+					];
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
 				} else {
@@ -2009,38 +2032,65 @@ class phpMyEdit
 					switch ($compare) {
 					case 'equal':
 						if ($afilter == '') {
-							$ar["IFNULL(".$sqlKey.",'')"] = array('oper' => 'LIKE', 'value' => "''");
+							$ar[] = [
+								'fqn' => $sqlKey,
+								'fqnTemplate' => "IFNULL('%s','')",
+								'oper' => 'LIKE',
+								'value' => "''",
+							];
 						} else {
 							// Some match, but exclude also the empty string
 							$afilter = addslashes($matches[1]);
 							$afilter = str_replace('*', '%', $afilter);
-							$ar["IF(".$sqlKey." LIKE '',NULL,".$sqlKey.")"] =
-								array('oper' => 'LIKE', 'value' => "'$afilter'");
+							$ar[] = [
+								'fqn' => $sqlKey,
+								'fqnTemplate' => "IF(%s LIKE '', NULL, %s)",
+								'oper' => 'LIKE',
+								'value' => "'$afilter'",
+							];
 						}
 						break;
 					case 'notequal':
 						if ($afilter == '') {
 							// not NULL and not '    '
-							$ar[$sqlKey] = array('oper' => '>', 'value' => "''");
+							$ar[] = [
+								'fqn' => $sqlKey,
+								'fqnTemplate' => '%s',
+								'oper' => '>',
+								'value' => "''",
+							];
 						} else if ($afilter == '%' || $afilter == '*') {
 							// !='%' means: not something, so include
 							// !NULL and '' into the results. So this
 							// !is equivalent to =''
-							$ar["IFNULL(".$sqlKey.",'')"] = array('oper' => 'LIKE', 'value' => "''");
+							$ar[] = [
+								'fqn' => $sqlKey,
+								'fqnTemplate' => "IFNULL(%s, '')",
+								'oper' => 'LIKE',
+								'value' => "''",
+							];
 						} else {
 							$afilter = addslashes($matches[1]);
 							$afilter = str_replace('*', '%', $afilter);
-							$ar["IF(".$sqlKey." LIKE '',NULL,".$sqlKey.")"] =
-								array('oper' => 'NOT LIKE', 'value' => "'$afilter'");
+							$ar[] = [
+								'fqn' => $sqlKey,
+								'fqnTemplate' => "IF(%s LIKE '', NULL, %s)",
+								'oper' => 'NOT LIKE',
+								'value' => "'$afilter'",
+							];
 						}
 						break;
 					case 'contains':
 					default:
 						$afilter = addslashes($m);
 						$afilter = '%'.str_replace('*', '%', $afilter).'%';
-						$ar[$sqlKey] = array('oper' => 'LIKE', 'value' => "'$afilter'");
+						$ar[] = [
+							'fqn' => $sqlKey,
+							'fqnTemplate' => '%s',
+							'oper' => 'LIKE',
+							'value' => "'$afilter'",
+						];
 						break;
-
 					}
 
 					if (is_array($this->fdd[$k][self::FDD_VALUES2]??null)) {
@@ -2048,8 +2098,12 @@ class phpMyEdit
 						switch ($compare) {
 						case 'equal':
 							if ($afilter == '') {
-								$ar["IFNULL(".$sqlKey.",'')"] = array('oper' => 'LIKE',
-																	  'value' => "''");
+								$ar[] = [
+									'fqn' => $sqlKey,
+									'fqnTemplate' => "IFNULL(%s, '')",
+									'oper' => 'LIKE',
+									'value' => "''",
+								];
 							} else {
 								$afilter = addslashes($matches[1]);
 								$afilter = str_replace('*', '.*', $afilter);
@@ -2060,17 +2114,31 @@ class phpMyEdit
 									}
 								}
 								if (count($ids) > 0) {
-									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.implode(',', $ids).')');
+									$ar[] = [
+										'fqn' => $sqlKey,
+										'fqnTemplate' => '%s',
+										'oper' => 'IN',
+										'value' => '('.implode(',', $ids).')',
+									];
 								}
 							}
 							break;
 						case 'notequal':
 							if ($afilter == '') {
 								// not NULL and not '    '
-								$ar[$sqlKey] = array('oper' => '>', 'value' => "''");
+								$ar[] = [
+									'fqn' => $sqlKey,
+									'fqnTemplate' => '%s',
+									'oper' => '>',
+									'value' => "''",
+								];
 							} else if ($afilter == '%' || $afilter == '*') {
-								$ar["IFNULL(".$sqlKey.",'')"] = array('oper' => 'LIKE',
-																	  'value' => "''");
+								$ar[] = [
+									'fqn' => $sqlKey,
+									'fqnTemplate' => "IFNULL(%s, '')",
+									'oper' => 'LIKE',
+									'value' => "''",
+								];
 							} else {
 								$afilter = addslashes($matches[1]);
 								$afilter = str_replace('*', '.*', $afilter);
@@ -2081,7 +2149,12 @@ class phpMyEdit
 									}
 								}
 								if (count($ids) > 0) {
-									$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.implode(',', $ids).')');
+									$ar[] = [
+										'fqn' => $sqlKey,
+										'fqnTemplate' => '%s',
+										'oper' => 'IN',
+										'value' => '('.implode(',', $ids).')',
+									];
 								}
 							}
 							break;
@@ -2095,12 +2168,17 @@ class phpMyEdit
 								}
 							}
 							if (count($ids) > 0) {
-								$ar[$sqlKey] = array('oper'	=> 'IN', 'value' => '('.implode(',', $ids).')');
+								$ar[] = [
+									'fqn' => $sqlKey,
+									'fqnTemplate' => '%s',
+									'oper' => 'IN',
+									'value' => '('.implode(',', $ids).')',
+								];
 							}
 							break;
 						}
 					}
-					$qo[] = $ar;
+					$qo[$k] = $ar;
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'='.rawurlencode($m);
 				}
 			}
@@ -4355,11 +4433,11 @@ class phpMyEdit
 		 * Display the current query
 		 */
 		$queries = array();
-		$query = $this->get_SQL_where_from_query_opts(null, true);
+		$query = $this->get_SQL_where_from_query_opts(true);
 		if ($query) {
 			$queries[] = $query;
 		}
-		$query = $this->get_SQL_having_query_opts(null, true);
+		$query = $this->get_SQL_having_query_opts(true);
 		if ($query) {
 			$queries[] = $query;
 		}
