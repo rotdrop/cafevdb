@@ -44,9 +44,12 @@ form.pme-form.project-participant-fields-display {
   }
 
   &:not(.pme-change) {
-    span.allowed-option-name:empty,
-    span.allowed-option-name:empty ~ span.allowed-option-separator {
-      display:none;
+    span.allowed-option-name:empty {
+      &, & ~ span.allowed-option-separator {
+        &, & ~ span.allowed-option-value {
+          display:none;
+        }
+      }
     }
 
     td.groupofpeople:not(.pme-key),
