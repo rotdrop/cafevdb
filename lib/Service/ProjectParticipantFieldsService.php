@@ -354,7 +354,7 @@ class ProjectParticipantFieldsService
         if (empty($key)) {
           break;
         }
-        return (float)$participantField->getDataOptions()->first()['data'];
+        return (float)$participantField->getManagementOption()->getData();
       case Multiplicity::SINGLE():
         if (empty($key)) {
           break;
