@@ -33,7 +33,6 @@ use OCP\Files as CloudFiles;
 use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Storage\UserStorage;
-use \phpMyEdit as PME;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
@@ -62,6 +61,7 @@ trait ParticipantFieldsTrait
   use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
   use ParticipantFileFieldsTrait;
   use ParticipantFieldsCgiNameTrait;
+  use SubstituteSQLFragmentTrait;
 
   /** @var UserStorage */
   protected $userStorage = null;
@@ -81,6 +81,23 @@ trait ParticipantFieldsTrait
   /** @var bool */
   protected $expertMode;
 
+  /** @var PHPMyEdit */
+  protected $pme;
+
+  /**
+   * @var array
+   *
+   * @see PMETableViewBase::$joinStructure
+   */
+  // protected $joinStructure = [];
+
+  /**
+   * @var array
+   *
+   * @see PMETableViewBase::$joinTables
+   */
+  // protected $joinTables = null;
+
   /**
    * For each extra field add one dedicated join table entry
    * which is pinned to the respective field-id.
@@ -93,14 +110,33 @@ trait ParticipantFieldsTrait
    *
    * @return array
    * ```
-   * [ JOIN_STRUCTURE_FRAGMENT, GENERATOR(&$fdd) ]
+   * [
+   *   JOIN_STRUCTURE_FRAGMENT,
+   *   callable(array &$fdd, array &subTotals = []),
+   * ]
    * ```
+   *
+   * After merging JOIN_STRUCTURE_FRAGMENT to the rest of using class's
+   * join-structure the generator callback has to be called and augments the
+   * given field-description-data with columns for all participant fields. The
+   * $subTotals array is filled with SQL-fragments which collect the
+   * service-fee amounts of the respective monetary fields with data-type
+   * field-type FieldType::SERVICE_FEE, is is indexed by field-name. Steps to
+   * perform:
+   *
+   * - merge the returned join-structure into $this->joinStructure
+   * - call PMETableViewBase::defineJoinStructure()
+   * - call the returned generator function generator($fdd, $subTotals) which
+   *   will then augment the given field-descriptor array and fill the
+   *   sub-totals array.
    *
    * @note Joining many tables with multiple rows per join key is a
    * performance hit. Therefore there is only a single join and the respective
    * field is selected by an IF-clause inside the group functions. The problem
    * with the multiple joins is that they form a tensor-product of the tables
    * wich rather quickly leads to a memory blow-up.
+   *
+   * @see PMETableViewBase::defineJoinStructure()
    */
   public function renderParticipantFields(
     iterable $participantFields,
@@ -142,7 +178,7 @@ trait ParticipantFieldsTrait
       ];
     }
 
-    $generator = function(&$fieldDescData) use ($participantFields, $financeTab) {
+    $generator = function(array &$fieldDescData, array &$subTotals = []) use ($participantFields, $financeTab) {
 
       /** @var Entities\ProjectParticipantField $field */
       foreach ($participantFields as $field) {
@@ -203,17 +239,18 @@ trait ParticipantFieldsTrait
           $extraFddBase['input'] = 'VSRH';
         }
 
-        list($keyFddIndex, $keyFddName) = $this->makeJoinTableField(
+        list($fddBaseIndex, $keyFddName) = $this->makeJoinTableField(
           $fieldDescData, $tableName, 'option_key',
           Util::arrayMergeRecursive($extraFddBase, [ 'values' => ['encode' => 'BIN2UUID(%s)',], ])
         );
         $keyFdd = &$fieldDescData[$keyFddName];
 
-        list($valueFddIndex, $valueFddName) = $this->makeJoinTableField(
+        list($absValueFddIndex, $valueFddName) = $this->makeJoinTableField(
           $fieldDescData, $tableName, 'option_value',
           Util::arrayMergeRecursive($extraFddBase, [ 'input' => 'VSRH', ])
         );
         $valueFdd = &$fieldDescData[$valueFddName];
+        $valueFddOffset = $absValueFddIndex - $fddBaseIndex;
 
         // @todo this would need more care.
         /* list($deletedFddIndex, $deletedFddName) = */$this->makeJoinTableField(
@@ -329,7 +366,7 @@ trait ParticipantFieldsTrait
                 unset($valueFdd['mask']);
 
                 // yet another field for the supporting documents
-                list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
+                list($absInvoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
                   $fieldDescData, $tableName, 'supporting_document_id', [
                     'input' => 'SRH',
                     'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
@@ -340,10 +377,10 @@ trait ParticipantFieldsTrait
                     ],
                   ]);
                 // $invoiceFdd = &$fieldDescData[$invoiceFddName];
+                $invoiceFddOffset = $absInvoiceFddIndex - $fddBaseIndex;
 
                 // yet another field to support summing up totals
-                /* list($fddTotalAmountInvoicedIndex, $fddTotalAmountInvoicedName) = */
-                $this->makeJoinTableField(
+                list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
                   $fieldDescData, $tableName, 'sub_totals_invoiced',
                   Util::arrayMergeRecursive(
                     $extraFddBase, [
@@ -351,9 +388,12 @@ trait ParticipantFieldsTrait
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                       'select' => 'N',
                       'sql' => 'CAST(
-  GROUP_CONCAT(
-    DISTINCT
-    IF($join_table.field_id = ' . $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
+  COALESCE(
+    GROUP_CONCAT(
+      DISTINCT
+      IF($join_table.field_id = ' . $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
+    ),
+    0
   )
   AS DECIMAL(7, 2)
 )',
@@ -363,7 +403,7 @@ trait ParticipantFieldsTrait
                         'column' => 'option_value',
                       ],
                     ])
-                  );
+                );
 
                 $valueFdd['php|VDLF'] = function(
                   $optionValue,
@@ -374,10 +414,13 @@ trait ParticipantFieldsTrait
                   $pme,
                 ) use (
                   $field,
-                  $keyFddIndex,
-                  $invoiceFddIndex,
+                  $valueFddOffset,
+                  $invoiceFddOffset,
                 ) {
                   $html = $this->moneyValue($optionValue);
+
+                  $keyFddIndex = $k - $valueFddOffset;
+                  $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
 
                   $optionKey = $row['qf' . $keyFddIndex];
                   $invoice = $row['qf' . $invoiceFddIndex];
@@ -428,18 +471,21 @@ trait ParticipantFieldsTrait
                   $field,
                   $defaultValue,
                   $defaultButton,
-                  $keyFddIndex,
-                  $valueFddIndex,
-                  $invoiceFddIndex,
+                  $valueFddOffset,
+                  $invoiceFddOffset,
                 ) {
                   $html = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                   if ($defaultValue !== '' && $defaultValue !== null) {
                     $html .=
                       str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultValue' ], $defaultButton);
                   }
-                  if ($op != PME::OPERATION_CHANGE) {
+                  if ($op != PHPMyEdit::OPERATION_CHANGE) {
                     return $html;
                   }
+
+                  $keyFddIndex = $k - $valueFddOffset;
+                  $valueFddIndex = $k;
+                  $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
 
                   $optionValue = $row['qf' . $valueFddIndex];
                   $optionKey = $row['qf' . $keyFddIndex];
@@ -829,23 +875,26 @@ trait ParticipantFieldsTrait
                 };
 
                 // yet another field to support summing up totals
-                /* list($fddTotalAmountInvoicedIndex, $fddTotalAmountInvoicedName) = */
-                $this->makeJoinTableField(
+                list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
                   $fieldDescData, $tableName, 'sub_totals_invoiced',
                   Util::arrayMergeRecursive(
                     $extraFddBase, [
                       'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                       'select' => 'T',
-                      'sql' => 'IF(
-  GROUP_CONCAT(
-    DISTINCT
-    IF($join_table.field_id = '. $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
-    SEPARATOR ""
-  ) IS NULL,
-  0,
-  CAST(' . $dataValue . ' AS DECIMAL(7,2))
-)',
+                      'sql' => 'CAST(
+  COALESCE(
+    IF(
+      GROUP_CONCAT(
+        DISTINCT
+        IF($join_table.field_id = '. $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
+        SEPARATOR ""
+      ) IS NULL,
+      0,
+      ' . $dataValue . '
+    ),
+    0
+  ) AS DECIMAL(7,2))',
                       'php' => fn($value) => $this->moneyValue($value),
                       'align' => 'right',
                       'values' => [
@@ -1086,7 +1135,7 @@ trait ParticipantFieldsTrait
   ' . $this->joinTables[$optionsTableName] . '.data,
   NULL
 )';
-                  $sql = 'CAST(GROUP_CONCAT(DISTINCT ' . $optionValueSql . ') AS DECIMAL(7, 2))';
+                  $sql = 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))';
                 } else {
                   // comparatively difficult because of the many multi-valued joins.x
 
@@ -1104,10 +1153,10 @@ trait ParticipantFieldsTrait
   $join_col_fqn,
   NULL
 )';
-                  $sql = 'CAST(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . ') AS DECIMAL(7, 2))';
+                  $sql = 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))';
                 }
 
-                $this->makeJoinTableField(
+                list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
                   $fieldDescData, $tableName, 'sub_totals_invoiced',
                   Util::arrayMergeRecursive(
                     $extraFddBase, [
@@ -1213,8 +1262,7 @@ trait ParticipantFieldsTrait
   NULL
 )';
 
-              /* list($fddTotalAmountInvoicedIndex, $fddTotalAmountInvoicedName) = */
-              $this->makeJoinTableField(
+              list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
                 $fieldDescData, $tableName, 'sub_totals_invoiced',
                 Util::arrayMergeRecursive(
                   $extraFddBase, [
@@ -1223,7 +1271,7 @@ trait ParticipantFieldsTrait
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->moneyValue($value),
-                    'sql' => 'CAST(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . ') AS DECIMAL(7, 2))',
+                    'sql' => 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -1305,7 +1353,7 @@ trait ParticipantFieldsTrait
             // $labelFdd = &$fieldDescData[$labelFddName];
 
             // yet another field for the supporting documents
-            list($invoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
+            list($absInvoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'supporting_document_id', [
                 'input' => 'SRH',
                 'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
@@ -1325,7 +1373,7 @@ trait ParticipantFieldsTrait
                   'orderby' => '$table.created DESC, $table.option_key ASC',
                 ],
               ]);
-            // $invoiceFdd = &$fieldDescData[$invoiceFddName];
+            $invoiceFddOffset = $absInvoiceFddIndex - $fddBaseIndex;
 
             $viewClosure = function(
               $value,
@@ -1337,8 +1385,10 @@ trait ParticipantFieldsTrait
             ) use (
               $field,
               $dataType,
-              $invoiceFddIndex,
+              $invoiceFddOffset,
             ) {
+              $keyFddIndex = $k;
+              $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
 
               // LF are actually both the same. $value will always just
               // come from the filter's $value2 array. The actual values
@@ -1346,6 +1396,7 @@ trait ParticipantFieldsTrait
               // through the 'qf'.$k field in $row.
               $values = array_filter(Util::explodeIndexed($row['qf' . $k]));
               $options = self::fetchValueOptions($field, $values);
+
               $invoices = Util::explodeIndexed($row['qf' . $invoiceFddIndex]);
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
@@ -1411,8 +1462,8 @@ trait ParticipantFieldsTrait
             };
 
 
-            $keyFdd['php|LF'] = fn($value, $op, $k, $row, $recordId, $pme) => $viewClosure($value, PME::OPERATION_LIST, $k, $row, $recordId, $pme);
-            $keyFdd['php|VD'] = fn($value, $op, $k, $row, $recordId, $pme) => $viewClosure($value, PME::OPERATION_VIEW, $k, $row, $recordId, $pme);
+            $keyFdd['php|LF'] = fn($value, $op, $k, $row, $recordId, $pme) => $viewClosure($value, PHPMyEdit::OPERATION_LIST, $k, $row, $recordId, $pme);
+            $keyFdd['php|VD'] = fn($value, $op, $k, $row, $recordId, $pme) => $viewClosure($value, PHPMyEdit::OPERATION_VIEW, $k, $row, $recordId, $pme);
 
             // $keyFdd has probably to be voided here as otherwise hidden
             // input fields are emitted which conflict with the $valueFdd
@@ -1430,8 +1481,12 @@ trait ParticipantFieldsTrait
             ) use (
               $field,
               $dataType,
-              $invoiceFddIndex
+              $valueFddOffset,
+              $invoiceFddOffset,
             ) {
+              $keyFddIndex = $k - $valueFddOffset;
+              $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
+
               // $this->logInfo('VALUE '.$k.': '.$value);
               // $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
               // $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
@@ -1571,8 +1626,9 @@ trait ParticipantFieldsTrait
             $keyFdd = array_merge($keyFdd, [ 'mask' => null, ]);
 
             // generate a new group-definition field as yet another column
-            list(, $fddGroupMemberName) = $this->makeJoinTableField(
+            list($groupMemberFddIndex, $groupMemberFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'musician_id', $keyFdd);
+            $groupMemberFddOffset = $groupMemberFddIndex - $fddBaseIndex;
 
             // hide value field and tweak for view displays.
             $css[] = FieldMultiplicity::GROUPOFPEOPLE;
@@ -1613,7 +1669,7 @@ trait ParticipantFieldsTrait
             $dataOptionsData = json_encode(array_column($dataOptionsData, 'data', 'key'));
 
             // new field, member selection
-            $groupMemberFdd = &$fieldDescData[$fddGroupMemberName];
+            $groupMemberFdd = &$fieldDescData[$groupMemberFddName];
             $groupMemberFdd = array_merge(
               $groupMemberFdd, [
                 'select' => 'M',
@@ -1685,42 +1741,48 @@ WHERE pp.project_id = $this->projectId",
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $keyFddIndex) {
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $groupMemberFddOffset) {
+                    $keyFddIndex = $k - $groupMemberFddOffset;
                     $selectedKey = $row['qf'.$keyFddIndex];
                     $active = empty($selectedKey) ? '' : ' selected';
                     return '</span><span class="allowed-option-separator money">&nbsp;</span>'
                       .'<span class="allowed-option-value money">'.$money.'</span></span>';
-                    },
+                  },
                 ]);
               $groupMemberFdd['display|ACP'] = array_merge(
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<label class="'.implode(' ', $css).'">',
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $keyFddIndex) {
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $groupMemberFddOffset) {
+                    $keyFddIndex = $k - $groupMemberFddOffset;
                     $selectedKey = $row['qf'.$keyFddIndex];
                     $active = ($op == 'display' && empty($selectedKey)) ? '' : 'selected';
                     return $this->allowedOptionLabel('', $fieldData, $dataType, $active)
                       .'</label>';
-                    },
+                  },
                 ]);
 
               // yet another field to support summing up totals
-              $this->makeJoinTableField(
+              list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
                 $fieldDescData, $tableName, 'sub_totals_invoiced',
                 Util::arrayMergeRecursive(
                   $extraFddBase, [
                     'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
                     'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                     'select' => 'T',
-                    'sql' => 'IF(
-  GROUP_CONCAT(
-    DISTINCT
-    IF($join_table.field_id = '. $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
-    SEPARATOR ""
-  ) IS NULL,
-  0,
-  CAST(' . $fieldData . ' AS DECIMAL(7,2))
-)',
+                    'sql' => 'CAST(
+  COALESCE(
+    IF(
+      GROUP_CONCAT(
+        DISTINCT
+        IF($join_table.field_id = '. $fieldId . ' AND $join_table.deleted IS NULL, $join_col_fqn, NULL)
+        SEPARATOR ""
+      ) IS NULL,
+      0,
+      ' . $fieldData . '
+    ),
+    0
+  ) AS DECIMAL(7,2))',
                     'php' => fn($value) => $this->moneyValue($value),
                     'align' => 'right',
                     'values' => [
@@ -1811,8 +1873,9 @@ WHERE pp.project_id = $this->projectId",
               ]);
 
             // generate a new group-definition field as yet another column
-            list(, $fddGroupMemberName) = $this->makeJoinTableField(
+            list($groupMemberFddIndex, $groupMemberFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'musician_id', $fddBase);
+            $groupMemberFddOffset = $groupMemberFddIndex - $fddBaseIndex;
 
             // compute group limits per group
             $dataOptionsData = $dataOptions->map(function($value) {
@@ -1824,7 +1887,7 @@ WHERE pp.project_id = $this->projectId",
             $dataOptionsData = json_encode(array_column($dataOptionsData, 'data', 'key'));
 
             // new field, member selection
-            $groupMemberFdd = &$fieldDescData[$fddGroupMemberName];
+            $groupMemberFdd = &$fieldDescData[$groupMemberFddName];
             $groupMemberFdd = Util::arrayMergeRecursive(
               $groupMemberFdd, [
                 'select' => 'M',
@@ -1884,7 +1947,8 @@ WHERE pp.project_id = $this->projectId",
                   'prefix' => function($op, $pos, $k, $row, $pme) use ($css) {
                     return '<label class="'.implode(' ', $css).'">';
                   },
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $keyFddIndex) {
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $groupMemberFddOffset) {
+                    $keyFddIndex = $k - $groupMemberFddOffset;
                     $selectedKey = $row['qf'.$keyFddIndex];
                     $html = '';
                     foreach ($dataOptions as $dataOption) {
@@ -1952,7 +2016,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
   ' . $this->joinTables[$optionsTableName] . '.data,
   NULL
 )';
-              $this->makeJoinTableField(
+              list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
                 $fieldDescData, $tableName, 'sub_totals_invoiced',
                 Util::arrayMergeRecursive(
                   $extraFddBase, [
@@ -1961,7 +2025,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->moneyValue($value),
-                    'sql' => 'CAST(GROUP_CONCAT(DISTINCT ' . $optionValueSql . ') AS DECIMAL(7, 2))',
+                    'sql' => 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -1972,6 +2036,14 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
 
             break;
         }
+
+        if ($dataType == FieldType::SERVICE_FEE) {
+          $sql = $fieldDescData[$subTotalsName]['sql'];
+          $sql = $this->substituteSQLFragment($fieldDescData, $subTotalsName, $sql, $subTotalsIndex);
+          $subTotals[$subTotalsName] = $sql;
+          // $this->logInfo('SUB TOTALS SQL ' . print_r($subTotals[$subTotalsName], true));
+        }
+
       } // foreach ($participantFields ...)
     };
 

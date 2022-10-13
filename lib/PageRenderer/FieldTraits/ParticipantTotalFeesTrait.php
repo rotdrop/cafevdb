@@ -26,8 +26,13 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use Exception;
 
+use OCP\IL10N;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**
  * Field definition for total fees and salaries for
@@ -36,6 +41,19 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 trait ParticipantTotalFeesTrait
 {
   use ParticipantFieldsCgiNameTrait;
+  use SubstituteSQLFragmentTrait;
+
+  /** @var IL10N */
+  protected $l;
+
+  /** @var ToolTipsService */
+  protected $toolTipsService;
+
+  /** @var PHPMyEdit */
+  protected $pme;
+
+  /** @var string */
+  protected static $toolTipsPrefix = 'page-renderer:participant-fields:display';
 
   /**
    * Create a "virtual" total-fees field with a summary of the total amount to
@@ -56,7 +74,7 @@ trait ParticipantTotalFeesTrait
   protected function makeTotalFeesField(array &$fdd, iterable $monetaryFields, string $financeTab):void
   {
     $this->makeJoinTableField(
-      $fdd, self::PROJECT_PAYMENTS_TABLE, 'amount',
+      $fdd, PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'amount',
       [
         'tab'      => [ 'id' => $financeTab ],
         'name'     => $this->l->t('Total Project Fees'),
@@ -118,8 +136,100 @@ trait ParticipantTotalFeesTrait
                   .'<span class="received finance-state">'.$amountPaid.'</span>'
                   .'<span class="outstanding finance-state">'.$rest.'</span>');
         },
-        'tooltip'  => $this->toolTipsService['project-total-fee-summary'],
+        'tooltip'  => $this->toolTipsService[self::$toolTipsPrefix . ':total-fees:summary'],
         'display|LFVD' => [ 'popup' => 'tooltip' ],
+      ]);
+  }
+
+  /**
+   * Generate three distinct columns for the total invoice amount, the amount
+   * already transferred and the open amount which still needs to be
+   * transferred.
+   *
+   * @param array $fdd Field description data, will be modified in place.
+   *
+   * @param array $subTotals Array of SQL selectable expressions as
+   * returned by the renderer-callback returned by
+   * ParticipantFieldsTrait::renderParticipantFields().
+   *
+   * @param string $financeTab The tab to move the field to.
+   *
+   * @return void
+   */
+  protected function makeTotalFeesFields(array &$fdd, array $subTotals, string $financeTab):void
+  {
+    // generate monster SQL fragment for the total amount to pay
+    $totalAmountInvoicedSql = '(' . implode(' + ', $subTotals) . ')';
+    $this->makeJoinTableField(
+      $fdd, PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_invoiced', [
+        'tab'      => [ 'id' => $financeTab ],
+        'name'     => $this->l->t('Total Amount Invoiced'),
+        'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
+        'sort'    => true,
+        'options' => 'VDFL', // wrong in change mode
+        'input' => 'VR',
+        'select|FL' => 'N',
+        'sql' => $totalAmountInvoicedSql,
+        'filter' => [
+          'having' => true,
+        ],
+        'values' => [
+          'column' => 'field_id',
+        ],
+        'php' => fn($value) => '<span class="totals finance-state">' . $this->moneyValue($value) . '</span>',
+        'tooltip' => $this->toolTipsService[self::$toolTipsPrefix . ':total-fees:invoiced'],
+      ]);
+
+    $totalAmountTransferredSql = 'CAST(
+  IF(
+    $join_col_fqn IS NULL,
+    0.0,
+    SUM($join_col_fqn)
+    * COUNT(DISTINCT $join_table.id)
+    / COUNT($join_table.id)
+  ) AS DECIMAL(7, 2))';
+
+    $column = 'amount';
+    list($fddIndex, $fddName) = $this->makeJoinTableField(
+      $fdd, PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'total_amount_transferred', [
+        'tab'      => [ 'id' => $financeTab ],
+        'name'     => $this->l->t('Total Amount Transferred'),
+        'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
+        'sort'    => true,
+        'options' => 'VDFL', // wrong in change mode
+        'input' => 'VR',
+        'select|FL' => 'N',
+        'sql' => $totalAmountTransferredSql,
+        'filter' => [
+          'having' => true,
+        ],
+        'values' => [
+          'column' => $column,
+        ],
+        'php' => fn($value) => '<span class="received finance-state">' . $this->moneyValue($value) . '</span>',
+        'tooltip' => $this->toolTipsService[self::$toolTipsPrefix . ':total-fees:received'],
+      ]);
+
+    $totalAmountTransferredSql = $this->substituteSQLFragment($fdd, $fddName, $totalAmountTransferredSql, $fddIndex);
+
+    $this->makeJoinTableField(
+      $fdd, PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding', [
+        'tab'      => [ 'id' => $financeTab ],
+        'name'     => $this->l->t('Total Amount Outstanding'),
+        'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
+        'sort'    => true,
+        'options' => 'VDFL', // wrong in change mode
+        'input' => 'VR',
+        'select|FL' => 'N',
+        'sql' => $totalAmountInvoicedSql . ' - ' . $totalAmountTransferredSql,
+        'filter' => [
+          'having' => true,
+        ],
+        'values' => [
+          'column' => 'field_id',
+        ],
+        'php' => fn($value) => '<span class="outstanding finance-state">' . $this->moneyValue($value) . '</span>',
+        'tooltip' => $this->toolTipsService[self::$toolTipsPrefix . ':total-fees:outstanding'],
       ]);
   }
 }
