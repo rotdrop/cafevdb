@@ -386,6 +386,7 @@ trait ParticipantFieldsTrait
                     $extraFddBase, [
                       'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                      'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'N',
                       'sql' => 'CAST(
   COALESCE(
@@ -881,6 +882,7 @@ trait ParticipantFieldsTrait
                     $extraFddBase, [
                       'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                      'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'T',
                       'sql' => 'CAST(
   COALESCE(
@@ -1162,6 +1164,7 @@ trait ParticipantFieldsTrait
                     $extraFddBase, [
                       'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                      'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'T',
                       'align' => 'right',
                       'php' => fn($value) => $this->moneyValue($value),
@@ -1268,6 +1271,7 @@ trait ParticipantFieldsTrait
                   $extraFddBase, [
                     'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
                     'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                    'tab' => [ 'id' => 'tab-none' ], // move it away
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->moneyValue($value),
@@ -1768,6 +1772,7 @@ WHERE pp.project_id = $this->projectId",
                 Util::arrayMergeRecursive(
                   $extraFddBase, [
                     'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
+                    'tab' => [ 'id' => 'tab-none' ], // move it away
                     'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                     'select' => 'T',
                     'sql' => 'CAST(
@@ -2022,6 +2027,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                   $extraFddBase, [
                     'name' => $extraFddBase['name'] . ' (' . $this->l->t('sub-totals') . ')',
                     'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
+                    'tab' => [ 'id' => 'tab-none' ], // move it away
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->moneyValue($value),
