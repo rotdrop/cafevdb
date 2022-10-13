@@ -32,8 +32,31 @@
 form.pme-form.project-participant-fields-display {
 
   table.pme-main {
-    /* @include readwriteOnTab("musician"); */
-    /* @include readwriteOnTab("tab-all"); */
+    @for $id from 0 through 15 {
+      @include tableTabDisplay($id, "none", "&", ".project-fees-details");
+    }
+    &.pme-filter-visible, &.pme-sortinfo-visible {
+      @for $id from 0 through 15 {
+        @include tableTabDisplay($id, "table-cell", "&", ".project-fees-details");
+        @include tableTabDisplay($id, "none", "&", ".project-fees-summary");
+      }
+    }
+  }
+
+  .total-project-fees.money {
+    span.finance-state {
+      font-weight:bold;
+      padding:0.2em;
+    }
+    span.totals, span.invoiced {
+      color:black;
+    }
+    span.received {
+      color:blue;
+    }
+    span.outstanding {
+      color:red;
+    }
   }
 
   span.allowed-option {

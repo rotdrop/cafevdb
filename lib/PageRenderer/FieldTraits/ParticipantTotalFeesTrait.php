@@ -78,9 +78,9 @@ trait ParticipantTotalFeesTrait
       [
         'tab'      => [ 'id' => $financeTab ],
         'name'     => $this->l->t('Total Project Fees'),
-        'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
+        'css'      => [ 'postfix' => [ 'total-project-fees project-fees-summary', 'money', ], ],
         'sort'    => true,
-        'options' => 'VDFL', // wrong in change mode
+        'options' => 'VDL', // wrong in change mode
         'input' => 'VR',
         'select|FL' => 'N',
         'sql' => 'IF($join_col_fqn IS NULL,
@@ -163,8 +163,8 @@ trait ParticipantTotalFeesTrait
     $this->makeJoinTableField(
       $fdd, PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_invoiced', [
         'tab'      => [ 'id' => $financeTab ],
-        'name'     => $this->l->t('Total Amount Invoiced'),
-        'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
+        'name'     => $this->l->t('Invoiced'),
+        'css'      => [ 'postfix' => [ 'total-project-fees project-fees-details project-fees-invoiced', 'money', ], ],
         'sort'    => true,
         'options' => 'VDFL', // wrong in change mode
         'input' => 'VR',
@@ -193,8 +193,8 @@ trait ParticipantTotalFeesTrait
     list($fddIndex, $fddName) = $this->makeJoinTableField(
       $fdd, PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'total_amount_transferred', [
         'tab'      => [ 'id' => $financeTab ],
-        'name'     => $this->l->t('Total Amount Transferred'),
-        'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
+        'name'     => $this->l->t('Transferred'),
+        'css'      => [ 'postfix' => [ 'total-project-fees project-fees-details project-fees-received', 'money', ], ],
         'sort'    => true,
         'options' => 'VDFL', // wrong in change mode
         'input' => 'VR',
@@ -215,8 +215,8 @@ trait ParticipantTotalFeesTrait
     $this->makeJoinTableField(
       $fdd, PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding', [
         'tab'      => [ 'id' => $financeTab ],
-        'name'     => $this->l->t('Total Amount Outstanding'),
-        'css'      => [ 'postfix' => [ 'total-project-fees', 'money', ], ],
+        'name'     => $this->l->t('Outstanding'),
+        'css'      => [ 'postfix' => [ 'total-project-fees project-fees-details project-fees-outstanding', 'money', ], ],
         'sort'    => true,
         'options' => 'VDFL', // wrong in change mode
         'input' => 'VR',
@@ -231,5 +231,39 @@ trait ParticipantTotalFeesTrait
         'php' => fn($value) => '<span class="outstanding finance-state">' . $this->moneyValue($value) . '</span>',
         'tooltip' => $this->toolTipsService[self::$toolTipsPrefix . ':total-fees:outstanding'],
       ]);
+  }
+
+  /**
+   * Move the search request from the summary to the respective detail field.
+   *
+   * @param PHPMyEdit $pme
+   *
+   * @param string $op
+   *
+   * @param string $step
+   *
+   * @return bool
+   */
+  public function totalFeesPreFilterTrigger(PHPMyEdit $pme, string $op, string $step):bool
+  {
+    $summaryName = $this->joinTableFieldName(PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'amount');
+    $outstandingName = $this->joinTableFieldName(PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding');
+
+    $summaryIndex = $pme->fdn[$summaryName];
+    $outstandingIndex = $pme->fdn[$outstandingName];
+
+    $searchField = array_search($summaryIndex, $pme->sfn);
+    if ($searchField === false) {
+      $searchField = array_search(-$summaryIndex, $pme->sfn);
+    }
+
+    // sfn needs to be a string
+    if ($searchField !== false) {
+      $pme->sfn[$searchField] = $pme->sfn[$searchField] < 0
+        ? '-' . $outstandingIndex
+        : (string)$outstandingIndex;
+    }
+
+    return true;
   }
 }

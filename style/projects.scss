@@ -265,27 +265,3 @@ body:not(.cafevdb-expert-mode) {
     }
   }
 }
-
-/*******************************************************************************
- *
- * Some styling for the instrumentation table
- *
- * @todo: check whether this is still needed. Also, it rather belongs
- * to project-participans.scss
- */
-.total-project-fees.money {
-  span.finance-state {
-    font-weight:bold;
-    padding:0.2em;
-  }
-
-  span.totals {
-    color:black;
-  }
-  span.received {
-    color:blue;
-  }
-  span.outstanding {
-    color:red;
-  }
-}
