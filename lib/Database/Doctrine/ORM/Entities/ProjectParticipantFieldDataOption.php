@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -155,6 +155,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   private $payments;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->__wakeup();
@@ -163,7 +164,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     $this->key = null;
     $this->field = null;
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function __clone()
   {
     if (empty($this->field) || empty($this->key)) {
@@ -176,6 +179,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
                : Uuid::create();
   }
 
+  /** {@inheritdoc} */
   public function __wakeup()
   {
     $this->arrayCTOR();
@@ -184,11 +188,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set field.
    *
-   * @param ProjectParticipantField $field
+   * @param null|int|ProjectParticipantField $field
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setField($field):ProjectParticipantFieldDataOption
+  public function setField(mixed $field):ProjectParticipantFieldDataOption
   {
     $this->field = $field;
 
@@ -214,8 +218,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   public function setKey($key):ProjectParticipantFieldDataOption
   {
-    if (empty($key = Uuid::asUuid($key))) {
-      throw new \Exception("UUID DATA: ".$key);
+    $key = Uuid::asUuid($key);
+    if (empty($key)) {
+      throw new Exceptions\DatabaseException("UUID DATA: ".$key);
     }
     $this->key = $key;
 
@@ -264,6 +269,8 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * @param null|string $untranslatedLabel
    *
    * @return ProjectParticipantFieldDataOption
+   *
+   * @throws Exceptions\DatabaseReadonlyException
    */
   public function setUntranslatedLabel(?string $untranslatedLabel):ProjectParticipantFieldDataOption
   {
@@ -308,7 +315,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set deposit.
    *
-   * @param null|string $float
+   * @param null|float $deposit
    *
    * @return ProjectParticipantFieldDatum
    */
@@ -356,11 +363,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set limit.
    *
-   * @param int $limit
+   * @param null|int $limit
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setLimit($limit):ProjectParticipantFieldDataOption
+  public function setLimit(?int $limit):ProjectParticipantFieldDataOption
   {
     $this->limit = $limit;
 
@@ -384,7 +391,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setFieldData($fieldData):ProjectParticipantFieldDataOption
+  public function setFieldData(Collection $fieldData):ProjectParticipantFieldDataOption
   {
     $this->fieldData = $fieldData;
 
@@ -408,7 +415,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantPaymentsOption
    */
-  public function setPayments($payments):ProjectParticipantFieldDataOption
+  public function setPayments(Collection $payments):ProjectParticipantFieldDataOption
   {
     $this->payments = $payments;
 
@@ -428,10 +435,12 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Filter field-data by musician.
    *
+   * @param Musician $musician
+   *
+   * @return Collection
+   *
    * @todo Why does this return a collection? There should be zero or one data
    * item.
-   *
-   * @param Musician $musician
    */
   public function getMusicianFieldData(Musician $musician):Collection
   {
@@ -443,13 +452,16 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Return the number of ProjectParticipantFieldDatum entities and
    * ProjectPayment entities attatched to this option.
+   *
+   * @return int
    */
   public function usage():int
   {
     return $this->fieldData->count() + $this->payments->count();
   }
 
-  public function isFileSystemContext()
+  /** @return bool Whether this field links to the cloud-file-systen. */
+  public function isFileSystemContext():bool
   {
     return $this->field->getDataType() == FieldType::CLOUD_FILE
       && $this->field->getMultiplicity() != FieldMultiplicity::SIMPLE;
@@ -459,7 +471,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * Remove 'label' from the set of translatable fields if it is the base of
    * file- or folder-names and thus should not change on a per-user basis.
    *
-   * @param array $fields The array of annotated translatable fields
+   * @param array $fields The array of annotated translatable fields.
    *
    * @return array The array of translatable fields based on the state of the
    * entity. This must be a sub-set of the input array.
@@ -477,9 +489,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   private $preUpdatePosted = false;
 
   /**
-   * @ORM\PreUpdate
+   * {@inheritdoc}
    *
-   * @param Event\PreUpdateEventArgs $event
+   * @ORM\PreUpdate
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
@@ -494,9 +506,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * @ORM\PostUpdate
+   * {@inheritdoc}
    *
-   * @param Event\LifecycleEventArgs $event
+   * @ORM\PostUpdate
    */
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
