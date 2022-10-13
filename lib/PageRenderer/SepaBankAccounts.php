@@ -923,7 +923,22 @@ class SepaBankAccounts extends PMETableViewBase
       if ($monetaryFields->count() > 0) {
         $this->makeTotalFeesField($opts['fdd'], $monetaryFields, self::AMOUNT_TAB_ID);
       }
-      $participantFieldsGenerator($opts['fdd']);
+
+      $totalFeesTargetIndex = count($opts['fdd']);
+
+      $subTotals = [];
+      $participantFieldsGenerator($opts['fdd'], $subTotals);
+
+      if (!empty($subTotals)) {
+        $totalFeesIndex = count($opts['fdd']);
+        $this->makeTotalFeesFields($opts['fdd'], $subTotals, self::AMOUNT_TAB_ID);
+
+        $baseFdd = array_slice($opts['fdd'], 0, $totalFeesTargetIndex);
+        $participantFieldsFdd = array_slice($opts['fdd'], $totalFeesTargetIndex, $totalFeesIndex - $totalFeesTargetIndex);
+        $totalFeesFdd = array_slice($opts['fdd'], $totalFeesIndex);
+
+        $opts['fdd'] = $baseFdd + $totalFeesFdd + $participantFieldsFdd;
+      }
     }
 
     ///////////////
@@ -975,6 +990,8 @@ class SepaBankAccounts extends PMETableViewBase
       }
       return true;
     };
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::OPERATION_LIST][PHPMyEdit::TRIGGER_PRE][] = [ $this, 'totalFeesPreFilterTrigger' ];
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
@@ -1266,15 +1283,14 @@ received so far'),
    */
   protected function tableTabId(string $idOrName):string
   {
+    if ($idOrName === 'finance') {
+      $idOrName = self::AMOUNT_TAB_ID;
+    }
     $dflt = $this->tableTabs();
     foreach ($dflt as $tab) {
       if ($idOrName === $tab['name'] || $idOrName === $this->l->t($tab['id'])) {
         return $tab['id'];
       }
-    }
-
-    if ($idOrName == 'finance') {
-      $this->logInfo('FINANCE TAB');
     }
 
     return $idOrName;

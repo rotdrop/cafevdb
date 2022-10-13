@@ -1012,6 +1012,8 @@ class ProjectParticipants extends PMETableViewBase
       $this->makeTotalFeesField($opts['fdd'], $monetary, $financeTab);
     }
 
+    $totalFeesTargetIndex = count($opts['fdd']);
+
     /*
      *
      **************************************************************************
@@ -1021,7 +1023,19 @@ class ProjectParticipants extends PMETableViewBase
      */
 
     // Generate input fields for the extra columns
-    $participantFieldsGenerator($opts['fdd']);
+    $subTotals = [];
+    $participantFieldsGenerator($opts['fdd'], $subTotals);
+
+    if (!empty($subTotals)) {
+      $totalFeesIndex = count($opts['fdd']);
+      $this->makeTotalFeesFields($opts['fdd'], $subTotals, $financeTab);
+
+      $baseFdd = array_slice($opts['fdd'], 0, $totalFeesTargetIndex);
+      $participantFieldsFdd = array_slice($opts['fdd'], $totalFeesTargetIndex, $totalFeesIndex - $totalFeesTargetIndex);
+      $totalFeesFdd = array_slice($opts['fdd'], $totalFeesIndex);
+
+      $opts['fdd'] = $baseFdd + $totalFeesFdd + $participantFieldsFdd;
+    }
 
     /*
      *
@@ -1330,6 +1344,8 @@ class ProjectParticipants extends PMETableViewBase
       }
       return true;
     };
+
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::OPERATION_LIST][PHPMyEdit::TRIGGER_PRE][] = [ $this, 'totalFeesPreFilterTrigger' ];
 
     $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
