@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { refreshWidgetProperties, widget as selectWidget } from './select-utils.js';
+import { refreshWidgetProperties, widget as selectWidget, isVanilla as isSelectVanilla } from './select-utils.js';
 
 require('jquery-readonly.scss');
 
@@ -191,8 +191,10 @@ $.fn.readonly = function(state) {
           vanillaProp.call($this, 'disabled', true);
         }
       }
-      refreshWidgetProperties($this);
-      selectWidget($this).toggleClass(elementReadonlyClass, state).find('*').toggleClass(elementReadonlyClass, state);
+      if (!isSelectVanilla($this)) {
+        refreshWidgetProperties($this);
+        selectWidget($this).toggleClass(elementReadonlyClass, state).find('*').toggleClass(elementReadonlyClass, state);
+      }
     } else if ($this.is(':radio')) {
       let $container = $this.closest('fieldset');
       if (!$container) {
