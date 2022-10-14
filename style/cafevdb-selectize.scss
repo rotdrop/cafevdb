@@ -53,6 +53,11 @@
       outline: none;
       box-shadow: none;
     }
+
+    &.invalid {
+      box-shadow: none !important;
+      border-color: var(--color-error);
+    }
   }
 
   .selectize-dropdown {
