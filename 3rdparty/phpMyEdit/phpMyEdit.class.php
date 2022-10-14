@@ -2274,7 +2274,7 @@ class phpMyEdit
 							}
 							$tab_postfix = [];
 							foreach ($idList as $id) {
-								$tab_idx = $this->tabs_by_id[$id];
+								$tab_idx = $this->tabs_by_id[$id] ?? '-none';
 								$tab_postfix[] = 'tab-'.$tab_idx;
 								$tab_postfix[] = 'tab-'.$id;
 							}
