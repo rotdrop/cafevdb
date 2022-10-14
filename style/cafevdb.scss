@@ -444,6 +444,7 @@ div[class|='cafevdb-nav']>div {
   padding: 5px;
 }
 
+// @todo no longer there?
 div#controls div.buttonseparator {
   display:inline-block;
   background:#000;
@@ -524,6 +525,7 @@ form#personalsettings {
     width:2px;
     vertical-align:middle;
     opacity:0.5;
+    margin: 0 3px;
   }
 
 } /* form#personalsettings */
