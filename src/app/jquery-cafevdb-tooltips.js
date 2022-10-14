@@ -57,6 +57,7 @@ const defaultOptions = {
   cssclass: [],
   fallbackPlacement: 'flip',
   boundary: 'viewport',
+  timestamp: false,
   // delay: { show: 500, hide: 100000 },
 };
 
@@ -80,6 +81,22 @@ const unregisterBackgroundJob = function() {
     backGroundDeferred = $.Deferred();
     backGroundPromise = backGroundDeferred.promise();
   }
+};
+
+let markCount = 0;
+
+const getMarkCount = () => markCount;
+const setMarkCount = (value) => { markCount = value; };
+
+const markElement = function($element, timestamp) {
+  if (timestamp !== false) {
+    if ($element.data(appName + '-tooltip-timestamp') === timestamp) {
+      markCount++;
+      return false;
+    }
+    $element.data(appName + '-tooltip-timestamp', timestamp);
+  }
+  return true;
 };
 
 const lockElement = function($element) {
@@ -220,11 +237,17 @@ $.fn.cafevTooltip = function(argument) {
     optionsForAll.cssclass.push('cafevdb');
     // Iterator over individual element in order to pick up the
     // correct class-arguments. The setTimeout() hack is in order to
-    // fake background jobs and keep the UI somewhat response.
+    // fake background jobs and keep the UI somewhat responsive.
     //
     // @todo This has to be reworked, tooltips just take too much time.
     $this.each(function(index) {
       const $element = $(this);
+      if ($element.is('.selectize-input-element')) {
+        console.trace('BALH');
+      }
+      if (!markElement($element, optionsForAll.timestamp)) {
+        return;
+      }
       if (!lockElement($element)) {
         return;
       }
@@ -291,6 +314,8 @@ export {
   backGroundCount,
   backGroundPromise,
   rejectBackgroundPromise,
+  setMarkCount,
+  getMarkCount,
 };
 
 // Local Variables: ***
