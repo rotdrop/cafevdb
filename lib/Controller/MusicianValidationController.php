@@ -394,7 +394,7 @@ class MusicianValidationController extends Controller
         $criteria = array_merge($nameCriteria, $commCriteria, $addressCriteria);
         if (empty($criteria)) {
           return self::dataResponse([
-            'messages' => [],
+            'message' => [],
             'duplicates' => [],
           ]);
         }
