@@ -64,10 +64,10 @@ $navigationControls = $pageNavigation->buttonsFromArray(
       'name' => $l->t('Reload'),
       'title' => $l->t('Reload the current view.'),
       'image' => [
-	image_path($appName, 'reload-solid.svg'),
-	image_path('core', 'loading.gif'),
+        image_path($appName, 'reload-solid.svg'),
+        image_path('core', 'loading.gif'),
       ],
-      'class' => 'reload navigation history tooltip-auto',
+      'class' => 'reload navigation history tooltip-auto flex-container flex-center flex-justify-center',
       'id' => 'reloadbutton',
       'type' => 'submitbutton',
     ],
@@ -155,7 +155,10 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 </div>
 <div id="app-content">
   <div id="app-inner-content">
-    <form id="personalsettings" class="visible personal-settings" method="post" action="?app=<?php echo $_['appName']; ?>">
+    <form id="personalsettings"
+          class="visible personal-settings flex-container flex-center flex-justify-full"
+          method="post"
+          action="?app=<?php echo $_['appName']; ?>">
       <?php echo $navigationControls; ?>
       <div class="buttonseparator"></div>
       <?php echo $settingsControls; ?>
