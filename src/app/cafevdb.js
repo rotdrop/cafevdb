@@ -27,6 +27,8 @@ import { token as pmeToken } from './pme-selectors.js';
 import {
   backGroundPromise as toolTipsBackgroundPromise,
   rejectBackgroundPromise as rejectToolTipsBackgroundPromise,
+  getMarkCount,
+  setMarkCount,
 } from './jquery-cafevdb-tooltips.js';
 
 require('cafevdb.scss');
@@ -267,7 +269,10 @@ const snapperClose = function() {
 const toolTipsInit = function(containerSel) {
 
   console.time('TOOLTIPS');
+
   rejectToolTipsBackgroundPromise();
+
+  console.time('TOOLTIP_PROMISE');
 
   if (typeof containerSel === 'undefined') {
     containerSel = '#content.app-' + appName;
@@ -276,63 +281,110 @@ const toolTipsInit = function(containerSel) {
 
   console.debug('tooltips container', containerSel, container.length);
 
-  // container.find('button.settings').cafevTooltip({ placement: 'bottom' });
-  container.find('select').cafevTooltip({ placement: 'right' });
-  container.find('option').cafevTooltip({ placement: 'right' });
-  container.find('div.chosen-container').cafevTooltip({ placement: 'top' });
-  container.find('button.settings').cafevTooltip({ placement: 'bottom' });
-  container.find('.' + pmeToken('sort')).cafevTooltip({ placement: 'bottom' });
-  container.find(['', pmeToken('check'), pmeToken('misc')].join('.')).cafevTooltip({ placement: 'bottom' });
-  container.find('label').cafevTooltip({ placement: 'top' });
-  container.find('.header-right img').cafevTooltip({ placement: 'bottom' });
-  container.find('img').cafevTooltip({ placement: 'bottom' });
-  container.find('button').cafevTooltip({ placement: 'right' });
-  container.find('li.' + pmeToken('navigation') + '.table-tabs').cafevTooltip({ placement: 'bottom' });
+  setMarkCount(0);
+  const timestamp = Date.now();
 
-  // pme input stuff and tables.
-  container.find('textarea.' + pmeToken('input')).cafevTooltip(
-    { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('input.' + pmeToken('input')).cafevTooltip(
-    { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('table.' + pmeToken('main') + ' td').cafevTooltip(
-    { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('table.' + pmeToken('main') + ' th').cafevTooltip(
-    { placement: 'bottom' });
+  // first handle tooltips with explicitly specified wishes
+  container.find('[class*="tooltip-"]').cafevTooltip({ timestamp });
 
-  // original tipsy stuff
-  container.find('.displayName .action').cafevTooltip({ placement: 'top' });
-  container.find('.password .action').cafevTooltip({ placement: 'top' });
-  container.find('#upload').cafevTooltip({ placement: 'right' });
-  container.find('.selectedActions a').cafevTooltip({ placement: 'top' });
-  container.find('a.action.delete').cafevTooltip({ placement: 'left' });
-  container.find('a.action').cafevTooltip({ placement: 'top' });
-  container.find('td .modified').cafevTooltip({ placement: 'top' });
-  container.find('td.lastLogin').cafevTooltip({ placement: 'top', html: true });
-  container.find('input:not([type=hidden])').cafevTooltip({ placement: 'right' });
-  container.find('textarea').cafevTooltip({ placement: 'right' });
-
-  // everything else.
-  container.find('.tip').cafevTooltip({ placement: 'right' });
-
-  container.find('select[class*="pme-filter"]').cafevTooltip(
-    { placement: 'bottom', cssclass: 'tooltip-wide' }
-  );
-  container.find('input[class*="pme-filter"]').cafevTooltip(
-    { placement: 'bottom', cssclass: 'tooltip-wide' }
-  );
-  container.find('td.' + pmeToken('sys') + ' ~ td.' + pmeToken('data') + ' .info').cafevTooltip(
-    { placement: 'bottom', cssclass: 'tooltip-wide' }
-  );
-
-  container.find('[class*="tooltip-"]').each(function(index) {
-    // console.log("tooltip autoclass", $(this), $(this).attr('title'));
-    $(this).cafevTooltip({});
+  const $autoToolTips = container.find([
+    '#app-navigation-toggle',
+  ].join(','));
+  const $autoWideToolTips = $autoToolTips.filter('.tooltip-wide');
+  $autoWideToolTips.cafevTooltip({
+    cssclass: 'tooltip-wide',
+    timestamp,
+  });
+  $autoToolTips.cafevTooltip({
+    timestamp,
   });
 
-  container.find('#app-navigation-toggle').cafevTooltip();
+  const $leftToolTips = container.find([
+    'a.action.delete',
+  ].join(','));
+  const $leftWideToolTips = $leftToolTips.filter('.tooltip-wide');
+  $leftWideToolTips.cafevTooltip({
+    placement: 'left',
+    cssclass: 'tooltip-wide',
+    timestamp,
+  });
+  $leftToolTips.cafevTooltip({
+    placement: 'left',
+    timestamp,
+  });
 
-  // Tipsy greedily enables itself when attaching it to elements, so
-  // ...
+  const $rightToolTips = container.find([
+    'select',
+    'option',
+    'button',
+    '#upload',
+    'input:not([type=hidden], .selectize-input-element)',
+    'textarea',
+  ].join(','));
+  const $rightWideToolTips = $rightToolTips.filter('.tooltip-wide');
+  $rightWideToolTips.cafevTooltip({
+    placement: 'right',
+    cssclass: 'tooltip-wide',
+    timestamp,
+  });
+  $rightToolTips.cafevTooltip({
+    placement: 'right',
+    timestamp,
+  });
+
+  const $topToolTips = container.find([
+    'div.chosen-container',
+    'label',
+    '.displayName .action:not(.delete)',
+    '.password .action:not(.delete)',
+    '.selectedActions a',
+    'a.action:not(.delete)',
+    'td .modified',
+    'td.lastLogin',
+  ].join(','));
+  const $topWideToolTips = container.find([
+    'textarea.' + pmeToken('input'),
+    'input.' + pmeToken('input'),
+    'table.' + pmeToken('main') + ' td',
+  ].join(',')).add(
+    $topToolTips.filter('.tooltip-wide')
+  );
+  $topWideToolTips.cafevTooltip({
+    placement: 'top',
+    timestamp,
+  });
+  $topToolTips.cafevTooltip({
+    placement: 'top',
+    cssclass: 'tooltip-wide',
+    timestamp,
+  });
+
+  const $bottomToolTips = container.find([
+    'button.settings',
+    '.' + pmeToken('sort'),
+    ['', pmeToken('check'), pmeToken('misc')].join('.'),
+    '.header-right img',
+    'img',
+    'li.' + pmeToken('navigation') + '.table-tabs',
+    'table.' + pmeToken('main') + ' th',
+  ].join(','));
+  const $bottomWideToolTips = container.find([
+    'select[class*="pme-filter"]',
+    'input[class*="pme-filter"]',
+    'td.' + pmeToken('sys') + ' ~ td.' + pmeToken('data') + ' .info',
+  ].join(',')).add(
+    $bottomToolTips.filter('.tooltip-wide')
+  );
+  $bottomWideToolTips.cafevTooltip({
+    placement: 'bottom',
+    cssclass: 'tooltip-wide',
+    timestamp,
+  });
+  $bottomToolTips.cafevTooltip({
+    placement: 'bottom',
+    timestamp,
+  });
+
   if (globalState.toolTipsEnabled) {
     $.fn.cafevTooltip.enable();
   } else {
@@ -340,10 +392,18 @@ const toolTipsInit = function(containerSel) {
   }
 
   toolTipsBackgroundPromise
-    .done((maxJobs) => console.info('TOOLTIP JOBS HANDLED', maxJobs))
-    .fail((maxJobs) => console.info('RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs));
+    .done((maxJobs) => {
+      console.timeEnd('TOOLTIP_PROMISE');
+      console.info('TOOLTIP JOBS HANDLED', maxJobs);
+    })
+    .fail((maxJobs) => {
+      console.timeEnd('TOOLTIP_PROMISE');
+      console.info('RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs);
+    });
 
   console.timeEnd('TOOLTIPS');
+
+  console.info('SKIPPED MARKED', getMarkCount());
 };
 
 export {
