@@ -168,7 +168,7 @@ trait MailingListsTrait
           data-operation="' .  $operation . '"
           ' .  ($disabled ? 'disabled' : '') . '
       >
-        <a href="#">
+        <a href="#" class="flex-container flex-center">
           <img alt="" src="' . $this->urlGenerator()->imagePath($icon['app'], $icon['image']) . '"/>
           ' . $menuLabels[$operation] . '
         </a>
@@ -215,13 +215,13 @@ trait MailingListsTrait
         $registration = empty($row['qf' . $pme->fdn['registration']])
           ? 'preliminary' : 'confirmed';
         $cssClasses[] =  'registration-' . $registration;
-        $listId = empty($this->project) ? null : $this->project->getMailingListId();
 
         $displayStatus = $this->l->t('unknown');
 
         // Do not contact the mailing-list service here, as this really slows
         // down things if the mailing list service is unreachable.
         //
+        // $listId = empty($this->project) ? null : $this->project->getMailingListId();
         // try {
         //   $summary = ProjectParticipantsController::mailingListDeliveryStatus($this->listsService, $listId, $email);
         //   // $status = $summary['subscriptionStatus'];
@@ -248,7 +248,7 @@ trait MailingListsTrait
           data-operation="' . ProjectParticipantsController::LIST_ACTION_SUBSCRIBE . '"
           title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:subscribe'] . '"
       >
-        <a href="#">
+        <a href="#" class="flex-container flex-center">
           <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/add.svg') . '"/>
           ' . $this->l->t('subscribe') . '
         </a>
@@ -257,7 +257,7 @@ trait MailingListsTrait
           data-operation="' . ProjectParticipantsController::LIST_ACTION_UNSUBSCRIBE . '"
           title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:unsubscribe'] . '"
       >
-        <a href="#">
+        <a href="#" class="flex-container flex-center">
           <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/delete.svg') . '"/>
           ' . $this->l->t('unsubscribe') . '
         </a>
@@ -266,7 +266,7 @@ trait MailingListsTrait
           data-operation="' . ProjectParticipantsController::LIST_ACTION_ENABLE_DELIVERY . '"
           title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:enable-delivery'] . '"
       >
-        <a href="#">
+        <a href="#" class="flex-container flex-center">
           <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/play.svg') . '"/>
           ' . $this->l->t('enable delivery') . '
         </a>
@@ -275,7 +275,7 @@ trait MailingListsTrait
           data-operation="' . ProjectParticipantsController::LIST_ACTION_DISABLE_DELIVERY . '"
           title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:disable-delivery'] . '"
       >
-        <a href="#">
+        <a href="#" class="flex-container flex-center">
           <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/pause.svg') . '"/>
           ' . $this->l->t('disable delivery') . '
         </a>
@@ -284,7 +284,7 @@ trait MailingListsTrait
           data-operation="' . ProjectParticipantsController::LIST_ACTION_RELOAD_SUBSCRIPTION . '"
           title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:reload-subscription'] . '"
       >
-        <a href="#">
+        <a href="#" class="flex-container flex-center">
           <img alt="" src="' . $this->urlGenerator()->imagePath($this->appName(), 'reload-solid.svg') . '"/>
           ' . $this->l->t('reload subscription') . '
         </a>
