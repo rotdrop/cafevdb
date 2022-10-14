@@ -259,6 +259,97 @@ const snapperClose = function() {
   $('#navigation-list li.nav-heading a').trigger('click');
 };
 
+const toolTipSelectors = [
+  // by class
+  {
+    selector: [
+      '.tooltip-auto',
+      '.tooltip-left',
+      '.tooltip-right',
+      '.tooltip-top',
+      '.tooltip-bottom',
+    ].join(','),
+    options: {},
+  },
+  // auto
+  {
+    selector: [
+      '#app-navigation-toggle',
+    ].join(','),
+    options: {},
+  },
+  // left
+  {
+    selector: [
+      'a.action.delete',
+    ].join(','),
+    options: { placement: 'left' },
+  },
+  // right
+  {
+    selector: [
+      'select',
+      'option',
+      'button',
+      '#upload',
+      'input:not([type=hidden], .selectize-input-element)',
+      'textarea',
+    ].join(','),
+    options: { placement: 'right' },
+  },
+  // top wide
+  {
+    selector: [
+      'textarea.' + pmeToken('input'),
+      'input.' + pmeToken('input'),
+      'table.' + pmeToken('main') + ' td',
+    ].join(','),
+    options: {
+      placement: 'top',
+      cssclass: 'tooltip-wide',
+    },
+  },
+  // top
+  {
+    selector: [
+      'div.chosen-container',
+      'label',
+      '.displayName .action:not(.delete)',
+      '.password .action:not(.delete)',
+      '.selectedActions a',
+      'a.action:not(.delete)',
+      'td .modified',
+      'td.lastLogin',
+    ].join(','),
+    options: { placement: 'top' },
+  },
+  // bottom wide
+  {
+    selector: [
+      'select[class*="pme-filter"]',
+      'input[class*="pme-filter"]',
+      'td.' + pmeToken('sys') + ' ~ td.' + pmeToken('data') + ' .info',
+    ].join(','),
+    options: {
+      placement: 'bottom',
+      cssclass: 'tooltip-wide',
+    },
+  },
+  // bottom
+  {
+    selector: [
+      'button.settings',
+      '.' + pmeToken('sort'),
+      ['', pmeToken('check'), pmeToken('misc')].join('.'),
+      '.header-right img',
+      'img',
+      'li.' + pmeToken('navigation') + '.table-tabs',
+      'table.' + pmeToken('main') + ' th',
+    ].join(','),
+    options: { placement: 'bottom' },
+  },
+];
+
 /**
  * Initialize our tipsy stuff. Only exchange for our own thingies, of course.
  *
@@ -284,106 +375,24 @@ const toolTipsInit = function(containerSel) {
   setMarkCount(0);
   const timestamp = Date.now();
 
-  // first handle tooltips with explicitly specified wishes
-  container.find('[class*="tooltip-"]').cafevTooltip({ timestamp });
+  for (const toolTipSpec of toolTipSelectors) {
+    const options = toolTipSpec.options;
+    options.timestamp = timestamp;
+    container.find(toolTipSpec.selector).cafevTooltip(options);
+  }
 
-  const $autoToolTips = container.find([
-    '#app-navigation-toggle',
-  ].join(','));
-  const $autoWideToolTips = $autoToolTips.filter('.tooltip-wide');
-  $autoWideToolTips.cafevTooltip({
-    cssclass: 'tooltip-wide',
-    timestamp,
-  });
-  $autoToolTips.cafevTooltip({
-    timestamp,
-  });
+  // for (const toolTipSpec of toolTipSelectors) {
+  //   toolTipSpec.options.timestamp = timestamp;
+  // }
 
-  const $leftToolTips = container.find([
-    'a.action.delete',
-  ].join(','));
-  const $leftWideToolTips = $leftToolTips.filter('.tooltip-wide');
-  $leftWideToolTips.cafevTooltip({
-    placement: 'left',
-    cssclass: 'tooltip-wide',
-    timestamp,
-  });
-  $leftToolTips.cafevTooltip({
-    placement: 'left',
-    timestamp,
-  });
-
-  const $rightToolTips = container.find([
-    'select',
-    'option',
-    'button',
-    '#upload',
-    'input:not([type=hidden], .selectize-input-element)',
-    'textarea',
-  ].join(','));
-  const $rightWideToolTips = $rightToolTips.filter('.tooltip-wide');
-  $rightWideToolTips.cafevTooltip({
-    placement: 'right',
-    cssclass: 'tooltip-wide',
-    timestamp,
-  });
-  $rightToolTips.cafevTooltip({
-    placement: 'right',
-    timestamp,
-  });
-
-  const $topToolTips = container.find([
-    'div.chosen-container',
-    'label',
-    '.displayName .action:not(.delete)',
-    '.password .action:not(.delete)',
-    '.selectedActions a',
-    'a.action:not(.delete)',
-    'td .modified',
-    'td.lastLogin',
-  ].join(','));
-  const $topWideToolTips = container.find([
-    'textarea.' + pmeToken('input'),
-    'input.' + pmeToken('input'),
-    'table.' + pmeToken('main') + ' td',
-  ].join(',')).add(
-    $topToolTips.filter('.tooltip-wide')
-  );
-  $topWideToolTips.cafevTooltip({
-    placement: 'top',
-    timestamp,
-  });
-  $topToolTips.cafevTooltip({
-    placement: 'top',
-    cssclass: 'tooltip-wide',
-    timestamp,
-  });
-
-  const $bottomToolTips = container.find([
-    'button.settings',
-    '.' + pmeToken('sort'),
-    ['', pmeToken('check'), pmeToken('misc')].join('.'),
-    '.header-right img',
-    'img',
-    'li.' + pmeToken('navigation') + '.table-tabs',
-    'table.' + pmeToken('main') + ' th',
-  ].join(','));
-  const $bottomWideToolTips = container.find([
-    'select[class*="pme-filter"]',
-    'input[class*="pme-filter"]',
-    'td.' + pmeToken('sys') + ' ~ td.' + pmeToken('data') + ' .info',
-  ].join(',')).add(
-    $bottomToolTips.filter('.tooltip-wide')
-  );
-  $bottomWideToolTips.cafevTooltip({
-    placement: 'bottom',
-    cssclass: 'tooltip-wide',
-    timestamp,
-  });
-  $bottomToolTips.cafevTooltip({
-    placement: 'bottom',
-    timestamp,
-  });
+  // container.find('*').each(function() {
+  //   const $this = $(this);
+  //   for (const toolTipSpec of toolTipSelectors) {
+  //     if ($this.is(toolTipSpec.selector)) {
+  //       $this.cafevTooltip(toolTipSpec.options);
+  //     }
+  //   }
+  // });
 
   if (globalState.toolTipsEnabled) {
     $.fn.cafevTooltip.enable();
