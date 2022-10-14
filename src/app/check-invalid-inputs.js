@@ -25,8 +25,9 @@ import $ from './jquery.js';
 import { appName } from './app-info.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Dialogs from './dialogs.js';
-import { chosenActive } from './select-utils.js';
+import { widget as selectWidget } from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
+import mergician from 'mergician';
 
 /**
  * Brief UI check for invalid input elements.
@@ -38,28 +39,47 @@ import { token as pmeToken } from './pme-selectors.js';
  * If the container does not contain a form and is not itself a form,
  * then all contained elements are search for ':invalid'.
  *
- * @param {Function} cleanup Cleanup function called after displaying a
- * warning about invalid elements. It is not executed if no invalid
- * form elements can be found.
+ * @param {Function} options Options with components 'cleanup',
+ * 'labelCallback', 'afterDialog' and 'timeout'.
  *
  * @param {Function} labelCallback A callback receiving the invalid
  * input element as only argument. The return value may be logical
  * false or a non-zero string which is used as the display label for
  * the error message.
  *
+ * @param {Function} afterDialog A callback which is called after the
+ * user has closed the error callback. It receives as argument the
+ * jQuery list of invalid inputs.
+ *
  * @returns {boolean} true iff no error is found.
  */
-function checkInvalidInputs(container, cleanup, labelCallback) {
-
-  if (typeof cleanup !== 'function') {
-    cleanup = function() {};
-  }
-
-  if (typeof labelCallback !== 'function') {
-    labelCallback = function($input) {
+function checkInvalidInputs(container, options, labelCallback, afterDialog) {
+  const defaultOptions = {
+    cleanup() {},
+    labelCallback($input) {
       return $input.closest('tr').find('td.' + pmeToken('key')).html();
+    },
+    afterDialog($invalidInputs) {},
+    timeout: 5000,
+  };
+
+  if (typeof options === 'function') {
+    options = {
+      cleanup: options,
     };
   }
+  if (typeof labelCallback === 'function') {
+    options.labelCallback = labelCallback;
+  }
+
+  if (typeof afterDialog === 'function') {
+    options.afterDialog = afterDialog;
+  }
+
+  options = mergician({}, defaultOptions, options || {});
+
+  const cleanup = options.cleanup;
+  labelCallback = options.labelCallback;
 
   const containedForms = container.find('form');
   const searchBase = containedForms.length === 0 ? container : containedForms;
@@ -81,34 +101,40 @@ function checkInvalidInputs(container, cleanup, labelCallback) {
       for (const input of invalidInputs) {
         const $input = $(input);
         let $effectInput = $input;
+        let $tooltipInput = $input;
         if (!$input.is(':visible') && $input.is('select')) {
-          if ($input[0].selectize) {
-            $effectInput = $input.next().find('.selectize-input');
-          } else if (chosenActive($input)) {
-            $effectInput = $input.next();
-          }
+          $effectInput = selectWidget($input);
+          $tooltipInput = selectWidget($input);
         } else {
-          $effectInput = $input;
+          // selectize moves the "required" property to its own input
+          const $selectize = $input.closest('.selectize-control');
+          if ($selectize.length > 0) {
+            $effectInput = $input.parent();
+            $tooltipInput = $selectize;
+          }
         }
 
         if ($effectInput.is(':visible')) {
-          $effectInput.cafevTooltip('enable');
-          if (afterDialog) {
-            $effectInput.cafevTooltip('show');
-          }
+          $tooltipInput.cafevTooltip('enable');
           $effectInput.effect(
             'highlight',
             {},
-            10000,
+            options.timeout,
             function() {
               if (afterDialog) {
                 if (!CAFEVDB.toolTipsEnabled()) {
-                  $effectInput.cafevTooltip('disable');
+                  $tooltipInput.cafevTooltip('disable');
                 }
                 cleanup();
               }
             });
+          if (afterDialog) {
+            $tooltipInput.cafevTooltip('show');
+          }
         }
+      }
+      if (afterDialog) {
+        options.afterDialog(invalidInputs);
       }
     };
     const invalidInfo = [];

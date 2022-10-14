@@ -467,8 +467,19 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     changeCallback({ reason: 'tabChange' });
   });
 
-  // The easy one, but for changed content
+  const reloadButtonSelector = pmeClassSelectors(
+    'input',
+    ['change', 'delete', 'copy', 'apply', 'more', 'reload']);
+  const reloadingButton = container.find(reloadButtonSelector);
+
+  const saveButtonSelector = 'input.' + pmeToken('save');
+  const saveButton = container.find(saveButtonSelector);
+
   const cancelButton = container.find(pmeClassSelector('input', 'cancel'));
+
+  const allButtons = $().add(reloadingButton).add(saveButton).add(cancelButton);
+
+  // The easy one, but for changed content
   cancelButton
     .off('click')
     .on('click', function(event, triggerData) {
@@ -492,22 +503,17 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     });
 
   // The complicated ones. This reloads new data.
-  const ReloadButtonSel = pmeClassSelectors(
-    'input',
-    ['change', 'delete', 'copy', 'apply', 'more', 'reload']);
-  const reloadingButton = container.find(ReloadButtonSel);
-
-  // remove non-delegate handlers and stop default actions in any case.
-  reloadingButton.off('click');
 
   // install a delegate handler on the outer-most container which
   // finally will run after possible inner data-validation handlers
   // have been executed.
+  // remove non-delegate handlers and stop default actions in any case.
+  reloadingButton.off('click');
   container
-    .off('click', ReloadButtonSel)
+    .off('click', reloadButtonSelector)
     .on(
       'click',
-      ReloadButtonSel,
+      reloadButtonSelector,
       function(event, triggerData) {
 
         const $submitButton = $(this);
@@ -550,29 +556,38 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
    * view-mode.
    *
    */
-  const saveButtonSel = 'input.' + pmeToken('save');
-  const saveButton = container.find(saveButtonSel);
-  saveButton.off('click');
 
+  saveButton.off('click');
   container
-    .off('click', saveButtonSel)
-    .on('click', saveButtonSel, function(event, triggerData) {
+    .off('click', saveButtonSelector)
+    .on('click', saveButtonSelector, function(event, triggerData) {
 
       if (container.data(pmeToken('saving'))) {
         return false;
       }
       container.data(pmeToken('saving'), true);
 
+      allButtons.prop('disabled', true);
+
+      $.fn.cafevTooltip.remove();
       tableDialogLoadIndicator(container, true);
       Page.busyIcon(true);
 
+      const cleanup = () => {
+        tableDialogLoadIndicator(container, false);
+        Page.busyIcon(false);
+        allButtons.prop('disabled', false);
+        container.data(pmeToken('saving'), false);
+      };
+
       // Brief front-end-check for empty required fields.
-      if (!checkInvalidInputs(
-        container, function() {
-          tableDialogLoadIndicator(container, false);
-          Page.busyIcon(false);
-          container.data(pmeToken('saving'), false);
-        })) {
+      if (!checkInvalidInputs(container, {
+        cleanup,
+        afterDialog($invalidInputs) {
+          cleanup();
+        },
+        timeout: 10000, // animation timeout
+      })) {
         return false;
       }
 
@@ -1396,7 +1411,7 @@ function installInputSelectize(containerSel, onlyClass) {
     // console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
     $self.selectize(selectizeOptions);
     const selectizeInstance = getSelectConstrolObject($self);
-    selectizeInstance.$control_input.removeAttr('autofill');
+    selectizeInstance.$control_input.removeAttr('autofill').addClass('selectize-input-element');
     const $selectWidget = selectWidget($self);
     const toolTip = $self.attr('title') || $self.attr('data-original-title');
     if (toolTip) {
