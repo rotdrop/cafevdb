@@ -22,6 +22,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use OCP\AppFramework\Http\TemplateResponse;
+
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\MailingListsService;
@@ -65,6 +67,7 @@ trait MailingListsTrait
     array $columnTabs = [],
     array $override = [],
   ):array {
+
     $fdd = [
       'name'    => $this->l->t('Mailing List'),
       'tab'     => [ 'id' => $columnTabs ],
@@ -75,13 +78,13 @@ trait MailingListsTrait
       'input|AP' => 'R',
       'tooltip' => $this->toolTipsService['page-renderer:musicians:mailing-list'],
       'php|AP' =>  function($email, $action, $k, $row, $recordId, PHPMyEdit $pme) {
-        return '<input class="radio" id="mailing-list-action-invite" type="radio" value="invite" name="' . $pme->cgiDataName('mailing_list') . '" checked/>
-<label for="mailing-list-action-invite">' . $this->l->t('invite') . '</label>
-<input class="radio" type="radio" id="mailing-list-action-subscribe" value="subscribe" name="' . $pme->cgiDataName('mailing_list') . '"/>
-<label for="mailing-list-action-subscribe">' . $this->l->t('subscribe') . '</label>
-<input class="radio" type="radio" id="mailing-list-action-noop" value="subscribe" name="' . $pme->cgiDataName('mailing_list') . '"/>
-<label for="mailing-list-action-noop">' . $this->l->t('no action') . '</label>
-';
+        return (new TemplateResponse(
+          $this->appName(),
+          'fragments/mailing-lists/announcements-list-controls-add-copy', [
+            'mailingListActionName' => $pme->cgiDataName('mailing_list'),
+          ],
+          'blank',
+        ))->render();
       },
       'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
         // Do not contact the mailing-list service here, as this really slows
@@ -95,91 +98,17 @@ trait MailingListsTrait
         //   $status = 'unknown';
         // }
         $status = 'unknown';
-        $statusText = $this->l->t($status);
-        $operations = [
-          MailingListsController::OPERATION_INVITE,
-          MailingListsController::OPERATION_ACCEPT,
-          MailingListsController::OPERATION_SUBSCRIBE,
-          MailingListsController::OPERATION_REJECT,
-          MailingListsController::OPERATION_UNSUBSCRIBE,
-          MailingListsController::OPERATION_RELOAD,
-        ];
-        $defaultCss = [ 'mailing-list', 'operation' ];
-        $cssClasses = [
-          MailingListsController::OPERATION_INVITE => [
-            'status-unsubscribed-visible' => true,
+        return (new TemplateResponse(
+          $this->appName(),
+          'fragments/mailing-lists/announcements-list-controls', [
+            'appName' => $this->appName(),
+            'action' => $action,
+            'status' => $status,
+            'urlGenerator' => $this->urlGenerator(),
+            'toolTips' => $this->toolTipsService,
           ],
-          MailingListsController::OPERATION_ACCEPT => [
-            'status-waiting-visible' => true,
-          ],
-          MailingListsController::OPERATION_REJECT => [
-            'status-invited-visible' => true,
-            'status-waiting-visible' => true,
-           ],
-          MailingListsController::OPERATION_SUBSCRIBE => [
-            'status-unsubscribed-visible' => true,
-            'expert-mode-only' => true,
-          ],
-          MailingListsController::OPERATION_UNSUBSCRIBE => [
-            'status-subscribed-visible' => true,
-          ],
-          MailingListsController::OPERATION_RELOAD => [
-            'status-unsubscribed-visible' => true,
-            'status-waiting-visible' => true,
-            'status-invited-visible' => true,
-            'status-subscribed-visible' => true,
-            'status-unknown-visible' => true,
-          ],
-        ];
-        $icons = [
-          MailingListsController::OPERATION_INVITE => [ 'app' => 'core', 'image' => 'actions/confirm.svg' ],
-          MailingListsController::OPERATION_ACCEPT => [ 'app' => 'core', 'image' => 'actions/checkmark.svg' ],
-          MailingListsController::OPERATION_REJECT => [ 'app' => 'core', 'image' => 'actions/close.svg' ],
-          MailingListsController::OPERATION_SUBSCRIBE => [ 'app' => 'core', 'image' => 'actions/add.svg' ],
-          MailingListsController::OPERATION_UNSUBSCRIBE => [ 'app' => 'core', 'image' => 'actions/delete.svg' ],
-          MailingListsController::OPERATION_RELOAD => [ 'app' => $this->appName(), 'image' => 'reload-solid.svg' ],
-        ];
-        $menuLabels = [
-          MailingListsController::OPERATION_INVITE => $this->l->t('invite'),
-          MailingListsController::OPERATION_ACCEPT => $this->l->t('accept'),
-          MailingListsController::OPERATION_REJECT => $this->l->t('reject'),
-          MailingListsController::OPERATION_SUBSCRIBE => $this->l->t('subscribe'),
-          MailingListsController::OPERATION_UNSUBSCRIBE => $this->l->t('unsubscribe'),
-          MailingListsController::OPERATION_RELOAD =>  $this->l->t('reload subscription'),
-        ];
-        $html = '
-<span class="mailing-list announcements subscription status status-label action-' . $action . ' status-' . $status . '" data-status="' . $status. '">' . $statusText . '</span>
-';
-        $html .= '
-<span class="dropdown-container dropdown-no-hover mailing-list announcements subscription operations action-' . $action . ' status-' . $status . '" data-status="' . $status. '">
-  <button class="menu-title action-menu-toggle">...</button>
-  <nav class="announcements subscription-dropdown dropdown-content dropdown-align-right">
-    <ul>';
-        foreach ($operations as $operation) {
-          $operationClasses = $cssClasses[$operation];
-          $icon = $icons[$operation];
-          $visible = !empty($operationClasses['status-' . $status . '-visible']);
-          $disabled = !$visible || (!$this->expertMode && !empty($operationClasses['expert-mode-only']));
-          $css = implode(' ', array_merge($defaultCss, array_keys($operationClasses), [ $operation ]));
-          $css .= ($disabled ? ' disabled' : '');
-          $html .= '
-      <li class="subscription-action tooltip-auto ' . $css . '"
-          title="' . $this->toolTipsService['page-renderer:musicians:mailing-list:actions:' . $operation] . '"
-          data-operation="' .  $operation . '"
-          ' .  ($disabled ? 'disabled' : '') . '
-      >
-        <a href="#" class="flex-container flex-center">
-          <img alt="" src="' . $this->urlGenerator()->imagePath($icon['app'], $icon['image']) . '"/>
-          ' . $menuLabels[$operation] . '
-        </a>
-      </li>
-';
-        }
-        $html .= '
-    </ul>
-  </nav>
-</span>';
-        return $html;
+          'blank',
+        ))->render();
       },
     ];
 
@@ -210,7 +139,6 @@ trait MailingListsTrait
       'tooltip' => $this->toolTipsService['page-renderer:participants:mailing-list'],
       // copy and add are disabled
       'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
-        $this->getListsService();
         $cssClasses = [ 'mailing-list', 'project', 'status' ];
         $registration = empty($row['qf' . $pme->fdn['registration']])
           ? 'preliminary' : 'confirmed';
@@ -221,6 +149,7 @@ trait MailingListsTrait
         // Do not contact the mailing-list service here, as this really slows
         // down things if the mailing list service is unreachable.
         //
+        // $this->getListsService();
         // $listId = empty($this->project) ? null : $this->project->getMailingListId();
         // try {
         //   $summary = ProjectParticipantsController::mailingListDeliveryStatus($this->listsService, $listId, $email);
@@ -235,64 +164,21 @@ trait MailingListsTrait
 
         $statusData = htmlspecialchars(json_encode($statusFlags));
         $cssClasses = array_merge($cssClasses, $statusFlags);
-        $html = '<span class="status-label ' . implode(' ', $cssClasses) . '">' . $displayStatus . '</span>';
 
         // add an "action button" for some convenience operations in order to
         // spare the change to the admin page for the list.
-        $html .= '
-<span class="subscription actions dropdown-container dropdown-no-hover ' . implode(' ', $cssClasses) . '" data-status=\'' . $statusData . '\'>
-  <button class="menu-title action-menu-toggle">...</button>
-  <nav class="subscription-dropdown dropdown-content dropdown-align-right">
-    <ul>
-      <li class="subscription-action subscription-action-subscribe registration-preliminary-disabled expert-mode-enabled status-subscribed-disabled tooltip-auto"
-          data-operation="' . ProjectParticipantsController::LIST_ACTION_SUBSCRIBE . '"
-          title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:subscribe'] . '"
-      >
-        <a href="#" class="flex-container flex-center">
-          <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/add.svg') . '"/>
-          ' . $this->l->t('subscribe') . '
-        </a>
-      </li>
-      <li class="subscription-action subscription-action-unsubscribe registration-confirmed-disabled expert-mode-enabled status-not-subscribed-disabled tooltip-auto"
-          data-operation="' . ProjectParticipantsController::LIST_ACTION_UNSUBSCRIBE . '"
-          title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:unsubscribe'] . '"
-      >
-        <a href="#" class="flex-container flex-center">
-          <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/delete.svg') . '"/>
-          ' . $this->l->t('unsubscribe') . '
-        </a>
-      </li>
-      <li class="subscription-action subscription-action-delivery delivery-enabled-disabled status-not-subscribed-disabled subscription-action-enable-delivery tooltip-auto"
-          data-operation="' . ProjectParticipantsController::LIST_ACTION_ENABLE_DELIVERY . '"
-          title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:enable-delivery'] . '"
-      >
-        <a href="#" class="flex-container flex-center">
-          <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/play.svg') . '"/>
-          ' . $this->l->t('enable delivery') . '
-        </a>
-      </li>
-      <li class="subscription-action subscription-action-delivery delivery-disabled-disabled status-not-subscribed-disabled subscription-action-disable-delivery tooltip-auto"
-          data-operation="' . ProjectParticipantsController::LIST_ACTION_DISABLE_DELIVERY . '"
-          title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:disable-delivery'] . '"
-      >
-        <a href="#" class="flex-container flex-center">
-          <img alt="" src="' . $this->urlGenerator()->imagePath('core', 'actions/pause.svg') . '"/>
-          ' . $this->l->t('disable delivery') . '
-        </a>
-      </li>
-      <li class="subscription-action subscription-action-reload status-unknown-enabled tooltip-auto"
-          data-operation="' . ProjectParticipantsController::LIST_ACTION_RELOAD_SUBSCRIPTION . '"
-          title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:reload-subscription'] . '"
-      >
-        <a href="#" class="flex-container flex-center">
-          <img alt="" src="' . $this->urlGenerator()->imagePath($this->appName(), 'reload-solid.svg') . '"/>
-          ' . $this->l->t('reload subscription') . '
-        </a>
-      </li>
-    </ul>
-  </nav>
-</span>';
-        return $html;
+        return (new TemplateResponse(
+          $this->appName(),
+          'fragments/mailing-lists/project-list-controls', [
+            'appName' => $this->appName(),
+            'displayStatus' => $displayStatus,
+            'cssClasses' => $cssClasses,
+            'statusData' => $statusData,
+            'urlGenerator' => $this->urlGenerator(),
+            'toolTips' => $this->toolTipsService,
+          ],
+          'blank',
+        ))->render();
       },
     ];
     return Util::arrayMergeRecursive($fdd, $override ?? []);
