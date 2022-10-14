@@ -47,9 +47,9 @@
         padding: 6px 7px;
       }
       .subscription {
-        &.dropdown-container {
-          &.status-unknown, &.registration-unconfirmed.status-unsubscribed {
-            display:none;
+        &.status-unknown {
+          .subscription-action:not(.status-unknown-enabled) {
+            @include styleHidden
           }
         }
         &.status-subscribed {

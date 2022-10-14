@@ -84,13 +84,17 @@ trait MailingListsTrait
 ';
       },
       'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
-        $list = $this->getConfigValue('announcementsMailingList');
-        try {
-          $status = $this->getListsService()->getSubscriptionStatus($list, $email);
-        } catch (\Throwable $t) {
-          $this->logException($t, $this->l->t('Unable to contact mailing lists service'));
-          $status = 'unknown';
-        }
+        // Do not contact the mailing-list service here, as this really slows
+        // down things if the mailing list service is unreachable.
+        //
+        // $list = $this->getConfigValue('announcementsMailingList');
+        // try {
+        //   $status = $this->getListsService()->getSubscriptionStatus($list, $email);
+        // } catch (\Throwable $t) {
+        //   $this->logException($t, $this->l->t('Unable to contact mailing lists service'));
+        //   $status = 'unknown';
+        // }
+        $status = 'unknown';
         $statusText = $this->l->t($status);
         $operations = [
           MailingListsController::OPERATION_INVITE,
@@ -100,13 +104,6 @@ trait MailingListsTrait
           MailingListsController::OPERATION_UNSUBSCRIBE,
           MailingListsController::OPERATION_RELOAD,
         ];
-        // $disabled = [
-        //   MailingListsController::OPERATION_INVITE => ($status != MailingListsService::STATUS_UNSUBSCRIBED),
-        //   MailingListsController::OPERATION_ACCEPT => ($status != MailingListsService::STATUS_WAITING),
-        //   MailingListsController::OPERATION_REJECT => ($status != MailingListsService::STATUS_INVITED && $status != MailingListsService::STATUS_WAITING),
-        //   MailingListsController::OPERATION_SUBSCRIBE => (!$this->expertMode || $status != MailingListsService::STATUS_UNSUBSCRIBED),
-        //   MailingListsController::OPERATION_UNSUBSCRIBE => ($status != MailingListsService::STATUS_SUBSCRIBED),
-        // ];
         $defaultCss = [ 'mailing-list', 'operation' ];
         $cssClasses = [
           MailingListsController::OPERATION_INVITE => [
@@ -131,6 +128,7 @@ trait MailingListsTrait
             'status-waiting-visible' => true,
             'status-invited-visible' => true,
             'status-subscribed-visible' => true,
+            'status-unknown-visible' => true,
           ],
         ];
         $icons = [
@@ -212,39 +210,32 @@ trait MailingListsTrait
       'tooltip' => $this->toolTipsService['page-renderer:participants:mailing-list'],
       // copy and add are disabled
       'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
-        $displayStatus = $this->l->t($status = 'unknown');
         $this->getListsService();
         $cssClasses = [ 'mailing-list', 'project', 'status' ];
         $registration = empty($row['qf' . $pme->fdn['registration']])
           ? 'preliminary' : 'confirmed';
         $cssClasses[] =  'registration-' . $registration;
-        if (empty($this->project)
-            || empty($listId = $this->project->getMailingListId())
-            || !$this->listsService->isConfigured()
-        ) {
-          $cssClasses[] = 'status-' . $status;
-          return '<span class="' . implode(' ', $cssClasses) . '">' . $displayStatus . '</span>';
-        }
+        $listId = empty($this->project) ? null : $this->project->getMailingListId();
 
-        // @todo This is duplicate of the corresponding code in
-        // ProjectParticipantsController.
-        try {
-          $summary = ProjectParticipantsController::mailingListDeliveryStatus($this->listsService, $listId, $email);
-          $status = $summary['subscriptionStatus'];
-          $statusFlags = $summary['statusTags'];
-          $displayStatus = $this->l->t($summary['summary']);
-        } catch (\Throwable $t) {
-          $this->logException($t, $this->l->t('Unable to contact mailing lists service'));
-          $statusFlags = [];
-        }
+        $displayStatus = $this->l->t('unknown');
+
+        // Do not contact the mailing-list service here, as this really slows
+        // down things if the mailing list service is unreachable.
+        //
+        // try {
+        //   $summary = ProjectParticipantsController::mailingListDeliveryStatus($this->listsService, $listId, $email);
+        //   // $status = $summary['subscriptionStatus'];
+        //   $statusFlags = $summary['statusTags'];
+        //   $displayStatus = $this->l->t($summary['summary']);
+        // } catch (\Throwable $t) {
+        //   $this->logException($t, $this->l->t('Unable to contact mailing lists service'));
+        //   $statusFlags = [ 'status-unknown' ];
+        // }
+        $statusFlags = [ 'status-unknown' ];
 
         $statusData = htmlspecialchars(json_encode($statusFlags));
         $cssClasses = array_merge($cssClasses, $statusFlags);
         $html = '<span class="status-label ' . implode(' ', $cssClasses) . '">' . $displayStatus . '</span>';
-
-        if ($status == 'unknown') {
-          return $html;
-        }
 
         // add an "action button" for some convenience operations in order to
         // spare the change to the admin page for the list.
@@ -289,7 +280,7 @@ trait MailingListsTrait
           ' . $this->l->t('disable delivery') . '
         </a>
       </li>
-      <li class="subscription-action subscription-action-reload tooltip-auto"
+      <li class="subscription-action subscription-action-reload status-unknown-enabled tooltip-auto"
           data-operation="' . ProjectParticipantsController::LIST_ACTION_RELOAD_SUBSCRIPTION . '"
           title="' . $this->toolTipsService['page-renderer:participants:mailing-list:operation:reload-subscription'] . '"
       >

@@ -53,16 +53,13 @@ td.pme-value.mailing-list.announcements {
     padding: 6px 7px;
   }
   .subscription {
-    &.dropdown-container.status-unknown {
-      display:none;
-    }
     .subscription-action {
       @include styleHidden
     }
     .subscription-action.disabled {
       @include styleDisabled
     }
-    @each $status in subscribed, unsubscribed, waiting, invited {
+    @each $status in unknown, subscribed, unsubscribed, waiting, invited {
       @include conditionalVisibility($status)
     }
   }

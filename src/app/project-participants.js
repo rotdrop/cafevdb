@@ -773,12 +773,18 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   });
 
   // mailing list subscritions
-  form.find('.mailing-list.project .subscription-dropdown .subscription-action').on('click', function(event) {
+  form.find('.mailing-list.project .subscription-dropdown .subscription-action').on('click', function(event, triggerData) {
     const $this = $(this);
     const operation = $this.data('operation');
     if (!operation) {
       return;
     }
+
+    $this.addClass('busy').closest('.dropdown-container').addClass('busy');
+    const cleanup = () => {
+      $this.removeClass('busy').closest('.dropdown-container').removeClass('busy');
+    };
+
     const post = function(force) {
       $.post(
         generateUrl('projects/participants/mailing-list/' + operation), {
@@ -787,7 +793,12 @@ const myReady = function(selector, dialogParameters, resizeCB) {
           force,
         })
         .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown);
+          if (triggerData && triggerData.setup) {
+            // don't annoy the user with an error message on page load.
+            cleanup();
+          } else {
+            Ajax.handleError(xhr, status, errorThrown, cleanup);
+          }
         })
         .done(function(data, textStatus, request) {
           if (data.status === 'unconfirmed') {
@@ -820,6 +831,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
                 $statusDropDown.addClass(newFlag);
               }
               $statusDisplay.html(t(appName, data.summary));
+              cleanup();
             }
           }
         });
@@ -827,10 +839,12 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     post(false);
     return false;
   });
+
   // Trigger reload on page load. The problem is that meanwhile some
   // data-base fixups run on events after the legacy PME code has
-  // generated its HTML output.
-  form.find('.mailing-list.project .subscription-dropdown .subscription-action-reload').trigger('click');
+  // generated its HTML output. This also speeds up things if the
+  // mailing-list service is down.
+  form.find('.mailing-list.project .subscription-dropdown .subscription-action-reload').trigger('click', [{ setup: true }]);
 
   const pmeForm = container.find(pmeFormSelector);
   console.debug('PME FORM', pmeForm, pmeFormSelector);

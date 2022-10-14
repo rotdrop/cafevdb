@@ -688,6 +688,10 @@ body.cafevdb-modalizer {
     }
   }
 
+  &.busy .action-menu-toggle {
+    background-image:url('../../../core/img/loading.gif');
+  }
+
   // Action menu-toggle, more or less like the current NC-Vue thing
   .action-menu-toggle {
     background-image:url('../../../core/img/actions/more.svg');

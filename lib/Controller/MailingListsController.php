@@ -27,6 +27,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use GuzzleHttp\Exception\ConnectException as HttpClientConnectException;
+
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
@@ -34,6 +36,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MailingListsService;
 
@@ -101,38 +104,38 @@ class MailingListsController extends Controller
     if ($list == 'announcements') {
       $list = $this->getConfigValue('announcementsMailingList');
     }
-    switch ($operation) {
-      case self::OPERATION_INVITE:
-        $this->logInfo('INVITE ' . $list . ' / ' . $email);
-        $this->listsService->invite($list, email: $email, displayName: $displayName);
-        break;
-      case self::OPERATION_SUBSCRIBE:
-        $this->logInfo('SUBSCRIBE ' . $list . ' / ' . $email);
-        $this->listsService->subscribe($list, email: $email, displayName: $displayName, role: $role);
-        break;
-      case self::OPERATION_UNSUBSCRIBE:
-        $this->logInfo('UNSUBSCRIBE ' . $list . ' / ' . $email);
-        $this->listsService->unsubscribe($list, $email);
-        break;
-      case self::OPERATION_ACCEPT:
-        $this->logInfo('ACCEPT SUBSCRIPTION '  . $list  . ' / ' . $email);
-        $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_ACCEPT);
-        break;
-      case self::OPERATION_REJECT:
-        $this->logInfo('REJECT SUBSCRIPTION '  . $list  . ' / ' . $email);
-        $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_REJECT, 'test reason');
-        break;
-      case self::OPERATION_RELOAD:
-        break;
-      default:
-        return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));
-    }
     try {
+      switch ($operation) {
+        case self::OPERATION_INVITE:
+          $this->logInfo('INVITE ' . $list . ' / ' . $email);
+          $this->listsService->invite($list, email: $email, displayName: $displayName);
+          break;
+        case self::OPERATION_SUBSCRIBE:
+          $this->logInfo('SUBSCRIBE ' . $list . ' / ' . $email);
+          $this->listsService->subscribe($list, email: $email, displayName: $displayName, role: $role);
+          break;
+        case self::OPERATION_UNSUBSCRIBE:
+          $this->logInfo('UNSUBSCRIBE ' . $list . ' / ' . $email);
+          $this->listsService->unsubscribe($list, $email);
+          break;
+        case self::OPERATION_ACCEPT:
+          $this->logInfo('ACCEPT SUBSCRIPTION '  . $list  . ' / ' . $email);
+          $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_ACCEPT);
+          break;
+        case self::OPERATION_REJECT:
+          $this->logInfo('REJECT SUBSCRIPTION '  . $list  . ' / ' . $email);
+          $this->listsService->handleSubscriptionRequest($list, $email, MailingListsService::MODERATION_ACTION_REJECT, 'test reason');
+          break;
+        case self::OPERATION_RELOAD:
+          break;
+        default:
+          return self::grumble($this->l->t('Unknown mailing list operation "%s"', $operation));
+      }
       $status = $this->listsService->getSubscriptionStatus($list, $email);
-    } catch (\Throwable $t) {
-      $this->logException($t);
-      $status = 'unknown';
+    } catch (HttpClientConnectException $e) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('The mailing-list service is unreachable'), 0, $e);
     }
+
     return self::dataResponse([
       'status' =>  $status,
     ]);

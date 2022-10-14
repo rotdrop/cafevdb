@@ -398,7 +398,7 @@ trait ParticipantFieldsTrait
   )
   AS DECIMAL(7, 2)
 )',
-                      'php' => fn($value) => $this->moneyValue($value),
+                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
                       'align' => 'right',
                       'values' => [
                         'column' => 'option_value',
@@ -897,7 +897,7 @@ trait ParticipantFieldsTrait
     ),
     0
   ) AS DECIMAL(7,2))',
-                      'php' => fn($value) => $this->moneyValue($value),
+                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
                       'align' => 'right',
                       'values' => [
                         'column' => 'option_key',
@@ -971,7 +971,6 @@ trait ParticipantFieldsTrait
                     $values = array_combine($optionKeys, $optionValues);
                   }
 
-                  $this->debug('VALUES ' . print_r($values, true));
                   $fieldId = $field->getId();
 
                   $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
@@ -1167,7 +1166,7 @@ trait ParticipantFieldsTrait
                       'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'T',
                       'align' => 'right',
-                      'php' => fn($value) => $this->moneyValue($value),
+                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
                       'sql' => $sql,
                       'values' => [
                         'column' => 'option_key',
@@ -1274,7 +1273,7 @@ trait ParticipantFieldsTrait
                     'tab' => [ 'id' => 'tab-none' ], // move it away
                     'select' => 'T',
                     'align' => 'right',
-                    'php' => fn($value) => $this->moneyValue($value),
+                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
                     'sql' => 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
@@ -1788,7 +1787,7 @@ WHERE pp.project_id = $this->projectId",
     ),
     0
   ) AS DECIMAL(7,2))',
-                    'php' => fn($value) => $this->moneyValue($value),
+                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
                     'align' => 'right',
                     'values' => [
                       'column' => 'option_key',
@@ -2030,7 +2029,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                     'tab' => [ 'id' => 'tab-none' ], // move it away
                     'select' => 'T',
                     'align' => 'right',
-                    'php' => fn($value) => $this->moneyValue($value),
+                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
                     'sql' => 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',

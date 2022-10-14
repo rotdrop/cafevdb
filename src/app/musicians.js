@@ -258,13 +258,21 @@ const contactValidation = function(container) {
 
   $mailingListOperations
     .off('click')
-    .on('click', function(event) {
+    .on('click', function(event, triggerData) {
       const $this = $(this);
 
       const operation = $this.data('operation');
       if (!operation) {
         return;
       }
+
+      $this.addClass('busy');
+      $mailingListOperationsContainer.addClass('busy');
+      const cleanup = () => {
+        $mailingListOperationsContainer.removeClass('busy');
+        $this.removeClass('busy');
+      };
+
       const email = $emailInput.val();
       if (email === '') {
         Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
@@ -282,8 +290,12 @@ const contactValidation = function(container) {
 
       $.post(generateUrl('mailing-lists/' + operation), post)
         .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, function() {
-          });
+          if (triggerData && triggerData.setup) {
+            // don't annoy the user with an error message on page load.
+            cleanup();
+          } else {
+            Ajax.handleError(xhr, status, errorThrown, cleanup);
+          }
         })
         .done(function(data) {
           const status = data.status;
@@ -301,13 +313,14 @@ const contactValidation = function(container) {
             $this.prop('disabled', disabled);
             $this.toggleClass('disabled', disabled);
           });
+          cleanup();
         });
       return false;
     });
   // Trigger reload on page load. The problem is that meanwhile some
   // data-base fixups run on events after the legacy PME code has
   // generated its HTML output.
-  $mailingListOperations.filter('.reload').trigger('click');
+  $mailingListOperations.filter('.reload').trigger('click', [{ setup: true }]);
 
   const address = $form.find('input.musician-address');
   const city = address.filter('.city');
