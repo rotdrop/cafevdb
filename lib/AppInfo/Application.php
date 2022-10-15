@@ -72,6 +72,7 @@ use OCA\CAFEVDB\Listener\Registration as ListenerRegistration;
 use OCA\CAFEVDB\PageRenderer\Registration as PageRendererRegistration;
 use OCA\CAFEVDB\Service\Registration as ServiceRegistration;
 use OCA\CAFEVDB\Crypto\Registration as CryptoRegistration;
+use OCA\CAFEVDB\Storage\Database\Registration as StorageRegistration;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
@@ -244,6 +245,9 @@ class Application extends App implements IBootstrap
 
     // Register Service stuff
     ServiceRegistration::register($context);
+
+    // Register Storage stuff
+    StorageRegistration::register($context);
 
     // Register crypto implementation
     CryptoRegistration::register($context);
