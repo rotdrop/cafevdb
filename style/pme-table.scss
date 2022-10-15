@@ -507,6 +507,7 @@ form.pme-form {
   &.pme-list .pme-navigation-container {
     position:sticky;
     left:0;
+    z-index:2;
     /* overflow:hidden; */ /* otherwise the scroll-region extends indefinitely */
   }
 
