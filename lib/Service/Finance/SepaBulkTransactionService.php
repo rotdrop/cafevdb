@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\VCalendarService;
+use OCA\CAFEVDB\Storage\Database\BankTransactionsStorage;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service;
@@ -61,6 +62,7 @@ class SepaBulkTransactionService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\TimeStampTrait;
 
   /**
    * @var int
@@ -254,7 +256,7 @@ class SepaBulkTransactionService
    * Handle bulk transaction pre notifications and gradually complete the
    * pre-notification task.
    *
-   * @param Entities\SepaDebitNote $bulkTransaction The bulk-transaction to modify.
+   * @param Entities\SepaDebitNote $debitNote The bulk-transaction to modify.
    *
    * @param Entities\CompositePayment $payment The composite payment which was announced.
    *
@@ -265,7 +267,7 @@ class SepaBulkTransactionService
     Entities\CompositePayment $payment,
   ):void {
 
-    try  {
+    try {
       $this->logInfo('TWEAK PRE NOTIFICATION TASK');
       $preNotificationTaskUri = $debitNote->getPreNotificationTaskUri();
       $preNotificationTask = $this->financeService->findFinanceCalendarEntry($preNotificationTaskUri);
@@ -282,7 +284,7 @@ class SepaBulkTransactionService
         }
         $this->eventsService->setCalendarTaskStatus($preNotificationTask, percentComplete: $percentage);
       }
-    }  catch (Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, 'Unable to tweak pre-notification task ' . $preNotificationTaskUri);
     }
 
@@ -510,7 +512,7 @@ class SepaBulkTransactionService
         $debitAmount = round($payableAmount - $paidAmount, 2);
         if ($debitAmount == 0.0) {
           // No need to debit empty amounts
-          // FIXME. Perhaps empty amounts should also be recorded.
+          // @todo Perhaps empty amounts should also be recorded.
           continue;
         }
         /** @var Entities\ProjectPayment $payment */
@@ -676,6 +678,9 @@ class SepaBulkTransactionService
       );
     }
 
+    /** @var BankTransactionsStorage $storage */
+    $storage = $this->appContainer->get(BankTransactionsStorage::class);
+
     $this->entityManager->beginTransaction();
 
     $this->entityManager->registerPreCommitAction(
@@ -701,6 +706,7 @@ class SepaBulkTransactionService
       /** @var Entities\EncryptedFile $transactionData */
       foreach ($bulkTransaction->getSepaTransactionData() as $transactionData) {
         $bulkTransaction->removeTransactionData($transactionData);
+        $storage->removeDocument($bulkTransaction, $transactionData);
       }
       $this->remove($bulkTransaction, flush: true);
 
@@ -782,9 +788,8 @@ class SepaBulkTransactionService
       }
       $exportFile = null;
     }
-    if (empty($exportFile)
-        || $bulkTransaction->getUpdated() > $exportFile->getUpdated()
-        || $bulkTransaction->getSepaTransactionDataChanged() > $exportFile->getUpdated()) {
+    if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
+
       /** @var IBulkTransactionExporter $exporter */
       $exporter = $this->getTransactionExporter($format);
       if (empty($exporter)) {
@@ -796,8 +801,7 @@ class SepaBulkTransactionService
         $transactionType = self::TRANSACTION_TYPE_DEBIT_NOTE;
       }
 
-      // FIXME: just for the timeStamp() function ...
-      $timeStamp = $this->appContainer->get(Service\ConfigService::class)->timeStamp();
+      $timeStamp = $this->timeStamp();
 
       $fileName = implode('-', array_filter([
         $timeStamp,
@@ -822,11 +826,15 @@ class SepaBulkTransactionService
           ->getFileData()->setData($fileData);
       }
 
+      /** @var BankTransactionsStorage $storage */
+      $storage = $this->appContainer->get(BankTransactionsStorage::class);
+
       $this->entityManager->beginTransaction();
       try {
         $this->persist($exportFile);
         $this->flush();
         $bulkTransaction->addTransactionData($exportFile);
+        $storage->addDocument($bulkTransaction, $exportFile);
         $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {

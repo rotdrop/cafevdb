@@ -57,6 +57,9 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /** @var Entities\Project */
   private $project;
 
+  /** @var Entities\DatabaseStorageFolder */
+  private $rootFolder;
+
   /** @var array */
   private $files = [];
 
@@ -66,7 +69,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     parent::__construct($params);
     $this->project = $params['project'];
     $this->projectService = $this->di(ProjectService::class);
-    $this->directoriesRepository = $this->getDatabaseRepository(Entities\DatabaseStorageDirEntry::class);
+    $shortId = substr($this->getId(), strlen(parent::getId()));
+    $rootStorage = $this->entityManager->find(Entities\DatabaseStorage::class, [ 'storageId' => $shortId ]);
+    if (!empty($rootStorage)) {
+      $this->rootFolder = $rootStorage->getRoot();
+    }
+
     /** @var IEventDispatcher $eventDispatcher */
     $eventDispatcher = $this->di(IEventDispatcher::class);
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
@@ -76,8 +84,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       try {
         $projectId = $this->project->getId();
         $this->clearDatabaseRepository();
+        $shortId = substr($this->getId(), strlen(parent::getId()));
+        $rootStorage = $this->entityManager->find(Entities\DatabaseStorage::class, [ 'storageId' => $shortId ]);
+        if (!empty($rootStorage)) {
+          $this->rootFolder = $rootStorage->getRoot();
+        }
         $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
-        $this->directoriesRepository = $this->getDatabaseRepository(Entities\DatabaseStorageDirEntry::class);
       } catch (\Throwable $t) {
         $this->logException($t);
       }
@@ -159,24 +171,33 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       return $this->files[$dirName];
     }
 
-    /** @var Entities\DatabaseStorageFolder $folderDirEntry */
+    // the mount provider currently disables soft-deleteable filter ...
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
-    if (empty($dirName)) {
-      $folderDirEntry = $this->project->getFinancialBalanceDocumentsFolder();
-      $this->files[$dirName]['.'] = $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1'));
+    $dirComponents = Util::explode(self::PATH_SEPARATOR, $dirName);
+
+     /** @var Entities\DatabaseStorageFolder $folderDirEntry */
+    $folderDirEntry = $this->rootFolder;
+    if (empty($dirName) && empty($this->root)) {
+      $this->files[$dirName] = [ '.' => $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1')) ];
       if (empty($folderDirEntry)) {
         return $this->files[$dirName];
       }
     } else {
-      $folderDirEntry = $this->fileFromFileName($dirName);
-      $this->files[$dirName]['.'] = $folderDirEntry;
+      foreach ($dirComponents as $component) {
+        $folderDirEntry = $dirEntry->getFolderByName($component);
+        if (empty($dirEntry)) {
+          throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
+            'Unable to find directory entry for folder "%s".', $dirName
+          ));
+        }
+      }
+      $this->files[$dirName] = [ '.' => $folderDirEntry ];
     }
-
-    // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     $dirEntries = $folderDirEntry->getDirectoryEntries();
 
+    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
     foreach ($dirEntries as $dirEntry) {
 
       $baseName = $dirEntry->getName();
@@ -202,7 +223,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**  {@inheritdoc} */
   protected function getStorageModificationDateTime():\DateTimeInterface
   {
-    return self::ensureDate($this->project->getFinancialBalanceSupportingDocumentsChanged());
+    return self::ensureDate($this->rootFolder->getUpdated());
   }
 
   /** {@inheritdoc} */

@@ -38,7 +38,9 @@ use Icewind\Streams\IteratorDirectory;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -51,6 +53,9 @@ class BankTransactionsStorage extends Storage
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
   private $transactionsRepository;
 
+  /** @var Entities\DatabaseStorageFolder */
+  private $rootFolder;
+
   /** @var array */
   private $files = [];
 
@@ -58,14 +63,141 @@ class BankTransactionsStorage extends Storage
   public function __construct($params)
   {
     parent::__construct($params);
+
+    $shortId = substr($this->getId(), strlen(parent::getId()));
+    $rootStorage = $this->entityManager->find(Entities\DatabaseStorage::class, [ 'storageId' => $shortId ]);
+    if (!empty($rootStorage)) {
+      $this->rootFolder = $rootStorage->getRoot();
+    }
     $this->transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
+
     /** @var IEventDispatcher $eventDispatcher */
     $eventDispatcher = $this->di(IEventDispatcher::class);
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
       $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
       $this->clearDatabaseRepository();
+
+      $shortId = substr($this->getId(), strlen(parent::getId()));
+      $rootStorage = $this->entityManager->find(Entities\DatabaseStorage::class, [ 'storageId' => $shortId ]);
+      if (!empty($rootStorage)) {
+        $this->rootFolder = $rootStorage->getRoot();
+      }
       $this->transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
     });
+  }
+
+  /**
+   * Find an existing directory entry for the given file.
+   *
+   * @param Entities\SepaBulkTransaction $transaction
+   *
+   * @param Entities\EncryptedFile $file
+   *
+   * @return null|Entities\DatabaseStorageFile
+   */
+  public function findDocument(Entities\SepaBulkTransaction $transaction, Entities\EncryptedFile $file):?Entities\DatabaseStorageFile
+  {
+    $year = $transaction->getCreated()->format('Y');
+
+    /** @var Entities\DatabaseStorageFile $dirEntry */
+    foreach ($file->getDatabaseStorageDirEntries() as $dirEntry) {
+      $parent = $dirEntry->getParent();
+      if (empty($parent)) {
+        continue;
+      }
+      $grandParent = $parent->getParent();
+      if ($grandParent === $this->rootFolder && $parent->getName() == $year) {
+        return $dirEntry;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Add a new document to the storage.
+   *
+   * @param Entities\SepaBulkTransaction $transaction
+   *
+   * @param Entities\EncryptedFile $file
+   *
+   * @return Entities\DatabaseStorageFile
+   */
+  public function addDocument(Entities\SepaBulkTransaction $transaction, Entities\EncryptedFile $file):Entities\DatabaseStorageFile
+  {
+    $document = $this->findDocument($transaction, $file);
+    if (!empty($document)) {
+      return $document;
+    }
+
+    $this->entityManager->beginTransaction();
+    try {
+      $year = $transaction->getCreated()->format('Y');
+      $yearFolder = $this->rootStorge->getRoot()->getFolderByName($year);
+      if (empty($yearFolder)) {
+        $yearFolder = $this->rootFolder->addSubFolder($year)
+          ->setUpdated($file->getUpdated())
+          ->setCreated($file->getCreated());
+        $this->persist($yearFolder);
+      }
+
+      $document = $yearFolder->addDocument($file)
+        ->setCreated($file->getCreated())
+        ->setUpdated($file->getUpdated());
+      $this->persist($document);
+      $yearFolder
+        ->setCreated(min($file->getCreated(), $yearFolder->getCreated()))
+        ->setUpdated(max($file->getUpdated(), $yearFolder->getUpdated()));
+
+      $this->flush();
+
+      $this->entityManager->commit();
+
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\Exception($this->l->t('Unable to add new document "%s".', $file->getFileName()));
+    }
+
+    return $document;
+  }
+
+  /**
+   * Remove a document from the storage.
+   *
+   * @param Entities\SepaBulkTransaction $transaction
+   *
+   * @param Entities\EncryptedFile $file
+   *
+   * @return void
+   */
+  public function removeDocument(Entities\SepaBulkTransaction $transaction, Entities\EncryptedFile $file):void
+  {
+    $document = $this->findDocument($transaction, $file);
+    if (empty($document)) {
+      return;
+    }
+    $this->entityManager->beginTransaction();
+    try {
+      $parent = $document->getParent();
+      $document->setFile(null);
+      $document->setParent(null);
+      $this->entityManager->remove($document);
+      if ($parent->isEmpty()) {
+        $parent->setParent(null);
+        $this->entityManager->remove($parent);
+      }
+      $this->flush();
+
+      $this->entityManager->commit();
+
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\DatabaseException($this->l->t('Unable to remove document "%s".', $file->getFileName()));
+    }
   }
 
   /**
@@ -74,7 +206,12 @@ class BankTransactionsStorage extends Storage
   public function fileFromFileName(string $name)
   {
     $name = $this->buildPath($name);
-    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    if ($name == self::PATH_SEPARATOR) {
+      $dirName = '';
+      $baseName = '.';
+    } else {
+      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    }
 
     if (empty($this->files[$dirName])) {
       $this->findFiles($dirName);
@@ -95,59 +232,39 @@ class BankTransactionsStorage extends Storage
       return $this->files[$dirName];
     }
 
-    $this->files[$dirName] = [
-      '.' => new DirectoryNode('.', new DateTimeImmutable('@1')),
-    ];
+    $dirComponents = Util::explode(self::PATH_SEPARATOR, $dirName);
 
-    $directoryYear = (int)basename($dirName);
-    if ($directoryYear >= 1000 && $directoryYear <= 9999) {
-      $transactions = $this->transactionsRepository->findByCreationYear($directoryYear);
-    } else {
-      $transactions = $this->transactionsRepository->findAll();
+    /** @var Entities\DatabaseStorageFolder $folderDirEntry */
+    $folderDirEntry = $this->rootFolder;
+    foreach ($dirComponents as $component) {
+      $folderDirEntry = $folderDirEntry->getFolderByName($component);
+      if (empty($folderDirEntry)) {
+        throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
+          'Unable to find directory entry for folder "%s".', $dirName
+        ));
+      }
     }
 
-    $directories = [];
+    $this->files[$dirName] = [ '.' => $folderDirEntry ];
 
-    /** @var Entities\SepaBulkTransaction $transaction */
-    foreach ($transactions as $transaction) {
+    $dirEntries = $folderDirEntry->getDirectoryEntries();
 
-      // choose the createdAt field for the subdirectory name
-      $year = $transaction->getCreated()->format('Y');
-      list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($year . self::PATH_SEPARATOR . '_'));
-      if (strpos($fileDirName, $dirName) !== 0) {
-        // not our directory
-        continue;
-      }
-      $sepaTransactionData = $transaction->getSepaTransactionData();
-      if ($fileDirName != $dirName) {
-        // parent directory of year directory
-        $modificationTime = $transaction->getSepaTransactionDataChanged();
-        // should just be the year ...
-        list($yearBaseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
+    foreach ($dirEntries as $dirEntry) {
 
-        if (!empty($modificationTime) && $sepaTransactionData->count() == 0) {
-          // just update the timestamp of the parent
-          $this->files[$dirName]['.']->updateModificationTime($modificationTime);
-        } elseif (!empty($modificationTime) || $sepaTransactionData->count() > 0) {
-          // add a directory entry
-          if (empty($directories[$yearBaseName]) || $directories[$yearBaseName] < $modificationTime) {
-            $directories[$yearBaseName] = $modificationTime;
-          }
-        }
+      $baseName = $dirEntry->getName();
+      $fileName = $this->buildPath($dirName . self::PATH_SEPARATOR . $baseName);
+      list('basename' => $baseName) = self::pathInfo($fileName);
+
+      if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
+        /** @var Entities\DatabaseStorageFolder $dirEntry */
+        // add a directory entry
+        $baseName .= self::PATH_SEPARATOR;
+        $this->files[$dirName][$baseName] = $dirEntry;
       } else {
-        // just inside the year sub-directory
-        /** @var Entities\File $file */
-        foreach ($sepaTransactionData as $file) {
-          $fileName = $file->getFileName();
-          $fileName = $year . self::PATH_SEPARATOR . $fileName;
-          $fileName = $this->buildPath($fileName);
-          list('basename' => $baseName) = self::pathInfo($fileName);
-          $this->files[$dirName][$baseName] = $file;
-        }
+        /** @var Entities\DatabaseStorageFile $dirEntry */
+        $this->files[$dirName][$baseName] = $dirEntry;
       }
-    }
-    foreach ($directories as $name => $mtime) {
-      $this->files[$dirName][$name] = new DirectoryNode($name, $mtime);
     }
 
     return $this->files[$dirName];
@@ -156,7 +273,7 @@ class BankTransactionsStorage extends Storage
   /** {@inheritdoc} */
   protected function getStorageModificationDateTime():?\DateTimeInterface
   {
-    return self::ensureDate($this->transactionsRepository->sepaTransactionDataModificationTime());
+    return self::ensureDate($this->rootFolder->getUpdated());
   }
 
   /** {@inheritdoc} */
