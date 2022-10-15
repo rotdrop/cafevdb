@@ -90,17 +90,6 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var \DateTimeImmutable
    *
-   * This should track changes in the transaction-data in order to catch
-   * deletions in the file-system export.
-   *
-   * @Gedmo\Timestampable(on={"change"}, field="sepaTransactionData")
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   */
-  private $sepaTransactionDataChanged;
-
-  /**
-   * @var \DateTimeImmutable
-   *
    * Latest date before which the debit notes have to be submitted to
    * the bank in order to match the $dueDate.
    *
@@ -253,7 +242,7 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   public function getSepaTransactionDataChanged():?DateTimeInterface
   {
-    return $this->sepaTransactionDataChanged;
+    return $this->updated;
   }
 
   /**

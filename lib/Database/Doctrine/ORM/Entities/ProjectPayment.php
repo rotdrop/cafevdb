@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ProjectPayments
@@ -37,7 +38,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class ProjectPayment implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * @var int
@@ -93,6 +94,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(nullable=false)
    * )
+   *
+   * Promote any changes to the parent.
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
   private $compositePayment;
 

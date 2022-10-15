@@ -80,8 +80,8 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
     $this->file = $file;
 
     if (!empty($this->file)) {
-      $this->file->link();
       $this->file->addDatabaseStorageDirEntry($this);
+      $this->file->link();
     }
 
     return $this;

@@ -112,7 +112,9 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @var SepaBulkTransaction
    *
    * @ORM\ManyToOne(targetEntity="SepaBulkTransaction", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="sepaTransactionDataChanged")
+   *
+   * Promote any changes to the sepa transaction.
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
   private $sepaTransaction = null;
 

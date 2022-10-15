@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 use OCA\CAFEVDB\Exceptions;
 
@@ -85,7 +86,6 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     $dirEntry = (new DatabaseStorageFolder)
       ->setName($name)
       ->setParent($this);
-    $this->directoryEntries->add($dirEntry);
 
     return $dirEntry;
   }
@@ -117,8 +117,9 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
       throw new Exceptions\DatabaseException('Directory entry "' . $name . '" exists in directory ' . $this->id . ' but the existing entry is not a directory.');
     }
 
-    $dirEntry->parent = null;
-    $this->directoryEntries->removeElement($dirEntry);
+    $dirEntry->setParent(null);
+
+    $this->setUpdated('now');
 
     return $this;
   }
@@ -227,7 +228,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   }
 
   /**
-   * @param Collection $databaseStorageDirectories
+   * @param Collection $directoryEntries
    *
    * @return DatabaseStorageDirEntry
    */
@@ -236,5 +237,51 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     $this->directoryEntries = $directoryEntries;
 
     return $this;
+  }
+
+  /**
+   * @param string $name
+   *
+   * @return null|DatabaseStorageDirEntry
+   */
+  public function getEntryByName(string $name):?DatabaseStorageDirEntry
+  {
+    $matches = $this->directoryEntries->matching(DBUtil::criteriaWhere([ 'name' => $name ]));
+
+    return empty($matches) ? null : $matches->first();
+  }
+
+  /**
+   * @param string $name
+   *
+   * @return null|DatabaseStorageFile
+   */
+  public function getFileByName(string $name):?DatabaseStorageFile
+  {
+    $matches = $this->directoryEntries
+      ->matching(DBUtil::criteriaWhere([ 'name' => $name ]))
+      ->filter(fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry instanceof DatabaseStorageFile);
+
+    return empty($matches) ? null : $matches->first();
+  }
+
+  /**
+   * @param string $name
+   *
+   * @return null|DatabaseStorageFolder
+   */
+  public function getFolderByName(string $name):?DatabaseStorageFolder
+  {
+    $matches = $this->directoryEntries
+      ->matching(DBUtil::criteriaWhere([ 'name' => $name ]))
+      ->filter(fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry instanceof DatabaseStorageFolder);
+
+    return empty($matches) ? null : $matches->first();
+  }
+
+  /** @return bool Whether this folder is empty. */
+  public function isEmpty():bool
+  {
+    return $this->directoryEntries->count() == 0;
   }
 }
