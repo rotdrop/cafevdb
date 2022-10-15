@@ -60,6 +60,7 @@ class ConfigService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\TimeStampTrait;
 
   /*-**************************************************************************
    *
@@ -286,7 +287,7 @@ class ConfigService
   private $urlGenerator;
 
   /** @var IDateTimeZone */
-  private $dateTimeZone;
+  protected $dateTimeZone;
 
   /** @var EncryptionService */
   private $encryptionService;
@@ -304,7 +305,7 @@ class ConfigService
   protected $timeFactory;
 
   /** @var IAppContainer */
-  private $appContainer;
+  protected $appContainer;
 
   /**
    * {@inheritdoc}
