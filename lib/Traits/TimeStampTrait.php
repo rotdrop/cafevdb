@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Traits;
 
 use DateTimeZone;
 use DateTimeInterface;
+use DateTimeImmutable;
 
 use OCP\IDateTimeZone;
 use OCP\AppFramework\IAppContainer;
