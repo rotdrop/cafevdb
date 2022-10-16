@@ -269,7 +269,7 @@ class ProjectParticipantsStorage extends Storage
       [
         'skipDepthIfOther' => 1,
         'pathChain' => [],
-        'parenModificationTime' => fn() => $this->participant->getParticipantFieldsDataChanged(),
+        'parentModificationTime' => fn() => $this->participant->getParticipantFieldsDataChanged(),
         'hasLeafNodes' => fn() => true, // don't care top-level
         'createLeafNodes' => function($subDirectoryPath) use ($dirName) {
 
