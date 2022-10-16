@@ -56,7 +56,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\FactoryTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait; // filename of supporting document.
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
   const SUBJECT_PREFIX_LIMIT = 16;
   const SUBJECT_PREFIX_SEPARATOR = ' / ';

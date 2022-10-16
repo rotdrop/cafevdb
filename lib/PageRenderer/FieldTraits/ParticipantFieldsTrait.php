@@ -58,7 +58,7 @@ trait ParticipantFieldsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use ParticipantFileFieldsTrait;
   use ParticipantFieldsCgiNameTrait;
   use SubstituteSQLFragmentTrait;

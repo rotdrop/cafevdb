@@ -51,7 +51,7 @@ class PaymentsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
-  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   public const DOCUMENT_ACTION_UPLOAD = 'upload';
   public const DOCUMENT_ACTION_DELETE = 'delete';

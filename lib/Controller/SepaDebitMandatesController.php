@@ -61,7 +61,7 @@ class SepaDebitMandatesController extends Controller
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
-  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait; // cloud-paths
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // cloud-paths
 
   public const HARDCOPY_ACTION_UPLOAD = 'upload';
   public const HARDCOPY_ACTION_DELETE = 'delete';
@@ -1211,7 +1211,6 @@ class SepaDebitMandatesController extends Controller
 
     $musician = $debitMandate->getMusician();
     $project = $debitMandate->getProject();
-    $mandateReference = $debitMandate->getMandateReference();
 
     /** @var UserStorage $userStorage */
     $userStorage = $this->di(UserStorage::class);

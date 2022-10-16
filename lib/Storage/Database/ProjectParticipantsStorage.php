@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Events;
 class ProjectParticipantsStorage extends Storage
 {
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
-  use ProjectParticipantsStorageTrait;
+  use DatabaseStorageNodeNameTrait;
 
   /** @var Entities\Musician */
   private $musician;

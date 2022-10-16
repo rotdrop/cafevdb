@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Common\Util;
  * Actually just provide some path names, translated with the app's configured
  * locale.
  */
-trait ProjectParticipantsStorageTrait
+trait DatabaseStorageNodeNameTrait
 {
   /**
    * @var IL10N

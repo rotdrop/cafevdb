@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\CryptoTrait;
