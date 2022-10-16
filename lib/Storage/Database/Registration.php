@@ -26,8 +26,9 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\IAppContainer;
 
-use OCA\CAVEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ConfigService;
 
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration
@@ -45,12 +46,7 @@ class Registration
       return new Storage([ 'configService' => $container->get(ConfigService::class), ]);
     });
     $context->registerService(BankTransactionsStorage::class, function(ContainerInterface $container) {
-      return new Storage([ 'configService' => $container->get(ConfigService::class), ]);
+      return new BankTransactionsStorage([ 'configService' => $container->get(ConfigService::class), ]);
     });
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
