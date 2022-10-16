@@ -152,11 +152,11 @@ class Project implements \ArrayAccess
   private $sentEmail;
 
   /**
-   * @var DatabaseStorageFolder
+   * @var DatabaseStorage
    *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="DatabaseStorage", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
    */
-  private $financialBalanceDocumentsFolder;
+  private $financialBalanceDocumentsStorage;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -529,17 +529,27 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set financialBalanceDocumentsFolder.
+   * Set financialBalanceDocumentsStorage
    *
-   * @param DatabaseStorageFolder $financialBalanceDocumentsFolder
+   * @param DatabaseStorage $financialBalanceDocumentsStorage
    *
    * @return Project
    */
-  public function setFinancialBalanceDocumentsFolder(DatabaseStorageFolder $financialBalanceDocumentsFolder):Project
+  public function setFinancialBalanceDocumentsStorage(DatabaseStorage $financialBalanceDocumentsStorage):Project
   {
-    $this->financialBalanceDocumentsFolder = $financialBalanceDocumentsFolder;
+    $this->financialBalanceDocumentsStorage = $financialBalanceDocumentsStorage;
 
     return $this;
+  }
+
+  /**
+   * Get financialBalanceDocumentsStorage.
+   *
+   * @return null|DatabaseStorage
+   */
+  public function getFinancialBalanceDocumentsStorage():?DatabaseStorage
+  {
+    return $this->financialBalanceDocumentsStorage;
   }
 
   /**
@@ -549,7 +559,7 @@ class Project implements \ArrayAccess
    */
   public function getFinancialBalanceDocumentsFolder():?DatabaseStorageFolder
   {
-    return $this->financialBalanceDocumentsFolder;
+    return empty($this->financialBalanceDocumentsStorage) ? null : $this->financialBalanceDocumentsStorage->getRoot();
   }
 
   /**
@@ -560,10 +570,10 @@ class Project implements \ArrayAccess
    */
   public function getFinancialBalanceSupportingDocuments():Collection
   {
-    if (empty($this->financialBalanceDocumentsFolder)) {
+    if (empty($this->financialBalanceDocumentsStorage)) {
       return new ArrayCollection;
     }
-    return $this->financialBalanceDocumentsFolder->getSubFolders();
+    return $this->getFinancialBalanceDocumentsFolder()->getSubFolders();
   }
 
 

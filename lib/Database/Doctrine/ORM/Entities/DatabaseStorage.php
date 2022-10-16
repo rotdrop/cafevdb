@@ -35,12 +35,27 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 /**
  * "Join table" which connects storage names to their root directory entry.
  *
- * @ORM\Table(name="DatabaseStorages")
+ * @ORM\Table(
+ *  name="DatabaseStorages",
+ *  uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"storage_id"}),
+ *     @ORM\UniqueConstraint(columns={"root_id"})
+ *   }
+ * )
  * @ORM\Entity
  */
 class DatabaseStorage implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+  protected $id;
 
   /**
    * @var string The storage id as string, with the common prefix
@@ -51,15 +66,14 @@ class DatabaseStorage implements \ArrayAccess
    * @see OCA\CAFEVDB\Storage\Database\Storage
    * @see OCA\CAFEVDB\Storage\Database\MountProvider
    *
-   * @ORM\Column(type="string", length=512)
-   * @ORM\Id
+   * @ORM\Column(type="string", length=512, nullable=false)
    */
   protected $storageId;
 
   /**
    * @var DatabaseStorageFolder The root-node of the directory tree.
    *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder")
+   * @ORM\OneToOne(targetEntity="DatabaseStorageFolder")
    */
   protected $root;
 

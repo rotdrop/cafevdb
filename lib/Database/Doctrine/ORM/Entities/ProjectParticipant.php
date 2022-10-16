@@ -140,6 +140,17 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $sepaDebitMandate = null;
 
+  /**
+   * @var DatabaseStorage
+   *
+   * The root-directory entry for the potentially encrypted participant
+   * storage. This would also be available through the DatabaseStorages table,
+   * but we keep it here for convenient access.
+   *
+   * @ORM\OneToOne(targetEntity="DatabaseStorage", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
+   */
+  private $databaseDocuments;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
@@ -363,6 +374,30 @@ class ProjectParticipant implements \ArrayAccess
   public function getSepaDebitMandate():?SepaDebitMandate
   {
     return $this->sepaDebitMandate;
+  }
+
+  /**
+   * Set databaseDocuments.
+   *
+   * @param null|DatabaseStorage $databaseDocuments
+   *
+   * @return ProjectParticipant
+   */
+  public function setDatabaseDocuments(?DatabaseStorage $databaseDocuments):DatabaseStorage
+  {
+    $this->databaseDocuments = $databaseDocuments;
+
+    return $this;
+  }
+
+  /**
+   * Get databaseDocuments.
+   *
+   * @return DatabaseStorage|null
+   */
+  public function getDatabaseDocuments():?DatabaseStorage
+  {
+    return $this->databaseDocuments;
   }
 
   /**

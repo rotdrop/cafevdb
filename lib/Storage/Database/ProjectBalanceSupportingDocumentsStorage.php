@@ -70,7 +70,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     $this->project = $params['project'];
     $this->projectService = $this->di(ProjectService::class);
     $shortId = substr($this->getId(), strlen(parent::getId()));
-    $rootStorage = $this->entityManager->find(Entities\DatabaseStorage::class, [ 'storageId' => $shortId ]);
+    $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
     if (!empty($rootStorage)) {
       $this->rootFolder = $rootStorage->getRoot();
     }
@@ -85,7 +85,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         $projectId = $this->project->getId();
         $this->clearDatabaseRepository();
         $shortId = substr($this->getId(), strlen(parent::getId()));
-        $rootStorage = $this->entityManager->find(Entities\DatabaseStorage::class, [ 'storageId' => $shortId ]);
+        $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
         if (!empty($rootStorage)) {
           $this->rootFolder = $rootStorage->getRoot();
         }
@@ -223,7 +223,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**  {@inheritdoc} */
   protected function getStorageModificationDateTime():\DateTimeInterface
   {
-    return self::ensureDate($this->rootFolder->getUpdated());
+    return self::ensureDate(empty($this->rootFolder) ? null : $this->rootFolder->getUpdated());
   }
 
   /** {@inheritdoc} */
@@ -267,16 +267,22 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   private function ensureRootFolder():Entities\DatabaseStorageFolder
   {
     /** @var Entities\DatabaseStorageFolder $root */
-    $root = $this->project->getFinancialBalanceDocumentsFolder();
-    if (empty($root)) {
-      $root = (new Entities\DatabaseStorageFolder)
+    $rootStorage = $this->project->getFinancialBalanceDocumentsStorage();
+    if (empty($rootStorage)) {
+      $rootFolder = (new Entities\DatabaseStorageFolder)
         ->setName('')
         ->setParent(null);
-      $this->project->setFinancialBalanceDocumentsFolder($root);
-      $this->persist($root);
+      $rootStorage = (new Entities\DatabaseStorage)
+        ->setRoot($rootFolder)
+        ->setStorageId(substr($this->getId(), strlen(parent::getId())));
+      $this->project->setFinancialBalanceDocumentsStorage($rootStorage);
+      $this->persist($rootFolder);
+      $this->persist($rootStorage);
       $this->flush();
     }
-    return $root;
+    $this->rootFolder = $rootFolder;
+
+    return $rootFolder;
   }
 
   /** {@inheritdoc} */

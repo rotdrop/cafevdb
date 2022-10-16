@@ -28,19 +28,25 @@ use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\InvalidFieldNameException;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Storage\Database as Storage;
+use OCA\CAFEVDB\Storage\Database\DirectoryNode as MigrationDirectoryNode;
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Constants;
 
 /**
  * Remember the id of a mailing list.
  */
 class RootDirectoryEntries extends AbstractMigration
 {
+  use \OCA\CAFEVDB\Traits\TimeStampTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+
   /** @var IAppContainer */
-  private $appContainer;
+  protected $appContainer;
 
   protected static $sql = [
     self::STRUCTURAL => [
@@ -49,6 +55,18 @@ class RootDirectoryEntries extends AbstractMigration
   ADD CONSTRAINT FK_3594ED2379066886
   FOREIGN KEY IF NOT EXISTS (root_id)
  REFERENCES DatabaseStorageDirEntries (id)',
+      'ALTER TABLE DatabaseStorages DROP INDEX IF EXISTS IDX_3594ED2379066886, ADD UNIQUE INDEX IF NOT EXISTS UNIQ_3594ED2379066886 (root_id)',
+      'ALTER TABLE DatabaseStorages ADD COLUMN IF NOT EXISTS id INT NOT NULL AUTO_INCREMENT FIRST',
+      'ALTER TABLE `DatabaseStorages` ADD PRIMARY KEY IF NOT EXISTS (id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_3594ED235CC5DB90 ON DatabaseStorages (storage_id)',
+      //
+      'ALTER TABLE ProjectParticipants ADD COLUMN IF NOT EXISTS database_documents_id INT DEFAULT NULL',
+      'ALTER TABLE ProjectParticipants ADD CONSTRAINT FK_D9AE987BC6073910 FOREIGN KEY IF NOT EXISTS (database_documents_id) REFERENCES DatabaseStorages (id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_D9AE987BC6073910 ON ProjectParticipants (database_documents_id)',
+      //
+      'ALTER TABLE Projects ADD COLUMN IF NOT EXISTS financial_balance_documents_storage_id INT DEFAULT NULL',
+      'ALTER TABLE Projects ADD CONSTRAINT FK_A5E5D1F214CA24B1 FOREIGN KEY IF NOT EXISTS (financial_balance_documents_storage_id) REFERENCES DatabaseStorages (id)',
+      'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_A5E5D1F214CA24B1 ON Projects (financial_balance_documents_storage_id)',
     ],
     self::TRANSACTIONAL => [
       'UPDATE SepaBulkTransactions SET updated = GREATEST(updated, sepa_transaction_data_changed)
@@ -92,13 +110,15 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
       $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
       $storagesRepository = $this->getDatabaseRepository(Entities\DatabaseStorage::class);
 
+      $configService = $this->appContainer->get(Service\ConfigService::class);
+
       /** @var Entities\Project $project */
       foreach ($projectsRepository->findAll() as $project) {
         $balanceFolder = $project->getFinancialBalanceDocumentsFolder();
         if (!empty($balanceFolder)) {
           /** @var Storage\ProjectBalanceSupportingDocumentsStorage $storage */
           $storage = new Storage\ProjectBalanceSupportingDocumentsStorage([
-            'configService' => $this->appContainer->get(Service\ConfigService::class),
+            'configService' => $configService,
             'project' => $project
           ]);
           $this->logInfo('STORAGE ID ' . $storage->getId());
@@ -113,7 +133,7 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
           $storageId = substr($storage->getId(), strlen($baseId));
 
           /** @var Entities\DatabaseStorage $storageEntity */
-          $storageEntity = $storagesRepository->find($storageId);
+          $storageEntity = $storagesRepository->findOneBy([ 'storageId' => $storageId ]);
           if (empty($storageEntity)) {
             $storageEntity = (new Entities\DatabaseStorage)
               ->setStorageId($storageId)
@@ -123,7 +143,87 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
             $storageEntity->setRoot($balanceFolder);
           }
         }
+
+        // Add entries for the participant documents folders as necessary
+        /** @var Entities\ProjectParticipant $participant */
+        foreach ($project->getParticipants() as $participant) {
+          /** @var Storage\ProjectParticipantsStorage $storage */
+          $storage = new Storage\ProjectParticipantsStorage([
+            'configService' => $configService,
+            'participant' => $participant,
+          ]);
+
+          $rootListing = $storage->findFilesForMigration('');
+
+          if (count($rootListing) == 1 && isset($rootListing['.'])) {
+            continue; // skip essentially empty folders
+          }
+
+          $storageId = $storageId = substr($storage->getId(), strlen($baseId));
+          $this->logInfo($storageId . ' ' . print_r(array_keys($rootListing), true));
+          $storageEntity = $storagesRepository->findOneBy([ 'storageId' => $storageId ]);
+          if (empty($storageEntity)) {
+            $rootFolder = (new Entities\DatabaseStorageFolder)
+              ->setName('')
+              ->setParent(null)
+              ->setUpdated('@1')
+              ->setCreated('@1');
+            $this->persist($rootFolder);
+
+            $storageEntity = (new Entities\DatabaseStorage)
+              ->setStorageId($storageId)
+              ->setRoot($rootFolder);
+            $this->persist($storageEntity);
+          } else {
+            $rootFolder = $storageEntity->getRoot();
+            $rootFolder
+              ->setUpdated('@1')
+              ->setCreated('@1');
+          }
+          $rootFolder->setUpdated($storage->getDirectoryModificationTimeForMigration(''));
+          $participant->setDatabaseDocuments($storageEntity);
+
+          $walkFileSystem = function($path, $folderListing, $folderEntity) use (&$walkFileSystem, $storage) {
+            foreach ($folderListing as $nodeName => $node) {
+              if ($nodeName == '.') {
+                $folderEntity->setUpdated(max($folderEntity->getUpdated(), $node->minimalModificationTime));
+                continue;
+              }
+              $nodePath = rtrim($path, Constants::PATH_SEP) . Constants::PATH_SEP . $nodeName;
+              $this->logInfo('PATH ' . $nodePath);
+
+              if ($node instanceof Entities\EncryptedFile) {
+                /** @var Entities\EncryptedFile $node */
+                $dirEntry = $folderEntity->getFileByName($nodeName);
+                if (empty($dirEntry)) {
+                  $dirEntry = $folderEntity->addDocument($node, $nodeName);
+                  $this->persist($dirEntry);
+                  $dirEntry
+                    ->setUpdated($node->getUpdated())
+                    ->setCreated($node->getCreated());
+                  $folderEntity
+                    ->setCreated(min($folderEntity->getCreated(), $node->getCreated()));
+                }
+              } elseif ($node instanceof MigrationDirectoryNode) {
+                $dirEntry = $folderEntity->getFolderByName($nodeName);
+                if (empty($dirEntry)) {
+                  $dirEntry = $folderEntity->addSubFolder($nodeName)
+                    ->setUpdated($storage->getDirectoryModificationTimeForMigration($nodePath));
+                  $dirEntry->setCreated($dirEntry->getUpdated());
+                }
+                $nodeListing = $storage->findFilesForMigration($nodePath);
+                $walkFileSystem($nodePath, $nodeListing, $dirEntry);
+              }
+            }
+          };
+
+          $walkFileSystem('', $rootListing, $rootFolder);
+        }
+
       }
+
+      // throw new \Exception('STOP');
+
 
       $storage = $this->appContainer->get(Storage\BankTransactionsStorage::class);
       $storageId = $storage->getId();
@@ -135,7 +235,7 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
         );
       }
       $storageId = substr($storage->getId(), strlen($baseId));
-      $storageEntity = $storagesRepository->find($storageId);
+      $storageEntity = $storagesRepository->findOneBy([ 'storageId' => $storageId ]);
       if (empty($storageEntity)) {
         $rootFolder = (new Entities\DatabaseStorageFolder)
           ->setName('')
@@ -190,6 +290,38 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
         }
       }
 
+      // now migrate the projects in order to link to the storages, not the root-folder
+      //
+      // This needs SQL as the class member is gone.
+
+      $storagesRepository = $this->getDatabaseRepository(Entities\DatabaseStorage::class);
+
+      $connection = $this->entityManager->getConnection();
+      $sql = 'SELECT dbs.id FROM Projects p
+LEFT JOIN DatabaseStorages dbs
+ON p.financial_balance_documents_folder_id = dbs.root_id
+WHERE p.id = ?';
+      $stmt = $connection->prepare($sql);
+
+      /** @var Entities\Project $project */
+      foreach ($projectsRepository->findAll() as $project) {
+        // We need to use plain DQL/SQL here as the old column should vanish
+        $stmt->bindValue(1, $project->getId());
+        try {
+          $storageId = $stmt->executeQuery()->fetchOne();
+        } catch (InvalidFieldNameException $t) {
+          $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+          continue;
+        }
+        if (empty($storageId)) {
+          $this->logInfo('NO STORAGE FOR PROJECT ' . $project->getName());
+          continue;
+        }
+        $this->logInfo('STORAGE ID: ' . print_r($storageId, true));
+        $storage = $storagesRepository->find($storageId);
+        $project->setFinancialBalanceDocumentsStorage($storage);
+      }
+
       $this->flush();
 
       $this->entityManager->commit();
@@ -201,6 +333,19 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
       throw new Exceptions\DatabaseMigrationException($this->l->t('Exception during transactional part of the migration.'), 0, $t);
     }
 
-    return true;
+    self::$sql = [
+      self::STRUCTURAL => [
+        'ALTER TABLE Projects DROP FOREIGN KEY IF EXISTS FK_A5E5D1F2ABE5D3E5',
+        'DROP INDEX IF EXISTS UNIQ_A5E5D1F2ABE5D3E5 ON Projects',
+        'ALTER TABLE Projects DROP COLUMN IF EXISTS financial_balance_documents_folder_id',
+        //
+        // 'ALTER TABLE SepaBulkTransactions DROP COLUMN IF EXISTS sepa_transaction_data_changed',
+      ],
+      self::TRANSACTIONAL => [
+      ],
+    ];
+
+    // pray that it worked out.
+    return parent::execute();
   }
 }

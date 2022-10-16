@@ -65,7 +65,7 @@ class BankTransactionsStorage extends Storage
     parent::__construct($params);
 
     $shortId = substr($this->getId(), strlen(parent::getId()));
-    $rootStorage = $this->entityManager->find(Entities\DatabaseStorage::class, [ 'storageId' => $shortId ]);
+    $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
     if (!empty($rootStorage)) {
       $this->rootFolder = $rootStorage->getRoot();
     }
@@ -78,7 +78,7 @@ class BankTransactionsStorage extends Storage
       $this->clearDatabaseRepository();
 
       $shortId = substr($this->getId(), strlen(parent::getId()));
-      $rootStorage = $this->entityManager->find(Entities\DatabaseStorage::class, [ 'storageId' => $shortId ]);
+      $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
       if (!empty($rootStorage)) {
         $this->rootFolder = $rootStorage->getRoot();
       }

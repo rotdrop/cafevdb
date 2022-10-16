@@ -7,7 +7,6 @@
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
- * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-use \DateTimeImmutable;
+use DateTimeImmutable;
+use DateTimeInterface;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
@@ -69,11 +69,11 @@ class ProjectParticipantsStorage extends Storage
   /** @var ProjectService */
   private $projectService;
 
-  /** @var OrganizationalRolesService */
-  private $organizationalRolesService;
-
   /** @var array */
   private $files = [];
+
+  /** @var bool Whether the current user belongs to the treasurer group. */
+  private $isTreasurer;
 
   /** {@inheritdoc} */
   public function __construct($params)
@@ -83,7 +83,9 @@ class ProjectParticipantsStorage extends Storage
     $this->project = $this->participant->getProject();
     $this->musician = $this->participant->getMusician();
     $this->projectService = $this->di(ProjectService::class);
-    $this->organizationalRolesService = $this->di(OrganizationalRolesService::class);
+    $organizationalRolesService = $this->di(OrganizationalRolesService::class);
+    $userId = $this->entityManager->getUserId();
+    $this->isTreasurer = $organizationalRolesService->isTreasurer($userId, allowGroupAccess: true);
     /** @var IEventDispatcher $eventDispatcher */
     $eventDispatcher = $this->di(IEventDispatcher::class);
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
@@ -125,35 +127,13 @@ class ProjectParticipantsStorage extends Storage
                 ?? null));
   }
 
-  /**
-   * {@inheritdoc}
-   *
-   * We expose all found documents in the projectParticipantFieldsData(),
-   * payments() and the debitMandates(). Changes including deletions are
-   * tracked in dedicated fields of the ProjectParticipant and Musician
-   * entity.
-   */
-  protected function findFiles(string $dirName):array
+  /** @return array */
+  protected function getListingGenerators():array
   {
-    $dirName = self::normalizeDirectoryName($dirName);
-    if (false && !empty($this->files[$dirName])) {
-      return $this->files[$dirName];
-    }
-
-    $this->files[$dirName] = [
-      '.' => new DirectoryNode('.', new DateTimeImmutable('@1')),
-    ];
-
-    // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-
-    $userId = $this->entityManager->getUserId();
-    $isTreasurer = $this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true);
-
     // Arguably, these should be classes, but as PHP does not support multiple
     // inheritance this really would produce a lot of boiler-plate-code.
-    $dirInfos = [
-      [
+    return [
+      new ParticipantsStorageGenerator([
         'skipDepthIfOther' => -1,
         'pathChain' => [
           $this->getSupportingDocumentsFolderName(),
@@ -163,7 +143,7 @@ class ProjectParticipantsStorage extends Storage
         'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
           fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
         ),
-        'createLeafNodes' => function($subDirectoryPath) use ($dirName) {
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
           $modificationTime = $this->participant->getParticipantFieldsDataChanged();
           $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
             fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
@@ -186,15 +166,49 @@ class ProjectParticipantsStorage extends Storage
             }
           }
         },
-      ],
-      [
+      ]),
+      new ParticipantsStorageGenerator([
+        'skipDepthIfOther' => -1,
+        'pathChain' => [
+          $this->getSupportingDocumentsFolderName(),
+          $this->getReceivablesFolderName(),
+        ],
+        'parentModificationTime' => fn() => $this->participant->getParticipantFieldsDataChanged(),
+        'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
+          fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
+        ),
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
+          $modificationTime = $this->participant->getParticipantFieldsDataChanged();
+          $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
+            fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
+          );
+
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          foreach ($activeFieldData as $fieldDatum) {
+            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+            if (empty($fileInfo)) {
+              continue; // should not happen here because of ->filter().
+            }
+            $fileName = $this->buildPath($fileInfo['pathName']);
+
+            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+            if ($fileDirName == $dirName) {
+              $this->files[$dirName][$baseName] = $fileInfo['file'];
+            } elseif (strpos($fileDirName, $dirName) === 0) {
+              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
+            }
+          }
+        },
+      ]),
+      new ParticipantsStorageGenerator([
         'skipDepthIfOther' => -1,
         'pathChain' => [
           $this->getSupportingDocumentsFolderName(),
           $this->getBankTransactionsFolderName(),
         ],
         'parentModificationTime' => fn() => $this->musician->getPaymentsChanged(),
-        'hasLeafNodes' => fn() => $isTreasurer && !$this->musician->getPayments()->forAll(
+        'hasLeafNodes' => fn() => $this->isTreasurer && !$this->musician->getPayments()->forAll(
           fn($key, Entities\CompositePayment $compositePayment) => (
             $compositePayment->getProjectPayments()->matching(
               DBUtil::criteriaWhere([ 'project' => $this->project ])
@@ -202,7 +216,7 @@ class ProjectParticipantsStorage extends Storage
             || empty($compositePayment->getSupportingDocument())
           )
         ),
-        'createLeafNodes' => function($subDirectoryPath) use ($dirName) {
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
           /** @var Entities\CompositePayment $compositePayment */
           foreach ($this->musician->getPayments() as $compositePayment) {
             $projectPayments = $compositePayment->getProjectPayments()->matching(
@@ -223,15 +237,25 @@ class ProjectParticipantsStorage extends Storage
             $this->files[$dirName][$baseName] = $file;
           }
         },
-      ],
-      [
+      ]),
+      new ParticipantsStorageGenerator([
         'skipDepthIfOther' => -1,
         'pathChain' => [
           $this->getDebitMandatesFolderName(),
         ],
-        'parentModificationTime' => fn() => $this->musician->getSepaDebitMandatesChanged(),
-        'hasLeafNodes' => function() use ($isTreasurer) {
-          if (!$isTreasurer) {
+        'parentModificationTime' => function() {
+          $modificationTime = self::ensureDate($this->musician->getSepaDebitMandatesChanged());
+          /** @var Entities\SepaDebitMandate $debitMandate */
+          foreach ($this->musician->getSepaDebitMandates() as $debitMandate) {
+            $writtenMandate = $debitMandate->getWrittenMandate();
+            if (!empty($writtenMandate)) {
+              $modificationTime = max($modificationTime, self::ensureDate($writtenMandate->getUpdated()));
+            }
+          }
+          return $modificationTime;
+        },
+        'hasLeafNodes' => function() {
+          if (!$this->isTreasurer) {
             return false;
           }
           $membersProjectId = $this->getClubMembersProjectId();
@@ -243,7 +267,7 @@ class ProjectParticipantsStorage extends Storage
             }
           );
         },
-        'createLeafNodes' => function($subDirectoryPath) use ($dirName) {
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
           $projectId = $this->project->getId();
           $membersProjectId = $this->getClubMembersProjectId();
           /** @var Entities\SepaDebitMandate $debitMandate */
@@ -265,13 +289,22 @@ class ProjectParticipantsStorage extends Storage
             $this->files[$dirName][$baseName] = $file;
           }
         },
-      ],
-      [
+      ]),
+      new ParticipantsStorageGenerator([
         'skipDepthIfOther' => 1,
         'pathChain' => [],
         'parentModificationTime' => fn() => $this->participant->getParticipantFieldsDataChanged(),
-        'hasLeafNodes' => fn() => true, // don't care top-level
-        'createLeafNodes' => function($subDirectoryPath) use ($dirName) {
+        'hasLeafNodes' => fn() => $this->participant->getParticipantFieldsData()->filter(
+          function(Entities\ProjectParticipantFieldDatum $fieldDatum) {
+            if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
+              return false;
+            }
+            if (empty($this->projectService->participantFileInfo($fieldDatum, includeDeleted: true))) {
+              return false;
+            }
+            return true;
+          })->count() > 0,
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
 
           $modificationTime = $this->participant->getParticipantFieldsDataChanged();
 
@@ -298,28 +331,120 @@ class ProjectParticipantsStorage extends Storage
             }
           }
         },
-      ],
+      ]),
     ];
+  }
+
+  /**
+   * @return array A flat array of directory names with non-empty content.
+   */
+  public function getNonEmptyDirectories():array
+  {
+    // the mount provider currently disables soft-deleteable filter ...
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    $pathArray = [];
+
+    $generators = $this->getListingGenerators();
+    /** @var ParticipantsStorageGenerator $generator */
+    foreach ($generators as $generator) {
+      if (!$generator->hasLeafNodes()) {
+        continue;
+      }
+      $pathArray[implode(self::PATH_SEPARATOR, $generator->pathChain())] = [
+        'mtime' => $generator->parentModificationTime(),
+        'pathChain' => $generator->pathChain(),
+      ];
+    }
+    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    return $pathArray;
+  }
+
+  /**
+   * In order to aid database migration processes this funtction will remain
+   * here until the base layout of the database is changed.
+   *
+   * @param string $dirName
+   *
+   * @return array
+   *
+   * @see \OCA\CAFEVDB\Maintenance\Migrations\RootDirectoryEntries
+   */
+  public function findFilesForMigration(string $dirName):array
+  {
+    $isTreasurer = $this->isTreasurer;
+    $this->isTreasurer = true;
+    $result = $this->findFiles($dirName);
+    $this->isTreasurer = $isTreasurer;
+
+    return $result;
+  }
+
+  /**
+   * In order to aid database migration processes this funtction will remain
+   * here until the base layout of the database is changed.
+   *
+   * @param string $dirName
+   *
+   * @return DateTimeInterface
+   *
+   * @see \OCA\CAFEVDB\Maintenance\Migrations\RootDirectoryEntries
+   */
+  public function getDirectoryModificationTimeForMigration(string $dirName):DateTimeInterface
+  {
+    $isTreasurer = $this->isTreasurer;
+    $this->isTreasurer = true;
+    $result = $this->getDirectoryModificationTime($dirName);
+    $this->isTreasurer = $isTreasurer;
+
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * We expose all found documents in the projectParticipantFieldsData(),
+   * payments() and the debitMandates(). Changes including deletions are
+   * tracked in dedicated fields of the ProjectParticipant and Musician
+   * entity.
+   */
+  protected function findFiles(string $dirName):array
+  {
+    $dirName = self::normalizeDirectoryName($dirName);
+    if (false && !empty($this->files[$dirName])) {
+      return $this->files[$dirName];
+    }
+
+    $this->files[$dirName] = [
+      '.' => new DirectoryNode('.', new DateTimeImmutable('@1')),
+    ];
+
+    // the mount provider currently disables soft-deleteable filter ...
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    $dirInfos = $this->getListingGenerators();
 
     $depth = count(Util::explode(self::PATH_SEPARATOR, $dirName));
     $subDirMatch = false;
+    /** @var ParticipantsStorageGenerator $dirInfo */
     foreach ($dirInfos as $dirInfo) {
-      $pathChain = $dirInfo['pathChain'];
+      $pathChain = $dirInfo->pathChain();
       $subDirectoryPath = '';
       while (strpos($dirName, $subDirectoryPath) === 0 && !empty($pathChain)) {
         $subDirectoryPath .= self::PATH_SEPARATOR . array_shift($pathChain);
         list('dirname' => $subDirectoryPath) = self::pathInfo($this->buildPath($subDirectoryPath . self::PATH_SEPARATOR . '_'));
       }
       if (strpos($dirName, $subDirectoryPath) === 0 && empty($pathChain)) {
-        if ($subDirMatch && $dirInfo['skipDepthIfOther'] > 0 && $depth >= $dirInfo['skipDepthIfOther']) {
+        if ($subDirMatch && $dirInfo->skipDepthIfOther() > 0 && $depth >= $dirInfo->skipDepthIfOther()) {
           continue;
         }
         // create leaf entries
-        $dirInfo['createLeafNodes']($subDirectoryPath);
+        $dirInfo->createLeafNodes($dirName, $subDirectoryPath);
       } elseif (strpos($subDirectoryPath, $dirName) === 0) {
         // create parent
-        $modificationTime = $dirInfo['parentModificationTime']();
-        $hasLeafNodes = $dirInfo['hasLeafNodes']();
+        $modificationTime = $dirInfo->parentModificationTime();
+        $hasLeafNodes = $dirInfo->hasLeafNodes();
         if (!empty($modificationTime) && !$hasLeafNodes) {
           // just update the time-stamp of the parent in order to trigger
           // update after deleting records.
