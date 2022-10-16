@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
 
 /**
@@ -69,6 +70,9 @@ class ProjectParticipantsStorage extends Storage
   /** @var ProjectService */
   private $projectService;
 
+  /** @var Entities\DatabaseStorageFolder */
+  private $rootFolder;
+
   /** @var array */
   private $files = [];
 
@@ -83,6 +87,13 @@ class ProjectParticipantsStorage extends Storage
     $this->project = $this->participant->getProject();
     $this->musician = $this->participant->getMusician();
     $this->projectService = $this->di(ProjectService::class);
+
+    $shortId = substr($this->getId(), strlen(parent::getId()));
+    $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
+    if (!empty($rootStorage)) {
+      $this->rootFolder = $rootStorage->getRoot();
+    }
+
     $organizationalRolesService = $this->di(OrganizationalRolesService::class);
     $userId = $this->entityManager->getUserId();
     $this->isTreasurer = $organizationalRolesService->isTreasurer($userId, allowGroupAccess: true);
@@ -96,6 +107,11 @@ class ProjectParticipantsStorage extends Storage
         $projectId = $this->participant->getProject()->getId();
         $musicianId = $this->participant->getMusician()->getId();
         $this->clearDatabaseRepository();
+        $shortId = substr($this->getId(), strlen(parent::getId()));
+        $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
+        if (!empty($rootStorage)) {
+          $this->rootFolder = $rootStorage->getRoot();
+        }
         $this->participant = $this->getDatabaseRepository(Entities\ProjectParticipant::class)
           ->find([
             'project' => $projectId,
@@ -116,6 +132,12 @@ class ProjectParticipantsStorage extends Storage
   public function fileFromFileName(?string $name)
   {
     $name = $this->buildPath($name);
+    if ($name == self::PATH_SEPARATOR) {
+      $dirName = '';
+      $baseName = '.';
+    } else {
+      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    }
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
 
     if (empty($this->files[$dirName])) {
@@ -127,7 +149,87 @@ class ProjectParticipantsStorage extends Storage
                 ?? null));
   }
 
-  /** @return array */
+  /**
+   * Helper functino in order to migrate to DatabaseStorageDirEntry.
+   *
+   * @param int $id
+   *
+   * @return null|DateTimeInterface
+   */
+  private function getSepaDebitMandatesChanged(int $id):?DateTimeInterface
+  {
+    $connection = $this->entityManager->getConnection();
+    $sql = 'SELECT t.sepa_debit_mandates_changed
+FROM Musicians t
+WHERE t.id = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $id);
+    try {
+      $value = $stmt->executeQuery()->fetchOne();
+    } catch (InvalidFieldNameException $t) {
+      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+      return self::ensureDate(null);
+    }
+    return self::convertToDateTime($value);
+  }
+
+  /**
+   * Helper functino in order to migrate to DatabaseStorageDirEntry.
+   *
+   * @param int $id
+   *
+   * @return null|DateTimeInterface
+   */
+  private function getPaymentsChanged(int $id):?DateTimeInterface
+  {
+    $connection = $this->entityManager->getConnection();
+    $sql = 'SELECT t.payments_changed
+FROM Musicians t
+WHERE t.id = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $id);
+    try {
+      $value = $stmt->executeQuery()->fetchOne();
+    } catch (InvalidFieldNameException $t) {
+      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+      return self::ensureDate(null);
+    }
+    return self::convertToDateTime($value);
+  }
+
+  /**
+   * Helper functino in order to migrate to DatabaseStorageDirEntry.
+   *
+   * @param int $projectId
+   *
+   * @param int $musicianId
+   *
+   * @return null|DateTimeInterface
+   */
+  private function getParticipantFieldsDataChanged(int $projectId, int $musicianId):?DateTimeInterface
+  {
+    $connection = $this->entityManager->getConnection();
+    $sql = 'SELECT t.participant_fields_data_changed
+FROM ProjectParticipants t
+WHERE t.project_id = ? AND t.musician_id = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $projectId);
+    $stmt->bindValue(2, $musicianId);
+    try {
+      $value = $stmt->executeQuery()->fetchOne();
+    } catch (InvalidFieldNameException $t) {
+      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+      return self::ensureDate(null);
+    }
+    return self::convertToDateTime($value);
+  }
+
+  /**
+   * These are now only used to migrate the stuff to the new
+   * DatabaseStorageDirEntries tables.
+   *
+   * @return array
+   */
   protected function getListingGenerators():array
   {
     // Arguably, these should be classes, but as PHP does not support multiple
@@ -139,12 +241,12 @@ class ProjectParticipantsStorage extends Storage
           $this->getSupportingDocumentsFolderName(),
           $this->getReceivablesFolderName(),
         ],
-        'parentModificationTime' => fn() => $this->participant->getParticipantFieldsDataChanged(),
+        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId()),
         'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
           fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
         ),
         'createLeafNodes' => function($dirName, $subDirectoryPath) {
-          $modificationTime = $this->participant->getParticipantFieldsDataChanged();
+          $modificationTime = $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId());
           $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
             fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
           );
@@ -173,12 +275,12 @@ class ProjectParticipantsStorage extends Storage
           $this->getSupportingDocumentsFolderName(),
           $this->getReceivablesFolderName(),
         ],
-        'parentModificationTime' => fn() => $this->participant->getParticipantFieldsDataChanged(),
+        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId()),
         'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
           fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
         ),
         'createLeafNodes' => function($dirName, $subDirectoryPath) {
-          $modificationTime = $this->participant->getParticipantFieldsDataChanged();
+          $modificationTime = $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId());
           $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
             fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
           );
@@ -207,7 +309,7 @@ class ProjectParticipantsStorage extends Storage
           $this->getSupportingDocumentsFolderName(),
           $this->getBankTransactionsFolderName(),
         ],
-        'parentModificationTime' => fn() => $this->musician->getPaymentsChanged(),
+        'parentModificationTime' => fn() => $this->getPaymentsChanged($this->musician->getId()),
         'hasLeafNodes' => fn() => $this->isTreasurer && !$this->musician->getPayments()->forAll(
           fn($key, Entities\CompositePayment $compositePayment) => (
             $compositePayment->getProjectPayments()->matching(
@@ -244,7 +346,7 @@ class ProjectParticipantsStorage extends Storage
           $this->getDebitMandatesFolderName(),
         ],
         'parentModificationTime' => function() {
-          $modificationTime = self::ensureDate($this->musician->getSepaDebitMandatesChanged());
+          $modificationTime = $this->getSepaDebitMandatesChanged($this->musician->getId());
           /** @var Entities\SepaDebitMandate $debitMandate */
           foreach ($this->musician->getSepaDebitMandates() as $debitMandate) {
             $writtenMandate = $debitMandate->getWrittenMandate();
@@ -293,7 +395,7 @@ class ProjectParticipantsStorage extends Storage
       new ParticipantsStorageGenerator([
         'skipDepthIfOther' => 1,
         'pathChain' => [],
-        'parentModificationTime' => fn() => $this->participant->getParticipantFieldsDataChanged(),
+        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId()),
         'hasLeafNodes' => fn() => $this->participant->getParticipantFieldsData()->filter(
           function(Entities\ProjectParticipantFieldDatum $fieldDatum) {
             if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
@@ -306,7 +408,7 @@ class ProjectParticipantsStorage extends Storage
           })->count() > 0,
         'createLeafNodes' => function($dirName, $subDirectoryPath) {
 
-          $modificationTime = $this->participant->getParticipantFieldsDataChanged();
+          $modificationTime = $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId());
 
           /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
           foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
@@ -362,23 +464,62 @@ class ProjectParticipantsStorage extends Storage
   }
 
   /**
-   * In order to aid database migration processes this funtction will remain
-   * here until the base layout of the database is changed.
+   * {@inheritdoc}
    *
-   * @param string $dirName
-   *
-   * @return array
-   *
-   * @see \OCA\CAFEVDB\Maintenance\Migrations\RootDirectoryEntries
+   * We expose all found documents in the projectParticipantFieldsData(),
+   * payments() and the debitMandates(). Changes including deletions are
+   * tracked in dedicated fields of the ProjectParticipant and Musician
+   * entity.
    */
-  public function findFilesForMigration(string $dirName):array
+  protected function findFiles(string $dirName):array
   {
-    $isTreasurer = $this->isTreasurer;
-    $this->isTreasurer = true;
-    $result = $this->findFiles($dirName);
-    $this->isTreasurer = $isTreasurer;
+    $dirName = self::normalizeDirectoryName($dirName);
+    if (!empty($this->files[$dirName])) {
+      return $this->files[$dirName];
+    }
 
-    return $result;
+    $dirComponents = Util::explode(self::PATH_SEPARATOR, $dirName);
+
+    /** @var Entities\DatabaseStorageFolder $folderDirEntry */
+    $folderDirEntry = $this->rootFolder;
+    if (empty($dirName) && empty($this->root)) {
+      $this->files[$dirName] = [ '.' => $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1')) ];
+      if (empty($folderDirEntry)) {
+        return $this->files[$dirName];
+      }
+    } else {
+      foreach ($dirComponents as $component) {
+        $folderDirEntry = $folderDirEntry->getFolderByName($component);
+        if (empty($folderDirEntry)) {
+          throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
+            'Unable to find directory entry for folder "%s".', $dirName
+          ));
+        }
+      }
+      $this->files[$dirName] = [ '.' => $folderDirEntry ];
+    }
+
+    $dirEntries = $folderDirEntry->getDirectoryEntries();
+
+    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
+    foreach ($dirEntries as $dirEntry) {
+
+      $baseName = $dirEntry->getName();
+      $fileName = $this->buildPath($dirName . self::PATH_SEPARATOR . $baseName);
+      list('basename' => $baseName) = self::pathInfo($fileName);
+
+      if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
+        /** @var Entities\DatabaseStorageFolder $dirEntry */
+        // add a directory entry
+        $baseName .= self::PATH_SEPARATOR;
+        $this->files[$dirName][$baseName] = $dirEntry;
+      } else {
+        /** @var Entities\DatabaseStorageFile $dirEntry */
+        $this->files[$dirName][$baseName] = $dirEntry;
+      }
+    }
+
+    return $this->files[$dirName];
   }
 
   /**
@@ -402,14 +543,16 @@ class ProjectParticipantsStorage extends Storage
   }
 
   /**
-   * {@inheritdoc}
+   * In order to aid database migration processes this funtction will remain
+   * here until the base layout of the database is changed.
    *
-   * We expose all found documents in the projectParticipantFieldsData(),
-   * payments() and the debitMandates(). Changes including deletions are
-   * tracked in dedicated fields of the ProjectParticipant and Musician
-   * entity.
+   * @param string $dirName
+   *
+   * @return array
+   *
+   * @see \OCA\CAFEVDB\Maintenance\Migrations\RootDirectoryEntries
    */
-  protected function findFiles(string $dirName):array
+  public function findFilesForMigration(string $dirName):array
   {
     $dirName = self::normalizeDirectoryName($dirName);
     if (false && !empty($this->files[$dirName])) {
@@ -475,15 +618,9 @@ class ProjectParticipantsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function getStorageModificationDateTime():\DateTimeInterface
+  protected function getStorageModificationDateTime():DateTimeInterface
   {
-    $mtime = max(
-      self::ensureDate($this->participant->getParticipantFieldsDataChanged()),
-      self::ensureDate($this->musician->getSepaDebitMandatesChanged()),
-      self::ensureDate($this->musician->getPaymentsChanged()),
-    );
-
-    return $mtime;
+    return self::ensureDate(empty($this->rootFolder) ? null : $this->rootFolder->getUpdated());
   }
 
   /** {@inheritdoc} */

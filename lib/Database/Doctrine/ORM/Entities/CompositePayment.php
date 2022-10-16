@@ -162,7 +162,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(nullable=false)
-   * @Gedmo\Timestampable(on={"update","change","create","delete"}, field="supportingDocument", timestampField="paymentsChanged")
    */
   private $musician;
 

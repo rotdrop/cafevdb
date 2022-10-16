@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
@@ -180,7 +183,6 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
               ->setUpdated('@1')
               ->setCreated('@1');
           }
-          $rootFolder->setUpdated($storage->getDirectoryModificationTimeForMigration(''));
           $participant->setDatabaseDocuments($storageEntity);
 
           $walkFileSystem = function($path, $folderListing, $folderEntity) use (&$walkFileSystem, $storage) {
@@ -191,6 +193,7 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
               }
               $nodePath = rtrim($path, Constants::PATH_SEP) . Constants::PATH_SEP . $nodeName;
               $this->logInfo('PATH ' . $nodePath);
+              $nodeName = trim($nodeName . Constants::PATH_SEP);
 
               if ($node instanceof Entities\EncryptedFile) {
                 /** @var Entities\EncryptedFile $node */
@@ -207,17 +210,21 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
               } elseif ($node instanceof MigrationDirectoryNode) {
                 $dirEntry = $folderEntity->getFolderByName($nodeName);
                 if (empty($dirEntry)) {
-                  $dirEntry = $folderEntity->addSubFolder($nodeName)
-                    ->setUpdated($storage->getDirectoryModificationTimeForMigration($nodePath));
+                  $dirEntry = $folderEntity->addSubFolder($nodeName);
                   $dirEntry->setCreated($dirEntry->getUpdated());
                 }
                 $nodeListing = $storage->findFilesForMigration($nodePath);
+
                 $walkFileSystem($nodePath, $nodeListing, $dirEntry);
+
+                $dirEntry->setUpdated($storage->getDirectoryModificationTimeForMigration($nodePath));
               }
             }
           };
 
           $walkFileSystem('', $rootListing, $rootFolder);
+
+          $rootFolder->setUpdated($storage->getDirectoryModificationTimeForMigration(''));
         }
 
       }
@@ -252,6 +259,9 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
       $transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
       /** @var Entities\SepaBulkTransaction $transaction */
       foreach ($transactionsRepository->findAll() as $transaction) {
+
+        $modificationTime = $this->getSepaTransactionDataChanged($transaction->getId());
+
         /** @var Entities\EncryptedFile $file */
         foreach ($transaction->getSepaTransactionData() as $file) {
           $root = null;
@@ -285,8 +295,10 @@ WHERE sepa_transaction_data_changed IS NOT NULL',
 
             $yearFolder
               ->setCreated(min($file->getCreated(), $yearFolder->getCreated()))
-              ->setUpdated(max($file->getUpdated(), $yearFolder->getUpdated()));
+              ->setUpdated(max($file->getUpdated(), $yearFolder->getUpdated(), $modificationTime));
           }
+
+          $root->setUpdated(max($root->getUpdated(), $modificationTime));
         }
       }
 
@@ -340,6 +352,11 @@ WHERE p.id = ?';
         'ALTER TABLE Projects DROP COLUMN IF EXISTS financial_balance_documents_folder_id',
         //
         // 'ALTER TABLE SepaBulkTransactions DROP COLUMN IF EXISTS sepa_transaction_data_changed',
+        //
+        // 'ALTER TABLE Musicians DROP COLUMN IF EXISTS sepa_debit_mandates_changed',
+        // 'ALTER TABLE Musicians DROP COLUMN IF EXISTS  payments_changed',
+        //
+        // 'ALTER TABLE ProjectParticipants DROP COLUMN IF EXISTS participant_fields_data_changed',
       ],
       self::TRANSACTIONAL => [
       ],
@@ -347,5 +364,27 @@ WHERE p.id = ?';
 
     // pray that it worked out.
     return parent::execute();
+  }
+
+  /**
+   * @param int $id
+   *
+   * @return null|DateTimeInterface
+   */
+  private function getSepaTransactionDataChanged(int $id):?DateTimeInterface
+  {
+    $connection = $this->entityManager->getConnection();
+    $sql = 'SELECT t.sepa_transaction_data_changed
+FROM SepaBulkTransactions t
+WHERE t.id = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $id);
+    try {
+      $value = $stmt->executeQuery()->fetchOne();
+    } catch (InvalidFieldNameException $t) {
+      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+      return self::ensureDate(null);
+    }
+    return self::convertToDateTime($value);
   }
 }

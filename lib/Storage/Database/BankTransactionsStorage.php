@@ -306,7 +306,7 @@ class BankTransactionsStorage extends Storage
   /** {@inheritdoc} */
   protected function getStorageModificationDateTime():?\DateTimeInterface
   {
-    return self::ensureDate($this->rootFolder->getUpdated());
+    return self::ensureDate(empty($this->rootFolder) ? null : $this->rootFolder->getUpdated());
   }
 
   /** {@inheritdoc} */

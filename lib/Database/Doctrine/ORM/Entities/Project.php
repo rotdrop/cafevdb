@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeInterface;
 use DateTimeImmutable;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
@@ -513,19 +514,6 @@ class Project implements \ArrayAccess
   public function getSentEmail():Collection
   {
     return $this->sentEmail;
-  }
-
-  /**
-   * Get financialBalanceSupportingDocumentsChanged time-stamp.
-   *
-   * @return \DateTimeInterface
-   */
-  public function getFinancialBalanceSupportingDocumentsChanged():?\DateTimeInterface
-  {
-    if (!empty($this->financialBalanceDocumentsFolder)) {
-      return $this->financialBalanceDocumentsFolder->getUpdated();
-    }
-    return new DateTimeImmutable('@1');
   }
 
   /**

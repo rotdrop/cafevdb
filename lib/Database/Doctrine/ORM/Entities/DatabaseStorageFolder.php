@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Constants;
 
 /**
  * Folder entry for a database-backed file.
@@ -68,6 +69,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    */
   public function addSubFolder(string $name):DatabaseStorageFolder
   {
+    $name = trim($name, Constants::PATH_SEP);
     $existing = $this->directoryEntries->filter(
       fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $name
     );
@@ -102,6 +104,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    */
   public function removeSubFolder(string $name):DatabaseStorageFolder
   {
+    $name = trim($name, Constants::PATH_SEP);
     $existing = $this->directoryEntries->filter(
       fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $name
     );
@@ -143,6 +146,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     }
     $fileId = $file->getId();
     $fileName = $fileName ?? $file->getFileName();
+    $fileName = trim($fileName, Constants::PATH_SEP);
     $existing = $this->directoryEntries->filter(
       fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $fileName
     );
@@ -186,6 +190,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     }
     $fileId = $file->getId();
     $fileName = $fileName ?? $file->getFileName();
+    $fileName = trim($fileName, Constants::PATH_SEP);
     $existing = $this->directoryEntries->filter(
       fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry->name === $fileName
     );

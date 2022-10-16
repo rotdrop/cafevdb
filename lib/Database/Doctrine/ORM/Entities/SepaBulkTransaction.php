@@ -238,16 +238,6 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
-   * Get sepaTransactionDataChanged.
-   *
-   * @return Collection
-   */
-  public function getSepaTransactionDataChanged():?DateTimeInterface
-  {
-    return $this->updated;
-  }
-
-  /**
    * Set submissionDeadline.
    *
    * @param DateTimeInterface $submissionDeadline

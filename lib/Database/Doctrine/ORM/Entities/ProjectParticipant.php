@@ -93,16 +93,6 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $participantFieldsData;
 
- /**
-   * @var \DateTimeImmutable
-   *
-   * Tracks changes in the fields data, in particular to catch deleted files
-   * for the database file-space.
-   *
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   */
-  private $participantFieldsDataChanged;
-
   /**
    * Link in the project instruments, may be more than one per participant.
    *
@@ -282,16 +272,6 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Get participantFieldsDataChanged.
-   *
-   * @return Collection
-   */
-  public function getParticipantFieldsDataChanged():?\DateTimeInterface
-  {
-    return $this->participantFieldsDataChanged;
-  }
-
-  /**
    * Get one specific participant-field datum indexed by its key
    *
    * @param mixed $key Everything which can be converted to an UUID by
@@ -383,7 +363,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setDatabaseDocuments(?DatabaseStorage $databaseDocuments):DatabaseStorage
+  public function setDatabaseDocuments(?DatabaseStorage $databaseDocuments):ProjectParticipant
   {
     $this->databaseDocuments = $databaseDocuments;
 

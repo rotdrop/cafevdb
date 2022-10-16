@@ -134,11 +134,6 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
    *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id")
    * )
-   * @Gedmo\Timestampable(
-   *   on={"update","change","create","delete"},
-   *   field={"supportingDocument","optionValue"},
-   *   timestampField="participantFieldsDataChanged",
-   * )
    */
   private $projectParticipant;
 
