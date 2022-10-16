@@ -626,4 +626,10 @@ class Project implements \ArrayAccess
   {
     return $this->payments->count();
   }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->name;
+  }
 }
