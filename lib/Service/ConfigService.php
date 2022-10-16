@@ -24,11 +24,11 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \Throwable;
-use \RuntimeException;
-use \DateTimeZone;
-use \NumberFormatter;
-use \DateTimeImmutable;
+use Throwable;
+use RuntimeException;
+use DateTimeZone;
+use NumberFormatter;
+use DateTimeImmutable;
 
 use OCP\IUser;
 use OCP\IGroup;
@@ -1256,7 +1256,7 @@ class ConfigService
    *
    * @return string
    */
-  public function formatTimeStamp($date = null, ?string $format = null, ?\DateTimeZone $timeZone = null):string
+  public function formatTimeStamp($date = null, ?string $format = null, ?DateTimeZone $timeZone = null):string
   {
     if ($date === null) {
       $date = new DateTimeImmutable;
@@ -1282,7 +1282,7 @@ class ConfigService
    *
    * @return string
    */
-  public function timeStamp(?string $format = null, ?\DateTimeZone $timeZone = null):string
+  public function timeStamp(?string $format = null, ?DateTimeZone $timeZone = null):string
   {
     return $this->formatTimeStamp(new DateTimeImmutable, $format, $timeZone);
   }
