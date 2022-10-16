@@ -528,9 +528,21 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             && !$submitButton.hasClass(pmeToken('reload'))) {
           // so this is pme-more, morechange, apply
 
-          if (!checkInvalidInputs(container)) {
+          allButtons.prop('disabled', true);
+          const cleanup = () => {
+            allButtons.prop('disabled', false);
+          };
+
+          if (!checkInvalidInputs(container, {
+            cleanup,
+            afterDialog($invalidInputs) {
+              cleanup();
+            },
+            timeout: 10000, // animation timeout
+          })) {
             return false;
           }
+          cleanup();
 
           options.modified = true;
         } else if ($submitButton.hasClass(pmeToken('reload'))) {
@@ -622,9 +634,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         pmePost(post)
           .fail(function(xhr, status, errorThrown) {
             unblockTableDialog(container);
-            tableDialogLoadIndicator(container, false);
-            Page.busyIcon(false);
-            container.data(pmeToken('saving'), false);
+            cleanup();
           })
           .done(function(htmlContent, historyAction, post) {
             const op = $(htmlContent).find(pmeSysNameSelector('input', 'op_name'));
@@ -637,6 +647,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                                   + ' Sorry for that.'), { timeout: 15 });
               tableDialogReplace(container, htmlContent, options, changeCallback);
               container.data(pmeToken('saving'), false);
+              allButtons.prop('disabled', false);
               return;
             }
 
@@ -668,6 +679,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                 Page.busyIcon(false);
               }
             }
+            allButtons.prop('disabled', false);
             container.data(pmeToken('saving'), false);
           });
       });
