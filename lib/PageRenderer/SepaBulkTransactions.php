@@ -681,10 +681,6 @@ __EOT__;
       $this->setDatabaseRepository(Entities\CompositePayment::class);
       $payment = $this->find($paymentId);
       $bulkTransaction->getPayments()->removeElement($payment);
-      // Remove the transaction data in order to force recomputation
-      foreach ($bulkTransaction->getSepaTransactionData() as $exportFile) {
-        $bulkTransaction->removeTransactionData($exportFile);
-      }
       $this->flush();
     }
 

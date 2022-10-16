@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  * @ORM\DiscriminatorColumn(name="sepa_transaction", type="EnumSepaTransaction")
  * @ORM\DiscriminatorMap({null="SepaBulkTransaction","debit_note"="SepaDebitNote", "bank_transfer"="SepaBankTransfer"})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository")
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener"})
  *
  * @ORM\HasLifecycleCallbacks
  */
@@ -72,7 +73,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true, indexBy="id")
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"persist"}, indexBy="id")
    * @ORM\JoinTable(
    *   name="SepaBulkTransactionData",
    *   inverseJoinColumns={
@@ -162,13 +163,14 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   private $payments;
 
-  /** {@inheritdoc} */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
     $this->sepaTransactionData = new ArrayCollection();
     $this->payments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Get id.
@@ -546,9 +548,7 @@ class SepaBulkTransaction implements \ArrayAccess
     $field = 'submitDate';
     if ($event->hasChangedField($field)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      // $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $oldValue = $event->getOldValue($field);
-      // $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($entityManager, $this, $oldValue, $event->getNewValue($field)));
       $this->preUpdateValue[$field] = $oldValue;
     }
   }

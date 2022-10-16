@@ -24,10 +24,11 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \RuntimeException;
-use \InvalidArgumentException;
-use \DateTimeImmutable;
-use \DateTimeInterface;
+use RuntimeException;
+use InvalidArgumentException;
+use DateTimeImmutable;
+use DateTimeInterface;
+use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IDateTimeFormatter;
@@ -118,7 +119,13 @@ class SepaBulkTransactionService
    */
   const BULK_TRANSACTION_EARLY_REMINDER_SECONDS = - (15 + 24) * 60 * 60; /* alert one day in advance */
 
+  /** @var string Export format AqBanking. */
   const EXPORT_AQBANKING = 'aqbanking';
+
+  /** @var array All supported exporters. */
+  const EXPORTERS = [
+    self::EXPORT_AQBANKING,
+  ];
 
   const SUBJECT_PREFIX_LIMIT = 16;
   const SUBJECT_PREFIX_SEPARATOR = ' / ';
@@ -127,7 +134,7 @@ class SepaBulkTransactionService
   const SUBJECT_OPTION_SEPARATOR = ': ';
 
   /** @var IAppContainer */
-  private $appContainer;
+  protected $appContainer;
 
   /** @var FinanceService */
   private $financeService;
@@ -465,7 +472,7 @@ class SepaBulkTransactionService
                       ->setSubject('');
 
     if (empty($receivableOptions)) {
-      return [ $payments, $totalAmount ];
+      return $compositePayment;
     }
 
     /** @var Entities\ProjectParticipantFieldDataOption $receivableOption */
@@ -678,9 +685,6 @@ class SepaBulkTransactionService
       );
     }
 
-    /** @var BankTransactionsStorage $storage */
-    $storage = $this->appContainer->get(BankTransactionsStorage::class);
-
     $this->entityManager->beginTransaction();
 
     $this->entityManager->registerPreCommitAction(
@@ -703,13 +707,8 @@ class SepaBulkTransactionService
     );
 
     try {
-      /** @var Entities\EncryptedFile $transactionData */
-      foreach ($bulkTransaction->getSepaTransactionData() as $transactionData) {
-        $bulkTransaction->removeTransactionData($transactionData);
-        $storage->removeDocument($bulkTransaction, $transactionData);
-      }
+      // transaction data is handled in a separate listener.
       $this->remove($bulkTransaction, flush: true);
-
       $this->entityManager->commit();
 
     } catch (\Throwable $t) {
@@ -772,7 +771,7 @@ class SepaBulkTransactionService
    */
   public function generateTransactionData(
     Entities\SepaBulkTransaction $bulkTransaction,
-    ?Entities\Project $project,
+    ?Entities\Project $project = null,
     string $format = self::EXPORT_AQBANKING,
   ):?Entities\EncryptedFile {
 
@@ -788,6 +787,7 @@ class SepaBulkTransactionService
       }
       $exportFile = null;
     }
+
     if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
 
       /** @var IBulkTransactionExporter $exporter */
@@ -802,6 +802,19 @@ class SepaBulkTransactionService
       }
 
       $timeStamp = $this->timeStamp();
+
+      /** @var Entities\CompositePayment $payment */
+      foreach ($bulkTransaction->getPayments() as $payment) {
+        $paymentProject = $payment->getProject();
+        if (empty($project)) {
+          $project = $paymentProject;
+        } elseif ($project != $paymentProject) {
+          throw new UnexpectedValueException($this->l->t(
+            'Conflicting projects "%1$s" vs. "%2$s".', [
+              (string)$project,  (string)$paymentProject
+            ]));
+        }
+      }
 
       $fileName = implode('-', array_filter([
         $timeStamp,
@@ -826,15 +839,11 @@ class SepaBulkTransactionService
           ->getFileData()->setData($fileData);
       }
 
-      /** @var BankTransactionsStorage $storage */
-      $storage = $this->appContainer->get(BankTransactionsStorage::class);
-
       $this->entityManager->beginTransaction();
       try {
         $this->persist($exportFile);
         $this->flush();
         $bulkTransaction->addTransactionData($exportFile);
-        $storage->addDocument($bulkTransaction, $exportFile);
         $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {

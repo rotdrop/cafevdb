@@ -121,19 +121,26 @@ class BankTransactionsStorage extends Storage
    *
    * @param Entities\EncryptedFile $file
    *
+   * @param bool $flush Whether to flush the changes to the db.
+   *
    * @return Entities\DatabaseStorageFile
    */
-  public function addDocument(Entities\SepaBulkTransaction $transaction, Entities\EncryptedFile $file):Entities\DatabaseStorageFile
-  {
+  public function addDocument(
+    Entities\SepaBulkTransaction $transaction,
+    Entities\EncryptedFile $file,
+    bool $flush = true,
+  ):Entities\DatabaseStorageFile {
     $document = $this->findDocument($transaction, $file);
     if (!empty($document)) {
       return $document;
     }
 
-    $this->entityManager->beginTransaction();
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
     try {
       $year = $transaction->getCreated()->format('Y');
-      $yearFolder = $this->rootStorge->getRoot()->getFolderByName($year);
+      $yearFolder = $this->rootFolder->getFolderByName($year);
       if (empty($yearFolder)) {
         $yearFolder = $this->rootFolder->addSubFolder($year)
           ->setUpdated($file->getUpdated())
@@ -149,9 +156,10 @@ class BankTransactionsStorage extends Storage
         ->setCreated(min($file->getCreated(), $yearFolder->getCreated()))
         ->setUpdated(max($file->getUpdated(), $yearFolder->getUpdated()));
 
-      $this->flush();
-
-      $this->entityManager->commit();
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
 
     } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
@@ -164,33 +172,58 @@ class BankTransactionsStorage extends Storage
   }
 
   /**
-   * Remove a document from the storage.
+   * Remove a document from the storage. Note that this does not remove the
+   * file from the transaction entity.
    *
    * @param Entities\SepaBulkTransaction $transaction
    *
    * @param Entities\EncryptedFile $file
    *
+   * @param bool $flush Whether to actually flush the operations to th db.
+   *
    * @return void
    */
-  public function removeDocument(Entities\SepaBulkTransaction $transaction, Entities\EncryptedFile $file):void
-  {
+  public function removeDocument(
+    Entities\SepaBulkTransaction $transaction,
+    Entities\EncryptedFile $file,
+    bool $flush = true,
+  ):void {
     $document = $this->findDocument($transaction, $file);
     if (empty($document)) {
+      $this->logInfo('DOCUMENT NOT FOUND, CANNOT REMOVE ' . $file->getFileName());
       return;
     }
-    $this->entityManager->beginTransaction();
+
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
     try {
       $parent = $document->getParent();
+      $file = $document->getFile();
       $document->setFile(null);
       $document->setParent(null);
       $this->entityManager->remove($document);
+      if ($flush) {
+        $this->flush();
+      }
       if ($parent->isEmpty()) {
         $parent->setParent(null);
         $this->entityManager->remove($parent);
+        if ($flush) {
+          $this->flush();
+        }
       }
-      $this->flush();
+      if ($file->getNumberOfLinks() == 0) {
+        if ($flush) {
+          $this->flush();
+        }
+        $this->entityManager->remove($file);
+      }
 
-      $this->entityManager->commit();
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
 
     } catch (Throwable $t) {
       if ($this->entityManager->isTransactionActive()) {
