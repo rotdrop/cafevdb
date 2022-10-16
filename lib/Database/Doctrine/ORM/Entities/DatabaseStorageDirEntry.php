@@ -134,13 +134,13 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   public function setParent(?DatabaseStorageFolder $parent):DatabaseStorageDirEntry
   {
     if (!empty($this->parent)) {
-      $this->parent->directoryEntries->removeElement($this);
+      $this->parent->getDirectoryEntries()->removeElement($this);
     }
 
     $this->parent = $parent;
 
     if (!empty($this->parent)) {
-      $this->parent->directoryEntries->add($this);
+      $this->parent->getDirectoryEntries()->add($this);
     }
 
     return $this;
