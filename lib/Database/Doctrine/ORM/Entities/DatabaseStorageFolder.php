@@ -77,7 +77,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     if ($existing->count() == 1) {
       /** @var DatabaseStorageFolder $dirEntry */
       $dirEntry = $existing->first();
-      if (!($dirEntry instanceof DatabaseStorageFolder))  {
+      if (!($dirEntry instanceof DatabaseStorageFolder)) {
         throw new Exceptions\DatabaseException('Directory entry "' . $name . '" already exists in directory ' . $this->id . ' and the existing entry is not a directory.');
       }
       return $dirEntry;
@@ -113,7 +113,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     }
     /** @var DatabaseStorageFolder $dirEntry */
     $dirEntry = $existing->first();
-    if (!($dirEntry instanceof DatabaseStorageFolder))  {
+    if (!($dirEntry instanceof DatabaseStorageFolder)) {
       throw new Exceptions\DatabaseException('Directory entry "' . $name . '" exists in directory ' . $this->id . ' but the existing entry is not a directory.');
     }
 
@@ -152,7 +152,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     if ($existing->count() == 1) {
       /** @var DatabaseStorageFile $dirEntry */
       $dirEntry = $existing->first();
-      if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile()->getId() != $fileId)  {
+      if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile()->getId() != $fileId) {
         throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
       }
       return $dirEntry;
@@ -198,7 +198,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
 
     /** @var DatabaseStorageFile $dirEntry */
     $dirEntry = $existing->first();
-    if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile()->getId() != $fileId)  {
+    if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile()->getId() != $fileId) {
       throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
     }
 
@@ -262,7 +262,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
       ->matching(DBUtil::criteriaWhere([ 'name' => $name ]))
       ->filter(fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry instanceof DatabaseStorageFile);
 
-    return empty($matches) ? null : $matches->first();
+    return $matches->count() == 0 ? null : $matches->first();
   }
 
   /**
@@ -276,7 +276,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
       ->matching(DBUtil::criteriaWhere([ 'name' => $name ]))
       ->filter(fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry instanceof DatabaseStorageFolder);
 
-    return empty($matches) ? null : $matches->first();
+    return $matches->count() == 0 ? null : $matches->first();
   }
 
   /** @return bool Whether this folder is empty. */
