@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
+
+use RuntimeException;
 
 use OCP\AppFramework\Http\TemplateResponse;
 
@@ -66,8 +68,24 @@ trait ParticipantFileFieldsTrait
   /** @var string */
   protected static $toolTipsPrefix = 'page-renderer:participant-fields:display';
 
-  /** Generate one HTML input row for a cloud-file field. */
-  protected function cloudFileUploadRowHtml($optionValue, $fieldId, $optionKey, $subDir, $fileBase, $musician)
+  /**
+   * Generate one HTML input row for a cloud-file field.
+   *
+   * @param mixed $optionValue
+   *
+   * @param int $fieldId
+   *
+   * @param null|string $optionKey
+   *
+   * @param null|string $subDir
+   *
+   * @param null|string $fileBase
+   *
+   * @param Entities\Musician $musician
+   *
+   * @return string HTML fragment.
+   */
+  protected function cloudFileUploadRowHtml(mixed $optionValue, int $fieldId, ?string $optionKey, ?string $subDir, ?string $fileBase, Entities\Musician $musician):string
   {
     $project = ($project ?? $this->project) ?? null;
     $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician);
@@ -136,8 +154,35 @@ trait ParticipantFileFieldsTrait
     ))->render();
   }
 
-  protected function dbFileUploadRowHtml($optionValue, int $fieldId, string $optionKey, ?string $subDir, ?string $fileBase, Entities\Musician $musician, ?Entities\Project $project = null, bool $overrideFileName = false)
-  {
+  /**
+   * @param mixed $optionValue
+   *
+   * @param int $fieldId
+   *
+   * @param string $optionKey
+   *
+   * @param null|string $subDir
+   *
+   * @param null|string $fileBase
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param null|Entities\Project $project
+   *
+   * @param bool $overrideFileName
+   *
+   * @return string HTML fragment.
+   */
+  protected function dbFileUploadRowHtml(
+    mixed $optionValue,
+    int $fieldId,
+    string $optionKey,
+    ?string $subDir,
+    ?string $fileBase,
+    Entities\Musician $musician,
+    ?Entities\Project $project = null,
+    bool $overrideFileName = false,
+  ):string {
     $project = ($project ?? $this->project) ?? null;
     $participantFolder = empty($project)
       ? ''
@@ -170,15 +215,15 @@ trait ParticipantFileFieldsTrait
       if (empty($extension) && !empty($dbExtension)) {
         $fileName .= '.' . $dbExtension;
       }
-    } else if (!empty($fileBase)) {
+    } elseif (!empty($fileBase)) {
       if (empty($project)) {
-        throw new \RuntimeException($this->l->t('No project given, unable generate a file-name.'));
+        throw new RuntimeException($this->l->t('No project given, unable generate a file-name.'));
       }
       $fileName = $this->projectService->participantFilename($fileBase, $musician);
       if (!empty($dbExtension)) {
         $fileName .= '.' . $dbExtension;
       }
-    } else if (!empty($optionValue)) {
+    } elseif (!empty($optionValue)) {
       $fileName = $dbFileName;
     } else {
       $fileName = null;
@@ -234,8 +279,18 @@ trait ParticipantFileFieldsTrait
 
   /**
    * Generate a link to the files-app if appropriate
+   *
+   * @param null|Entities\ProjectParticipantField $field
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param null|Entities\Project $project
+   *
+   * @param null|string $subFolder
+   *
+   * @return null|array
    */
-  private function getFilesAppLink(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null)
+  private function getFilesAppLink(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null):?array
   {
     $pathChain = [];
     $project = $project ?? $this->project;
@@ -285,8 +340,26 @@ trait ParticipantFileFieldsTrait
     return [ $filesAppLink, $filesAppTarget ];
   }
 
-  private function getFilesAppAnchor(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null, ?string $toolTip = null)
-  {
+  /**
+   * @param null|Entities\ProjectParticipantField $field
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param null|Entities\Project $project
+   *
+   * @param null|string $subFolder
+   *
+   * @param null|string $toolTip
+   *
+   * @return string HTML fragment.
+   */
+  private function getFilesAppAnchor(
+    ?Entities\ProjectParticipantField $field,
+    Entities\Musician $musician,
+    ?Entities\Project $project = null,
+    ?string $subFolder = null,
+    ?string $toolTip = null,
+  ):string {
     if (!empty($toolTip)) {
       $toolTip = $this->toolTipsService['participant-attachment-open-parent'] . '<br/>' . $toolTip;
     } else {
