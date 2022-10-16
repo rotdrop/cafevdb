@@ -138,8 +138,3 @@ class Registration
     $context->registerServiceAlias(lcfirst(self::APP_L10N), ucfirst(self::APP_L10N));
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
