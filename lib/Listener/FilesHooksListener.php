@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+/** Listener for hooking up an additional context menu entry. */
 class FilesHooksListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -58,14 +59,19 @@ class FilesHooksListener implements IEventListener
 
   private $handled = false;
 
+  /**
+   * @param IAppContainer $appContainer The only argument in order to have a
+   * small CTOR footprint.
+   */
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
 
+  /** {@inheritdoc} */
   public function handle(Event $event): void
   {
-    if (!($event instanceOf HandledEvent)) {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
     /** @var HandledEvent $event */
