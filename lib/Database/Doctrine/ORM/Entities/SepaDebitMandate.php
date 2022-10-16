@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -181,15 +182,18 @@ class SepaDebitMandate implements \ArrayAccess
    */
   private $payments;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set sequence
    *
-   * @param null|int
+   * @param null|int $sequence
    *
    * @return SepaDebitMandate
    *
@@ -496,6 +500,8 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * See that the mandate-sequence is reflected by the mandate reference.
    *
+   * @return void
+   *
    * @todo The DB structure probably should be cleaned up s.t. this is not
    * necessary.
    *
@@ -503,7 +509,7 @@ class SepaDebitMandate implements \ArrayAccess
    * @ORM\PreUpdate
    * @ORM\PreFlush
    */
-  public function adjustMandateReference()
+  public function adjustMandateReference():void
   {
     if ($this->sequence !== null && $this->mandateReference !== null) {
       $this->mandateReference = preg_replace(
