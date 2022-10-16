@@ -185,8 +185,8 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       }
     } else {
       foreach ($dirComponents as $component) {
-        $folderDirEntry = $dirEntry->getFolderByName($component);
-        if (empty($dirEntry)) {
+        $folderDirEntry = $folderDirEntry->getFolderByName($component);
+        if (empty($folderDirEntry)) {
           throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
             'Unable to find directory entry for folder "%s".', $dirName
           ));
