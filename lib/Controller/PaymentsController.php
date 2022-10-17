@@ -205,10 +205,6 @@ class PaymentsController extends Controller
 
               if (!empty($supportingDocument) && $supportingDocument->getNumberOfLinks() > 1) {
                 $storage->removeCompositePayment($compositePayment, flush:true);
-                if (!empty($supportingDocument->getOriginalFileName())) {
-                  // undo greedily modified filename
-                  $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
-                }
                 $compositePayment->setSupportingDocument(null); // will decrease the link-count
                 $supportingDocument = null;
               }
@@ -226,7 +222,7 @@ class PaymentsController extends Controller
                   ->setSize(strlen($fileContent))
                   ->getFileData()->setData($fileContent);
               }
-              $supportingDocument->setOriginalFileName($originalFileName);
+              $supportingDocument->setFileName($originalFileName);
 
               break;
             case UploadsController::UPLOAD_MODE_LINK:
@@ -241,9 +237,6 @@ class PaymentsController extends Controller
                 $storage->removeCompositePayment($compositePayment, flush: true);
                 if ($supportingDocument->getNumberOfLinks() == 0) {
                   $this->remove($supportingDocument, flush: true);
-                } elseif (!empty($supportingDocument->getOriginalFileName())) {
-                  // undo greedily modified filename
-                  $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
                 }
               }
               $supportingDocument = $originalFile;
@@ -335,9 +328,6 @@ class PaymentsController extends Controller
         $compositePayment->setSupportingDocument(null);
         if ($supportingDocument->getNumberOfLinks() == 0) {
           $this->remove($supportingDocument, flush: true);
-        } elseif (!empty($supportingDocument->getOriginalFileName())) {
-          $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
-          $this->flush();
         }
 
         return self::response($this->l->t('Successfully deleted the supporting document for the payment "%1$s", please upload a new one!', $compositePaymentId));

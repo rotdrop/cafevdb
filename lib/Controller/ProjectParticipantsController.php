@@ -727,7 +727,6 @@ class ProjectParticipantsController extends Controller
                     $fieldData->getOptionValue()
                   ));
                 }
-                $dbFile->unlink(); // link-count incremented again below
                 $conflict = 'replaced';
                 break;
               case FieldDataType::SERVICE_FEE:
@@ -844,7 +843,7 @@ class ProjectParticipantsController extends Controller
                         ->setMimeType($mimeType)
                         ->getFileData()->setData($fileData);
                     }
-                    $dbFile->setOriginalFileName($originalFileName ?? null);
+                    $dbFile->setFileName($originalFileName ?? null);
                     break;
                   case UploadsController::UPLOAD_MODE_LINK:
                     // Generate kind of a hard-link. The code below will just increase the link-count.

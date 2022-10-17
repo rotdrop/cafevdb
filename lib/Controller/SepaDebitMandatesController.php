@@ -1315,7 +1315,7 @@ class SepaDebitMandatesController extends Controller
               ->setSize(strlen($fileContent))
               ->getFileData()->setData($fileContent);
           }
-          $writtenMandate->setOriginalFileName($originalFileName);
+          $writtenMandate->setFileName($originalFileName);
 
           break;
         case UploadsController::UPLOAD_MODE_LINK:
