@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
 
+use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\Mapping\Event\LoggableAdapter;
+use OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener as BaseLoggableListener;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectManager;
@@ -34,17 +37,17 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectManager;
  * @todo ATM all properties of all entities are logged with the
  * exception of the LogEntry-class, of course. Perhaps make this configurable.
  */
-class GedmoLoggableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Loggable\LoggableListener
+class GedmoLoggableListener extends BaseLoggableListener
 {
   /** @var string */
   private $remoteAddress;
 
   /**
-   * @param mixed $userId string or null
+   * @param null|string $userId string or null.
    *
-   * @param mixed $remoteAddress string or null
+   * @param null|string $remoteAddress string or null.
    */
-  public function __construct($userId = null, $remoteAddress = null)
+  public function __construct(?string $userId = null, ?string $remoteAddress = null)
   {
     parent::__construct();
     $this->username = $userId;
@@ -54,13 +57,16 @@ class GedmoLoggableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Loggable\Loggable
   /**
    * Set remote address for logging.
    *
-   * @param mixed string or null
+   * @param null|strinng $remoteAddress
+   *
+   * @return void
    */
-  public function setRemoteAddress($remoteAddress)
+  public function setRemoteAddress($remoteAddress):void
   {
     $this->remoteAddress = $remoteAddress;
   }
 
+  /** {@inheritdoc} */
   public function getConfiguration(ObjectManager $objectManager, $class)
   {
     $config = parent::getConfiguration($objectManager, $class);
@@ -82,7 +88,12 @@ class GedmoLoggableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Loggable\Loggable
     return $config;
   }
 
-  protected function getLogEntryClass(\OCA\CAFEVDB\Wrapped\Gedmo\Loggable\Mapping\Event\LoggableAdapter $ea, $class)
+  /**
+   * {@inheritdoc}
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
+   */
+  protected function getLogEntryClass(LoggableAdapter $eventAdapter, $class)
   {
     return isset(self::$configurations[$this->name][$class]['logEntryClass']) ?
       self::$configurations[$this->name][$class]['logEntryClass'] :

@@ -140,7 +140,7 @@ class SepaBulkTransactionsController extends Controller
     array $sepaBulkTransactions = [],
     ?string $sepaDueDeadline = null,
     int $bulkTransactionId = 0,
-  ):DataResponse {
+  ):Response {
     switch ($topic) {
       case 'create':
         $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));

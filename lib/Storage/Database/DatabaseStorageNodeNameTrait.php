@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,17 +26,32 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use OCP\IL10N;
 
+use OCA\CAFEVDB\AppInfo\Application;
+use OCA\CAFEVDB\Service\Registration;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
 
-trait ProjectParticipantsStorageTrait
+/**
+ * Actually just provide some path names, translated with the app's configured
+ * locale.
+ */
+trait DatabaseStorageNodeNameTrait
 {
   /**
    * @var IL10N
-   * Personal localization settings based on user preferences.
+   * Personal localization settings based on the app settings.
    */
-  protected $l;
+  protected $appL10n;
+
+  /** @return IL10N */
+  protected function getAppL10n():IL10N
+  {
+    if (empty($this->appL10n)) {
+      $this->appL10n = Application::get(Registration::APP_L10N);
+    }
+    return $this->appL10n;
+  }
 
   /**
    * Get the name of the per-participant document folder
@@ -46,7 +61,7 @@ trait ProjectParticipantsStorageTrait
   protected function getDocumentsFolderName():string
   {
     // TRANSLATORS: folder-name
-    return $this->l->t('Documents');
+    return $this->getAppL10n()->t('Documents');
   }
 
   /**
@@ -56,7 +71,7 @@ trait ProjectParticipantsStorageTrait
   protected function getSupportingDocumentsFolderName():string
   {
     // TRANSLATORS: folder-name
-    return $this->l->t('SupportingDocuments');
+    return $this->getAppL10n()->t('SupportingDocuments');
   }
 
   /**
@@ -68,7 +83,7 @@ trait ProjectParticipantsStorageTrait
   protected function getBankTransactionsFolderName():string
   {
     // TRANSLATORS: folder-name
-    return $this->l->t('BankTransactions');
+    return $this->getAppL10n()->t('BankTransactions');
   }
 
   /**
@@ -80,7 +95,7 @@ trait ProjectParticipantsStorageTrait
   protected function getReceivablesFolderName():string
   {
     // TRANSLATORS: folder-name
-    return $this->l->t('Receivables');
+    return $this->getAppL10n()->t('Receivables');
   }
 
   /**
@@ -90,15 +105,24 @@ trait ProjectParticipantsStorageTrait
    *
    * @param string $userIdSlug
    *
+   * @param null|string $extension
+   *
    * @return string
    */
-  protected function getLegacyPaymentRecordFileName(int $compositePaymentId, string $userIdSlug):string
-  {
+  protected function getLegacyPaymentRecordFileName(
+    int $compositePaymentId,
+    string $userIdSlug,
+    ?string $extension = null,
+  ):string {
     // TRANSLATORS: file-name
-    return $this->l->t('PaymentRecord-%1$s-%2$d', [
+    $fileName =  $this->getAppL10n()->t('PaymentRecord-%1$s-%2$d', [
       Util::dashesToCamelCase($userIdSlug, true, '_-.'),
       $compositePaymentId,
     ]);
+    if (!empty($extension)) {
+      $fileName .= '.' . $extension;
+    }
+    return $fileName;
   }
 
   /**
@@ -106,12 +130,16 @@ trait ProjectParticipantsStorageTrait
    *
    * @param Entities\CompositePayment $compositePayment
    *
+   * @param null|string $extension
+   *
    * @return string
    */
-  protected function getPaymentRecordFileName(Entities\CompositePayment $compositePayment):string
-  {
+  protected function getPaymentRecordFileName(
+    Entities\CompositePayment $compositePayment,
+    ?string $extension = null,
+  ):string {
     $userIdSlug = $compositePayment->getMusician()->getUserIdSlug();
-    return $this->getLegacyPaymentRecordFileName($compositePayment->getId(), $userIdSlug);
+    return $this->getLegacyPaymentRecordFileName($compositePayment->getId(), $userIdSlug, $extension);
   }
 
   /**
@@ -122,14 +150,23 @@ trait ProjectParticipantsStorageTrait
   protected function getDebitMandatesFolderName():string
   {
     // TRANSLATORS: folder-name
-    return $this->l->t('DebitMandates');
+    return $this->getAppL10n()->t('DebitMandates');
   }
 
   /**
    * PME-legacy.
+   *
+   * @param string $debitMandateReference
+   *
+   * @param null|string $extension
+   *
+   * @return string
    */
-  protected function getLegacyDebitMandateFileName(string $debitMandateReference):string
+  protected function getLegacyDebitMandateFileName(string $debitMandateReference, ?string $extension = null):string
   {
+    if (!empty($extension)) {
+      $debitMandateReference .= '.' . $extension;
+    }
     return $debitMandateReference;
   }
 
@@ -138,10 +175,12 @@ trait ProjectParticipantsStorageTrait
    *
    * @param Entities\SepaDebitMandate $debitMandate
    *
+   * @param null|string $extension
+   *
    * @return string
    */
-  protected function getDebitMandateFileName(Entities\SepaDebitMandate $debitMandate):string
+  protected function getDebitMandateFileName(Entities\SepaDebitMandate $debitMandate, ?string $extension = null):string
   {
-    return $this->getLegacyDebitMandateFileName($debitMandate->getMandateReference());
+    return $this->getLegacyDebitMandateFileName($debitMandate->getMandateReference(), $extension);
   }
 }

@@ -93,16 +93,6 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $participantFieldsData;
 
- /**
-   * @var \DateTimeImmutable
-   *
-   * Tracks changes in the fields data, in particular to catch deleted files
-   * for the database file-space.
-   *
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   */
-  private $participantFieldsDataChanged;
-
   /**
    * Link in the project instruments, may be more than one per participant.
    *
@@ -139,6 +129,17 @@ class ProjectParticipant implements \ArrayAccess
    * )
    */
   private $sepaDebitMandate = null;
+
+  /**
+   * @var DatabaseStorage
+   *
+   * The root-directory entry for the potentially encrypted participant
+   * storage. This would also be available through the DatabaseStorages table,
+   * but we keep it here for convenient access.
+   *
+   * @ORM\OneToOne(targetEntity="DatabaseStorage", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
+   */
+  private $databaseDocuments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -271,16 +272,6 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Get participantFieldsDataChanged.
-   *
-   * @return Collection
-   */
-  public function getParticipantFieldsDataChanged():?\DateTimeInterface
-  {
-    return $this->participantFieldsDataChanged;
-  }
-
-  /**
    * Get one specific participant-field datum indexed by its key
    *
    * @param mixed $key Everything which can be converted to an UUID by
@@ -366,6 +357,30 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
+   * Set databaseDocuments.
+   *
+   * @param null|DatabaseStorage $databaseDocuments
+   *
+   * @return ProjectParticipant
+   */
+  public function setDatabaseDocuments(?DatabaseStorage $databaseDocuments):ProjectParticipant
+  {
+    $this->databaseDocuments = $databaseDocuments;
+
+    return $this;
+  }
+
+  /**
+   * Get databaseDocuments.
+   *
+   * @return DatabaseStorage|null
+   */
+  public function getDatabaseDocuments():?DatabaseStorage
+  {
+    return $this->databaseDocuments;
+  }
+
+  /**
    * @var null|array
    *
    * The array of changed field values.
@@ -419,5 +434,18 @@ class ProjectParticipant implements \ArrayAccess
   public function usage():int
   {
     return $this->payments->count();
+  }
+
+    /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $musicianName = ($this->musician instanceof Musician)
+      ? $this->musician->getUserIdSlug() . ':' . $this->musician->getId()
+      : '?';
+    $projectName = ($this->project instanceof Project)
+      ? $this->project->getName() . ':' . $this->project->getId()
+      : '?';
+
+    return $musicianName . '@' . $projectName;
   }
 }

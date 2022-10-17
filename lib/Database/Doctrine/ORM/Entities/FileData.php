@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,7 +70,6 @@ class FileData implements \ArrayAccess
    *       @Gedmo\SlugHandlerOption(name="associationSlug", value="file.dataHash")
    *     })
    * })
-   *
    */
   protected $dataHash;
 
@@ -81,22 +80,28 @@ class FileData implements \ArrayAccess
    */
   protected $data;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set data.
    *
-   * @param string $data
+   * @param null|string $data
+   *
+   * @param string $format
    *
    * @return FileData
    */
-  public function setData($data, string $format = 'binary')
+  public function setData(?string $data, string $format = 'binary')
   {
     switch ($format) {
       case 'base64':
         $this->data = base64_decode($data);
+        // fallthrough
       default:
       case 'resource':
       case 'binary':
@@ -110,35 +115,37 @@ class FileData implements \ArrayAccess
   /**
    * Get data.
    *
+   * @param string $format
+   *
    * @return string|null
    */
-  public function getData(string $format = 'binary')
+  public function getData(string $format = 'binary'):?string
   {
     if (is_resource($this->data)) {
       rewind($this->data);
       switch ($format) {
-      case 'base64':
-        return base64_encode(stream_get_contents($this->data));
-      case 'resource':
-        return $this->data;
-      case 'binary':
-        return stream_get_contents($this->data);
-      default:
-        return $this->data;
+        case 'base64':
+          return base64_encode(stream_get_contents($this->data));
+        case 'resource':
+          return $this->data;
+        case 'binary':
+          return stream_get_contents($this->data);
+        default:
+          return $this->data;
       }
     } else {
       switch ($format) {
-      case 'base64':
-        return base64_encode($this->data);
-      case 'resource':
-        $stream = fopen('php://memory', 'r+');
-        fwrite($stream, $this->data);
-        rewind($stream);
-        return $stream;
-      case 'binary':
-        return $this->data;
-      default:
-        return $this->data;
+        case 'base64':
+          return base64_encode($this->data);
+        case 'resource':
+          $stream = fopen('php://memory', 'r+');
+          fwrite($stream, $this->data);
+          rewind($stream);
+          return $stream;
+        case 'binary':
+          return $this->data;
+        default:
+          return $this->data;
       }
     }
   }
@@ -146,7 +153,7 @@ class FileData implements \ArrayAccess
   /**
    * Set file.
    *
-   * @param $file
+   * @param File $file
    *
    * @return FileData
    */

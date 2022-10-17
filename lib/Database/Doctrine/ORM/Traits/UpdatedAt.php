@@ -43,7 +43,7 @@ trait UpdatedAt
   /**
    * @var \DateTimeImmutable
    */
-  private $updated;
+  protected $updated;
 
   /**
    * Sets updated.

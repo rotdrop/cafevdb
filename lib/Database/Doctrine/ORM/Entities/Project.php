@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeInterface;
+use DateTimeImmutable;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
@@ -41,6 +44,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class Project implements \ArrayAccess
 {
@@ -149,24 +153,15 @@ class Project implements \ArrayAccess
   private $sentEmail;
 
   /**
-   * @var Collection
+   * @var DatabaseStorage
    *
-   * @ORM\OneToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="project", indexBy="sequence", fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"sequence" = "ASC"})
+   * @ORM\OneToOne(targetEntity="DatabaseStorage", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
    */
-  private $financialBalanceSupportingDocuments;
+  private $financialBalanceDocumentsStorage;
 
-  /**
-   * @var \DateTimeImmutable
-   *
-   * Tracks changes in the supporting documents collection, in particular
-   * deletions.
-   *
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   */
-  private $financialBalanceSupportingDocumentsChanged;
-
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->instrumentationNumbers = new ArrayCollection();
     $this->webPages = new ArrayCollection();
@@ -178,9 +173,9 @@ class Project implements \ArrayAccess
     $this->compositePayments = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->sentEmail = new ArrayCollection();
-    $this->financialBalanceSupportingDocuments = new ArrayCollection();
   }
 
+  /** {@inheritdoc} */
   public function __clone()
   {
     if ($this->id) {
@@ -200,7 +195,7 @@ class Project implements \ArrayAccess
     }
 
     // clone all participant fields
-    foreach ($oldParticipantFields as $oldParticipantField)  {
+    foreach ($oldParticipantFields as $oldParticipantField) {
       /** @var ProjectParticipantField $participantField */
       $participantField = clone $oldParticipantField;
       $participantField->setProject($this);
@@ -212,6 +207,8 @@ class Project implements \ArrayAccess
 
   /**
    * Set id.
+   *
+   * @param int $id Entity id.
    *
    * @return Project
    */
@@ -235,11 +232,11 @@ class Project implements \ArrayAccess
   /**
    * Set year.
    *
-   * @param int $year
+   * @param null|int $year
    *
    * @return Project
    */
-  public function setYear($year)
+  public function setYear(?int $year):Project
   {
     $this->year = $year;
 
@@ -259,11 +256,11 @@ class Project implements \ArrayAccess
   /**
    * Set name.
    *
-   * @param string $name
+   * @param null|string $name
    *
    * @return Project
    */
-  public function setName($name)
+  public function setName(?string $name):Project
   {
     $this->name = $name;
 
@@ -330,11 +327,11 @@ class Project implements \ArrayAccess
   /**
    * Set webPages.
    *
-   * @param ArrayCollection $webPages
+   * @param Collection $webPages
    *
    * @return Project
    */
-  public function setWebPages($webPages)
+  public function setWebPages(Collection $webPages):Project
   {
     $this->webPages = $webPages;
 
@@ -344,7 +341,7 @@ class Project implements \ArrayAccess
   /**
    * Get webPages.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getWebPages()
   {
@@ -354,11 +351,11 @@ class Project implements \ArrayAccess
   /**
    * Set participantFields.
    *
-   * @param ArrayCollection $participantFields
+   * @param Collection $participantFields
    *
    * @return Project
    */
-  public function setParticipantFields($participantFields):Project
+  public function setParticipantFields(Collection $participantFields):Project
   {
     $this->participantFields = $participantFields;
 
@@ -378,11 +375,11 @@ class Project implements \ArrayAccess
   /**
    * Set participantFieldsData.
    *
-   * @param ArrayCollection $participantFieldsData
+   * @param Collection $participantFieldsData
    *
    * @return Project
    */
-  public function setParticipantFieldsData($participantFieldsData):Project
+  public function setParticipantFieldsData(Collection $participantFieldsData):Project
   {
     $this->participantFieldsData = $participantFieldsData;
 
@@ -402,11 +399,11 @@ class Project implements \ArrayAccess
   /**
    * Set participants.
    *
-   * @param ArrayCollection $participants
+   * @param Collection $participants
    *
    * @return Project
    */
-  public function setParticipants($participants):Project
+  public function setParticipants(Collection $participants):Project
   {
     $this->participants = $participants;
 
@@ -426,11 +423,11 @@ class Project implements \ArrayAccess
   /**
    * Set sepaDebitMandates.
    *
-   * @param ArrayCollection $sepaDebitMandates
+   * @param Collection $sepaDebitMandates
    *
    * @return Project
    */
-  public function setSepaDebitMandates($sepaDebitMandates):Project
+  public function setSepaDebitMandates(Collection $sepaDebitMandates):Project
   {
     $this->sepaDebitMandates = $sepaDebitMandates;
 
@@ -450,11 +447,11 @@ class Project implements \ArrayAccess
   /**
    * Set instrumentationNumbers.
    *
-   * @param ArrayCollection $instrumentationNumbers
+   * @param Collection $instrumentationNumbers
    *
    * @return Project
    */
-  public function setInstrumentationNumbers($instrumentationNumbers)
+  public function setInstrumentationNumbers(Collection $instrumentationNumbers):Project
   {
     $this->instrumentationNumbers = $instrumentationNumbers;
 
@@ -464,7 +461,7 @@ class Project implements \ArrayAccess
   /**
    * Get instrumentationNumbers.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getInstrumentationNumbers()
   {
@@ -488,7 +485,7 @@ class Project implements \ArrayAccess
   /**
    * Get payments.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getPayments():Collection
   {
@@ -512,7 +509,7 @@ class Project implements \ArrayAccess
   /**
    * Get sentEmail.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getSentEmail():Collection
   {
@@ -520,38 +517,53 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set financialBalanceSupportingDocuments.
+   * Set financialBalanceDocumentsStorage
    *
-   * @param Collection $financialBalanceSupportingDocuments
+   * @param DatabaseStorage $financialBalanceDocumentsStorage
    *
    * @return Project
    */
-  public function setFinancialBalanceSupportingDocuments(Collection $financialBalanceSupportingDocuments):Project
+  public function setFinancialBalanceDocumentsStorage(DatabaseStorage $financialBalanceDocumentsStorage):Project
   {
-    $this->financialBalanceSupportingDocuments = $financialBalanceSupportingDocuments;
+    $this->financialBalanceDocumentsStorage = $financialBalanceDocumentsStorage;
 
     return $this;
   }
 
   /**
-   * Get financialBalanceSupportingDocuments.
+   * Get financialBalanceDocumentsStorage.
    *
-   * @return ArrayCollection
+   * @return null|DatabaseStorage
    */
-  public function getFinancialBalanceSupportingDocuments():Collection
+  public function getFinancialBalanceDocumentsStorage():?DatabaseStorage
   {
-    return $this->financialBalanceSupportingDocuments;
+    return $this->financialBalanceDocumentsStorage;
   }
 
   /**
-   * Get financialBalanceSupportingDocumentsChanged time-stamp.
+   * Get financialBalanceDocumentsFolder.
    *
-   * @return \DateTimeInterface
+   * @return null|DatabaseStorageFolder
    */
-  public function getFinancialBalanceSupportingDocumentsChanged():?\DateTimeInterface
+  public function getFinancialBalanceDocumentsFolder():?DatabaseStorageFolder
   {
-    return $this->financialBalanceSupportingDocumentsChanged;
+    return empty($this->financialBalanceDocumentsStorage) ? null : $this->financialBalanceDocumentsStorage->getRoot();
   }
+
+  /**
+   * Recurse to the balance documents folder and return its contents. Return
+   * an empty collection if there is no such folder.
+   *
+   * @return Collection
+   */
+  public function getFinancialBalanceSupportingDocuments():Collection
+  {
+    if (empty($this->financialBalanceDocumentsStorage)) {
+      return new ArrayCollection;
+    }
+    return $this->getFinancialBalanceDocumentsFolder()->getSubFolders();
+  }
+
 
   /**
    * Set participantInstruments.
@@ -570,7 +582,7 @@ class Project implements \ArrayAccess
   /**
    * Get participantInstruments.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getParticipantInstruments():Collection
   {
@@ -594,7 +606,7 @@ class Project implements \ArrayAccess
   /**
    * Get calendarEvents.
    *
-   * @return ArrayCollection
+   * @return Collection
    */
   public function getCalendarEvents():Collection
   {
@@ -605,9 +617,17 @@ class Project implements \ArrayAccess
    * Return the number of "serious" items which "use" this entity. For
    * project participant this is (for now) the number of payments. In
    * the long run: only open payments/receivables should count.
+   *
+   * @return int
    */
   public function usage():int
   {
     return $this->payments->count();
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->name . '@' . $this->id;
   }
 }

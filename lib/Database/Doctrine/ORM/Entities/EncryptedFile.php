@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,12 +63,14 @@ class EncryptedFile extends File
   /**
    * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="ProjectBalanceSupportingDocument", mappedBy="documents")
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="documentsChanged")
+   * @ORM\OneToMany(targetEntity="DatabaseStorageFile", mappedBy="file", cascade={"persist"})
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
-  private $projectBalanceSupportingDocuments;
+  private $databaseStorageDirEntries;
 
-  public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null) {
+  /** {@inheritdoc} */
+  public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null)
+  {
     parent::__construct($fileName, null, $mimeType);
     $this->owners = new ArrayCollection;
     $data = $data ?? '';
@@ -81,7 +83,7 @@ class EncryptedFile extends File
     if (!empty($owner)) {
       $this->addOwner($owner);
     }
-    $this->projectBalanceSupportingDocuments = new ArrayCollection;
+    $this->databaseStorageDirEntries = new ArrayCollection;
   }
 
   /**
@@ -137,42 +139,44 @@ class EncryptedFile extends File
   public function removeOwner(Musician $musician):EncryptedFile
   {
     $this->owners->remove($musician->getId());
-  }
 
-  /**
-   * Set projectBalanceSupportingDocuments.
-   *
-   * @param Collection $projectBalanceSupportingDocuments
-   *
-   * @return EncryptedFile
-   */
-  public function setProjectBalanceSupportingDocuments(Collection $supportingDocuments):EncryptedFile
-  {
-    $this->projectBalanceSupportingDocuments = $supportingDocuments;
     return $this;
   }
 
   /**
-   * Get projectBalanceSupportingDocuments.
+   * Set databaseStorageDirEntries.
    *
-   * @return null|ProjectBalanceSupportingDocument
+   * @param Collection $dirEntries
+   *
+   * @return EncryptedFile
    */
-  public function getProjectBalanceSupportingDocuments():Collection
+  public function setDatabaseStorageDirEntries(Collection $dirEntries):EncryptedFile
   {
-    return $this->projectBalanceSupportingDocuments;
+    $this->databaseStorageDirEntries = $dirEntries;
+    return $this;
+  }
+
+  /**
+   * Get databaseStorageDirEntries.
+   *
+   * @return Collection
+   */
+  public function getDatabaseStorageDirEntries():Collection
+  {
+    return $this->databaseStorageDirEntries;
   }
 
   /**
    * Add one document container.
    *
-   * @param ProjectBalanceSupportingDocument $entity
+   * @param DatabaseStorageFile $entity
    *
    * @return EncryptedFile
    */
-  public function addProjectBalanceSupportingDocument(ProjectBalanceSupportingDocument $entity):EncryptedFile
+  public function addDatabaseStorageDirEntry(DatabaseStorageFile $entity):EncryptedFile
   {
-    if (!$this->projectBalanceSupportingDocuments->contains($entity)) {
-      $this->projectBalanceSupportingDocuments->add($entity);
+    if (!$this->databaseStorageDirEntries->contains($entity)) {
+      $this->databaseStorageDirEntries->add($entity);
     }
     return $this;
   }
@@ -180,15 +184,25 @@ class EncryptedFile extends File
   /**
    * Remove one document container.
    *
-   * @param ProjectBalanceSupportingDocument $entity
+   * @param DatabaseStorageFile $entity
    *
-   * @return null|ProjectBalanceSupportingDocument
+   * @return EncryptedFile
    */
-  public function removeProjectBalanceSupportingDocument(ProjectBalanceSupportingDocument $entity):EncryptedFile
+  public function removeDatabaseStorageDirEntry(DatabaseStorageFile $entity):EncryptedFile
   {
-    if ($this->projectBalanceSupportingDocuments->contains($entity)) {
-      $this->projectBalanceSupportingDocuments->removeElement($entity);
+    if ($this->databaseStorageDirEntries->contains($entity)) {
+      $this->databaseStorageDirEntries->removeElement($entity);
     }
     return $this;
+  }
+
+  /**
+   * Get numberOfLinks.
+   *
+   * @return int
+   */
+  public function getNumberOfLinks():int
+  {
+    return $this->databaseStorageDirEntries->count();
   }
 }

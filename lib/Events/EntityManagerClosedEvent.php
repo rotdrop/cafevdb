@@ -2,8 +2,8 @@
 /**
  * Orchestra member, musician and project management application.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,12 +34,16 @@ class EntityManagerClosedEvent extends Event
   /** @var EntityManager */
   private $entityManager;
 
+  /**
+   * @param EntityManager $entityManager
+   */
   public function __construct(EntityManager $entityManager)
   {
     parent::__construct();
     $this->entityManager = $entityManager;
   }
 
+  /** @return EntityManager */
   public function getEntityManager():EntityManager
   {
     return $this->entityManager;

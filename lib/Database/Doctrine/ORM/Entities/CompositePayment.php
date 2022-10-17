@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Common\Util;
  *
  * @ORM\Table(name="CompositePayments")
  *    uniqueConstraints={@ORM\UniqueConstraint(columns={"notification_message_id"})}
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository")
  *
  * @ORM\HasLifecycleCallbacks
  */
@@ -56,6 +56,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\FactoryTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // filename of supporting document.
 
   const SUBJECT_PREFIX_LIMIT = 16;
   const SUBJECT_PREFIX_SEPARATOR = ' / ';
@@ -111,7 +112,9 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @var SepaBulkTransaction
    *
    * @ORM\ManyToOne(targetEntity="SepaBulkTransaction", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="sepaTransactionDataChanged")
+   *
+   * Promote any changes to the sepa transaction.
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
   private $sepaTransaction = null;
 
@@ -159,7 +162,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumn(nullable=false)
-   * @Gedmo\Timestampable(on={"update","change","create","delete"}, field="supportingDocument", timestampField="paymentsChanged")
    */
   private $musician;
 
@@ -185,22 +187,18 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   private $supportingDocument;
 
   /**
-   * @var ProjectBalanceSupportingDocument
+   * @var DatabaseStorageFolder
    *
-   * @ORM\ManyToOne(targetEntity="ProjectBalanceSupportingDocument", inversedBy="compositePayments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="balance_document_sequence", referencedColumnName="sequence", nullable=true)
-   * )
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
-  private $projectBalanceSupportingDocument;
+  private $balanceDocumentsFolder;
 
   /** {@inheritdoc} */
   public function __construct()
   {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
-    $this->projectBalanceSupportingDocuments = new ArrayCollection;
+    $this->balanceDocumentsFolders = new ArrayCollection;
   }
 
   /**
@@ -526,22 +524,16 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    */
   public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
   {
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
-      $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
-    }
-
-    if (!empty($this->supportingDocument)) {
-      $this->supportingDocument->unlink();
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
+      $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+      $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
     }
 
     $this->supportingDocument = $supportingDocument;
 
-    if (!empty($this->supportingDocument)) {
-      $this->supportingDocument->link();
-    }
-
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->supportingDocument)) {
-      $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
+      $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+      $this->balanceDocumentsFolder->addDocument($this->supportingDocument, $fileName);
     }
 
     return $this;
@@ -558,37 +550,40 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set projectBalanceSupportingDocument.
+   * Set balanceDocumentsFolder.
    *
-   * @param ProjectBalanceSupportingDocument $projectBalanceSupportingDocument
+   * @param DatabaseStorageFolder $balanceDocumentsFolder
    *
    * @return ProjectPayment
    */
-  public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $projectBalanceSupportingDocument):CompositePayment
+  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder):CompositePayment
   {
-    if (!empty($this->projectBalanceSupportingDocument)) {
+    if (!empty($this->balanceDocumentsFolder)) {
       /** @var ProjectPayment $part */
       foreach ($this->projectPayments as $part) {
-        if ($part->getProjectBalanceSupportingDocument() == $this->projectBalanceSupportingDocument) {
-          $part->setProjectBalanceSupportingDocument(null);
+        if ($part->getBalanceDocumentsFolder() == $this->balanceDocumentsFolder) {
+          $part->setBalanceDocumentsFolder(null);
         }
       }
       if (!empty($this->supportingDocument)) {
-        $this->projectBalanceSupportingDocument->removeDocument($this->supportingDocument);
+        $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+
+        $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
       }
     }
 
-    $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
+    $this->balanceDocumentsFolder = $balanceDocumentsFolder;
 
-    if (!empty($this->projectBalanceSupportingDocument)) {
+    if (!empty($this->balanceDocumentsFolder)) {
       if (!empty($this->supportingDocument)) {
-        $this->projectBalanceSupportingDocument->addDocument($this->supportingDocument);
+        $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
+        $this->balanceDocumentsFolder->addDocument($this->supportingDocument, $fileName);
       }
 
       /** @var ProjectPayment $part */
       foreach ($this->projectPayments as $part) {
-        if (empty($part->getProjectBalanceSupportingDocument())) {
-          $part->setProjectBalanceSupportingDocument($this->projectBalanceSupportingDocument);
+        if (empty($part->getBalanceDocumentsFolder())) {
+          $part->setBalanceDocumentsFolder($this->balanceDocumentsFolder);
         }
       }
     }
@@ -597,18 +592,18 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Get projectBalanceSupportingDocument.
+   * Get balanceDocumentsFolder.
    *
-   * @return ?ProjectBalanceSupportingDocument
+   * @return ?DatabaseStorageFolder
    */
-  public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
+  public function getBalanceDocumentsFolder():?DatabaseStorageFolder
   {
-    return $this->projectBalanceSupportingDocument;
+    return $this->balanceDocumentsFolder;
   }
 
   /**
    * Automatic subject generation from receivables and linked
-   * ProjectBalanceSupportingDocument's. The routine applies the supplied
+   * DatabaseStorageFolder's. The routine applies the supplied
    * transliteration routine such that the result only contains valid
    * characters for a potential bank transaction data-set. It also tries to
    * group and compactify payments which carry the same prefix assuming the
@@ -627,14 +622,14 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       $transliterate = fn(string $x) => $x;
     }
 
-    // collect the ProjectBalanceSupportingDocument's
-    $balanceDocuments = [ $this->projectBalanceSupportingDocument ];
+    // collect the DatabaseStorageFolder's
+    $balanceDocuments = [ $this->balanceDocumentsFolder ];
     /** @var ProjectPayment $projectPayment */
     foreach ($this->projectPayments as $projectPayment) {
-      $balanceDocuments[] = $projectPayment->getProjectBalanceSupportingDocument();
+      $balanceDocuments[] = $projectPayment->getBalanceDocumentsFolder();
     }
     $balanceSequences =  array_map(
-      fn(ProjectBalanceSupportingDocument $document) => $document->getSequence(),
+      fn(DatabaseStorageFolder $document) => substr($document->getName() ?? '000', -3),
       array_filter($balanceDocuments),
     );
     sort($balanceSequences, SORT_NUMERIC);

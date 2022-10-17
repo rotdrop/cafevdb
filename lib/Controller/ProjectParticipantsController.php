@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
@@ -92,6 +93,9 @@ class ProjectParticipantsController extends Controller
   /** @var EntityManager */
   protected $entityManager;
 
+  /** @var StorageFactory */
+  private $storageFactory;
+
   /** {@inheritdoc} */
   public function __construct(
     $appName,
@@ -102,6 +106,7 @@ class ProjectParticipantsController extends Controller
     PHPMyEdit $phpMyEdit,
     ProjectService $projectService,
     ProjectParticipantFieldsService $participantFieldsService,
+    StorageFactory $storageFactory,
   ) {
 
     parent::__construct($appName, $request);
@@ -112,6 +117,7 @@ class ProjectParticipantsController extends Controller
     $this->pme = $phpMyEdit;
     $this->projectService = $projectService;
     $this->participantFieldsService = $participantFieldsService;
+    $this->storageFactory = $storageFactory;
     $this->l = $this->l10N();
     $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
@@ -489,9 +495,11 @@ class ProjectParticipantsController extends Controller
               $fieldDatum->setOptionValue(null);
               break;
             case FieldDataType::DB_FILE:
+              $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+              $storage->removeFieldDatumDocument($fieldDatum, flush: true);
               $fieldDatum->setOptionValue(null);
+              $this->flush();
               $filePath = $dbFile->getFileName();
-              $dbFile->unlink(); // not done by setOptionValue().
               if ($dbFile->getNumberOfLinks() == 0) {
                 $this->remove($dbFile, hard: true);
               } else {
@@ -499,6 +507,8 @@ class ProjectParticipantsController extends Controller
               }
               break;
             case FieldDataType::SERVICE_FEE:
+              $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+              $storage->removeFieldDatumDocument($fieldDatum, flush: true);
               $fieldDatum->setSupportingDocument(null);
               $this->flush();
               $filePath = $dbFile->getFileName();
@@ -717,7 +727,6 @@ class ProjectParticipantsController extends Controller
                     $fieldData->getOptionValue()
                   ));
                 }
-                $dbFile->unlink(); // link-count incremented again below
                 $conflict = 'replaced';
                 break;
               case FieldDataType::SERVICE_FEE:
@@ -796,6 +805,9 @@ class ProjectParticipantsController extends Controller
                 break;
               case FieldDataType::SERVICE_FEE:
               case FieldDataType::DB_FILE:
+
+                $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+
                 switch ($uploadMode) {
                   case UploadsController::UPLOAD_MODE_COPY:
                   case UploadsController::UPLOAD_MODE_MOVE:
@@ -809,9 +821,8 @@ class ProjectParticipantsController extends Controller
                       // if the file has multiple links then it is probably
                       // better to remove the existing file rather than
                       // overwriting a file which has multiple links.
-                      if ($dataType == FieldDataType::DB_FILE) {
-                        $dbFile->unlink(); // setOptionValue() can't
-                      } else {
+                      $storage->removeFieldDatumDocument($fieldDatum, flush: true);
+                      if ($dataType == FieldDataType::SERVICE_FEE) {
                         $fieldData->setSupportingDocument(null);
                       }
                       $dbFile = null;
@@ -832,12 +843,15 @@ class ProjectParticipantsController extends Controller
                         ->setMimeType($mimeType)
                         ->getFileData()->setData($fileData);
                     }
-                    $dbFile->setOriginalFileName($originalFileName ?? null);
+                    $dbFile->setFileName($originalFileName ?? null);
                     break;
                   case UploadsController::UPLOAD_MODE_LINK:
                     // Generate kind of a hard-link. The code below will just increase the link-count.
-                    if (!empty($dbFile) && $dbFile->getNumberOfLinks() == 0) {
-                      $this->remove($dbFile, flush: true);
+                    if (!empty($dbFile)) {
+                      $storage->removeFieldDatumDocument($fieldDatum, flush: true);
+                      if ($dbFile->getNumberOfLinks() == 0) {
+                        $this->remove($dbFile, flush: true);
+                      }
                     }
                     $dbFile = $originalFile;
                     break;
@@ -845,13 +859,15 @@ class ProjectParticipantsController extends Controller
 
                 $this->persist($dbFile);
                 $this->flush();
+
                 if ($dataType == FieldDataType::DB_FILE) {
                   $fieldData->setOptionValue($dbFile->getId());
-                  $dbFile->link(); // setOptionValue() can't
                 } else {
                   $fieldData->setSupportingDocument($dbFile); // will increase the link-count of $dbFile
                 }
                 $this->persist($fieldData);
+
+                $storage->addFieldDatumDocument($fieldData, flush: false);
 
                 $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
                   'section' => 'database',

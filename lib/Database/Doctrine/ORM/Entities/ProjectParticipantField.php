@@ -944,4 +944,10 @@ class ProjectParticipantField implements \ArrayAccess
       unset($this->preUpdatePosted[$field]);
     }
   }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->name . '@' . $this->id . '[' . $this->dataType . ':' . $this->multiplicity . ']';
+  }
 }

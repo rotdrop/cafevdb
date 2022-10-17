@@ -50,6 +50,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  * @ORM\DiscriminatorColumn(name="sepa_transaction", type="EnumSepaTransaction")
  * @ORM\DiscriminatorMap({null="SepaBulkTransaction","debit_note"="SepaDebitNote", "bank_transfer"="SepaBankTransfer"})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository")
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener"})
  *
  * @ORM\HasLifecycleCallbacks
  */
@@ -72,7 +73,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true, indexBy="id")
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"persist"}, indexBy="id")
    * @ORM\JoinTable(
    *   name="SepaBulkTransactionData",
    *   inverseJoinColumns={
@@ -86,17 +87,6 @@ class SepaBulkTransaction implements \ArrayAccess
    * and tagged immutable once the transaction has been submitted to the bank.
    */
   private $sepaTransactionData;
-
-  /**
-   * @var \DateTimeImmutable
-   *
-   * This should track changes in the transaction-data in order to catch
-   * deletions in the file-system export.
-   *
-   * @Gedmo\Timestampable(on={"change"}, field="sepaTransactionData")
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   */
-  private $sepaTransactionDataChanged;
 
   /**
    * @var \DateTimeImmutable
@@ -173,13 +163,14 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   private $payments;
 
-  /** {@inheritdoc} */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
     $this->sepaTransactionData = new ArrayCollection();
     $this->payments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Get id.
@@ -226,7 +217,6 @@ class SepaBulkTransaction implements \ArrayAccess
       throw new RuntimeException('The transaction data does not have a file-id.');
     }
     if (!$this->sepaTransactionData->containsKey($data->getId())) {
-      $data->link();
       $this->sepaTransactionData->set($data->getId(), $data);
     }
     return $this;
@@ -241,19 +231,8 @@ class SepaBulkTransaction implements \ArrayAccess
   {
     if ($this->sepaTransactionData->contains($data)) {
       $this->sepaTransactionData->removeElement($data);
-      $data->unlink();
     }
     return $this;
-  }
-
-  /**
-   * Get sepaTransactionDataChanged.
-   *
-   * @return Collection
-   */
-  public function getSepaTransactionDataChanged():?DateTimeInterface
-  {
-    return $this->sepaTransactionDataChanged;
   }
 
   /**
@@ -557,9 +536,7 @@ class SepaBulkTransaction implements \ArrayAccess
     $field = 'submitDate';
     if ($event->hasChangedField($field)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      // $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $oldValue = $event->getOldValue($field);
-      // $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($entityManager, $this, $oldValue, $event->getNewValue($field)));
       $this->preUpdateValue[$field] = $oldValue;
     }
   }

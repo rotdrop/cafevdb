@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,6 +46,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
  * @ORM\DiscriminatorMap({"generic"="File","encrypted"="EncryptedFile","image"="Image"})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\FilesRepository")
+ *
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class File implements \ArrayAccess
 {
@@ -66,30 +68,11 @@ class File implements \ArrayAccess
   protected $id;
 
   /**
-   * @var int
-   *
-   * The number of links pointing to this file.
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=0,"unsigned"=true})
-   */
-  protected $numberOfLinks = 0;
-
-  /**
    * @var string|null
    *
    * @ORM\Column(type="string", length=512, nullable=true)
    */
   protected $fileName;
-
-  /**
-   * @var string|null
-   *
-   * Optional original file-name, e.g. if this file generated from an upload
-   * or was copied from a cloud folder.
-   *
-   * @ORM\Column(type="string", length=512, nullable=true)
-   */
-  protected $originalFileName;
 
   /**
    * @var string|null
@@ -128,9 +111,11 @@ class File implements \ArrayAccess
    * @Gedmo\Timestampable(on={"update","change"}, field="fileData")
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */
-  private $updated;
+  protected $updated;
 
-  public function __construct($fileName = null, $data = null, $mimeType = null) {
+  /** {@inheritdoc} */
+  public function __construct($fileName = null, $data = null, $mimeType = null)
+  {
     $this->arrayCTOR();
     $this->setFileName($fileName);
     $this->setMimeType($mimeType);
@@ -152,71 +137,6 @@ class File implements \ArrayAccess
   public function getId():?int
   {
     return $this->id;
-  }
-
-  /**
-   * Set numberOfLinks.
-   *
-   * @param int $numberOfLinks
-   *
-   * @return File
-   *
-   * @throws DatabaseException
-   */
-  public function setNumberOfLinks(int $numberOfLinks):File
-  {
-    if ($numberOfLinks < 0) {
-      throw new DatabaseException(
-        'Number of links ' . $numberOfLinks
-          . ' has to be non negative. '
-          . 'File ' . $this->fileName . '@' . $this->id);
-    }
-
-    $this->numberOfLinks = $numberOfLinks;
-
-    return $this;
-  }
-
-  /**
-   * Get numberOfLinks.
-   *
-   * @return int
-   */
-  public function getNumberOfLinks():int
-  {
-    return $this->numberOfLinks;
-  }
-
-  /**
-   * Increment the link-count.
-   *
-   * @return File
-   */
-  public function link():File
-  {
-    ++$this->numberOfLinks;
-
-    return $this;
-  }
-
-  /**
-   * Decrement the link-count
-   *
-   * @return File
-   *
-   * @throws DatabaseException
-   */
-  public function unlink():File
-  {
-    if ($this->numberOfLinks <= 0) {
-      throw new DatabaseException(
-        'Number of links ' . $this->numberOfLinks . ' is already zero or less '
-          . ' but has to be non-negative. '
-          . 'File ' . $this->fileName . '@' . $this->id);
-    }
-    --$this->numberOfLinks;
-
-    return $this;
   }
 
   /**
@@ -269,6 +189,10 @@ class File implements \ArrayAccess
 
   /**
    * Set only the dir-name
+   *
+   * @param string $dirName
+   *
+   * @return File
    */
   public function setDirName(string $dirName):File
   {
@@ -278,6 +202,8 @@ class File implements \ArrayAccess
 
   /**
    * Get the dir-part of the file-name
+   *
+   * @return null|string
    */
   public function getDirName():?string
   {
@@ -285,16 +211,31 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set only the base-name
+   * Set only the base-name.
+   *
+   * @param string $baseName
+   *
+   * @return File
    */
   public function setBaseName(string $baseName):File
   {
-    $this->fileName = ($this->getDirName()??'') . self::PATH_SEPARATOR . trim($baseName, self::PATH_SEPARATOR);
+    $pathInfo = pathinfo($this->fileName);
+
+    $this->fileName = trim(
+      $pathInfo['dirname'] .  self::PATH_SEPARATOR
+      . trim($baseName, self::PATH_SEPARATOR),
+      self::PATH_SEPARATOR
+    );
+
     return $this;
   }
 
   /**
-   * Get the dir-part of the file-name
+   * Get the dir-part of the file-name.
+   *
+   * @param null|string $extension
+   *
+   * @return null|string
    */
   public function getBaseName(?string $extension = null):?string
   {
@@ -302,27 +243,33 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set originalFileName.
+   * Set only the extension.
    *
-   * @param string|null $originalFileName
+   * @param string $extension
    *
    * @return File
    */
-  public function setOriginalFileName(?string $originalFileName = null):File
+  public function setExtension(string $extension):File
   {
-    $this->originalFileName = $originalFileName;
+    $pathInfo = pathinfo($this->fileName ?? '');
+    $this->fileName = $pathInfo['filename'] . '.' . $extension;
+    if ($pathInfo['dirname'] != '.') {
+      $this->fileName = $pathInfo['dirname'] . self::PATH_SEPARATOR . $this->fileName;
+    }
 
     return $this;
   }
 
   /**
-   * Get originalFileName.
+   * Get the extension-part of the file-name.
    *
-   * @return string|null
+   * @param null|string $extension
+   *
+   * @return null|string
    */
-  public function getOriginalFileName():?string
+  public function getExtension(?string $extension = null):?string
   {
-    return $this->originalFileName;
+    return is_string($this->fileName) ? pathinfo($this->fileName, PATHINFO_EXTENSION) : null;
   }
 
   /**
@@ -352,11 +299,11 @@ class File implements \ArrayAccess
   /**
    * Set $size.
    *
-   * @param int $fileData
+   * @param int $size
    *
    * @return File
    */
-  public function setSize(int $size= -1):File
+  public function setSize(int $size = -1):File
   {
     $this->size = $size;
 
@@ -376,7 +323,7 @@ class File implements \ArrayAccess
   /**
    * Set FileData.
    *
-   * @param FileData $data
+   * @param FileData $fileData
    *
    * @return File
    */

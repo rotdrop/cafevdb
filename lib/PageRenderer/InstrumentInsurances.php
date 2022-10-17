@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Common\Util;
 /** TBD. */
 class InstrumentInsurances extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   const TEMPLATE = 'instrument-insurance';
   const TABLE = self::INSTRUMENT_INSURANCES_TABLE;

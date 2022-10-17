@@ -1,10 +1,33 @@
 <?php
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ProjectPayments
@@ -15,7 +38,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class ProjectPayment implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
 
   /**
    * @var int
@@ -71,6 +94,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(nullable=false)
    * )
+   *
+   * Promote any changes to the parent.
+   * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
   private $compositePayment;
 
@@ -98,17 +124,15 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private $projectParticipant;
 
   /**
-   * @var ProjectBalanceSupportingDocument
+   * @var DatabaseStorageFolder
    *
-   * @ORM\ManyToOne(targetEntity="ProjectBalanceSupportingDocument", inversedBy="projectPayments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="balance_document_sequence", referencedColumnName="sequence", nullable=true)
-   * )
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
-  private $projectBalanceSupportingDocument;
+  private $balanceDocumentsFolder;
 
-  public function __construct() {
+  /** {@inheritdoc} */
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
 
@@ -140,11 +164,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set compositePayment.
    *
-   * @param int $compositePayment
+   * @param null|int|CompositePayment $compositePayment
    *
    * @return ProjectPayment
    */
-  public function setCompositePayment($compositePayment):ProjectPayment
+  public function setCompositePayment(mixed $compositePayment):ProjectPayment
   {
     $this->compositePayment = $compositePayment;
 
@@ -156,7 +180,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return CompositePayment
    */
-  public function getCompositePayment()
+  public function getCompositePayment():?CompositePayment
   {
     return $this->compositePayment;
   }
@@ -164,11 +188,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set projectParticipant.
    *
-   * @param int $projectParticipant
+   * @param null|ProjectParticipant $projectParticipant
    *
    * @return ProjectPayment
    */
-  public function setProjectParticipant($projectParticipant):ProjectPayment
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectPayment
   {
     $this->projectParticipant = $projectParticipant;
 
@@ -180,7 +204,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectParticipant
    */
-  public function getProjectParticipant()
+  public function getProjectParticipant():?ProjectParticipant
   {
     return $this->projectParticipant;
   }
@@ -188,11 +212,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|int|Project $project
    *
    * @return ProjectPayment
    */
-  public function setProject($project):ProjectPayment
+  public function setProject(mixed $project):ProjectPayment
   {
     $this->project = $project;
 
@@ -204,7 +228,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return Project
    */
-  public function getProject()
+  public function getProject():?Project
   {
     return $this->project;
   }
@@ -212,11 +236,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|int|Musician $musician
    *
    * @return ProjectPayment
    */
-  public function setMusician($musician):ProjectPayment
+  public function setMusician(mixed $musician):ProjectPayment
   {
     $this->musician = $musician;
 
@@ -228,7 +252,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return Musician
    */
-  public function getMusician()
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
@@ -252,7 +276,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return float
    */
-  public function getAmount():float
+  public function getAmount():?float
   {
     return $this->amount;
   }
@@ -260,11 +284,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set subject.
    *
-   * @param string $subject
+   * @param null|string $subject
    *
    * @return ProjectPayment
    */
-  public function setSubject($subject):ProjectPayment
+  public function setSubject(?string $subject):ProjectPayment
   {
     $this->subject = $subject;
 
@@ -276,7 +300,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return string
    */
-  public function getSubject()
+  public function getSubject():?string
   {
     return $this->subject;
   }
@@ -290,19 +314,19 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   public function setReceivable(ProjectParticipantFieldDatum $receivable):ProjectPayment
   {
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->projectBalanceSupportingDocument->removeDocument($supportingDocument);
+        $this->balanceDocumentsFolder->removeDocument($supportingDocument);
       }
     }
 
     $this->receivable = $receivable;
 
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->projectBalanceSupportingDocument->addDocument($supportingDocument);
+        $this->balanceDocumentsFolder->addDocument($supportingDocument);
       }
     }
 
@@ -314,7 +338,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function getReceivable():ProjectParticipantFieldDatum
+  public function getReceivable():?ProjectParticipantFieldDatum
   {
     return $this->receivable;
   }
@@ -322,11 +346,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set receivableOption.
    *
-   * @param ProjectParticipantFieldDataOption $receivableOption
+   * @param null|ProjectParticipantFieldDataOption $receivableOption
    *
    * @return ProjectPayment
    */
-  public function setReceivableOption($receivableOption):ProjectPayment
+  public function setReceivableOption(?ProjectParticipantFieldDataOption $receivableOption):ProjectPayment
   {
     $this->receivableOption = $receivableOption;
 
@@ -338,33 +362,33 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function getReceivableOption()
+  public function getReceivableOption():?ProjectParticipantFieldDataOption
   {
     return $this->receivableOption;
   }
 
   /**
-   * Set projectBalanceSupportingDocument.
+   * Set balanceDocumentsFolder.
    *
-   * @param ProjectBalanceSupportingDocument $projectBalanceSupportingDocument
+   * @param DatabaseStorageFolder $balanceDocumentsFolder
    *
    * @return ProjectPayment
    */
-  public function setProjectBalanceSupportingDocument(?ProjectBalanceSupportingDocument $projectBalanceSupportingDocument):ProjectPayment
+  public function setBalanceDocumentsFolder(?DatabaseStorageFolder $balanceDocumentsFolder):ProjectPayment
   {
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->projectBalanceSupportingDocument->removeDocument($supportingDocument);
+        $this->balanceDocumentsFolder->removeDocument($supportingDocument);
       }
     }
 
-    $this->projectBalanceSupportingDocument = $projectBalanceSupportingDocument;
+    $this->balanceDocumentsFolder = $balanceDocumentsFolder;
 
-    if (!empty($this->projectBalanceSupportingDocument) && !empty($this->receivable)) {
+    if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->projectBalanceSupportingDocument->addDocument($supportingDocument);
+        $this->balanceDocumentsFolder->addDocument($supportingDocument);
       }
     }
 
@@ -372,16 +396,16 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Get projectBalanceSupportingDocument.
+   * Get balanceDocumentsFolder.
    *
-   * @return ?ProjectBalanceSupportingDocument
+   * @return ?DatabaseStorageFolder
    */
-  public function getProjectBalanceSupportingDocument():?ProjectBalanceSupportingDocument
+  public function getBalanceDocumentsFolder():?DatabaseStorageFolder
   {
-    return $this->projectBalanceSupportingDocument;
+    return $this->balanceDocumentsFolder;
   }
 
-  /** \JsonSerializable interface */
+  /** {@inheritdoc} */
   public function jsonSerialize():array
   {
     return $this->toArray();

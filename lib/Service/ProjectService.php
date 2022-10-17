@@ -60,7 +60,7 @@ class ProjectService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   const DBTABLE = 'Projects';
 
@@ -703,7 +703,6 @@ class ProjectService
   public function ensureDownloadsFolder($projectOrId, bool $dry = false)
   {
     list(self::FOLDER_TYPE_DOWNLOADS => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_DOWNLOADS, $dry);
-    $this->logInfo('DOWNLOADS FOLDER ' . $path);
     return $path;
   }
 

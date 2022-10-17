@@ -32,7 +32,7 @@ trait CreatedAt
   /**
    * @var \DateTimeImmutable
    */
-  private $created;
+   protected $created;
 
   /**
    * Sets created.

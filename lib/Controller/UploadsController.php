@@ -173,7 +173,6 @@ class UploadsController extends Controller
               $dbFile->getName()
             ));
           }
-          $dbFile->link(); // increase the link-count
         } else {
           /** @var Entities\EncryptedFile $dbFile */
           $dbFile = new $dbFileClass(
@@ -181,7 +180,7 @@ class UploadsController extends Controller
             data: $appFile->getContent(),
             mimeType: $appFile->getMimeType()
           );
-          $dbFile->setOriginalFileName($originalFileName);
+          $dbFile->setFileName($originalFileName);
         }
         if ($encrypted && $ownerId > 0) {
           $owner = $this->getDatabaseRepository(Entities\Musician::class)->find($ownerId);

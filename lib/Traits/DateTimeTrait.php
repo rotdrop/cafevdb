@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ trait DateTimeTrait
    */
   public static function ensureDate(?DateTimeInterface $dateTime):DateTimeInterface
   {
-    return $dateTime ?? (new DateTimeImmutable)->setTimestamp(1);
+    return $dateTime ?? new DateTimeImmutable('@1');
   }
 
   /**
@@ -78,10 +78,19 @@ trait DateTimeTrait
     return null; // not reached
   }
 
-  /** Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone. */
+  /**
+   * Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.
+   *
+   * @param DateTimeInterface $date
+   *
+   * @param DateTimeZone $timeZone
+   *
+   * @return DateTimeImmutable
+   *
+   * @todo Rework time-zone stuff.
+   */
   public static function convertToTimezoneDate(DateTimeInterface $date, DateTimeZone $timeZone):DateTimeImmutable
   {
     return \DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $timeZone);
   }
-
 }
