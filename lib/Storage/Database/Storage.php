@@ -130,35 +130,6 @@ class Storage extends AbstractStorage
       $date = new DateTimeImmutable('@1');
     }
 
-    // maybe we should skip the read-dir for performance reasons.
-    /** @var Entities\File $node */
-    foreach ($this->findFiles($dirName) as $nodeName => $node) {
-      if ($node instanceof Entities\File) {
-        $updated = $node->getUpdated();
-      } elseif ($node instanceof DirectoryNode) {
-        $updated = $node->minimalModificationTime ?? (new DateTimeImmutable('@1'));
-        if ($nodeName != '.') {
-          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $nodeName);
-          if ($recursiveModificationTime > $updated) {
-            $updated = $recursiveModificationTime;
-          }
-        }
-      } elseif ($node instanceof Entities\DatabaseStorageDirEntry) {
-        $updated = $node->getUpdated();
-        if ($nodeName != '.' && $node instanceof Entities\DatabaseStorageFolder) {
-          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $nodeName);
-          if ($recursiveModificationTime > $updated) {
-            $updated = $recursiveModificationTime;
-          }
-        }
-      } else {
-        $this->logError('Unknown directory entry in ' . $dirName);
-        $updated = new DateTimeImmutable('@1');
-      }
-      if ($updated > $date) {
-        $date = $updated;
-      }
-    }
     return $date;
   }
 
@@ -185,7 +156,13 @@ class Storage extends AbstractStorage
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->appName() . self::STORAGE_ID_TAG . self::PATH_SEPARATOR;
+    return $this->appName() . self::STORAGE_ID_TAG . self::PATH_SEPARATOR . $this->getShortId();
+  }
+
+  /** @return string The shot storage id without the base prefix. */
+  protected function getShortId():string
+  {
+    return '';
   }
 
   /**

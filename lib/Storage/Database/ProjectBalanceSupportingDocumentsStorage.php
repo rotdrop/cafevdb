@@ -69,7 +69,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     parent::__construct($params);
     $this->project = $params['project'];
     $this->projectService = $this->di(ProjectService::class);
-    $shortId = substr($this->getId(), strlen(parent::getId()));
+    $shortId = $this->getShortId();
     $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
     if (!empty($rootStorage)) {
       $this->rootFolder = $rootStorage->getRoot();
@@ -84,7 +84,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       try {
         $projectId = $this->project->getId();
         $this->clearDatabaseRepository();
-        $shortId = substr($this->getId(), strlen(parent::getId()));
+        $shortId = $this->getShortId();
         $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
         if (!empty($rootStorage)) {
           $this->rootFolder = $rootStorage->getRoot();
@@ -227,10 +227,10 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function getId()
+  public function getShortId()
   {
-    return parent::getId()
-      . implode(self::PATH_SEPARATOR, [
+    return implode(
+      self::PATH_SEPARATOR, [
         'finance', 'balances', 'projects', $this->project->getName(),
       ])
       . self::PATH_SEPARATOR;

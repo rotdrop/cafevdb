@@ -213,12 +213,12 @@ class ProjectParticipantsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function getId()
+  public function getShortId()
   {
     // the mount provider currently disables soft-deleteable filter ...
     $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-    $result = parent::getId()
-      . implode(self::PATH_SEPARATOR, [
+    $result = implode(
+      self::PATH_SEPARATOR, [
         $this->project->getName(), 'participants', $this->participant->getMusician()->getUserIdSlug(),
       ])
       . self::PATH_SEPARATOR;
@@ -239,7 +239,7 @@ class ProjectParticipantsStorage extends Storage
       return $this->rootFolder;
     }
     /** @var Entities\DatabaseStorageFolder $root */
-    $shortId = substr($this->getId(), strlen(parent::getId()));
+    $shortId = $this->getShortId();
     /** @var Entities\DatabaseStorage $rootStorage */
     $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
     if (!empty($rootStorage)) {
@@ -871,10 +871,49 @@ WHERE t.project_id = ? AND t.musician_id = ?';
   {
     $isTreasurer = $this->isTreasurer;
     $this->isTreasurer = true;
-    $result = $this->getDirectoryModificationTime($dirName);
+
+    $directory = $this->fileFromFileName($dirName);
+    if ($directory instanceof DirectoryNode) {
+      $date = $directory->minimalModificationTime ?? (new DateTimeImmutable('@1'));
+    } elseif ($directory instanceof Entities\DatabaseStorageFolder) {
+      $date = $directory->getUpdated();
+    } else {
+      $date = new DateTimeImmutable('@1');
+    }
+
+    // maybe we should skip the read-dir for performance reasons.
+    /** @var Entities\File $node */
+    foreach ($this->findFiles($dirName) as $nodeName => $node) {
+      if ($node instanceof Entities\File) {
+        $updated = $node->getUpdated();
+      } elseif ($node instanceof DirectoryNode) {
+        $updated = $node->minimalModificationTime ?? (new DateTimeImmutable('@1'));
+        if ($nodeName != '.') {
+          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $nodeName);
+          if ($recursiveModificationTime > $updated) {
+            $updated = $recursiveModificationTime;
+          }
+        }
+      } elseif ($node instanceof Entities\DatabaseStorageDirEntry) {
+        $updated = $node->getUpdated();
+        if ($nodeName != '.' && $node instanceof Entities\DatabaseStorageFolder) {
+          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $nodeName);
+          if ($recursiveModificationTime > $updated) {
+            $updated = $recursiveModificationTime;
+          }
+        }
+      } else {
+        $this->logError('Unknown directory entry in ' . $dirName);
+        $updated = new DateTimeImmutable('@1');
+      }
+      if ($updated > $date) {
+        $date = $updated;
+      }
+    }
+
     $this->isTreasurer = $isTreasurer;
 
-    return $result;
+    return $date;
   }
 
   /**

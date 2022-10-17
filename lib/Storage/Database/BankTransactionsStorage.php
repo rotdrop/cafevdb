@@ -64,7 +64,7 @@ class BankTransactionsStorage extends Storage
   {
     parent::__construct($params);
 
-    $shortId = substr($this->getId(), strlen(parent::getId()));
+    $shortId = $this->getShortId();
     $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
     if (!empty($rootStorage)) {
       $this->rootFolder = $rootStorage->getRoot();
@@ -77,7 +77,7 @@ class BankTransactionsStorage extends Storage
       $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
       $this->clearDatabaseRepository();
 
-      $shortId = substr($this->getId(), strlen(parent::getId()));
+      $shortId = $this->getShortId();
       $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
       if (!empty($rootStorage)) {
         $this->rootFolder = $rootStorage->getRoot();
@@ -310,10 +310,10 @@ class BankTransactionsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function getId()
+  public function getShortId()
   {
-    return parent::getId()
-      . implode(self::PATH_SEPARATOR, [
+    return implode(
+      self::PATH_SEPARATOR, [
         'finance', 'transactions',
       ])
       . self::PATH_SEPARATOR;
