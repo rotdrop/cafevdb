@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+use UnexpectedValueException;
 use DateTimeImmutable;
 use DateTimeInterface;
 
@@ -150,320 +151,6 @@ class ProjectParticipantsStorage extends Storage
   }
 
   /**
-   * Helper functino in order to migrate to DatabaseStorageDirEntry.
-   *
-   * @param int $id
-   *
-   * @return null|DateTimeInterface
-   */
-  private function getSepaDebitMandatesChanged(int $id):?DateTimeInterface
-  {
-    $connection = $this->entityManager->getConnection();
-    $sql = 'SELECT t.sepa_debit_mandates_changed
-FROM Musicians t
-WHERE t.id = ?';
-    $stmt = $connection->prepare($sql);
-    $stmt->bindValue(1, $id);
-    try {
-      $value = $stmt->executeQuery()->fetchOne();
-    } catch (InvalidFieldNameException $t) {
-      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
-      return self::ensureDate(null);
-    }
-    return self::convertToDateTime($value);
-  }
-
-  /**
-   * Helper functino in order to migrate to DatabaseStorageDirEntry.
-   *
-   * @param int $id
-   *
-   * @return null|DateTimeInterface
-   */
-  private function getPaymentsChanged(int $id):?DateTimeInterface
-  {
-    $connection = $this->entityManager->getConnection();
-    $sql = 'SELECT t.payments_changed
-FROM Musicians t
-WHERE t.id = ?';
-    $stmt = $connection->prepare($sql);
-    $stmt->bindValue(1, $id);
-    try {
-      $value = $stmt->executeQuery()->fetchOne();
-    } catch (InvalidFieldNameException $t) {
-      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
-      return self::ensureDate(null);
-    }
-    return self::convertToDateTime($value);
-  }
-
-  /**
-   * Helper functino in order to migrate to DatabaseStorageDirEntry.
-   *
-   * @param int $projectId
-   *
-   * @param int $musicianId
-   *
-   * @return null|DateTimeInterface
-   */
-  private function getParticipantFieldsDataChanged(int $projectId, int $musicianId):?DateTimeInterface
-  {
-    $connection = $this->entityManager->getConnection();
-    $sql = 'SELECT t.participant_fields_data_changed
-FROM ProjectParticipants t
-WHERE t.project_id = ? AND t.musician_id = ?';
-    $stmt = $connection->prepare($sql);
-    $stmt->bindValue(1, $projectId);
-    $stmt->bindValue(2, $musicianId);
-    try {
-      $value = $stmt->executeQuery()->fetchOne();
-    } catch (InvalidFieldNameException $t) {
-      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
-      return self::ensureDate(null);
-    }
-    return self::convertToDateTime($value);
-  }
-
-  /**
-   * These are now only used to migrate the stuff to the new
-   * DatabaseStorageDirEntries tables.
-   *
-   * @return array
-   */
-  protected function getListingGenerators():array
-  {
-    // Arguably, these should be classes, but as PHP does not support multiple
-    // inheritance this really would produce a lot of boiler-plate-code.
-    return [
-      new ParticipantsStorageGenerator([
-        'skipDepthIfOther' => -1,
-        'pathChain' => [
-          $this->getSupportingDocumentsFolderName(),
-          $this->getReceivablesFolderName(),
-        ],
-        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId()),
-        'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
-          fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
-        ),
-        'createLeafNodes' => function($dirName, $subDirectoryPath) {
-          $modificationTime = $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId());
-          $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
-            fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
-          );
-
-          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-          foreach ($activeFieldData as $fieldDatum) {
-            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
-            if (empty($fileInfo)) {
-              continue; // should not happen here because of ->filter().
-            }
-            $fileName = $this->buildPath($fileInfo['pathName']);
-
-            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
-            if ($fileDirName == $dirName) {
-              $this->files[$dirName][$baseName] = $fileInfo['file'];
-            } elseif (strpos($fileDirName, $dirName) === 0) {
-              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-            }
-          }
-        },
-      ]),
-      new ParticipantsStorageGenerator([
-        'skipDepthIfOther' => -1,
-        'pathChain' => [
-          $this->getSupportingDocumentsFolderName(),
-          $this->getReceivablesFolderName(),
-        ],
-        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId()),
-        'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
-          fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
-        ),
-        'createLeafNodes' => function($dirName, $subDirectoryPath) {
-          $modificationTime = $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId());
-          $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
-            fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
-          );
-
-          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-          foreach ($activeFieldData as $fieldDatum) {
-            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
-            if (empty($fileInfo)) {
-              continue; // should not happen here because of ->filter().
-            }
-            $fileName = $this->buildPath($fileInfo['pathName']);
-
-            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
-            if ($fileDirName == $dirName) {
-              $this->files[$dirName][$baseName] = $fileInfo['file'];
-            } elseif (strpos($fileDirName, $dirName) === 0) {
-              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-            }
-          }
-        },
-      ]),
-      new ParticipantsStorageGenerator([
-        'skipDepthIfOther' => -1,
-        'pathChain' => [
-          $this->getSupportingDocumentsFolderName(),
-          $this->getBankTransactionsFolderName(),
-        ],
-        'parentModificationTime' => fn() => $this->getPaymentsChanged($this->musician->getId()),
-        'hasLeafNodes' => fn() => $this->isTreasurer && !$this->musician->getPayments()->forAll(
-          fn($key, Entities\CompositePayment $compositePayment) => (
-            $compositePayment->getProjectPayments()->matching(
-              DBUtil::criteriaWhere([ 'project' => $this->project ])
-            )->count() == 0
-            || empty($compositePayment->getSupportingDocument())
-          )
-        ),
-        'createLeafNodes' => function($dirName, $subDirectoryPath) {
-          /** @var Entities\CompositePayment $compositePayment */
-          foreach ($this->musician->getPayments() as $compositePayment) {
-            $projectPayments = $compositePayment->getProjectPayments()->matching(
-              DBUtil::criteriaWhere([ 'project' => $this->project ])
-            );
-            if ($projectPayments->count() == 0) {
-              continue;
-            }
-            $file = $compositePayment->getSupportingDocument();
-            if (empty($file)) {
-              continue;
-            }
-            // enforce the "correct" file-name
-            $dbFileName = $file->getFileName();
-            $baseName = $this->getPaymentRecordFileName($compositePayment) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
-            $fileName = $this->buildPath($subDirectoryPath . self::PATH_SEPARATOR . $baseName);
-            list('basename' => $baseName) = self::pathInfo($fileName);
-            $this->files[$dirName][$baseName] = $file;
-          }
-        },
-      ]),
-      new ParticipantsStorageGenerator([
-        'skipDepthIfOther' => -1,
-        'pathChain' => [
-          $this->getDebitMandatesFolderName(),
-        ],
-        'parentModificationTime' => function() {
-          $modificationTime = $this->getSepaDebitMandatesChanged($this->musician->getId());
-          /** @var Entities\SepaDebitMandate $debitMandate */
-          foreach ($this->musician->getSepaDebitMandates() as $debitMandate) {
-            $writtenMandate = $debitMandate->getWrittenMandate();
-            if (!empty($writtenMandate)) {
-              $modificationTime = max($modificationTime, self::ensureDate($writtenMandate->getUpdated()));
-            }
-          }
-          return $modificationTime;
-        },
-        'hasLeafNodes' => function() {
-          if (!$this->isTreasurer) {
-            return false;
-          }
-          $membersProjectId = $this->getClubMembersProjectId();
-          $projectId = $this->project->getId();
-          return !$this->musician->getSepaDebitMandates()->forAll(
-            function($key, Entities\SepaDebitMandate $debitMandate) use ($membersProjectId, $projectId) {
-              $mandateProjectId = $debitMandate->getProject()->getId();
-              return $mandateProjectId != $membersProjectId && $mandateProjectId != $projectId && empty($debitMandate->getWrittenMandate());
-            }
-          );
-        },
-        'createLeafNodes' => function($dirName, $subDirectoryPath) {
-          $projectId = $this->project->getId();
-          $membersProjectId = $this->getClubMembersProjectId();
-          /** @var Entities\SepaDebitMandate $debitMandate */
-          $projectMandates = $this->musician->getSepaDebitMandates()->filter(
-            function($debitMandate) use ($membersProjectId, $projectId) {
-              $mandateProjectId = $debitMandate->getProject()->getId();
-              return $mandateProjectId === $membersProjectId || $mandateProjectId === $projectId;
-            });
-          foreach ($projectMandates as $debitMandate) {
-            $file = $debitMandate->getWrittenMandate();
-            if (empty($file)) {
-              continue;
-            }
-            // enforce the "correct" file-name
-            $extension = '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
-            $baseName = $this->getDebitMandateFileName($debitMandate) . $extension;
-            $fileName = $this->buildPath($subDirectoryPath . self::PATH_SEPARATOR . $baseName);
-            list('basename' => $baseName) = self::pathInfo($fileName);
-            $this->files[$dirName][$baseName] = $file;
-          }
-        },
-      ]),
-      new ParticipantsStorageGenerator([
-        'skipDepthIfOther' => 1,
-        'pathChain' => [],
-        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId()),
-        'hasLeafNodes' => fn() => $this->participant->getParticipantFieldsData()->filter(
-          function(Entities\ProjectParticipantFieldDatum $fieldDatum) {
-            if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
-              return false;
-            }
-            if (empty($this->projectService->participantFileInfo($fieldDatum, includeDeleted: true))) {
-              return false;
-            }
-            return true;
-          })->count() > 0,
-        'createLeafNodes' => function($dirName, $subDirectoryPath) {
-
-          $modificationTime = $this->getParticipantFieldsDataChanged($this->project->getId(), $this->musician->getId());
-
-          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-          foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
-
-            if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
-              continue;
-            }
-
-            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
-            if (empty($fileInfo)) {
-              continue;
-            }
-
-            $fileName = $this->buildPath($fileInfo['pathName']);
-
-            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
-            if ($fileDirName == $dirName) {
-              $this->files[$dirName][$baseName] = $fileInfo['file'];
-            } elseif (strpos($fileDirName, $dirName) === 0) {
-              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-            }
-          }
-        },
-      ]),
-    ];
-  }
-
-  /**
-   * @return array A flat array of directory names with non-empty content.
-   */
-  public function getNonEmptyDirectories():array
-  {
-    // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-
-    $pathArray = [];
-
-    $generators = $this->getListingGenerators();
-    /** @var ParticipantsStorageGenerator $generator */
-    foreach ($generators as $generator) {
-      if (!$generator->hasLeafNodes()) {
-        continue;
-      }
-      $pathArray[implode(self::PATH_SEPARATOR, $generator->pathChain())] = [
-        'mtime' => $generator->parentModificationTime(),
-        'pathChain' => $generator->pathChain(),
-      ];
-    }
-    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-
-    return $pathArray;
-  }
-
-  /**
    * {@inheritdoc}
    *
    * We expose all found documents in the projectParticipantFieldsData(),
@@ -522,6 +209,520 @@ WHERE t.project_id = ? AND t.musician_id = ?';
     return $this->files[$dirName];
   }
 
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getStorageModificationDateTime():DateTimeInterface
+  {
+    return self::ensureDate(empty($this->rootFolder) ? null : $this->rootFolder->getUpdated());
+  }
+
+  /** {@inheritdoc} */
+  public function getId()
+  {
+    // the mount provider currently disables soft-deleteable filter ...
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+    $result = parent::getId()
+      . implode(self::PATH_SEPARATOR, [
+        $this->project->getName(), 'participants', $this->participant->getMusician()->getUserIdSlug(),
+      ])
+      . self::PATH_SEPARATOR;
+    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+    return $result;
+  }
+
+  /**
+   * Add an directory entry for the given debit-mandate and file.
+   *
+   * @param Entities\SepaDebitMandate $debitMandate
+   *
+   * @param bool $flush
+   *
+   * @return null|Entities\DatabaseStorageFile
+   */
+  public function addDebitMandate(Entities\SepaDebitMandate $debitMandate, bool $flush = true):?Entities\DatabaseStorageFile
+  {
+    $file = $debitMandate->getWrittenMandate();
+    if (empty($file)) {
+      throw new UnexpectedValueException($this->l->t('Debit-mandate "%s" has no hard-copy attached.', $debitMandate->getMandateReference()));
+    }
+    $mimeType = $file->getMimeType();
+    $extension = Util::fileExtensionFromMimeType($mimeType);
+    if (empty($extension) && !empty($file['name'])) {
+      $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    }
+    $fileName = $this->getDebitMandateFileName($debitMandate, $extension);
+
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
+    try {
+      // search for the folder
+      $folderName = $this->getDebitMandatesFolderName();
+      $folderEntity = $this->rootFolder->getFolderByName($folderName);
+
+      if (emtpy($folderEntity)) {
+        $folderEntity = $this->rootFolder->addSubFolder($folderName);
+        $this->persist($folderEntity);
+      }
+
+      $documentEntity = $folderEntity->addDocument($file, $fileName);
+      $this->persist($documentEntity);
+
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\DatabaseException($this->l->t('Unable to add debit-mandate "%s".', $debitMandate->getMandateDate()));
+    }
+
+    return $documentEntity;
+  }
+
+  /**
+   * Remove the given debit mandate.
+   *
+   * @param Entities\SepaDebitMandate $debitMandate
+   *
+   * @param bool $flush
+   *
+   * @return void
+   */
+  public function removeDebitMandate(Entities\SepaDebitMandate $debitMandate, bool $flush = true):void
+  {
+    $file = $debitMandate->getWrittenMandate();
+    if (empty($file)) {
+      throw new UnexpectedValueException($this->l->t('Debit-mandate "%s" has no hard-copy attached.', $debitMandate->getMandateReference()));
+    }
+
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
+    try {
+      // search for the folder
+      $folderName = $this->getDebitMandatesFolderName();
+      $folderEntity = $this->rootFolder->getFolderByName($folderName);
+      /** @var Entities\DatabaseStorageFile $dirEntry */
+      foreach ($folderEntity->getDocuments() as $dirEntry) {
+        if ($dirEntry->getFile()->getId() == $file->getId()) {
+          $dirEntry
+            ->setParent(null)
+            ->setFile(null);
+        }
+      }
+
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\DatabaseException($this->l->t('Unable to remove debit-mandate "%s".', $debitMandate->getMandateDate()));
+    }
+  }
+
+  /**
+   * Add an directory entry for a supporting document for the given payment.
+   *
+   * @param Entities\CompositePayment $compositePayment
+   *
+   * @param bool $flush
+   *
+   * @return null|Entities\DatabaseStorageFile
+   */
+  public function addCompositePayment(Entities\CompositePayment $compositePayment, bool $flush = true):?Entities\DatabaseStorageFile
+  {
+    $file = $compositePayment->getSupportingDocument();
+    if (empty($file)) {
+      throw new UnexpectedValueException($this->l->t('Composite payment "%d" has no hard-copy attached.', $compositePayment->getId()));
+    }
+    $mimeType = $file->getMimeType();
+    $extension = Util::fileExtensionFromMimeType($mimeType);
+    if (empty($extension) && !empty($file['name'])) {
+      $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    }
+    $fileName = $this->getPaymentRecordFileName($compositePayment, $extension);
+
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
+    try {
+      // search for the folder
+      $folderEntity = $this->rootFolder->addSubFolder($this->getSupportingDocumentsFolderName());
+      $this->persist($folderEntity);
+      $folderEntity = $folderEntity->addSubFolder($this->getBankTransactionsFolderName());
+      $this->persist($folderEntity);
+
+      $documentEntity = $folderEntity->addDocument($file, $fileName);
+      $this->persist($documentEntity);
+
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\DatabaseException($this->l->t('Unable to add composite payment "%s".', $compositePayment->getId()));
+    }
+
+    return $documentEntity;
+  }
+
+  /**
+   * Remove any directory entry referencing the supporting document of the payment.
+   *
+   * @param Entities\CompositePayment $compositePayment
+   *
+   * @param bool $flush
+   *
+   * @return void
+   */
+  public function removeCompositePayment(Entities\CompositePayment $compositePayment, bool $flush = true):void
+  {
+    $file = $compositePayment->getSupportingDocument();
+    if (empty($file)) {
+      throw new UnexpectedValueException($this->l->t('Composite payment "%d" has no hard-copy attached.', $compositePayment->getId()));
+    }
+
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
+    try {
+      // search for the folder
+      $folderName = $this->getSupportingDocumentsFolderName();
+      $folderEntity = $this->rootFolder->getFolderByName($folderName);
+      if (empty($folderEntity)) {
+        throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $folderName));
+      }
+      $folderName = $this->getSupportingDocumentsFolderName();
+      $folderEntity = $folderEntity->getFolderByName($folderName);
+      if (empty($folderEntity)) {
+        throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $folderName));
+      }
+
+      /** @var Entities\DatabaseStorageFile $dirEntry */
+      foreach ($folderEntity->getDocuments() as $dirEntry) {
+        if ($dirEntry->getFile()->getId() == $file->getId()) {
+          $dirEntry
+            ->setParent(null)
+            ->setFile(null);
+        }
+      }
+
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\DatabaseException($this->l->t('Unable to remove composite payment "%s".', $compositePayment->getId()));
+    }
+
+  }
+
+  /**
+   * Helper functino in order to migrate to DatabaseStorageDirEntry.
+   *
+   * @param int $id
+   *
+   * @return null|DateTimeInterface
+   */
+  private function getSepaDebitMandatesChangedForMigration(int $id):?DateTimeInterface
+  {
+    $connection = $this->entityManager->getConnection();
+    $sql = 'SELECT t.sepa_debit_mandates_changed
+FROM Musicians t
+WHERE t.id = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $id);
+    try {
+      $value = $stmt->executeQuery()->fetchOne();
+    } catch (InvalidFieldNameException $t) {
+      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+      return self::ensureDate(null);
+    }
+    return self::convertToDateTime($value);
+  }
+
+  /**
+   * Helper functino in order to migrate to DatabaseStorageDirEntry.
+   *
+   * @param int $id
+   *
+   * @return null|DateTimeInterface
+   */
+  private function getPaymentsChangedForMigration(int $id):?DateTimeInterface
+  {
+    $connection = $this->entityManager->getConnection();
+    $sql = 'SELECT t.payments_changed
+FROM Musicians t
+WHERE t.id = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $id);
+    try {
+      $value = $stmt->executeQuery()->fetchOne();
+    } catch (InvalidFieldNameException $t) {
+      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+      return self::ensureDate(null);
+    }
+    return self::convertToDateTime($value);
+  }
+
+  /**
+   * Helper functino in order to migrate to DatabaseStorageDirEntry.
+   *
+   * @param int $projectId
+   *
+   * @param int $musicianId
+   *
+   * @return null|DateTimeInterface
+   */
+  private function getParticipantFieldsDataChangedForMigration(int $projectId, int $musicianId):?DateTimeInterface
+  {
+    $connection = $this->entityManager->getConnection();
+    $sql = 'SELECT t.participant_fields_data_changed
+FROM ProjectParticipants t
+WHERE t.project_id = ? AND t.musician_id = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $projectId);
+    $stmt->bindValue(2, $musicianId);
+    try {
+      $value = $stmt->executeQuery()->fetchOne();
+    } catch (InvalidFieldNameException $t) {
+      $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+      return self::ensureDate(null);
+    }
+    return self::convertToDateTime($value);
+  }
+
+  /**
+   * These are now only used to migrate the stuff to the new
+   * DatabaseStorageDirEntries tables.
+   *
+   * @return array
+   */
+  protected function getListingGeneratorsForMigration():array
+  {
+    // Arguably, these should be classes, but as PHP does not support multiple
+    // inheritance this really would produce a lot of boiler-plate-code.
+    return [
+      new ParticipantsStorageGenerator([
+        'skipDepthIfOther' => -1,
+        'pathChain' => [
+          $this->getSupportingDocumentsFolderName(),
+          $this->getReceivablesFolderName(),
+        ],
+        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId()),
+        'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
+          fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
+        ),
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
+          $modificationTime = $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId());
+          $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
+            fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
+          );
+
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          foreach ($activeFieldData as $fieldDatum) {
+            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+            if (empty($fileInfo)) {
+              continue; // should not happen here because of ->filter().
+            }
+            $fileName = $this->buildPath($fileInfo['pathName']);
+
+            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+            if ($fileDirName == $dirName) {
+              $this->files[$dirName][$baseName] = $fileInfo['file'];
+            } elseif (strpos($fileDirName, $dirName) === 0) {
+              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
+            }
+          }
+        },
+      ]),
+      new ParticipantsStorageGenerator([
+        'skipDepthIfOther' => -1,
+        'pathChain' => [
+          $this->getSupportingDocumentsFolderName(),
+          $this->getReceivablesFolderName(),
+        ],
+        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId()),
+        'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
+          fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
+        ),
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
+          $modificationTime = $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId());
+          $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
+            fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
+          );
+
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          foreach ($activeFieldData as $fieldDatum) {
+            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+            if (empty($fileInfo)) {
+              continue; // should not happen here because of ->filter().
+            }
+            $fileName = $this->buildPath($fileInfo['pathName']);
+
+            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+            if ($fileDirName == $dirName) {
+              $this->files[$dirName][$baseName] = $fileInfo['file'];
+            } elseif (strpos($fileDirName, $dirName) === 0) {
+              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
+            }
+          }
+        },
+      ]),
+      new ParticipantsStorageGenerator([
+        'skipDepthIfOther' => -1,
+        'pathChain' => [
+          $this->getSupportingDocumentsFolderName(),
+          $this->getBankTransactionsFolderName(),
+        ],
+        'parentModificationTime' => fn() => $this->getPaymentsChangedForMigration($this->musician->getId()),
+        'hasLeafNodes' => fn() => $this->isTreasurer && !$this->musician->getPayments()->forAll(
+          fn($key, Entities\CompositePayment $compositePayment) => (
+            $compositePayment->getProjectPayments()->matching(
+              DBUtil::criteriaWhere([ 'project' => $this->project ])
+            )->count() == 0
+            || empty($compositePayment->getSupportingDocument())
+          )
+        ),
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
+          /** @var Entities\CompositePayment $compositePayment */
+          foreach ($this->musician->getPayments() as $compositePayment) {
+            $projectPayments = $compositePayment->getProjectPayments()->matching(
+              DBUtil::criteriaWhere([ 'project' => $this->project ])
+            );
+            if ($projectPayments->count() == 0) {
+              continue;
+            }
+            $file = $compositePayment->getSupportingDocument();
+            if (empty($file)) {
+              continue;
+            }
+            // enforce the "correct" file-name
+            $dbFileName = $file->getFileName();
+            $baseName = $this->getPaymentRecordFileName($compositePayment) . '.' . pathinfo($dbFileName, PATHINFO_EXTENSION);
+            $fileName = $this->buildPath($subDirectoryPath . self::PATH_SEPARATOR . $baseName);
+            list('basename' => $baseName) = self::pathInfo($fileName);
+            $this->files[$dirName][$baseName] = $file;
+          }
+        },
+      ]),
+      new ParticipantsStorageGenerator([
+        'skipDepthIfOther' => -1,
+        'pathChain' => [
+          $this->getDebitMandatesFolderName(),
+        ],
+        'parentModificationTime' => function() {
+          $modificationTime = $this->getSepaDebitMandatesChangedForMigration($this->musician->getId());
+          /** @var Entities\SepaDebitMandate $debitMandate */
+          foreach ($this->musician->getSepaDebitMandates() as $debitMandate) {
+            $writtenMandate = $debitMandate->getWrittenMandate();
+            if (!empty($writtenMandate)) {
+              $modificationTime = max($modificationTime, self::ensureDate($writtenMandate->getUpdated()));
+            }
+          }
+          return $modificationTime;
+        },
+        'hasLeafNodes' => function() {
+          if (!$this->isTreasurer) {
+            return false;
+          }
+          $membersProjectId = $this->getClubMembersProjectId();
+          $projectId = $this->project->getId();
+          return !$this->musician->getSepaDebitMandates()->forAll(
+            function($key, Entities\SepaDebitMandate $debitMandate) use ($membersProjectId, $projectId) {
+              $mandateProjectId = $debitMandate->getProject()->getId();
+              return $mandateProjectId != $membersProjectId && $mandateProjectId != $projectId && empty($debitMandate->getWrittenMandate());
+            }
+          );
+        },
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
+          $projectId = $this->project->getId();
+          $membersProjectId = $this->getClubMembersProjectId();
+          /** @var Entities\SepaDebitMandate $debitMandate */
+          $projectMandates = $this->musician->getSepaDebitMandates()->filter(
+            function($debitMandate) use ($membersProjectId, $projectId) {
+              $mandateProjectId = $debitMandate->getProject()->getId();
+              return $mandateProjectId === $membersProjectId || $mandateProjectId === $projectId;
+            });
+          foreach ($projectMandates as $debitMandate) {
+            $file = $debitMandate->getWrittenMandate();
+            if (empty($file)) {
+              continue;
+            }
+            // enforce the "correct" file-name
+            $extension = '.' . pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+            $baseName = $this->getDebitMandateFileName($debitMandate) . $extension;
+            $fileName = $this->buildPath($subDirectoryPath . self::PATH_SEPARATOR . $baseName);
+            list('basename' => $baseName) = self::pathInfo($fileName);
+            $this->files[$dirName][$baseName] = $file;
+          }
+        },
+      ]),
+      new ParticipantsStorageGenerator([
+        'skipDepthIfOther' => 1,
+        'pathChain' => [],
+        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId()),
+        'hasLeafNodes' => fn() => $this->participant->getParticipantFieldsData()->filter(
+          function(Entities\ProjectParticipantFieldDatum $fieldDatum) {
+            if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
+              return false;
+            }
+            if (empty($this->projectService->participantFileInfo($fieldDatum, includeDeleted: true))) {
+              return false;
+            }
+            return true;
+          })->count() > 0,
+        'createLeafNodes' => function($dirName, $subDirectoryPath) {
+
+          $modificationTime = $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId());
+
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
+
+            if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
+              continue;
+            }
+
+            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+            if (empty($fileInfo)) {
+              continue;
+            }
+
+            $fileName = $this->buildPath($fileInfo['pathName']);
+
+            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
+            if ($fileDirName == $dirName) {
+              $this->files[$dirName][$baseName] = $fileInfo['file'];
+            } elseif (strpos($fileDirName, $dirName) === 0) {
+              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
+              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
+            }
+          }
+        },
+      ]),
+    ];
+  }
+
   /**
    * In order to aid database migration processes this funtction will remain
    * here until the base layout of the database is changed.
@@ -566,7 +767,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
     // the mount provider currently disables soft-deleteable filter ...
     $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
-    $dirInfos = $this->getListingGenerators();
+    $dirInfos = $this->getListingGeneratorsForMigration();
 
     $depth = count(Util::explode(self::PATH_SEPARATOR, $dirName));
     $subDirMatch = false;
@@ -614,31 +815,4 @@ WHERE t.project_id = ? AND t.musician_id = ?';
 
     return $this->files[$dirName];
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getStorageModificationDateTime():DateTimeInterface
-  {
-    return self::ensureDate(empty($this->rootFolder) ? null : $this->rootFolder->getUpdated());
-  }
-
-  /** {@inheritdoc} */
-  public function getId()
-  {
-    // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-    $result = parent::getId()
-      . implode(self::PATH_SEPARATOR, [
-        $this->project->getName(), 'participants', $this->participant->getMusician()->getUserIdSlug(),
-      ])
-      . self::PATH_SEPARATOR;
-    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-    return $result;
-  }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

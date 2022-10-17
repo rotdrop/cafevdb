@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
+use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 use OCA\CAFEVDB\Common\BankAccountValidator;
 
 use OCA\CAFEVDB\Common;
@@ -87,6 +88,9 @@ class SepaDebitMandatesController extends Controller
   /** @var BankAccountValidator */
   private $bav;
 
+  /** @var StorageFactory */
+  private $storageFactory;
+
   /** {@inheritdoc} */
   public function __construct(
     $appName,
@@ -98,6 +102,7 @@ class SepaDebitMandatesController extends Controller
     ProjectService $projectService,
     FuzzyInputService $fuzzyInputService,
     BankAccountValidator $bav,
+    StorageFactory $storageFactory,
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
@@ -107,6 +112,7 @@ class SepaDebitMandatesController extends Controller
     $this->projectService = $projectService;
     $this->fuzzyInputService = $fuzzyInputService;
     $this->bav = $bav;
+    $this->storageFactory = $storageFactory;
 
     $this->l = $this->l10N();
 
@@ -687,23 +693,23 @@ class SepaDebitMandatesController extends Controller
       'projectId' => $projectId,
       'projectName' => !empty($project) ? $project->getName() : null,
 
-        'musicianId' => $musicianId,
+      'musicianId' => $musicianId,
       'musicianName' => $musician->getPublicName(),
 
-        'mandateProjectId' => $mandate->getProject() ? $mandate->getProject()->getId() : 0,
+      'mandateProjectId' => $mandate->getProject() ? $mandate->getProject()->getId() : 0,
       'mandateProjectName' => $mandate->getProject() ? $mandate->getProject()->getName() : null,
 
-        // members are not allowed to give per-project mandates
-        'memberProjectId' => $memberProjectId,
+      // members are not allowed to give per-project mandates
+      'memberProjectId' => $memberProjectId,
       'isClubMember' => $isClubMember,
 
-        'projectOptions' => $projectOptions,
+      'projectOptions' => $projectOptions,
 
-        'participantFolder' => empty($project) ? '' : $this->projectService->ensureParticipantFolder($project, $musician, dry: true),
+      'participantFolder' => empty($project) ? '' : $this->projectService->ensureParticipantFolder($project, $musician, dry: true),
 
-        'cssClass' => 'sepadebitmandate',
+      'cssClass' => 'sepadebitmandate',
 
-        'mandateSequence' => $mandate->getSequence(),
+      'mandateSequence' => $mandate->getSequence(),
       'mandateReference' => $mandate->getMandateReference(),
       'mandateExpired' => $mandateExpired, // @todo
       'mandateDate' => $mandate->getMandateDate(),
@@ -712,20 +718,20 @@ class SepaDebitMandatesController extends Controller
       'mandateInUse' => $mandate->inUse(),
       'mandateDeleted' => $mandate->getDeleted(),
 
-        'bankAccountSequence' => $bankAccount->getSequence(),
+      'bankAccountSequence' => $bankAccount->getSequence(),
       'bankAccountOwner' => $bankAccount->getBankAccountOwner(),
 
-        'bankAccountIBAN' => $iban,
+      'bankAccountIBAN' => $iban,
       'bankAccountBLZ' => $blz,
       'bankAccountBIC' => $bic,
       'bankAccountInUse' => $bankAccount->inUse(),
       'bankAccountDeleted' => $bankAccount->getDeleted(),
 
-        'writtenMandateId' => $writtenMandateId??null,
+      'writtenMandateId' => $writtenMandateId??null,
       'writtenMandateDownloadLink' => $writtenMandateDownloadLink??null,
       'writtenMandateFileName' => $writtenMandateFileName??null,
 
-        'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
+      'dateTimeFormatter' => \OC::$server->query(\OCP\IDateTimeFormatter::class),
       'toolTips' => $this->toolTipsService(),
     ];
 
@@ -1179,13 +1185,23 @@ class SepaDebitMandatesController extends Controller
         }
 
         // ok, delete it
+
+        $musician = $debitMandate->getMusician();
+        $project = $debitMandate->getProject();
+        if ($project->getId() == $this->getClubMembersProjectId()) {
+          $participants = $musician->getProjectParticipation();
+        } else {
+          $participants = [ $musician->getProjectParticipantOf($project) ];
+        }
+        foreach ($participants as $participant) {
+          $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+          $storage->removeDebitMandate($debitMandate, flush: false);
+        }
         $debitMandate->setWrittenMandate(null);
+        $this->flush();
+
         if ($writtenMandate->getNumberOfLinks() == 0) {
           $this->remove($writtenMandate, flush: true);
-        } elseif (!empty($writtenMandate->getOriginalFileName())) {
-          // undo greedily modified filename
-          $writtenMandate->setFileName($writtenMandate->getOriginalFileName());
-          $this->flush();
         }
 
         return self::response($this->l->t('Successfully deleted the hard-copy of the written-mandate for "%1$s", please upload a new one!', $mandateReference));
@@ -1209,7 +1225,9 @@ class SepaDebitMandatesController extends Controller
       return self::grumble($this->l->t('Upload error "%s".', $file['str_error']));
     }
 
+    /** @var Entities\Musician $musician */
     $musician = $debitMandate->getMusician();
+    /** @var Entities\Project $project */
     $project = $debitMandate->getProject();
 
     /** @var UserStorage $userStorage */
@@ -1316,18 +1334,15 @@ class SepaDebitMandatesController extends Controller
       $this->persist($writtenMandate);
       $debitMandate->setWrittenMandate($writtenMandate);
 
-      if ($writtenMandate->getNumberOfLinks() == 1) {
-        // only tweak the file name if we are the only user.
-        $extension = Util::fileExtensionFromMimeType($mimeType);
-        if (empty($extension) && !empty($file['name'])) {
-          $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        }
-        $writtenMandateFileName = $this->getDebitMandateFileName($debitMandate, $extension);
-        $originalFileName = $writtenMandate->getFileName();
-        if (!empty($originalFileName) && $originalFileName != $writtenMandateFileName) {
-          $writtenMandate->setOriginalFileName($originalFileName);
-        }
-        $writtenMandate->setFileName($writtenMandateFileName);
+      if ($project->getId() == $this->getClubMembersProjectId()) {
+        $participants = $musician->getProjectParticipation();
+      } else {
+        $participants = [ $musician->getProjectParticipantOf($project) ];
+      }
+      foreach ($participants as $participant) {
+        $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+        $dirEntry = $storage->addDebitMandate($debitMandate, flush: false);
+        $writtenMandateFileName = $dirEntry->getName();
       }
 
       $this->flush();

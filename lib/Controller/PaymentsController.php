@@ -32,6 +32,7 @@ use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -39,7 +40,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCP\Files\SimpleFS\ISimpleFile;
+use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
@@ -59,6 +60,9 @@ class PaymentsController extends Controller
   /** @var ReqeuestParameterService */
   private $parameterService;
 
+  /** @var StorageFactory */
+  private $storageFactory;
+
   /** {@inheritdoc} */
   public function __construct(
     $appName,
@@ -66,11 +70,13 @@ class PaymentsController extends Controller
     RequestParameterService $parameterService,
     ConfigService $configService,
     EntityManager $entityManager,
+    StorageFactory $storageFactory,
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
     $this->configService = $configService;
     $this->entityManager = $entityManager;
+    $this->storageFactory = $storageFactory;
     $this->l = $this->l10N();
   }
 
@@ -244,25 +250,16 @@ class PaymentsController extends Controller
               break;
           }
 
-          if ($supportingDocument->getNumberOfLinks() == 0) {
-            // only tweak the file name if we are the only user.
-            $extension = Util::fileExtensionFromMimeType($mimeType);
-            if (empty($extension) && !empty($file['name'])) {
-              $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-            }
-            $supportingDocumentFileName = $this->getPaymentRecordFileName($compositePayment, $extension);
-            $originalFileName = $supportingDocument->getFileName();
-            if (!empty($originalFileName) && $originalFileName != $supportingDocumentFileName) {
-              $supportingDocument->setOriginalFileName($originalFileName);
-            }
-            $supportingDocument->setFileName($supportingDocumentFileName);
-          }
-
           $this->persist($supportingDocument);
           $this->flush(); // we need the file id
 
           $compositePayment->setSupportingDocument($supportingDocument);
           $this->flush();
+
+          $storage = $this->storageFactory->getProjectParticipantsStorage($compositePayment->getProjectParticipant());
+          $dirEntry = $storage->addCompositePayment($compositePayment, flush: false);
+
+          $supportingDocumentFileName = $dirEntry->getName();
 
           $this->entityManager->commit();
         } catch (\Throwable $t) {
