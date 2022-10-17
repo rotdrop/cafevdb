@@ -442,11 +442,16 @@ class Storage extends AbstractStorage
   /** {@inheritdoc} */
   public function file_exists($path)
   {
-    if ($this->is_dir($path)) {
-      return true;
-    }
-    $file = $this->fileFromFileName($path);
-    if (empty($file)) {
+    try {
+      if ($this->is_dir($path)) {
+        return true;
+      }
+      $file = $this->fileFromFileName($path);
+      if (empty($file)) {
+        return false;
+      }
+    } catch (Exceptions\DatabaseEntityNotFoundException $e) {
+      // ignore
       return false;
     }
     return true;
