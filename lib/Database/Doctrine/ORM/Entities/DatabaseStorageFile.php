@@ -73,7 +73,6 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   public function setFile(?EncryptedFile $file):DatabaseStorageFile
   {
     if (!empty($this->file)) {
-      $this->file->unlink();
       $this->file->removeDatabaseStorageDirEntry($this);
     }
 
@@ -81,7 +80,6 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
 
     if (!empty($this->file)) {
       $this->file->addDatabaseStorageDirEntry($this);
-      $this->file->link();
     }
 
     return $this;

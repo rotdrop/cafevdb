@@ -372,15 +372,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   public function setSupportingDocument(?EncryptedFile $supportingDocument):ProjectParticipantFieldDatum
   {
-    if (!empty($this->supportingDocument)) {
-      $this->supportingDocument->unlink();
-    }
-
     $this->supportingDocument = $supportingDocument;
-
-    if (!empty($this->supportingDocument)) {
-      $this->supportingDocument->link();
-    }
 
     return $this;
   }
@@ -611,5 +603,21 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
       default:
         return null;
     }
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $optionName = ($this->dataOption instanceof ProjectParticipantFieldDataOption)
+      ? $this->dataOption->getLabel()
+      : '?';
+    $fieldName =  ($this->field instanceof ProjectParticipantField)
+      ? (string)$this->field
+      : '?';
+    $personName = ($this->projectParticipant instanceof ProjectParticipant)
+      ? (string)$this->projectParticipant
+      : '?';
+
+    return $this->optionValue . '@[' . $fieldName . ' -> ' . $optionName  . ' -> ' . $personName . ']';
   }
 }

@@ -217,7 +217,6 @@ class SepaBulkTransaction implements \ArrayAccess
       throw new RuntimeException('The transaction data does not have a file-id.');
     }
     if (!$this->sepaTransactionData->containsKey($data->getId())) {
-      $data->link();
       $this->sepaTransactionData->set($data->getId(), $data);
     }
     return $this;
@@ -232,7 +231,6 @@ class SepaBulkTransaction implements \ArrayAccess
   {
     if ($this->sepaTransactionData->contains($data)) {
       $this->sepaTransactionData->removeElement($data);
-      $data->unlink();
     }
     return $this;
   }

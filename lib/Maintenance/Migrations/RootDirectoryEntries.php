@@ -74,6 +74,8 @@ class RootDirectoryEntries extends AbstractMigration
     self::TRANSACTIONAL => [
       'UPDATE SepaBulkTransactions SET updated = GREATEST(updated, sepa_transaction_data_changed)
 WHERE sepa_transaction_data_changed IS NOT NULL',
+      'UPDATE Files SET file_name = original_file_name
+WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
     ],
   ];
 
@@ -358,7 +360,8 @@ WHERE p.id = ?';
         //
         // 'ALTER TABLE ProjectParticipants DROP COLUMN IF EXISTS participant_fields_data_changed',
         //
-        // 'ALTER TABLE Files DROP number_of_links',
+        // 'ALTER TABLE Files DROP COLUMN IF EXIST number_of_links',
+        // 'ALTER TABLE Files DROP DROP COLUMN IF EXISTS original_file_name;
       ],
       self::TRANSACTIONAL => [
       ],

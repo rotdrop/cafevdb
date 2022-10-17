@@ -205,26 +205,4 @@ class EncryptedFile extends File
   {
     return $this->databaseStorageDirEntries->count();
   }
-
-  /**
-   * Increment the link-count.
-   *
-   * @return File
-   */
-  public function link():EncryptedFile
-  {
-    return $this;
-  }
-
-  /**
-   * Decrement the link-count
-   *
-   * @return File
-   *
-   * @throws DatabaseException
-   */
-  public function unlink():EncryptedFile
-  {
-    return $this;
-  }
 }

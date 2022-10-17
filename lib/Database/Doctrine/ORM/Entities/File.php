@@ -77,16 +77,6 @@ class File implements \ArrayAccess
   /**
    * @var string|null
    *
-   * Optional original file-name, e.g. if this file generated from an upload
-   * or was copied from a cloud folder.
-   *
-   * @ORM\Column(type="string", length=512, nullable=true)
-   */
-  protected $originalFileName;
-
-  /**
-   * @var string|null
-   *
    * @ORM\Column(type="string", length=128, nullable=false)
    */
   protected $mimeType;
@@ -280,30 +270,6 @@ class File implements \ArrayAccess
   public function getExtension(?string $extension = null):?string
   {
     return is_string($this->fileName) ? pathinfo($this->fileName, PATHINFO_EXTENSION) : null;
-  }
-
-  /**
-   * Set originalFileName.
-   *
-   * @param string|null $originalFileName
-   *
-   * @return File
-   */
-  public function setOriginalFileName(?string $originalFileName = null):File
-  {
-    $this->originalFileName = $originalFileName;
-
-    return $this;
-  }
-
-  /**
-   * Get originalFileName.
-   *
-   * @return string|null
-   */
-  public function getOriginalFileName():?string
-  {
-    return $this->originalFileName;
   }
 
   /**

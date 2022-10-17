@@ -529,15 +529,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
     }
 
-    if (!empty($this->supportingDocument)) {
-      $this->supportingDocument->unlink();
-    }
-
     $this->supportingDocument = $supportingDocument;
-
-    if (!empty($this->supportingDocument)) {
-      $this->supportingDocument->link();
-    }
 
     if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
       $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
