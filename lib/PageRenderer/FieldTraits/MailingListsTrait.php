@@ -109,6 +109,7 @@ trait MailingListsTrait
             'status' => $status,
             'urlGenerator' => $this->urlGenerator(),
             'toolTips' => $this->toolTipsService,
+            'expertMode' => $this->expertMode ?? false,
           ],
           'blank',
         ))->render();
@@ -179,7 +180,6 @@ trait MailingListsTrait
             'statusData' => $statusData,
             'urlGenerator' => $this->urlGenerator(),
             'toolTips' => $this->toolTipsService,
-            'expertMode' => $this->expertMode,
           ],
           'blank',
         ))->render();
