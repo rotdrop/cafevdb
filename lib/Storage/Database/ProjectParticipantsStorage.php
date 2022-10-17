@@ -151,38 +151,18 @@ class ProjectParticipantsStorage extends Storage
     return $result;
   }
 
-  /**
-   * Ensure that the top-level root directory exists as database entity.
-   *
-   * @param bool $create Create the root-folder if it does not exist yet.
-   *
-   * @return Entities\DatabaseStorageFolder
-   */
-  protected function getRootFolder(bool $create = false):Entities\DatabaseStorageFolder
+  /** {@inheritdoc} */
+  protected function getRootFolder(bool $create = false):?Entities\DatabaseStorageFolder
   {
-    if (!empty($this->rootFolder)) {
-      return $this->rootFolder;
-    }
-    /** @var Entities\DatabaseStorageFolder $root */
-    $shortId = $this->getShortId();
-    /** @var Entities\DatabaseStorage $rootStorage */
-    $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
-    if (!empty($rootStorage)) {
-      $this->rootFolder = $rootStorage->getRoot();
-      return $this->rootFolder;
-    }
-    $rootFolder = (new Entities\DatabaseStorageFolder)
-      ->setName('')
-      ->setParent(null);
-    $rootStorage = (new Entities\DatabaseStorage)
-      ->setRoot($rootFolder)
-      ->setStorageId($shortId);
-    $this->persist($rootFolder);
-    $this->persist($rootStorage);
-    $this->participant->setDatabaseDocuments($rootStorage);
-    $this->flush();
+    $rootFolder = parent::getRootFolder($create);
 
-    $this->rootFolder = $rootFolder;
+    if ($create
+        && !empty($rootFolder)
+        && $this->participant->getDatabaseDocuments() != $this->storageEntity
+    ) {
+      $this->participant->setDatabaseDocuments($this->storageEntity);
+      $this->flush();
+    }
 
     return $this->rootFolder;
   }

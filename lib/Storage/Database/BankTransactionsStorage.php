@@ -58,11 +58,7 @@ class BankTransactionsStorage extends Storage
   {
     parent::__construct($params);
 
-    $shortId = $this->getShortId();
-    $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
-    if (!empty($rootStorage)) {
-      $this->rootFolder = $rootStorage->getRoot();
-    }
+    $this->getRootFolder(create: false);
     $this->transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
 
     /** @var IEventDispatcher $eventDispatcher */
@@ -71,11 +67,7 @@ class BankTransactionsStorage extends Storage
       $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
       $this->clearDatabaseRepository();
 
-      $shortId = $this->getShortId();
-      $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
-      if (!empty($rootStorage)) {
-        $this->rootFolder = $rootStorage->getRoot();
-      }
+      $this->getRootFolder(create: false);
       $this->transactionsRepository = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class);
     });
   }

@@ -73,6 +73,9 @@ class Storage extends AbstractStorage
   /** @var array */
   protected $files = [];
 
+  /** @var null|Entities\DatabaseStorage */
+  protected $storageEntity = null;
+
   /** @var null|Entities\DatabaseStorageFolder */
   protected $rootFolder = null;
 
@@ -90,6 +93,45 @@ class Storage extends AbstractStorage
     }
 
     $this->filesRepository = $this->getDatabaseRepository(Entities\File::class);
+  }
+
+  /**
+   * Ensure that the top-level root directory exists as database entity.
+   *
+   * @param bool $create Create the root-folder if it does not exist yet.
+   *
+   * @return null|Entities\DatabaseStorageFolder
+   */
+  protected function getRootFolder(bool $create = false):?Entities\DatabaseStorageFolder
+  {
+    if (!empty($this->rootFolder) && !empty($this->storageEntity)) {
+      return $this->rootFolder;
+    }
+    /** @var Entities\DatabaseStorageFolder $root */
+    $shortId = $this->getShortId();
+    /** @var Entities\DatabaseStorage $rootStorage */
+    $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
+    if (!empty($rootStorage)) {
+      $this->storageEntity = $rootStorage;
+      $this->rootFolder = $rootStorage->getRoot();
+    }
+    if (!empty($rootStorage) || !$create) {
+      return $this->rootFolder;
+    }
+    $rootFolder = (new Entities\DatabaseStorageFolder)
+      ->setName('')
+      ->setParent(null);
+    $rootStorage = (new Entities\DatabaseStorage)
+      ->setRoot($rootFolder)
+      ->setStorageId($shortId);
+    $this->persist($rootFolder);
+    $this->persist($rootStorage);
+    $this->flush();
+
+    $this->storageEntity = $rootStorage;
+    $this->rootFolder = $rootFolder;
+
+    return $this->rootFolder;
   }
 
   /**
@@ -113,7 +155,7 @@ class Storage extends AbstractStorage
 
     /** @var Entities\DatabaseStorageFolder $folderDirEntry */
     $folderDirEntry = $this->rootFolder;
-    if (!$rootIsMandatory && empty($dirName) && empty($this->root)) {
+    if (!$rootIsMandatory && empty($dirName) && empty($folderDirEntry)) {
       $this->files[$dirName] = [ '.' => $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1')) ];
       if (empty($folderDirEntry)) {
         $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
