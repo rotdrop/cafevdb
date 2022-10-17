@@ -958,7 +958,7 @@ class SepaDebitMandatesController extends Controller
       // just make sure it does not change.
       $mandateReference = $debitMandate->getMandateReference();
     } else {
-      $debitMandate->setProject($mandateProjectId);
+      $debitMandate->setProject($this->getReference(Entities\Project::class, (int)$mandateProjectId));
       $mandateReference = $this->financeService->generateSepaMandateReference($debitMandate);
     }
 
@@ -1344,6 +1344,7 @@ class SepaDebitMandatesController extends Controller
 
       $this->persist($writtenMandate);
       $debitMandate->setWrittenMandate($writtenMandate);
+      $this->flush(); // the entity persisted needs an id in order to go further
 
       foreach ($participants as $participant) {
         $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
