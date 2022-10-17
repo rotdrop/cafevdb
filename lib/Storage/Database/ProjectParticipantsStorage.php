@@ -410,11 +410,16 @@ class ProjectParticipantsStorage extends Storage
       $fileName  = $fileInfo['baseName'];
       $dirName = $fileInfo['dirName'];
 
+      // $dirName may actually be a deep path:
+      // Belege/Forderungen/Erstattungen
+
+      $components = Util::explode(self::PATH_SEPARATOR, $dirName);
+
       $folderEntity = $this->getRootFolder(create: true);
-      if (!empty($dirName)) {
-        $subFolder = $folderEntity->getFolderByName($dirName);
+      foreach ($components as $component) {
+        $subFolder = $folderEntity->getFileByName($component);
         if (empty($subFolder)) {
-          $subFolder = $folderEntity->addSubFolder($dirName);
+          $subFolder = $folderEntity->addSubFolder($component);
           $this->persist($subFolder);
         }
         $folderEntity = $subFolder;
@@ -469,12 +474,18 @@ class ProjectParticipantsStorage extends Storage
       $file = $fileInfo['file'];
       $dirName = $fileInfo['dirName'];
 
+      // $dirName may actually be a deep path:
+      // Belege/Forderungen/Erstattungen
+
+      $components = Util::explode(self::PATH_SEPARATOR, $dirName);
+
       $folderEntity = $this->getRootFolder(create: false);
       if (empty($folderEntity)) {
         throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
       }
-      if (!empty($dirName)) {
-        $folderEntity = $folderEntity->getFolderByName($dirName);
+
+      foreach ($components as $component) {
+        $folderEntity = $folderEntity->getFolderByName($component);
         if (empty($folderEntity)) {
           throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $dirName));
         }
