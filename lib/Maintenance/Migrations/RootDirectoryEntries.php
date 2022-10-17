@@ -70,10 +70,21 @@ class RootDirectoryEntries extends AbstractMigration
       'ALTER TABLE Projects ADD COLUMN IF NOT EXISTS financial_balance_documents_storage_id INT DEFAULT NULL',
       'ALTER TABLE Projects ADD CONSTRAINT FK_A5E5D1F214CA24B1 FOREIGN KEY IF NOT EXISTS (financial_balance_documents_storage_id) REFERENCES DatabaseStorages (id)',
       'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_A5E5D1F214CA24B1 ON Projects (financial_balance_documents_storage_id)',
+      //
+      // make sure that the column exists s.t. the migration does not fail
+      "ALTER TABLE SepaBulkTransactions ADD COLUMN IF NOT EXISTS sepa_transaction_data_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
+      'ALTER TABLE Files ADD COLUMN IF NOT EXISTS original_file_name VARCHAR(512) DEFAULT NULL',
+      "ALTER TABLE ProjectParticipants ADD COLUMN IF NOT EXISTS participant_fields_data_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
+      "ALTER TABLE SepaBulkTransactions ADD COLUMN IF NOT EXISTS sepa_transaction_data_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
+      "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS sepa_debit_mandates_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
+      "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS sepa_debit_mandates_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', ADD COLUMN IF NOT EXISTS payments_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
+      "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS financial_balance_supporting_documents_changed DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
     ],
     self::TRANSACTIONAL => [
       'UPDATE SepaBulkTransactions SET updated = GREATEST(updated, sepa_transaction_data_changed)
 WHERE sepa_transaction_data_changed IS NOT NULL',
+      'UPDATE SepaBulkTransactions SET sepa_transaction_data_changed = updated
+WHERE sepa_transaction_data_changed IS NULL',
       'UPDATE Files SET file_name = original_file_name
 WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
     ],
@@ -352,16 +363,28 @@ WHERE p.id = ?';
         'ALTER TABLE Projects DROP FOREIGN KEY IF EXISTS FK_A5E5D1F2ABE5D3E5',
         'DROP INDEX IF EXISTS UNIQ_A5E5D1F2ABE5D3E5 ON Projects',
         'ALTER TABLE Projects DROP COLUMN IF EXISTS financial_balance_documents_folder_id',
+        'ALTER TABLE Projects DROP COLUMN IF EXISTS financial_balance_supporting_documents_changed',
         //
-        // 'ALTER TABLE SepaBulkTransactions DROP COLUMN IF EXISTS sepa_transaction_data_changed',
+        'ALTER TABLE SepaBulkTransactions DROP COLUMN IF EXISTS sepa_transaction_data_changed',
         //
-        // 'ALTER TABLE Musicians DROP COLUMN IF EXISTS sepa_debit_mandates_changed',
-        // 'ALTER TABLE Musicians DROP COLUMN IF EXISTS  payments_changed',
+        'ALTER TABLE Musicians DROP COLUMN IF EXISTS sepa_debit_mandates_changed',
+        'ALTER TABLE Musicians DROP COLUMN IF EXISTS  payments_changed',
         //
-        // 'ALTER TABLE ProjectParticipants DROP COLUMN IF EXISTS participant_fields_data_changed',
+        'ALTER TABLE ProjectParticipants DROP COLUMN IF EXISTS participant_fields_data_changed',
         //
-        // 'ALTER TABLE Files DROP COLUMN IF EXIST number_of_links',
-        // 'ALTER TABLE Files DROP DROP COLUMN IF EXISTS original_file_name;
+        'ALTER TABLE Files DROP COLUMN IF EXISTS number_of_links',
+        'ALTER TABLE Files DROP COLUMN IF EXISTS original_file_name',
+        //
+        'ALTER TABLE CompositePayments DROP FOREIGN KEY IF EXISTS FK_65D9920C166D1F9C6A022FD1',
+        'ALTER TABLE CompositePayments DROP COLUMN IF EXISTS balance_document_sequence',
+        'DROP INDEX IF EXISTS IDX_65D9920C166D1F9C6A022FD1 ON CompositePayments',
+        //
+        'ALTER TABLE ProjectPayments DROP FOREIGN KEY IF EXISTS FK_F6372AE2166D1F9C6A022FD1',
+        'ALTER TABLE ProjectPayments DROP COLUMN IF EXISTS balance_document_sequence',
+        'DROP INDEX IF EXISTS IDX_F6372AE2166D1F9C6A022FD1 ON ProjectPayments',
+        //
+        'DROP TABLE IF EXISTS project_balance_supporting_document_encrypted_file',
+        'DROP TABLE IF EXISTS ProjectBalanceSupportingDocuments',
       ],
       self::TRANSACTIONAL => [
       ],
