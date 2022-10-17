@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -205,14 +205,15 @@ WITH CHECK OPTION';
   /** @var string */
   private $appDbName;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IAppContainer $appContainer
-    , ILogger $logger
-    , IL10N $l10n
-    , IConfig $cloudConfig
-    , EncryptionService $encryptionService
-    , IAppManager $appManager
+    string $appName,
+    IAppContainer $appContainer,
+    ILogger $logger,
+    IL10N $l10n,
+    IConfig $cloudConfig,
+    EncryptionService $encryptionService,
+    IAppManager $appManager,
   ) {
     $this->appName = $appName;
     $this->appContainer = $appContainer;
@@ -228,7 +229,17 @@ WITH CHECK OPTION';
       $this->appDbHost = $this->encryptionService->getConfigValue('dbserver');
     }
   }
+  // phpcs:enable
 
+  /**
+   * @param null|string $dataBaseName
+   *
+   * @param string $prefix
+   *
+   * @param string $baseName
+   *
+   * @return string
+   */
   private function viewName(?string $dataBaseName, string $prefix, string $baseName):string
   {
     $viewName = $prefix . Util::dashesToCamelCase($baseName, true, '_') . self::VIEW_POSTFIX;
@@ -238,11 +249,23 @@ WITH CHECK OPTION';
     return $viewName;
   }
 
-  private function personalizedViewName(?string $dataBaseName, string $baseName)
+  /**
+   * @param null|string $dataBaseName
+   *
+   * @param string $baseName
+   *
+   * @return string
+   */
+  private function personalizedViewName(?string $dataBaseName, string $baseName):string
   {
     return $this->viewName($dataBaseName, self::PERSONALIZED_PREFIX, $baseName);
   }
 
+  /**
+   * @return string
+   *
+   * @throws Exceptions\DatabaseCloudConnectorViewException
+   */
   private function checkAndGetCloudDbUser():string
   {
     $cloudDbHost = $this->cloudConfig->getSystemValue('dbhost');
@@ -250,7 +273,7 @@ WITH CHECK OPTION';
 
     if ($cloudDbHost !== $this->appDbHost) {
       throw new Exceptions\DatabaseCloudConnectorViewException(
-        $this->l->t('Cloud database server "%s" and app database server "%s" must coincide.',  [ $cloudDbHost, $appDbHost ])
+        $this->l->t('Cloud database server "%s" and app database server "%s" must coincide.', [ $cloudDbHost, $this->appDbHost ])
       );
     }
 
@@ -261,9 +284,11 @@ WITH CHECK OPTION';
    * Check the requirements for this affair, in particular whether the
    * user_sql backend is enabled, and return an error with status and hints.
    *
+   * @param null|string $dataBaseName
+   *
    * @return array
    */
-  public function checkRequirements(?string $dataBaseName)
+  public function checkRequirements(?string $dataBaseName):array
   {
     $status = self::REQUIREMENTS_OK;
 
@@ -274,9 +299,13 @@ WITH CHECK OPTION';
       $status = self::REQUIREMENTS_MISSING;
       $hints[] = $this->l->t('In order to be able to import the orchestra club-members as cloud-users the
 "%1$s"-app needs to be enabled. Please ask the administrator of this cloud-instance to install and unconditionally enable this app.', self::CLOUD_USER_BACKEND);
-    } else if (!empty($userBackendRestrictions)) {
+    } elseif (!empty($userBackendRestrictions)) {
       $status = self::REQUIREMENTS_MISSING;
-      $hints[] = $this->l->t('The requird user-backend "%1$s" seems to be installed and enabled, however, the following app-restriction have been imposed on the app: "%2$s".', [ self::CLOUD_USER_BACKEND, implode(', ', $userBackendRestrictions), ]);
+      $hints[] = $this->l->t(
+        'The requird user-backend "%1$s" seems to be installed and enabled,'
+        . ' however, the following app-restriction have been imposed on the app: "%2$s".', [
+          self::CLOUD_USER_BACKEND, implode(', ', $userBackendRestrictions),
+        ]);
     }
 
     if (!empty($dataBaseName) && $dataBaseName != $this->appDbName) {
@@ -312,8 +341,12 @@ WITH CHECK OPTION';
    * @param string|null $dataBaseName The name of the database where the views
    * will be created. The cafevdb database user must have GRANT rights on the
    * databse. If null the views are created in the standard databse.
-   */
-  public function updateUserSqlViews(?string $dataBaseName)
+   *
+   * @return void
+   *
+   * @throws Exceptions\DatabaseCloudConnectorViewException
+  */
+  public function updateUserSqlViews(?string $dataBaseName):void
   {
     $cloudDbUser = $this->checkAndGetCloudDbUser();
     $currentStatement = null;
@@ -351,12 +384,14 @@ WITH CHECK OPTION';
    * @param string|null $dataBaseName The name of the database where the views
    * will be created. The cafevdb database user must have GRANT rights on the
    * databse. If null the views are created in the standard databse.
+   *
+   * @return void
    */
-  public function removeUserSqlViews(?string $dataBaseName)
+  public function removeUserSqlViews(?string $dataBaseName):void
   {
     $currentStatement = null;
     try {
-      foreach (self::USER_SQL_VIEWS as $name => $sql) {
+      foreach (array_keys(self::USER_SQL_VIEWS) as $name) {
         $viewName = $this->viewName($dataBaseName, self::USER_SQL_PREFIX, $name);
         $currentStatement = sprintf('DROP VIEW IF EXISTS %1$s', $viewName);
         $this->logDebug('SQL ' . $currentStatement);
@@ -374,10 +409,16 @@ WITH CHECK OPTION';
   /**
    * Generate a config array for the user_sql app "as of now".
    *
+   * @param null|string $dataBaseName
+   *
+   * @param bool $withDbAuth
+   *
+   * @return array
+   *
    * @bug Uses the internal structure of an app which is not under our
    * controle.
    */
-  private function generateUserSqlConfig(?string $dataBaseName = null, bool $withDbAuth = true)
+  private function generateUserSqlConfig(?string $dataBaseName = null, bool $withDbAuth = true):array
   {
     $cloudDbHost = $withDbAuth ? $this->cloudConfig->getSystemValue('dbhost') : '%system:dbhost%';
     $cloudDbUser = $withDbAuth ? $this->cloudConfig->getSystemValue('dbuser') : '%system:dbuser%';
@@ -448,8 +489,14 @@ WITH CHECK OPTION';
    * For the moment this just fills in our own app-config. Idea is to have the
    * admin-settings actually flush this data to the config space, either
    * directly or by using a call to set settings route of the user_sql app.
+   *
+   * @param null|string $dataBaseName
+   *
+   * @param bool $delete
+   *
+   * @return void
    */
-  public function writeUserSqlConfig(?string $dataBaseName = null, bool $delete = false)
+  public function writeUserSqlConfig(?string $dataBaseName = null, bool $delete = false):void
   {
     $config = $this->generateUserSqlConfig($dataBaseName, withDbAuth: false);
     if ($delete) {
@@ -468,8 +515,12 @@ WITH CHECK OPTION';
    * config-space. This variant uses the routes of the user_sql app. Hence it
    * will only work if the logged-in user is allowed to write to the user-sql
    * config space.
+   *
+   * @param bool $erase
+   *
+   * @return array
    */
-  public function configureCloudUserBackend(bool $erase = false)
+  public function configureCloudUserBackend(bool $erase = false):array
   {
     /** @var RequestService $requestService */
     $requestService = $this->appContainer->get(RequestService::class);
@@ -520,8 +571,14 @@ WITH CHECK OPTION';
 
   /**
    * Clear the backend cache, for use in controllers, back-reportings messages.
+   *
+   * @param null|RequestService $requestService
+   *
+   * @param null|array $messages
+   *
+   * @return void
    */
-  private function clearUserBackendCache(?RequestService $requestService = null, ?array &$messages = null)
+  private function clearUserBackendCache(?RequestService $requestService = null, ?array &$messages = null):void
   {
     // /** @var RequestService $requestService */
     // $requestService = $this->appContainer->get(RequestService::class);
@@ -551,14 +608,19 @@ WITH CHECK OPTION';
    * In particular flush potential data-caches after changing data of
    * the orchestra app.
    *
-   * @return array<int, string> Diagnostic messages.
+   * @return void
    */
-  public function synchronizeCloud()
+  public function synchronizeCloud():void
   {
     $this->clearUserBackendCache();
   }
 
-  public function setCloudUserSubAdmins(bool $delete = false)
+  /**
+   * @param bool $delete
+   *
+   * @return void
+   */
+  public function setCloudUserSubAdmins(bool $delete = false):void
   {
     /** @var ConfigService $configService */
     $configService = $this->appContainer->get(ConfigService::class);
@@ -572,15 +634,15 @@ WITH CHECK OPTION';
         $isSubAdmin = $subAdminManager->isSubAdminOfGroup($subAdmin, $catchAllGroup);
         if ($delete && $isSubAdmin) {
           $configService->getSubAdminManager()->deleteSubAdmin($subAdmin, $catchAllGroup);
-        } else if (!($delete || $isSubAdmin)) {
+        } elseif (!($delete || $isSubAdmin)) {
           $configService->getSubAdminManager()->createSubAdmin($subAdmin, $catchAllGroup);
         }
       }
     }
   }
 
-  /** Check for cached cloud user-backend config */
-  public function haveCloudUserBackendConfig()
+  /** @return bool Check for cached cloud user-backend config */
+  public function haveCloudUserBackendConfig():bool
   {
     return !empty(array_filter(
       $this->cloudConfig->getAppKeys($this->appName),
@@ -593,6 +655,8 @@ WITH CHECK OPTION';
    * Generate the (My-)SQL statements for defining the personalized single-row
    * musician views.
    *
+   * @param null|string $dataBaseName
+   *
    * @return array<string, string>
    * ```
    * [
@@ -600,7 +664,7 @@ WITH CHECK OPTION';
    * ]
    * ```
    */
-  private function generateMusicianPersonalizedViewsStatements(?string $dataBaseName)
+  private function generateMusicianPersonalizedViewsStatements(?string $dataBaseName):array
   {
     $statements = [];
 
@@ -744,8 +808,12 @@ SELECT t.* FROM " . $table . " t";
    * @param string|null $dataBaseName The name of the database where the views
    * will be created. The cafevdb database user must have GRANT rights on the
    * databse. If null the views are created in the standard databse.
+   *
+   * @return void
+   *
+   * @throws Exceptions\DatabaseCloudConnectorViewException
    */
-  public function updateMusicianPersonalizedViews(?string $dataBaseName)
+  public function updateMusicianPersonalizedViews(?string $dataBaseName):void
   {
     $statements = $this->generateMusicianPersonalizedViewsStatements($dataBaseName);
 
@@ -780,8 +848,12 @@ SELECT t.* FROM " . $table . " t";
    * @param string|null $dataBaseName The name of the database where the views
    * will be created. The cafevdb database user must have GRANT rights on the
    * databse. If null the views are created in the standard databse.
+   *
+   * @return void
+   *
+   * @throws Exceptions\DatabaseCloudConnectorViewException
    */
-  public function removeMusicianPersonalizedViews(?string $dataBaseName)
+  public function removeMusicianPersonalizedViews(?string $dataBaseName):void
   {
     $statements = $this->generateMusicianPersonalizedViewsStatements($dataBaseName);
 
