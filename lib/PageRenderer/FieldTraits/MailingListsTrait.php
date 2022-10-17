@@ -36,6 +36,9 @@ trait MailingListsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  /** @var bool */
+  protected $expertMode;
+
   /** @var MailingListsService */
   private $listsService;
 
@@ -176,6 +179,7 @@ trait MailingListsTrait
             'statusData' => $statusData,
             'urlGenerator' => $this->urlGenerator(),
             'toolTips' => $this->toolTipsService,
+            'expertMode' => $this->expertMode,
           ],
           'blank',
         ))->render();
