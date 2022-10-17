@@ -234,9 +234,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return int|Musician
+   * @return null|int|Musician
    */
-  public function getMusician()
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
@@ -306,9 +306,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return Project|int
+   * @return null|int|Project
    */
-  public function getProject()
+  public function getProject():?Project
   {
     return $this->project;
   }
