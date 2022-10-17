@@ -71,12 +71,6 @@ class ProjectParticipantsStorage extends Storage
   /** @var ProjectService */
   private $projectService;
 
-  /** @var Entities\DatabaseStorageFolder */
-  private $rootFolder;
-
-  /** @var array */
-  private $files = [];
-
   /** @var bool Whether the current user belongs to the treasurer group. */
   private $isTreasurer;
 
@@ -123,29 +117,6 @@ class ProjectParticipantsStorage extends Storage
 
   /**
    * {@inheritdoc}
-   */
-  public function fileFromFileName(?string $name)
-  {
-    $name = $this->buildPath($name);
-    if ($name == self::PATH_SEPARATOR) {
-      $dirName = '';
-      $baseName = '.';
-    } else {
-      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
-    }
-    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
-
-    if (empty($this->files[$dirName])) {
-      $this->findFiles($dirName);
-    }
-
-    return ($this->files[$dirName][$baseName]
-            ?? ($this->files[$dirName][$baseName . self::PATH_SEPARATOR]
-                ?? null));
-  }
-
-  /**
-   * {@inheritdoc}
    *
    * We expose all found documents in the projectParticipantFieldsData(),
    * payments() and the debitMandates(). Changes including deletions are
@@ -154,53 +125,7 @@ class ProjectParticipantsStorage extends Storage
    */
   protected function findFiles(string $dirName):array
   {
-    $dirName = self::normalizeDirectoryName($dirName);
-    if (!empty($this->files[$dirName])) {
-      return $this->files[$dirName];
-    }
-
-    $dirComponents = Util::explode(self::PATH_SEPARATOR, $dirName);
-
-    /** @var Entities\DatabaseStorageFolder $folderDirEntry */
-    $folderDirEntry = $this->rootFolder;
-    if (empty($dirName) && empty($this->root)) {
-      $this->files[$dirName] = [ '.' => $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1')) ];
-      if (empty($folderDirEntry)) {
-        return $this->files[$dirName];
-      }
-    } else {
-      foreach ($dirComponents as $component) {
-        $folderDirEntry = $folderDirEntry->getFolderByName($component);
-        if (empty($folderDirEntry)) {
-          throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
-            'Unable to find directory entry for folder "%s".', $dirName
-          ));
-        }
-      }
-      $this->files[$dirName] = [ '.' => $folderDirEntry ];
-    }
-
-    $dirEntries = $folderDirEntry->getDirectoryEntries();
-
-    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
-    foreach ($dirEntries as $dirEntry) {
-
-      $baseName = $dirEntry->getName();
-      $fileName = $this->buildPath($dirName . self::PATH_SEPARATOR . $baseName);
-      list('basename' => $baseName) = self::pathInfo($fileName);
-
-      if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
-        /** @var Entities\DatabaseStorageFolder $dirEntry */
-        // add a directory entry
-        $baseName .= self::PATH_SEPARATOR;
-        $this->files[$dirName][$baseName] = $dirEntry;
-      } else {
-        /** @var Entities\DatabaseStorageFile $dirEntry */
-        $this->files[$dirName][$baseName] = $dirEntry;
-      }
-    }
-
-    return $this->files[$dirName];
+    return parent::findFiles($dirName, rootIsMandatory: false);
   }
 
 
@@ -889,7 +814,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
       } elseif ($node instanceof DirectoryNode) {
         $updated = $node->minimalModificationTime ?? (new DateTimeImmutable('@1'));
         if ($nodeName != '.') {
-          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $nodeName);
+          $recursiveModificationTime = $this->getDirectoryModificationTimeForMigration($dirName . self::PATH_SEPARATOR . $nodeName);
           if ($recursiveModificationTime > $updated) {
             $updated = $recursiveModificationTime;
           }
@@ -897,7 +822,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
       } elseif ($node instanceof Entities\DatabaseStorageDirEntry) {
         $updated = $node->getUpdated();
         if ($nodeName != '.' && $node instanceof Entities\DatabaseStorageFolder) {
-          $recursiveModificationTime = $this->getDirectoryModificationTime($dirName . self::PATH_SEPARATOR . $nodeName);
+          $recursiveModificationTime = $this->getDirectoryModificationTimeForMigration($dirName . self::PATH_SEPARATOR . $nodeName);
           if ($recursiveModificationTime > $updated) {
             $updated = $recursiveModificationTime;
           }

@@ -71,7 +71,10 @@ class Storage extends AbstractStorage
   protected $filesRepository;
 
   /** @var array */
-  private $files = [];
+  protected $files = [];
+
+  /** @var null|Entities\DatabaseStorageFolder */
+  protected $rootFolder = null;
 
   /** {@inheritdoc} */
   public function __construct($params)
@@ -92,25 +95,72 @@ class Storage extends AbstractStorage
   /**
    * @param string $dirName Find all files below the given directory.
    *
+   * @param bool $rootIsMandatory If \true throw an exception if the root-storage is
+   * missing in the data-base. Otherwise silently create an empty dummy directory entry.
+   *
    * @return array
    */
-  protected function findFiles(string $dirName):array
+  protected function findFiles(string $dirName, bool $rootIsMandatory = false):array
   {
     $dirName = self::normalizeDirectoryName($dirName);
-    $files = empty($dirName)
-      ? $this->filesRepository->findAll()
-      : $this->filesRepository->findLike([ 'fileName' => $dirName . self::PATH_SEPARATOR . '%' ]);
-    /** @var Entities\File $file */
-    foreach ($files as $file) {
-      $fileName = $this->buildPath($file->getFileName());
-      list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathinfo($fileName);
-      if ($fileDirName == $dirName) {
-        $this->files[$dirName][$baseName] = $file;
-      } elseif (strpos($fileDirName, $dirName) === 0) {
-        list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-        $this->files[$dirName][$baseName] = new DirectoryNode($baseName);
+    if (!empty($this->files[$dirName])) {
+      return $this->files[$dirName];
+    }
+
+    $dirComponents = Util::explode(self::PATH_SEPARATOR, $dirName);
+
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    /** @var Entities\DatabaseStorageFolder $folderDirEntry */
+    $folderDirEntry = $this->rootFolder;
+    if (!$rootIsMandatory && empty($dirName) && empty($this->root)) {
+      $this->files[$dirName] = [ '.' => $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1')) ];
+      if (empty($folderDirEntry)) {
+        $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+        return $this->files[$dirName];
+      }
+    } elseif (empty($folderDirEntry)) {
+      $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+      throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
+        'Unable to find directory entry for folder "%s".', $dirName
+      ));
+    } else {
+      foreach ($dirComponents as $component) {
+        $folderDirEntry = $folderDirEntry->getFolderByName($component);
+        if (empty($folderDirEntry)) {
+          $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+          throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
+            'Unable to find directory entry for folder "%s".', $dirName
+          ));
+        }
+      }
+      $this->files[$dirName] = [ '.' => $folderDirEntry ];
+    }
+
+    $this->files[$dirName] = [ '.' => $folderDirEntry ];
+
+    $dirEntries = $folderDirEntry->getDirectoryEntries();
+
+    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
+    foreach ($dirEntries as $dirEntry) {
+
+      $baseName = $dirEntry->getName();
+      $fileName = $this->buildPath($dirName . self::PATH_SEPARATOR . $baseName);
+      list('basename' => $baseName) = self::pathInfo($fileName);
+
+      if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
+        /** @var Entities\DatabaseStorageFolder $dirEntry */
+        // add a directory entry
+        $baseName .= self::PATH_SEPARATOR;
+        $this->files[$dirName][$baseName] = $dirEntry;
+      } else {
+        /** @var Entities\DatabaseStorageFile $dirEntry */
+        $this->files[$dirName][$baseName] = $dirEntry;
       }
     }
+
+    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
     return $this->files[$dirName];
   }
 
@@ -219,36 +269,32 @@ class Storage extends AbstractStorage
   }
 
   /**
-   * @param string $name The file-name to work on.
-   *
-   * @return int The file-id.
-   */
-  private function fileIdFromFileName(string $name):int
-  {
-    $name = $this->buildPath($name);
-    $name = pathinfo($name, PATHINFO_BASENAME);
-    $parts = explode('-', $name);
-    if (count($parts) >= 2 && filter_var($parts[1], FILTER_VALIDATE_INT, [ 'options' => [ 'min_range' => 1 ], ]) !== false) {
-      return $parts[1];
-    }
-    return 0;
-  }
-
-  /**
    * Fetch the file entity corresponding to file-name. If the entry is a
    * directory, return the directory name.
    *
    * @param string $name The path-name to work on.
    *
-   * @return null|Entities\EncryptedFile|Entities\DatabaseStorageDirEntry|DirectoryNode
+   * @return null|Entities\DatabaseStorageDirEntry|DirectoryNode
    */
   public function fileFromFileName(string $name)
   {
-    $id = $this->fileIdFromFileName($name);
-    if ($id > 0) {
-      return $this->filesRepository->find($id);
+    $name = $this->buildPath($name);
+    if ($name == self::PATH_SEPARATOR) {
+      $dirName = '';
+      $baseName = '.';
+    } else {
+      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
     }
-    return null;
+
+    if (empty($this->files[$dirName])) {
+      $this->findFiles($dirName);
+    }
+
+    $dirEntry = ($this->files[$dirName][$baseName]
+                 ?? ($this->files[$dirName][$baseName . self::PATH_SEPARATOR]
+                     ?? null));
+
+    return $dirEntry;
   }
 
   /** {@inheritdoc} */
@@ -539,8 +585,3 @@ class Storage extends AbstractStorage
     return false;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -57,12 +57,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /** @var Entities\Project */
   private $project;
 
-  /** @var Entities\DatabaseStorageFolder */
-  private $rootFolder;
-
-  /** @var array */
-  private $files = [];
-
   /** {@inheritdoc} */
   public function __construct($params)
   {
@@ -95,32 +89,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       }
       $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     });
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fileFromFileName(string $name)
-  {
-    $name = $this->buildPath($name);
-    if ($name == self::PATH_SEPARATOR) {
-      $dirName = '';
-      $baseName = '.';
-    } else {
-      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
-    }
-
-    // $this->logInfo('SEARCH DIR ENTRY FOR ' . $name . ' || ' . $dirName . ' // ' . $baseName);
-
-    if (empty($this->files[$dirName])) {
-      $this->findFiles($dirName);
-    }
-
-    $dirEntry = ($this->files[$dirName][$baseName]
-                 ?? ($this->files[$dirName][$baseName . self::PATH_SEPARATOR]
-                     ?? null));
-
-    return $dirEntry;
   }
 
   /**
@@ -164,60 +132,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
    */
   protected function findFiles(string $dirName):array
   {
-    // $this->logInfo('FIND FILES IN ' . $dirName);
-
-    $dirName = self::normalizeDirectoryName($dirName);
-    if (!empty($this->files[$dirName])) {
-      return $this->files[$dirName];
-    }
-
-    // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-
-    $dirComponents = Util::explode(self::PATH_SEPARATOR, $dirName);
-
-     /** @var Entities\DatabaseStorageFolder $folderDirEntry */
-    $folderDirEntry = $this->rootFolder;
-    if (empty($dirName) && empty($this->root)) {
-      $this->files[$dirName] = [ '.' => $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1')) ];
-      if (empty($folderDirEntry)) {
-        return $this->files[$dirName];
-      }
-    } else {
-      foreach ($dirComponents as $component) {
-        $folderDirEntry = $folderDirEntry->getFolderByName($component);
-        if (empty($folderDirEntry)) {
-          throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
-            'Unable to find directory entry for folder "%s".', $dirName
-          ));
-        }
-      }
-      $this->files[$dirName] = [ '.' => $folderDirEntry ];
-    }
-
-    $dirEntries = $folderDirEntry->getDirectoryEntries();
-
-    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
-    foreach ($dirEntries as $dirEntry) {
-
-      $baseName = $dirEntry->getName();
-      $fileName = $this->buildPath($dirName . self::PATH_SEPARATOR . $baseName);
-      list('basename' => $baseName) = self::pathInfo($fileName);
-
-      if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
-        /** @var Entities\DatabaseStorageFolder $dirEntry */
-        // add a directory entry
-        $baseName .= self::PATH_SEPARATOR;
-        $this->files[$dirName][$baseName] = $dirEntry;
-      } else {
-        /** @var Entities\DatabaseStorageFile $dirEntry */
-        $this->files[$dirName][$baseName] = $dirEntry;
-      }
-    }
-
-    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-
-    return $this->files[$dirName];
+    return parent::findFiles($dirName, rootIsMandatory: false);
   }
 
   /**  {@inheritdoc} */
@@ -274,7 +189,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         ->setParent(null);
       $rootStorage = (new Entities\DatabaseStorage)
         ->setRoot($rootFolder)
-        ->setStorageId(substr($this->getId(), strlen(parent::getId())));
+        ->setStorageId($this->getShortId());
       $this->project->setFinancialBalanceDocumentsStorage($rootStorage);
       $this->persist($rootFolder);
       $this->persist($rootStorage);

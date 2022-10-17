@@ -53,12 +53,6 @@ class BankTransactionsStorage extends Storage
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
   private $transactionsRepository;
 
-  /** @var Entities\DatabaseStorageFolder */
-  private $rootFolder;
-
-  /** @var array */
-  private $files = [];
-
   /** {@inheritdoc} */
   public function __construct($params)
   {
@@ -236,71 +230,9 @@ class BankTransactionsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  public function fileFromFileName(string $name)
-  {
-    $name = $this->buildPath($name);
-    if ($name == self::PATH_SEPARATOR) {
-      $dirName = '';
-      $baseName = '.';
-    } else {
-      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
-    }
-
-    if (empty($this->files[$dirName])) {
-      $this->findFiles($dirName);
-    }
-
-    return ($this->files[$dirName][$baseName]
-            ?? ($this->files[$dirName][$baseName . self::PATH_SEPARATOR]
-                ?? null));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function findFiles(string $dirName):array
   {
-    $dirName = self::normalizeDirectoryName($dirName);
-    if (!empty($this->files[$dirName])) {
-      return $this->files[$dirName];
-    }
-
-    $dirComponents = Util::explode(self::PATH_SEPARATOR, $dirName);
-
-    /** @var Entities\DatabaseStorageFolder $folderDirEntry */
-    $folderDirEntry = $this->rootFolder;
-    foreach ($dirComponents as $component) {
-      $folderDirEntry = $folderDirEntry->getFolderByName($component);
-      if (empty($folderDirEntry)) {
-        throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
-          'Unable to find directory entry for folder "%s".', $dirName
-        ));
-      }
-    }
-
-    $this->files[$dirName] = [ '.' => $folderDirEntry ];
-
-    $dirEntries = $folderDirEntry->getDirectoryEntries();
-
-    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
-    foreach ($dirEntries as $dirEntry) {
-
-      $baseName = $dirEntry->getName();
-      $fileName = $this->buildPath($dirName . self::PATH_SEPARATOR . $baseName);
-      list('basename' => $baseName) = self::pathInfo($fileName);
-
-      if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
-        /** @var Entities\DatabaseStorageFolder $dirEntry */
-        // add a directory entry
-        $baseName .= self::PATH_SEPARATOR;
-        $this->files[$dirName][$baseName] = $dirEntry;
-      } else {
-        /** @var Entities\DatabaseStorageFile $dirEntry */
-        $this->files[$dirName][$baseName] = $dirEntry;
-      }
-    }
-
-    return $this->files[$dirName];
+    return parent::findFiles($dirName, rootIsMandatory: true);
   }
 
   /** {@inheritdoc} */
@@ -319,8 +251,3 @@ class BankTransactionsStorage extends Storage
       . self::PATH_SEPARATOR;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
