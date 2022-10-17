@@ -435,4 +435,17 @@ class ProjectParticipant implements \ArrayAccess
   {
     return $this->payments->count();
   }
+
+    /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $musicianName = ($this->musician instanceof Musician)
+      ? $this->musician->getUserIdSlug() . ':' . $this->musician->getId()
+      : '?';
+    $projectName = ($this->project instanceof Project)
+      ? $this->project->getName() . ':' . $this->project->getId()
+      : '?';
+
+    return $musicianName . '@' . $projectName;
+  }
 }
