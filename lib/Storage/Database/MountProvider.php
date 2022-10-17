@@ -63,6 +63,9 @@ class MountProvider implements IMountProvider
   /** @var OrganizationalRolesService */
   private $organizationalRolesService;
 
+  /** @var Factory */
+  private $storageFactory;
+
   /** @var int */
   private static $recursionLevel = 0;
 
@@ -71,11 +74,13 @@ class MountProvider implements IMountProvider
     ConfigService $configService,
     OrganizationalRolesService $organizationalRolesService,
     EntityManager $entityManager,
+    Factory $storageFactory,
   ) {
     $this->configService = $configService;
     $this->organizationalRolesService = $organizationalRolesService;
     $this->l = $this->l10n();
     $this->entityManager = $entityManager;
+    $this->storageFactory = $storageFactory;
   }
   // phpcs:enable
 
@@ -148,9 +153,7 @@ class MountProvider implements IMountProvider
     if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
       // block for non-treasurers
 
-      $storage = new BankTransactionsStorage([
-        'configService' => $this->configService
-      ]);
+      $storage = $this->storageFactory->getBankTransactionsStorage();
       $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
@@ -197,10 +200,7 @@ class MountProvider implements IMountProvider
       /** @var Entities\Project $project */
       foreach ($projects as $project) {
 
-        $storage = new ProjectBalanceSupportingDocumentsStorage([
-          'configService' => $this->configService,
-          'project' => $project,
-        ]);
+        $storage = $this->storageFactory->getProjectBalanceSupportingDocumentsStorage($project);
         $bulkLoadStorageIds[] = $storage->getId();
 
         $mountPathChain = [ $this->getProjectBalancesPath() ];
@@ -259,10 +259,7 @@ class MountProvider implements IMountProvider
       foreach ($project->getParticipants() as $participant) {
         try {
           $folder = $projectService->getParticipantFolder($project, $participant->getMusician());
-          $storage = new ProjectParticipantsStorage([
-            'configService' => $this->configService,
-            'participant' => $participant,
-          ]);
+          $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
           $bulkLoadStorageIds[] = $storage->getId();
           $participantStorages[$folder] = $storage;
         } catch (\Throwable $t) {
