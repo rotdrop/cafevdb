@@ -357,6 +357,8 @@ WHERE p.id = ?';
         // 'ALTER TABLE Musicians DROP COLUMN IF EXISTS  payments_changed',
         //
         // 'ALTER TABLE ProjectParticipants DROP COLUMN IF EXISTS participant_fields_data_changed',
+        //
+        // 'ALTER TABLE Files DROP number_of_links',
       ],
       self::TRANSACTIONAL => [
       ],
