@@ -27,8 +27,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as PHPMyEdit from './pme-selectors.js';
 import * as Notification from './notification.js';
-import { chosenActive } from './select-utils.js';
-import selectValues from './select-values.js';
+import { chosenActive, selected as selectedValues } from './select-utils.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 
 // console.info('JQUERY ', $.fn.jquery);
@@ -296,7 +295,7 @@ const documentReady = function() {
       });
     $('.personal-settings select.pagerows').each(function(index) {
       if (this !== $self[0]) {
-        selectValues(this, selectValues($self));
+        selectedValues($(this), selectedValues($self));
       }
     });
     return false;
@@ -318,7 +317,7 @@ const documentReady = function() {
       });
     $('.personal-settings select.debugmode').each(function(index) {
       if (this !== $self[0]) {
-        selectValues(this, selectValues($self));
+        selectedValues($(this), selectedValues($self));
       }
     });
     return false;
@@ -339,7 +338,7 @@ const documentReady = function() {
       });
     $('.personal-settings select.wysiwyg-editor').each(function(index) {
       if (this !== $self[0]) {
-        selectValues(this, selectValues($self));
+        selectedValues($(this), selectedValues($self));
       }
     });
     return false;

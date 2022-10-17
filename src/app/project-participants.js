@@ -39,7 +39,6 @@ import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
-import selectValues from './select-values.js';
 import { pageRenderer } from './pme-state.js';
 import {
   sys as pmeSys,
@@ -761,7 +760,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
         { isHTML: true, timeout: 30 }
       );
       console.log('exceeding limit');
-      selectValues($self, prevSelected);
+      SelectUtils.selected($self, prevSelected);
     } else {
       Notification.hide();
     }
