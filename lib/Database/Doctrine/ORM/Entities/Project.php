@@ -471,7 +471,7 @@ class Project implements \ArrayAccess
   /**
    * Set payments.
    *
-   * @param ArrayCollection $payments
+   * @param Collection $payments
    *
    * @return Project
    */
@@ -490,6 +490,30 @@ class Project implements \ArrayAccess
   public function getPayments():Collection
   {
     return $this->payments;
+  }
+
+  /**
+   * Set compositePayments.
+   *
+   * @param Collection $compositePayments
+   *
+   * @return Project
+   */
+  public function setCompositePayments(Collection $compositePayments):Project
+  {
+    $this->compositePayments = $compositePayments;
+
+    return $this;
+  }
+
+  /**
+   * Get compositePayments.
+   *
+   * @return Collection
+   */
+  public function getCompositePayments():Collection
+  {
+    return $this->compositePayments;
   }
 
   /**
@@ -568,7 +592,7 @@ class Project implements \ArrayAccess
   /**
    * Set participantInstruments.
    *
-   * @param ArrayCollection $participantInstruments
+   * @param Collection $participantInstruments
    *
    * @return Project
    */
@@ -592,7 +616,7 @@ class Project implements \ArrayAccess
   /**
    * Set calendarEvents.
    *
-   * @param ArrayCollection $calendarEvents
+   * @param Collection $calendarEvents
    *
    * @return Project
    */
