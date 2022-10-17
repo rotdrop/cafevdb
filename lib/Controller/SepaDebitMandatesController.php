@@ -1185,7 +1185,6 @@ class SepaDebitMandatesController extends Controller
         }
 
         // ok, delete it
-
         $musician = $debitMandate->getMusician();
         $project = $debitMandate->getProject();
         if ($project->getId() == $this->getClubMembersProjectId()) {
@@ -1193,6 +1192,7 @@ class SepaDebitMandatesController extends Controller
         } else {
           $participants = [ $musician->getProjectParticipantOf($project) ];
         }
+
         foreach ($participants as $participant) {
           $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
           $storage->removeDebitMandate($debitMandate, flush: false);
@@ -1271,6 +1271,12 @@ class SepaDebitMandatesController extends Controller
     $this->entityManager->beginTransaction();
     try {
 
+      if ($project->getId() == $this->getClubMembersProjectId()) {
+        $participants = $musician->getProjectParticipation();
+      } else {
+        $participants = [ $musician->getProjectParticipantOf($project) ];
+      }
+
       switch ($uploadMode) {
         case UploadsController::UPLOAD_MODE_MOVE:
           $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
@@ -1282,15 +1288,17 @@ class SepaDebitMandatesController extends Controller
           $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
           $mimeType = $mimeTypeDetector->detectString($fileContent);
 
-          if (!empty($writtenMandate) && $writtenMandate->getNumberOfLinks() > 1) {
+          if (!empty($writtenMandate) && $writtenMandate->getNumberOfLinks() > count($participants)) {
             // if the file has multiple links then it is probably
             // better to remove the existing file rather than
             // overwriting a file which has multiple links.
-            if (!empty($writtenMandate->getOriginalFileName())) {
-              // undo greedily modified filename
-              $writtenMandate->setFileName($writtenMandate->getOriginalFileName());
+            // remove the original file-entry
+            foreach ($participants as $participant) {
+              $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+              $storage->removeDebitMandate($debitMandate, flush: false);
             }
-            $debitMandate->setWrittenMandate(null); // will decrease the link-count
+            $this->flush();
+            $debitMandate->setWrittenMandate(null);
             $writtenMandate = null;
           }
 
@@ -1319,11 +1327,14 @@ class SepaDebitMandatesController extends Controller
             ]));
           }
           if (!empty($writtenMandate)) {
+            // remove the original file-entry
+            foreach ($participants as $participant) {
+              $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+              $storage->removeDebitMandate($debitMandate, flush: false);
+            }
+            $this->flush();
             if ($writtenMandate->getNumberOfLinks() == 0) {
               $this->remove($writtenMandate, flush: true);
-            } elseif (!empty($writtenMandate->getOriginalFileName())) {
-              // undo greedily modified filename
-              $writtenMandate->setFileName($writtenMandate->getOriginalFileName());
             }
           }
           $writtenMandate = $originalFile;
@@ -1334,11 +1345,6 @@ class SepaDebitMandatesController extends Controller
       $this->persist($writtenMandate);
       $debitMandate->setWrittenMandate($writtenMandate);
 
-      if ($project->getId() == $this->getClubMembersProjectId()) {
-        $participants = $musician->getProjectParticipation();
-      } else {
-        $participants = [ $musician->getProjectParticipantOf($project) ];
-      }
       foreach ($participants as $participant) {
         $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
         $dirEntry = $storage->addDebitMandate($debitMandate, flush: false);

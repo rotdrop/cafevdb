@@ -190,6 +190,8 @@ class PaymentsController extends Controller
         $this->entityManager->beginTransaction();
         try {
 
+          $storage = $this->storageFactory->getProjectParticipantsStorage($compositePayment->getProjectParticipant());
+
           switch ($uploadMode) {
             case UploadsController::UPLOAD_MODE_MOVE:
               $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
@@ -202,9 +204,7 @@ class PaymentsController extends Controller
               $mimeType = $mimeTypeDetector->detectString($fileContent);
 
               if (!empty($supportingDocument) && $supportingDocument->getNumberOfLinks() > 1) {
-                // if the file has multiple links then it is probably
-                // better to remove the existing file rather than
-                // overwriting a file which has multiple links.
+                $storage->removeCompositePayment($compositePayment, flush:true);
                 if (!empty($supportingDocument->getOriginalFileName())) {
                   // undo greedily modified filename
                   $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
@@ -238,6 +238,7 @@ class PaymentsController extends Controller
                 ]));
               }
               if (!empty($supportingDocument)) {
+                $storage->removeCompositePayment($compositePayment, flush: true);
                 if ($supportingDocument->getNumberOfLinks() == 0) {
                   $this->remove($supportingDocument, flush: true);
                 } elseif (!empty($supportingDocument->getOriginalFileName())) {
@@ -254,10 +255,9 @@ class PaymentsController extends Controller
           $this->flush(); // we need the file id
 
           $compositePayment->setSupportingDocument($supportingDocument);
-          $this->flush();
-
-          $storage = $this->storageFactory->getProjectParticipantsStorage($compositePayment->getProjectParticipant());
           $dirEntry = $storage->addCompositePayment($compositePayment, flush: false);
+
+          $this->flush();
 
           $supportingDocumentFileName = $dirEntry->getName();
 

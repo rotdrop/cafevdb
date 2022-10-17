@@ -89,11 +89,7 @@ class ProjectParticipantsStorage extends Storage
     $this->musician = $this->participant->getMusician();
     $this->projectService = $this->di(ProjectService::class);
 
-    $shortId = substr($this->getId(), strlen(parent::getId()));
-    $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
-    if (!empty($rootStorage)) {
-      $this->rootFolder = $rootStorage->getRoot();
-    }
+    $this->getRootFolder(create: false);
 
     $organizationalRolesService = $this->di(OrganizationalRolesService::class);
     $userId = $this->entityManager->getUserId();
@@ -108,11 +104,9 @@ class ProjectParticipantsStorage extends Storage
         $projectId = $this->participant->getProject()->getId();
         $musicianId = $this->participant->getMusician()->getId();
         $this->clearDatabaseRepository();
-        $shortId = substr($this->getId(), strlen(parent::getId()));
-        $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
-        if (!empty($rootStorage)) {
-          $this->rootFolder = $rootStorage->getRoot();
-        }
+
+        $this->getRootFolder(create: false);
+
         $this->participant = $this->getDatabaseRepository(Entities\ProjectParticipant::class)
           ->find([
             'project' => $projectId,
@@ -233,6 +227,42 @@ class ProjectParticipantsStorage extends Storage
   }
 
   /**
+   * Ensure that the top-level root directory exists as database entity.
+   *
+   * @param bool $create Create the root-folder if it does not exist yet.
+   *
+   * @return Entities\DatabaseStorageFolder
+   */
+  protected function getRootFolder(bool $create = false):Entities\DatabaseStorageFolder
+  {
+    if (!empty($this->rootFolder)) {
+      return $this->rootFolder;
+    }
+    /** @var Entities\DatabaseStorageFolder $root */
+    $shortId = substr($this->getId(), strlen(parent::getId()));
+    /** @var Entities\DatabaseStorage $rootStorage */
+    $rootStorage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findOneBy([ 'storageId' => $shortId ]);
+    if (!empty($rootStorage)) {
+      $this->rootFolder = $rootStorage->getRoot();
+      return $this->rootFolder;
+    }
+    $rootFolder = (new Entities\DatabaseStorageFolder)
+      ->setName('')
+      ->setParent(null);
+    $rootStorage = (new Entities\DatabaseStorage)
+      ->setRoot($rootFolder)
+      ->setStorageId($shortId);
+    $this->persist($rootFolder);
+    $this->persist($rootStorage);
+    $this->participant->setDatabaseDocuments($rootStorage);
+    $this->flush();
+
+    $this->rootFolder = $rootFolder;
+
+    return $this->rootFolder;
+  }
+
+  /**
    * Add an directory entry for the given debit-mandate and file.
    *
    * @param Entities\SepaDebitMandate $debitMandate
@@ -259,11 +289,12 @@ class ProjectParticipantsStorage extends Storage
     }
     try {
       // search for the folder
+      $rootFolder = $this->getRootFolder(create: true);
       $folderName = $this->getDebitMandatesFolderName();
-      $folderEntity = $this->rootFolder->getFolderByName($folderName);
+      $folderEntity = $rootFolder->getFolderByName($folderName);
 
       if (emtpy($folderEntity)) {
-        $folderEntity = $this->rootFolder->addSubFolder($folderName);
+        $folderEntity = $rootFolder->addSubFolder($folderName);
         $this->persist($folderEntity);
       }
 
@@ -306,8 +337,12 @@ class ProjectParticipantsStorage extends Storage
     }
     try {
       // search for the folder
+      $rootFolder = $this->getRootFolder(create: false);
+      if (empty($rootFolder)) {
+        throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
+      }
       $folderName = $this->getDebitMandatesFolderName();
-      $folderEntity = $this->rootFolder->getFolderByName($folderName);
+      $folderEntity = $rootFolder->getFolderByName($folderName);
       /** @var Entities\DatabaseStorageFile $dirEntry */
       foreach ($folderEntity->getDocuments() as $dirEntry) {
         if ($dirEntry->getFile()->getId() == $file->getId()) {
@@ -357,7 +392,8 @@ class ProjectParticipantsStorage extends Storage
     }
     try {
       // search for the folder
-      $folderEntity = $this->rootFolder->addSubFolder($this->getSupportingDocumentsFolderName());
+      $rootFolder = $this->getRootFolder(create: true);
+      $folderEntity = $rootFolder->addSubFolder($this->getSupportingDocumentsFolderName());
       $this->persist($folderEntity);
       $folderEntity = $folderEntity->addSubFolder($this->getBankTransactionsFolderName());
       $this->persist($folderEntity);
@@ -401,8 +437,12 @@ class ProjectParticipantsStorage extends Storage
     }
     try {
       // search for the folder
+      $rootFolder = $this->getRootFolder(create: false);
+      if (empty($rootFolder)) {
+        throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
+      }
       $folderName = $this->getSupportingDocumentsFolderName();
-      $folderEntity = $this->rootFolder->getFolderByName($folderName);
+      $folderEntity = $rootFolder->getFolderByName($folderName);
       if (empty($folderEntity)) {
         throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $folderName));
       }
@@ -432,7 +472,131 @@ class ProjectParticipantsStorage extends Storage
       }
       throw new Exceptions\DatabaseException($this->l->t('Unable to remove composite payment "%s".', $compositePayment->getId()));
     }
+  }
 
+  /**
+   * Add an directory entry for a ProjectParticipantFieldDatum of type
+   * FieldType::DB_FILE or for the optional supporting document of fields of
+   * type FieldType::SERVICE_FEE.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @param bool $flush
+   *
+   * @return null|Entities\DatabaseStorageFile
+   */
+  public function addFieldDatumDocument(Entities\ProjectParticipantFieldDatum $fieldDatum, bool $flush = true):?Entities\DatabaseStorageFile
+  {
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $fieldDatum->getField();
+    $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+    if (empty($fileInfo)) {
+      throw new UnexpectedValueException($this->l->t('The field datum for field "%s" has no file attached to it.', [
+        (string)$field,
+      ]));
+    }
+
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
+
+    try {
+      $file = $fileInfo['file'];
+      $fileName  = $fileInfo['baseName'];
+      $dirName = $fileInfo['dirName'];
+
+      $folderEntity = $this->getRootFolder(create: true);
+      if (!empty($dirName)) {
+        $subFolder = $folderEntity->getFolderByName($dirName);
+        if (empty($subFolder)) {
+          $subFolder = $folderEntity->addSubFolder($dirName);
+          $this->persist($subFolder);
+        }
+        $folderEntity = $subFolder;
+      }
+      $documentEntity = $folderEntity->addDocument($file, $fileName);
+      $this->persist($documentEntity);
+
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\DatabaseException($this->l->t('Unable to add file for field-datum "%s".', [
+        (string)$fieldDatum->getProjectParticipant()
+      ]));
+    }
+
+    return $documentEntity;
+  }
+
+  /**
+   * Remove all directory entries for a ProjectParticipantFieldDatum of type
+   * FieldType::DB_FILE or for the optional supporting document of fields of
+   * type FieldType::SERVICE_FEE.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @param bool $flush
+   *
+   * @return void
+   */
+  public function removeFieldDatumDocument(Entities\ProjectParticipantFieldDatum $fieldDatum, bool $flush = true):void
+  {
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $fieldDatum->getField();
+    $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+    if (empty($fileInfo)) {
+      throw new UnexpectedValueException($this->l->t('The field datum for field "%s" has no file attached to it.', [
+        (string)$field,
+      ]));
+    }
+
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
+    try {
+
+      $file = $fileInfo['file'];
+      $dirName = $fileInfo['dirName'];
+
+      $folderEntity = $this->getRootFolder(create: false);
+      if (empty($folderEntity)) {
+        throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
+      }
+      if (!empty($dirName)) {
+        $folderEntity = $folderEntity->getFolderByName($dirName);
+        if (empty($folderEntity)) {
+          throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $dirName));
+        }
+      }
+
+      /** @var Entities\DatabaseStorageFile $dirEntry */
+      foreach ($folderEntity->getDocuments() as $dirEntry) {
+        if ($dirEntry->getFile()->getId() == $file->getId()) {
+          $dirEntry
+            ->setParent(null)
+            ->setFile(null);
+        }
+      }
+
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\DatabaseException($this->l->t('Unable to remove file for field-datum "%s".', [
+        (string)$fieldDatum->getProjectParticipant()
+      ]));
+    }
   }
 
   /**
@@ -521,6 +685,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
     // Arguably, these should be classes, but as PHP does not support multiple
     // inheritance this really would produce a lot of boiler-plate-code.
     return [
+      // Supporting documents of Entities\ProjectParticipantFieldDatum
       new ParticipantsStorageGenerator([
         'skipDepthIfOther' => -1,
         'pathChain' => [
@@ -555,40 +720,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
           }
         },
       ]),
-      new ParticipantsStorageGenerator([
-        'skipDepthIfOther' => -1,
-        'pathChain' => [
-          $this->getSupportingDocumentsFolderName(),
-          $this->getReceivablesFolderName(),
-        ],
-        'parentModificationTime' => fn() => $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId()),
-        'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
-          fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
-        ),
-        'createLeafNodes' => function($dirName, $subDirectoryPath) {
-          $modificationTime = $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId());
-          $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
-            fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
-          );
-
-          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-          foreach ($activeFieldData as $fieldDatum) {
-            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
-            if (empty($fileInfo)) {
-              continue; // should not happen here because of ->filter().
-            }
-            $fileName = $this->buildPath($fileInfo['pathName']);
-
-            list('dirname' => $fileDirName, 'basename' => $baseName) = self::pathInfo($fileName);
-            if ($fileDirName == $dirName) {
-              $this->files[$dirName][$baseName] = $fileInfo['file'];
-            } elseif (strpos($fileDirName, $dirName) === 0) {
-              list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-              $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-            }
-          }
-        },
-      ]),
+      // supporting documents of Entities\CompositePayment
       new ParticipantsStorageGenerator([
         'skipDepthIfOther' => -1,
         'pathChain' => [
@@ -626,6 +758,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
           }
         },
       ]),
+      // debit mandates
       new ParticipantsStorageGenerator([
         'skipDepthIfOther' => -1,
         'pathChain' => [
@@ -678,6 +811,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
           }
         },
       ]),
+      // FieldType::DB_FILE
       new ParticipantsStorageGenerator([
         'skipDepthIfOther' => 1,
         'pathChain' => [],
