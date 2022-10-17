@@ -144,6 +144,7 @@ WITH CHECK OPTION';
     'CompositePayments' => 'musician_id',
     'MusicianPhoto' => 'owner_id',
     'EncryptedFileOwners' => 'musician_id',
+    'MusicianEmailAddresses' => 'musician_id',
   ];
   const PARTICIPANT_FIELD_ID_TABLES = [
     'ProjectParticipantFields' => [
