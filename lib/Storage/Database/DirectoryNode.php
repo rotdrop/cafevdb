@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
+use DateTimeInterface;
+
 /**
  * Simplistik directory node holding the basename of the directory and
  * an optional minimal directory modification time in order to track
@@ -39,13 +41,23 @@ class DirectoryNode
   /** @var null|\DateTimeInterface */
   public ?\DateTimeInterface $minimalModificationTime;
 
-  public function __construct(string $name, ?\DateTimeInterface $minimalModificationTime = null)
+  /**
+   * @param string $name
+   *
+   * @param  null|DateTimeInterface $minimalModificationTime
+   */
+  public function __construct(string $name, ?DateTimeInterface $minimalModificationTime = null)
   {
     $this->name = $name;
     $this->minimalModificationTime = $minimalModificationTime;
   }
 
-  public function updateModificationTime(?\DateTimeInterface $mtime = null):DirectoryNode
+  /**
+   * @param null|DateTimeInterface $mtime
+   *
+   * @return DirectoryNode $this.
+   */
+  public function updateModificationTime(?DateTimeInterface $mtime = null):DirectoryNode
   {
     if (!empty($mtime)) {
       $this->minimalModificationTime = max($mtime, $this->minimalModificationTime);
