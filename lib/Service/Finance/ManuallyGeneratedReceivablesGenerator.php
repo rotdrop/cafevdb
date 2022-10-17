@@ -146,7 +146,7 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
   /**
    * {@inheritdoc}
    *
-   * This will also make sure that there is always one extra emtpy field
+   * This will also make sure that there is always one extra empty field
    * available for the respective participant. If $receivable is non-null,
    * only this receivable-data will be removed if no longer needed.
    *
