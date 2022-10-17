@@ -33,6 +33,7 @@ use Behat\Transliterator\Transliterator;
 
 use OCP\IUser;
 use OCP\IConfig;
+use OCP\IGroup;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IUserSession;
