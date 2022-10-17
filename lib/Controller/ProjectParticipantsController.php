@@ -438,6 +438,7 @@ class ProjectParticipantsController extends Controller
                 $fieldDatum->getOptionValue()
               ));
             }
+            $filePath = $dbFile->getFileName();
             break;
 
           case FieldDataType::CLOUD_FILE:
@@ -458,6 +459,7 @@ class ProjectParticipantsController extends Controller
                 $field->getName(), $fieldDatum->getMusician()->getPublicName(),
               ]));
             }
+            $filePath = $dbFile->getFileName();
             break;
 
           default:
