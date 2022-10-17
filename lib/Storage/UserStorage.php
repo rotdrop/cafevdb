@@ -592,6 +592,9 @@ class UserStorage
   public function getDatabaseFile(string $cloudPath):?Entities\DatabaseStorageDirEntry
   {
     $cloudFile = $this->get($cloudPath);
+    if (empty($cloudFile)) {
+      return null;
+    }
     $storage = $cloudFile->getStorage();
 
     while ($storage instanceof WrapperStorage) {
