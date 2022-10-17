@@ -198,7 +198,7 @@ class ProjectParticipantsStorage extends Storage
       $folderName = $this->getDebitMandatesFolderName();
       $folderEntity = $rootFolder->getFolderByName($folderName);
 
-      if (emtpy($folderEntity)) {
+      if (empty($folderEntity)) {
         $folderEntity = $rootFolder->addSubFolder($folderName);
         $this->persist($folderEntity);
       }
