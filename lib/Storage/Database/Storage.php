@@ -210,7 +210,7 @@ class Storage extends AbstractStorage
   }
 
   /** @return string The shot storage id without the base prefix. */
-  protected function getShortId():string
+  public function getShortId():string
   {
     return '';
   }

@@ -123,7 +123,7 @@ class ProjectParticipantsStorage extends Storage
    * tracked in dedicated fields of the ProjectParticipant and Musician
    * entity.
    */
-  protected function findFiles(string $dirName):array
+  protected function findFiles(string $dirName, bool $ignored = false):array
   {
     return parent::findFiles($dirName, rootIsMandatory: false);
   }
@@ -138,7 +138,7 @@ class ProjectParticipantsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function getShortId()
+  public function getShortId():string
   {
     // the mount provider currently disables soft-deleteable filter ...
     $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);

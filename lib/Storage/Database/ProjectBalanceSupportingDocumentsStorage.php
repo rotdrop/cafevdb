@@ -130,7 +130,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function findFiles(string $dirName):array
+  protected function findFiles(string $dirName, bool $ignored = false):array
   {
     return parent::findFiles($dirName, rootIsMandatory: false);
   }
@@ -142,7 +142,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /** {@inheritdoc} */
-  public function getShortId()
+  public function getShortId():string
   {
     return implode(
       self::PATH_SEPARATOR, [
