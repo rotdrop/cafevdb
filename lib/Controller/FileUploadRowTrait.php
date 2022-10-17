@@ -175,25 +175,25 @@ trait FileUploadRowTrait
     }
   }
 
-  /**
-   * Return the underline storage entity if the upload refers to db-backed
-   * cloud-file.
-   *
-   * @param array $file File-upload data as prepared by
-   * FileUploadRowTrait::prepareUploadInfo().
-   *
-   * @return null|Entities\EncryptedFile
-   */
-  protected function getDatabaseFile(array $file):?Entities\EncryptedFile
-  {
-    if (!isset($file['cloud_path'])) {
-      return null;
-    }
-    $cloudPath = $file['cloud_path'];
+  // /**
+  //  * Return the underline storage entity if the upload refers to db-backed
+  //  * cloud-file.
+  //  *
+  //  * @param array $file File-upload data as prepared by
+  //  * FileUploadRowTrait::prepareUploadInfo().
+  //  *
+  //  * @return null|Entities\EncryptedFile
+  //  */
+  // protected function getDatabaseFile(array $file):?Entities\EncryptedFile
+  // {
+  //   if (!isset($file['cloud_path'])) {
+  //     return null;
+  //   }
+  //   $cloudPath = $file['cloud_path'];
 
-    /** @var UserStorage $userStorage */
-    $userStorage = $this->di(UserStorage::class);
+  //   /** @var UserStorage $userStorage */
+  //   $userStorage = $this->di(UserStorage::class);
 
-    return $userStorage->getDatabaseFile($cloudPath);
-  }
+  //   return $userStorage->getDatabaseFile($cloudPath);
+  // }
 }
