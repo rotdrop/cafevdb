@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Exceptions\Exception;
 
 // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps

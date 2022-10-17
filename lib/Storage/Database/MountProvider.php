@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Storage\Database;
 
 use Exception;
+use Throwable;
 
 // F I X M E internal
 use OC\Files\Mount\MountPoint;
@@ -92,7 +93,22 @@ class MountProvider implements IMountProvider
       $this->logDebug('RECURSION: ' . self::$recursionLevel);
       return [];
     }
+    self::$recursionLevel++;
 
+    try {
+      $mounts = $this->getMountsForUserInternal($user, $loader);
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to generate mounts');
+      $mounts = [];
+    }
+
+    --self::$recursionLevel;
+    return $mounts;
+  }
+
+  /** {@inheritdoc} */
+  private function getMountsForUserInternal(IUser $user, IStorageFactory $loader)
+  {
     $userId = $user->getUID();
 
     if (!$this->inGroup($userId)) {
@@ -110,8 +126,6 @@ class MountProvider implements IMountProvider
       return [];
     }
 
-    self::$recursionLevel++;
-
     // disable soft-deleteable here in order to cope with the case that the
     // musician underlying the project-participation is alreay soft-deleted.
     // Do this early as proxies seemingly (correctly) remember the filter state.
@@ -128,7 +142,6 @@ class MountProvider implements IMountProvider
     $node = $userStorage->get($sharedFolder);
     if (empty($node) || $node->getType() !== FileInfo::TYPE_FOLDER) {
       $this->logException(new Exception('No shared folder for ' . $userId));
-      --self::$recursionLevel;
       return [];
     }
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
@@ -136,12 +149,10 @@ class MountProvider implements IMountProvider
       $node = $node->get($projectsFolder);
       if (empty($node) || $node->getType() !== FileInfo::TYPE_FOLDER) {
         $this->logException(new MissingProjectsFolderException('No projects folder for ' . $userId));
-        --self::$recursionLevel;
         return [];
       }
     } catch (\Throwable $t) {
       $this->logException(new MissingProjectsFolderException('No projects folder ' . $projectsFolder . ' for ' . $userId));
-      --self::$recursionLevel;
       return [];
     }
 
@@ -300,7 +311,6 @@ class MountProvider implements IMountProvider
 
     $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
-    --self::$recursionLevel;
     return $mounts;
   }
 }

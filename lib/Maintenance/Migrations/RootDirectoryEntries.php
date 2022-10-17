@@ -53,15 +53,15 @@ class RootDirectoryEntries extends AbstractMigration
 
   protected static $sql = [
     self::STRUCTURAL => [
-      'CREATE TABLE IF NOT EXISTS DatabaseStorages (storage_id VARCHAR(512) NOT NULL, root_id INT DEFAULT NULL, INDEX IDX_3594ED2379066886 (root_id), PRIMARY KEY(storage_id))',
-      'ALTER TABLE DatabaseStorages
-  ADD CONSTRAINT FK_3594ED2379066886
-  FOREIGN KEY IF NOT EXISTS (root_id)
- REFERENCES DatabaseStorageDirEntries (id)',
-      'ALTER TABLE DatabaseStorages DROP INDEX IF EXISTS IDX_3594ED2379066886, ADD UNIQUE INDEX IF NOT EXISTS UNIQ_3594ED2379066886 (root_id)',
-      'ALTER TABLE DatabaseStorages ADD COLUMN IF NOT EXISTS id INT NOT NULL AUTO_INCREMENT FIRST',
-      'ALTER TABLE `DatabaseStorages` ADD PRIMARY KEY IF NOT EXISTS (id)',
-      'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_3594ED235CC5DB90 ON DatabaseStorages (storage_id)',
+      'CREATE TABLE IF NOT EXISTS DatabaseStorages (
+  id INT AUTO_INCREMENT NOT NULL,
+  root_id INT DEFAULT NULL,
+  storage_id VARCHAR(512) NOT NULL,
+  UNIQUE INDEX UNIQ_3594ED235CC5DB90 (storage_id),
+  UNIQUE INDEX UNIQ_3594ED2379066886 (root_id),
+  PRIMARY KEY(id)
+)',
+      'ALTER TABLE DatabaseStorages ADD CONSTRAINT FK_3594ED2379066886 FOREIGN KEY IF NOT EXISTS(root_id) REFERENCES DatabaseStorageDirEntries (id)',
       //
       'ALTER TABLE ProjectParticipants ADD COLUMN IF NOT EXISTS database_documents_id INT DEFAULT NULL',
       'ALTER TABLE ProjectParticipants ADD CONSTRAINT FK_D9AE987BC6073910 FOREIGN KEY IF NOT EXISTS (database_documents_id) REFERENCES DatabaseStorages (id)',

@@ -788,7 +788,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
 
     // maybe we should skip the read-dir for performance reasons.
     /** @var Entities\File $node */
-    foreach ($this->findFiles($dirName) as $nodeName => $node) {
+    foreach ($this->findFilesForMigration($dirName) as $nodeName => $node) {
       if ($node instanceof Entities\File) {
         $updated = $node->getUpdated();
       } elseif ($node instanceof DirectoryNode) {
