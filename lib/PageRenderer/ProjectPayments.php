@@ -295,7 +295,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectId       = $this->projectId;
 
     $projectMode = $this->projectId > 0;
     if (!$projectMode) {
