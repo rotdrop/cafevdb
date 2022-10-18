@@ -104,6 +104,7 @@ class ImagesController extends Controller
     int $imageSize = -1,
     ?int $previewWidth = null,
   ):Http\Response {
+
     $ownerId = urldecode($ownerId);
 
     if ((string)$imageId == (string)ImagesService::IMAGE_ID_PLACEHOLDER) {
@@ -136,7 +137,7 @@ class ImagesController extends Controller
    *
    * @param int $imageSize
    *
-   * @return Response
+   * @return Http\Response
    *
    * @NoAdminRequired
    *
@@ -387,7 +388,7 @@ class ImagesController extends Controller
    *
    * @return Http\RedirectResponse
    */
-  private function getPlaceHolder(string $joinTable, int $imageSize):Http\RedirectResponse
+  private function getPlaceHolder(string $joinTable, int $imageSize):Http\Response
   {
     $placeHolderName = 'placeholder/'.Util::camelCaseToDashes($joinTable).'.svg';
     try {
