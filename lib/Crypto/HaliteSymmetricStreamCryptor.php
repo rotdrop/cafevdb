@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,10 +48,12 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
   /** @var Halite\Symmetric\EncryptionKey */
   private $haliteEncryptionKey;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(?string $encryptionKey = null)
   {
     $this->setEncryptionKey($encryptionKey);
   }
+  // phpcs:enable
 
   /**
    * Set the encryption-key to use. If left empty then the data will be left
@@ -165,4 +167,4 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
   {
     return $this->encryptionKey !== null;
   }
-};
+}
