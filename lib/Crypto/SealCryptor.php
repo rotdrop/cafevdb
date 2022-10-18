@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,17 +35,21 @@ class SealCryptor implements ICryptor
   /** @var array */
   private $sealCryptors = [];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(SealService $sealService)
   {
     $this->sealService = $sealService;
   }
+  // phpcs:enable
 
   /**
    * Replace the set of seal-cryptors by the given one.
    *
    * @param array<string, ICryptor>  $sealCryptors
+   *
+   * @return void
    */
-  public function setSealCryptors(array $sealCryptors)
+  public function setSealCryptors(array $sealCryptors):void
   {
     $this->sealCryptors = $sealCryptors;
   }
@@ -66,8 +70,10 @@ class SealCryptor implements ICryptor
    * @param string $userId
    *
    * @param ICryptor $cryptor
+   *
+   * @return void
    */
-  public function addSealCryptor(string $userId, ICryptor $cryptor)
+  public function addSealCryptor(string $userId, ICryptor $cryptor):void
   {
     $this->sealCryptors[$userId] = $cryptor;
   }
@@ -76,8 +82,10 @@ class SealCryptor implements ICryptor
    * Remove the seal-cryptor for the given user-id.
    *
    * @param string $userId
+   *
+   * @return void
    */
-  public function removeSealCryptor(string $userId)
+  public function removeSealCryptor(string $userId):void
   {
     unset($this->sealCryptors[$userId]);
   }
@@ -130,9 +138,9 @@ class SealCryptor implements ICryptor
     return false;
   }
 
-  /** Return the used SealService instance. */
+  /** @return SealService The used SealService instance. */
   public function getSealService():SealService
   {
     return $this->sealService;
   }
-};
+}
