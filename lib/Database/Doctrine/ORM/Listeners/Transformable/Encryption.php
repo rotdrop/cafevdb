@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable;
 
+use RuntimeException;
+use Throwable;
+
 use OCP\ILogger;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
@@ -32,6 +35,7 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Common\Util;
 
+/** Handle transparent multi-user encryption/decryption */
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -54,12 +58,13 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   /** @var bool */
   private $cachable;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    Crypto\AsymmetricKeyService $keyService
-    , string $managementGroupId
-    , EncryptionService $encryptionService
-    , Crypto\SealCryptor $sealCryptor
-    , ILogger $logger
+    Crypto\AsymmetricKeyService $keyService,
+    string $managementGroupId,
+    EncryptionService $encryptionService,
+    Crypto\SealCryptor $sealCryptor,
+    ILogger $logger,
   ) {
     $this->keyService = $keyService;
     $this->managementGroupId = '@' . $managementGroupId;
@@ -71,17 +76,24 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     $this->cachable = true;
     $this->logger = $logger;
   }
+  // phpcs:enable
 
   /**
-   * Set the shared app-cryptor which is used to encrypt the database values
+   * Set the shared app-cryptor which is used to encrypt the database values.
+   *
+   * @param null|Crypto\ICryptor $appCryptor
+   *
+   * @return void
    */
-  public function setAppCryptor(?Crypto\ICryptor $appCryptor)
+  public function setAppCryptor(?Crypto\ICryptor $appCryptor):void
   {
     $this->appCryptor = $appCryptor;
   }
 
   /**
    * Return the shared app-cryptor which is used to encrypt the database values
+   *
+   * @return null|Crypto\ICryptor
    */
   public function getAppCryptor():?Crypto\ICryptor
   {
@@ -90,8 +102,10 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
   /**
    * @param bool $isCachable Set cachable status of transformer.
+   *
+   * @return void
    */
-  public function setCachable(bool $isCachable)
+  public function setCachable(bool $isCachable):void
   {
     $this->cachable = $isCachable;
   }
@@ -101,9 +115,11 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @param string $value Unencrypted data.
    *
-   * @return string Encrypted data.
+   * @param mixed $context
+   *
+   * @return mixed Encrypted data.
    */
-  public function transform(?string $value, mixed &$context = null): mixed
+  public function transform(?string $value, mixed &$context = null):mixed
   {
     if (!$this->isEncrypted()) {
       return $value;
@@ -128,9 +144,11 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @param string $value Encrypted data.
    *
-   * @return string Decrypted data.
+   * @param mixed $context
+   *
+   * @return mixed Decrypted data.
    */
-  public function reverseTransform(?string $value, mixed &$context = null): mixed
+  public function reverseTransform(?string $value, mixed &$context = null):mixed
   {
     if (!$this->isEncrypted()) {
       return $value;
@@ -160,11 +178,17 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     return $this->cachable;
   }
 
+  /** @return bool */
   public function isEncrypted():bool
   {
     return !empty($this->appCryptor);
   }
 
+  /**
+   * @param string $encryptionId
+   *
+   * @return Crypto\ICryptor
+   */
   private function getSealCryptor(string $encryptionId):Crypto\ICryptor
   {
     if ($encryptionId == $this->managementGroupId) {
@@ -174,7 +198,14 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     }
   }
 
-  private function manageEncryptionContext(?string $value, $context)
+  /**
+   * @param null|string $value
+   *
+   * @param mixed $context
+   *
+   * @return array
+   */
+  private function manageEncryptionContext(?string $value, mixed $context):array
   {
     if (empty($context)) {
       return [ $this->managementGroupId ];
@@ -182,14 +213,14 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     if (is_string($context)) {
       try {
         $context = json_decode($context);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $context = Util::explode(',', $context);
       }
     }
     if (!is_array($context)) {
-      throw new \RuntimeException('Encryption context must be an array of user- or @group-ids.');
+      throw new RuntimeException('Encryption context must be an array of user- or @group-ids.');
     }
     $context[] = $this->managementGroupId;
     return array_unique($context);
   }
-};
+}
