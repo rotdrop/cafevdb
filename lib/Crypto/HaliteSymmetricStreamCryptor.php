@@ -49,7 +49,7 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
   private $haliteEncryptionKey;
 
   /**
-   * @param null|string
+   * @param null|string $encryptionKey
    */
   public function __construct(?string $encryptionKey = null)
   {

@@ -90,7 +90,7 @@ interface AsymmetricKeyStorageInterface
    *
    * @return mixed|null Public key or null if none is found.
    */
-  public function getPublicKey(string $ownerId);
+  public function getPublicKey(string $ownerId):mixed;
 
   /**
    * Change the the passphrase of the given unlocked private-key.

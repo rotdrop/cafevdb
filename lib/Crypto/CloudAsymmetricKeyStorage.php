@@ -123,7 +123,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 
 
   /** {@inheritdoc} */
-  public function getPublicKey(string $ownerId)
+  public function getPublicKey(string $ownerId):mixed
   {
     $pubKeyMaterial = $this->getUserValue($ownerId, self::PUBLIC_ENCRYPTION_KEY);
     return empty($pubKeyMaterial) ? null : $this->unserializeKey($pubKeyMaterial, self::PUBLIC_ENCRYPTION_KEY);

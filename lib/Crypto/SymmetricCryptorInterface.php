@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,14 +28,14 @@ namespace OCA\CAFEVDB\Crypto;
 interface SymmetricCryptorInterface extends ICryptor
 {
   /**
-   * @param null|string $encrypionKey
+   * @param null|string $encryptionKey
    *
    * @return null|string The previously set encryption key.
    */
-  public function setEncryptionKey(?string $encrpytionKey):?string;
+  public function setEncryptionKey(?string $encryptionKey):?string;
 
   /**
    * @return null|string The currently installed encryption key.
    */
   public function getEncryptionKey():?string;
-};
+}

@@ -59,7 +59,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
    *
    * The paramter $password is ignored and must be kept at null.
    */
-  public function setPrivateKey($privSignKey, ?string $password = null):AsymmetricCryptorInterface
+  public function setPrivateKey(mixed $privSignKey, ?string $password = null):AsymmetricCryptorInterface
   {
     if ($password !== null) {
       throw new Exceptions\EncryptionKeyException('The private key has to be unlocked before passing it here.');
@@ -74,7 +74,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
   }
 
   /** {@inheritdoc} */
-  public function setPublicKey($pubSignKey):AsymmetricCryptorInterface
+  public function setPublicKey(mixed $pubSignKey):AsymmetricCryptorInterface
   {
     $this->pubSignKey = $pubSignKey;
     if (!empty($pubSignKey)) {
@@ -86,7 +86,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
   }
 
   /** {@inheritdoc} */
-  public function getPublicKey()
+  public function getPublicKey():mixed
   {
     return $this->pubSignKey;
   }

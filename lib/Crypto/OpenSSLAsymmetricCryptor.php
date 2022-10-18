@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,12 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
 
   private $pubKey = null;
 
-  public function __construct($privKey = null, string $password = null)
+  /**
+   * @param mixed $privKey
+   *
+   * @param string $password
+   */
+  public function __construct(mixed $privKey = null, string $password = null)
   {
     if (!empty($privKey)) {
       $this->setPrivateKey($privKey, $password);
@@ -43,7 +48,7 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   }
 
   /** {@inheritdoc} */
-  public function setPrivateKey($privKey, ?string $password = null):AsymmetricCryptorInterface
+  public function setPrivateKey(mixed $privKey, ?string $password = null):AsymmetricCryptorInterface
   {
     if ($privKey !== null) {
       $this->privKey = openssl_pkey_get_private($privKey, $password);
@@ -56,14 +61,14 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   }
 
   /** {@inheritdoc} */
-  public function setPublicKey($pubKey):AsymmetricCryptorInterface
+  public function setPublicKey(mixed $pubKey):AsymmetricCryptorInterface
   {
     $this->pubKey = $pubKey;
     return $this;
   }
 
   /** {@inheritdoc} */
-  public function getPublicKey()
+  public function getPublicKey():mixed
   {
     return $this->pubKey;
   }
@@ -143,4 +148,4 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   {
     return $this->canEncrypt();
   }
-};
+}

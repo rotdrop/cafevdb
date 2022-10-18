@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,28 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
+/**
+ * Interface for crypto-factory.
+ *
+ * @see HaliteCryptoFactory
+ * @see CloudCryptoFactory
+ */
 interface CryptoFactoryInterface
 {
+  /**
+   * @param null|string $passphrase
+   *
+   * @return SymmetricCryptorInterface
+   */
   public function getSymmetricCryptor(?string $passphrase = null):SymmetricCryptorInterface;
-  public function getAsymmetricCryptor($privateKey = null):AsymmetricCryptorInterface;
+
+  /**
+   * @param mixed $privateKey
+   *
+   * @return AsymmetricCryptorInterface
+   */
+  public function getAsymmetricCryptor(mixed $privateKey = null):AsymmetricCryptorInterface;
+
+  /** @return AsymmetricKeyStorageInterface */
   public function getAsymmetricKeyStorage():AsymmetricKeyStorageInterface;
 }

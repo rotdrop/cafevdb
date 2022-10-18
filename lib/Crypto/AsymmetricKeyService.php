@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Crypto;
+
+use DateTime;
 
 use OCP\ILogger;
 use OCP\IL10N;
@@ -85,26 +87,27 @@ class AsymmetricKeyService
   private $cryptorPrototype;
 
   /** @var array<string, AsymmetricCryptorInterface> */
-  static private $cryptors = [];
+  private static $cryptors = [];
 
   /** @var array<string, array> */
-  static private $keyPairs = [];
+  private static $keyPairs = [];
 
   /**
    * @todo We might want to use the \OCP\IAppContainer instead and only fetch
    * the needed service-classes on demand.
    */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , IAppContainer $appContainer
-    , IUserSession $userSession
-    , ICredentialsStore $credentialsStore
-    , IConfig $cloudConfig
-    , IEventDispatcher $eventDispatcher
-    , IL10N $l10n
-    , ILogger $logger
-    , AsymmetricKeyStorageInterface $keyStorage
-    , AsymmetricCryptorInterface $cryptorPrototype
+    string $appName,
+    IAppContainer $appContainer,
+    IUserSession $userSession,
+    ICredentialsStore $credentialsStore,
+    IConfig $cloudConfig,
+    IEventDispatcher $eventDispatcher,
+    IL10N $l10n,
+    ILogger $logger,
+    AsymmetricKeyStorageInterface $keyStorage,
+    AsymmetricCryptorInterface $cryptorPrototype,
   ) {
     $this->appName = $appName;
     $this->appContainer = $appContainer;
@@ -117,6 +120,7 @@ class AsymmetricKeyService
     $this->keyStorage = $keyStorage;
     $this->cryptorPrototype = $cryptorPrototype;
   }
+  // phpcs:enable
 
   /**
    * Initialize a private/public key-pair by either retreiving it from the
@@ -198,7 +202,7 @@ class AsymmetricKeyService
     self::$keyPairs[$ownerId] = $keyPair;
 
     // ensure that the cached cryptor has the correct key
-    $cryptor = $this->getCryptor($ownerId)
+    /* $cryptor = */$this->getCryptor($ownerId)
       ->setPrivateKey($keyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG] ?? null)
       ->setPublicKey($keyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG] ?? null);
 
@@ -209,8 +213,10 @@ class AsymmetricKeyService
    * Remove the key pair and all config-data for the given id.
    *
    * @param string $ownerId
+   *
+   * @return void
    */
-  public function deleteEncryptionKeyPair(string $ownerId)
+  public function deleteEncryptionKeyPair(string $ownerId):void
   {
     $this->keyStorage->wipeKeyPair($ownerId);
     $this->removeSharedPrivateData($ownerId);
@@ -222,8 +228,12 @@ class AsymmetricKeyService
    * Restore the key-pair from a potential backup e.g. in case of a failure
    * while changing the key. This is desctructive, the current key is
    * overwritten.
+   *
+   * @param string $ownerId
+   *
+   * @return void
    */
-  public function restoreEncryptionKeyPair(string $ownerId)
+  public function restoreEncryptionKeyPair(string $ownerId):void
   {
     $this->keyStorage->restoreKeyPair($ownerId);
   }
@@ -299,9 +309,11 @@ class AsymmetricKeyService
    *
    * @param mixed $value Must be convertible to string.
    *
+   * @return void
+   *
    * @throws Exceptions\CannotEncryptException
    */
-  public function setSharedPrivateValue(string $ownerId, string $key, mixed $value)
+  public function setSharedPrivateValue(string $ownerId, string $key, mixed $value):void
   {
     $value = (string)$value;
     $configKey = self::CONFIG_KEY_PREFIX . $key;
@@ -350,8 +362,10 @@ class AsymmetricKeyService
    * @param string $ownerId
    *
    * @param string $key
+   *
+   * @return void
    */
-  public function deleteSharedPrivateValue(string $ownerId, string $key)
+  public function deleteSharedPrivateValue(string $ownerId, string $key):void
   {
     $this->setSharedPrivateValue($ownerId, $key, null);
   }
@@ -382,8 +396,10 @@ class AsymmetricKeyService
    * Remove all shared private values, e.g. after a password was lost.
    *
    * @param string $ownerId
+   *
+   * @return void
    */
-  public function removeSharedPrivateData(string $ownerId)
+  public function removeSharedPrivateData(string $ownerId):void
   {
     foreach ($this->cloudConfig->getUserKeys($ownerId, $this->appName) as $configKey) {
       if (str_starts_with($configKey, self::CONFIG_KEY_PREFIX)) {
@@ -413,17 +429,19 @@ class AsymmetricKeyService
    *   self::PUBLIC_ENCRYPTION_KEY_CONFIG => PUB_KEY,
    * ]
    * ```
+   *
+   * @return void
    */
-  public function recryptSharedPrivateData(string $ownerId, array $oldKeyPair, array $newKeyPair)
+  public function recryptSharedPrivateData(string $ownerId, array $oldKeyPair, array $newKeyPair):void
   {
-    $cryptor = $this->getCryptor($ownerId)
+    /*$cryptor = */$this->getCryptor($ownerId)
       ->setPrivateKey($oldKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG])
       ->setPublicKey($oldKeyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
     $configValues = $this->getSharedPrivateData($ownerId);
-    $cryptor = $this->getCryptor($ownerId)
+    /* $cryptor = */$this->getCryptor($ownerId)
       ->setPrivateKey($newKeyPair[self::PRIVATE_ENCRYPTION_KEY_CONFIG])
       ->setPublicKey($newKeyPair[self::PUBLIC_ENCRYPTION_KEY_CONFIG]);
-    foreach ($configValues as $configKey => $configValue)  {
+    foreach ($configValues as $configKey => $configValue) {
       $this->setSharedPrivateValue($ownerId, $configKey, $configValue);
     }
   }
@@ -441,7 +459,7 @@ class AsymmetricKeyService
     if (!empty($ownerId)) {
       $requestValue = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
       $requests[$ownerId] = $requestValue;
-    } else  {
+    } else {
       $recryptionUsers = $this->cloudConfig->getUsersForUserValue($this->appName, self::RECRYPTION_REQUEST_KEY);
       $requests = $this->cloudConfig->getUserValueForUsers($this->appName, self::RECRYPTION_REQUEST_KEY, $recryptionUsers);
       // sort by value, value is a timestamp
@@ -450,11 +468,13 @@ class AsymmetricKeyService
     return $requests;
   }
 
-  /*
+  /**
    * Push a new recryption-request notification and record the request int the user preferences.
    *
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @return INotification
    */
   public function pushRecryptionRequestNotification(string $ownerId):INotification
   {
@@ -466,7 +486,7 @@ class AsymmetricKeyService
     $notification = $notificationManager->createNotification();
 
     $notification->setApp($this->appName)
-      ->setDateTime(new \DateTime)
+      ->setDateTime(new DateTime)
       ->setObject('owner_id', $ownerId)
       ->setSubject(Notifier::RECRYPT_USER_SUBJECT, [ 'timestamp' => $requestData ])
       ->addAction($notification->createAction()
@@ -499,8 +519,10 @@ class AsymmetricKeyService
    *
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @return void
    */
-  public function removeRecryptionRequestNotification(string $ownerId)
+  public function removeRecryptionRequestNotification(string $ownerId):void
   {
     $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
 
@@ -522,9 +544,11 @@ class AsymmetricKeyService
    *
    * @param bool $allowProtest Add a button for re-requesting recryption.
    *
+   * @return INotification
+   *
    * @throws Exceptions\RecryptionRequestNotFoundException
    */
-  public function pushRecryptionRequestDeniedNotification($ownerId, bool $allowProtest = true)
+  public function pushRecryptionRequestDeniedNotification(string $ownerId, bool $allowProtest = true):INotification
   {
     $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
 
@@ -538,7 +562,7 @@ class AsymmetricKeyService
 
     $notification->setApp($this->appName)
       ->setUser($ownerId)
-      ->setDateTime(new \DateTime)
+      ->setDateTime(new DateTime)
       ->setObject('owner_id', $ownerId)
       ->setSubject(Notifier::RECRYPT_USER_DENIED_SUBJECT, [ 'timestamp' => $requestData ]);
     if ($allowProtest) {
@@ -559,8 +583,10 @@ class AsymmetricKeyService
    *
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @return void
    */
-  public function removeRecryptionRequestDeniedNotification($ownerId)
+  public function removeRecryptionRequestDeniedNotification(string $ownerId):void
   {
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);
@@ -579,9 +605,11 @@ class AsymmetricKeyService
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
    *
+   * @return INotification
+   *
    * @throws Exceptions\RecryptionRequestNotFoundException
    */
-  public function pushRecryptionRequestHandledNotification($ownerId)
+  public function pushRecryptionRequestHandledNotification(string $ownerId):INotification
   {
     $requestData = $this->cloudConfig->getUserValue($ownerId, $this->appName, self::RECRYPTION_REQUEST_KEY);
 
@@ -595,7 +623,7 @@ class AsymmetricKeyService
 
     $notification->setApp($this->appName)
       ->setUser($ownerId)
-      ->setDateTime(new \DateTime)
+      ->setDateTime(new DateTime)
       ->setObject('owner_id', $ownerId)
       ->setSubject(Notifier::RECRYPT_USER_HANDLED_SUBJECT, [ 'timestamp' => $requestData ]);
 
@@ -610,8 +638,10 @@ class AsymmetricKeyService
    *
    * @param string $ownerId The owner-id. If used for a group then it should
    * be prefixed by '@'. If null then the currently logged in user is used.
+   *
+   * @return void
    */
-  public function removeRecryptionRequestHandledNotification($ownerId)
+  public function removeRecryptionRequestHandledNotification(string $ownerId):void
   {
     /** @var NotificationManager $notificationManager */
     $notificationManager = $this->appContainer->get(NotificationManager::class);

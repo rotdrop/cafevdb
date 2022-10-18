@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,9 +28,15 @@ use Psr\Container\ContainerInterface;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\IConfig;
 
+/** App container service registration. */
 class Registration
 {
-  static public function register(IRegistrationContext $context)
+  /**
+   * @param IRegistrationContext $context
+   *
+   * @return void
+   */
+  public static function register(IRegistrationContext $context):void
   {
     $context->registerService(CryptoFactoryInterface::class, function(ContainerInterface $container) {
       return self::getCryptoFactory($container);
@@ -49,7 +55,12 @@ class Registration
     });
   }
 
-  static private function getCryptoFactory(ContainerInterface $container):CryptoFactoryInterface
+  /**
+   * @param ContainerInterface $container
+   *
+   * @return CryptoFactoryInterface
+   */
+  private static function getCryptoFactory(ContainerInterface $container):CryptoFactoryInterface
   {
     return $container->get(HaliteCryptoFactory::class);
   }
