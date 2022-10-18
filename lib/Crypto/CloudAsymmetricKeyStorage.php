@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,16 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
+use Throwable;
+use InvalidArgumentException;
+
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\IConfig;
 
 use OCA\CAFEVDB\Exceptions;
 
+/** Key-storage base-class. */
 abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -37,7 +41,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   const NAME_SEPARATOR = ';';
 
   /** @var string */
-  static $name = null;
+  public static $name = null;
 
   /** @var string */
   private $appName;
@@ -51,12 +55,13 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   /** @var IL10N */
   protected $l;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , ILogger $logger
-    , IL10N $l10n
-    , IConfig $cloudConfig
-    , SymmetricCryptorInterface $cryptor
+    string $appName,
+    ILogger $logger,
+    IL10N $l10n,
+    IConfig $cloudConfig,
+    SymmetricCryptorInterface $cryptor,
   ) {
     $this->appName = $appName;
     $this->logger = $logger;
@@ -64,6 +69,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     $this->cloudConfig = $cloudConfig;
     $this->cryptor = $cryptor;
   }
+  // phpcs:enable
 
   /** {@inheritdoc} */
   public function getKeyPair(string $ownerId, string $keyPassphrase)
@@ -73,7 +79,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
       try {
         $this->cryptor->setEncryptionKey($keyPassphrase);
         $privKeyMaterial = $this->cryptor->decrypt($privKeyMaterial);
-      } catch(\Throwable $t) {
+      } catch (Throwable $t) {
         // exceptions are ok, but we want to stick to Exceptions\EncryptionException
         throw new Exceptions\EncryptionKeyException(
           $this->l->t('Unable to decrypt private key for owner "%s".', $ownerId),
@@ -109,7 +115,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   }
 
   /** {@inheritdoc} */
-  public function wipeKeyPair(string $ownerId)
+  public function wipeKeyPair(string $ownerId):void
   {
     $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::PRIVATE_ENCRYPTION_KEY);
     $this->cloudConfig->deleteUserValue($ownerId, $this->appName, self::PUBLIC_ENCRYPTION_KEY);
@@ -124,7 +130,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   }
 
   /** {@inheritdoc} */
-  public function setPrivateKeyPassphrase(string $ownerId, $privateKey, string $newPassphrase)
+  public function setPrivateKeyPassphrase(string $ownerId, mixed $privateKey, string $newPassphrase):void
   {
     $privKeyMaterial = $this->serializeKey($privateKey, self::PRIVATE_ENCRYPTION_KEY);
     $privKeyMaterial = $this->crypto->encrypt($privKeyMaterial, $newPassphrase);
@@ -132,7 +138,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   }
 
   /** {@inheritdoc} */
-  public function backupKeyPair(string $ownerId, string $tag = 'old')
+  public function backupKeyPair(string $ownerId, string $tag = 'old'):void
   {
     foreach ([self::PUBLIC_ENCRYPTION_KEY, self::PRIVATE_ENCRYPTION_KEY] as $key) {
       $value = $this->getUserValue($ownerId, $key);
@@ -146,7 +152,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
   }
 
   /** {@inheritdoc} */
-  public function restoreKeyPair(string $ownerId, string $tag = 'old')
+  public function restoreKeyPair(string $ownerId, string $tag = 'old'):void
   {
     foreach ([self::PUBLIC_ENCRYPTION_KEY, self::PRIVATE_ENCRYPTION_KEY] as $key) {
       $backupKey = $key . '.' . $tag;
@@ -159,16 +165,45 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     }
   }
 
-  /** create a key-pair, but don't store it */
-  abstract protected function createKeyPair();
+  /**
+   * Create a key-pair, but don't store it
+   *
+   * @return null|array
+   */
+  abstract protected function createKeyPair():?array;
 
-  /** Decode the raw data fetch from whatever storage backend */
-  abstract protected function unserializeKey(string $rawKeyMaterial, string $which);
+  /**
+   * Decode the raw data fetch from whatever storage backend.
+   *
+   * @param string $rawKeyMaterial
+   *
+   * @param string $which
+   *
+   * @return mixed
+   */
+  abstract protected function unserializeKey(string $rawKeyMaterial, string $which):mixed;
 
-  /** Serialize key to string for storage in whatever storage backend */
+  /**
+   * Serialize key to string for storage in whatever storage backend
+   *
+   * @param mixed $key
+   *
+   * @param string $which
+   *
+   * @return string
+   */
   abstract protected function serializeKey(mixed $key, string $which):string;
 
-  private function getUserValue(string $ownerId, string $key, mixed $default = null)
+  /**
+   * @param string $ownerId
+   *
+   * @param string $key
+   *
+   * @param mixed $default
+   *
+   * @return mixed
+   */
+  private function getUserValue(string $ownerId, string $key, mixed $default = null):mixed
   {
     $value = $this->cloudConfig->getUserValue($ownerId, $this->appName, $key, $default);
     if (!empty($value)) {
@@ -176,7 +211,7 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
       if ($separatorPos !== false) {
         $name = substr($value, 0, $separatorPos);
         if ($name != static::$name) {
-          throw new \InvalidArgumentException($this->l->t('Key-storage mismatch: %1$s / %2$s', [ $name, static::$name ]));
+          throw new InvalidArgumentException($this->l->t('Key-storage mismatch: %1$s / %2$s', [ $name, static::$name ]));
         }
         $value = substr($value, $separatorPos+1);
       }
@@ -184,11 +219,20 @@ abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
     return $value;
   }
 
-  private function setUserValue(string $ownerId, string $key, mixed $value)
+  /**
+   * @param string $ownerId
+   *
+   * @param string $key
+   *
+   * @param mixed $value
+   *
+   * @return void
+   */
+  private function setUserValue(string $ownerId, string $key, mixed $value):void
   {
     if (!empty(static::$name)) {
       $value = static::$name . self::NAME_SEPARATOR . $value;
     }
-    return $this->cloudConfig->setUserValue($ownerId, $this->appName, $key, $value);
+    $this->cloudConfig->setUserValue($ownerId, $this->appName, $key, $value);
   }
 }

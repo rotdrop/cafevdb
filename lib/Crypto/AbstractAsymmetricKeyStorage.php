@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,10 +24,11 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
+/** Abstract base providing default implementations. */
 abstract class AbstractAsymmetricKeyStorage implements AsymmetricKeyStorageInterface
 {
   /** {@inheritdoc} */
-  public function getPrivateKey(string $ownerId, string $keyPassphrase)
+  public function getPrivateKey(string $ownerId, string $keyPassphrase):mixed
   {
     $keyPair = $this->getKeyPair($ownerId, $keyPassphrase);
     return $keyPair[self::PRIVATE_ENCRYPTION_KEY]??null;
