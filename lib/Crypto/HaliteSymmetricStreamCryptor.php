@@ -48,12 +48,13 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
   /** @var Halite\Symmetric\EncryptionKey */
   private $haliteEncryptionKey;
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  /**
+   * @param null|string
+   */
   public function __construct(?string $encryptionKey = null)
   {
     $this->setEncryptionKey($encryptionKey);
   }
-  // phpcs:enable
 
   /**
    * Set the encryption-key to use. If left empty then the data will be left
@@ -65,14 +66,18 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
    */
   public function setEncryptionKey(?string $encryptionKey):?string
   {
+    if (!empty($encryptionKey) && $this->encryptionKey == $encryptionKey) {
+      return $this->encryptionKey;
+    }
+
     $oldEncryptionKey = $this->encryptionKey;
     $this->encryptionKey = $encryptionKey;
 
     if (!empty($encryptionKey)) {
-      // Halite will compute a hash of its own. We rather assume that the
-      // $encryptionKey is more or less random and not a simple password and
-      // just split it in order to avoid passing 0-bytes as salt.
-      // $salt = substr($encryptionKey, -SODIUM_CRYPTO_PWHASH_SALTBYTES);
+      // The encryption key is random anyway, so no reason to add more salts.
+      //
+      // @todo I think the following is expensive by design to block out
+      // brute-force decryption attacks.
       $salt = str_pad('', SODIUM_CRYPTO_PWHASH_SALTBYTES, chr(0));
       $this->haliteEncryptionKey = Halite\KeyFactory::deriveEncryptionKey(
         new HiddenString($encryptionKey),
@@ -131,6 +136,7 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
         // not encrypted hack
         return $data;
       }
+
       try {
         // $startTime = microtime(true);
         // \OCP\Util::writeLog('cafevdb', 'Start Decrypt ' . strlen($data) . ' bytes', \OCP\Util::INFO);
@@ -153,6 +159,7 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
         throw new Exceptions\DecryptionFailedException('Decrypt failed', $t->getCode(), $t);
       }
     }
+
     return $data;
   }
 
