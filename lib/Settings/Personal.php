@@ -58,7 +58,7 @@ class Personal implements ISettings
   /** {@inheritdoc} */
   public function __construct(
     string $appName,
-    string $userId,
+    ?string $userId,
     AuthorizationService $authorizationService,
     IUserSession $userSession,
     ILogger $logger,
