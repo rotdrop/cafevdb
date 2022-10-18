@@ -607,7 +607,7 @@ trait ConfigTrait
    *
    * @return string
    */
-  protected function getSharedSubFolderPath(string $configKey):string
+  protected function getSharedSubFolderPath(string $configKey):?string
   {
     $sharedFolder = $this->getSharedFolderPath();
     if (empty($sharedFolder)) {
