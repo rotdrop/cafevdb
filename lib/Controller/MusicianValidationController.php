@@ -117,6 +117,8 @@ class MusicianValidationController extends Controller
    *
    * @param null|string $subTopic Optional subtopic.
    *
+   * @param string $failure
+   *
    * @return DataResponse
    *
    * @NoAdminRequired
@@ -506,6 +508,8 @@ class MusicianValidationController extends Controller
    *
    * @param array $criteria Criteria to search for. The function adds them to
    * this value.
+   *
+   * @return void
    */
   private static function matchOrNull(string $field, mixed $value, array &$criteria):void
   {
