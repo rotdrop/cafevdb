@@ -778,11 +778,18 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     if (!operation) {
       return;
     }
+    triggerData = triggerData || { setup: false };
 
-    $this.addClass('busy').closest('.dropdown-container').addClass('busy');
-    const cleanup = () => {
-      $this.removeClass('busy').closest('.dropdown-container').removeClass('busy');
-    };
+    let cleanup = () => $this.removeClass('busy').closest('.dropdown-container').removeClass('busy');
+    let onFail = (xhr, status, errorThrown) => Ajax.handleError(xhr, status, errorThrown, cleanup);
+
+    if (triggerData.setup) {
+      // don't annoy the user with an error message on page load.
+      cleanup = () => {};
+      onFail = () => {};
+    } else {
+      $this.addClass('busy').closest('.dropdown-container').addClass('busy');
+    }
 
     const post = function(force) {
       $.post(
@@ -791,14 +798,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
           musicianId,
           force,
         })
-        .fail(function(xhr, status, errorThrown) {
-          if (triggerData && triggerData.setup) {
-            // don't annoy the user with an error message on page load.
-            cleanup();
-          } else {
-            Ajax.handleError(xhr, status, errorThrown, cleanup);
-          }
-        })
+        .fail(onFail)
         .done(function(data, textStatus, request) {
           if (data.status === 'unconfirmed') {
             Dialogs.confirm(
@@ -815,7 +815,9 @@ const myReady = function(selector, dialogParameters, resizeCB) {
                 default: 'cancel',
               });
           } else {
-            Notification.messages(data.message);
+            if (!triggerData.setup) {
+              Notification.messages(data.message);
+            }
             if (data.status !== 'unchanged') {
               const $statusDisplay = $this.closest('.pme-value').find('.mailing-list.project.status.status-label');
               const $statusDropDown = $this.closest('.pme-value').find('.mailing-list.project.status.dropdown-container');

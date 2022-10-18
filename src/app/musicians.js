@@ -260,25 +260,35 @@ const contactValidation = function(container) {
     .off('click')
     .on('click', function(event, triggerData) {
       const $this = $(this);
+      triggerData = triggerData || { setup: false };
 
       const operation = $this.data('operation');
       if (!operation) {
         return;
       }
 
-      $this.addClass('busy');
-      $mailingListOperationsContainer.addClass('busy');
-      const cleanup = () => {
-        $mailingListOperationsContainer.removeClass('busy');
-        $this.removeClass('busy');
-      };
-
       const email = $emailInput.val();
       if (email === '') {
-        Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
+        if (!triggerData.setup) {
+          Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
+        }
         return false;
       }
       const displayName = $displayNameInput.val() || $displayNameInput.attr('placeholder');
+
+      let cleanup = () => {
+        $mailingListOperationsContainer.removeClass('busy');
+        $this.removeClass('busy');
+      };
+      let onFail = (xhr, status, errorThrown) => Ajax.handleError(xhr, status, errorThrown, cleanup);
+      if (triggerData.setup) {
+        // don't annoy the user with an error message on page load.
+        cleanup = () => {};
+        onFail = () => {};
+      } else {
+        $this.addClass('busy');
+        $mailingListOperationsContainer.addClass('busy');
+      }
 
       $.fn.cafevTooltip.remove(); // remove pending tooltips ...
 
@@ -289,14 +299,7 @@ const contactValidation = function(container) {
       };
 
       $.post(generateUrl('mailing-lists/' + operation), post)
-        .fail(function(xhr, status, errorThrown) {
-          if (triggerData && triggerData.setup) {
-            // don't annoy the user with an error message on page load.
-            cleanup();
-          } else {
-            Ajax.handleError(xhr, status, errorThrown, cleanup);
-          }
-        })
+        .fail(onFail)
         .done(function(data) {
           const status = data.status;
           $mailingListStatus.html(t(appName, status));
