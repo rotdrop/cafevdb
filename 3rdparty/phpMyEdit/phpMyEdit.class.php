@@ -2814,7 +2814,8 @@ class phpMyEdit
 			echo $this->htmlAttributes($operation, $k, $row, $readonly);
 
 			echo ($readonly !== false ? ' '.$readonly : '');
-			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
+			echo ' name="' . $this->cgi['prefix']['data'] . $this->fds[$k] . '"';
+			echo ' value="';
 			if ($this->col_has_datemask($k)) {
 				echo $this->makeUserTimeString($k, $row);
 			} else if ($escape) {
@@ -2822,7 +2823,9 @@ class phpMyEdit
 			} else {
 				echo $value;
 			}
-			echo '"',$len_props,' />',"\n";
+			echo '"';
+			echo ' data-original-value="' . $this->enc($value) . '"';
+			echo ' ' . $len_props .'/>' . "\n";
 		}
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
 			$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
