@@ -139,7 +139,7 @@ class PmeTableController extends Controller
    * @NoAdminRequired
    * @UseSession
    */
-  public function serviceSwitch(string $topic):Http\DataResponse
+  public function serviceSwitch(string $topic):Http\Response
   {
     switch ($topic) {
       case 'load':
