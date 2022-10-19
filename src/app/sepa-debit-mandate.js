@@ -385,6 +385,7 @@ const mandatesInit = function(data, onChangeCallback) {
         .chosen({
           allow_single_deselect: true,
           inherit_select_classes: true,
+          title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
           disable_search_threshold: 8,
         });
       if (disabled) {
@@ -1370,6 +1371,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
   bulkTransactionChooser.chosen({
     disable_search: true,
     inherit_select_classes: true,
+    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
     allow_single_deselect: true,
   });
   bulkTransactionChooser

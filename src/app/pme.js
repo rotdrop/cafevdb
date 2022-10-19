@@ -1328,6 +1328,7 @@ const installFilterChosen = function(containerSel) {
   container.find('select.' + pmeCompFilter).chosen({
     width: 'auto',
     inherit_select_classes: true,
+    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
     disable_search_threshold: 10,
     single_backstroke_delete: false,
   });
@@ -1342,6 +1343,7 @@ const installFilterChosen = function(containerSel) {
   container.find('select.' + pmeFilter).chosen({
     width: '100%', // This needs margin:0 and box-sizing:border-box to be useful.
     inherit_select_classes: true,
+    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
     no_results_text: noRes,
     single_backstroke_delete: false,
   });
@@ -1469,6 +1471,7 @@ const installInputChosen = function(containerSel, onlyClass) {
     const chosenOptions = {
       // width:'100%',
       inherit_select_classes: true,
+      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
       disable_search: self.hasClass('no-search'),
       disable_search_threshold: self.hasClass('no-search') ? 999999 : 10,
       no_results_text: noRes,
@@ -1821,6 +1824,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     gotoSelect.chosen({
       width: 'auto',
       inherit_select_classes: true,
+      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
       disable_search_threshold: 10,
     });
     if (gotoSelect.is(':disabled')) {
@@ -1834,6 +1838,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     container.find('select.' + pmePageRows).chosen({
       width: 'auto',
       inherit_select_classes: true,
+      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
       disable_search: true,
     });
   }

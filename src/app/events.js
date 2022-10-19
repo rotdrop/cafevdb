@@ -125,6 +125,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
       // style the menu with chosen
       eventMenu.chosen({
         inherit_select_classes: true,
+        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
         disable_search: true,
         width: '10em',
       });

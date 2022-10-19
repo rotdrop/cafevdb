@@ -1109,6 +1109,7 @@ const afterLoad = function(container) {
       disable_search_threshold: 10,
       allow_single_deselect: true,
       inherit_select_classes: true,
+      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
       width: '100%',
     });
     selectPlaceholder(executiveBoardIds);
