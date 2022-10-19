@@ -980,7 +980,7 @@ class phpMyEdit
 		$filters  = $valuesDef['filters'] ?? null;
 		$orderby  = $valuesDef['orderby'] ?? null;
 		$groups   = $valuesDef['groups'] ?? null;
-		$data     = $valuesDef['data'] ?? null;
+		$data     = $valuesDef['data'] ?? [];
 		$titles   = $valuesDef['titles'] ?? null;
 		$encode   = $valuesDef['encode'] ?? null;
 		$dbp      = !empty($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
@@ -1075,8 +1075,13 @@ class phpMyEdit
 			$qparts[self::QPARTS_SELECT] .= ', '.$groups;
 		}
 		if (!empty($data)) {
-			$data = $this->substituteVars($data, $subs);
-			$qparts[self::QPARTS_SELECT] .= ', '.$data;
+			if (!is_array($data)) {
+				$data = [ 'data' => $data ];
+			}
+			foreach ($data as &$dataValue) {
+				$dataValue = $this->substituteVars($dataValue, $subs);
+				$qparts[self::QPARTS_SELECT] .= ', '.$dataValue;
+			}
 		}
 		if (!empty($titles)) {
 			$titles = $this->substituteVars($titles, $subs);
@@ -1107,8 +1112,8 @@ class phpMyEdit
 			if (!empty($groups)) {
 				$grps[$row[0]] = $row[$colIdx++];
 			}
-			if (!empty($data)) {
-				$dt[$row[0]] = $row[$colIdx++];
+			foreach (array_keys($data) as $dataKey) {
+				$dt[$row[0]][$dataKey] = $row[$colIdx++];
 			}
 			if (!empty($titles)) {
 				$ttls[$row[0]] = $row[$colIdx++];
@@ -2359,6 +2364,9 @@ class phpMyEdit
 			foreach ($attributes as $attributeKey => $attributeValue) {
 				switch ($attributeKey) {
 				case 'readonly':
+					if ($op == self::OPERATION_FILTER) {
+						break;
+					}
 					if ($attributeValue === true) {
 						$readonly = $this->display['readonly'];
 					} else if ($attributeValue == false) {
@@ -2366,6 +2374,9 @@ class phpMyEdit
 					}
 					break;
 				case 'disabled':
+					if ($op == self::OPERATION_FILTER) {
+						break;
+					}
 					if ($attributeValue === true) {
 						$htmlFragment .= ' '.$this->display['disabled'];
 					}
@@ -2803,7 +2814,8 @@ class phpMyEdit
 			echo $this->htmlAttributes($operation, $k, $row, $readonly);
 
 			echo ($readonly !== false ? ' '.$readonly : '');
-			echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
+			echo ' name="' . $this->cgi['prefix']['data'] . $this->fds[$k] . '"';
+			echo ' value="';
 			if ($this->col_has_datemask($k)) {
 				echo $this->makeUserTimeString($k, $row);
 			} else if ($escape) {
@@ -2811,7 +2823,9 @@ class phpMyEdit
 			} else {
 				echo $value;
 			}
-			echo '"',$len_props,' />',"\n";
+			echo '"';
+			echo ' data-original-value="' . $this->enc($value) . '"';
+			echo ' ' . $len_props .'/>' . "\n";
 		}
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
 			$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
@@ -3465,7 +3479,16 @@ class phpMyEdit
 		is_array($kd_array) || $kd_array = array();
 		$found = false;
 		$dfltGroup = empty($kg_array[-1]) ? null : $kg_array[-1];
-		$dfltData = empty($kd_array[-1]) ? null : $this->enc($kd_array[-1]);
+		$dfltData = $kd_array[-1] ?? [];
+		if (!empty($dfltData)) {
+			if (!is_array($dfltData)) {
+				$dfltData = [ 'data' => $dfltData ];
+			}
+			foreach ($dfltData as &$dataValue) {
+				$dataValue = $this->enc($dataValue);
+			}
+			unset($dataValue);
+		}
 		$lastGroup = null;
 		$groupId = 0;
 		$ret .= $multiple ? '' : '<option value=""></option>'."\n";
@@ -3498,10 +3521,21 @@ class phpMyEdit
 				$ret .= ' title="'.$title.'"';
 			}
 			if (!empty($kd_array[$key])) {
-				$data = $this->enc($kd_array[$key]);
-				$ret .= " data-data='".$data."'";
-			} else if (!empty($dfltData)) {
-				$ret .= " data-data='".$dfltData."'";
+				$data = $kd_array[$key];
+				if (!is_array($data)) {
+					$data = [ 'data' => $data ];
+				}
+				foreach ($data as &$dataValue) {
+					$dataValue = $this->enc($dataValue);
+				}
+				unset($dataValue);
+			} else {
+				$data = $dfltData;
+			}
+			foreach ($data as $dataKey => $dataValue) {
+				$quote = strpos($dataValue, '"') !== false ? "'" : '"';
+				$dataHtml = ' data-' . $dataKey . '=' . $quote . $dataValue . $quote;
+				$ret .= $dataHtml;
 			}
 			if ($lastGroup) {
 				$ret .= ' data-group-id="'.$groupId.'"';
@@ -3587,6 +3621,17 @@ class phpMyEdit
 			}
 		}
 
+		$dfltData = $kd_array[-1] ?? [];
+		if (!empty($dfltData)) {
+			if (!is_array($dfltData)) {
+				$dfltData = [ 'data' => $dfltData ];
+			}
+			foreach ($dfltData as &$dataValue) {
+				$dataValue = $this->enc($dataValue);
+			}
+			unset($dataValue);
+		}
+
 		if (count($kv_array) == 1 || $multiple) {
 			$type = 'checkbox';
 		} else {
@@ -3604,10 +3649,24 @@ class phpMyEdit
 				.' name="'.$this->enc($name).'[]"'
 				.' value="'.$this->enc($key).'"'
 				.' class="'.$this->enc($css).'"';
+
 			if (!empty($kd_array[$key])) {
-				$data = $this->enc($kd_array[$key]);
-				$ret .= " data-data='".$data."'";
+				$data = $kd_array[$key];
+				if (!is_array($data)) {
+					$data = [ 'data' => $data ];
+				}
+				foreach ($data as &$dataValue) {
+					$dataValue = $this->enc($dataValue);
+				}
+				unset($dataValue);
+			} else {
+				$data = $dfltData;
 			}
+			foreach ($data as $dataKey => $dataValue) {
+				$quote = strpos($dataValue, '"') !== false ? "'" : '"';
+				$ret .= ' data-' . $dataKey . '=' . $quote . $dataValue . $quote;
+			}
+
 			// $inputhelp = !empty($tip)
 			// 	? ' title="'.$this->enc($tip).'" '
 			// 	: $this->fetchToolTip($css, $name, $css.'radio');
@@ -4357,6 +4416,7 @@ class phpMyEdit
 				$strip_tags = true;
 				//$escape	  = true;
 				$escape	  = false;
+				$attributes = $this->htmlAttributes(self::OPERATION_FILTER, $k, []);
 				echo '<div class="'.$negate_css_class_name.'">';
 				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp',
 										   $negate_css_class_name,
@@ -4367,7 +4427,7 @@ class phpMyEdit
 				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx', $css_class_name,
 									   $vals, $groups, $titles, $data, $selected,
 									   $multiple || true, $readonly, false, $strip_tags, $escape,
-									   null /* help */, null /* attributes */);
+									   null /* help */, $attributes);
 				echo '</div>';
 			} elseif (($this->fdd[$fd][self::FDD_SELECT] == 'N' ||
 					   $this->fdd[$fd][self::FDD_SELECT] == 'T')) {

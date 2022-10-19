@@ -958,7 +958,7 @@ class FinanceService
    *
    * @param string $iban
    *
-   * @return array
+   * @return null|array
    * ```
    * [
    *   'iban' => $iban,
@@ -969,7 +969,7 @@ class FinanceService
    * ]
    * ```
    */
-  public function getIbanInfo(string $iban)
+  public function getIbanInfo(string $iban):?array
   {
     $result = [ 'iban' => $iban ];
 
@@ -978,9 +978,15 @@ class FinanceService
       return null;
     }
 
-    $result['country'] = $iban->Country();
+    $country = $iban->Country();
+    $countryName = $this->localeCountryNames()[$country] ?? null;
+    if ($countryName) {
+      $result['country'] = $countryName . ' (' . $country . ')';
+    } else {
+      $result['country'] = $country;
+    }
 
-    if ($iban->Country() == 'DE') {
+    if ($country == 'DE') {
       // otherwise: not implemented yet
       $ibanBLZ = $iban->Bank();
       $ibanKTO = $iban->Account();

@@ -41,6 +41,11 @@ import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import { pageRenderer } from './pme-state.js';
 import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.js';
+import {
   sys as pmeSys,
   formSelector as pmeFormSelector,
   classSelector as pmeClassSelector,
@@ -346,6 +351,14 @@ const myLoadProjectParticipants = function(form, musicians, afterLoadCallback) {
 const myReady = function(selector, dialogParameters, resizeCB) {
   selector = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(selector);
+
+  rejectDecryptionPromise(); // terminate previous calls
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.done((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+  lazyDecrypt(container);
 
   Musicians.contactValidation(container);
 

@@ -363,7 +363,7 @@ const toolTipsInit = function(containerSel) {
 
   rejectToolTipsBackgroundPromise();
 
-  console.time('TOOLTIP_PROMISE');
+  console.time('TOOLTIP PROMISE');
 
   if (typeof containerSel === 'undefined') {
     containerSel = '#content.app-' + appName;
@@ -402,11 +402,11 @@ const toolTipsInit = function(containerSel) {
 
   toolTipsBackgroundPromise
     .done((maxJobs) => {
-      console.timeEnd('TOOLTIP_PROMISE');
+      console.timeEnd('TOOLTIP PROMISE');
       console.info('TOOLTIP JOBS HANDLED', maxJobs);
     })
     .fail((maxJobs) => {
-      console.timeEnd('TOOLTIP_PROMISE');
+      console.timeEnd('TOOLTIP PROMISE');
       console.info('RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs);
     });
 

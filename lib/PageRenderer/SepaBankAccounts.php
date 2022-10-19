@@ -578,7 +578,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['bank_account_owner'] = [
       'tab' => [ 'id' => [ 'account', 'mandate', ], ],
       'name' => $this->l->t('Bank Account Owner'),
-      'css' => [ 'postfix' => [ 'allow-empty', 'bank-account-owner', ], ],
+      'css' => [ 'postfix' => [ 'allow-empty', 'bank-account-owner', 'lazy-decryption', ], ],
       'input' => 'M',
       'options' => 'LFACPDV',
       'select' => 'T',
@@ -586,16 +586,20 @@ class SepaBankAccounts extends PMETableViewBase
       'maxlen' => 80,
       'encryption' => [
         'encrypt' => fn($value) => $this->ormEncrypt($value),
-        'decrypt' => fn($value) => $this->ormDecrypt($value),
+        'decrypt' => fn($value) => md5($value), // $this->ormDecrypt($value),
       ],
-      'values|LF'  => [
+      'values|LFVD'  => [
         'table' => self::TABLE,
         'column' => 'bank_account_owner',
         'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
-        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
         'filters' => (!$projectMode
                       ? null
                       : self::musicianInProjectSql($this->projectId, 'musician_id')),
+        'data' => [
+          'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+          'crypto-hash' => 'MD5($table.$column)',
+          'meta-data' => '"iban"', // SQL STRING
+        ],
       ],
       'values|ACP' => [
         'table' => self::TABLE,
@@ -603,10 +607,31 @@ class SepaBankAccounts extends PMETableViewBase
         'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
         // in order to support auto-completion and/or filling in particular
         // while adding new mandates we provide the bank account identifier
-        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+        'data' => [
+          'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+          'crypto-hash' => 'MD5($table.$column)',
+          'meta-data' => '"bankAccountOwner"', // SQL string
+        ],
         'filters' => '$table.deleted IS NULL',
       ],
+      'display' => [
+        'attributes' => [
+          'data-meta-data' => 'bankAccountrOwner',
+        ],
+      ],
     ];
+    // See also FieldTraits/SepaAccountsTrait. Decrypt values in the
+    // background to improve the responsiveness of the UI.
+    $opts['fdd']['bank_account_owner']['encryption|LF']['decrypt'] = function($value) {
+      // $this->ormDecrypt($value);
+      $value = '<span class="iban encryption-placeholder"
+      data-crypto-hash="' . md5($value) . '"
+      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
+>'
+        . $this->l->t('please wait')
+        . '</span>';
+      return $value;
+    };
 
     // soft-deletion
     $opts['fdd']['deleted'] = Util::arrayMergeRecursive(
@@ -618,7 +643,7 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['iban'] = [
       'tab' => [ 'id' => [ 'account', 'mandate' ] ],
       'name' => 'IBAN',
-      'css' => [ 'postfix' => [ 'bank-account-iban', ], ],
+      'css' => [ 'postfix' => [ 'bank-account-iban', 'meta-data-popup', 'lazy-decryption' ], ],
       'input' => 'M',
       'options' => 'LFACPDV',
       'select' => 'T',
@@ -626,7 +651,7 @@ class SepaBankAccounts extends PMETableViewBase
       'maxlen' => 35,
       'encryption' => [
         'encrypt' => fn($value) => $this->ormEncrypt($value),
-        'decrypt' => fn($value) => $this->ormDecrypt($value),
+        'decrypt' => fn($value) => md5($value), // $this->ormDecrypt($value),
       ],
       'values|LFVD' => [
         'table' => self::TABLE,
@@ -635,7 +660,11 @@ class SepaBankAccounts extends PMETableViewBase
         'filters' => (!$projectMode
                       ? null
                       : self::musicianInProjectSql($this->projectId, 'musician_id')),
-        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+        'data' => [
+          'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+          'crypto-hash' => 'MD5($table.$column)',
+          'meta-data' => '"iban"', // SQL STRING
+        ],
       ],
       'values|ACP' => [ // use full table contents for auto-completion
         'table' => self::TABLE,
@@ -643,7 +672,11 @@ class SepaBankAccounts extends PMETableViewBase
         'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
         // in order to support auto-completion and/or filling in particular
         // while adding new mandates we provide the bank account identifier
-        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+        'data' => [
+          'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+          'crypto-hash' => 'MD5($table.$column)',
+          'meta-data' => '"iban"', // SQL STRING
+        ],
         'filters' => '$table.deleted IS NULL',
       ],
       'display' => [
@@ -655,8 +688,28 @@ class SepaBankAccounts extends PMETableViewBase
           }
           return $result;
         },
+        'attributes' => [
+          'data-meta-data' => 'iban',
+        ],
+      ],
+      'display|LF' => [
+        'attributes' => [
+          'data-meta-data' => 'iban',
+        ],
       ],
     ];
+    // See also FieldTraits/SepaAccountsTrait. Decrypt values in the
+    // background to improve the responsiveness of the UI.
+    $opts['fdd']['iban']['encryption|LF']['decrypt'] = function($value) {
+      // $this->ormDecrypt($value);
+      $value = '<span class="iban encryption-placeholder"
+      data-crypto-hash="' . md5($value) . '"
+      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
+>'
+        . $this->l->t('please wait')
+        . '</span>';
+      return $value;
+    };
 
     $opts['fdd']['blz'] = [
       'tab' => [ 'id' => 'account' ],

@@ -52,6 +52,7 @@ const documentReady = function() {
       self.chosen({
         disable_search: true,
         inherit_select_classes: true,
+        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
         width: '10ex',
       });
     });
@@ -67,6 +68,7 @@ const documentReady = function() {
       self.show();
       self.chosen({
         inherit_select_classes: true,
+        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
         disable_search: true,
         width: 'auto',
       });
@@ -80,6 +82,7 @@ const documentReady = function() {
       }
       self.chosen({
         inherit_select_classes: true,
+        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
         disable_search: true,
         width: '100%',
       });

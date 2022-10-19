@@ -308,6 +308,11 @@ class ConfigService
   protected $appContainer;
 
   /**
+   * @var array<string, array<string, string>>
+   */
+  private $localeCountryNames = [];
+
+  /**
    * {@inheritdoc}
    *
    * @SuppressWarnings(PHPMD.Superglobals)
@@ -1072,25 +1077,29 @@ class ConfigService
   }
 
   /**
-   * @param null|string $locale Locale to use, if null the current user's locale.
+   * @param null|string $displayLocale Locale to use, if null the current user's locale.
    *
    * @return array An array of supported country-codes and names.
    */
-  public function localeCountryNames(?string $locale = null):array
+  public function localeCountryNames(?string $displayLocale = null):array
   {
-    if (!$locale) {
-      $locale = $this->getLocale();
+    if (!$displayLocale) {
+      $displayLocale = $this->getLocale();
     }
-    $language = locale_get_primary_language($locale);
+    $displayLanguage = locale_get_primary_language($displayLocale);
+    if (!empty($this->localeCountryNames[$displayLanguage])) {
+      return $this->localeCountryNames[$displayLanguage];
+    }
     $locales = resourcebundle_locales('');
     $countryCodes = array();
     foreach ($locales as $locale) {
       $country = locale_get_region($locale);
       if ($country) {
-        $countryCodes[$country] = locale_get_display_region($locale, $language);
+        $countryCodes[$country] = locale_get_display_region($locale, $displayLanguage);
       }
     }
     asort($countryCodes);
+    $this->localeCountryNames[$displayLanguage] = $countryCodes;
     return $countryCodes;
   }
 

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
+
+use InvalidArgumentException;
 
 use chillerlan\QRCode\QRCode;
 
@@ -226,21 +228,22 @@ class ProjectParticipants extends PMETableViewBase
   /** @var UserStorage */
   protected $userStorage;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
-    , GeoCodingService $geoCodingService
-    , ContactsService $contactsService
-    , PhoneNumberService $phoneNumberService
-    , FinanceService $financeService
-    , InstrumentInsuranceService $insuranceService
-    , ProjectParticipantFieldsService $participantFieldsService
-    , ProjectService $projectService
-    , UserStorage $userStorage
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
+    GeoCodingService $geoCodingService,
+    ContactsService $contactsService,
+    PhoneNumberService $phoneNumberService,
+    FinanceService $financeService,
+    InstrumentInsuranceService $insuranceService,
+    ProjectParticipantFieldsService $participantFieldsService,
+    ProjectService $projectService,
+    UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->geoCodingService = $geoCodingService;
@@ -257,31 +260,27 @@ class ProjectParticipants extends PMETableViewBase
 
     $this->pme->overrideLabel('Add', $this->l->t('Add Musician'));
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove the musician from %s?', [ $this->projectName ]);
-    } else if ($this->viewOperation()) {
+    } elseif ($this->viewOperation()) {
       return $this->l->t('Display of all stored data for the shown musician.');
-    } else if ($this->changeOperation()) {
+    } elseif ($this->changeOperation()) {
       return $this->l->t('Edit the data of the displayed musician.');
     }
     return $this->l->t('Instrumentation for Project "%s"', [ $this->projectName ]);
   }
 
-  /**
-   * Show the underlying table.
-   *
-   * @todo Much of this is really CTOR stuff.
-   */
+  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
     $instruments     = $this->instruments;
-    $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
     $opts            = [];
@@ -293,7 +292,7 @@ class ProjectParticipants extends PMETableViewBase
     ];
 
     if (empty($projectName) || empty($this->projectId)) {
-      throw new \InvalidArgumentException($this->l->t('Project-id and/or -name must be given (%1$s / %2$s)', [ $projectName, $this->projectId ]));
+      throw new InvalidArgumentException($this->l->t('Project-id and/or -name must be given (%1$s / %2$s)', [ $projectName, $this->projectId ]));
     }
 
     $opts['filters']['AND'] = [
@@ -373,7 +372,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->joinStructure = array_merge($this->joinStructure, $emailJoin);
 
     list($sepaJoin, $sepaFieldGenerator) = $this->renderSepaAccounts(
-      'musician_id', [ $this->projectId, $this->membersProjectId ], $financeTab);
+      'musician_id', $this->projectId, $this->membersProjectId, $financeTab);
     $this->joinStructure = array_merge($this->joinStructure, $sepaJoin);
 
     list($participantFieldsJoin, $participantFieldsGenerator) =
@@ -390,15 +389,14 @@ class ProjectParticipants extends PMETableViewBase
 
     // Display special page elements
     $opts['display'] =  Util::arrayMergeRecursive(
-      $opts['display'] ?? [],
-      [
+      $opts['display'] ?? [], [
         'form'  => true,
         //'query' => true,
         'sort'  => true,
         'time'  => true,
         'tabs' => $this->tableTabs($participantFields, $useFinanceTab),
         'navigation' => 'VCD',
-    ]);
+      ]);
 
     /*
      *
@@ -435,16 +433,17 @@ class ProjectParticipants extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-      case self::INSTRUMENTS_TABLE:
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-        break;
-      case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-        break;
-      case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
-      default:
-        break;
+        case self::INSTRUMENTS_TABLE:
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          break;
+        case self::INSTRUMENTS_TABLE . self::VALUES_TABLE_SEP . 'musicians':
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          break;
+        case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
+          break;
+        default:
+          break;
       }
     });
 
@@ -478,6 +477,7 @@ class ProjectParticipants extends PMETableViewBase
         'maxlen'   => 384,
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
+            $nickNamePlaceholder = $this->l->t('e.g. Cathy');
             $firstName = $row['qf'.($k-1)];
             $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
             $unlockedPlaceholder = $this->l->t('e.g. Cathy');
@@ -517,6 +517,7 @@ class ProjectParticipants extends PMETableViewBase
         'maxlen'   => 384,
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
+            $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
             $surName = $row['qf'.($k-3)];
             $firstName = $row['qf'.($k-2)];
             $nickName = $row['qf'.($k-1)];
@@ -625,10 +626,14 @@ class ProjectParticipants extends PMETableViewBase
       'valueGroups' => $this->instrumentInfo['idGroups'],
     ];
     $fdd['values|VDPC'] = array_merge($fdd['values'], [
-      'filters' => '$table.id IN (SELECT DISTINCT instrument_id FROM '.self::MUSICIAN_INSTRUMENTS_TABLE.' mi WHERE $record_id[project_id] = '.$this->projectId.' AND $record_id[musician_id] = mi.musician_id)',
+      'filters' => '$table.id IN (SELECT DISTINCT instrument_id
+  FROM '.self::MUSICIAN_INSTRUMENTS_TABLE.' mi
+  WHERE $record_id[project_id] = '.$this->projectId.' AND $record_id[musician_id] = mi.musician_id)',
     ]);
     $fdd['values|LFV'] = array_merge($fdd['values'], [
-      'filters' => '$table.id IN (SELECT DISTINCT instrument_id FROM '.self::PROJECT_INSTRUMENTS_TABLE.' pi WHERE '.$this->projectId.' = pi.project_id)',
+      'filters' => '$table.id IN (SELECT DISTINCT instrument_id
+  FROM '.self::PROJECT_INSTRUMENTS_TABLE.' pi
+  WHERE '.$this->projectId.' = pi.project_id)',
     ]);
 
     // Use $fdd defined above after tweaking its values
@@ -737,7 +742,9 @@ class ProjectParticipants extends PMETableViewBase
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.instrument_id = pi.instrument_id AND pin.project_id = pi.project_id
   JOIN " . self::SEQUENCE_TABLE . " n
-    ON n.seq <= (" . self::EXTRA_VOICES . " + 1 + pin.voice) AND n.seq >= 1 AND n.seq <= (1+(SELECT GREATEST(" . self::EXTRA_VOICES . ", MAX(pin2.voice)) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
+    ON n.seq <= (" . self::EXTRA_VOICES . " + 1 + pin.voice)
+    AND n.seq >= 1
+    AND n.seq <= (1+(SELECT GREATEST(" . self::EXTRA_VOICES . ", MAX(pin2.voice)) FROM ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin2))
   WHERE
     pi.project_id = \$record_id[project_id]
   GROUP BY
@@ -858,8 +865,8 @@ class ProjectParticipants extends PMETableViewBase
       // 0 => '',
       // 1 => '&#10004;'
       // ],
-      'tooltip|LFDV' => $this->l->t("Set to `%s' in order to mark participants who passed a personally signed registration form to us.",
-                               [ "&#10004;" ]),
+      'tooltip|LFDV' => $this->l->t(
+        "Set to `%s' in order to mark participants who passed a personally signed registration form to us.", [ "&#10004;" ]),
       'tooltip|CAP' => $this->l->t("Check in order to mark participants who passed a personally signed registration form to us."),
       'display|LF' => [
         'popup' => function($data) {
@@ -883,7 +890,9 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ],
       'display|LVF' => ['popup' => 'data'],
-      'sql'         => 'GROUP_CONCAT(DISTINCT IF('.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL) ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
+      'sql'         => 'GROUP_CONCAT(DISTINCT
+  IF('.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.deleted IS NULL, $join_col_fqn, NULL)
+  ORDER BY '.$this->joinTables[self::MUSICIAN_INSTRUMENTS_TABLE].'.ranking ASC, $order_by)',
       'select'      => 'M',
       'values' => [
         'column'      => 'id',
@@ -947,7 +956,7 @@ class ProjectParticipants extends PMETableViewBase
       ]);
 
     // soft-deleted musician kept to keep the instrumentation for the old project
-    list($index, $fieldName) = $this->makeJoinTableField(
+    list(, $fieldName) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'deleted', array_merge(
         $this->defaultFDD['deleted'], [
           'input' => ($this->showDisabled && $this->expertMode ? '' : 'HR'),
@@ -1222,19 +1231,19 @@ class ProjectParticipants extends PMETableViewBase
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIAN_PHOTO_JOIN_TABLE, 'image_id', [
-      'tab'      => ['id' => 'miscinfo'],
-      'input' => 'VRS',
-      'name' => $this->l->t('Photo'),
-      'select' => 'T',
-      'options' => 'APVCD',
-      'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
-        $musicianId = $recordId['musician_id'] ?? 0;
-        return $this->photoImageLink($musicianId, $action, $imageId);
-      },
-      'css' => ['postfix' => [ 'photo', ], ],
-      'default' => '',
-      'sort' => false
-    ]);
+        'tab'      => ['id' => 'miscinfo'],
+        'input' => 'VRS',
+        'name' => $this->l->t('Photo'),
+        'select' => 'T',
+        'options' => 'APVCD',
+        'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
+          $musicianId = $recordId['musician_id'] ?? 0;
+          return $this->photoImageLink($musicianId, $action, $imageId);
+        },
+        'css' => ['postfix' => [ 'photo', ], ],
+        'default' => '',
+        'sort' => false
+      ]);
 
     $opts['fdd']['vcard'] = [
       'tab' => ['id' => 'miscinfo'],
@@ -1244,19 +1253,19 @@ class ProjectParticipants extends PMETableViewBase
       'options' => 'ACPDV',
       'sql' => '$main_table.musician_id',
       'php' => function($musicianId, $action, $k, $row, $recordId, $pme) {
-        switch($action) {
-        case 'change':
-        case 'display':
-          list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
-          $vcard = $this->contactsService->export($musician);
-          unset($vcard->PHOTO); // too much information
-          $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
-          sort($categories);
-          $vcard->CATEGORIES->setParts($categories);
-          //$this->logInfo($vcard->serialize());
-          return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
-        default:
-          return '';
+        switch ($action) {
+          case 'change':
+          case 'display':
+            list('musician' => $musician, 'categories' => $categories) = $this->musicianFromRow($row, $pme);
+            $vcard = $this->contactsService->export($musician);
+            unset($vcard->PHOTO); // too much information
+            $categories = array_merge($categories, $vcard->CATEGORIES->getParts());
+            sort($categories);
+            $vcard->CATEGORIES->setParts($categories);
+            //$this->logInfo($vcard->serialize());
+            return '<img height="231" width="231" src="'.(new QRCode)->render($vcard->serialize()).'"></img>';
+          default:
+            return '';
         }
       },
       'default' => '',
@@ -1361,8 +1370,22 @@ class ProjectParticipants extends PMETableViewBase
 
   /**
    * When removing an instrument any pending voice(s) have to be removed, too.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateRemoveDependentVoices($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function beforeUpdateRemoveDependentVoices(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     // sanitize instrumentation numbers
     $instrumentsColumn = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
@@ -1412,8 +1435,22 @@ class ProjectParticipants extends PMETableViewBase
   /**
    * Make sure at least a dummy instrumentation number exists when
    * adding people to project instruments.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateEnsureInstrumentationNumbers($pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function beforeUpdateEnsureInstrumentationNumbers(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     $voiceField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'voice');
     $instrumentField = $this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'instrument_id');
@@ -1474,11 +1511,15 @@ class ProjectParticipants extends PMETableViewBase
    * definitions of the table. This is needed by the
    * ParticipantFieldsTrait in order to move extra-fields to the
    * correct tab.
+   *
+   * @param string $idOrName
+   *
+   * @return string
    */
-  private function tableTabId($idOrName)
+  protected function tableTabId(string $idOrName):string
   {
     $dflt = $this->defaultTableTabs(true);
-    foreach($dflt as $tab) {
+    foreach ($dflt as $tab) {
       if ($idOrName === $tab['name'] || $idOrName === $this->l->t($tab['id'])) {
         return $tab['id'];
       }
@@ -1490,8 +1531,14 @@ class ProjectParticipants extends PMETableViewBase
    * Export the default tabs family. Extra-tabs are inserted after the
    * personal data and before the misc-tab. The finance tab comes
    * before the personal data.
+   *
+   * @param bool $useFinanceTab
+   *
+   * @param array $extraTabs
+   *
+   * @return array
    */
-  private function defaultTableTabs($useFinanceTab = false, $extraTabs = [])
+  private function defaultTableTabs(bool $useFinanceTab = false, array $extraTabs = []):array
   {
     $pre = [
       [
@@ -1551,8 +1598,14 @@ class ProjectParticipants extends PMETableViewBase
 
   /**
    * Export the description for the table tabs.
+   *
+   * @param mixed $participantFields
+   *
+   * @param bool $useFinanceTab
+   *
+   * @return array
    */
-  private function tableTabs($participantFields = false, $useFinanceTab = false)
+  private function tableTabs(mixed $participantFields = false, bool $useFinanceTab = false):array
   {
     $dfltTabs = $this->defaultTableTabs($useFinanceTab);
 
@@ -1595,24 +1648,21 @@ class ProjectParticipants extends PMETableViewBase
   /**
    * This is a phpMyEdit before-SOMETHING trigger.
    *
-   * phpMyEdit calls the trigger (callback) with
-   * the following arguments:
+   * @param PHPMyEdit $pme The phpMyEdit instance.
    *
-   * @param $pme The phpMyEdit instance
+   * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param $op The operation, 'insert', 'update' etc.
+   * @param string $step 'before' or 'after'.
    *
-   * @param $step 'before' or 'after'
+   * @param array $oldValues Self-explanatory.
    *
-   * @param $oldValues Self-explanatory.
+   * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$changed Set of changed fields, may be modified by the callback.
+   * @param null|array $newValues Set of new values, which may also be modified.
    *
-   * @param &$newValues Set of new values, which may also be modified.
-   *
-   * @return boolean If returning @c false the operation will be terminated
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeDeleteTrigger(&$pme, $op, $step, $oldValues, &$changed, &$newValues)
+  public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     $entity = $this->legacyRecordToEntity($pme->rec);
 
@@ -1622,5 +1672,4 @@ class ProjectParticipants extends PMETableViewBase
 
     return true; // but run further triggers if appropriate
   }
-
 }

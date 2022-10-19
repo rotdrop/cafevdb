@@ -130,6 +130,11 @@ $routes = [
         'apiVersion' => 'v1',
       ],
     ],
+    [
+      'name' => 'encryption#decryptDatabaseValue',
+      'url' => '/encryption/decypt',
+      'verb' => 'POST',
+    ],
   ],
   'routes' => [
     [
@@ -510,6 +515,11 @@ $routes = [
       'verb' => 'POST',
     ],
     [
+      'name' => 'sepa_debit_mandates#iban_info',
+      'url' => '/finance/sepa/iban-info/{iban}',
+      'verb' => 'GET',
+    ],
+    [
       'name' => 'sepa_bulk_transactions#service_switch',
       'url' => '/finance/sepa/bulk-transactions/{topic}',
       'verb' => 'POST',
@@ -612,6 +622,30 @@ $routes = [
       'name' => 'tool_tips#get_multiple',
       'url' => '/tooltips',
       'verb' => 'GET',
+    ],
+    /**
+     * Generic crypto utilities
+     *
+     * @todo compare OCS encryption controller.
+     */
+    [
+      'name' => 'crypto#unseal',
+      'verb' => 'POST',
+      'url' => '/crypto/decryption/unseal/{mode}',
+      'defaults' => [
+        'mode' => 'single',
+      ],
+      'requirements' => [
+        'mode' => '^(single|)$',
+      ],
+    ],
+    [
+      'name' => 'crypto#batch_unseal',
+      'verb' => 'POST',
+      'url' => '/crypto/decryption/unseal/{mode}',
+      'requirements' => [
+        'mode' => 'batch',
+      ],
     ],
     /**
      * Manage mailing list subscriptions

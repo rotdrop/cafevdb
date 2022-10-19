@@ -145,7 +145,7 @@ const documentReady = function() {
     $.fn.cafevTooltip.remove(); // remove any left-over items.
   });
 
-  content.on('chosen:showing_dropdown', 'select', function(event, params) {
+  content.on('chosen:showing_dropdown chosen:update_results', 'select', function(event, params) {
     const container = params.chosen.container;
     const results = params.chosen.search_results;
     const menuItems = results.find('li');
@@ -157,6 +157,7 @@ const documentReady = function() {
     container.cafevTooltip('disable');
     // $.fn.cafevTooltip.remove(); // remove any left-over items.
   });
+
   content.on('chosen:hiding_dropdown', 'select', function(event, params) {
     const container = params.chosen.container;
     const results = params.chosen.search_results;
@@ -167,7 +168,6 @@ const documentReady = function() {
       // params.chosen.container.cafevTooltip('show');
     }
   });
-
   // Any pending form-submit which has not been caught otherwise is
   // here intercepted and redirected to the page-loader in order to
   // reduce load-time and to record usable history information.
@@ -329,6 +329,7 @@ const documentReady = function() {
     callback(selector, parameters, resizeCB) {
 
       if (parameters.reason !== 'dialogOpen') {
+        SepaBulkTransactions.backgroundDecryption(selector);
         resizeCB();
         return;
       }
