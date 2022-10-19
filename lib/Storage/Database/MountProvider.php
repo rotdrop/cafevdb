@@ -4,30 +4,35 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-// FIXME internal
+use Exception;
+use Throwable;
+
+// F I X M E internal
 use OC\Files\Mount\MountPoint;
 
 use OCP\Files\Config\IMountProvider;
 use OCP\Files\Storage\IStorageFactory;
+use OCP\Files\FileInfo;
 use OCP\IUser;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -52,34 +57,35 @@ class MountProvider implements IMountProvider
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use ProjectParticipantsStorageTrait;
+  use DatabaseStorageNodeNameTrait;
 
   const MOUNT_TYPE = 'cafevdb-database';
 
   /** @var OrganizationalRolesService */
   private $organizationalRolesService;
 
+  /** @var Factory */
+  private $storageFactory;
+
   /** @var int */
   private static $recursionLevel = 0;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , OrganizationalRolesService $organizationalRolesService
-    , EntityManager $entityManager
+    ConfigService $configService,
+    OrganizationalRolesService $organizationalRolesService,
+    EntityManager $entityManager,
+    Factory $storageFactory,
   ) {
     $this->configService = $configService;
     $this->organizationalRolesService = $organizationalRolesService;
     $this->l = $this->l10n();
     $this->entityManager = $entityManager;
+    $this->storageFactory = $storageFactory;
   }
+  // phpcs:enable
 
-  /**
-   * Get all mountpoints applicable for the user
-   *
-   * @param \OCP\IUser $user
-   * @param \OCP\Files\Storage\IStorageFactory $loader
-   * @return \OCP\Files\Mount\IMountPoint[]
-   */
+  /** {@inheritdoc} */
   public function getMountsForUser(IUser $user, IStorageFactory $loader)
   {
     if (self::$recursionLevel > 0) {
@@ -87,7 +93,22 @@ class MountProvider implements IMountProvider
       $this->logDebug('RECURSION: ' . self::$recursionLevel);
       return [];
     }
+    self::$recursionLevel++;
 
+    try {
+      $mounts = $this->getMountsForUserInternal($user, $loader);
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to generate mounts');
+      $mounts = [];
+    }
+
+    --self::$recursionLevel;
+    return $mounts;
+  }
+
+  /** {@inheritdoc} */
+  private function getMountsForUserInternal(IUser $user, IStorageFactory $loader)
+  {
     $userId = $user->getUID();
 
     if (!$this->inGroup($userId)) {
@@ -105,8 +126,6 @@ class MountProvider implements IMountProvider
       return [];
     }
 
-    self::$recursionLevel++;
-
     // disable soft-deleteable here in order to cope with the case that the
     // musician underlying the project-participation is alreay soft-deleted.
     // Do this early as proxies seemingly (correctly) remember the filter state.
@@ -116,26 +135,24 @@ class MountProvider implements IMountProvider
 
     /** @var UserStorage $userStorage */
     $userStorage = $this->di(UserStorage::class);
-    if (empty($userStorage->user())) {
-      $userStorage->setUser($user);
-    }
+
+    // we have to install the correct user into our UserStorage support class on each call.
+    $userStorage->setUser($user);
+
     $node = $userStorage->get($sharedFolder);
-    if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
-      $this->logException(new \Exception('No shared folder for ' . $userId));
-      --self::$recursionLevel;
+    if (empty($node) || $node->getType() !== FileInfo::TYPE_FOLDER) {
+      $this->logException(new Exception('No shared folder for ' . $userId));
       return [];
     }
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
     try {
       $node = $node->get($projectsFolder);
-      if (empty($node) || $node->getType() !== \OCP\Files\FileInfo::TYPE_FOLDER) {
+      if (empty($node) || $node->getType() !== FileInfo::TYPE_FOLDER) {
         $this->logException(new MissingProjectsFolderException('No projects folder for ' . $userId));
-        --self::$recursionLevel;
         return [];
       }
     } catch (\Throwable $t) {
       $this->logException(new MissingProjectsFolderException('No projects folder ' . $projectsFolder . ' for ' . $userId));
-      --self::$recursionLevel;
       return [];
     }
 
@@ -147,9 +164,7 @@ class MountProvider implements IMountProvider
     if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
       // block for non-treasurers
 
-      $storage = new BankTransactionsStorage([
-        'configService' => $this->configService
-      ]);
+      $storage = $this->storageFactory->getBankTransactionsStorage();
       $bulkLoadStorageIds[] = $storage->getId();
 
       $mounts[] = new class(
@@ -166,7 +181,14 @@ class MountProvider implements IMountProvider
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
         ]
-      ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
+      ) extends MountPoint
+      {
+        /** {@inheritdoc} */
+        public function getMountType()
+        {
+          return MountProvider::MOUNT_TYPE;
+        }
+      };
     }
 
     try {
@@ -189,10 +211,7 @@ class MountProvider implements IMountProvider
       /** @var Entities\Project $project */
       foreach ($projects as $project) {
 
-        $storage = new ProjectBalanceSupportingDocumentsStorage([
-          'configService' => $this->configService,
-          'project' => $project,
-        ]);
+        $storage = $this->storageFactory->getProjectBalanceSupportingDocumentsStorage($project);
         $bulkLoadStorageIds[] = $storage->getId();
 
         $mountPathChain = [ $this->getProjectBalancesPath() ];
@@ -216,7 +235,14 @@ class MountProvider implements IMountProvider
             'enable_sharing' => false, // cannot work, mount needs DB access
             'authenticated' => true,
           ]
-        ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
+        ) extends MountPoint
+        {
+          /** {@inheritdoc} */
+          public function getMountType()
+          {
+            return MountProvider::MOUNT_TYPE;
+          }
+        };
       }
     }
 
@@ -244,10 +270,7 @@ class MountProvider implements IMountProvider
       foreach ($project->getParticipants() as $participant) {
         try {
           $folder = $projectService->getParticipantFolder($project, $participant->getMusician());
-          $storage = new ProjectParticipantsStorage([
-            'configService' => $this->configService,
-            'participant' => $participant,
-          ]);
+          $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
           $bulkLoadStorageIds[] = $storage->getId();
           $participantStorages[$folder] = $storage;
         } catch (\Throwable $t) {
@@ -274,19 +297,20 @@ class MountProvider implements IMountProvider
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
         ]
-        ) extends MountPoint { public function getMountType() { return MountProvider::MOUNT_TYPE; } };
+      ) extends MountPoint
+      {
+        /** {@inheritdoc} */
+        public function getMountType()
+        {
+          return MountProvider::MOUNT_TYPE;
+        }
+      };
     }
 
     \OC\Files\Cache\Storage::getGlobalCache()->loadForStorageIds($bulkLoadStorageIds);
 
     $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
-    --self::$recursionLevel;
     return $mounts;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

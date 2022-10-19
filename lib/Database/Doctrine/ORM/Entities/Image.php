@@ -4,24 +4,27 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use OCP\Image as CloudImage;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
@@ -62,9 +65,13 @@ class Image extends File
   private $height;
 
   /**
-   * Allow construction from a cloud image obejct
+   * Allow construction from a cloud image obejct.
+   *
+   * @param null|string $fileName
+   *
+   * @param null|CloudImage $image
    */
-  public function __construct($fileName = null, ?\OCP\Image $image = null)
+  public function __construct(?string $fileName = null, ?CloudImage $image = null)
   {
     parent::__construct($fileName, $image->data(), $image->mimeType());
     $this->setWidth($image->width())
@@ -74,11 +81,11 @@ class Image extends File
   /**
    * Set $width.
    *
-   * @param int $imageData
+   * @param int $width
    *
    * @return Image
    */
-  public function setWidth(int $width = -1)
+  public function setWidth(int $width = -1):Image
   {
     $this->width = $width;
 
@@ -98,11 +105,11 @@ class Image extends File
   /**
    * Set $height.
    *
-   * @param int $imageData
+   * @param int $height
    *
    * @return Image
    */
-  public function setHeight(int $height= -1)
+  public function setHeight(int $height = -1):Image
   {
     $this->height = $height;
 

@@ -462,6 +462,7 @@ class EntityManager extends EntityManagerDecorator
       Types\EnumMemberStatus::class => 'enum',
       Types\EnumProjectTemporalType::class => 'enum',
       Types\EnumVCalendarType::class => 'enum',
+      Types\EnumDirEntryType::class => 'enum',
       // Ramsey\UuidType::class => null,
       // Ramsey\UuidBinaryType::class => 'binary',
       // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
@@ -1441,7 +1442,7 @@ class EntityManager extends EntityManagerDecorator
       throw new RuntimeException($this->l->t('EntityManager is not connected to database.'));
     }
 
-    $annotationClass = \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Annotation\Transformable::class;
+    $annotationClass = \OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Mapping\Transformable::class;
     $transformables = $this->propertiesByAnnotation($annotationClass);
 
     /** @var Doctrine\ORM\Listeners\Transformable\Encryption $transformer */

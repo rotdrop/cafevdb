@@ -4,25 +4,27 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use \DateTimeZone;
 use \DateTimeImmutable as DateTime;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -61,11 +63,12 @@ class InstrumentInsuranceService
   /** @var OpenDocumentFiller */
   private $documentFiller;
 
+  /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService
-    , EntityManager $entityManager
-    , OrganizationalRolesService $orgaRolesService
-    , OpenDocumentFiller $documentFiller
+    ConfigService $configService,
+    EntityManager $entityManager,
+    OrganizationalRolesService $orgaRolesService,
+    OpenDocumentFiller $documentFiller,
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -101,7 +104,7 @@ class InstrumentInsuranceService
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
-      $date = new \DateTimeImmutable();
+      $date = new DateTime();
     }
     $date = self::convertToTimezoneDate(self::convertToDateTime($date), $timeZone);
     $year = (int)$date->format('Y');
@@ -133,7 +136,7 @@ class InstrumentInsuranceService
    */
   private function yearFraction(\DateTimeInterface $insuranceStart, ?\DateTimeInterface $insuranceEnd, \DateTimeInterface $dueDate)
   {
-    $timeZone = $this->getDateTimeZone();
+    $timeZone = new DateTimeZone('UTC'); // $this->getDateTimeZone();
     $startDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceStart), $timeZone);
     $dueDate = self::convertToTimezoneDate(self::convertToDateTime($dueDate), $timeZone);
 
@@ -153,7 +156,7 @@ class InstrumentInsuranceService
     if (!empty($insuranceEnd)) {
       // to get the diff right -- $insuranceEnd is the last day where the
       // instrument was included by into the insurance, we have to add one
-      // day. E.g.: Start 01.07.YYYY, end 31.07.ZZZZ should yield one year and
+      // day. E.g.: Start 01.07.YYYY, end 30.06.ZZZZ should yield one year and
       // not 365 days.
       $endDate = self::convertToTimezoneDate(self::convertToDateTime($insuranceEnd), $timeZone)->modify('+1 day');
       $endDistance = $dueDate->diff($endDate);
@@ -187,13 +190,15 @@ class InstrumentInsuranceService
    * @param int|Entities\Musician $musicianOrId
    *
    * @param mixed string|\DateTimeInterface $date Compute until this
-   * date. Only the calendar-year of $date according to the timezone
+   * date. Only the calendar-year of $date according to the timezone.
    *
    * @return array<int, float>
    * ```[ YEAR => VALUE ]```
    *
    * @todo What happens if the rates change? The rates should have a
    * validity time-range.
+   *
+   * @todo This function appears to be unused.
    */
   public function insuranceFeesYearly($musicianOrId, $date = null)
   {
@@ -222,7 +227,7 @@ class InstrumentInsuranceService
       $startYear = $insuranceStart->format('Y');
 
       $lastDueDate = $this->dueDate($rate->getDueDate(), ($startYear - 1).'-06-01');
-      for ($year = $startYear; $year <= $currentYear; ++$year) {
+      for ($year = $startYear; $year <= $yearUntil; ++$year) {
         $dueDate = $this->dueDate($rate->getDueDate(), $year.'-06-01');
         if ($lastDueDate > $insuranceEnd) {
           break;
@@ -261,21 +266,24 @@ class InstrumentInsuranceService
    * starts at January 2nd, then the fees charged in year Y are for
    * Y/01/02 - (Y+1)/01/01.
    *
-    * @param int $musicianId
+   * @param int|Entities\Musician $musicianOrId Database entity or id.
    *
    * @param string|DateTime $date
    *
-   * @param bool $currentYearOnly
+   * @param null|array $dueInterval Return the minimum and maximum due dates
+   * found for the musician.
+   *
+   * @return float Insurance fees computed.
    */
-  public function insuranceFee($musicianId, $date = null, ?array &$dueInterval = null)
+  public function insuranceFee(mixed $musicianOrId, $date = null, ?array &$dueInterval = null):float
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
-      $date = new \DateTimeImmutable();
+      $date = new DateTime();
     }
     $date = self::convertToTimezoneDate($date, $timeZone);
 
-    $payables = $this->billableInsurances($musicianId);
+    $payables = $this->billableInsurances($musicianOrId);
 
     $fee = 0.0;
     /** @var \DateTimeInterface $minDueDate */
@@ -320,8 +328,22 @@ class InstrumentInsuranceService
    * array(BROKERSCOPE => RATE)
    *
    * where "RATE" is the actual fraction, not the percentage.
+   *
+   * @param bool $translate Translate the geographical scope names.
+   *
+   * @param bool $nested Affects the layout of the returned array. \true means
+   * to return a nested array
+   * ```
+   * [ BROKER => [ SCOPE => RATE, ... ], ... ]
+   * ```
+   * is returned. \false means to return an array
+   * ```
+   * [ BROKERSCOPE => [ 'rate' => RATE, 'due' => DUEDATE, 'policy' => POLICYNUMBER ], ... ]
+   * ```.
+   *
+   * @return array Depending on argument $nested.
    */
-  public function getRates($translate = false, $nested = false)
+  public function getRates(bool $translate = false, bool $nested = false):array
   {
     $rates = [];
     $nestedRates = [];
@@ -351,10 +373,11 @@ class InstrumentInsuranceService
   }
 
   /**
-   * Fetch all the insurance brokers from the data-base, return an
-   * array indexed by the short name.
+   * Fetch all the insurance brokers from the data-base.
+   *
+   * @return array  An array indexed by the short name of the broker.
    */
-  public function getBrokers()
+  public function getBrokers():array
   {
     $brokers = [];
     $entities = $this->getDatabaseRepository(Entities\InsuranceBroker::class)->findAll();
@@ -394,8 +417,14 @@ class InstrumentInsuranceService
    *   ]
    * ]
    * ```
+   *
+   * @param int|Entities\Musician $musicianOrId Database entity or its id.
+   *
+   * @param null|DateTime $date Determines the insurance year.
+   *
+   * @return array
    */
-  public function musicianOverview($musicianOrId, $date = null)
+  public function musicianOverview(mixed $musicianOrId, ?DateTime $date = null):array
   {
     $timeZone = $this->getDateTimeZone();
     if (empty($date)) {
@@ -475,11 +504,10 @@ class InstrumentInsuranceService
     }
 
     $annual     = 0.0;
-    $fractional = 0.0;
-    foreach($insuranceOverview['musicians'] as $id => $info) {
+    foreach ($insuranceOverview['musicians'] as $id => $info) {
       // ordinary annular fees
       $subTotals = 0.0;
-      foreach($info['items'] as $itemInfo) {
+      foreach ($info['items'] as $itemInfo) {
         $subTotals += $itemInfo['fee'];
       }
       $insuranceOverview['musicians'][$id]['subTotals'] = $subTotals;
@@ -492,10 +520,14 @@ class InstrumentInsuranceService
   }
 
   /**
-   *Small support function in order to generate a consistent
+   * Small support function in order to generate a consistent
    * file-name for the exported PDFs.
+   *
+   * @param array $overview As computed by musicianOverview().
+   *
+   * @return string
    */
-  public function musicianOverviewFileName($overview)
+  public function musicianOverviewFileName(array $overview):string
   {
     /** @var Entities\Musician $billToParty */
     $billToParty = $overview['billTo'];
@@ -522,12 +554,11 @@ class InstrumentInsuranceService
    * respective musician by SnailMail. The resulting letter will be
    * returned as string.
    *
-   * @param array $overview Data returned from InstrumentInsuranceService::musicianOverview()
+   * @param array $overview Data returned from InstrumentInsuranceService::musicianOverview().
    *
    * @param string $format Requested Mime-type. The resulting data may have a different mime-type.
    *
    * @return string The generated document data as PHP string.
-   *
    */
   public function musicianOverviewLetter(array $overview, string $format = 'application/pdf')
   {
@@ -539,13 +570,13 @@ class InstrumentInsuranceService
     }
 
     // Prepare the date doing some translations first
-    foreach($overview['musicians'] as $id => &$insurance) {
-      foreach($insurance['items'] as &$item) {
+    foreach ($overview['musicians'] as &$insurance) {
+      foreach ($insurance['items'] as &$item) {
         $item['scope'] = $this->l->t($item['scope']);
       }
     }
 
-    list($fileData, $mimeType, $generatedFileName) = $this->documentFiller->fill(
+    list($fileData, /* $mimeType, $generatedFileName */) = $this->documentFiller->fill(
       $templateFileName, [
         'instins' => $overview,
       ], [
@@ -632,10 +663,4 @@ class InstrumentInsuranceService
 
     return $billToParty;
   }
-
-};
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+}

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
+/** Key-storage for OpenSSL backend. */
 class OpenSSLAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
 {
   // NOPE. OpenSSL supports RSA-encryption only.
@@ -37,10 +38,10 @@ class OpenSSLAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
     'private_key_bits' => 4096,
   ];
 
-  static $name = 'openssl';
+  public static $name = 'openssl';
 
-  /** create a key-pair, but don't store it */
-  protected function createKeyPair()
+  /** {@inheritdoc} */
+  protected function createKeyPair():?array
   {
     $privKey = openssl_pkey_new(self::KEY_CONFIG);
 
@@ -59,8 +60,8 @@ class OpenSSLAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
     ];
   }
 
-  /** Decode the raw data fetch from whatever storage backend */
-  protected function unserializeKey(string $rawKeyMaterial, string $which)
+  /** {@inheritdoc} */
+  protected function unserializeKey(string $rawKeyMaterial, string $which):mixed
   {
     if ($which == self::PRIVATE_ENCRYPTION_KEY) {
       return openssl_pkey_get_private($rawKeyMaterial);
@@ -69,7 +70,7 @@ class OpenSSLAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
     }
   }
 
-  /** Serialize key to string for storage in whatever storage backend */
+  /** {@inheritdoc} */
   protected function serializeKey(mixed $key, string $which):string
   {
     if ($which == self::PRIVATE_ENCRYPTION_KEY) {
@@ -79,5 +80,4 @@ class OpenSSLAsymmetricKeyStorage extends CloudAsymmetricKeyStorage
       return $key;
     }
   }
-
 }

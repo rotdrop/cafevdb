@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+/** AJAX end-points in order to support encryption. */
 class EncryptionController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -66,13 +67,14 @@ class EncryptionController extends OCSController
   /** @var IL10N */
   protected $l;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , IAppContainer $appContainer
-    , AsymmetricKeyService $keyService
-    , ILogger $logger
-    , IL10N $l10n
+    $appName,
+    IRequest $request,
+    IAppContainer $appContainer,
+    AsymmetricKeyService $keyService,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     parent::__construct($appName, $request);
     $this->appContainer = $appContainer;
@@ -80,8 +82,13 @@ class EncryptionController extends OCSController
     $this->l = $l10n;
     $this->keyService = $keyService;
   }
+  // phpcs:enable
 
   /**
+   * @param null|string $userId
+   *
+   * @return Response
+   *
    * @NoAdminRequired
    * @NoGroupMemberRequired
    */
@@ -113,6 +120,12 @@ class EncryptionController extends OCSController
   }
 
   /**
+   * @param null|string $userId
+   *
+   * @param bool $notifyUser
+   *
+   * @return Response
+   *
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
   public function deleteRecryptRequest(string $userId, bool $notifyUser = true):Response
@@ -131,6 +144,10 @@ class EncryptionController extends OCSController
   }
 
   /**
+   * @param null|string $userId
+   *
+   * @return Response
+   *
    * @NoAdminRequired
    * @NoGroupMemberRequired
    */
@@ -150,6 +167,12 @@ class EncryptionController extends OCSController
   /**
    * Remove the row access token from the database table and the cloud's user
    * settings.
+   *
+   * @param string $userId
+   *
+   * @param bool $allowFailure
+   *
+   * @return Response
    *
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
@@ -186,6 +209,14 @@ class EncryptionController extends OCSController
   }
 
   /**
+   * @param null|string $userId
+   *
+   * @param bool $notifyUser
+   *
+   * @param bool $allowFailure
+   *
+   * @return Response
+   *
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
   public function handleRecryptRequest(string $userId, bool $notifyUser = true, bool $allowFailure = false):Response
@@ -224,21 +255,29 @@ class EncryptionController extends OCSController
   /**
    * Handle bulk recryption requests.
    *
-   * @param bool $grantAccess If true grant access, if false deny access
+   * @param bool $grantAccess If true grant access, if false deny access.
    *
-   * @param int $offset Start at the given offset
+   * @param bool $includeDisabled
+   *
+   * @param bool $includeDeactivated
+   *
+   * @param int $offset Start at the given offset.
    *
    * @param int $limit Work at most on that many musicians before returning.
    *
+   * @param int $projectId
+   *
+   * @return Response
+   *
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
-  public function bulkRecryptionRequest(bool $grantAccess, bool $includeDisabled, bool $includeDeactivated, int $offset, int $limit = 1, $projectId = 0):Response
+  public function bulkRecryptionRequest(bool $grantAccess, bool $includeDisabled, bool $includeDeactivated, int $offset, int $limit = 1, int $projectId = 0):Response
   {
     $this->entityManager = $this->appContainer->get(EntityManager::class);
     /** @var Repositories\MusiciansRepository */
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
-    $criteria = [ '!userIdSlug' => null, '!userIdSlug' => '' ];
+    $criteria = [ [ '!userIdSlug' => null ], [ '!userIdSlug' => '' ] ];
     if (!$includeDeactivated) {
       $criteria[] = [ '(|cloudAccountDeactivated' => false ];
       $criteria[] = [ 'cloudAccountDeactivated' => null ];
@@ -277,7 +316,12 @@ class EncryptionController extends OCSController
     }
   }
 
-  private function recryptForUser(string $userId)
+  /**
+   * @param string $userId
+   *
+   * @return null|string Encryption-key.
+   */
+  private function recryptForUser(string $userId):?string
   {
     $this->entityManager = $this->appContainer->get(EntityManager::class);
     /** @var Entities\Musician $musician */
@@ -299,7 +343,7 @@ class EncryptionController extends OCSController
       } catch (\Throwable $t) {
         $this->entityManager->rollback();
         $this->keyService->setSharedPrivateValue($userId, self::ROW_ACCESS_TOKEN_KEY, null);
-        $this->logException($t,'Unable to set row access-token for user ' . $userId);
+        $this->logException($t, 'Unable to set row access-token for user ' . $userId);
         throw new OCS\OCSBadRequestException($this->l->t('Unable to set row access-token for user "%s".', $userId), $t);
       }
 
@@ -340,7 +384,12 @@ class EncryptionController extends OCSController
     return $appEncryptionKey;
   }
 
-  private function isMatchingUserOrAdmin(?string $userId)
+  /**
+   * @param null|string $userId
+   *
+   * @return bool
+   */
+  private function isMatchingUserOrAdmin(?string $userId):bool
   {
     /** @var IUserSession $userSession */
     $userSession = $this->appContainer->get(IUserSession::class);
@@ -357,10 +406,4 @@ class EncryptionController extends OCSController
     $authorizationService = $this->appContainer->get(AuthorizationService::class);
     return $authorizationService->isAdmin($currentUserId);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Crypto;
 use OCP\AppFramework\IAppContainer;
 use OCP\Security\ICrypto;
 
+/** Factory using the Nextcloud crypto routines as backend. */
 class CloudCryptoFactory implements CryptoFactoryInterface
 {
   /** @var IAppContainer */
@@ -35,24 +36,32 @@ class CloudCryptoFactory implements CryptoFactoryInterface
   /** @var ICrypto */
   private $crypto;
 
+  /**
+   * @param IAppContainer $appContainer
+   *
+   * @param ICrypto $crypto
+   */
   public function __construct(
-    IAppContainer $appContainer
-    , ICrypto $crypto
+    IAppContainer $appContainer,
+    ICrypto $crypto,
   ) {
     $this->appContainer = $appContainer;
     $this->crypto = $crypto;
   }
 
+  /** {@inheritdoc} */
   public function getSymmetricCryptor(?string $encryptionKey = null):SymmetricCryptorInterface
   {
-    return new CloudSymmetricCryptor($crypto, $encryptionKey);
+    return new CloudSymmetricCryptor($this->crypto, $encryptionKey);
   }
 
-  public function getAsymmetricCryptor($privateKey = null):AsymmetricCryptorInterface
+  /** {@inheritdoc} */
+  public function getAsymmetricCryptor(mixed $privateKey = null):AsymmetricCryptorInterface
   {
     return new OpenSSLAsymmetricCryptor($privateKey);
   }
 
+  /** {@inheritdoc} */
   public function getAsymmetricKeyStorage():AsymmetricKeyStorageInterface
   {
     return $this->appContainer->get(OpenSSLAsymmetricKeyStorage::class);

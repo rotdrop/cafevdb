@@ -19,6 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
@@ -132,6 +133,7 @@ class EventsService
     $objectData = $event->getObjectData();
     $calendarIds = $this->defaultCalendars();
     $calendarId = $objectData['calendarid'];
+
     if (!in_array($calendarId, $calendarIds)) {
       // not for us
       return;
@@ -831,6 +833,32 @@ class EventsService
     $categories = VCalendarService::getCategories($vCalendar);
     $eventUID   = VCalendarService::getUid($vCalendar);
 
+    $type = VCalendarService::getVObjectType($vCalendar);
+
+    // As a temporary hack enforce all events to be public as there is
+    // currently no means to share calendars with really full-access. This is
+    // a missing delegation feature in NC.
+    if ($type == 'VEVENT') {
+      $vEvent = VCalendarService::getVObject($vCalendar);
+      if (!empty($vEvent->CLASS) && ($vEvent->CLASS == 'CONFIDENTIAL' || $vEvent->CLASS == 'PRIVATE')) {
+        $this->logInfo('FORCE EVENT ' . $eventURI . ' TO BE PUBLIC ' . $vEvent->CLASS);
+
+        // We first have to fetch the original event, as the data supplied by
+        // the change event carries already the disclosed form of the event.
+        $originalEvent = $this->calDavService->getCalendarObject($calId, $eventURI);
+        $originalVCalendar = VCalendarService::getVCalendar($originalEvent);
+
+        $vEvent = VCalendarService::getVObject($originalVCalendar);
+        $vEvent->CLASS = 'PUBLIC';
+
+        $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
+        $this->calDavService->updateCalendarObject($calId, $eventURI, $originalVCalendar);
+        return []; // there will be another event which then is used to update the project links.
+      }
+    }
+
     // Now fetch all projects and their names ...
     $projects = $this->projectService->fetchAll();
 
@@ -842,7 +870,6 @@ class EventsService
       $prKey = $project->getId();
       if (in_array($project->getName(), $categories)) {
         // register or update the event
-        $type = VCalendarService::getVObjectType($vCalendar);
         if ($this->register($project, $eventURI, $eventUID, $calId, $calURI, $type)) {
           $registered[] = $prKey;
         }
@@ -1245,6 +1272,17 @@ class EventsService
         }
       }
     }
+    if (array_key_exists('classification', $changeSet)) {
+      switch ($changeSet['classification']) {
+        case 'PUBLIC':
+        case 'PRIVATE':
+        case 'CONFIDENTIAL':
+          $vEvent->CLASS = $changeSet['classification'];
+          break;
+        default:
+          break;
+      }
+    }
     if (array_key_exists('alarm', $changeSet)) {
       $this->vCalendarService->addVAlarmsFromRequest($vCalendar, $vEvent, $changeSet);
     }
@@ -1354,7 +1392,7 @@ class EventsService
       'description' => 'Text',
       'location' => 'Where',
       'categories' => 'Cat1,Cat2',
-      'priority' => 10,
+      'priority' => 9,
       'from' => '01-11-2020',
       'fromtime' => '10:20:22',
       'to' => '30-11-2020',
@@ -1373,7 +1411,7 @@ class EventsService
       'description' => 'Text',
       'location' => 'Where',
       'categories' => 'Cat1,Cat2',
-      'priority' => 10,
+      'priority' => 9,
       'due' => '01-11-2020',
       'start' => '01-11-2020',
       'calendar' => 'calendarId',

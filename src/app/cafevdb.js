@@ -27,6 +27,8 @@ import { token as pmeToken } from './pme-selectors.js';
 import {
   backGroundPromise as toolTipsBackgroundPromise,
   rejectBackgroundPromise as rejectToolTipsBackgroundPromise,
+  getMarkCount,
+  setMarkCount,
 } from './jquery-cafevdb-tooltips.js';
 
 require('cafevdb.scss');
@@ -257,6 +259,97 @@ const snapperClose = function() {
   $('#navigation-list li.nav-heading a').trigger('click');
 };
 
+const toolTipSelectors = [
+  // by class
+  {
+    selector: [
+      '.tooltip-auto',
+      '.tooltip-left',
+      '.tooltip-right',
+      '.tooltip-top',
+      '.tooltip-bottom',
+    ].join(','),
+    options: {},
+  },
+  // auto
+  {
+    selector: [
+      '#app-navigation-toggle',
+    ].join(','),
+    options: {},
+  },
+  // left
+  {
+    selector: [
+      'a.action.delete',
+    ].join(','),
+    options: { placement: 'left' },
+  },
+  // right
+  {
+    selector: [
+      'select',
+      'option',
+      'button',
+      '#upload',
+      'input:not([type=hidden], .selectize-input-element)',
+      'textarea',
+    ].join(','),
+    options: { placement: 'right' },
+  },
+  // top wide
+  {
+    selector: [
+      'textarea.' + pmeToken('input'),
+      'input.' + pmeToken('input'),
+      'table.' + pmeToken('main') + ' td',
+    ].join(','),
+    options: {
+      placement: 'top',
+      cssclass: 'tooltip-wide',
+    },
+  },
+  // top
+  {
+    selector: [
+      'div.chosen-container',
+      'label',
+      '.displayName .action:not(.delete)',
+      '.password .action:not(.delete)',
+      '.selectedActions a',
+      'a.action:not(.delete)',
+      'td .modified',
+      'td.lastLogin',
+    ].join(','),
+    options: { placement: 'top' },
+  },
+  // bottom wide
+  {
+    selector: [
+      'select[class*="pme-filter"]',
+      'input[class*="pme-filter"]',
+      'td.' + pmeToken('sys') + ' ~ td.' + pmeToken('data') + ' .info',
+    ].join(','),
+    options: {
+      placement: 'bottom',
+      cssclass: 'tooltip-wide',
+    },
+  },
+  // bottom
+  {
+    selector: [
+      'button.settings',
+      '.' + pmeToken('sort'),
+      ['', pmeToken('check'), pmeToken('misc')].join('.'),
+      '.header-right img',
+      'img',
+      'li.' + pmeToken('navigation') + '.table-tabs',
+      'table.' + pmeToken('main') + ' th',
+    ].join(','),
+    options: { placement: 'bottom' },
+  },
+];
+
 /**
  * Initialize our tipsy stuff. Only exchange for our own thingies, of course.
  *
@@ -267,7 +360,10 @@ const snapperClose = function() {
 const toolTipsInit = function(containerSel) {
 
   console.time('TOOLTIPS');
+
   rejectToolTipsBackgroundPromise();
+
+  console.time('TOOLTIP PROMISE');
 
   if (typeof containerSel === 'undefined') {
     containerSel = '#content.app-' + appName;
@@ -276,63 +372,28 @@ const toolTipsInit = function(containerSel) {
 
   console.debug('tooltips container', containerSel, container.length);
 
-  // container.find('button.settings').cafevTooltip({ placement: 'bottom' });
-  container.find('select').cafevTooltip({ placement: 'right' });
-  container.find('option').cafevTooltip({ placement: 'right' });
-  container.find('div.chosen-container').cafevTooltip({ placement: 'top' });
-  container.find('button.settings').cafevTooltip({ placement: 'bottom' });
-  container.find('.' + pmeToken('sort')).cafevTooltip({ placement: 'bottom' });
-  container.find(['', pmeToken('check'), pmeToken('misc')].join('.')).cafevTooltip({ placement: 'bottom' });
-  container.find('label').cafevTooltip({ placement: 'top' });
-  container.find('.header-right img').cafevTooltip({ placement: 'bottom' });
-  container.find('img').cafevTooltip({ placement: 'bottom' });
-  container.find('button').cafevTooltip({ placement: 'right' });
-  container.find('li.' + pmeToken('navigation') + '.table-tabs').cafevTooltip({ placement: 'bottom' });
+  setMarkCount(0);
+  const timestamp = Date.now();
 
-  // pme input stuff and tables.
-  container.find('textarea.' + pmeToken('input')).cafevTooltip(
-    { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('input.' + pmeToken('input')).cafevTooltip(
-    { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('table.' + pmeToken('main') + ' td').cafevTooltip(
-    { placement: 'top', cssclass: 'tooltip-wide' });
-  container.find('table.' + pmeToken('main') + ' th').cafevTooltip(
-    { placement: 'bottom' });
+  for (const toolTipSpec of toolTipSelectors) {
+    const options = toolTipSpec.options;
+    options.timestamp = timestamp;
+    container.find(toolTipSpec.selector).cafevTooltip(options);
+  }
 
-  // original tipsy stuff
-  container.find('.displayName .action').cafevTooltip({ placement: 'top' });
-  container.find('.password .action').cafevTooltip({ placement: 'top' });
-  container.find('#upload').cafevTooltip({ placement: 'right' });
-  container.find('.selectedActions a').cafevTooltip({ placement: 'top' });
-  container.find('a.action.delete').cafevTooltip({ placement: 'left' });
-  container.find('a.action').cafevTooltip({ placement: 'top' });
-  container.find('td .modified').cafevTooltip({ placement: 'top' });
-  container.find('td.lastLogin').cafevTooltip({ placement: 'top', html: true });
-  container.find('input:not([type=hidden])').cafevTooltip({ placement: 'right' });
-  container.find('textarea').cafevTooltip({ placement: 'right' });
+  // for (const toolTipSpec of toolTipSelectors) {
+  //   toolTipSpec.options.timestamp = timestamp;
+  // }
 
-  // everything else.
-  container.find('.tip').cafevTooltip({ placement: 'right' });
+  // container.find('*').each(function() {
+  //   const $this = $(this);
+  //   for (const toolTipSpec of toolTipSelectors) {
+  //     if ($this.is(toolTipSpec.selector)) {
+  //       $this.cafevTooltip(toolTipSpec.options);
+  //     }
+  //   }
+  // });
 
-  container.find('select[class*="pme-filter"]').cafevTooltip(
-    { placement: 'bottom', cssclass: 'tooltip-wide' }
-  );
-  container.find('input[class*="pme-filter"]').cafevTooltip(
-    { placement: 'bottom', cssclass: 'tooltip-wide' }
-  );
-  container.find('td.' + pmeToken('sys') + ' ~ td.' + pmeToken('data') + ' .info').cafevTooltip(
-    { placement: 'bottom', cssclass: 'tooltip-wide' }
-  );
-
-  container.find('[class*="tooltip-"]').each(function(index) {
-    // console.log("tooltip autoclass", $(this), $(this).attr('title'));
-    $(this).cafevTooltip({});
-  });
-
-  container.find('#app-navigation-toggle').cafevTooltip();
-
-  // Tipsy greedily enables itself when attaching it to elements, so
-  // ...
   if (globalState.toolTipsEnabled) {
     $.fn.cafevTooltip.enable();
   } else {
@@ -340,10 +401,18 @@ const toolTipsInit = function(containerSel) {
   }
 
   toolTipsBackgroundPromise
-    .done((maxJobs) => console.info('TOOLTIP JOBS HANDLED', maxJobs))
-    .fail((maxJobs) => console.info('RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs));
+    .done((maxJobs) => {
+      console.timeEnd('TOOLTIP PROMISE');
+      console.info('TOOLTIP JOBS HANDLED', maxJobs);
+    })
+    .fail((maxJobs) => {
+      console.timeEnd('TOOLTIP PROMISE');
+      console.info('RECOMPUTE TOOLTIPS, TOOLTIPS HANDLED SO FAR', maxJobs);
+    });
 
   console.timeEnd('TOOLTIPS');
+
+  console.info('SKIPPED MARKED', getMarkCount());
 };
 
 export {

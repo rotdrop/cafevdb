@@ -517,6 +517,14 @@ field. If left blank, every logged in user is allowed to change this field.'),
               'open-parent' => $this->l->t('Open the containing folder using the file-app of the cloud.'),
             ],
             'show-empty-options' => $this->l->t('Show all field options even if they contain no data.'),
+            'total-fees' => [
+              'summary' => $this->l->t(
+                'The accumulated total of all service fees, reimbursements and salaries the participant has to pay or to receive (TOTALS/PAID/REMAINING).'
+              ),
+              'invoiced' => $this->l->t('The total amount invoiced for this participant. A negative amount means that the participant has to receive money from the orchestra.'),
+              'received' =>  $this->l->t('The total amount of money received from or paid to the participant. A negative amount means that the particiant has received money from the orchestra.'),
+              'outstanding' => $this->l->t('The total outstanding amount of money. A negative amount means that the orchestra has to pay money to the participant but did not yet do so.'),
+            ],
           ],
         ],
         'projects' => [
@@ -1072,9 +1080,6 @@ of the project name before the year is added.'),
       'project-personaldata-tab' => $this->l->t('Displays the personal data of the respective musicians, like address, email, date of birth if known, phone numbers.'),
 
       'project-remarks' => $this->l->t('Project specific remarks for this musician. Please check first if there is a special field for the things you want to note'),
-
-      'project-total-fee-summary' => $this->l->t(
-        'The accumulated total of all service fees, reimbursements and salaries the participant has to pay or to receive (TOTALS/PAID/REMAINING).'),
 
       'project-web-article-add' => $this->l->t('Add a new public web-page to the project by generating a new, empty concert announcement.'),
 

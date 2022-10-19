@@ -587,11 +587,14 @@ class UserStorage
    *
    * @param string $cloudPath The path in the cloud FS.
    *
-   * @return null|Entities\EncryptedFile
+   * @return null|Entities\DatabaseStorageDirEntry
    */
-  public function getDatabaseFile(string $cloudPath):?Entities\EncryptedFile
+  public function getDatabaseFile(string $cloudPath):?Entities\DatabaseStorageDirEntry
   {
     $cloudFile = $this->get($cloudPath);
+    if (empty($cloudFile)) {
+      return null;
+    }
     $storage = $cloudFile->getStorage();
 
     while ($storage instanceof WrapperStorage) {
@@ -604,7 +607,13 @@ class UserStorage
     }
 
     /** @var DatabaseStorage $storage */
-    return $storage->fileFromFileName($cloudFile->getInternalPath());
+    $dirEntry = $storage->fileFromFileName($cloudFile->getInternalPath());
+
+    if ($dirEntry instanceof Entities\DatabaseStorageDirEntry) {
+      return $dirEntry;
+    }
+
+    return null;
   }
 
   /**

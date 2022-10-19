@@ -1,23 +1,25 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -91,16 +93,6 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $participantFieldsData;
 
- /**
-   * @var \DateTimeImmutable
-   *
-   * Tracks changes in the fields data, in particular to catch deleted files
-   * for the database file-space.
-   *
-   * @ORM\Column(type="datetime_immutable", nullable=true)
-   */
-  private $participantFieldsDataChanged;
-
   /**
    * Link in the project instruments, may be more than one per participant.
    *
@@ -138,17 +130,31 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $sepaDebitMandate = null;
 
-  public function __construct() {
+  /**
+   * @var DatabaseStorage
+   *
+   * The root-directory entry for the potentially encrypted participant
+   * storage. This would also be available through the DatabaseStorages table,
+   * but we keep it here for convenient access.
+   *
+   * @ORM\OneToOne(targetEntity="DatabaseStorage", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
+   */
+  private $databaseDocuments;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|int|Project $project
    *
    * @return ProjectParticipant
    */
@@ -172,7 +178,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|int|Musician $musician
    *
    * @return ProjectParticipant
    */
@@ -196,11 +202,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set registration.
    *
-   * @param bool $registration
+   * @param null|bool $registration
    *
    * @return ProjectParticipant
    */
-  public function setRegistration($registration):ProjectParticipant
+  public function setRegistration(?bool $registration):ProjectParticipant
   {
     $this->registration = $registration;
 
@@ -220,11 +226,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set projectInstruments.
    *
-   * @param bool $projectInstruments
+   * @param Collection $projectInstruments
    *
    * @return ProjectParticipant
    */
-  public function setProjectInstruments($projectInstruments):ProjectParticipant
+  public function setProjectInstruments(Collection $projectInstruments):ProjectParticipant
   {
     $this->projectInstruments = $projectInstruments;
 
@@ -248,7 +254,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setParticipantFieldsData($participantFieldsData):ProjectParticipant
+  public function setParticipantFieldsData(Collection $participantFieldsData):ProjectParticipant
   {
     $this->participantFieldsData = $participantFieldsData;
 
@@ -266,16 +272,6 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Get participantFieldsDataChanged.
-   *
-   * @return Collection
-   */
-  public function getParticipantFieldsDataChanged():?\DateTimeInterface
-  {
-    return $this->participantFieldsDataChanged;
-  }
-
-  /**
    * Get one specific participant-field datum indexed by its key
    *
    * @param mixed $key Everything which can be converted to an UUID by
@@ -283,7 +279,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return null|ProjectParticipantFieldDatum
    */
-  public function getParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
+  public function getParticipantFieldsDatum(mixed $key):?ProjectParticipantFieldDatum
   {
     return $this->getByUuid($this->participantFieldsData, $key, 'optionKey');
   }
@@ -295,7 +291,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setPayments($payments):ProjectParticipant
+  public function setPayments(Collection $payments):ProjectParticipant
   {
     $this->payments = $payments;
 
@@ -315,7 +311,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set sepaBankAccount.
    *
-   * @param SepaBankAccount|null sepaBankAccount
+   * @param null|SepaBankAccount $sepaBankAccount
    *
    * @return ProjectParticipant
    */
@@ -339,7 +335,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set sepaDebitMandate.
    *
-   * @param SepaDebitMandate|null sepaDebitMandate
+   * @param null|SepaDebitMandate $sepaDebitMandate
    *
    * @return ProjectParticipant
    */
@@ -361,6 +357,30 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
+   * Set databaseDocuments.
+   *
+   * @param null|DatabaseStorage $databaseDocuments
+   *
+   * @return ProjectParticipant
+   */
+  public function setDatabaseDocuments(?DatabaseStorage $databaseDocuments):ProjectParticipant
+  {
+    $this->databaseDocuments = $databaseDocuments;
+
+    return $this;
+  }
+
+  /**
+   * Get databaseDocuments.
+   *
+   * @return DatabaseStorage|null
+   */
+  public function getDatabaseDocuments():?DatabaseStorage
+  {
+    return $this->databaseDocuments;
+  }
+
+  /**
    * @var null|array
    *
    * The array of changed field values.
@@ -368,9 +388,11 @@ class ProjectParticipant implements \ArrayAccess
   private $preUpdateValue = [];
 
   /**
-   * @ORM\PreUpdate
-   *
    * @param Event\PreUpdateEventArgs $event
+   *
+   * @return void
+   *
+   * @ORM\PreUpdate
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
@@ -385,9 +407,11 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * @ORM\PostUpdate
-   *
    * @param Event\LifecycleEventArgs $event
+   *
+   * @return void
+   *
+   * @ORM\PostUpdate
    */
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
@@ -404,9 +428,24 @@ class ProjectParticipant implements \ArrayAccess
    * Return the number of "serious" items which "use" this entity. For
    * project participant this is (for now) the number of payments. In
    * the long run: only open payments/receivables should count.
+   *
+   * @return int
    */
   public function usage():int
   {
     return $this->payments->count();
+  }
+
+    /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $musicianName = ($this->musician instanceof Musician)
+      ? $this->musician->getUserIdSlug() . ':' . $this->musician->getId()
+      : '?';
+    $projectName = ($this->project instanceof Project)
+      ? $this->project->getName() . ':' . $this->project->getId()
+      : '?';
+
+    return $musicianName . '@' . $projectName;
   }
 }

@@ -30,6 +30,7 @@ import * as Page from './page.js';
 import * as Dialogs from './dialogs.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import fileDownload from './file-download.js';
+import { pageRenderer } from './pme-state.js';
 import {
   valueSelector as pmeValueSelector,
   sys as pmeSys,
@@ -195,12 +196,16 @@ const ready = function(selector, pmeParameters, resizeCB) {
           const projectId = projectIds[0];
           const musicianId = musicianIds[0];
 
+          const recordId = $actionOption.data('data').recordId;
+          const compositePaymentId = recordId.id;
+
           projectPaymentPopup(selector, {
             projectId,
             musicianId,
+            [pmeData('id')]: compositePaymentId,
             [pmeData('Musicians:id')]: musicianId,
-            [pmeSys('rec')]: $actionOption.data('data').recordId,
-            [pmeSys('groupby_rec')]: { id: $actionOption.data('data').recordId.id, ProjectPayments_key: 0 },
+            [pmeSys('rec')]: recordId,
+            [pmeSys('groupby_rec')]: { id: compositePaymentId, ['ProjectPayments' + pageRenderer.masterFieldSuffix]: 0 },
           });
 
           return false;

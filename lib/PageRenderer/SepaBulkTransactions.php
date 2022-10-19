@@ -19,6 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
@@ -174,7 +175,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   }
 
   /** {@inheritdoc} */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectId       = $this->projectId;
@@ -407,22 +408,51 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'bank_account_id', [
         'tab' => [ 'id' =>[ 'bookings', ], ],
         'name'     => $this->l->t('IBAN'),
-        'css'      => [ 'postfix' => ' bank-account-iban squeeze-subsequent-lines' ],
+        'css'      => [
+          'postfix' => [
+            'bank-account-iban',
+            'squeeze-subsequent-lines',
+            'lazy-decryption',
+            'meta-data-popup',
+          ],
+        ],
         'select' => 'M',
         'sql' => $this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.bank_account_id',
         'values' => [
           'table' => "SELECT
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t.musician_id, __t.sequence) AS bank_account_id,
-  __t.iban AS iban
+  __t.iban AS sealed_value,
+  MD5(__t.iban) AS crypto_hash
   FROM ".self::SEPA_BANK_ACCOUNTS_TABLE." __t",
           'column' => 'bank_account_id',
           'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.bank_account_id',
-          'description' => self::trivialDescription('iban'),
+          'description' => [
+            'columns' => 'CONCAT("<span class=\"iban encryption-placeholder\"
+      data-crypto-hash=\"", $table.crypto_hash, "\"
+      title=\"' . $this->l->t('Fetching decrypted values in the background.') . '\"
+>'
+            . $this->l->t('please wait')
+            . '</span>")',
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+          ],
+          'data' => [
+            'crypto-hash' => '$table.crypto_hash',
+            'sealed-value' => '$table.sealed_value',
+            'meta-data' => "'iban'",
+          ],
         ],
         'php' => function($value, $op, $field, $row, $recordId, $pme) {
           $values = Util::explode(',', $value, Util::TRIM);
+          return implode('<br/>', $values);
           foreach ($values as &$value) {
-            $value = $this->ormDecrypt($value);
+            // $value = $this->ormDecrypt($value);
+            $value = '<span class="iban encryption-placeholder"
+      data-crypto-hash="' . $value . '"
+      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
+>'
+            . $this->l->t('please wait')
+            . '</span>';
           }
           return implode('<br/>', $values);
         },
@@ -430,6 +460,9 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
           'postfix' => '</div></div>',
           'popup' => 'data',
+          'attributes' => [
+            'data-meta-data' => 'iban',
+          ],
         ],
       ]);
 
@@ -680,10 +713,6 @@ __EOT__;
       $this->setDatabaseRepository(Entities\CompositePayment::class);
       $payment = $this->find($paymentId);
       $bulkTransaction->getPayments()->removeElement($payment);
-      // Remove the transaction data in order to force recomputation
-      foreach ($bulkTransaction->getSepaTransactionData() as $exportFile) {
-        $bulkTransaction->removeTransactionData($exportFile);
-      }
       $this->flush();
     }
 

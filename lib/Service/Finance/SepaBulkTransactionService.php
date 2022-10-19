@@ -19,14 +19,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \RuntimeException;
-use \InvalidArgumentException;
-use \DateTimeImmutable;
-use \DateTimeInterface;
+use RuntimeException;
+use InvalidArgumentException;
+use DateTimeImmutable;
+use DateTimeInterface;
+use UnexpectedValueException;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IDateTimeFormatter;
@@ -48,6 +50,7 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\VCalendarService;
+use OCA\CAFEVDB\Storage\Database\BankTransactionsStorage;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Service;
@@ -60,6 +63,7 @@ class SepaBulkTransactionService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Traits\TimeStampTrait;
 
   /**
    * @var int
@@ -115,7 +119,13 @@ class SepaBulkTransactionService
    */
   const BULK_TRANSACTION_EARLY_REMINDER_SECONDS = - (15 + 24) * 60 * 60; /* alert one day in advance */
 
+  /** @var string Export format AqBanking. */
   const EXPORT_AQBANKING = 'aqbanking';
+
+  /** @var array All supported exporters. */
+  const EXPORTERS = [
+    self::EXPORT_AQBANKING,
+  ];
 
   const SUBJECT_PREFIX_LIMIT = 16;
   const SUBJECT_PREFIX_SEPARATOR = ' / ';
@@ -124,7 +134,7 @@ class SepaBulkTransactionService
   const SUBJECT_OPTION_SEPARATOR = ': ';
 
   /** @var IAppContainer */
-  private $appContainer;
+  protected $appContainer;
 
   /** @var FinanceService */
   private $financeService;
@@ -253,7 +263,7 @@ class SepaBulkTransactionService
    * Handle bulk transaction pre notifications and gradually complete the
    * pre-notification task.
    *
-   * @param Entities\SepaDebitNote $bulkTransaction The bulk-transaction to modify.
+   * @param Entities\SepaDebitNote $debitNote The bulk-transaction to modify.
    *
    * @param Entities\CompositePayment $payment The composite payment which was announced.
    *
@@ -264,7 +274,7 @@ class SepaBulkTransactionService
     Entities\CompositePayment $payment,
   ):void {
 
-    try  {
+    try {
       $this->logInfo('TWEAK PRE NOTIFICATION TASK');
       $preNotificationTaskUri = $debitNote->getPreNotificationTaskUri();
       $preNotificationTask = $this->financeService->findFinanceCalendarEntry($preNotificationTaskUri);
@@ -281,7 +291,7 @@ class SepaBulkTransactionService
         }
         $this->eventsService->setCalendarTaskStatus($preNotificationTask, percentComplete: $percentage);
       }
-    }  catch (Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, 'Unable to tweak pre-notification task ' . $preNotificationTaskUri);
     }
 
@@ -462,7 +472,7 @@ class SepaBulkTransactionService
                       ->setSubject('');
 
     if (empty($receivableOptions)) {
-      return [ $payments, $totalAmount ];
+      return $compositePayment;
     }
 
     /** @var Entities\ProjectParticipantFieldDataOption $receivableOption */
@@ -509,7 +519,7 @@ class SepaBulkTransactionService
         $debitAmount = round($payableAmount - $paidAmount, 2);
         if ($debitAmount == 0.0) {
           // No need to debit empty amounts
-          // FIXME. Perhaps empty amounts should also be recorded.
+          // @todo Perhaps empty amounts should also be recorded.
           continue;
         }
         /** @var Entities\ProjectPayment $payment */
@@ -697,12 +707,8 @@ class SepaBulkTransactionService
     );
 
     try {
-      /** @var Entities\EncryptedFile $transactionData */
-      foreach ($bulkTransaction->getSepaTransactionData() as $transactionData) {
-        $bulkTransaction->removeTransactionData($transactionData);
-      }
+      // transaction data is handled in a separate listener.
       $this->remove($bulkTransaction, flush: true);
-
       $this->entityManager->commit();
 
     } catch (\Throwable $t) {
@@ -765,7 +771,7 @@ class SepaBulkTransactionService
    */
   public function generateTransactionData(
     Entities\SepaBulkTransaction $bulkTransaction,
-    ?Entities\Project $project,
+    ?Entities\Project $project = null,
     string $format = self::EXPORT_AQBANKING,
   ):?Entities\EncryptedFile {
 
@@ -781,9 +787,9 @@ class SepaBulkTransactionService
       }
       $exportFile = null;
     }
-    if (empty($exportFile)
-        || $bulkTransaction->getUpdated() > $exportFile->getUpdated()
-        || $bulkTransaction->getSepaTransactionDataChanged() > $exportFile->getUpdated()) {
+
+    if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
+
       /** @var IBulkTransactionExporter $exporter */
       $exporter = $this->getTransactionExporter($format);
       if (empty($exporter)) {
@@ -795,8 +801,20 @@ class SepaBulkTransactionService
         $transactionType = self::TRANSACTION_TYPE_DEBIT_NOTE;
       }
 
-      // FIXME: just for the timeStamp() function ...
-      $timeStamp = $this->appContainer->get(Service\ConfigService::class)->timeStamp();
+      $timeStamp = $this->timeStamp();
+
+      /** @var Entities\CompositePayment $payment */
+      foreach ($bulkTransaction->getPayments() as $payment) {
+        $paymentProject = $payment->getProject();
+        if (empty($project)) {
+          $project = $paymentProject;
+        } elseif ($project != $paymentProject) {
+          throw new UnexpectedValueException($this->l->t(
+            'Conflicting projects "%1$s" vs. "%2$s".', [
+              (string)$project,  (string)$paymentProject
+            ]));
+        }
+      }
 
       $fileName = implode('-', array_filter([
         $timeStamp,

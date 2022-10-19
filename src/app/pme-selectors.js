@@ -184,6 +184,11 @@ const pmeValueSelector = 'td.' + pmeToken('value');
 const pmeCellSelector = 'td.' + pmeToken('cell');
 
 /**
+ * Selector for filter
+ */
+const pmeFilterSelector = pmeToken('filter');
+
+/**
  * Genereate the default selector.
  *
  * @param {string} selector The selector to construct the final
@@ -269,6 +274,7 @@ export {
   pmeKeySelector as keySelector,
   pmeValueSelector as valueSelector,
   pmeCellSelector as cellSelector,
+  pmeFilterSelector as filterSelector,
 };
 
 // Local Variables: ***

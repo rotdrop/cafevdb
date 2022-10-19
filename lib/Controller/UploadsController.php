@@ -173,7 +173,6 @@ class UploadsController extends Controller
               $dbFile->getName()
             ));
           }
-          $dbFile->link(); // increase the link-count
         } else {
           /** @var Entities\EncryptedFile $dbFile */
           $dbFile = new $dbFileClass(
@@ -181,7 +180,7 @@ class UploadsController extends Controller
             data: $appFile->getContent(),
             mimeType: $appFile->getMimeType()
           );
-          $dbFile->setOriginalFileName($originalFileName);
+          $dbFile->setFileName($originalFileName);
         }
         if ($encrypted && $ownerId > 0) {
           $owner = $this->getDatabaseRepository(Entities\Musician::class)->find($ownerId);
@@ -270,8 +269,11 @@ class UploadsController extends Controller
         /** @var OCP\Files\File $cloudFile */
         $cloudFile = $this->userStorage->get($path);
 
-        /** @var Entities\EncryptedFile $dbFile */
+        /** @var Entities\DatabaseStorageFile $dbFile */
         $dbFile = $this->userStorage->getDatabaseFile($path);
+        if (!empty($dbFile) && !($dbFile instanceof Entities\DatabaseStorageFile)) {
+          return self::grumble($this->l->t('File "%s" referes to a database storage folder, we expected a plain file.', $path));
+        }
 
         if (empty($cloudFile)) {
           return self::grumble($this->l->t('File "%s" could not be found in cloud storage.', $path));
@@ -281,7 +283,7 @@ class UploadsController extends Controller
         }
 
         $fileName = $cloudFile->getName();
-        $fileEntityId = !empty($dbFile) ? $dbFile->getId() : null;
+        $fileEntityId = !empty($dbFile) ? $dbFile->getFile()->getId() : null;
 
         switch ($uploadMode) {
           case self::UPLOAD_MODE_TEST:

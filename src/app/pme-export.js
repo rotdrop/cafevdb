@@ -78,6 +78,7 @@ const pmeExportMenu = function(containerSel) {
   $exportSelect.chosen({
     disable_search: true,
     inherit_select_classes: true,
+    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
   });
 
   // install placeholder as first item if chosen is not active

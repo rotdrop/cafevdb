@@ -24,11 +24,11 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \Throwable;
-use \RuntimeException;
-use \DateTimeZone;
-use \NumberFormatter;
-use \DateTimeImmutable;
+use Throwable;
+use RuntimeException;
+use DateTimeZone;
+use NumberFormatter;
+use DateTimeImmutable;
 
 use OCP\IUser;
 use OCP\IGroup;
@@ -60,6 +60,7 @@ class ConfigService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\TimeStampTrait;
 
   /*-**************************************************************************
    *
@@ -273,6 +274,12 @@ class ConfigService
   /** @var IL10N */
   protected $appL10n;
 
+  /** @var string */
+  protected $appLocale;
+
+  /** @var string */
+  protected $appLanguage;
+
   /** @var IL10NFactory */
   private $l10NFactory;
 
@@ -280,7 +287,7 @@ class ConfigService
   private $urlGenerator;
 
   /** @var IDateTimeZone */
-  private $dateTimeZone;
+  protected $dateTimeZone;
 
   /** @var EncryptionService */
   private $encryptionService;
@@ -298,7 +305,12 @@ class ConfigService
   protected $timeFactory;
 
   /** @var IAppContainer */
-  private $appContainer;
+  protected $appContainer;
+
+  /**
+   * @var array<string, array<string, string>>
+   */
+  private $localeCountryNames = [];
 
   /**
    * {@inheritdoc}
@@ -495,11 +507,7 @@ class ConfigService
   public function getAppL10n():IL10N
   {
     if (empty($this->appL10n)) {
-      $appLocale = $this->getAppLocale();
-      $appLanguage = locale_get_primary_language($appLocale);
-      // The following is a hack because get() below does not underst .UTF-8 etc
-      $appLocale = $appLanguage . '_' . locale_get_region($appLocale);
-      $this->appL10n = $this->l10NFactory->get($this->appName, $appLanguage, $appLocale);
+      $this->appL10n = $this->appContainer->get(Registration::APP_L10N);
     }
     return $this->appL10n;
   }
@@ -1008,14 +1016,10 @@ class ConfigService
   public function getLocale(?string $lang = null):string
   {
     if (empty($lang)) {
-      $lang = $this->l10NFactory->findLanguage($this->appName);
-      if (empty($lang) || $lang == 'en') {
-        $lang = null;
-      }
-      $locale = $this->l10NFactory->findLocale($this->appName, $lang);
-      $lang = $this->l10NFactory->findLanguageFromLocale($this->appName, $locale);
+      $locale = $this->appContainer->get(Registration::USER_LOCALE);
       $this->logDebug('Locale seems to be ' . $locale);
       $this->logDebug('Language seems to be ' . $lang);
+      $lang = locale_get_primary_language($locale);
     } else {
       $locale = $lang;
     }
@@ -1038,11 +1042,10 @@ class ConfigService
    */
   public function getAppLocale():string
   {
-    $appLocale = $this->getConfigValue('orchestraLocale', $this->getLocale()) ?? self::DEFAULT_LOCALE;
-    if (strpos($appLocale, '.') === false) {
-      $appLocale .= '.UTF-8';
+    if (empty($this->appLocale)) {
+      $this->appLocale = $this->appContainer->get(Registration::APP_LOCALE);
     }
-    return $appLocale;
+    return $this->appLocale;
   }
 
   /**
@@ -1067,29 +1070,36 @@ class ConfigService
    */
   public function getAppLanguage():string
   {
-    return $this->getLanguage($this->getAppLocale());
+    if (empty($this->appLanguage)) {
+      $this->appLanguage =$this->appContainer->get(Registration::APP_LANGUAGE);
+    }
+    return $this->appLanguage;
   }
 
   /**
-   * @param null|string $locale Locale to use, if null the current user's locale.
+   * @param null|string $displayLocale Locale to use, if null the current user's locale.
    *
    * @return array An array of supported country-codes and names.
    */
-  public function localeCountryNames(?string $locale = null):array
+  public function localeCountryNames(?string $displayLocale = null):array
   {
-    if (!$locale) {
-      $locale = $this->getLocale();
+    if (!$displayLocale) {
+      $displayLocale = $this->getLocale();
     }
-    $language = locale_get_primary_language($locale);
+    $displayLanguage = locale_get_primary_language($displayLocale);
+    if (!empty($this->localeCountryNames[$displayLanguage])) {
+      return $this->localeCountryNames[$displayLanguage];
+    }
     $locales = resourcebundle_locales('');
     $countryCodes = array();
     foreach ($locales as $locale) {
       $country = locale_get_region($locale);
       if ($country) {
-        $countryCodes[$country] = locale_get_display_region($locale, $language);
+        $countryCodes[$country] = locale_get_display_region($locale, $displayLanguage);
       }
     }
     asort($countryCodes);
+    $this->localeCountryNames[$displayLanguage] = $countryCodes;
     return $countryCodes;
   }
 
@@ -1255,7 +1265,7 @@ class ConfigService
    *
    * @return string
    */
-  public function formatTimeStamp($date = null, ?string $format = null, ?\DateTimeZone $timeZone = null):string
+  public function formatTimeStamp($date = null, ?string $format = null, ?DateTimeZone $timeZone = null):string
   {
     if ($date === null) {
       $date = new DateTimeImmutable;
@@ -1281,7 +1291,7 @@ class ConfigService
    *
    * @return string
    */
-  public function timeStamp(?string $format = null, ?\DateTimeZone $timeZone = null):string
+  public function timeStamp(?string $format = null, ?DateTimeZone $timeZone = null):string
   {
     return $this->formatTimeStamp(new DateTimeImmutable, $format, $timeZone);
   }

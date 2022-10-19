@@ -29,13 +29,31 @@ import * as Email from './email.js';
 import * as PHPMyEdit from './pme.js';
 import fileDownload from './file-download.js';
 import modalizer from './modalizer.js';
+import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.js';
 
 require('sepa-bulk-transactions.scss');
+
+const backgroundDecryption = function(container) {
+  const $container = PHPMyEdit.container(container);
+  rejectDecryptionPromise();
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.done((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+  lazyDecrypt($container);
+};
 
 const ready = function(container, resizeCB) {
 
   // sanitize
   const $container = PHPMyEdit.container(container);
+
+  backgroundDecryption($container);
 
   $container
     .on('contextmenu', 'table.pme-main tr.bulk-transaction.first td', function(event) {
@@ -107,6 +125,7 @@ const documentReady = function() {
 
 export {
   documentReady,
+  backgroundDecryption,
   ready,
 };
 

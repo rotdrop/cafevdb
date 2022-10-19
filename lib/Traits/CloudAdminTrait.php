@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,10 +26,19 @@ namespace OCA\CAFEVDB\Traits;
 
 use OCP\IGroupManager;
 
+/** Get the cloud-admin contacts. */
 trait CloudAdminTrait
 {
   /**
    * Contact information for the overall admins.
+   *
+   * @param IGroupManager $groupManager
+   *
+   * @param bool $implode
+   *
+   * @return string|array If $implode == \true then a comma separated string
+   * with the email addresses is returned, other an array of arrays with
+   * 'name' and 'email' keys.
    */
   protected function getCloudAdminContacts(IGroupManager $groupManager, bool $implode = false)
   {

@@ -6,19 +6,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB;
@@ -63,10 +64,10 @@ $navigationControls = $pageNavigation->buttonsFromArray(
       'name' => $l->t('Reload'),
       'title' => $l->t('Reload the current view.'),
       'image' => [
-	image_path($appName, 'reload-solid.svg'),
-	image_path('core', 'loading.gif'),
+        image_path($appName, 'reload-solid.svg'),
+        image_path('core', 'loading.gif'),
       ],
-      'class' => 'reload navigation history tooltip-auto',
+      'class' => 'reload navigation history tooltip-auto flex-container flex-center flex-justify-center',
       'id' => 'reloadbutton',
       'type' => 'submitbutton',
     ],
@@ -154,7 +155,10 @@ if (!isset($_['headerblock']) && isset($_['header'])) {
 </div>
 <div id="app-content">
   <div id="app-inner-content">
-    <form id="personalsettings" class="visible personal-settings" method="post" action="?app=<?php echo $_['appName']; ?>">
+    <form id="personalsettings"
+          class="visible personal-settings flex-container flex-center flex-justify-full"
+          method="post"
+          action="?app=<?php echo $_['appName']; ?>">
       <?php echo $navigationControls; ?>
       <div class="buttonseparator"></div>
       <?php echo $settingsControls; ?>

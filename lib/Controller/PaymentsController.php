@@ -32,6 +32,7 @@ use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\Files\SimpleFS\ISimpleFile;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -39,7 +40,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Storage\UserStorage;
-use OCP\Files\SimpleFS\ISimpleFile;
+use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;
@@ -51,12 +52,16 @@ class PaymentsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   public const DOCUMENT_ACTION_UPLOAD = 'upload';
   public const DOCUMENT_ACTION_DELETE = 'delete';
 
   /** @var ReqeuestParameterService */
   private $parameterService;
+
+  /** @var StorageFactory */
+  private $storageFactory;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -65,11 +70,13 @@ class PaymentsController extends Controller
     RequestParameterService $parameterService,
     ConfigService $configService,
     EntityManager $entityManager,
+    StorageFactory $storageFactory,
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
     $this->configService = $configService;
     $this->entityManager = $entityManager;
+    $this->storageFactory = $storageFactory;
     $this->l = $this->l10N();
   }
 
@@ -183,6 +190,8 @@ class PaymentsController extends Controller
         $this->entityManager->beginTransaction();
         try {
 
+          $storage = $this->storageFactory->getProjectParticipantsStorage($compositePayment->getProjectParticipant());
+
           switch ($uploadMode) {
             case UploadsController::UPLOAD_MODE_MOVE:
               $this->entityManager->registerPreCommitAction(new Common\UndoableFileRemove($originalFilePath, gracefully: true));
@@ -195,13 +204,7 @@ class PaymentsController extends Controller
               $mimeType = $mimeTypeDetector->detectString($fileContent);
 
               if (!empty($supportingDocument) && $supportingDocument->getNumberOfLinks() > 1) {
-                // if the file has multiple links then it is probably
-                // better to remove the existing file rather than
-                // overwriting a file which has multiple links.
-                if (!empty($supportingDocument->getOriginalFileName())) {
-                  // undo greedily modified filename
-                  $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
-                }
+                $storage->removeCompositePayment($compositePayment, flush:true);
                 $compositePayment->setSupportingDocument(null); // will decrease the link-count
                 $supportingDocument = null;
               }
@@ -219,7 +222,7 @@ class PaymentsController extends Controller
                   ->setSize(strlen($fileContent))
                   ->getFileData()->setData($fileContent);
               }
-              $supportingDocument->setOriginalFileName($originalFileName);
+              $supportingDocument->setFileName($originalFileName);
 
               break;
             case UploadsController::UPLOAD_MODE_LINK:
@@ -231,11 +234,9 @@ class PaymentsController extends Controller
                 ]));
               }
               if (!empty($supportingDocument)) {
+                $storage->removeCompositePayment($compositePayment, flush: true);
                 if ($supportingDocument->getNumberOfLinks() == 0) {
                   $this->remove($supportingDocument, flush: true);
-                } elseif (!empty($supportingDocument->getOriginalFileName())) {
-                  // undo greedily modified filename
-                  $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
                 }
               }
               $supportingDocument = $originalFile;
@@ -244,26 +245,14 @@ class PaymentsController extends Controller
           }
 
           $this->persist($supportingDocument);
-          $compositePayment->setSupportingDocument($supportingDocument);
+          $this->flush(); // we need the file id
 
-          if ($supportingDocument->getNumberOfLinks() ==  1) {
-            // only tweak the file name if we are the only user.
-            $supportingDocumentFileName = basename($supportingDocumentFileName);
-            $extension = Util::fileExtensionFromMimeType($mimeType);
-            if (empty($extension) && $file['name']) {
-              $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-            }
-            if (!empty($extension)) {
-              $supportingDocumentFileName = pathinfo($supportingDocumentFileName, PATHINFO_FILENAME) . '.' . $extension;
-            }
-            $originalFileName = $supportingDocument->getFileName();
-            if (!empty($originalFileName) && $originalFileName != $supportingDocumentFileName) {
-              $supportingDocument->setOriginalFileName($originalFileName);
-            }
-            $supportingDocument->setFileName($supportingDocumentFileName);
-          }
+          $compositePayment->setSupportingDocument($supportingDocument);
+          $dirEntry = $storage->addCompositePayment($compositePayment, flush: false);
 
           $this->flush();
+
+          $supportingDocumentFileName = $dirEntry->getName();
 
           $this->entityManager->commit();
         } catch (\Throwable $t) {
@@ -339,9 +328,6 @@ class PaymentsController extends Controller
         $compositePayment->setSupportingDocument(null);
         if ($supportingDocument->getNumberOfLinks() == 0) {
           $this->remove($supportingDocument, flush: true);
-        } elseif (!empty($supportingDocument->getOriginalFileName())) {
-          $supportingDocument->setFileName($supportingDocument->getOriginalFileName());
-          $this->flush();
         }
 
         return self::response($this->l->t('Successfully deleted the supporting document for the payment "%1$s", please upload a new one!', $compositePaymentId));

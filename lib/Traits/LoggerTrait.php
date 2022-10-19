@@ -4,40 +4,67 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Traits;
 
-use \OCP\ILogger;
+use Throwable;
+use OCP\ILogger;
 
+/**
+ * Utility trait providing functions for logging messages the cloud
+ * log-file.
+ */
 trait LoggerTrait
 {
   /** @var ILogger */
   protected $logger;
 
-  /** Return the stored logger class */
+  /** @return ILogger The stored logger class. */
   public function logger():ILogger
   {
     return $this->logger;
   }
 
-  public function log(int $level, string $message, array $context = [], $shift = 0, bool $showTrace = false) {
-    ++$shift; // relative to the caller of this function
+  /**
+   * Log the given message at the given level. The function optionally
+   * provides a backtrace functionality and determines the file, line, class
+   * and method of the calling context.
+   *
+   * @param int $level
+   *
+   * @param string $message
+   *
+   * @param array $context
+   *
+   * @param int $shift Additional shift for determining the calling
+   * context. Can be set to something larger than 0 if this method is called
+   * from another logging method in order get the backtrace right.
+   *
+   * @param bool $showTrace
+   *
+   * @return void
+   *
+   * @see \OCP\ILogger
+   */
+  public function log(int $level, string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
+  {
     $trace = debug_backtrace();
     $prefix = '';
     $shift = min($shift, count($trace));
@@ -52,15 +79,35 @@ trait LoggerTrait
 
       $prefix .= $file.':'.$line.': '.$class.'::'.$method.'(): ';
     } while ($showTrace && --$shift > 0);
-    return $this->logger()->log($level, $prefix.$message, $context);
+    $this->logger()->log($level, $prefix.$message, $context);
   }
 
-  public function logException($exception, $message = null, $shift = 0, bool $showTrace = false) {
+   /**
+   * Log the given message at the given level. The function optionally
+   * provides a backtrace functionality and determines the file, line, class
+   * and method of the calling context.
+   *
+   * @param Throwable $exception
+   *
+   * @param null|string|array $message Message or log-context.
+   *
+   * @param int $shift Additional shift for determining the calling
+   * context. Can be set to something larger than 0 if this method is called
+   * from another logging method in order get the backtrace right.
+   *
+   * @param bool $showTrace
+   *
+   * @return void
+   *
+   * @see \OCP\ILogger
+   */
+  public function logException(Throwable $exception, mixed $message = null, int $shift = 0, bool $showTrace = false):void
+  {
     $trace = debug_backtrace();
     $caller = $trace[$shift];
     $file = $caller['file']??'unknown';
     $line = $caller['line']??0;
-    $caller = $trace[$shift+1];
+    $caller = $trace[$shift + 1];
     $class = $caller['class'];
     $method = $caller['function'];
 
@@ -77,24 +124,123 @@ trait LoggerTrait
     $this->logger()->logException($exception, $context);
   }
 
-  public function logError(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
-    return $this->log(ILogger::ERROR, $message, $context, $shift, $showTrace);
+  /**
+   * Log the given message at the given level. The function optionally
+   * provides a backtrace functionality and determines the file, line, class
+   * and method of the calling context.
+   *
+   * @param string $message
+   *
+   * @param array $context
+   *
+   * @param int $shift Additional shift for determining the calling
+   * context. Can be set to something larger than 0 if this method is called
+   * from another logging method in order get the backtrace right.
+   *
+   * @param bool $showTrace
+   *
+   * @return void
+   *
+   * @see \OCP\ILogger
+   */
+  public function logError(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
+  {
+    $this->log(ILogger::ERROR, $message, $context, $shift, $showTrace);
   }
 
-  public function logDebug(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
-    return $this->log(ILogger::DEBUG, $message, $context, $shift, $showTrace);
+  /**
+   * Log the given message at the given level. The function optionally
+   * provides a backtrace functionality and determines the file, line, class
+   * and method of the calling context.
+   *
+   * @param string $message
+   *
+   * @param array $context
+   *
+   * @param int $shift Additional shift for determining the calling
+   * context. Can be set to something larger than 0 if this method is called
+   * from another logging method in order get the backtrace right.
+   *
+   * @param bool $showTrace
+   *
+   * @return void
+   *
+   * @see \OCP\ILogger
+   */
+  public function logDebug(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
+  {
+    $this->log(ILogger::DEBUG, $message, $context, $shift + 1, $showTrace);
   }
 
-  public function logInfo(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
-    return $this->log(ILogger::INFO, $message, $context, $shift, $showTrace);
+  /**
+   * Log the given message at the given level. The function optionally
+   * provides a backtrace functionality and determines the file, line, class
+   * and method of the calling context.
+   *
+   * @param string $message
+   *
+   * @param array $context
+   *
+   * @param int $shift Additional shift for determining the calling
+   * context. Can be set to something larger than 0 if this method is called
+   * from another logging method in order get the backtrace right.
+   *
+   * @param bool $showTrace
+   *
+   * @return void
+   *
+   * @see \OCP\ILogger
+   */
+  public function logInfo(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
+  {
+    $this->log(ILogger::INFO, $message, $context, $shift + 1, $showTrace);
   }
 
-  public function logWarn(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
-    return $this->log(ILogger::WARN, $message, $context, $shift, $showTrace);
+  /**
+   * Log the given message at the given level. The function optionally
+   * provides a backtrace functionality and determines the file, line, class
+   * and method of the calling context.
+   *
+   * @param string $message
+   *
+   * @param array $context
+   *
+   * @param int $shift Additional shift for determining the calling
+   * context. Can be set to something larger than 0 if this method is called
+   * from another logging method in order get the backtrace right.
+   *
+   * @param bool $showTrace
+   *
+   * @return void
+   *
+   * @see \OCP\ILogger
+   */
+  public function logWarn(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
+  {
+    $this->log(ILogger::WARN, $message, $context, $shift + 1, $showTrace);
   }
 
-  public function logFatal(string $message, array $context = [], $shift = 0, bool $showTrace = false) {
-    return $this->log(ILogger::FATAL, $message, $context, $shift, $showTrace);
+  /**
+   * Log the given message at the given level. The function optionally
+   * provides a backtrace functionality and determines the file, line, class
+   * and method of the calling context.
+   *
+   * @param string $message
+   *
+   * @param array $context
+   *
+   * @param int $shift Additional shift for determining the calling
+   * context. Can be set to something larger than 0 if this method is called
+   * from another logging method in order get the backtrace right.
+   *
+   * @param bool $showTrace
+   *
+   * @return void
+   *
+   * @see \OCP\ILogger
+   */
+  public function logFatal(string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
+  {
+    $this->log(ILogger::FATAL, $message, $context, $shift + 1, $showTrace);
   }
-
 }

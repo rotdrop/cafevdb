@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
+use RuntimeException;
+
 use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
@@ -37,7 +39,6 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use \phpMyEdit as PME;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -144,40 +145,40 @@ class ProjectParticipantFields extends PMETableViewBase
   /** @var ProjectParticipantFieldsService */
   private $participantFieldsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , InstrumentationService $instrumentationService
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
-    , FuzzyInputService $fuzzyInput
-    , ProjectParticipantFieldsService $participantFieldsService
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    InstrumentationService $instrumentationService,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
+    FuzzyInputService $fuzzyInput,
+    ProjectParticipantFieldsService $participantFieldsService,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->instrumentationService = $instrumentationService;
     $this->fuzzyInput = $fuzzyInput;
     $this->participantFieldsService = $participantFieldsService;
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     if ($this->projectId > 0) {
-      return $this->l->t("Participant-Fields for Project %s",
-                         array($this->projectName));
+      return $this->l->t("Participant-Fields for Project %s", [ $this->projectName ]);
     } else {
       return $this->l->t("Extra Fields for Projects");
     }
   }
 
-  /** Show the underlying table. */
-  public function render(bool $execute = true)
+  /** {@inheritdoc} */
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
-    $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
 
     $opts = [];
@@ -274,12 +275,12 @@ class ProjectParticipantFields extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-      case self::OPTIONS_TABLE:
-        $this->optionsTable =
-          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, ['label', 'tooltip']);
-        break;
-      default:
-        break;
+        case self::OPTIONS_TABLE:
+          $this->optionsTable =
+            $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, ['label', 'tooltip']);
+          break;
+        default:
+          break;
       }
     });
 
@@ -401,7 +402,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'valueData' => array_map('json_encode', $this->participantFieldsService->multiplicityTypeMask()),
     ];
 
-    $dataTypeIndex = count($opts['fdd']);
+    // $dataTypeIndex = count($opts['fdd']);
     $opts['fdd']['data_type'] =[
       'name'    => $this->l->t('Data-Type'),
       'tab' => [ 'id' => 'definition' ],
@@ -444,7 +445,7 @@ class ProjectParticipantFields extends PMETableViewBase
         ],
       ]);
 
-    /**************************************************************************
+    /*-*************************************************************************
      *
      * Define field for the option values table in order to fetch the
      * old state automatically.
@@ -458,7 +459,7 @@ class ProjectParticipantFields extends PMETableViewBase
           'sql' => ($column == 'key')
           ? "GROUP_CONCAT(DISTINCT BIN2UUID(\$join_col_fqn) ORDER BY \$join_col_fqn ASC)"
           : "GROUP_CONCAT(DISTINCT CONCAT(BIN2UUID(\$join_table.key), '".parent::JOIN_KEY_SEP."', \$join_col_fqn) ORDER BY \$join_table.key ASC)",
-      ]);
+        ]);
     }
 
     /*
@@ -684,7 +685,7 @@ __EOT__;
           $defaultRow = $this->participantFieldsService->findDataOption($value, $allowed);
           if (!empty($defaultRow['data'])) {
             $value = $defaultRow['data'];
-          } else if ($multiplicity != Multiplicity::SIMPLE && !empty($defaultRow['label'])) {
+          } elseif ($multiplicity != Multiplicity::SIMPLE && !empty($defaultRow['label'])) {
             $value = $defaultRow['label'];
           } else {
             $value = null;
@@ -1038,73 +1039,75 @@ __EOT__;
    * Cleanup "trigger" which relocates several virtual inputs to their
    * proper destination columns.
    *
-   * phpMyEdit calls the trigger (callback) with the following arguments:
+   * @param PHPMyEdit $pme The phpMyEdit instance.
    *
-   * @param $pme The phpMyEdit instance
+   * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param $op The operation, 'insert', 'update' etc.
+   * @param string $step 'before' or 'after'.
    *
-   * @param $step 'before' or 'after'
+   * @param array $oldValues Self-explanatory.
    *
-   * @param $oldvals Self-explanatory.
+   * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param &$newvals Set of new values, which may also be modified.
+   * @param null|array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  public function beforeUpdateOrInsertTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     if ($op === PHPMyEdit::SQL_QUERY_INSERT) {
-      // populate the empty $oldvals array with null in order to have
+      // populate the empty $oldValues array with null in order to have
       // less undefined array key accesses.
-      $oldvals = array_fill_keys(array_keys($newvals), null);
+      $oldValues = array_fill_keys(array_keys($newValues), null);
     }
 
-    $this->debugPrintValues($oldvals, $changed, $newvals, null, 'before');
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
-    if ($newvals['name'] === Constants::README_NAME) {
-      throw new Exceptions\EnduserNotificationException($this->l->t('The name "%1$s" is reserved by the app in order to provide general help texts in the file-system and may not be used as a field-name.', Constants::README_NAME));
+    if ($newValues['name'] === Constants::README_NAME) {
+      throw new Exceptions\EnduserNotificationException(
+        $this->l->t(
+          'The name "%1$s" is reserved by the app in order to provide general help texts in the file-system'
+          . ' and may not be used as a field-name.',
+          Constants::README_NAME));
     }
 
     // make sure writer-acls are a subset of reader-acls
-    $writers = preg_split('/\s*,\s*/', $newvals['writers'], -1, PREG_SPLIT_NO_EMPTY);
-    $readers = preg_split('/\s*,\s*/', $newvals['readers'], -1, PREG_SPLIT_NO_EMPTY);
+    $writers = preg_split('/\s*,\s*/', $newValues['writers'], -1, PREG_SPLIT_NO_EMPTY);
+    $readers = preg_split('/\s*,\s*/', $newValues['readers'], -1, PREG_SPLIT_NO_EMPTY);
     $missing = array_diff($writers, $readers);
     if (!empty($missing)) {
       $readers = array_merge($readers, $missing);
-      $newvals['Readers'] = implode(',', $readers);
+      $newValues['Readers'] = implode(',', $readers);
     }
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Add the data from NewTab to Tab
      *
      */
     $tag = 'display_order';
-    if (empty($newvals[$tag])) {
-      $newvals[$tag] = null;
+    if (empty($newValues[$tag])) {
+      $newValues[$tag] = null;
       Util::unsetValue($changed, $tag);
-      if ($newvals[$tag] !== ($oldvals[$tag]??null)) {
+      if ($newValues[$tag] !== ($oldValues[$tag]??null)) {
         $changed[] = $tag;
       }
     }
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Move the data from NewTab to Tab
      *
      */
 
     $tag = 'new_tab';
-    if (!empty($newvals[$tag]) && empty($newvals['tab'])) {
-      $newvals['tab'] = $newvals[$tag];
+    if (!empty($newValues[$tag]) && empty($newValues['tab'])) {
+      $newValues['tab'] = $newValues[$tag];
       $changed[] = 'tab';
     }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+    self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Remove tab definitions resulting from data-type specs
      *
@@ -1120,74 +1123,74 @@ __EOT__;
       }
     }
 
-    if (empty($newvals[$tag]) && ($newvals[$tag]??null) !== null) {
-      $newvals[$tag] = null;
+    if (empty($newValues[$tag]) && ($newValues[$tag]??null) !== null) {
+      $newValues[$tag] = null;
     }
 
-    if (($oldvals[$tag] ?? null) !== ($newvals[$tag] ?? null)) {
+    if (($oldValues[$tag] ?? null) !== ($newValues[$tag] ?? null)) {
       $changed[] = $tag;
     }
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Sanitize tooltip.
      *
      */
 
     $tag = 'tooltip';
-    if (!empty($newvals[$tag])) {
-      $purified = $this->fuzzyInput->purifyHTML($newvals[$tag]);
+    if (!empty($newValues[$tag])) {
+      $purified = $this->fuzzyInput->purifyHTML($newValues[$tag]);
       if (empty($purified)) {
-        $this->logDebug('ORIG: '.$newvals[$tag].' PURIFIED '.$purified);
+        $this->logDebug('ORIG: '.$newValues[$tag].' PURIFIED '.$purified);
       } else {
         $this->logDebug('PURIFIED '.$purified);
       }
-      $newvals[$tag] = $purified;
+      $newValues[$tag] = $purified;
       Util::unsetValue($changed, $tag);
-      if ($newvals[$tag] !== $oldvals[$tag]) {
+      if ($newValues[$tag] !== $oldValues[$tag]) {
         $changed[] = $tag;
       }
     }
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Move the data from default_multi_value to default_value
      *
      */
 
     $tag = 'default_multi_value';
-    if ($newvals['multiplicity'] === Multiplicity::MULTIPLE ||
-        $newvals['multiplicity'] === Multiplicity::PARALLEL) {
-      $value = $newvals[$tag]??null;
-      $newvals['default_value'] = strlen($value) < 36 ? null : $value;
+    if ($newValues['multiplicity'] === Multiplicity::MULTIPLE ||
+        $newValues['multiplicity'] === Multiplicity::PARALLEL) {
+      $value = $newValues[$tag]??null;
+      $newValues['default_value'] = strlen($value) < 36 ? null : $value;
     }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+    self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Move the data from default_single_value to default_value
      *
      */
 
     $tag = 'default_single_value';
-    if ($newvals['multiplicity'] == Multiplicity::SINGLE) {
-      $value = $newvals[$tag];
-      $newvals['default_value'] = strlen($value) < 36 ? null : $value;
+    if ($newValues['multiplicity'] == Multiplicity::SINGLE) {
+      $value = $newValues[$tag];
+      $newValues['default_value'] = strlen($value) < 36 ? null : $value;
     }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+    self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Recurring fields do not have a default value, the value is computed.
      *
      */
-    if ($newvals['multiplicity'] == Multiplicity::RECURRING) {
-      unset($newvals['default_value']);
+    if ($newValues['multiplicity'] == Multiplicity::RECURRING) {
+      unset($newValues['default_value']);
     }
 
-    /************************************************************************
+    /*-**********************************************************************
      *
-     * groupofpeople is an optional group with only one optional data
+     * The groupofpeople is an optional group with only one optional data
      * item and a common maximum group size. A usage example would be
      * the collection of twin-room preferences, where the data would
      * be a potential service-fee for twin-room accomodation.
@@ -1196,14 +1199,14 @@ __EOT__;
      */
 
     $tag = 'maximum_group_size';
-    if ($newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
-      $first = array_key_first($newvals['data_options_groupofpeople']);
-      $newvals['data_options_groupofpeople'][$first]['key'] = Uuid::NIL;
-      $newvals['data_options_groupofpeople'][$first]['limit'] = $newvals[$tag];
+    if ($newValues['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
+      $first = array_key_first($newValues['data_options_groupofpeople']);
+      $newValues['data_options_groupofpeople'][$first]['key'] = Uuid::NIL;
+      $newValues['data_options_groupofpeople'][$first]['limit'] = $newValues[$tag];
     }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+    self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Move the data from data_options_single to
      * data_options.
@@ -1211,15 +1214,15 @@ __EOT__;
      */
 
     $tag = 'data_options_single';
-    if ($newvals['multiplicity'] == Multiplicity::SINGLE) {
-      $first = array_key_first($newvals[$tag]);
-      $newvals[$tag][$first]['label'] = $newvals['name'];
-      $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
-      $newvals['data_options'] = $newvals[$tag];
+    if ($newValues['multiplicity'] == Multiplicity::SINGLE) {
+      $first = array_key_first($newValues[$tag]);
+      $newValues[$tag][$first]['label'] = $newValues['name'];
+      $newValues[$tag][$first]['tooltip'] = $newValues['tooltip'] ?? null;
+      $newValues['data_options'] = $newValues[$tag];
     }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+    self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Move the data from data_options_groupofpeople to
      * data_options.
@@ -1227,15 +1230,15 @@ __EOT__;
      */
 
     $tag = 'data_options_groupofpeople';
-    if ($newvals['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
-      $first = array_key_first($newvals[$tag]);
-      $newvals[$tag][$first]['label'] = $newvals['name'];
-      $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'];
-      $newvals['data_options'] = $newvals[$tag];
+    if ($newValues['multiplicity'] == Multiplicity::GROUPOFPEOPLE) {
+      $first = array_key_first($newValues[$tag]);
+      $newValues[$tag][$first]['label'] = $newValues['name'];
+      $newValues[$tag][$first]['tooltip'] = $newValues['tooltip'];
+      $newValues['data_options'] = $newValues[$tag];
     }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+    self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Move the data from data_options_simple to data_options and set
      * the default value to just this single option.
@@ -1243,43 +1246,43 @@ __EOT__;
      */
 
     $tag = 'data_options_simple';
-    if ($newvals['multiplicity'] == Multiplicity::SIMPLE) {
-      $first = array_key_first($newvals[$tag]);
-      $newvals[$tag][$first]['label'] = $newvals['name'];
-      $newvals[$tag][$first]['tooltip'] = $newvals['tooltip'] ?? '';
-      $newvals['data_options'] = $newvals[$tag];
+    if ($newValues['multiplicity'] == Multiplicity::SIMPLE) {
+      $first = array_key_first($newValues[$tag]);
+      $newValues[$tag][$first]['label'] = $newValues['name'];
+      $newValues[$tag][$first]['tooltip'] = $newValues['tooltip'] ?? '';
+      $newValues['data_options'] = $newValues[$tag];
 
-      $newvals['default_value'] = $first;
+      $newValues['default_value'] = $first;
       if ($op != PHPMyEdit::SQL_QUERY_INSERT && empty(Uuid::asUuid($first))) {
-        throw new \RuntimeException(
+        throw new RuntimeException(
           $this->l->t('Simple field-option key is not an UUID: "%s".', $key));
       }
     }
-    self::unsetRequestValue($tag, $oldvals, $changed, $newvals);
+    self::unsetRequestValue($tag, $oldValues, $changed, $newValues);
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Compute change status for default value
      *
      */
 
     Util::unsetValue($changed, 'default_value');
-    if ($newvals['default_value'] !== ($oldvals['default_value']??null)) {
+    if ($newValues['default_value'] !== ($oldValues['default_value']??null)) {
       $changed[] = 'default_value';
     }
 
-    /************************************************************************
+    /*-**********************************************************************
      *
      * Sanitize data_options
      *
      */
 
-    if (!is_array($newvals['data_options'])) {
+    if (!is_array($newValues['data_options'])) {
       // textfield
-      $allowed = $this->participantFieldsService->explodeDataOptions($newvals['data_options'], false);
+      $allowed = $this->participantFieldsService->explodeDataOptions($newValues['data_options'], false);
     } else {
-      $allowed = $newvals['data_options'];
-      if ($newvals['multiplicity'] == Multiplicity::RECURRING) {
+      $allowed = $newValues['data_options'];
+      if ($newValues['multiplicity'] == Multiplicity::RECURRING) {
         // index -1 holds the generator information
 
         // sanitize
@@ -1300,18 +1303,18 @@ __EOT__;
 
     // @todo is this still necessary?
     $this->debug('ALLOWED BEFORE REEXPLODE '.print_r($allowed, true));
-    $newvals['data_options'] =
+    $newValues['data_options'] =
       $this->participantFieldsService->explodeDataOptions(
         $this->participantFieldsService->implodeDataOptions($allowed), false);
 
     Util::unsetValue($changed, 'data_options');
 
-    $this->debug('ALLOWED BEFORE RESHAPE '.print_r($newvals['data_options'], true));
+    $this->debug('ALLOWED BEFORE RESHAPE '.print_r($newValues['data_options'], true));
 
     // convert allowed values from array to table format as understood by
     // our PME legacy join table stuff.
     $optionValues = [];
-    foreach ($newvals['data_options'] as $key => $allowedValue) {
+    foreach ($newValues['data_options'] as $key => $allowedValue) {
       $keyField = $this->joinTableFieldName(self::OPTIONS_TABLE, 'key');
       $optionValues[$keyField][] = $key;
       foreach ($allowedValue as $field => $value) {
@@ -1320,8 +1323,8 @@ __EOT__;
         }
         if (empty($value)) {
           $value = is_numeric($value) ? $value : null;
-        } else if ($key != Uuid::NIL && $field == 'data') {
-          switch ($newvals['data_type']) {
+        } elseif ($key != Uuid::NIL && $field == 'data') {
+          switch ($newValues['data_type']) {
             case DataType::DATE:
               $date = DateTime::parseFromLocale($value, $this->getLocale(), 'UTC');
               $value = $date->format('Y-m-d');
@@ -1335,8 +1338,8 @@ __EOT__;
         $field = $this->joinTableFieldName(self::OPTIONS_TABLE, $field);
         $optionValues[$field][] = $value === null ? null : $key.self::JOIN_KEY_SEP.$value;
       }
-      if (($newvals['multiplicity'] == Multiplicity::SIMPLE
-           || $newvals['multiplicity'] == Multiplicity::SINGLE)
+      if (($newValues['multiplicity'] == Multiplicity::SIMPLE
+           || $newValues['multiplicity'] == Multiplicity::SINGLE)
           && $key != Uuid::NIL
           && empty($allowedValue['deleted'])) {
         break;
@@ -1347,16 +1350,16 @@ __EOT__;
 
     foreach ($optionValues as $field => $fieldData) {
       //  TODO: eliminate empty field-data
-      $newvals[$field] = Util::implode(self::VALUES_SEP, $fieldData);
-      if ($newvals[$field] != ($oldvals[$field]??null)) {
+      $newValues[$field] = Util::implode(self::VALUES_SEP, $fieldData);
+      if ($newValues[$field] != ($oldValues[$field]??null)) {
         $changed[] = $field;
       }
     }
 
     $changed = array_values(array_unique($changed));
-    self::unsetRequestValue('data_options', $oldvals, $changed, $newvals);
+    self::unsetRequestValue('data_options', $oldValues, $changed, $newValues);
 
-    $this->debugPrintValues($oldvals, $changed, $newvals, null, 'after');
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
 
     $this->changeSetSize = count($changed);
 
@@ -1364,27 +1367,24 @@ __EOT__;
   }
 
   /**
-   * phpMyEdit calls the trigger (callback) with the following arguments:
+   * @param PHPMyEdit $pme The phpMyEdit instance.
    *
-   * @param $pme The phpMyEdit instance
+   * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param $op The operation, 'insert', 'update' etc.
+   * @param string $step 'before' or 'after'.
    *
-   * @param $step 'before' or 'after'
+   * @param array $oldValues Self-explanatory.
    *
-   * @param $oldvals Self-explanatory.
+   * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param &$newvals Set of new values, which may also be modified.
+   * @param null|array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    *
    * @todo Check whether something needs to be done with the ORM-cascade
    * stuff.
-   *
    */
-  public function beforeDeleteTrigger(&$pme, $op, $step, $oldvals, &$changed, &$newvals)
+  public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     $this->participantFieldsService->deleteField($pme->rec);
 
@@ -1393,7 +1393,12 @@ __EOT__;
     return true; // but run further triggers if appropriate
   }
 
-  private function optionKeys($fieldId)
+  /**
+   * @param null|int $fieldId May be null in add mode.
+   *
+   * @return iterable All option kleys for the given field.
+   */
+  private function optionKeys(?int $fieldId):iterable
   {
     return $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class)->optionKeys($fieldId);
   }
@@ -1403,11 +1408,11 @@ __EOT__;
    * corresponding to the multi-choice fields.
    *
    * @param array $value One row of the form as returned form
-   * self::explodeDataOptions()
+   * self::explodeDataOptions().
    *
    * @param integer $index A unique row number.
    *
-   * @param boolean $used Whether the DB already contains data
+   * @param null|boolean $used Whether the DB already contains data
    * records referring to this item.
    *
    * @param string $dataType Curent data-type in order to establish some
@@ -1415,10 +1420,10 @@ __EOT__;
    *
    * @return string HTML data for one row.
    */
-  public function dataOptionInputRowHtml($value, $index, $used, $dataType = null)
+  public function dataOptionInputRowHtml(array $value, int $index, bool $used, ?string $dataType = null):string
   {
     $pfx = $this->pme->cgiDataName('data_options');
-    $key = $value['key'];
+    // $key = $value['key'];
     $deleted = !empty($value['deleted']);
     $data = ''
           .' data-index="'.$index.'"' // real index
@@ -1522,7 +1527,7 @@ __EOT__;
           'not-multiplicity-groupofpeople-set-deposit-due-date-required',
           'set-deposit-due-date-required',
           'not-data-type-service-fee-hidden',
-      ])
+        ])
     );
     $html .= '<td class="'.$cssClass.'"><input'
           .($deleted ? ' readonly="readonly"' : '')
@@ -1575,7 +1580,7 @@ __EOT__;
    * is one single text input for a new name which triggers creation
    * of a new input row from the JS change event.
    *
-   * @param int $fieldId Id of the current field in change mode.
+   * @param null|int $fieldId Id of the current field in change mode, may be null in add mode.
    *
    * @param int $numberOfOptions The number of already set options s.t. the
    * placeholder row can generator indices for new options.
@@ -1586,7 +1591,7 @@ __EOT__;
    *
    * @return string HTML data for the generator button.
    */
-  private function dataOptionGeneratorHtml($fieldId, $numberOfOptions, $generatorItem)
+  private function dataOptionGeneratorHtml(?int $fieldId, int $numberOfOptions, mixed $generatorItem):string
   {
     $pfx = $this->pme->cgiDataName('data_options');
     $html = '
@@ -1634,7 +1639,7 @@ __EOT__;
       if (array_search($tag, $availableUpdateStrategies) === false) {
         $flags |= PageNavigation::DISABLED;
         $flags &= ~PageNavigation::SELECTED; // don't select disabled options
-      } else if (count($availableUpdateStrategies) == 1) {
+      } elseif (count($availableUpdateStrategies) == 1) {
         $flags |= PageNavigation::SELECTED; // select the only available option.
       }
       $option = [
@@ -1660,12 +1665,11 @@ __EOT__;
 <tr
   class="'.$cssClass.'"
   data-generator-slug="'.$generatorSlug.'"
-  data-generators=\''.json_encode(
+  data-generators=\'' . json_encode(
     array_merge(
       array_map([ $this->l, 't' ], array_keys($generators)),
       array_values($generators)
-    )
-  ).'\'
+    )) . '\'
   data-field-id="'.$fieldId.'"
   data-available-update-strategies=\''.json_encode($availableUpdateStrategies).'\'
 >
@@ -1695,8 +1699,9 @@ __EOT__;
       name="recurringReceivablesUpdateStrategy"
       title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategy']).'"
     >
-' . $updateStrategies
-. '
+'
+      . $updateStrategies
+      . '
     </select>
     <input
       class="field-data recurring-multiplicity-required"
@@ -1758,12 +1763,29 @@ __EOT__;
    * show | expert-mode |       |      | groupofpeople  | service-fee |
    *      |             |       |      | groupsofpeople |             |
    *      |             |       |      | date/time (?)  |             |
+   *
+   * @param mixed $value
+   *
+   * @param string $op
+   *
+   * @param null|int $fieldId May be null in add mode.
+   *
+   * @param null|string $multiplicity
+   *
+   * @param null|string $dataType
+   *
+   * @return string
    */
-  private function showDataOptions($value, $op, $fieldId, $multiplicity = null, $dataType = null)
-  {
+  private function showDataOptions(
+    mixed $value,
+    string $op,
+    ?int $fieldId,
+    ?string $multiplicity = null,
+    ?string $dataType = null,
+  ):string {
     $this->logDebug('OPTIONS so far: '.print_r($value, true));
     $allowed = $this->participantFieldsService->explodeDataOptions($value);
-    if ($op === PME::OPERATION_DISPLAY) {
+    if ($op === PHPMyEdit::OPERATION_DISPLAY) {
       if (count($allowed) == 1) {
         // "1" means empty (headerline)
         return '';
@@ -1792,8 +1814,8 @@ __EOT__;
                 $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
               }
               return $fieldValue;
-          default:
-            return '['.$this->l->t('empty').']'.' / '.$singleOption['data'];
+            default:
+              return '['.$this->l->t('empty').']'.' / '.$singleOption['data'];
           }
       }
     }
@@ -2017,19 +2039,25 @@ __EOT__;
    * The strategy is to pick the first non-deleted option or the first
    * non-deleted generator option for Multiplicity::GROUPOFPEOPLE.
    *
-   * @return null|array
+   * @param mixed $dataOptions
+   *
+   * @param null|string $multiplicity May be null in add mode.
+   *
+   * @param null|string $dataType May be null in add mode.
+   *
+   * @return array
    */
-  private function getAllowedSingleValue($dataOptions, $multiplicity, $dataType)
+  private function getAllowedSingleValue(mixed $dataOptions, ?string $multiplicity, ?string $dataType):array
   {
     $allowed = $this->participantFieldsService->explodeDataOptions($dataOptions, false);
     $entry = null;
-    foreach ($allowed as $key => $option) {
-      if (!empty($item['deleted'])) {
+    foreach ($allowed as $option) {
+      if (!empty($option['deleted'])) {
         continue;
       }
       if ($option['key'] == Uuid::NIL && $multiplicity == Multiplicity::GROUPOFPEOPLE) {
         $entry = $option;
-      } else if (empty($entry)) {
+      } elseif (empty($entry)) {
         $entry = $option;
       }
     }
@@ -2043,13 +2071,31 @@ __EOT__;
   /**
    * Display the input stuff for a single-value choice and simple input values.
    *
+   * @param mixed $dataOptions
+   *
+   * @param string $op
+   *
+   * @param null|string $toolTip
+   *
+   * @param null|string $multiplicity May be null in add mode.
+   *
+   * @param null|string $dataType May be null in add mode.
+   *
    * @param string $multiplicityVariant The multiplicity-variant this is emitted for.
+   *
+   * @return string HTML fragment.
    */
-  private function showAllowedSingleValue($dataOptions, $op, $toolTip, $multiplicity, $dataType, $multiplicityVariant)
-  {
+  private function showAllowedSingleValue(
+    mixed $dataOptions,
+    string $op,
+    ?string $toolTip,
+    ?string $multiplicity,
+    ?string $dataType,
+    string $multiplicityVariant,
+  ):string {
     list($entry, $allowed) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
     $value = $entry['data'];
-    if ($op === PME::OPERATION_DISPLAY) {
+    if ($op === PHPMyEdit::OPERATION_DISPLAY) {
       return $this->currencyValue($value);
     }
     $key = $entry['key'];
@@ -2146,7 +2192,7 @@ __EOT__;
       if ($multiplicity != Multiplicity::GROUPOFPEOPLE) {
         $option['deleted'] = (new DateTime)->getTimestamp();
       }
-      foreach(['key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted'] as $field) {
+      foreach (['key', 'label', 'data', 'deposit', 'limit', 'tooltip', 'deleted'] as $field) {
         $value = htmlspecialchars($option[$field]);
         $html .=<<<__EOT__
 <input class="pme-input data-options-{$multiplicityVariant}"
@@ -2164,8 +2210,12 @@ __EOT__;
   /**
    * Return a currency value where the number symbol can be hidden
    * by CSS.
+   *
+   * @param mixed $value
+   *
+   * @return string HTML fragment.
    */
-  private function currencyValue($value)
+  private function currencyValue(mixed $value):string
   {
     return
       '<span class="service-fee-alternatives">
@@ -2177,8 +2227,14 @@ __EOT__;
   /**
    * Return an alternate "Amount [CUR]" label which can be hidden by
    * CSS.
+   *
+   * @param string $label
+   *
+   * @param string $prefix
+   *
+   * @return string HTML fragment.
    */
-  private function currencyLabel($label, $prefix = '')
+  private function currencyLabel(string $label, string $prefix = ''):string
   {
     return
       '<span class="service-fee-alternatives">
@@ -2187,7 +2243,14 @@ __EOT__;
 </span>';
   }
 
-  static private function ifFileSystemEntry($ifTrue, $ifFalse)
+  /**
+   * @param string $ifTrue SQL value if this is a FS entry.
+   *
+   * @param string $ifFalse SQL value if this is not a FS entry.
+   *
+   * @return string SQL fragment.
+   */
+  private static function ifFileSystemEntry(string $ifTrue, string $ifFalse):string
   {
     return 'IF($main_table.data_type IN ("'
       . DataType::CLOUD_FILE . '", "'

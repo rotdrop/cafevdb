@@ -4,48 +4,69 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use RuntimeException;
+use RegexIterator;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use FilesystemIterator;
+
+use OCP\IL10N;
+use OCP\ILogger;
+use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\IMigration;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
 
+/** Manage database migrations. */
 class MigrationsService
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   private const MIGRATIONS_FOLDER = __DIR__ . '/../Maintenance/Migrations/';
   private const MIGRATIONS_NAMESPACE = 'OCA\CAFEVDB\\Maintenance\\Migrations';
 
+  /** @var IAppContainer */
+  private $appContainer;
+
+  /** @var null|array */
   private $unappliedMigrations = null;
 
+  // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , EntityManager $entityManager
+    IL10N $l10n,
+    ILogger $logger,
+    IAppContainer $appContainer,
+    EntityManager $entityManager,
   ) {
-    $this->configService = $configService;
+    $this->l = $l10n;
+    $this->logger = $logger;
+    $this->appContainer = $appContainer;
     $this->entityManager = $entityManager;
-    $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Check whether there need any migrations to be applied.
@@ -58,7 +79,12 @@ class MigrationsService
     return !empty($this->unappliedMigrations);
   }
 
-  public function applyAll()
+  /**
+   * Apply all found migrations, stop when one is failing.
+   *
+   * @return void
+   */
+  public function applyAll():void
   {
     $this->ensureMigrationsAreLoaded();
     foreach ($this->unappliedMigrations as $version => $className) {
@@ -72,24 +98,33 @@ class MigrationsService
     }
   }
 
-  public function getUnapplied()
+  /**
+   * @return array All unapplied migrations. The migration classes are
+   * instatiated using depency injection with the app-container.
+   */
+  public function getUnapplied():array
   {
     if (!$this->entityManager->connected()) {
       return [];
     }
     $this->ensureMigrationsAreLoaded();
-    return array_map(function($className) { return  $this->di($className)->description(); }, $this->unappliedMigrations);
+    return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->unappliedMigrations);
   }
 
-  public function getAll()
+  /**
+   * @return array Get all migration classes, instantiate all of them via
+   * dependency injection with the app-container.
+   */
+  public function getAll():array
   {
     if (!$this->entityManager->connected()) {
       return [];
     }
-    return array_map(function($className) { return $this->di($className)->description(); }, $this->findMigrations(self::MIGRATIONS_FOLDER));
+    return array_map(fn($className) => $this->appContainer->get($className)->description(), $this->findMigrations(self::MIGRATIONS_FOLDER));
   }
 
-  public function getLatest()
+  /** @return string The latest migration in the migrations folder. */
+  public function getLatest():string
   {
     return $this->findLatestVersion();
   }
@@ -98,8 +133,10 @@ class MigrationsService
    * Apply the migration with the given version
    *
    * @param string $version
+   *
+   * @return void
    */
-  public function apply(string $version)
+  public function apply(string $version):void
   {
     $allMigrations = $this->findMigrations(self::MIGRATIONS_FOLDER);
     if (!empty($allMigrations[$version])) {
@@ -110,24 +147,33 @@ class MigrationsService
   /**
    * Get the description of the migration with the given version
    *
-   * @param string $version
+   * @param string $className The version (which is also the class-name).
    *
-   * @return string $version
+   * @return string The description
    */
-  public function description(string $version):string
+  public function description(string $className):string
   {
     /** @var IMigration $instance */
-    $instance = $this->di($className);
+    $instance = $this->appContainer->get($className);
     return $instance->description();
   }
 
-  protected function applyMigration(string $version, string $className)
+  /**
+   * Apply the given migration.
+   *
+   * @param string $version
+   *
+   * @param string $className
+   *
+   * @return void
+   */
+  protected function applyMigration(string $version, string $className):void
   {
     /** @var IMigration $instance */
-    $instance = $this->di($className);
+    $instance = $this->appContainer->get($className);
     $result = $instance->execute();
     if ($result !== true) {
-      throw new \RuntimeException($this->l->t("Migration %s has failed to execute.", $className));
+      throw new RuntimeException($this->l->t("Migration %s has failed to execute.", $className));
     }
 
     /** @var Entities\Migration $migrationRecord */
@@ -136,11 +182,21 @@ class MigrationsService
     $this->flush();
   }
 
-  protected function ensureMigrationsAreLoaded()
+  /**
+   * Ensure all unapplied migrations are loaded.
+   *
+   * @return void
+   */
+  protected function ensureMigrationsAreLoaded():void
   {
-    $this->unappliedMigrations = $this->findUnappliedMigrations(self::MIGRATIONS_FOLDER);
+    if ($this->unappliedMigrations === null) {
+      $this->unappliedMigrations = $this->findUnappliedMigrations(self::MIGRATIONS_FOLDER);
+    }
   }
 
+  /**
+   * @return null|string The most recent migration applied, as stored in the database.
+   */
   protected function findLatestVersion():?string
   {
     if (!$this->entityManager->connected()) {
@@ -163,6 +219,13 @@ class MigrationsService
     return $latestMigration->getVersion();
   }
 
+  /**
+   * Find all unapplied migrations.
+   *
+   * @param string $directory
+   *
+   * @return array
+   */
   protected function findUnappliedMigrations(string $directory):array
   {
     $allMigrations = $this->findMigrations($directory);
@@ -174,6 +237,11 @@ class MigrationsService
       }, ARRAY_FILTER_USE_KEY);
   }
 
+  /**
+   * @param string $directory
+   *
+   * @return array
+   */
   protected function findMigrations(string $directory):array
   {
     $directory = realpath($directory);
@@ -181,10 +249,10 @@ class MigrationsService
       return [];
     }
 
-    $iterator = new \RegexIterator(
-      new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS),
-        \RecursiveIteratorIterator::LEAVES_ONLY
+    $iterator = new RegexIterator(
+      new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::LEAVES_ONLY
       ),
       '#^.+\\/Version\d+\\.php$#i',
       \RegexIterator::GET_MATCH);
@@ -212,7 +280,6 @@ class MigrationsService
 
     return $migrations;
   }
-
 }
 
 // Local Variables: ***

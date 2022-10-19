@@ -39,7 +39,12 @@ import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
-import selectValues from './select-values.js';
+import { pageRenderer } from './pme-state.js';
+import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.js';
 import {
   sys as pmeSys,
   formSelector as pmeFormSelector,
@@ -346,6 +351,14 @@ const myLoadProjectParticipants = function(form, musicians, afterLoadCallback) {
 const myReady = function(selector, dialogParameters, resizeCB) {
   selector = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(selector);
+
+  rejectDecryptionPromise(); // terminate previous calls
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.done((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+  lazyDecrypt(container);
 
   Musicians.contactValidation(container);
 
@@ -659,7 +672,9 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     const label = nameParts[0];
     const fieldId = nameParts[1];
     // const column = nameParts[2];
-    const groupFieldName = label + '@' + fieldId + ':' + 'option_key';
+    const groupFieldName = label
+          + pageRenderer.valuesTableSep + fieldId
+          + pageRenderer.joinFieldNameSeparator + 'option_key';
     console.log('group id name', groupFieldName);
     self.data('groupField', form.find('[name="' + groupFieldName + '"]'));
     self.data('fieldId', fieldId);
@@ -710,16 +725,16 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     } else {
       if (!musicianSelectedPrev && !musicianSelectedCur && curSelected.length > 0) {
         // add current record
-        console.log('add record', musicianId);
+        console.debug('group add record', musicianId);
         SelectUtils.optionByValue($self, musicianId).prop('selected', true);
         changed = true;
       }
       if (added.length === 1) {
         const singleNewOption = SelectUtils.optionByValue($self, added[0]);
-        console.log('other people group option', singleNewOption);
-        console.log('key', musicianId);
+        console.debug('other people group option', singleNewOption);
+        console.debug('key', musicianId);
         const data = singleNewOption.data('data');
-        console.log('option data', data);
+        console.debug('option data', data);
         if (parseInt(data.groupId) !== -1) {
           console.log('group: ', data.groupId);
           selectGroup($self, data.groupId);
@@ -745,7 +760,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     curSelected = $self.val() || [];
     $self.data('selected', curSelected);
 
-    console.info('DATA', $self.data());
+    console.debug('DATA', $self.data());
 
     const groupId = $self.data('groupField').val();
     const limit = groupId ? $self.data('groups')[groupId].limit : -1;
@@ -758,7 +773,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
         { isHTML: true, timeout: 30 }
       );
       console.log('exceeding limit');
-      selectValues($self, prevSelected);
+      SelectUtils.selected($self, prevSelected);
     } else {
       Notification.hide();
     }
@@ -770,12 +785,25 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   });
 
   // mailing list subscritions
-  form.find('.mailing-list.project .subscription-dropdown .subscription-action').on('click', function(event) {
+  form.find('.mailing-list.project .subscription-dropdown .subscription-action').on('click', function(event, triggerData) {
     const $this = $(this);
     const operation = $this.data('operation');
     if (!operation) {
       return;
     }
+    triggerData = triggerData || { setup: false };
+
+    let cleanup = () => $this.removeClass('busy').closest('.dropdown-container').removeClass('busy');
+    let onFail = (xhr, status, errorThrown) => Ajax.handleError(xhr, status, errorThrown, cleanup);
+
+    if (triggerData.setup) {
+      // don't annoy the user with an error message on page load.
+      cleanup = () => {};
+      onFail = () => {};
+    } else {
+      $this.addClass('busy').closest('.dropdown-container').addClass('busy');
+    }
+
     const post = function(force) {
       $.post(
         generateUrl('projects/participants/mailing-list/' + operation), {
@@ -783,9 +811,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
           musicianId,
           force,
         })
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown);
-        })
+        .fail(onFail)
         .done(function(data, textStatus, request) {
           if (data.status === 'unconfirmed') {
             Dialogs.confirm(
@@ -802,7 +828,9 @@ const myReady = function(selector, dialogParameters, resizeCB) {
                 default: 'cancel',
               });
           } else {
-            Notification.messages(data.message);
+            if (!triggerData.setup) {
+              Notification.messages(data.message);
+            }
             if (data.status !== 'unchanged') {
               const $statusDisplay = $this.closest('.pme-value').find('.mailing-list.project.status.status-label');
               const $statusDropDown = $this.closest('.pme-value').find('.mailing-list.project.status.dropdown-container');
@@ -817,6 +845,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
                 $statusDropDown.addClass(newFlag);
               }
               $statusDisplay.html(t(appName, data.summary));
+              cleanup();
             }
           }
         });
@@ -824,13 +853,15 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     post(false);
     return false;
   });
+
   // Trigger reload on page load. The problem is that meanwhile some
   // data-base fixups run on events after the legacy PME code has
-  // generated its HTML output.
-  form.find('.mailing-list.project .subscription-dropdown .subscription-action-reload').trigger('click');
+  // generated its HTML output. This also speeds up things if the
+  // mailing-list service is down.
+  form.find('.mailing-list.project .subscription-dropdown .subscription-action-reload').trigger('click', [{ setup: true }]);
 
   const pmeForm = container.find(pmeFormSelector);
-  console.info('PME FORM', pmeForm, pmeFormSelector);
+  console.debug('PME FORM', pmeForm, pmeFormSelector);
 
   // adding musicians
   pmeForm

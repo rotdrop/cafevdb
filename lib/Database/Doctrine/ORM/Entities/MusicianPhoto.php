@@ -1,23 +1,25 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -81,11 +83,40 @@ class MusicianPhoto implements \ArrayAccess
    * @Gedmo\Timestampable(on={"update","change"}, field={"image.updated"})
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */
-  private $updated;
+  protected $updated;
 
-  public function __construct() {
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
+
+  /**
+   * Set id.
+   *
+   * @param int $id
+   *
+   * @return MusicianPhoto
+   */
+  public function setId(?int $id):MusicianPhoto
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
+  /**
+   * Get id.
+   *
+   * @return int
+   */
+  public function getId():?int
+  {
+    return $this->id;
+  }
+
 
   /**
    * Set ownerId.
@@ -94,7 +125,7 @@ class MusicianPhoto implements \ArrayAccess
    *
    * @return MusicianPhoto
    */
-  public function setOwnerId($ownerId):self
+  public function setOwnerId(?int $ownerId):MusicianPhoto
   {
     $this->ownerId = $ownerId;
 
@@ -106,7 +137,7 @@ class MusicianPhoto implements \ArrayAccess
    *
    * @return int
    */
-  public function getOwnerId():int
+  public function getOwnerId():?int
   {
     return $this->ownerId;
   }
@@ -118,7 +149,7 @@ class MusicianPhoto implements \ArrayAccess
    *
    * @return MusicianPhoto
    */
-  public function setImageId($imageId):self
+  public function setImageId(?int $imageId):MusicianPhoto
   {
     $this->imageId = $imageId;
 
@@ -142,7 +173,7 @@ class MusicianPhoto implements \ArrayAccess
    *
    * @return OwnerPhoto
    */
-  public function setOwner($owner):self
+  public function setOwner(?int $owner):MusicianPhoto
   {
     $this->owner = $owner;
 
@@ -162,11 +193,11 @@ class MusicianPhoto implements \ArrayAccess
   /**
    * Set image.
    *
-   * @param int $image
+   * @param null|Image $image
    *
    * @return OwnerPhoto
    */
-  public function setImage($image):self
+  public function setImage(?Image $image):MusicianPhoto
   {
     $this->image = $image;
 
@@ -178,7 +209,7 @@ class MusicianPhoto implements \ArrayAccess
    *
    * @return Image
    */
-  public function getImage():Image
+  public function getImage():?Image
   {
     return $this->image;
   }

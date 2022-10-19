@@ -364,7 +364,7 @@ class VCalendarService
    *
    * @return VCalendar
    */
-  public static function getVCalendar(mixed $stuff):VCalendar
+  public static function getVCalendar(mixed $stuff):?VCalendar
   {
     $data = null;
     if (is_array($stuff) && isset($stuff['calendardata'])) {

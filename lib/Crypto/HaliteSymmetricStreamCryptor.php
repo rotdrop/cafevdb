@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Crypto;
@@ -47,6 +48,9 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
   /** @var Halite\Symmetric\EncryptionKey */
   private $haliteEncryptionKey;
 
+  /**
+   * @param null|string $encryptionKey
+   */
   public function __construct(?string $encryptionKey = null)
   {
     $this->setEncryptionKey($encryptionKey);
@@ -62,14 +66,18 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
    */
   public function setEncryptionKey(?string $encryptionKey):?string
   {
+    if (!empty($encryptionKey) && $this->encryptionKey == $encryptionKey) {
+      return $this->encryptionKey;
+    }
+
     $oldEncryptionKey = $this->encryptionKey;
     $this->encryptionKey = $encryptionKey;
 
     if (!empty($encryptionKey)) {
-      // Halite will compute a hash of its own. We rather assume that the
-      // $encryptionKey is more or less random and not a simple password and
-      // just split it in order to avoid passing 0-bytes as salt.
-      // $salt = substr($encryptionKey, -SODIUM_CRYPTO_PWHASH_SALTBYTES);
+      // The encryption key is random anyway, so no reason to add more salts.
+      //
+      // @todo I think the following is expensive by design to block out
+      // brute-force decryption attacks.
       $salt = str_pad('', SODIUM_CRYPTO_PWHASH_SALTBYTES, chr(0));
       $this->haliteEncryptionKey = Halite\KeyFactory::deriveEncryptionKey(
         new HiddenString($encryptionKey),
@@ -128,6 +136,7 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
         // not encrypted hack
         return $data;
       }
+
       try {
         // $startTime = microtime(true);
         // \OCP\Util::writeLog('cafevdb', 'Start Decrypt ' . strlen($data) . ' bytes', \OCP\Util::INFO);
@@ -150,6 +159,7 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
         throw new Exceptions\DecryptionFailedException('Decrypt failed', $t->getCode(), $t);
       }
     }
+
     return $data;
   }
 
@@ -164,4 +174,4 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
   {
     return $this->encryptionKey !== null;
   }
-};
+}

@@ -4,27 +4,29 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Crypto;
 
 use OCP\ILogger;
 
+/** Utility routines for the SealCryptor. */
 class SealService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -32,23 +34,25 @@ class SealService
   /** @var SymmetricCryptorInterface */
   private $dataCryptor;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(CryptoFactoryInterface $cryptoFactory, ILogger $logger)
   {
     $this->dataCryptor = $cryptoFactory->getSymmetricCryptor();
     $this->logger = $logger;
   }
+  // phpcs:enable
 
   /**
    * Seal the given data by encrypting it with a random key and encrpyting the
    * random key by the "user"-keys passed in $keyEncryption.
    *
-   * @param string $data The data to seal
+   * @param string $data The data to seal.
    *
    * @param AsymmetricCryptorInterface[] $keyEncryption The encryption classes to encode the
    * user-keys with, an array of the form:
    * ```
    * [ USER1 => CRYPTOR1, USER2 => CRYPTOR2, ... ]
-   * ```
+   * ```.
    *
    * @return null|string A string of the form
    *
@@ -63,6 +67,7 @@ class SealService
     $this->dataCryptor->setEncryptionKey($sealKey);
     $encryptedData = $this->dataCryptor->encrypt($data);
 
+    $sealData = [];
     /** @var ICryptor $sealCryptor */
     foreach ($keyEncryption as $userId => $sealCryptor) {
       $sealData[] = $userId . ':' . $sealCryptor->encrypt($sealKey);
@@ -100,7 +105,7 @@ class SealService
    * Break-up the given seal-data into the encrypted data portion and an array
    * of encrypted keys.
    *
-   * @param string $data Encrypted seal-data
+   * @param string $data Encrypted seal-data.
    *
    * @return array
    * ```
@@ -140,7 +145,8 @@ class SealService
   public function unseal(string $data, string $userId, ICryptor $keyCryptor):?string
   {
     $seal = $this->parseSeal($data);
-    if (empty($sealedKey = $seal['keys'][$userId])) {
+    $sealedKey = $seal['keys'][$userId];
+    if (empty($sealedKey)) {
       return null;
     }
     $key = $keyCryptor->decrypt($sealedKey);
@@ -148,6 +154,4 @@ class SealService
     $this->dataCryptor->setEncryptionKey($key);
     return $this->dataCryptor->decrypt($seal['data']);
   }
-
-
 }

@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Constants;
 
 /**
  * Storage implementation for data-base storage, including access to
@@ -56,16 +57,15 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /** @var Entities\Project */
   private $project;
 
-  /** @var array */
-  private $files = [];
-
   /** {@inheritdoc} */
   public function __construct($params)
   {
     parent::__construct($params);
     $this->project = $params['project'];
     $this->projectService = $this->di(ProjectService::class);
-    $this->transactionsRepository = $this->getDatabaseRepository(Entities\ProjectBalanceSupportingDocument::class);
+
+    $this->getRootFolder(create: false);
+
     /** @var IEventDispatcher $eventDispatcher */
     $eventDispatcher = $this->di(IEventDispatcher::class);
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
@@ -75,8 +75,10 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       try {
         $projectId = $this->project->getId();
         $this->clearDatabaseRepository();
+
+        $this->getRootFolder(create: false);
+
         $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
-        $this->transactionsRepository = $this->getDatabaseRepository(Entities\ProjectBalanceSupportingDocument::class);
       } catch (\Throwable $t) {
         $this->logException($t);
       }
@@ -85,33 +87,23 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function fileFromFileName(string $name)
-  {
-    $name = $this->buildPath($name);
-    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
-
-    if (empty($this->files[$dirName])) {
-      $this->findFiles($dirName);
-    }
-
-    return ($this->files[$dirName][$baseName]
-            ?? ($this->files[$dirName][$baseName . self::PATH_SEPARATOR]
-                ?? null));
-  }
-
-  /**
    * Insert a "cache" entry.
    *
    * @param string $name Path-name.
    *
-   * @param DirectoryNode|Entities\EncryptedFile $node File-system node.
+   * @param Entities\DatabaseStorageDirEntry $node File-system node.
+   *
+   * @return void
    */
-  private function setFileNameCache(string $name, $node):void
+  private function setFileNameCache(string $name, Entities\DatabaseStorageDirEntry $node):void
   {
     $name = $this->buildPath($name);
-    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    if ($name == self::PATH_SEPARATOR) {
+      $dirName = '';
+      $baseName = '.';
+    } else {
+      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    }
 
     $this->files[$dirName][$baseName] = $node;
   }
@@ -120,11 +112,18 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
    * Remove a "cache" entry.
    *
    * @param string $name Path-name.
+   *
+   * @return void
    */
   private function unsetFileNameCache(string $name):void
   {
     $name = $this->buildPath($name);
-    list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    if ($name == self::PATH_SEPARATOR) {
+      $dirName = '';
+      $baseName = '.';
+    } else {
+      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    }
 
     if (isset($this->files[$dirName][$baseName])) {
       unset($this->files[$dirName][$baseName]);
@@ -136,76 +135,22 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   /**
    * {@inheritdoc}
    */
-  protected function findFiles(string $dirName):array
+  protected function findFiles(string $dirName, bool $ignored = false):array
   {
-    $dirName = self::normalizeDirectoryName($dirName);
-    if (!empty($this->files[$dirName])) {
-      return $this->files[$dirName];
-    }
-
-    $this->files[$dirName] = [
-      '.' => new DirectoryNode('.', new DateTimeImmutable('@1')),
-    ];
-    if (empty($dirName)) {
-      $modificationTime = $this->project->getFinancialBalanceSupportingDocumentsChanged();
-      $this->files[$dirName]['.']->updateModificationTime($modificationTime);
-    }
-
-    // the mount provider currently disables soft-deleteable filter ...
-    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-
-    $documents = $this->project->getFinancialBalanceSupportingDocuments();
-
-
-    /** @var Entities\ProjectBalanceSupportingDocument $document */
-    foreach ($documents as $document) {
-
-      $documentFileName = sprintf('%s-%03d', $this->project->getName(), $document->getSequence());
-
-      // $this->logInfo('DOCUMENT ' . $documentFileName);
-
-      list('dirname' => $fileDirName) = self::pathInfo($this->buildPath($documentFileName) . self::PATH_SEPARATOR . '_');
-      // $this->logInfo('FILE DIR NAME ' . $fileDirName);
-
-      if (empty($dirName) || str_starts_with($fileDirName, $dirName)) {
-        if ($fileDirName != $dirName) {
-          // add a directory entry, $dirName is actually just the root ''
-          $modificationTime = $document->getDocumentsChanged();
-          list($baseName) = explode(self::PATH_SEPARATOR, substr($fileDirName, strlen($dirName)), 1);
-          $this->files[$dirName][$baseName] = new DirectoryNode($baseName, $modificationTime);
-        } else {
-          // add entries for all files in the directory
-          $documentFiles = $document->getDocuments();
-          /** @var Entities\EncryptedFile $file */
-          foreach ($documentFiles as $file) {
-            // enforce the "correct" file-name
-            $baseName = pathinfo($file->getFileName(), PATHINFO_BASENAME);
-            $fileName = $this->buildPath($documentFileName . self::PATH_SEPARATOR . $baseName);
-            list('basename' => $baseName) = self::pathInfo($fileName);
-            // $this->logInfo('ADD ' . $dirName . ' || ' . $baseName);
-            $this->files[$dirName][$baseName] = $file;
-          }
-          break; // stop after first matching directory
-        }
-      }
-    }
-
-    $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-
-    return $this->files[$dirName];
+    return parent::findFiles($dirName, rootIsMandatory: false);
   }
 
   /**  {@inheritdoc} */
   protected function getStorageModificationDateTime():\DateTimeInterface
   {
-    return self::ensureDate($this->project->getFinancialBalanceSupportingDocumentsChanged());
+    return self::ensureDate(empty($this->rootFolder) ? null : $this->rootFolder->getUpdated());
   }
 
   /** {@inheritdoc} */
-  public function getId()
+  public function getShortId():string
   {
-    return parent::getId()
-      . implode(self::PATH_SEPARATOR, [
+    return implode(
+      self::PATH_SEPARATOR, [
         'finance', 'balances', 'projects', $this->project->getName(),
       ])
       . self::PATH_SEPARATOR;
@@ -235,25 +180,54 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   }
 
   /** {@inheritdoc} */
+  protected function getRootFolder(bool $create = true):?Entities\DatabaseStorageFolder
+  {
+    $rootFolder = parent::getRootFolder($create);
+
+    if ($create
+        && !empty($rootFolder)
+        && $this->project->getFinancialBalanceDocumentsStorage() != $this->storageEntity
+    ) {
+      $this->project->setFinancialBalanceDocumentsStorage($this->storageEntity);
+      $this->flush();
+    }
+
+    // $this->logInfo('ROOT FOLDER ' . $this->getShortId() . ' ' . (int)$create . ' || ' . (int)!empty($this->rootFolder));
+
+    if (!empty($rootFolder) && !($this->fileFromFileName('') instanceof Entities\DatabaseStorageFolder)) {
+      unset($this->files['']);
+    }
+
+    return $this->rootFolder;
+  }
+
+  /** {@inheritdoc} */
   public function mkdir($path)
   {
     $sequence = $this->isContainerDirectory($path);
     if ($sequence === null) {
       return false;
     }
+    $baseName = self::pathinfo($path, PATHINFO_BASENAME);
+
+    $this->entityManager->beginTransaction();
     try {
-      /** @var Entities\ProjectBalanceSupportingDocument $documentContainer */
-      $documentContainer = (new Entities\ProjectBalanceSupportingDocument)
-        ->setProject($this->project)
-        ->setSequence($sequence);
-      $this->getDatabaseRepository(Entities\ProjectBalanceSupportingDocument::class)->persist($documentContainer);
+      $parent = $this->getRootFolder();
+
+      /** @var Entities\DatabaseStorageFolder $documentContainer */
+      $documentContainer = $parent->addSubFolder($baseName);
+      $this->persist($documentContainer);
       $this->flush();
 
+      $this->entityManager->commit();
+
       // update the local cache
-      list('basename' => $baseName,) = self::pathinfo($path);
-      $this->setFileNameCache($path, new DirectoryNode($baseName, $documentContainer->getDocumentsChanged()));
+      $this->setFileNameCache($path, $documentContainer);
     } catch (\Throwable $t) {
       $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
       return false;
     }
 
@@ -268,14 +242,16 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       return false;
     }
 
+    /** @var Entities\DatabaseStorageFolder $dirEntry */
+    $dirEntry = $this->fileFromFileName($path);
+    if (empty($dirEntry)) {
+      return false;
+    }
+
     $this->entityManager->beginTransaction();
     try {
-      $entityReference = $this->entityManager->getReference(
-        Entities\ProjectBalanceSupportingDocument::class, [
-          'project' => $this->project,
-          'sequence' => $sequence,
-        ]);
-      $this->entityManager->remove($entityReference);
+      $dirEntry->setParent(null);
+      $this->entityManager->remove($dirEntry);
       $this->flush();
 
       $this->entityManager->commit();
@@ -294,18 +270,18 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 
-  /**
-   * Find the container data-base entity for the given sequence number.
-   *
-   * @param int $sequence Supporting document sequence number.
-   *
-   * @return null|Entities\ProjectBalanceSupportingDocument
-   */
-  private function findContainer(int $sequence):?Entities\ProjectBalanceSupportingDocument
-  {
-    return $this->getDatabaseRepository(Entities\ProjectBalanceSupportingDocument::class)
-      ->find([ 'project' => $this->project, 'sequence' => $sequence ]);
-  }
+  // /**
+  //  * @param string $baseName
+  //  *
+  //  * @return bool
+  //  */
+  // private static function isReadMe(string $baseName):bool
+  // {
+  //   // Readme.md.ocTransferId950400209.part
+  //   return strtolower($baseName) == strtolower(Constants::README_NAME)
+  //     || (str_starts_with(strtolower($baseName), strtolower(Constants::README_NAME))
+  //         && str_ends_with($baseName, '.part'));
+  // }
 
   /**
    * {@inheritdoc}
@@ -321,75 +297,50 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
    */
   public function rename($path1, $path2)
   {
+    // $this->logInfo('P1 - P2 ' . $path1 . ' - ' . $path2);
+
     $path1 = $this->buildPath($path1);
     $path2 = $this->buildPath($path2);
-    // list('dirname' => $dirName1, 'basename' => $baseName1) = self::pathinfo($path1);
-    // list('dirname' => $dirName2, 'basename' => $baseName2) = self::pathinfo($path2);
+    list('dirname' => $dirName1, /* 'basename' => $baseName1 */) = self::pathinfo($path1);
+    list('dirname' => $dirName2, 'basename' => $baseName2) = self::pathinfo($path2);
     $baseName2 = self::pathInfo($path2, PATHINFO_BASENAME);
 
     $sequence1 = $this->isContainerDirectory($path1);
     $sequence2 = $this->isContainerDirectory($path2);
 
     if (($sequence1 === null) !== ($sequence2 === null)) {
-      // illegal, regular files can only reside inside the top-level directories.
+      // balance folder may only be rename to balance folders
       return false;
     }
 
+    /** @var Entities\DatabaseStorageDirEntry $dirEntry */
+    $dirEntry = $this->fileFromFileName($path1);
+    if (empty($dirEntry)) {
+      // $this->logInfo('NO DIR ENTRY FOR ' . $path1);
+      return false;
+    }
+    if ($dirName1 != $dirName2) {
+      $parent2 = $this->fileFromFileName($dirName2);
+      if (empty($parent2)) {
+        // $this->logInfo('NO PARENT2 for ' . $path2);
+        return false;
+      }
+    }
+
+    $this->entityManager->beginTransaction();
     try {
-      if ($sequence1 !== null && $sequence2 !== null) {
-        /** @var DirectoryNode $directory */
-        $directory = $this->fileFromFileName($path1);
-        $containerEntity = $this->findContainer($sequence1);
-        if (empty($directory) || empty($containerEntity)) {
-          return false;
-        }
-
-        // a little tricky as sequence belongs to the identifiers, hence we
-        // have to create a new entity and delete the old one.
-
-        $this->entityManager->beginTransaction();
-
-        $renamedContainer = new Entities\ProjectBalanceSupportingDocument($this->project, $sequence2);
-
-        $oldDocuments = $containerEntity->getDocuments();
-        $newDocuments = $renamedContainer->getDocuments();
-        foreach ($oldDocuments as $document) {
-          $newDocuments->add($document);
-          $oldDocuments->removeElement($document);
-        }
-        $this->flush();
-
-        $this->persist($renamedContainer);
-        $this->entityManager->remove($containerEntity);
-        $this->flush();
-
-        $this->entityManager->commit();
-
-        // update our local files cache
-        $directory->name = $baseName2;
-        $this->setFileNameCache($path2, $directory);
-      } elseif ($sequence1 === null && $sequence2 === null) {
-        /** @var Entities\EncryptedFile $file */
-        $file = $this->fileFromFileName($path1);
-        if (empty($file)) {
-          return false;
-        }
-        if ($sequence1 === $sequence2) {
-          // rename inside same directory just changes the name
-          $file->setFileName($baseName2); // actually rename
-          $this->flush();
-        } else {
-          // move document to other container
-        }
-        $this->flush(); // commit the changes
-
-        // update our local files cache
-        $this->setFileNameCache($path2, $file);
+      $dirEntry->setName($baseName2);
+      if (!empty($parent2)) {
+        $dirEntry->setParent($parent2);
       }
 
-      // update our local files cache
-      $this->unsetFileNameCache($path1);
+      $this->flush();
 
+      $this->entityManager->commit();
+
+      // update our local files cache
+      $this->setFileNameCache($path2, $dirEntry);
+      $this->unsetFileNameCache($path1);
     } catch (\Throwable $t) {
       $this->logException($t);
       if ($this->entityManager->isTransactionActive()) {
@@ -405,18 +356,26 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   public function touch($path, $mtime = null)
   {
     if ($this->is_dir($path)) {
+      // $this->logInfo('IS DIR ' . $path);
       return false;
     }
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
-    $sequence = $this->isContainerDirectory($dirName);
-    if ($sequence === false) {
+
+    if ($this->isContainerDirectory($path) !== null) {
+      // $this->logInfo('CONTAINER DIR CHCEK ' . $path);
       return false;
     }
-    $file = $this->fileFromFileName($path);
+
+    $this->entityManager->beginTransaction();
     try {
-      if (empty($file)) {
-        $containerEntity = $this->findContainer($sequence);
-        if (empty($containerEntity)) {
+      $this->getRootFolder();
+
+      /** @var Entities\DatabaseStorageFile $dirEntry */
+      $dirEntry = $this->fileFromFileName($path);
+      if (empty($dirEntry)) {
+        $parent = $this->fileFromFileName($dirName);
+        if (empty($parent)) {
+          // $this->logInfo('NO CONTAINER ENTITY FOR ' . $dirName);
           return false;
         }
         $file = new Entities\EncryptedFile($baseName, '', '');
@@ -425,46 +384,32 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         }
         $this->persist($file);
         $this->flush();
-        $containerEntity->addDocument($file);
+        $dirEntry = $parent->addDocument($file, $baseName);
+        if ($mtime !== null) {
+          $dirEntry->setCreated($mtime);
+        }
       }
       if ($mtime !== false) {
-        $file->setUpdated($mtime);
+        $dirEntry->setUpdated($mtime);
+        $dirEntry->getFile()->setUpdated($mtime);
       }
-      $this->persist($file);
       $this->flush();
 
-      $this->setFileNameCache($path, $file);
+      $this->entityManager->commit();
+
+      $this->setFileNameCache($path, $dirEntry);
+
+      // $this->logInfo('TOUCHED ' . $path . ' ' . $dirEntry->getName());
+
     } catch (\Throwable $t) {
       $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
       return false;
     }
 
     return true;
-  }
-
-  /**
-   * Parse the given path and return the project name and the supporting
-   * document sequence number.
-   *
-   * @param string $path
-   *
-   * @return array
-   * ```
-   * [ 'projectName' => NAME, 'sequence' => SEQUENCE, ]
-   * ```
-   */
-  private static function parsePath(string $path):array
-  {
-    $pathInfo = self::pathInfo($path);
-    if (empty($pathInfo['dirname']) && empty($pathInfo['filename'])) {
-      return [ 'projectName' => null, 'sequence' => null ];
-    } elseif (empty($pathInfo['dirname'])) {
-      $slug = trim($pathInfo['filename'], self::PATH_SEPARATOR);
-    } else {
-      $slug = trim($pathInfo['dirname'], self::PATH_SEPARATOR);
-    }
-    list($projectName, $sequence) = explode('-', $slug);
-    return [ 'projectName' => $projectName, 'sequence' => $sequence ];
   }
 
   /** {@inheritdoc} */
@@ -473,47 +418,62 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     if ($this->is_dir($path)) {
       return false;
     }
-    /** @var Entities\EncryptedFile $file */
-    $file = $this->fileFromFileName($path);
-    if (empty($file)) {
+    /** @var Entities\DatabaseStorageFile $dirEntry */
+    $dirEntry = $this->fileFromFileName($path);
+    if (empty($dirEntry)) {
       throw new Exceptions\DatabaseStorageException(
         $this->l->t('Unable to find database entity for path "%s".', $path)
       );
     }
-    $this->logInfo('PATH ' . print_r(self::parsePath($path), true));
-    list('projectName' => $projectName, 'sequence' => $sequence) = self::parsePath($path);
-    if (empty($projectName) || empty($sequence)) {
+    if ($dirEntry instanceof Entities\DatabaseStorageFolder) {
       throw new Exceptions\DatabaseStorageException(
-        $this->l->t('Cannot deduce project name or document sequence from path "%s".', $path)
+        $this->l->t('Path "%s" is a directory.', $path)
       );
     }
 
-    // filter the file's document containers, should not be so many ...
-    $containers = $file->getProjectBalanceSupportingDocuments()->filter(
-      fn(Entities\ProjectBalanceSupportingDocument $container) => $container->getProject()->getName() == $projectName && $container->getSequence() == $sequence
-    );
-    if (count($containers) != 1) {
+    $parent = $dirEntry->getParent();
+    if (empty($parent)) {
       throw new Exceptions\DatabaseStorageException(
         $this->l->t('Unable to find document container for path "%s".', $path)
       );
     }
-    $documentContainer = $containers->first();
+    $file = $dirEntry->getFile();
+    if (empty($file)) {
+      throw new Exceptions\DatabaseStorageException(
+        $this->l->t('The directory entry "%s" is not linked to a file.', $path)
+      );
+    }
 
+    $this->entityManager->beginTransaction();
     try {
-      $documentContainer->removeDocument($file);
+      $dirEntry->setParent(null);
+      $dirEntry->setFile(null);
+      $this->entityManager->remove($dirEntry);
 
       // break the link to the supporting documents of payments
+      // @todo Maybe better use a find-by instead of bloating the entities with too many associations.
+
+      /** @var Repositories\CompositePaymentsRepository $repository */
+      $repository = $this->entityManager->getRepository(Entities\CompositePayment::class);
+      $compositePayments = $repository->findBy([
+        'balanceDocumentsFolder' => $parent,
+        'supportingDocument' => $file,
+      ]);
       /** @var Entities\CompositePayment $compositePayment */
-      foreach ($documentContainer->getCompositePayments() as $compositePayment) {
-        if ($file->getId() == $compositePayment->getSupportingDocument()->getId()) {
-          $compositePayment->setProjectBalanceSupportingDocument(null);
-        }
+      foreach ($compositePayments as $compositePayment) {
+        $compositePayment->setBalanceDocumentsFolder(null);
       }
+
+      /** @var Repositories\ProjectPaymentsRepository $repository */
+      $repository = $this->entityManager->getRepository(Entities\ProjectPayment::class);
+      $projectPayments = $repository->findBy([
+        'balanceDocumentsFolder' => $parent,
+      ]);
       /** @var Entities\ProjectPayment $projectPayment */
-      foreach ($documentContainer->getProjectPayments() as $projectPayment) {
+      foreach ($projectPayments as $projectPayment) {
         $supportingDocument = $projectPayment->getReceivable() ? $projectPayment->getReceivable()->getSupportingDocument() : null;
-        if ($supportingDocument && $supportingDocument->getId() == $file->getId()) {
-          $projectPayment->setProjectBalanceSupportingDocument(null);
+        if ($supportingDocument == $file) {
+          $projectPayment->setBalanceDocumentsFolder(null);
         }
       }
 
@@ -522,17 +482,17 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       }
       $this->flush();
 
+      $this->entityManager->commit();
+
       $this->unsetFileNameCache($path);
     } catch (\Throwable $t) {
       $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
       return false;
     }
 
     return true;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

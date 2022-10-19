@@ -62,6 +62,11 @@ PEAR.Commenting.FunctionComment.ParamCommentAlignment
     <exclude name="PEAR.Commenting.FunctionComment.SpacingAfterParamName"/>
     <exclude name="PEAR.Commenting.FunctionComment.MissingParamTag"/>
     <exclude name="PEAR.Commenting.FunctionComment.MissingReturn"/>
+    <exclude name="PEAR.Commenting.FunctionComment.ParamNameNoMatch"/>
+    <exclude name="PEAR.WhiteSpace.ScopeClosingBrace.Line"/>
+    <exclude name="PEAR.Commenting.FunctionComment.MissingParamType"/>
+    <exclude name="PEAR.Commenting.FunctionComment.WrongStyle"/>
+
     <!-- already included by Squiz -->
     <exclude name="PEAR.Commenting.FunctionComment.Missing"/>
 

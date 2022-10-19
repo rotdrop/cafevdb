@@ -33,6 +33,11 @@ import * as Notification from './notification.js';
 import { selected as selectedValues } from './select-utils.js';
 import { token as pmeToken, data as pmeData, sys as pmeSys, classSelectors as pmeClassSelectors } from './pme-selectors.js';
 import { busyIcon as pageBusyIcon } from './page.js';
+import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -258,19 +263,37 @@ const contactValidation = function(container) {
 
   $mailingListOperations
     .off('click')
-    .on('click', function(event) {
+    .on('click', function(event, triggerData) {
       const $this = $(this);
+      triggerData = triggerData || { setup: false };
 
       const operation = $this.data('operation');
       if (!operation) {
         return;
       }
+
       const email = $emailInput.val();
       if (email === '') {
-        Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
+        if (!triggerData.setup) {
+          Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
+        }
         return false;
       }
       const displayName = $displayNameInput.val() || $displayNameInput.attr('placeholder');
+
+      let cleanup = () => {
+        $mailingListOperationsContainer.removeClass('busy');
+        $this.removeClass('busy');
+      };
+      let onFail = (xhr, status, errorThrown) => Ajax.handleError(xhr, status, errorThrown, cleanup);
+      if (triggerData.setup) {
+        // don't annoy the user with an error message on page load.
+        cleanup = () => {};
+        onFail = () => {};
+      } else {
+        $this.addClass('busy');
+        $mailingListOperationsContainer.addClass('busy');
+      }
 
       $.fn.cafevTooltip.remove(); // remove pending tooltips ...
 
@@ -281,10 +304,7 @@ const contactValidation = function(container) {
       };
 
       $.post(generateUrl('mailing-lists/' + operation), post)
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, function() {
-          });
-        })
+        .fail(onFail)
         .done(function(data) {
           const status = data.status;
           $mailingListStatus.html(t(appName, status));
@@ -296,18 +316,19 @@ const contactValidation = function(container) {
           );
           $mailingListOperations.each(function(index) {
             const $this = $(this);
-            $this.prop('disabled', $this.is(':hidden')
-                       || ($this.hasClass('expert-mode-only')
-                           && !$('body').hasClass('cafevdb-expert-mode')));
-            $this.toggleClass('disabled', $this.is(':hidden'));
+            const visible = $this.hasClass('status-' + status + '-visible');
+            const disabled = !visible || ($this.hasClass('expert-mode-only') && !$('body').hasClass('cafevdb-expert-mode'));
+            $this.prop('disabled', disabled);
+            $this.toggleClass('disabled', disabled);
           });
+          cleanup();
         });
       return false;
     });
   // Trigger reload on page load. The problem is that meanwhile some
   // data-base fixups run on events after the legacy PME code has
   // generated its HTML output.
-  $mailingListOperations.filter('.reload').trigger('click');
+  $mailingListOperations.filter('.reload').trigger('click', [{ setup: true }]);
 
   const address = $form.find('input.musician-address');
   const city = address.filter('.city');
@@ -748,6 +769,14 @@ const ready = function(container) {
   const $container = PHPMyEdit.container(container);
 
   contactValidation($container);
+
+  rejectDecryptionPromise();
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.done((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+  lazyDecrypt($container);
 
   const $form = $container.find('form.pme-form');
 

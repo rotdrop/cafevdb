@@ -40,7 +40,6 @@ use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use \phpMyEdit as PME;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
@@ -174,7 +173,7 @@ class Projects extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectName     = $this->projectName;
@@ -347,7 +346,7 @@ class Projects extends PMETableViewBase
         ],
         'display|C'  => [
           'popup' => false,
-          'prefix' =>  function($op, $pos, $k, $row, \phpMyEdit $pme) {
+          'prefix' =>  function($op, $pos, $k, $row, PHPMyEdit $pme) {
 
             $html = $this->templateEditButton(
               $pme->rec['id'],
@@ -835,7 +834,7 @@ class Projects extends PMETableViewBase
         $projectId = $recordId['id'];
         $postersFolder = $this->projectService->ensurePostersFolder($projectId);
         $imageIds = $this->imagesService->getImageIds(ImagesService::USER_STORAGE, $postersFolder);
-        if (empty($imageIds) || ($action != PME::OPERATION_DISPLAY)) {
+        if (empty($imageIds) || ($action != PHPMyEdit::OPERATION_DISPLAY)) {
           $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
         }
         $numImages = count($imageIds);

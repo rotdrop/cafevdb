@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { globalState, appName, $ } from './globals.js';
@@ -48,6 +49,11 @@ import {
   token as pmeToken,
   classSelectors as pmeClassSelectors,
 } from './pme-selectors.js';
+import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.js';
 
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
@@ -379,6 +385,7 @@ const mandatesInit = function(data, onChangeCallback) {
         .chosen({
           allow_single_deselect: true,
           inherit_select_classes: true,
+          title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
           disable_search_threshold: 8,
         });
       if (disabled) {
@@ -1083,6 +1090,10 @@ const mandateValidatePMEWorker = function(event, validateLockCB) {
   let changed = $element.attr('name');
   changed = inputMapping[changed];
 
+  if (!changed) {
+    return;
+  }
+
   const mandateData = {
     changed,
   };
@@ -1360,6 +1371,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
   bulkTransactionChooser.chosen({
     disable_search: true,
     inherit_select_classes: true,
+    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
     allow_single_deselect: true,
   });
   bulkTransactionChooser
@@ -1497,145 +1509,156 @@ const mandateReady = function(selector, parameters, resizeCB) {
     .off('click')
     .on('click', mandateExportHandler);
 
+  rejectDecryptionPromise(); // terminate previous calls
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.always((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+
   if (form.is(pmeClassSelectors('', ['list', 'view', 'delete']))) {
+    lazyDecrypt(form);
     return;
   }
 
-  const validateInput = function(event) {
-    const $input = $(this);
-    if ($input.prop('readonly')) {
-      return;
+  // initialize auto-complete only after decryption has finished
+
+  decryptionPromise.done((maxJobs) => {
+
+    // construct IBAN auto-completion from data-pme-values
+    const ibanValues = $bankAccountIbanInput.data('pmeValues');
+    console.info('IBAN VALUES', ibanValues);
+    const ibanAutoComplete = {};
+    const sequenceData = {}; // by musician id and iban
+    const ibanIdentifiers = {}; // identifier by IBAN
+    for (const [ibanKey, iban] of Object.entries(ibanValues.values)) {
+      const ibanIds = ibanValues.data[ibanKey].data.split(',');
+      for (const ibanId of ibanIds) {
+        const identifierArray = ibanId.split('-');
+        const musicianId = identifierArray[0];
+        const sequence = identifierArray[1];
+        ibanAutoComplete[musicianId] = ibanAutoComplete[musicianId] || [];
+        ibanAutoComplete[musicianId].push(iban);
+        sequenceData[musicianId] = sequenceData[musicianId] || {};
+        sequenceData[musicianId][iban] = sequenceData[musicianId][iban] || [];
+        sequenceData[musicianId][iban].push(sequence); // ?? only one ??
+        ibanIdentifiers[iban] = ibanIdentifiers[iban] || [];
+        ibanIdentifiers[iban].push(identifierArray);
+      }
     }
-    mandateValidatePME.call(this, event, function(lock) {
-      $input.readonly(lock);
+
+    // construct bank account owner completion
+    const ownerValues = $bankAccountOwnerInput.data('pmeValues');
+    const ownerAutoComplete = [];
+    const ownerData = {}; // by musician id and sequence
+    for (const [ownerKey, owner] of Object.entries(ownerValues.values)) {
+      const ownerIdentifiers = ownerValues.data[ownerKey].data.split(',');
+      for (const ownerIdentifier of ownerIdentifiers) {
+        const identifierArray = ownerIdentifier.split('-');
+        const musicianId = identifierArray[0];
+        const sequence = identifierArray[1];
+        ownerData[musicianId] = ownerData[musicianId] || {};
+        ownerData[musicianId][sequence] = owner;
+        ownerAutoComplete.push(owner);
+      }
+    }
+
+    $bankAccountIbanInput.autocomplete({
+      source: ibanAutoComplete[$musicianIdInput.val()],
+      position: { my: 'left bottom', at: 'left top' },
+      minLength: 0,
+      autoFocus: true,
+      select(event, ui) {
+        const $input = $(event.target);
+        $input.val(ui.item.value);
+        $input.blur();
+      },
     });
-  };
+    $bankAccountIbanInput.on('focus', function(event) {
+      const $self = $(this);
+      if ($self.val() === '') {
+        $self.autocomplete('search', '');
+      }
+    });
+    $bankAccountIbanInput.on('blur', function(event) {
+      // const $this = $(this);
+    });
 
-  $pmeTable.find('input[type="text"].pme-input').off('blur');
-  $pmeTable.find('select, input[type="checkbox"]').filter('.pme-input').off('change');
-
-  $mandateProjectSelect
-    .closest('tr.pme-row')
-    .toggleClass('empty-mandate-project', $mandateProjectSelect.val() === '');
-  $mandateProjectSelect.on('change', function(event) {
-    const $this = $(this);
-    $this
-      .closest('tr.pme-row')
-      .toggleClass('empty-mandate-project', $this.val() === '');
-    // $this.closest('.ui-dialog').trigger('resize');
-    container.trigger('pmetable:layoutchange');
-  });
-
-  // construct IBAN auto-completion from data-pme-values
-  const ibanValues = $bankAccountIbanInput.data('pmeValues');
-  const ibanAutoComplete = {};
-  const sequenceData = {}; // by musician id and iban
-  const ibanIdentifiers = {}; // identifier by IBAN
-  for (const [ibanKey, iban] of Object.entries(ibanValues.values)) {
-    const ibanIds = ibanValues.data[ibanKey].split(',');
-    for (const ibanId of ibanIds) {
-      const identifierArray = ibanId.split('-');
-      const musicianId = identifierArray[0];
-      const sequence = identifierArray[1];
-      ibanAutoComplete[musicianId] = ibanAutoComplete[musicianId] || [];
-      ibanAutoComplete[musicianId].push(iban);
-      sequenceData[musicianId] = sequenceData[musicianId] || {};
-      sequenceData[musicianId][iban] = sequenceData[musicianId][iban] || [];
-      sequenceData[musicianId][iban].push(sequence); // ?? only one ??
-      ibanIdentifiers[iban] = ibanIdentifiers[iban] || [];
-      ibanIdentifiers[iban].push(identifierArray);
-    }
-  }
-
-  const ownerValues = $bankAccountOwnerInput.data('pmeValues');
-  const ownerAutoComplete = [];
-  const ownerData = {}; // by musician id and sequence
-  for (const [ownerKey, owner] of Object.entries(ownerValues.values)) {
-    const ownerIdentifiers = ownerValues.data[ownerKey].split(',');
-    for (const ownerIdentifier of ownerIdentifiers) {
-      const identifierArray = ownerIdentifier.split('-');
-      const musicianId = identifierArray[0];
-      const sequence = identifierArray[1];
-      ownerData[musicianId] = ownerData[musicianId] || {};
-      ownerData[musicianId][sequence] = owner;
-      ownerAutoComplete.push(owner);
-    }
-  }
-
-  $bankAccountIbanInput.autocomplete({
-    source: ibanAutoComplete[$musicianIdInput.val()],
-    position: { my: 'left bottom', at: 'left top' },
-    minLength: 0,
-    autoFocus: true,
-    select(event, ui) {
-      const $input = $(event.target);
-      $input.val(ui.item.value);
-      $input.blur();
-    },
-  });
-  $bankAccountIbanInput.on('focus', function(event) {
-    const $self = $(this);
-    if ($self.val() === '') {
-      $self.autocomplete('search', '');
-    }
-  });
-  $bankAccountIbanInput.on('blur', function(event) {
-    // const $this = $(this);
-
-  });
-
-  // auto-fill empty or only-autofilled inputs.
-  const maybeAutoFillInput = function($input, value, blur, confirm) {
-    if ($input.val() !== value) {
-      const autoFillInput = function() {
-        $input.data('autoFill', value);
-        $input.val(value);
-        if (blur === true) {
-          $input.blur();
+    // auto-fill empty or only-autofilled inputs.
+    const maybeAutoFillInput = function($input, value, blur, confirm) {
+      if ($input.val() !== value) {
+        const autoFillInput = function() {
+          $input.data('autoFill', value);
+          $input.val(value);
+          if (blur === true) {
+            $input.blur();
+          }
+        };
+        if ($input.val() === '' || $input.val() === $input.data('autoFill')) {
+          autoFillInput();
+        } else if (typeof confirm === 'function') {
+          confirm(autoFillInput, $input, value, blur);
         }
-      };
-      if ($input.val() === '' || $input.val() === $input.data('autoFill')) {
-        autoFillInput();
-      } else if (typeof confirm === 'function') {
-        confirm(autoFillInput, $input, value, blur);
       }
-    }
-  };
+    };
 
-  $projectParticipantSelect.on('change', function(event) {
-    const $this = $(this);
-    const $owner = $bankAccountOwnerInput;
-    const musicianId = $this.val();
-    $musicianIdInput.val(musicianId);
-    ibanAutoComplete[musicianId] = [...new Set(ibanAutoComplete[musicianId])];
-    $bankAccountIbanInput.autocomplete('option', 'source', ibanAutoComplete[musicianId]);
-    let autoOwner = SelectUtils.selectedOptions($this).html();
-    let clearAutofill = true;
-    if (ibanAutoComplete[musicianId].length === 1) {
-      const iban = ibanAutoComplete[musicianId][0];
-      if (sequenceData[musicianId][iban].length === 1) {
-        const sequence = sequenceData[musicianId][iban][0];
-        const owner = ownerData[musicianId][sequence];
-        autoOwner = owner;
-        maybeAutoFillInput($bankAccountSequenceInput, sequence);
-        maybeAutoFillInput($bankAccountIbanInput, iban, true);
-        clearAutofill = false;
+    $projectParticipantSelect.on('change', function(event) {
+      const $this = $(this);
+      const $owner = $bankAccountOwnerInput;
+      const musicianId = $this.val();
+      $musicianIdInput.val(musicianId);
+      ibanAutoComplete[musicianId] = [...new Set(ibanAutoComplete[musicianId])];
+      $bankAccountIbanInput.autocomplete('option', 'source', ibanAutoComplete[musicianId]);
+      let autoOwner = SelectUtils.selectedOptions($this).html();
+      let clearAutofill = true;
+      if (ibanAutoComplete[musicianId].length === 1) {
+        const iban = ibanAutoComplete[musicianId][0];
+        if (sequenceData[musicianId][iban].length === 1) {
+          const sequence = sequenceData[musicianId][iban][0];
+          const owner = ownerData[musicianId][sequence];
+          autoOwner = owner;
+          maybeAutoFillInput($bankAccountSequenceInput, sequence);
+          maybeAutoFillInput($bankAccountIbanInput, iban, true);
+          clearAutofill = false;
+        }
       }
-    }
-    if (clearAutofill) {
-      maybeAutoFillInput($bankAccountSequenceInput, '');
-      maybeAutoFillInput($bankAccountIbanInput, '', true);
-    }
-    maybeAutoFillInput($owner, autoOwner, true, function(autoFillAction) {
-      Dialogs.confirm(
-        t(appName,
-          'The bank-account-owner is already set but differs from the project-participant.'
-          + ' Shall we replace the current bank-account-owner by the project-participant?'),
-        t(appName, 'Set Bank-Account-Owner to Project-Participant?'),
-        confirm => confirm && autoFillAction(),
-        true, // modal
-        false, // allowHtml
-      );
+      if (clearAutofill) {
+        maybeAutoFillInput($bankAccountSequenceInput, '');
+        maybeAutoFillInput($bankAccountIbanInput, '', true);
+      }
+      maybeAutoFillInput($owner, autoOwner, true, function(autoFillAction) {
+        Dialogs.confirm(
+          t(appName,
+            'The bank-account-owner is already set but differs from the project-participant.'
+            + ' Shall we replace the current bank-account-owner by the project-participant?'),
+          t(appName, 'Set Bank-Account-Owner to Project-Participant?'),
+          confirm => confirm && autoFillAction(),
+          true, // modal
+          false, // allowHtml
+        );
+      });
+
+      $projectParticipantSelect.find('option').each(function() {
+        ownerAutoComplete.push($(this).html());
+      });
+
+      $bankAccountOwnerInput.autocomplete({
+        source: ownerAutoComplete,
+        position: { my: 'left bottom', at: 'left top' },
+        minLength: 0,
+        autoFocus: true,
+        select(event, ui) {
+          const $input = $(event.target);
+          $input.val(ui.item.value);
+          $input.blur();
+        },
+      });
+      $bankAccountOwnerInput.on('focus', function(event) {
+        const $self = $(this);
+        if ($self.val() === '') {
+          $self.autocomplete('search', '');
+        }
+      });
     });
   });
 
@@ -1675,35 +1698,41 @@ const mandateReady = function(selector, parameters, resizeCB) {
     }
   });
 
-  $projectParticipantSelect.find('option').each(function() {
-    ownerAutoComplete.push($(this).html());
-  });
+  // must come after the promise.done()
+  lazyDecrypt(form);
 
-  $bankAccountOwnerInput.autocomplete({
-    source: ownerAutoComplete,
-    position: { my: 'left bottom', at: 'left top' },
-    minLength: 0,
-    autoFocus: true,
-    select(event, ui) {
-      const $input = $(event.target);
-      $input.val(ui.item.value);
-      $input.blur();
-    },
-  });
-  $bankAccountOwnerInput.on('focus', function(event) {
-    const $self = $(this);
-    if ($self.val() === '') {
-      $self.autocomplete('search', '');
+  const validateInput = function(event) {
+    const $input = $(this);
+    if ($input.prop('readonly')) {
+      return;
     }
+    mandateValidatePME.call(this, event, function(lock) {
+      $input.readonly(lock);
+    });
+  };
+
+  $pmeTable.find('input[type="text"].pme-input').off('blur');
+  $pmeTable.find('select, input[type="checkbox"]').filter('.pme-input').off('change');
+
+  $mandateProjectSelect
+    .closest('tr.pme-row')
+    .toggleClass('empty-mandate-project', $mandateProjectSelect.val() === '');
+  $mandateProjectSelect.on('change', function(event) {
+    const $this = $(this);
+    $this
+      .closest('tr.pme-row')
+      .toggleClass('empty-mandate-project', $this.val() === '');
+    // $this.closest('.ui-dialog').trigger('resize');
+    container.trigger('pmetable:layoutchange');
   });
 
-  $pmeTable.find('input[type="text"].pme-input').not('.revocation-date')
+  $pmeTable.find('input[type="text"].pme-input').not('.revocation-date, .participant-field')
     .on('blur', validateInput);
 
-  $pmeTable.find('select.pme-input').not('.project-participant')
+  $pmeTable.find('select.pme-input').not('.project-participant, .participant-field')
     .on('change', validateInput);
 
-  $pmeTable.find('input[type="checkbox"].pme-input')
+  $pmeTable.find('input[type="checkbox"].pme-input').not('.participant-field')
     .on('change', validateInput);
 
   const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
@@ -1732,7 +1761,6 @@ const mandateReady = function(selector, parameters, resizeCB) {
 
       // need only real valid input element
       const $ibanInput = $inputs.filter('[name="' + pmeData('iban') + '"]');
-      console.info('INPUTS', $inputs, $ibanInput, pmeData('iban'));
 
       mandateValidatePME.call($ibanInput, event, function(lock, validateOk) {
         if (lock) {

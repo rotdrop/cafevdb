@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,26 +26,33 @@ namespace OCA\CAFEVDB\Crypto;
 
 use OCP\AppFramework\IAppContainer;
 
+/** Factory class using Halite as encryption backend. */
 class HaliteCryptoFactory implements CryptoFactoryInterface
 {
   /** @var IAppContainer */
   private $appContainer;
 
+  /**
+   * @param IAppContainer $appContainer
+   */
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
 
+  /** {@inheritdoc} */
   public function getSymmetricCryptor(?string $encryptionKey = null):SymmetricCryptorInterface
   {
     return new HaliteSymmetricStreamCryptor($encryptionKey);
   }
 
-  public function getAsymmetricCryptor($privateKey = null):AsymmetricCryptorInterface
+  /** {@inheritdoc} */
+  public function getAsymmetricCryptor(mixed $privateKey = null):AsymmetricCryptorInterface
   {
     return new HaliteAsymmetricCryptor($privateKey);
   }
 
+  /** {@inheritdoc} */
   public function getAsymmetricKeyStorage():AsymmetricKeyStorageInterface
   {
     return $this->appContainer->get(HaliteAsymmetricKeyStorage::class);

@@ -27,13 +27,18 @@
  *
  */
 
-import $ from './jquery.js';
+import jQuery from './jquery.js';
 import { appName } from './app-info.js';
 import 'bootstrap/js/dist/tooltip';
 
 require('tooltips.scss');
 
+const $ = jQuery;
+
 console.log('jquery-cafevdb-tooltips');
+
+const toolTipJobInitialTimeOut = 100; // ms
+const toolTipJobRunnerTimeOut = 0; // ms
 
 const whiteList = {
   ...$.fn.tooltip.Constructor.Default.whiteList,
@@ -57,6 +62,7 @@ const defaultOptions = {
   cssclass: [],
   fallbackPlacement: 'flip',
   boundary: 'viewport',
+  timestamp: false,
   // delay: { show: 500, hide: 100000 },
 };
 
@@ -82,6 +88,22 @@ const unregisterBackgroundJob = function() {
   }
 };
 
+let markCount = 0;
+
+const getMarkCount = () => markCount;
+const setMarkCount = (value) => { markCount = value; };
+
+const markElement = function($element, timestamp) {
+  if (timestamp !== false) {
+    if ($element.data(appName + '-tooltip-timestamp') === timestamp) {
+      markCount++;
+      return false;
+    }
+    $element.data(appName + '-tooltip-timestamp', timestamp);
+  }
+  return true;
+};
+
 const lockElement = function($element) {
   if ($element.data(appName + '-tooltip-lock') === true) {
     return false;
@@ -100,27 +122,35 @@ const unlockElement = function($element) {
 
 const toolTipsWorkQueue = [];
 
-function singleToolTipWorker(optionsForAll, jobChunkSize) {
-  const $this = $(this);
+// const spaceRe = /\s+/;
+
+function singleToolTipWorker($this, optionsForAll, jobChunkSize) {
+  // const $this = this;
   const selfOptions = $.extend(true, {}, optionsForAll);
-  const classAttr = $this.attr('class');
-  if (classAttr) {
-    if (classAttr.match(/tooltip-off/) !== null) {
+  const attrClass = $this.attr('class') || '';
+  for (const cssClass of attrClass.split(/\s+/)) {
+    switch (cssClass) {
+    case 'tooltip-off':
       $this.cafevTooltip('disable');
       unlockElement($this);
       return;
-    }
-    const tooltipClasses = classAttr.match(/tooltip-[a-z-]+/g);
-    if (tooltipClasses) {
-      for (let idx = 0; idx < tooltipClasses.length; ++idx) {
-        const tooltipClass = tooltipClasses[idx];
-        const placement = tooltipClass.match(/^tooltip-(bottom|top|right|left)$/);
-        if (placement && placement.length === 2 && placement[1].length > 0) {
-          selfOptions.placement = placement[1];
-          continue;
-        }
-        selfOptions.cssclass.push(tooltipClass);
+    case 'tooltip-bottom':
+      selfOptions.placement = 'bottom';
+      break;
+    case 'tooltip-top':
+      selfOptions.placement = 'top';
+      break;
+    case 'tooltip-right':
+      selfOptions.placement = 'right';
+      break;
+    case 'tooltip-left':
+      selfOptions.placement = 'left';
+      break;
+    default:
+      if (cssClass.startsWith('tooltip-')) {
+        selfOptions.cssclass.push(cssClass);
       }
+      break;
     }
   }
   $.fn.tooltip.call($this, 'dispose');
@@ -137,12 +167,6 @@ function singleToolTipWorker(optionsForAll, jobChunkSize) {
   $this.removeAttr('data-' + appName + '-title');
   $this.removeAttr('data-original-title');
   $this.removeData('original-title');
-  // const title = $this.attr('title');
-  // if ((title === undefined || title.trim() === '') && !$this.is(':invalid')) {
-  //   $this.removeAttr('title');
-  //   $this.cafevTooltip('destroy');
-  //   return;
-  // }
   if (!selfOptions.title) {
     $this.data(appName + 'Title', $this.attr('title'));
     $this.attr('data-' + appName + '-title', $this.attr('title'));
@@ -178,11 +202,11 @@ function singleToolTipWorker(optionsForAll, jobChunkSize) {
     if (job === undefined) {
       break;
     }
-    singleToolTipWorker.call($(job.element), job.options);
+    singleToolTipWorker(job.element, job.options);
   }
   const job = toolTipsWorkQueue.pop();
   if (job !== undefined) {
-    setTimeout(() => singleToolTipWorker.call($(job.element), job.options, jobChunkSize));
+    setTimeout(() => singleToolTipWorker(job.element, job.options, jobChunkSize), toolTipJobRunnerTimeOut);
   }
 }
 
@@ -220,19 +244,22 @@ $.fn.cafevTooltip = function(argument) {
     optionsForAll.cssclass.push('cafevdb');
     // Iterator over individual element in order to pick up the
     // correct class-arguments. The setTimeout() hack is in order to
-    // fake background jobs and keep the UI somewhat response.
+    // fake background jobs and keep the UI somewhat responsive.
     //
     // @todo This has to be reworked, tooltips just take too much time.
     $this.each(function(index) {
       const $element = $(this);
+      if (!markElement($element, optionsForAll.timestamp)) {
+        return;
+      }
       if (!lockElement($element)) {
         return;
       }
       if (backGroundCount === 1) {
-        setTimeout(() => singleToolTipWorker.call($(this), optionsForAll, 10));
+        setTimeout(() => singleToolTipWorker($element, optionsForAll, toolTipJobInitialTimeOut));
       } else {
         toolTipsWorkQueue.push({
-          element: this,
+          element: $element,
           options: optionsForAll,
         });
       }
@@ -291,6 +318,8 @@ export {
   backGroundCount,
   backGroundPromise,
   rejectBackgroundPromise,
+  setMarkCount,
+  getMarkCount,
 };
 
 // Local Variables: ***

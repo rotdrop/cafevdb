@@ -255,7 +255,7 @@ make sure that the musicians are also automatically added to the
   }
 
   /** {@inheritdoc} */
-  public function render(bool $execute = true)
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
     $projectName     = $this->projectName;
@@ -1029,7 +1029,7 @@ make sure that the musicians are also automatically added to the
       //$key = 'qf'.$projectsIdx;
       $projectsJoin = $joinTables[self::PROJECT_PARTICIPANTS_TABLE];
       $projectIds = "GROUP_CONCAT(DISTINCT {$projectsJoin}.project_id)";
-      $opts['having']['AND'] = "($projectIds IS NULL OR NOT FIND_IN_SET('$projectId', $projectIds))";
+      $opts[PHPMyEdit::OPT_HAVING]['AND'] = "($projectIds IS NULL OR NOT FIND_IN_SET('$projectId', $projectIds))";
       $opts['misc']['css']['minor'] = [ 'bulkcommit', 'tooltip-right' ];
       $opts['labels']['Misc'] = strval($this->l->t('Add all to %s', [$projectName]));
     }

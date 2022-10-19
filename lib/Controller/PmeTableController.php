@@ -4,26 +4,27 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Controller;
 
-/******************************************************************************
+/*-*****************************************************************************
  *
  * We may want to move the office stuff to a separate service
  *
@@ -60,7 +61,9 @@ use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 
-class PmeTableController extends Controller {
+/** AJAX backends for legacy PME table stuff. */
+class PmeTableController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
@@ -94,20 +97,21 @@ class PmeTableController extends Controller {
   /** @var \OCP\ITempManager */
   private $tempManager;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ISession $session
-    , IAppContainer $appContainer
-    , ConfigService $configService
-    , HistoryService $historyService
-    , RequestParameterService $parameterService
-    , ProjectService $projectService
-    , PHPMyEdit $phpMyEdit
-    , ITempManager $tempManager
-    , $userId
-    , IL10N $l10n
-    , ILogger $logger
+    string $appName,
+    IRequest $request,
+    ISession $session,
+    IAppContainer $appContainer,
+    ConfigService $configService,
+    HistoryService $historyService,
+    RequestParameterService $parameterService,
+    ProjectService $projectService,
+    PHPMyEdit $phpMyEdit,
+    ITempManager $tempManager,
+    $userId,
+    IL10N $l10n,
+    ILogger $logger,
   ) {
     parent::__construct($appName, $request);
 
@@ -123,29 +127,36 @@ class PmeTableController extends Controller {
     $this->userId = $userId;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /**
-   * Return template for table load
+   * Return template for table load.
+   *
+   * @param string $topic
+   *
+   * @return Http\DataResponse
    *
    * @NoAdminRequired
    * @UseSession
    */
-  public function serviceSwitch($topic)
+  public function serviceSwitch(string $topic):Http\Response
   {
     switch ($topic) {
-    case 'load':
-      return $this->load();
-    case 'export':
-      $this->session->close();
-      return $this->export();
+      case 'load':
+        return $this->load();
+      case 'export':
+        $this->session->close();
+        return $this->export();
     }
     return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
   }
 
   /**
-   * Return template for table load
+   * Return template for table load.
+   *
+   * @return Http\Response
    */
-  private function load()
+  private function load():Http\Response
   {
     $this->logInfo('Start');
     try {
@@ -219,10 +230,12 @@ class PmeTableController extends Controller {
   /**
    * Return template for table load
    *
+   * @return Http\Response
+   *
    * @todo Most of this stuff should be moved somewhere else, e.g. to
    * PageRenderer.
    */
-  private function export()
+  private function export():Http\Response
   {
     $exportFormat = $this->parameterService['exportFormat'];
     if (empty($exportFormat)) {
@@ -261,10 +274,4 @@ class PmeTableController extends Controller {
 
     return $this->dataDownloadResponse($data, $fileName, $fileMeta['mimeType']);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

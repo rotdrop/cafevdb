@@ -3320,6 +3320,7 @@ Störung.';
           'email' => $dummy->getEmail(),
           'name' => $dummy->getPublicName(true),
           'dbdata' => $dummy,
+	  'userBase' => 0,
         ],
       ];
     }

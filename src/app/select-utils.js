@@ -60,6 +60,17 @@ const chosenActive = function($select) {
 };
 
 /**
+ * Check whether this $select is controlled by either chosen or selectize.
+ *
+ * @param {jQuery} $select Select element.
+ *
+ * @returns {boolean}
+ */
+const isVanilla = function($select) {
+  return !selectizeActive($select) && !chosenActive($select);
+};
+
+/**
  * Fetch the control instance attached to the given $select if any.
  *
  * @param {jQuery} $select TBD.
@@ -304,13 +315,20 @@ const refreshSelectWidget = function($select) {
   }
 };
 
+/**
+ * Return the jQuery element which actually is shown on the screen.
+ *
+ * @param {jQuery} $select Select element.
+ *
+ * @returns {jQuery}
+ */
 const getWidget = function($select) {
   if (chosenActive($select)) {
     return $select.next();
   } else if (selectizeActive($select)) {
     return getSelectize($select).$wrapper;
   } else {
-    return $();
+    return $select;
   }
 };
 
@@ -428,6 +446,7 @@ export {
   getWidget as widget,
   getSelectFromWidget as selectFromWidget,
   getControlObject,
+  isVanilla,
   locked,
   makePlaceholder,
 };

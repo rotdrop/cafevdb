@@ -5,19 +5,20 @@
  *
  * @author Claus-Justus Heine
  * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /******************************************************************************
@@ -31,8 +32,31 @@
 form.pme-form.project-participant-fields-display {
 
   table.pme-main {
-    /* @include readwriteOnTab("musician"); */
-    /* @include readwriteOnTab("tab-all"); */
+    @for $id from 0 through 15 {
+      @include tableTabDisplay($id, "none", "&", ".project-fees-details");
+    }
+    &.pme-filter-visible, &.pme-sortinfo-visible {
+      @for $id from 0 through 15 {
+        @include tableTabDisplay($id, "table-cell", "&", ".project-fees-details");
+        @include tableTabDisplay($id, "none", "&", ".project-fees-summary");
+      }
+    }
+  }
+
+  .total-project-fees.money {
+    span.finance-state {
+      font-weight:bold;
+      padding:0.2em;
+    }
+    span.totals, span.invoiced {
+      color:black;
+    }
+    span.received {
+      color:blue;
+    }
+    span.outstanding {
+      color:red;
+    }
   }
 
   span.allowed-option {
@@ -43,9 +67,12 @@ form.pme-form.project-participant-fields-display {
   }
 
   &:not(.pme-change) {
-    span.allowed-option-name:empty,
-    span.allowed-option-name:empty ~ span.allowed-option-separator {
-      display:none;
+    span.allowed-option-name:empty {
+      &, & ~ span.allowed-option-separator {
+        &, & ~ span.allowed-option-value {
+          display:none;
+        }
+      }
     }
 
     td.groupofpeople:not(.pme-key),

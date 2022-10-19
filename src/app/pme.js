@@ -85,6 +85,7 @@ const PHPMyEdit = PMEState.PHPMyEdit;
 const pmeDefaultSelector = PMEState.defaultSelector;
 const pmePrefix = PMEState.prefix;
 const pmeOpenDialogs = PMEState.openDialogs;
+const pmePageRenderer = PMEState.pageRenderer;
 
 /**
  * Generate the jQuery object corresponding to the inner container
@@ -466,8 +467,19 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     changeCallback({ reason: 'tabChange' });
   });
 
-  // The easy one, but for changed content
+  const reloadButtonSelector = pmeClassSelectors(
+    'input',
+    ['change', 'delete', 'copy', 'apply', 'more', 'reload']);
+  const reloadingButton = container.find(reloadButtonSelector);
+
+  const saveButtonSelector = 'input.' + pmeToken('save');
+  const saveButton = container.find(saveButtonSelector);
+
   const cancelButton = container.find(pmeClassSelector('input', 'cancel'));
+
+  const allButtons = $().add(reloadingButton).add(saveButton).add(cancelButton);
+
+  // The easy one, but for changed content
   cancelButton
     .off('click')
     .on('click', function(event, triggerData) {
@@ -491,22 +503,17 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
     });
 
   // The complicated ones. This reloads new data.
-  const ReloadButtonSel = pmeClassSelectors(
-    'input',
-    ['change', 'delete', 'copy', 'apply', 'more', 'reload']);
-  const reloadingButton = container.find(ReloadButtonSel);
-
-  // remove non-delegate handlers and stop default actions in any case.
-  reloadingButton.off('click');
 
   // install a delegate handler on the outer-most container which
   // finally will run after possible inner data-validation handlers
   // have been executed.
+  // remove non-delegate handlers and stop default actions in any case.
+  reloadingButton.off('click');
   container
-    .off('click', ReloadButtonSel)
+    .off('click', reloadButtonSelector)
     .on(
       'click',
-      ReloadButtonSel,
+      reloadButtonSelector,
       function(event, triggerData) {
 
         const $submitButton = $(this);
@@ -521,9 +528,21 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
             && !$submitButton.hasClass(pmeToken('reload'))) {
           // so this is pme-more, morechange, apply
 
-          if (!checkInvalidInputs(container)) {
+          allButtons.prop('disabled', true);
+          const cleanup = () => {
+            allButtons.prop('disabled', false);
+          };
+
+          if (!checkInvalidInputs(container, {
+            cleanup,
+            afterDialog($invalidInputs) {
+              cleanup();
+            },
+            timeout: 10000, // animation timeout
+          })) {
             return false;
           }
+          cleanup();
 
           options.modified = true;
         } else if ($submitButton.hasClass(pmeToken('reload'))) {
@@ -549,29 +568,38 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
    * view-mode.
    *
    */
-  const saveButtonSel = 'input.' + pmeToken('save');
-  const saveButton = container.find(saveButtonSel);
-  saveButton.off('click');
 
+  saveButton.off('click');
   container
-    .off('click', saveButtonSel)
-    .on('click', saveButtonSel, function(event, triggerData) {
+    .off('click', saveButtonSelector)
+    .on('click', saveButtonSelector, function(event, triggerData) {
 
       if (container.data(pmeToken('saving'))) {
         return false;
       }
       container.data(pmeToken('saving'), true);
 
+      allButtons.prop('disabled', true);
+
+      $.fn.cafevTooltip.remove();
       tableDialogLoadIndicator(container, true);
       Page.busyIcon(true);
 
+      const cleanup = () => {
+        tableDialogLoadIndicator(container, false);
+        Page.busyIcon(false);
+        allButtons.prop('disabled', false);
+        container.data(pmeToken('saving'), false);
+      };
+
       // Brief front-end-check for empty required fields.
-      if (!checkInvalidInputs(
-        container, function() {
-          tableDialogLoadIndicator(container, false);
-          Page.busyIcon(false);
-          container.data(pmeToken('saving'), false);
-        })) {
+      if (!checkInvalidInputs(container, {
+        cleanup,
+        afterDialog($invalidInputs) {
+          cleanup();
+        },
+        timeout: 10000, // animation timeout
+      })) {
         return false;
       }
 
@@ -606,9 +634,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
         pmePost(post)
           .fail(function(xhr, status, errorThrown) {
             unblockTableDialog(container);
-            tableDialogLoadIndicator(container, false);
-            Page.busyIcon(false);
-            container.data(pmeToken('saving'), false);
+            cleanup();
           })
           .done(function(htmlContent, historyAction, post) {
             const op = $(htmlContent).find(pmeSysNameSelector('input', 'op_name'));
@@ -621,6 +647,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                                   + ' Sorry for that.'), { timeout: 15 });
               tableDialogReplace(container, htmlContent, options, changeCallback);
               container.data(pmeToken('saving'), false);
+              allButtons.prop('disabled', false);
               return;
             }
 
@@ -652,6 +679,7 @@ const tableDialogHandlers = function(options, changeCallback, triggerData) {
                 Page.busyIcon(false);
               }
             }
+            allButtons.prop('disabled', false);
             container.data(pmeToken('saving'), false);
           });
       });
@@ -1300,6 +1328,7 @@ const installFilterChosen = function(containerSel) {
   container.find('select.' + pmeCompFilter).chosen({
     width: 'auto',
     inherit_select_classes: true,
+    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
     disable_search_threshold: 10,
     single_backstroke_delete: false,
   });
@@ -1314,6 +1343,7 @@ const installFilterChosen = function(containerSel) {
   container.find('select.' + pmeFilter).chosen({
     width: '100%', // This needs margin:0 and box-sizing:border-box to be useful.
     inherit_select_classes: true,
+    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
     no_results_text: noRes,
     single_backstroke_delete: false,
   });
@@ -1395,7 +1425,7 @@ function installInputSelectize(containerSel, onlyClass) {
     // console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
     $self.selectize(selectizeOptions);
     const selectizeInstance = getSelectConstrolObject($self);
-    selectizeInstance.$control_input.removeAttr('autofill');
+    selectizeInstance.$control_input.removeAttr('autofill').addClass('selectize-input-element');
     const $selectWidget = selectWidget($self);
     const toolTip = $self.attr('title') || $self.attr('data-original-title');
     if (toolTip) {
@@ -1441,6 +1471,7 @@ const installInputChosen = function(containerSel, onlyClass) {
     const chosenOptions = {
       // width:'100%',
       inherit_select_classes: true,
+      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
       disable_search: self.hasClass('no-search'),
       disable_search_threshold: self.hasClass('no-search') ? 999999 : 10,
       no_results_text: noRes,
@@ -1689,13 +1720,15 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
   container.on('click', tableSel + ' input.' + pmeHide, function(event) {
     event.stopImmediatePropagation(); // don't submit, not necessary
 
-    const table = container.find(tableSel);
-    const form = container.find(formSel);
+    const $table = container.find(tableSel);
+    const $form = container.find(formSel);
 
     $(this).addClass(hiddenClass);
-    table.find('tr.' + pmeFilter).addClass(hiddenClass);
-    table.find('input.' + pmeSearch).removeClass(hiddenClass);
-    form.find('input[name="' + pmeSys('fl') + '"]').val(0);
+
+    $table.addClass(pmeFilter + '-hidden').removeClass(pmeFilter + '-visible');
+    $table.find('tr.' + pmeFilter).addClass(hiddenClass);
+    $table.find('input.' + pmeSearch).removeClass(hiddenClass);
+    $form.find('input[name="' + pmeSys('fl') + '"]').val(0);
 
     container.trigger('pmetable:layoutchange');
 
@@ -1706,13 +1739,15 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
   container.on('click', tableSel + ' input.' + pmeSearch, function(event) {
     event.stopImmediatePropagation(); // don't submit, not necessary
 
-    const table = container.find(tableSel);
-    const form = container.find(formSel);
+    const $table = container.find(tableSel);
+    const $form = container.find(formSel);
 
     $(this).addClass(hiddenClass);
-    table.find('tr.' + pmeFilter).removeClass(hiddenClass);
-    table.find('input.' + pmeHide).removeClass(hiddenClass);
-    form.find('input[name="' + pmeSys('fl') + '"]').val(1);
+
+    $table.removeClass(pmeFilter + '-hidden').addClass(pmeFilter + '-visible');
+    $table.find('tr.' + pmeFilter).removeClass(hiddenClass);
+    $table.find('input.' + pmeHide).removeClass(hiddenClass);
+    $form.find('input[name="' + pmeSys('fl') + '"]').val(1);
 
     // maybe re-style chosen select-boxes
     let reattachChosen = false;
@@ -1721,7 +1756,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     const selector = pmeClassSelectors(
       pfx + ' ' + 'div.chosen-container',
       ['filter', 'comp-filter']);
-    table.find(selector).each(function(idx) {
+    $table.find(selector).each(function(idx) {
       if ($(this).width() === 0 || $(this).width() === 60) {
         $(this).prev().chosen('destroy');
         reattachChosen = true;
@@ -1789,6 +1824,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     gotoSelect.chosen({
       width: 'auto',
       inherit_select_classes: true,
+      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
       disable_search_threshold: 10,
     });
     if (gotoSelect.is(':disabled')) {
@@ -1802,6 +1838,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     container.find('select.' + pmePageRows).chosen({
       width: 'auto',
       inherit_select_classes: true,
+      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
       disable_search: true,
     });
   }
@@ -1955,6 +1992,7 @@ export {
   pmePushCancellable as pushCancellable,
   pmeHalt as halt,
   pmeIsHalted as halted,
+  pmePageRenderer as pageRenderer,
 };
 
 // Local Variables: ***

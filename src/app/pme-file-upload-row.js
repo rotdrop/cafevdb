@@ -283,7 +283,16 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
         $parentFolder.prop('disabled', noFilesAppLink()).toggleClass('disabled', noFilesAppLink());
 
         // replace the upload data
-        $uploadUi.find('input[name="data"]').val(JSON.stringify($thisRow.data()));
+        //
+        // @todo This has to be made more stable, filtering on key name is not good.
+        $uploadUi.find('input[name="data"]').val(JSON.stringify(
+          $thisRow.data(),
+          (k, v) => {
+            if (k.match(/tooltip/i)) {
+              return undefined;
+            }
+            return v;
+          }));
       }
       Notification.messages(data.message);
       cleanup();

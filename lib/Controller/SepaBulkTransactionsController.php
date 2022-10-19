@@ -19,6 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Controller;
@@ -139,7 +140,7 @@ class SepaBulkTransactionsController extends Controller
     array $sepaBulkTransactions = [],
     ?string $sepaDueDeadline = null,
     int $bulkTransactionId = 0,
-  ):DataResponse {
+  ):Response {
     switch ($topic) {
       case 'create':
         $sepaBulkTransactions = array_values(array_unique($sepaBulkTransactions));

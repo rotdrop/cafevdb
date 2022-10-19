@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
@@ -48,7 +49,7 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorageTrait;
+  use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\CryptoTrait;
@@ -193,17 +194,18 @@ class SepaBankAccounts extends PMETableViewBase
   /** @var Entities\Project */
   private $project = null;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
-    , ProjectParticipantFieldsService $participantFieldsService
-    , FinanceService $financeService
-    , ProjectService $projectService
-    , UserStorage $userStorage
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
+    ProjectParticipantFieldsService $participantFieldsService,
+    FinanceService $financeService,
+    ProjectService $projectService,
+    UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->participantFieldsService = $participantFieldsService;
@@ -215,42 +217,39 @@ class SepaBankAccounts extends PMETableViewBase
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
       $this->projectName = $this->project->getName();
     }
-
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Remove this Bank-Account?');
-    } else if ($this->viewOperation()) {
+    } elseif ($this->viewOperation()) {
       if ($this->projectId > 0 && $this->projectName != '') {
         return $this->l->t('Bank-Account for %s', array($this->projectName));
       } else {
         return $this->l->t('Bank-Account');
       }
-    } else if ($this->changeOperation()) {
+    } elseif ($this->changeOperation()) {
       return $this->l->t('Change this Bank-Account');
     }
     if ($this->projectId > 0 && $this->projectName != '') {
-      return $this->l->t('Overview over all SEPA Bank Accounts for %s',
-                  array($this->projectName));
+      return $this->l->t('Overview over all SEPA Bank Accounts for %s', [ $this->projectName ]);
     } else {
       return $this->l->t('Overview over all SEPA Bank Accounts');
     }
   }
 
-  /** Show the underlying table. */
-  public function render(bool $execute = true)
+  /** {@inheritdoc} */
+  public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
     $projectId       = $this->projectId;
-    $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
-    $expertMode      = $this->expertMode;
 
     $projectMode = $this->projectId > 0;
-    if ($projectMode)  {
+    if ($projectMode) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
     }
 
@@ -351,7 +350,7 @@ class SepaBankAccounts extends PMETableViewBase
       $buttons[] = [ 'code' =>  $sepaBulkTransactions, 'name' => 'bulk-transactions' ];
 
       // Control to select when we want to have the money (or to have spent the money)
-      $cgiDueDeadline = $this->requestParameters->getParam('sepaDueDeadline');
+      // $cgiDueDeadline = $this->requestParameters->getParam('sepaDueDeadline');
       $sepaDueDeadline = '
 <span id="sepa-due-deadline" class="sepa-due-deadline">
   <input type="text"
@@ -458,7 +457,7 @@ class SepaBankAccounts extends PMETableViewBase
       'navigation' => 'VCD', // 'VCPD',
     ];
 
-    if ($this->addOperation()){
+    if ($this->addOperation()) {
       $opts['display']['tabs'] = false;
     }
 
@@ -501,30 +500,30 @@ class SepaBankAccounts extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) use ($projectMode) {
       $joinInfo['table'] = $table;
       switch ($table) {
-      case self::PROJECT_PARTICIPANTS_TABLE:
-        if ($projectMode) {
-          $joinInfo['identifier']['project_id'] = [
-            'value' => $this->project->getId(),
-          ];
-        }
-        break;
-      case self::SEPA_DEBIT_MANDATES_TABLE:
-        if ($projectMode) {
-          $joinInfo['filter']['project_id'] = [
-            'value' => [ $this->project->getId(), $this->membersProjectId ],
-          ];
-        }
-        if (!$this->showDisabled) {
-          $joinInfo['filter']['deleted'] = [
-            'value' => null,
-          ];
-        }
-        break;
-      case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
-        break;
-      default:
-        break;
+        case self::PROJECT_PARTICIPANTS_TABLE:
+          if ($projectMode) {
+            $joinInfo['identifier']['project_id'] = [
+              'value' => $this->project->getId(),
+            ];
+          }
+          break;
+        case self::SEPA_DEBIT_MANDATES_TABLE:
+          if ($projectMode) {
+            $joinInfo['filter']['project_id'] = [
+              'value' => [ $this->project->getId(), $this->membersProjectId ],
+            ];
+          }
+          if (!$this->showDisabled) {
+            $joinInfo['filter']['deleted'] = [
+              'value' => null,
+            ];
+          }
+          break;
+        case self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE:
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'label');
+          break;
+        default:
+          break;
       }
     });
 
@@ -579,24 +578,28 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['bank_account_owner'] = [
       'tab' => [ 'id' => [ 'account', 'mandate', ], ],
       'name' => $this->l->t('Bank Account Owner'),
-      'css' => [ 'postfix' => [ 'allow-empty', 'bank-account-owner', ], ],
+      'css' => [ 'postfix' => [ 'allow-empty', 'bank-account-owner', 'lazy-decryption', ], ],
       'input' => 'M',
       'options' => 'LFACPDV',
       'select' => 'T',
       'select|LF' => 'D',
       'maxlen' => 80,
       'encryption' => [
-        'encrypt' => function($value) { return $this->ormEncrypt($value); },
-        'decrypt' => function($value) { return $this->ormDecrypt($value); },
+        'encrypt' => fn($value) => $this->ormEncrypt($value),
+        'decrypt' => fn($value) => md5($value), // $this->ormDecrypt($value),
       ],
-      'values|LF'  => [
+      'values|LFVD'  => [
         'table' => self::TABLE,
         'column' => 'bank_account_owner',
         'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
-        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
         'filters' => (!$projectMode
                       ? null
                       : self::musicianInProjectSql($this->projectId, 'musician_id')),
+        'data' => [
+          'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+          'crypto-hash' => 'MD5($table.$column)',
+          'meta-data' => '"iban"', // SQL STRING
+        ],
       ],
       'values|ACP' => [
         'table' => self::TABLE,
@@ -604,10 +607,31 @@ class SepaBankAccounts extends PMETableViewBase
         'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
         // in order to support auto-completion and/or filling in particular
         // while adding new mandates we provide the bank account identifier
-        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+        'data' => [
+          'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+          'crypto-hash' => 'MD5($table.$column)',
+          'meta-data' => '"bankAccountOwner"', // SQL string
+        ],
         'filters' => '$table.deleted IS NULL',
       ],
+      'display' => [
+        'attributes' => [
+          'data-meta-data' => 'bankAccountrOwner',
+        ],
+      ],
     ];
+    // See also FieldTraits/SepaAccountsTrait. Decrypt values in the
+    // background to improve the responsiveness of the UI.
+    $opts['fdd']['bank_account_owner']['encryption|LF']['decrypt'] = function($value) {
+      // $this->ormDecrypt($value);
+      $value = '<span class="iban encryption-placeholder"
+      data-crypto-hash="' . md5($value) . '"
+      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
+>'
+        . $this->l->t('please wait')
+        . '</span>';
+      return $value;
+    };
 
     // soft-deletion
     $opts['fdd']['deleted'] = Util::arrayMergeRecursive(
@@ -619,15 +643,15 @@ class SepaBankAccounts extends PMETableViewBase
     $opts['fdd']['iban'] = [
       'tab' => [ 'id' => [ 'account', 'mandate' ] ],
       'name' => 'IBAN',
-      'css' => [ 'postfix' => [ 'bank-account-iban', ], ],
+      'css' => [ 'postfix' => [ 'bank-account-iban', 'meta-data-popup', 'lazy-decryption' ], ],
       'input' => 'M',
       'options' => 'LFACPDV',
       'select' => 'T',
       'select|LF' => 'D',
       'maxlen' => 35,
       'encryption' => [
-        'encrypt' => function($value) { return $this->ormEncrypt($value); },
-        'decrypt' => function($value) { return $this->ormDecrypt($value); },
+        'encrypt' => fn($value) => $this->ormEncrypt($value),
+        'decrypt' => fn($value) => md5($value), // $this->ormDecrypt($value),
       ],
       'values|LFVD' => [
         'table' => self::TABLE,
@@ -636,7 +660,11 @@ class SepaBankAccounts extends PMETableViewBase
         'filters' => (!$projectMode
                       ? null
                       : self::musicianInProjectSql($this->projectId, 'musician_id')),
-        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+        'data' => [
+          'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+          'crypto-hash' => 'MD5($table.$column)',
+          'meta-data' => '"iban"', // SQL STRING
+        ],
       ],
       'values|ACP' => [ // use full table contents for auto-completion
         'table' => self::TABLE,
@@ -644,7 +672,11 @@ class SepaBankAccounts extends PMETableViewBase
         'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
         // in order to support auto-completion and/or filling in particular
         // while adding new mandates we provide the bank account identifier
-        'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+        'data' => [
+          'data' => 'GROUP_CONCAT(DISTINCT CONCAT_WS("'.self::COMP_KEY_SEP.'", $table.musician_id, $table.sequence))',
+          'crypto-hash' => 'MD5($table.$column)',
+          'meta-data' => '"iban"', // SQL STRING
+        ],
         'filters' => '$table.deleted IS NULL',
       ],
       'display' => [
@@ -656,8 +688,28 @@ class SepaBankAccounts extends PMETableViewBase
           }
           return $result;
         },
+        'attributes' => [
+          'data-meta-data' => 'iban',
+        ],
+      ],
+      'display|LF' => [
+        'attributes' => [
+          'data-meta-data' => 'iban',
+        ],
       ],
     ];
+    // See also FieldTraits/SepaAccountsTrait. Decrypt values in the
+    // background to improve the responsiveness of the UI.
+    $opts['fdd']['iban']['encryption|LF']['decrypt'] = function($value) {
+      // $this->ormDecrypt($value);
+      $value = '<span class="iban encryption-placeholder"
+      data-crypto-hash="' . md5($value) . '"
+      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
+>'
+        . $this->l->t('please wait')
+        . '</span>';
+      return $value;
+    };
 
     $opts['fdd']['blz'] = [
       'tab' => [ 'id' => 'account' ],
@@ -666,8 +718,8 @@ class SepaBankAccounts extends PMETableViewBase
       'input|LF' => 'H',
       'maxlen' => 12,
       'encryption' => [
-        'encrypt' => function($value) { return $this->ormEncrypt($value); },
-        'decrypt' => function($value) { return $this->ormDecrypt($value); },
+        'encrypt' => fn($value) => $this->ormEncrypt($value),
+        'decrypt' => fn($value) => $this->ormDecrypt($value),
       ],
     ];
 
@@ -678,8 +730,8 @@ class SepaBankAccounts extends PMETableViewBase
       'select' => 'T',
       'maxlen' => 35,
       'encryption' => [
-        'encrypt' => function($value) { return $this->ormEncrypt($value); },
-        'decrypt' => function($value) { return $this->ormDecrypt($value); },
+        'encrypt' => fn($value) => $this->ormEncrypt($value),
+        'decrypt' => fn($value) => $this->ormDecrypt($value),
       ],
     ];
 
@@ -874,14 +926,15 @@ class SepaBankAccounts extends PMETableViewBase
 
           return '<div class="file-upload-wrapper">
   <table class="file-upload">'
-            . $this->dbFileUploadRowHtml($writtenMandateId,
-                                         fieldId: $recordId['musician_id'],
-                                         optionKey: $row['qf'.($k-4)],
-                                         subDir: $this->getDebitMandatesFolderName(),
-                                         fileBase: $this->getLegacyDebitMandateFileName($mandateReference),
-                                         overrideFileName: true,
-                                         musician: $musician,
-                                         project: $project)
+            . $this->dbFileUploadRowHtml(
+              $writtenMandateId,
+              fieldId: $recordId['musician_id'],
+              optionKey: $row['qf'.($k-4)],
+              subDir: $this->getDebitMandatesFolderName(),
+              fileBase: $this->getLegacyDebitMandateFileName($mandateReference),
+              overrideFileName: true,
+              musician: $musician,
+              project: $project)
             . '
   </table>
 </div>';
@@ -923,7 +976,22 @@ class SepaBankAccounts extends PMETableViewBase
       if ($monetaryFields->count() > 0) {
         $this->makeTotalFeesField($opts['fdd'], $monetaryFields, self::AMOUNT_TAB_ID);
       }
-      $participantFieldsGenerator($opts['fdd']);
+
+      $totalFeesTargetIndex = count($opts['fdd']);
+
+      $subTotals = [];
+      $participantFieldsGenerator($opts['fdd'], $subTotals);
+
+      if (!empty($subTotals)) {
+        $totalFeesIndex = count($opts['fdd']);
+        $this->makeTotalFeesFields($opts['fdd'], $subTotals, self::AMOUNT_TAB_ID);
+
+        $baseFdd = array_slice($opts['fdd'], 0, $totalFeesTargetIndex);
+        $participantFieldsFdd = array_slice($opts['fdd'], $totalFeesTargetIndex, $totalFeesIndex - $totalFeesTargetIndex);
+        $totalFeesFdd = array_slice($opts['fdd'], $totalFeesIndex);
+
+        $opts['fdd'] = $baseFdd + $totalFeesFdd + $participantFieldsFdd;
+      }
     }
 
     ///////////////
@@ -946,21 +1014,20 @@ class SepaBankAccounts extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
-      function(&$pme, $op, $step, &$row)
-        use ($projectIndex, $mandateDateIndex, $mandateRecurringIndex, $mandateDeletedIndex) {
-          switch ($op) {
-            case PHPMyEdit::SQL_QUERY_UPDATE:
-              if (empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence', $pme->fdd)])) {
-                // enable input for unset debit mandate
-                $pme->fdd[$projectIndex]['input'] = '';
-                $pme->fdd[$mandateDateIndex]['input'] = 'R';
-                $pme->fdd[$mandateDeletedIndex]['input'] = 'R';
-                $pme->fdd[$mandateRecurringIndex]['input'] = 'R';
-              }
-              break;
-          }
-          return true;
-        };
+      function(&$pme, $op, $step, &$row) use ($projectIndex, $mandateDateIndex, $mandateRecurringIndex, $mandateDeletedIndex) {
+        switch ($op) {
+          case PHPMyEdit::SQL_QUERY_UPDATE:
+            if (empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence', $pme->fdd)])) {
+              // enable input for unset debit mandate
+              $pme->fdd[$projectIndex]['input'] = '';
+              $pme->fdd[$mandateDateIndex]['input'] = 'R';
+              $pme->fdd[$mandateDeletedIndex]['input'] = 'R';
+              $pme->fdd[$mandateRecurringIndex]['input'] = 'R';
+            }
+            break;
+        }
+        return true;
+      };
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
 
@@ -977,6 +1044,8 @@ class SepaBankAccounts extends PMETableViewBase
       return true;
     };
 
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::OPERATION_LIST][PHPMyEdit::TRIGGER_PRE][] = [ $this, 'totalFeesPreFilterTrigger' ];
+
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
     if ($execute) {
@@ -986,7 +1055,12 @@ class SepaBankAccounts extends PMETableViewBase
     }
   }
 
-  private function tableTabs($participantFields = [])
+  /**
+   * @param iterable $participantFields
+   *
+   * @return array
+   */
+  private function tableTabs(iterable $participantFields = []):array
   {
     $tabs = [
       [
@@ -1009,12 +1083,15 @@ received so far'),
       ];
     }
 
-    $extraTabs = [];
     foreach ($participantFields as $field) {
 
       $extraTab = $field['tab'] ?: ProjectParticipantFieldsService::defaultTabId($field->getMultiplicity(), $field->getDataType());
       if (empty($extraTab)) {
         continue;
+      }
+
+      if ($extraTab == 'finance') {
+        $extraTab = self::AMOUNT_TAB_ID;
       }
 
       foreach ($tabs as $tab) {
@@ -1026,6 +1103,7 @@ received so far'),
           break;
         }
       }
+
       if (!empty($extraTab)) {
         $newTab = [
           'id' => $extraTab,
@@ -1055,8 +1133,22 @@ received so far'),
 
   /**
    * Safe-guard against unwanted changes
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateSanitizeFields(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function beforeUpdateSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
 
@@ -1110,16 +1202,29 @@ received so far'),
    * - check whether it is is a new IBAN for the musician, otherwise redirect to the change dialog
    * - prepare data to be usable by beforeUpdateDoUpdateAll() and beforeInsertDoInsertAll()
    *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeInsertGenerateKeys(&$pme, $op, $step, &$oldvals, &$changed, &$newvals)
+  public function beforeInsertGenerateKeys(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     /** @var Entities\Musician $musician */
-    $musician = $this->getReference(Entities\Musician::class, $newvals['musician_id']);
-    $sequence = $newvals['sequence']??null;
+    $musician = $this->getReference(Entities\Musician::class, $newValues['musician_id']);
+    $sequence = $newValues['sequence']??null;
 
     $bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
 
-    if (!empty($newvals['sequence'])) {
+    if (!empty($newValues['sequence'])) {
       // if we have a sequence, fetch the bank account
       /** @var Entities\SepaBankAccount $bankAccount */
       $bankAccount = $bankAccountsRepository->find([
@@ -1139,19 +1244,16 @@ received so far'),
       // Still make sure that an existing bank-account with the same IBAN is
       // re-used. Unfortunately findBy() does not work with encrypted fields,
       // so fetch all and filter in PHP.
-      $iban = $newvals['iban'];
+      $iban = $newValues['iban'];
       $bankAccountCandidates = $bankAccountsRepository->findBy([
         'musician' => $musician,
         //'iban' => $iban,
         'deleted' => null,
       ]);
-      $bankAccountCandidates = array_values(array_filter(
-        $bankAccountCandidates,
-        function($account) use  ($iban) {
-          /** @var Entities\SepaBankAccount $account */
-          return $account->getIban() == $iban;
-        }
-      ));
+      $bankAccountCandidates = array_values(
+        array_filter(
+          $bankAccountCandidates, fn(Entities\SepaBankAccount $account) => $account->getIban() == $iban
+        ));
       /** @var Entities\SepaBankAccount $account */
       foreach ($bankAccountCandidates as $account) {
         $this->logInfo('IBAN ' . $account->getIban());
@@ -1161,7 +1263,7 @@ received so far'),
         throw new Exceptions\DatabaseEntityNotUniqueException(
           $this->l->t(
             'More than one (%1$d) active bank account found for musician "%2$s" and IBAN "%3$s".',
-            [ count($bankAccountCandidates), $musician->getPublicName(true), $newvals['iban'] ]
+            [ count($bankAccountCandidates), $musician->getPublicName(true), $newValues['iban'] ]
           )
         );
       }
@@ -1171,52 +1273,52 @@ received so far'),
     $maxSequence = $this->getDatabaseRepository(Entities\SepaDebitMandate::class)->sequenceMax($musician);
     $debitMandateSequence = $maxSequence + 1;
     $debitMandateSequenceKey = $this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence');
-    $newvals[$debitMandateSequenceKey] = $debitMandateSequence;
+    $newValues[$debitMandateSequenceKey] = $debitMandateSequence;
 
     // add some missing values
-    $newvals[$this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'bank_account_sequence')] =
-      $newvals['sequence'];
-    $newvals[$this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'project_id')] =
-      $newvals[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')];
+    $newValues[$this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'bank_account_sequence')] =
+      $newValues['sequence'];
+    $newValues[$this->joinTableFieldName(self::SEPA_DEBIT_MANDATES_TABLE, 'project_id')] =
+      $newValues[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')];
 
     // convert to the KEY:VALUE format understood by beforeInsert...
-    foreach ($newvals as $key => $value) {
+    foreach ($newValues as $key => $value) {
       if ($key == $debitMandateSequenceKey) {
         continue;
       }
       if (strpos($key, self::SEPA_DEBIT_MANDATES_TABLE . self::JOIN_FIELD_NAME_SEPARATOR) === 0) {
-        $newvals[$key] = $debitMandateSequence . self::JOIN_KEY_SEP . $value;
+        $newValues[$key] = $debitMandateSequence . self::JOIN_KEY_SEP . $value;
       }
     }
 
-    $changed = array_keys($newvals);
+    $changed = array_keys($newValues);
 
     if (empty($bankAccount)) {
       $maxSequence = $bankAccountsRepository->sequenceMax($musician);
-      $newvals['sequence'] = $maxSequence + 1;
+      $newValues['sequence'] = $maxSequence + 1;
     } else {
       // redirect to the updater
 
       if (!$bankAccount->unused()) {
-        $newvals['bank_account_owner'] = $bankAccount->getBankAccountOwner();
+        $newValues['bank_account_owner'] = $bankAccount->getBankAccountOwner();
       }
 
-      $oldvals['musician_id'] = $newvals['musician_id'];
-      $oldvals['sequence'] = $newvals['sequence'];
-      $oldvals['deleted'] = $newvals['deleted'];
-      $oldvals['iban'] = $newvals['iban'];
-      $oldvals['iban'] = $newvals['iban'];
-      $oldvals['blz'] = $newvals['blz'];
-      $oldvals['bic'] = $newvals['bic'];
+      $oldValues['musician_id'] = $newValues['musician_id'];
+      $oldValues['sequence'] = $newValues['sequence'];
+      $oldValues['deleted'] = $newValues['deleted'];
+      $oldValues['iban'] = $newValues['iban'];
+      $oldValues['iban'] = $newValues['iban'];
+      $oldValues['blz'] = $newValues['blz'];
+      $oldValues['bic'] = $newValues['bic'];
 
       $changed = [];
-      foreach (array_merge(array_keys($oldvals), array_keys($newvals)) as $key) {
-        if ($newvals[$key] !== $oldvals[$key]) {
+      foreach (array_merge(array_keys($oldValues), array_keys($newValues)) as $key) {
+        if ($newValues[$key] !== $oldValues[$key]) {
           $changed[] = $key;
         }
       }
 
-      return $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldvals, $changed, $newvals);
+      return $this->beforeUpdateDoUpdateAll($pme, $op, $step, $oldValues, $changed, $newValues);
     }
 
     return true;
@@ -1227,15 +1329,23 @@ received so far'),
    * definitions of the table. This is needed by the
    * ParticipantFieldsTrait in order to move extra-fields to the
    * correct tab.
+   *
+   * @param string $idOrName Tab id or translated tab name.
+   *
+   * @return string
    */
-  private function tableTabId($idOrName)
+  protected function tableTabId(string $idOrName):string
   {
+    if ($idOrName === 'finance') {
+      $idOrName = self::AMOUNT_TAB_ID;
+    }
     $dflt = $this->tableTabs();
-    foreach($dflt as $tab) {
+    foreach ($dflt as $tab) {
       if ($idOrName === $tab['name'] || $idOrName === $this->l->t($tab['id'])) {
         return $tab['id'];
       }
     }
+
     return $idOrName;
   }
 }

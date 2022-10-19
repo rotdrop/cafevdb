@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -69,7 +70,6 @@ class FileData implements \ArrayAccess
    *       @Gedmo\SlugHandlerOption(name="associationSlug", value="file.dataHash")
    *     })
    * })
-   *
    */
   protected $dataHash;
 
@@ -80,22 +80,28 @@ class FileData implements \ArrayAccess
    */
   protected $data;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set data.
    *
-   * @param string $data
+   * @param null|string $data
+   *
+   * @param string $format
    *
    * @return FileData
    */
-  public function setData($data, string $format = 'binary')
+  public function setData(?string $data, string $format = 'binary')
   {
     switch ($format) {
       case 'base64':
         $this->data = base64_decode($data);
+        // fallthrough
       default:
       case 'resource':
       case 'binary':
@@ -109,35 +115,37 @@ class FileData implements \ArrayAccess
   /**
    * Get data.
    *
+   * @param string $format
+   *
    * @return string|null
    */
-  public function getData(string $format = 'binary')
+  public function getData(string $format = 'binary'):?string
   {
     if (is_resource($this->data)) {
       rewind($this->data);
       switch ($format) {
-      case 'base64':
-        return base64_encode(stream_get_contents($this->data));
-      case 'resource':
-        return $this->data;
-      case 'binary':
-        return stream_get_contents($this->data);
-      default:
-        return $this->data;
+        case 'base64':
+          return base64_encode(stream_get_contents($this->data));
+        case 'resource':
+          return $this->data;
+        case 'binary':
+          return stream_get_contents($this->data);
+        default:
+          return $this->data;
       }
     } else {
       switch ($format) {
-      case 'base64':
-        return base64_encode($this->data);
-      case 'resource':
-        $stream = fopen('php://memory', 'r+');
-        fwrite($stream, $this->data);
-        rewind($stream);
-        return $stream;
-      case 'binary':
-        return $this->data;
-      default:
-        return $this->data;
+        case 'base64':
+          return base64_encode($this->data);
+        case 'resource':
+          $stream = fopen('php://memory', 'r+');
+          fwrite($stream, $this->data);
+          rewind($stream);
+          return $stream;
+        case 'binary':
+          return $this->data;
+        default:
+          return $this->data;
       }
     }
   }
@@ -145,7 +153,7 @@ class FileData implements \ArrayAccess
   /**
    * Set file.
    *
-   * @param $file
+   * @param File $file
    *
    * @return FileData
    */

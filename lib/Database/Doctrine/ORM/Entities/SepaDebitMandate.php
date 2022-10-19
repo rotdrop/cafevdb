@@ -1,23 +1,25 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -64,7 +66,6 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
    * @ORM\Id
-   * @Gedmo\Timestampable(on={"update","change","create","delete"}, field="writtenMandate", timestampField="sepaDebitMandatesChanged")
    */
   private $musician;
 
@@ -180,15 +181,18 @@ class SepaDebitMandate implements \ArrayAccess
    */
   private $payments;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set sequence
    *
-   * @param null|int
+   * @param null|int $sequence
    *
    * @return SepaDebitMandate
    *
@@ -230,9 +234,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return int|Musician
+   * @return null|int|Musician
    */
-  public function getMusician()
+  public function getMusician():?Musician
   {
     return $this->musician;
   }
@@ -302,9 +306,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get project.
    *
-   * @return Project|int
+   * @return null|int|Project
    */
-  public function getProject()
+  public function getProject():?Project
   {
     return $this->project;
   }
@@ -435,15 +439,7 @@ class SepaDebitMandate implements \ArrayAccess
    */
   public function setWrittenMandate(?EncryptedFile $writtenMandate):SepaDebitMandate
   {
-    if (!empty($this->writtenMandate)) {
-      $this->writtenMandate->unlink();
-    }
-
     $this->writtenMandate = $writtenMandate;
-
-    if (!empty($this->writtenMandate)) {
-      $this->writtenMandate->link();
-    }
 
     return $this;
   }
@@ -495,6 +491,8 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * See that the mandate-sequence is reflected by the mandate reference.
    *
+   * @return void
+   *
    * @todo The DB structure probably should be cleaned up s.t. this is not
    * necessary.
    *
@@ -502,7 +500,7 @@ class SepaDebitMandate implements \ArrayAccess
    * @ORM\PreUpdate
    * @ORM\PreFlush
    */
-  public function adjustMandateReference()
+  public function adjustMandateReference():void
   {
     if ($this->sequence !== null && $this->mandateReference !== null) {
       $this->mandateReference = preg_replace(

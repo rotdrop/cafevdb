@@ -74,6 +74,7 @@ module.exports = {
           '_key$',
           'disable_search',
           'inherit_select_classes',
+          'title_attributes',
           'allow_single_deselect',
           'single_backstroke_delete',
           'no_results_text',
