@@ -221,28 +221,40 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
     ],
-    // link only the balance directories via their parent_id
+    // link in the storages table to get the root directory for the balances
+    self::DATABASE_STORAGES_TABLE => [
+      'entity' => Entities\DatabaseStorage::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'id' => [
+          'table' => self::PROJECTS_TABLE,
+          'column' => 'financial_balance_documents_storage_id',
+        ],
+      ],
+      'column' => 'id',
+    ],
+    // link the balance directories via their parent_id for the composite payment
     self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'composite' => [
       'entity' => Entities\DatabaseStorageFolder::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'parent_id' => [
-          'table' => self::PROJECTS_TABLE,
-          'column' => 'financial_balance_documents_folder_id',
+          'table' => self::DATABASE_STORAGES_TABLE,
+          'column' => 'root_id'
         ],
         'id' => 'balance_documents_folder_id',
       ],
       'column' => 'id',
     ],
 
-    // link only the balance directories via their parent_id
+    // link the balance directories via their parent_id for the split payments
     self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'split' => [
       'entity' => Entities\DatabaseStorageFolder::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'parent_id' => [
-          'table' => self::PROJECTS_TABLE,
-          'column' => 'financial_balance_documents_folder_id',
+          'table' => self::DATABASE_STORAGES_TABLE,
+          'column' => 'root_id'
         ],
         'id' => [
           'table' => self::PROJECT_PAYMENTS_TABLE,
@@ -873,6 +885,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       },
     ];
 
+    $balanceRootid = empty($this->project->getFinancialBalanceDocumentsFolder())
+      ? 0
+      : $this->project->getFinancialBalanceDocumentsFolder()->getId();
+
     $opts['fdd']['balance_documents_folder_id'] = [
       'name' => $this->l->t('Composite Project Balance'),
       'tab' => [ 'id' => 'booking' ],
@@ -899,7 +915,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'cast' => [ false ],
         ],
         'data' => 'CONCAT($table.name, "/")',
-        'filters' => '$table.parent_id = ' . $this->project->getFinancialBalanceDocumentsFolder()->getId(),
+        'filters' => '$table.parent_id = ' . $balanceRootid,
       ],
       'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
       'display' => [
@@ -994,7 +1010,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             'cast' => [ false ],
           ],
           'data' => 'CONCAT($table.name, "/")',
-          'filters' => '$table.parent_id = ' . $this->project->getFinancialBalanceDocumentsFolder()->getId(),
+          'filters' => '$table.parent_id = ' . $balanceRootid,
         ],
         'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
           if ($this->isCompositeRow($row, $pme)) {
@@ -1115,7 +1131,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'php|LF' => [$this, 'compositeRowOnly'],
         'encryption' => [
           'encrypt' => fn($value) => $this->ormEncrypt($value),
-          'decrypt' => fn($value) => $this->ormDecrypt($value),
+          'decrypt' => fn($value) => $this->ormDecrypt($value  ?? ''),
         ],
         'display' => [
           'popup' => function($data) {

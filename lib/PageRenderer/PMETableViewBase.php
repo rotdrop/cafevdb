@@ -119,6 +119,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const PROJECT_PARTICIPANT_FIELDS_TABLE = 'ProjectParticipantFields';
   const PROJECT_PARTICIPANT_FIELDS_DATA_TABLE = 'ProjectParticipantFieldsData';
   const PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE = 'ProjectParticipantFieldsDataOptions';
+  const DATABASE_STORAGES_TABLE = 'DatabaseStorages';
   const DATABASE_STORAGE_DIR_ENTRIES_TABLE = 'DatabaseStorageDirEntries';
   const INSTRUMENTS_TABLE = 'Instruments';
   const INSTRUMENT_INSURANCES_TABLE = 'InstrumentInsurances';
