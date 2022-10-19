@@ -33,6 +33,7 @@ import * as Notification from './notification.js';
 import { selected as selectedValues } from './select-utils.js';
 import { token as pmeToken, data as pmeData, sys as pmeSys, classSelectors as pmeClassSelectors } from './pme-selectors.js';
 import { busyIcon as pageBusyIcon } from './page.js';
+import lazyDecryption from './lazy-decryption.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -764,6 +765,8 @@ const ready = function(container) {
   const $container = PHPMyEdit.container(container);
 
   contactValidation($container);
+
+  lazyDecryption($container);
 
   const $form = $container.find('form.pme-form');
 

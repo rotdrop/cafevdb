@@ -40,6 +40,7 @@ import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import pmeExportMenu from './pme-export.js';
 import { pageRenderer } from './pme-state.js';
+import lazyDecryption from './lazy-decryption.js';
 import {
   sys as pmeSys,
   formSelector as pmeFormSelector,
@@ -346,6 +347,8 @@ const myLoadProjectParticipants = function(form, musicians, afterLoadCallback) {
 const myReady = function(selector, dialogParameters, resizeCB) {
   selector = PHPMyEdit.selector(selector);
   const container = PHPMyEdit.container(selector);
+
+  lazyDecryption(container);
 
   Musicians.contactValidation(container);
 

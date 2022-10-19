@@ -372,7 +372,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->joinStructure = array_merge($this->joinStructure, $emailJoin);
 
     list($sepaJoin, $sepaFieldGenerator) = $this->renderSepaAccounts(
-      'musician_id', [ $this->projectId, $this->membersProjectId ], $financeTab);
+      'musician_id', $this->projectId, $this->membersProjectId, $financeTab);
     $this->joinStructure = array_merge($this->joinStructure, $sepaJoin);
 
     list($participantFieldsJoin, $participantFieldsGenerator) =
