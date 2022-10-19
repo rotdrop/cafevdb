@@ -24,7 +24,11 @@
 import { appName } from './app-info.js';
 import globalState from './globalstate.js';
 import { options as getOptions, refreshWidget } from './select-utils.js';
-import { classSelector as pmeClassSelector, cellSelector as pmeCellSelector } from './pme-selectors.js';
+import {
+  classSelector as pmeClassSelector,
+  cellSelector as pmeCellSelector,
+  inputSelector as pmeInputSelector,
+} from './pme-selectors.js';
 import generateUrl from './generate-url.js';
 import jQuery from './jquery.js';
 import { isPlainObject } from 'is-plain-object';
@@ -36,6 +40,54 @@ globalState.cryptoCache = globalState.cryptoCache || {};
 const cryptoCache = globalState.cryptoCache;
 
 const batchSize = 10;
+
+let decryptionJobCount = 0;
+let maxDecryptionJobCount = 0;
+
+let decryptionDeferred = $.Deferred();
+let decryptionPromise = decryptionDeferred.promise();
+
+// array of $.ajax promises.
+const decryptionCalls = [];
+const decryptionTimer = [];
+
+const increaseDecryptionJobCount = function(count) {
+  decryptionJobCount += count;
+  if (decryptionJobCount > maxDecryptionJobCount) {
+    maxDecryptionJobCount = decryptionJobCount;
+  }
+  console.info('INCREMENT JOBS', decryptionJobCount, count, maxDecryptionJobCount);
+};
+
+const decreaseDecryptionJobCount = function(count) {
+  decryptionJobCount -= count;
+  console.info('DECREMENT JOBS', decryptionJobCount, count, maxDecryptionJobCount);
+  if (decryptionJobCount <= 0) {
+    decryptionCalls.splice(0);
+    decryptionTimer.splice(0);
+    console.info('RESOLVE WITH', maxDecryptionJobCount);
+    decryptionDeferred.resolve(maxDecryptionJobCount);
+    decryptionJobCount = 0;
+    maxDecryptionJobCount = 0;
+    decryptionDeferred = $.Deferred();
+    decryptionPromise = decryptionDeferred.promise();
+  }
+};
+
+const rejectDecryptionPromise = function() {
+  const calls = decryptionCalls.splice(0);
+  for (const promise of calls) {
+    promise.abort('cancelled');
+  }
+  for (const timer of decryptionTimer.splice(0)) {
+    clearTimeout(timer);
+  }
+  decryptionDeferred.reject(maxDecryptionJobCount);
+  decryptionJobCount = 0;
+  maxDecryptionJobCount = 0;
+  decryptionDeferred = $.Deferred();
+  decryptionPromise = decryptionDeferred.promise();
+};
 
 const metaDataText = function(metaData) {
   if (isPlainObject(metaData)) {
@@ -50,7 +102,7 @@ const metaDataText = function(metaData) {
   return metaData.join('<br/>');
 };
 
-const replaceEncryptionPlaceholder = async function(data, $container, $filter, $option) {
+const replaceEncryptionPlaceholder = function(data, $container, $filter, $option) {
   $option.html(data.data);
   if ($filter.hasClass('meta-data-popup') && data.metaData) {
     $option
@@ -97,15 +149,15 @@ const replaceEncryptionPlaceholder = async function(data, $container, $filter, $
  * @param {jQuery} $container TBD.
  */
 const lazyBatchDecryptValues = function($container) {
+  const batchJobs = {};
+  const batchOptions = {};
+  const batchInputs = {};
   const $filters = $container.find(pmeClassSelector('select', 'filter') + '.lazy-decryption');
-  console.debug('FILTERS NEEDING DECRYPTION', $filters);
   $filters.each(function() {
     const $filter = $(this);
     $filter.removeClass('lazy-decryption');
     const metaData = $filter.data('metaData');
     const $options = getOptions($filter);
-    const batchJobs = [];
-    const batchOptions = [];
     $options.each(function() {
       const $option = $(this);
       const cryptoHash = $option.data('cryptoHash');
@@ -118,75 +170,128 @@ const lazyBatchDecryptValues = function($container) {
       if (!sealedData || sealedData === '' || sealedData === '*') {
         return;
       }
-      batchJobs.push({ sealedData, cryptoHash });
-      batchOptions[cryptoHash] = $option;
+      batchJobs[metaData] = batchJobs[metaData] || {};
+      batchJobs[metaData][cryptoHash] = { sealedData, cryptoHash };
+      batchOptions[cryptoHash] = { select: $filter, option: $option };
     });
-    for (let i = 0; i < batchJobs.length; i += batchSize) {
-      setTimeout(() => {
-        const valuesChunk = batchJobs.slice(i, i + batchSize);
+  });
+  const $inputs = $container.find(pmeInputSelector + '.lazy-decryption');
+  $inputs.each(function() {
+    const $input = $(this);
+    const metaData = $input.data('metaData');
+    const values = $input.data('pmeValues').values || {};
+    const valueCryptoHash = $input.data('originalValue');
+    for (const [sealedData, cryptoHash] of Object.entries(values)) {
+      const cachedData = cryptoCache[cryptoHash];
+      if (cachedData) {
+        values[sealedData] = cachedData.data;
+        if (valueCryptoHash === cryptoHash) {
+          $input.val(cachedData.data);
+        }
+      } else {
+        batchJobs[metaData] = batchJobs[metaData] || {};
+        batchJobs[metaData][cryptoHash] = { sealedData, cryptoHash };
+        batchInputs[cryptoHash] = {
+          input: $input,
+          hash: cryptoHash,
+          sealedData,
+          values,
+        };
+      }
+    }
+  });
+  // console.info('BATCH JOBS', batchJobs);
+  for (const [metaData, jobs] of Object.entries(batchJobs)) {
+    const jobsArray = Object.values(jobs);
+    for (let i = 0; i < jobsArray.length; i += batchSize) {
+      const valuesChunk = jobsArray.slice(i, i + batchSize);
+      increaseDecryptionJobCount(valuesChunk.length);
+      const timer = setTimeout(() => {
         const url = generateUrl('crypto/decryption/unseal/batch');
-        $.post(url, { sealedData: valuesChunk.map((job) => job.sealedData), metaData })
+        const ajaxPromise = $.post(
+          url, {
+            sealedData: valuesChunk.map((job) => job.sealedData),
+            metaData,
+          })
           .fail(function(xhr, textStatus, errorThrown) {
             console.info('DECRYPTION FAILED', valuesChunk, xhr, textStatus, errorThrown);
+            decreaseDecryptionJobCount(valuesChunk.length);
           })
           .done(function(data) {
             for (const dataItem of data) {
               const cryptoHash = dataItem.hash;
               cryptoCache[cryptoHash] = dataItem;
-              if (!batchOptions[cryptoHash]) {
-                console.info('BUG', batchOptions, dataItem);
+              const batchOption = batchOptions[cryptoHash];
+              if (batchOption) {
+                replaceEncryptionPlaceholder(dataItem, $container, batchOption.select, batchOption.option);
               }
-              replaceEncryptionPlaceholder(dataItem, $container, $filter, batchOptions[cryptoHash]);
+              const batchInput = batchInputs[cryptoHash];
+              if (batchInput) {
+                const $input = batchInput.input;
+                const valueCryptoHash = $input.data('originalValue');
+                if (valueCryptoHash === cryptoHash && $input.val() === cryptoHash) {
+                  $input.val(dataItem.data);
+                }
+                batchInput.values[batchInput.sealedData] = dataItem.data;
+                $input.attr('data-pme-values', JSON.stringify(batchInput.values));
+              }
             }
+            decreaseDecryptionJobCount(valuesChunk.length);
           });
+        decryptionCalls.push(ajaxPromise);
       });
+      decryptionTimer.push(timer);
     }
-  });
+  }
+  decreaseDecryptionJobCount(0); // resolves if nothing had to be done.
 };
 
-/**
- * Background-fetch for encrypted PME fields, one-by-one AJAX calls.
- *
- * @param {jQuery} $container TBD.
- */
-const lazyDecryptValues = function($container) {
-  const $filters = $container.find(pmeClassSelector('select', 'filter') + '.lazy-decryption');
-  console.debug('FILTERS NEEDING DECRYPTION', $filters);
-  $filters.each(function() {
-    const $filter = $(this);
-    $filter.removeClass('lazy-decryption');
-    const metaData = $filter.data('metaData');
-    const $options = getOptions($filter);
-    $options.each(function() {
-      const $option = $(this);
-      const cryptoHash = $option.data('cryptoHash');
-      const cachedData = cryptoCache[cryptoHash];
-      if (cachedData) {
-        replaceEncryptionPlaceholder(cachedData, $container, $filter, $option);
-        return;
-      }
-      const sealedData = $option.val();
-      if (!sealedData) {
-        return;
-      }
-      setTimeout(() => {
-        const url = generateUrl('crypto/decryption/unseal');
-        $.post(url, { sealedData, metaData })
-          .fail(function(xhr, textStatus, errorThrown) {
-            console.info('DECRYPTION FAILED', sealedData, xhr, textStatus, errorThrown);
-          })
-          .done(function(data) {
-            cryptoCache[data.hash] = data;
-            replaceEncryptionPlaceholder(data, $container, $filter, $option);
-          });
-      });
-    });
-  });
-};
+// /**
+//  * Background-fetch for encrypted PME fields, one-by-one AJAX calls.
+//  *
+//  * @param {jQuery} $container TBD.
+//  */
+// const lazyDecryptValues = function($container) {
+//   const $filters = $container.find(pmeClassSelector('select', 'filter') + '.lazy-decryption');
+//   console.debug('FILTERS NEEDING DECRYPTION', $filters);
+//   $filters.each(function() {
+//     const $filter = $(this);
+//     $filter.removeClass('lazy-decryption');
+//     const metaData = $filter.data('metaData');
+//     const $options = getOptions($filter);
+//     $options.each(function() {
+//       const $option = $(this);
+//       const cryptoHash = $option.data('cryptoHash');
+//       const cachedData = cryptoCache[cryptoHash];
+//       if (cachedData) {
+//         replaceEncryptionPlaceholder(cachedData, $container, $filter, $option);
+//         return;
+//       }
+//       const sealedData = $option.val();
+//       if (!sealedData) {
+//         return;
+//       }
+//       setTimeout(() => {
+//         const url = generateUrl('crypto/decryption/unseal');
+//         $.post(url, { sealedData, metaData })
+//           .fail(function(xhr, textStatus, errorThrown) {
+//             console.info('DECRYPTION FAILED', sealedData, xhr, textStatus, errorThrown);
+//           })
+//           .done(function(data) {
+//             cryptoCache[data.hash] = data;
+//             replaceEncryptionPlaceholder(data, $container, $filter, $option);
+//           });
+//       });
+//     });
+//   });
+// };
 
 export default lazyBatchDecryptValues;
 
 export {
-  lazyBatchDecryptValues,
-  lazyDecryptValues,
+  lazyBatchDecryptValues as lazyDecrypt,
+  decryptionJobCount as jobCount,
+  decryptionPromise as promise,
+  rejectDecryptionPromise as reject,
+  // lazyDecryptValues,
 };
