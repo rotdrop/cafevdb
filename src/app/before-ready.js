@@ -329,6 +329,7 @@ const documentReady = function() {
     callback(selector, parameters, resizeCB) {
 
       if (parameters.reason !== 'dialogOpen') {
+        SepaBulkTransactions.backgroundDecryption(selector);
         resizeCB();
         return;
       }

@@ -166,7 +166,7 @@ const lazyBatchDecryptValues = function($container) {
         replaceEncryptionPlaceholder(cachedData, $container, $filter, $option);
         return;
       }
-      const sealedData = $option.val();
+      const sealedData = $option.data('sealedValue') || $option.val();
       if (!sealedData || sealedData === '' || sealedData === '*') {
         return;
       }
