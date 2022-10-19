@@ -33,7 +33,11 @@ import * as Notification from './notification.js';
 import { selected as selectedValues } from './select-utils.js';
 import { token as pmeToken, data as pmeData, sys as pmeSys, classSelectors as pmeClassSelectors } from './pme-selectors.js';
 import { busyIcon as pageBusyIcon } from './page.js';
-import lazyDecryption from './lazy-decryption.js';
+import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -766,7 +770,13 @@ const ready = function(container) {
 
   contactValidation($container);
 
-  lazyDecryption($container);
+  rejectDecryptionPromise();
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.done((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+  lazyDecrypt($container);
 
   const $form = $container.find('form.pme-form');
 
