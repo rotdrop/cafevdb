@@ -68,7 +68,7 @@ const getProjectNameFromProjectBalancesFolders = function(dirInfo) {
     return false;
   }
   dirName = dirName.substring(initialState.sharing.files.folders.projectBalances.length);
-  dirName = dirName.replace(/^\/?\d{4}\/?/, '');
+  dirName = dirName.replace(/^\/?(\d{4}|)\/?/, '');
   const slashPos = dirName.indexOf('/');
   const projectName = slashPos >= 0 ? dirName.substring(0, dirName.indexOf('/')) : dirName;
   return projectName;
