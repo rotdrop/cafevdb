@@ -168,6 +168,27 @@ trait SepaAccountsTrait
               return implode(',', $values);
             },
           ],
+          'encryption|LF' => [
+            'encrypt' => function($value) {
+              $values = Util::explode(',', $value);
+              foreach ($values as &$value) {
+                $value = $this->ormEncrypt($value);
+              }
+              return implode(',', $values);
+            },
+            'decrypt' => function($value) {
+              $values = Util::explode(',', $value);
+              foreach ($values as &$value) {
+                $value = '<span class="iban encryption-placeholder"
+      data-crypto-hash="' . md5($value) . '"
+      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
+>'
+                  . $this->l->t('please wait')
+                  . '</span>'; // $this->ormDecrypt($value);
+              }
+              return implode(',', $values);
+            },
+          ],
           'encryption|ACP' => [
             'encrypt' => function($value) {
               $values = Util::explodeIndexed($value);
@@ -226,18 +247,6 @@ trait SepaAccountsTrait
           'css' => [ 'postfix' => [ 'iban', 'squeeze-subsequent-lines', ], ],
           'css|LF' => [ 'postfix' => [ 'iban', 'squeeze-subsequent-lines', 'lazy-decryption', 'meta-data-popup', ] ],
         ]);
-      $fdd[$ibanName]['encryption|LF']['decrypt'] = function($value) {
-        $values = Util::explode(',', $value);
-        foreach ($values as &$value) {
-          $value = '<span class="iban encryption-placeholder"
-      data-crypto-hash="' . md5($value) . '"
-      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
->'
-            . $this->l->t('please wait')
-            . '</span>'; // $this->ormDecrypt($value);
-        }
-        return implode(',', $values);
-      };
       if (!empty($projectId)) {
         $fdd[$ibanName]['values|LF'] = $fdd[$ibanName]['values'];
         $fdd[$ibanName]['values|LF']['filters'] = '$table.musician_id IN (SELECT pp.musician_id

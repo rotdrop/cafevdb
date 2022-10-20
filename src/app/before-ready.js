@@ -317,6 +317,7 @@ const documentReady = function() {
         ProjectPayments.ready(selector, parameters, resizeCB);
         break;
       default:
+        ProjectPayments.backgroundDecryption(selector);
         resizeCB();
         break;
       }

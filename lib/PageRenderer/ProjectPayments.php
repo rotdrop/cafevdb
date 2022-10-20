@@ -1126,12 +1126,33 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       [
         'name' => $this->l->t('IBAN'),
         'input'  => 'R',
-        'options' => 'LFVD',
+        'options' => 'LFVDCP',
+        'select|LF' => 'D',
         'css'  => [ 'postfix' => [ 'bank-account-iban', ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'encryption' => [
           'encrypt' => fn($value) => $this->ormEncrypt($value),
-          'decrypt' => fn($value) => $this->ormDecrypt($value  ?? ''),
+          'decrypt' => fn($value) => $this->ormDecrypt($value ?? ''),
+        ],
+        'css|LF'  => [ 'postfix' => [ 'bank-account-iban', 'lazy-decryption', 'meta-data-popup', ], ],
+        'encryption|LF' => [
+          'encrypt' => fn($value) => $this->ormEncrypt($value),
+          'decrypt' => function($value) {
+            // $value  $this->ormDecrypt($value);
+            $value = '<span class="iban encryption-placeholder"
+      data-crypto-hash="' . md5($value) . '"
+      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
+>'
+              . $this->l->t('please wait')
+              . '</span>';
+            return $value;
+          },
+        ],
+        'values' => [
+          'data' => [
+            'crypto-hash' => 'MD5($table.$column)',
+            'meta-data' => '"iban"', // SQL STRING
+          ],
         ],
         'display' => [
           'popup' => function($data) {
@@ -1145,6 +1166,15 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             }
             return $result;
           },
+          'attributes' => [
+            'data-meta-data' => 'iban',
+          ],
+        ],
+        'dislay|LF' => [
+          'popup' => 'data',
+          'attributes' => [
+            'data-meta-data' => 'iban',
+          ],
         ],
       ]);
 
