@@ -125,19 +125,31 @@ WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
 
       $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
       $storagesRepository = $this->getDatabaseRepository(Entities\DatabaseStorage::class);
+      $dirEntriesRepository = $this->getDatabaseRepository(Entities\DatabaseStorageFolder::class);
 
       $configService = $this->appContainer->get(Service\ConfigService::class);
 
       /** @var Entities\Project $project */
       foreach ($projectsRepository->findAll() as $project) {
-        $balanceFolder = $project->getFinancialBalanceDocumentsFolder();
-        if (!empty($balanceFolder)) {
-          /** @var Storage\ProjectBalanceSupportingDocumentsStorage $storage */
-          $storage = new Storage\ProjectBalanceSupportingDocumentsStorage([
-            'configService' => $configService,
-            'project' => $project
-          ]);
-          $this->logInfo('STORAGE ID ' . $storage->getId());
+        /** @var Storage\ProjectBalanceSupportingDocumentsStorage $storage */
+        $storage = new Storage\ProjectBalanceSupportingDocumentsStorage([
+          'configService' => $configService,
+          'project' => $project
+        ]);
+        $this->logInfo('STORAGE ID ' . $storage->getId());
+
+        // Finding the balance folder can no longer work this way, as the
+        // method return the root folder from the storage.
+        // $balanceFolder = $project->getFinancialBalanceDocumentsFolder();
+        //
+        /** @var Entities\DatabaseStorageFolder $balanceFolderChild */
+        $balanceFolderChild = $dirEntriesRepository->findOneBy([
+          'name' => $project->getName() . '-%',
+          'parent.parent' => null,
+        ]);
+
+        if (!empty($balanceFolderChild)) {
+          $balanceFolder = $balanceFolderChild->getParent();
           $storageId = $storage->getId();
           if (!str_starts_with($storageId, $baseId)) {
             throw new Exceptions\DatabaseMigrationException(
@@ -158,6 +170,7 @@ WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
           } elseif ($storageEntity->getRoot() != $balanceFolder) {
             $storageEntity->setRoot($balanceFolder);
           }
+          $project->setFinancialBalanceDocumentsStorage($storageEntity);
         }
 
         // Add entries for the participant documents folders as necessary
@@ -243,7 +256,6 @@ WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
       }
 
       // throw new \Exception('STOP');
-
 
       $storage = $this->appContainer->get(Storage\BankTransactionsStorage::class);
       $storageId = $storage->getId();
