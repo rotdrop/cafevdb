@@ -460,10 +460,14 @@ class ProjectParticipantFieldsService
   /**
    * @param null|string $name Name to sanitize.
    *
-   * @return string Sanitized file-name, no dots, no slashes, no spaces
+   * @return null|string Sanitized file-name, no dots, no slashes, no
+   * spaces. null if the argument was null.
    */
-  public static function sanitizeFileName(?string $name):string
+  public static function sanitizeFileName(?string $name):?string
   {
+    if (empty($name)) {
+      return null;
+    }
     $name = Util::normalizeSpaces($name);
     $name = preg_replace([ '|\s*/\s*|', '/[.]/', '/\s*/' ], [ '-', '_', '' ], $name);
 
@@ -475,9 +479,9 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantField $field
    *
-   * @return string
+   * @return null|string
    */
-  public function getFileSystemFieldName(Entities\ProjectParticipantField $field):string
+  public function getFileSystemFieldName(Entities\ProjectParticipantField $field):?string
   {
     assert($field->isFileSystemContext());
 
@@ -489,9 +493,9 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantFieldDataOption $option
    *
-   * @return string
+   * @return null|string
    */
-  public function getFileSystemOptionLabel(Entities\ProjectParticipantFieldDataOption $option):string
+  public function getFileSystemOptionLabel(Entities\ProjectParticipantFieldDataOption $option):?string
   {
     assert($option->isFileSystemContext());
 
