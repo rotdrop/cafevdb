@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Constants;
 /**
  * Folder entry for a database-backed file.
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFoldersRepository")
  */
 class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {

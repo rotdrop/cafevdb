@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Constants;
 /**
  * File-name entry for a database-backed file.
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFilesRepository")
  */
 class DatabaseStorageFile extends DatabaseStorageDirEntry
 {

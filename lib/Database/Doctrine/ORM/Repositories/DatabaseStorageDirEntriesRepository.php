@@ -27,10 +27,4 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 /** Database repository for DatabaseStorageDirEntry entities. */
 class DatabaseStorageDirEntriesRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait;
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
