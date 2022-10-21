@@ -38,9 +38,10 @@ class ConvertFileReferencesToDirEntries extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
+      'SET FOREIGN_KEY_CHECKS = 0', // danger zone
       'ALTER TABLE SepaBulkTransactionData DROP FOREIGN KEY IF EXISTS FK_1EBA3E5BEC15E76C',
       'DROP INDEX IF EXISTS UNIQ_1EBA3E5BEC15E76C ON SepaBulkTransactionData',
-      'ALTER TABLE SepaBulkTransactionData DROP PRIMARY KEY',
+      'ALTER TABLE SepaBulkTransactionData DROP INDEX IF EXISTS `PRIMARY`',
       'ALTER TABLE SepaBulkTransactionData CHANGE COLUMN IF EXISTS encrypted_file_id database_storage_file_id INT NOT NULL',
       'ALTER TABLE SepaBulkTransactionData ADD CONSTRAINT FK_1EBA3E5B4D73A4D4 FOREIGN KEY IF NOT EXISTS (database_storage_file_id) REFERENCES DatabaseStorageDirEntries (id)',
       'CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_1EBA3E5B4D73A4D4 ON SepaBulkTransactionData (database_storage_file_id)',
@@ -54,7 +55,7 @@ class ConvertFileReferencesToDirEntries extends AbstractMigration
       'ALTER TABLE ProjectParticipantFieldsData
   ADD UNIQUE INDEX IF NOT EXISTS UNIQ_E1AAA1E92423759C (supporting_document_id)',
       'ALTER TABLE ProjectParticipantFieldsData
-  DROP FOREIGN IF EXISTS KEY FK_E1AAA1E92423759C',
+  DROP FOREIGN KEY IF EXISTS FK_E1AAA1E92423759C',
       'ALTER TABLE ProjectParticipantFieldsData
   ADD CONSTRAINT FK_E1AAA1E92423759C FOREIGN KEY IF NOT EXISTS (supporting_document_id) REFERENCES DatabaseStorageDirEntries (id)',
 
@@ -105,7 +106,7 @@ LEFT JOIN DatabaseStorageDirEntries de
 LEFT JOIN DatabaseStorageDirEntries parents
   ON parents.id = de.parent_id
 
-SET sdm.writen_mandate_id = de.id
+SET sdm.written_mandate_id = de.id
 
 WHERE de.id IS NOT NULL
   AND parents.parent_id = s.root_id',
@@ -153,7 +154,7 @@ LEFT JOIN DatabaseStorageDirEntries grand_parents
 LEFT JOIN DatabaseStorageDirEntries ancestors
   ON grand_parents.parent_id = ancestors.id
 
-  SET ppfd.supporting_document_id = de.d
+  SET ppfd.supporting_document_id = de.id
 
 WHERE de.id IS NOT NULL
   AND ppf.data_type = "service-fee"
@@ -165,7 +166,7 @@ WHERE de.id IS NOT NULL
 LEFT JOIN ProjectParticipantFields ppf
   ON ppfd.field_id = ppf.id
 LEFT JOIN Projects p
-  ON ppf.project_d = p.id
+  ON ppf.project_id = p.id
 LEFT JOIN Musicians m
   ON ppfd.musician_id = m.id
 LEFT JOIN DatabaseStorages s
