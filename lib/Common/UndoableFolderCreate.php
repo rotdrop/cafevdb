@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,18 +24,23 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use Exception;
+
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IDateTimeFormatter;
+use OCP\Files\AlreadyExistsException as FileAlreadyExistsException;
 
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Create the given path as folder, remove the directory when undo is requested.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class UndoableFolderCreate extends AbstractFileSystemUndoable
 {
@@ -62,11 +67,13 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   /**
    * Undoable folder rename, optionally ignoring non-existing source folder.
    *
-   * @param string|Callable $folderName
+   * @param string|callable $name
    *
-   * @param bool $gracefully Do not throw if folder already exists
+   * @param bool $gracefully Do not throw if folder already exists.
+   *
+   * @param string $ignoredFiles
    */
-  public function __construct($name, bool $gracefully = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
+  public function __construct(mixed $name, bool $gracefully = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
   {
     $this->name = $name;
     $this->gracefully = $gracefully;
@@ -75,13 +82,15 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function initialize(IAppContainer $appContainer) {
+  public function initialize(IAppContainer $appContainer):void
+  {
     parent::initialize($appContainer);
     $this->dateTimeFormatter = $appContainer->get(IDateTimeFormatter::class);
   }
 
   /** {@inheritdoc} */
-  public function do() {
+  public function do():void
+  {
     if (is_callable($this->name)) {
       $this->name = call_user_func($this->name);
     }
@@ -96,7 +105,7 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
     //   -> delete, undelete on undo, or just rename
     $components = explode(UserStorage::PATH_SEP, $this->name);
     if (empty($components)) {
-      throw new \Exception('Cannot create the root-node.');
+      throw new Exception('Cannot create the root-node.');
     }
     $prefix = array_slice($components, 0, count($components)-1);
     $this->userStorage->ensureFolderChain($prefix);
@@ -115,14 +124,14 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
             );
           }
           if (!empty($listing)) {
-            throw new \OCP\Files\AlreadyExistsException($this->l->t('The folder "%s" exists already and is not empty.', $this->name));
+            throw new FileAlreadyExistsException($this->l->t('The folder "%s" exists already and is not empty.', $this->name));
           }
         }
         // empty or "gracefully", just reuse
         $this->reusedExisting = true;
       } else {
         if (!$this->gracefully) {
-          throw new \OCP\Files\AlreadyExistsException($this->l->t('The folder or file "%s" exists already.', $this->name));
+          throw new FileAlreadyExistsException($this->l->t('The folder or file "%s" exists already.', $this->name));
         }
         $this->renamedName = $this->renamedName($this->name);
         $this->userStorage->rename($this->name, $this->renamedName);
@@ -137,7 +146,8 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function undo() {
+  public function undo():void
+  {
     if ($this->reusedExisting) {
       return;
     }
@@ -148,7 +158,7 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function reset()
+  public function reset():void
   {
     $this->reusedExisting = false;
     $this->renamedName = null;

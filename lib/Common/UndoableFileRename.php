@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,11 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use Exception;
+use InvalidArgumentException;
+
 use OCP\AppFramework\IAppContainer;
+use OCP\Files\NotFoundException as FileNotFoundException;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 
@@ -35,6 +39,8 @@ use OCA\CAFEVDB\Storage\UserStorage;
  *
  * If the target folder is empty, then the source folder will be
  * deleted if it is empty. Non empty folders will bot be deleted.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class UndoableFileRename extends AbstractFileSystemUndoable
 {
@@ -65,14 +71,14 @@ class UndoableFileRename extends AbstractFileSystemUndoable
    * @param bool $gracefully Do not throw if the source-file given as $oldName
    * does not exist.
    *
-   * @param null|Callable $generator A callable returning an array
+   * @param null|callable $generator A callable returning an array
    * [NEW,OLD]. The generator will be called by the invocation of the
    * do() function.
    */
-  public function __construct(?string $oldName = null, ?string $newName = null, bool $gracefully = false, ?Callable $generator = null)
+  public function __construct(?string $oldName = null, ?string $newName = null, bool $gracefully = false, ?callable $generator = null)
   {
     if ((empty($oldName) || empty($newName)) && empty($generator)) {
-      throw new \InvalidArgumentException('Paramteter $oldName and $newName must be non-null when the file-name generator is null.');
+      throw new InvalidArgumentException('Paramteter $oldName and $newName must be non-null when the file-name generator is null.');
     }
     if (empty($generator)) {
       $this->generator = function() use ($oldName, $newName) {
@@ -85,32 +91,40 @@ class UndoableFileRename extends AbstractFileSystemUndoable
   }
 
   /**
-   * Rename $from to $to.
+   * Rename $fromPath to $to.
+   *
+   * @param string $fromPath
+   *
+   * @param string $toPath
+   *
+   * @return void
+   *
+   * @throws Exception
    */
-  protected function rename($from, $to)
+  protected function rename(string $fromPath, string $toPath):void
   {
-    $toComponents = explode(UserStorage::PATH_SEP, $to);
+    $toComponents = explode(UserStorage::PATH_SEP, $toPath);
     if (empty($toComponents)) {
-      throw new \Exception('Cannot rename to the root-node.');
+      throw new Exception('Cannot rename to the root-node.');
     }
 
     // Generate the destination directories
     $toPrefix = array_slice($toComponents, 0, count($toComponents)-1);
     $this->userStorage->ensureFolderChain($toPrefix);
 
-    $fromFile = $this->userStorage->get($from);
+    $fromFile = $this->userStorage->get($fromPath);
     if (empty($fromFile)) {
-      throw new \OCP\Files\NotFoundException(sprintf('Cannot find old file at location "%s".', $from));
+      throw new FileNotFoundException(sprintf('Cannot find old file at location "%s".', $fromPath));
     }
 
-    $fromComponents = explode(UserStorage::PATH_SEP, $from);
+    $fromComponents = explode(UserStorage::PATH_SEP, $fromPath);
     if (empty($toComponents)) {
-      throw new \Exception('Cannot rename the root-node.');
+      throw new Exception('Cannot rename the root-node.');
     }
     $fromPrefix = array_slice($fromComponents, 0, count($fromComponents)-1);
-    $this->userStorage->rename($from, $to);
+    $this->userStorage->rename($fromPath, $toPath);
 
-    // try to remove all empty parent folders of $from
+    // try to remove all empty parent folders of $fromPath
     while (!empty($fromPrefix)) {
       $parentPath = implode(UserStorage::PATH_SEP, $fromPrefix);
       $parent = $this->userStorage->getFolder($parentPath);
@@ -124,7 +138,8 @@ class UndoableFileRename extends AbstractFileSystemUndoable
 
 
   /** {@inheritdoc} */
-  public function do() {
+  public function do():void
+  {
     list($this->oldName, $this->newName) = call_user_func($this->generator);
 
     $this->oldName = self::normalizePath($this->oldName);
@@ -142,7 +157,8 @@ class UndoableFileRename extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function undo() {
+  public function undo():void
+  {
     // use the path-names previously generated in self::do()
     if ($this->gracefully !== self::GRACEFULLY_PERFORMED) {
       $this->rename($this->newName, $this->oldName);
@@ -150,15 +166,10 @@ class UndoableFileRename extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function reset() {
+  public function reset():void
+  {
     $this->gracefully = $this->gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
     $this->oldName = null;
     $this->newName = null;
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

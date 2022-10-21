@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\Common;
 /**
  * Simplistic do-undo interface in order to be stacked into a
  * do-undo-list.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class GenericUndoable extends AbstractUndoable
 {
@@ -44,19 +46,26 @@ class GenericUndoable extends AbstractUndoable
    */
   protected $doResult;
 
-  public function __construct(Callable $do, ?Callable $undo = null)
+  /**
+   * @param callable $doCallback
+   *
+   * @param null|callable $undoCallback
+   */
+  public function __construct(callable $doCallback, ?callable $undoCallback = null)
   {
-    $this->doCallback = $do;
-    $this->undoCallback = $undo;
+    $this->doCallback = $doCallback;
+    $this->undoCallback = $undoCallback;
   }
 
   /** {@inheritdoc} */
-  public function do() {
+  public function do():void
+  {
     $this->doResult = call_user_func($this->doCallback);
   }
 
   /** {@inheritdoc} */
-  public function undo() {
+  public function undo():void
+  {
     if (!empty($this->undoCallback)) {
       call_user_func($this->undoCallback, $this->doResult);
     }
@@ -64,12 +73,8 @@ class GenericUndoable extends AbstractUndoable
   }
 
   /** {@inheritdoc} */
-  public function reset() {
+  public function reset():void
+  {
     $this->doResult = null;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
