@@ -73,7 +73,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"persist"}, indexBy="id")
+   * @ORM\ManyToMany(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY", cascade={"persist"}, orphanRemoval=true, indexBy="id")
    * @ORM\JoinTable(
    *   name="SepaBulkTransactionData",
    *   inverseJoinColumns={
@@ -207,14 +207,14 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
-   * @param EncryptedFile $data
+   * @param DatabaseStorageFile $data
    *
    * @return SepaBulkTransaction
    */
-  public function addTransactionData(EncryptedFile $data):SepaBulkTransaction
+  public function addTransactionData(DatabaseStorageFile $data):SepaBulkTransaction
   {
     if (empty($data->getId())) {
-      throw new RuntimeException('The transaction data does not have a file-id.');
+      throw new RuntimeException('The transaction data does not have an id.');
     }
     if (!$this->sepaTransactionData->containsKey($data->getId())) {
       $this->sepaTransactionData->set($data->getId(), $data);
@@ -223,11 +223,11 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
-   * @param EncryptedFile $data
+   * @param DatabaseStorageFile $data
    *
    * @return SepaBulkTransaction
    */
-  public function removeTransactionData(EncryptedFile $data):SepaBulkTransaction
+  public function removeTransactionData(DatabaseStorageFile $data):SepaBulkTransaction
   {
     if ($this->sepaTransactionData->contains($data)) {
       $this->sepaTransactionData->removeElement($data);

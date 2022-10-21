@@ -175,12 +175,12 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   private $projectParticipant;
 
   /**
-   * @var EncryptedFile
+   * @var DatabaseStorageFile
    *
    * Optional. In case an additional overview document needs to be added in
    * addition to the individual supporting documents of the project payments.
    *
-   * @ORM\ManyToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY", cascade={"all"})
+   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY", cascade={"all"}, orphanRemoval=true)
    *
    * @todo Support more than one supporting document.
    */
@@ -518,22 +518,22 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set supportingDocument.
    *
-   * @param null|EncryptedFile $supportingDocument
+   * @param null|DatabaseStorageFile $supportingDocument
    *
    * @return CompositePayment
    */
-  public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
+  public function setSupportingDocument(?DatabaseStorageFile $supportingDocument):CompositePayment
   {
     if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
       $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
-      $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
+      $this->balanceDocumentsFolder->removeDocument($this->supportingDocument->getFile(), $fileName);
     }
 
     $this->supportingDocument = $supportingDocument;
 
     if (!empty($this->balanceDocumentsFolder) && !empty($this->supportingDocument)) {
       $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
-      $this->balanceDocumentsFolder->addDocument($this->supportingDocument, $fileName);
+      $this->balanceDocumentsFolder->addDocument($this->supportingDocument->getFile(), $fileName);
     }
 
     return $this;
@@ -542,9 +542,9 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * Get supportingDocument.
    *
-   * @return null|EncryptedFile
+   * @return null|DatabaseStorageFile
    */
-  public function getSupportingDocument():?EncryptedFile
+  public function getSupportingDocument():?DatabaseStorageFile
   {
     return $this->supportingDocument;
   }

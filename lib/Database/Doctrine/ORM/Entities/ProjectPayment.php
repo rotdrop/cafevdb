@@ -317,7 +317,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->balanceDocumentsFolder->removeDocument($supportingDocument);
+        $this->balanceDocumentsFolder->removeDirEntry($supportingDocument);
       }
     }
 
@@ -326,7 +326,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->balanceDocumentsFolder->addDocument($supportingDocument);
+        $this->balanceDocumentsFolder->addDirEntry($supportingDocument);
       }
     }
 
