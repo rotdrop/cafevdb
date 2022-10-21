@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-/** Entity-repository for file enitites. */
-class FilesRepository extends EntityRepository
+/** Entity-repository for encrypted file enitites. */
+class EncryptedFilesRepository extends FilesRepository
 {
 }
