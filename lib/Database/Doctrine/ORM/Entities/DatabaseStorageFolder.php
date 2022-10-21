@@ -58,6 +58,34 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   // phpcs:enable
 
   /**
+   * @param DatabaseStorageDirEntry $dirEntry
+   *
+   * @return DatabaseStorageFolder $this
+   */
+  public function addDirEntry(DatabaseStorageDirEntry $dirEntry):DatabaseStorageFolder
+  {
+    if (!$this->directoryEntries->contains($dirEntry)) {
+      $dirEntry->setParent($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @param DatabaseStorageDirEntry $dirEntry
+   *
+   * @return DatabaseStorageFolder $this
+   */
+  public function removeDirEntry(DatabaseStorageDirEntry $dirEntry):DatabaseStorageFolder
+  {
+    if (!$this->directoryEntries->contains($dirEntry)) {
+      $dirEntry->setParent(null);
+    }
+
+    return $this;
+  }
+
+  /**
    * Add a new sub-folder. It is ok if the folder already exists.
    *
    * @param string $name

@@ -74,7 +74,7 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   /**
    * @var DatabaseStorageFolder
    *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="directoryEntries")
+   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="directoryEntries", cascade={"persist"})
    * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="updated")
    */
   protected $parent;
@@ -144,6 +144,28 @@ class DatabaseStorageDirEntry implements \ArrayAccess
     }
 
     return $this;
+  }
+
+  /**
+   * @param DatabaseStorageFolder $parent
+   *
+   * @return DatabaseStorageDirEntry $this
+   */
+  public function link(DatabaseStorageFolder $parent):DatabaseStorageDirEntry
+  {
+    if ($parent !== $this->parent) {
+      $this->setParent($parent);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @return DatabaseStorageDirEntry $this
+   */
+  public function unlink():DatabaseStorageDirEntry
+  {
+    return $this->setParent(null);
   }
 
   /** {@inheritdoc} */
