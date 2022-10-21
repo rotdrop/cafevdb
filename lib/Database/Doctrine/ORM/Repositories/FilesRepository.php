@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,17 +24,31 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use DateTimeInterface;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
+/** Entity-repository for file enitites. */
 class FilesRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
   use \OCA\CAFEVDB\Traits\DateTimeTrait;
 
-  protected function fetchAggregate(array $criteria, string $function, string $field):\DateTimeInterface
+  /**
+   * @param array $criteria
+   *
+   * @param string $function
+   *
+   * @param string $field
+   *
+   * @return DateTimeInterface
+   *
+   * @todo This function is obsoleted by the FindLikeTrait and should be replaced by it.
+   */
+  protected function fetchAggregate(array $criteria, string $function, string $field):DateTimeInterface
   {
     $qb = $this->createQueryBuilder('f');
     $qb->select($function . '(' . 'f.' . $field . ')');
@@ -56,23 +70,28 @@ class FilesRepository extends EntityRepository
     }
     $date = $qb->getQuery()->getSingleScalarResult();
     if (empty($date)) {
-      return (new \DateTimeImmutable)->setTimestamp(0);
+      return (new DateTimeImmutable)->setTimestamp(0);
     }
     return self::convertToDateTime($date);
   }
 
-  public function fetchLatestModifiedTime($criteria = []):\DateTimeInterface
+  /**
+   * @param array $criteria
+   *
+   * @return DateTimeInterface
+   */
+  public function fetchLatestModifiedTime(array $criteria = []):DateTimeInterface
   {
     return $this->fetchAggregate($criteria, 'MAX', 'updated');
   }
 
-  public function fetchLatestCreatedTime($criteria = []):\DateTimeInterface
+  /**
+   * @param array $criteria
+   *
+   * @return DateTimeInterface
+   */
+  public function fetchLatestCreatedTime(array $criteria = []):DateTimeInterface
   {
     return $this->fetchAggregate($criteria, 'MAX', 'created');
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
