@@ -31,6 +31,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
+use OCA\CAFEVDB\Constants;
 
 /**
  * Generic directory entry for a database-backed file.
@@ -166,6 +167,23 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   public function unlink():DatabaseStorageDirEntry
   {
     return $this->setParent(null);
+  }
+
+  /**
+   * Fetch the entire path up to the root node. This will result in database
+   * queries if the parent elements are not already in memory.
+   *
+   * @return string Full path excluding leadin slash.
+   */
+  public function getPathName():string
+  {
+    $path = $this->name;
+    $node = $this->parent;
+    while (!empty($node)) {
+      $path = $node->getName() . Constants::PATH_SEP . $path;
+      $node = $node->getParent();
+    }
+    return $path;
   }
 
   /** {@inheritdoc} */
