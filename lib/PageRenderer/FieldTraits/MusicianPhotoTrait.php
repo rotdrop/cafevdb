@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,42 +29,54 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 
+/**
+ * Traits class for resuse in \OCA\CAFEVDB\PageRenderer\Musicians and
+ * \OCA\CAFEVDB\PageRenderer\ProjectParticipants.
+ */
 trait MusicianPhotoTrait
 {
   /**
    * Geneate code for a HTML-link for an optional photo.
+   *
+   * @param int $musicianId
+   *
+   * @param string $action
+   *
+   * @param int $imageId
+   *
+   * @return string HTML fragment.
    */
-  public function photoImageLink($musicianId, $action, $imageId)
+  public function photoImageLink(int $musicianId, string $action, int $imageId):string
   {
     if (empty($imageId)) {
       $imageId = ImagesService::IMAGE_ID_ANY;
     }
     switch ($action) {
-    case 'add':
-      return $this->l->t("Photos or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
-    case 'display':
-      $url = $this->urlGenerator()->linkToRoute(
-        'cafevdb.images.get',
-        [ 'joinTable' => self::MUSICIAN_PHOTO_JOIN_TABLE,
-          'ownerId' => $musicianId ]);
-      $url .= '?timeStamp='.time();
-      $url .= '&imageId='.$imageId;
-      $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
-      $div = ''
-        .'<div class="photo image-wrapper single full"><img class="cafevdb_inline_image portrait zoomable" src="'.$url.'" '
-        .'title="'.$this->l->t("Photo, if available").'" /></div>';
-      return $div;
-    case 'change':
-      $imageInfo = json_encode([
-        'ownerId' => $musicianId,
-        'imageId' => $imageId,
-        'joinTable' => self::MUSICIAN_PHOTO_JOIN_TABLE,
-        'imageSize' => -1,
-      ]);
-      $photoarea = ''
-        .'<div data-image-info=\''.$imageInfo.'\' class="tip musician-portrait portrait propertycontainer tooltip-top cafevdb_inline_image_wrapper image-wrapper single full" title="'
-      .$this->l->t("Drop photo to upload (max %s)", [ \OCP\Util::humanFileSize(Util::maxUploadSize()) ]).'"'
-        .' data-element="PHOTO">
+      case 'add':
+        return $this->l->t("Photos or Avatars can only be added to an existing musician's profile; please add the new musician without protrait image first.");
+      case 'display':
+        $url = $this->urlGenerator()->linkToRoute(
+          'cafevdb.images.get',
+          [ 'joinTable' => self::MUSICIAN_PHOTO_JOIN_TABLE,
+            'ownerId' => $musicianId ]);
+        $url .= '?timeStamp='.time();
+        $url .= '&imageId='.$imageId;
+        $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
+        $div = ''
+          .'<div class="photo image-wrapper single full"><img class="cafevdb_inline_image portrait zoomable" src="'.$url.'" '
+          .'title="'.$this->l->t("Photo, if available").'" /></div>';
+        return $div;
+      case 'change':
+        $imageInfo = json_encode([
+          'ownerId' => $musicianId,
+          'imageId' => $imageId,
+          'joinTable' => self::MUSICIAN_PHOTO_JOIN_TABLE,
+          'imageSize' => -1,
+        ]);
+        $photoarea = ''
+          .'<div data-image-info=\''.$imageInfo.'\' class="tip musician-portrait portrait propertycontainer tooltip-top cafevdb_inline_image_wrapper image-wrapper single full" title="'
+          .$this->l->t("Drop photo to upload (max %s)", [ \OCP\Util::humanFileSize(Util::maxUploadSize()) ]).'"'
+          .' data-element="PHOTO">
   <ul class="phototools" class="transparent hidden contacts_property">
     <li><a class="svg delete" title="'.$this->l->t("Delete current photo").'"></a></li>
     <li><a class="svg edit" title="'.$this->l->t("Edit current photo").'"></a></li>
@@ -73,14 +85,9 @@ trait MusicianPhotoTrait
   </ul>
 </div>'; // contact_photo
 
-      return $photoarea;
-    default:
-      return $this->l->t("Internal error, don't know what to do concerning photos in the given context.");
+        return $photoarea;
+      default:
+        return $this->l->t("Internal error, don't know what to do concerning photos in the given context.");
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
