@@ -598,7 +598,7 @@ class ProjectParticipantFieldsService
         if (empty($value)) {
           return null;
         }
-        return $this->getDatabaseRepository(Entities\EncryptedFile::class)->find($value);
+        return $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
       case DataType::TEXT:
       case DataType::HTML:
       default:
