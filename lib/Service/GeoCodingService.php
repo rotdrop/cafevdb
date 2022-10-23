@@ -449,14 +449,17 @@ class GeoCodingService
           'adminName1' => $stateName,
           'adminCode1' => $stateCode,
         ) = $this->translatePlaceName($placeName, $country, $lang);
-        if (!$translation) {
-          $translation = 'NULL';
-        } else {
-          $translation = Util::normalizeSpaces($translation);
-          $location[$lang] = $translation;
-          $translations[$lang] = $translation;
-          $stateTranslations[$lang][$stateCode] = Util::normalizeSpaces($stateName);
+        $translation = Util::normalizeSpaces($translation ?? '');
+        if (empty($translation)) {
+          continue;
         }
+        $location[$lang] = $translation;
+        $translations[$lang] = $translation;
+        $stateName = Util::normalizeSpaces($stateName ?? '');
+        if (empty($stateName)) {
+          continue;
+        }
+        $stateTranslations[$lang][$stateCode] = Util::normalizeSpaces($stateName);
       }
 
       $locations[] = $location;
@@ -731,13 +734,17 @@ class GeoCodingService
             'adminName1' => $stateName,
             'adminCode1' => $stateCode,
           ) = $this->translatePlaceName($name, $country, $lang);
-          $translation = Util::normalizeSpaces($translation);
+          $translation = Util::normalizeSpaces($translation ?? '');
           $this->debug('LANG ' . print_r($lang, true));
           $this->debug('TRANSLATION ' . print_r($translation, true));
           if (empty($translation)) {
             continue;
           }
           $translations[$lang] = $translation;
+          $stateName = Util::normalizeSpaces($stateName);
+          if (empty($stateName)) {
+            continue;
+          }
           $stateTranslations[$lang][$stateCode] = Util::normalizeSpaces($stateName);
         }
         $this->debug('TRANSLATIONS ' . print_r($translations, true));
