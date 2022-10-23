@@ -1485,7 +1485,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
     if ($event->hasChangedField($field)) {
       $entityManager = EntityManager::getDecorator($event->getEntityManager());
       $oldValue = $event->getOldValue($field);
-      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($oldValue, $event->getNewValue($field)));
+      // The event still needs the email as address entity, so fake one.
+      $oldValue = new MusicianEmailAddress($oldValue, $this);
+      $newValue = $this->getPrincipalEmailAddress();
+      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($oldValue, $newValue));
       $this->preUpdateValue[$field] = $oldValue;
     }
   }
@@ -1508,7 +1511,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
     if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->preUpdateValue[$field], $this->email));
+      $currentValue= $this->getPrincipalEmailAddress();
+      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->preUpdateValue[$field], $currentValue));
       unset($this->preUpdateValue[$field]);
     }
   }
