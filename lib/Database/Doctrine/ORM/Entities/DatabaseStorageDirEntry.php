@@ -186,6 +186,15 @@ class DatabaseStorageDirEntry implements \ArrayAccess
     return $path;
   }
 
+  /**
+   * @return DatabaseStorageFolder The root directory.
+   */
+  public function getRoot():DatabaseStorageFolder
+  {
+    for ($root = $this, $parent = $root->getParent(); !empty($parent); $root = $parent, $parent = $root->getParent());
+    return $root;
+  }
+
   /** {@inheritdoc} */
   public function __toString():string
   {
