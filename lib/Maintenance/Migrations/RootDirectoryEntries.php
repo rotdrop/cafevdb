@@ -287,8 +287,30 @@ WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
 
         $modificationTime = $this->getSepaTransactionDataChanged($transaction->getId());
 
+        $transactionData = [];
+        try {
+          // As in a later migration the file references are converted to
+          // directory entry references we have to fetch the file entities with
+          // a plain SQL query as the ORM mapping already refer to the new scheme.
+          $transactionId = $transaction->getId();
+          $column = 'encrypted_file_id';
+          $sql = 'SELECT jt.' . $column . '
+FROM SepaBulkTransactionData jt
+WHERE jt.sepa_bulk_transaction_id = ' . $transactionId;
+          $connection = $this->entityManager->getConnection();
+          $stmt = $connection->prepare($sql);
+          $fileIds = $stmt->executeQuery()->fetchFirstColumn();
+          $stmt->closeCursor();
+          foreach ($fileIds as $fileId) {
+            $transactionData[] = $this->entityManager->find(Entities\EncryptedFile::class, $fileId);
+          }
+        } catch (InvalidFieldNameException $e) {
+          $this->logException($e, sprintf('Column "%s" does not exist, migration probably has already been applied.', $column));
+          continue;
+        }
+
         /** @var Entities\EncryptedFile $file */
-        foreach ($transaction->getSepaTransactionData() as $file) {
+        foreach ($transactionData as $file) {
           $root = null;
           /** @var Entities\DatabaseStorageFile $dirEntry */
           foreach ($file->getDatabaseStorageDirEntries() as $dirEntry) {
@@ -334,9 +356,10 @@ WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
       $storagesRepository = $this->getDatabaseRepository(Entities\DatabaseStorage::class);
 
       $connection = $this->entityManager->getConnection();
+      $column = 'financial_balance_documents_folder_id';
       $sql = 'SELECT dbs.id FROM Projects p
 LEFT JOIN DatabaseStorages dbs
-ON p.financial_balance_documents_folder_id = dbs.root_id
+ON p.' . $column . ' = dbs.root_id
 WHERE p.id = ?';
       $stmt = $connection->prepare($sql);
 
@@ -346,8 +369,9 @@ WHERE p.id = ?';
         $stmt->bindValue(1, $project->getId());
         try {
           $storageId = $stmt->executeQuery()->fetchOne();
+          $stmt->closeCursor();
         } catch (InvalidFieldNameException $t) {
-          $this->logException($t, 'Column does not exist, migration probably has already been applied.');
+          $this->logException($t, sprintf('Column "%s" does not exist, migration probably has already been applied.', $column));
           continue;
         }
         if (empty($storageId)) {
