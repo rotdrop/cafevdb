@@ -1128,20 +1128,20 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         'input'  => 'R',
         'options' => 'LFVDCP',
         'select|LF' => 'D',
-        'css'  => [ 'postfix' => [ 'bank-account-iban', ], ],
+        'css'  => [ 'postfix' => [ 'bank-account-iban', 'meta-data-popup', ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'encryption' => [
           'encrypt' => fn($value) => $this->ormEncrypt($value),
           'decrypt' => fn($value) => $this->ormDecrypt($value ?? ''),
         ],
-        'css|LF'  => [ 'postfix' => [ 'bank-account-iban', 'lazy-decryption', ], ],
+        'css|LF'  => [ 'postfix' => [ 'bank-account-iban', 'lazy-decryption', 'meta-data-popup', ], ],
         'encryption|LF' => [
           'encrypt' => fn($value) => $this->ormEncrypt($value),
           'decrypt' => function($value) {
             if (empty($value)) {
               return '';
             }
-            $value = '<span class="iban encryption-placeholder meta-data-popup"
+            $value = '<span class="iban encryption-placeholder"
       data-crypto-hash="' . md5($value) . '"
       title="' . Util::htmlEscape($this->l->t('Fetching decrypted values in the background.')) . '"
 >'
