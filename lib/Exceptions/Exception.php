@@ -24,7 +24,9 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
+use Exception as CoreException;
+
 /** General abstraction base-class. */
-class Exception extends \Exception
+class Exception extends CoreException
 {
 }
