@@ -896,7 +896,7 @@ class ProjectService
    */
   public function participantFileInfo(
     Entities\ProjectParticipantFieldDatum $fieldDatum,
-    ?Entities\EncryptedFile $newFile,
+    ?Entities\EncryptedFile $newFile = null,
     bool $includeDeleted = false,
   ):?array {
     if (!$includeDeleted && $fieldDatum->isDeleted()) {
