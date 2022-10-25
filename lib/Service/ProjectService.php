@@ -926,12 +926,12 @@ class ProjectService
         default:
           return null;
       }
-      if (empty($file)) {
+      if (empty($dirEntry)) {
         return null;
       }
       $file = $dirEntry->getFile();
-      $dbFileName = $file->getFileName();
-      $pathName = $file->getPathName();
+      $dbFileName = $dirEntry->getName();
+      $pathName = $dirEntry->getPathName();
       list(
         'basename' => $baseName,
         'dirname' => $dirName,
