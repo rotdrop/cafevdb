@@ -28,6 +28,7 @@ import {
   classSelector as pmeClassSelector,
   cellSelector as pmeCellSelector,
   inputSelector as pmeInputSelector,
+  queryInfoSelector as pmeQueryInfoSelector,
 } from './pme-selectors.js';
 import generateUrl from './generate-url.js';
 import jQuery from './jquery.js';
@@ -118,6 +119,16 @@ const replaceEncryptionPlaceholder = function(data, $container, $filter, $option
         .removeClass('encryption-placeholder')
         .removeAttr('data-encrypted-value')
         .removeData('dataEncryptedValue');
+      $this.cafevTooltip('dispose'); // remove background decryption hint
+      if ($this.hasClass('meta-data-popup')) {
+        const cryptoHash = $this.data('cryptoHash');
+        const cryptoData = cryptoCache[cryptoHash];
+        if (cryptoData && cryptoData.metaData) {
+          $this
+            .attr('title', metaDataText(cryptoData.metaData))
+            .cafevTooltip({ placement: 'auto' });
+        }
+      }
       const $tableCell = $this.closest(pmeCellSelector);
       if ($tableCell.length === 1 && $tableCell.find('.encryption-placeholder').length === 0) {
         let popupText;
@@ -139,6 +150,14 @@ const replaceEncryptionPlaceholder = function(data, $container, $filter, $option
           .cafevTooltip('dispose')
           .attr('title', popupText)
           .cafevTooltip({ placement: 'auto' });
+      }
+      const $queryInfo = $this.closest(pmeQueryInfoSelector);
+      if ($queryInfo.length === 1 && $queryInfo.find('.encryption-placeholder').length === 0) {
+        const popupText = $queryInfo.html();
+        $queryInfo
+          .cafevTooltip('dispose')
+          .attr('title', popupText)
+          .cafevTooltip({ placement: 'auto', cssClass: 'tooltip-wide' });
       }
     });
 };

@@ -189,6 +189,11 @@ const pmeCellSelector = 'td.' + pmeToken('cell');
 const pmeFilterSelector = pmeToken('filter');
 
 /**
+ * Selector for query-info
+ */
+const pmeQueryInfoSelector = '.' + pmeToken('queryinfo');
+
+/**
  * Genereate the default selector.
  *
  * @param {string} selector The selector to construct the final
@@ -275,6 +280,7 @@ export {
   pmeValueSelector as valueSelector,
   pmeCellSelector as cellSelector,
   pmeFilterSelector as filterSelector,
+  pmeQueryInfoSelector as queryInfoSelector,
 };
 
 // Local Variables: ***
