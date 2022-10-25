@@ -119,7 +119,10 @@ const replaceEncryptionPlaceholder = function(data, $container, $filter, $option
         .removeClass('encryption-placeholder')
         .removeAttr('data-encrypted-value')
         .removeData('dataEncryptedValue');
-      $this.cafevTooltip('dispose'); // remove background decryption hint
+      // remove background decryption hint
+      $this
+        .cafevTooltip('dispose')
+        .removeAttr('title');
       if ($this.hasClass('meta-data-popup')) {
         const cryptoHash = $this.data('cryptoHash');
         const cryptoData = cryptoCache[cryptoHash];
