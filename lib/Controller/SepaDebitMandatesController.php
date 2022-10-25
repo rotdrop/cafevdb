@@ -1193,15 +1193,24 @@ class SepaDebitMandatesController extends Controller
           $participants = [ $musician->getProjectParticipantOf($project) ];
         }
 
-        foreach ($participants as $participant) {
-          $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
-          $storage->removeDebitMandate($debitMandate, flush: false);
-        }
-        $debitMandate->setWrittenMandate(null);
-        $this->flush();
+        $this->entityManager->beginTransaction();
+        try {
+          foreach ($participants as $participant) {
+            $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
+            $storage->removeDebitMandate($debitMandate, flush: false);
+          }
+          $debitMandate->setWrittenMandate(null);
 
-        if ($writtenMandate->getNumberOfLinks() == 0) {
-          $this->remove($writtenMandate, flush: true);
+          $this->flush();
+
+          $this->entityManager->commit();
+        } catch (Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          $exceptionChain = $this->exceptionChainData($t);
+          $exceptionChain['message'] =
+            $this->l->t('Error, caught an exception. No changes were performed.');
+          return self::grumble($exceptionChain);
         }
 
         return self::response($this->l->t('Successfully deleted the hard-copy of the written-mandate for "%1$s", please upload a new one!', $mandateReference));
@@ -1332,10 +1341,6 @@ class SepaDebitMandatesController extends Controller
               $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
               $storage->removeDebitMandate($debitMandate, flush: false);
             }
-            $this->flush();
-            if ($writtenMandate->getNumberOfLinks() == 0) {
-              $this->remove($writtenMandate, flush: true);
-            }
           }
           $writtenMandate = $originalFile;
           $mimeType = $writtenMandate->getMimeType();
@@ -1343,13 +1348,15 @@ class SepaDebitMandatesController extends Controller
       }
 
       $this->persist($writtenMandate);
-      $debitMandate->setWrittenMandate($writtenMandate);
-      $this->flush(); // the entity persisted needs an id in order to go further
 
+      /** @var Entities\ProjectParticipant $participant */
       foreach ($participants as $participant) {
         $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
         $dirEntry = $storage->addDebitMandate($debitMandate, flush: false);
-        $writtenMandateFileName = $dirEntry->getName();
+        if ($participant->getProject() == $debitMandate->getProject()) {
+          $debitMandate->setWrittenMandate($dirEntry);
+          $writtenMandateFileName = $dirEntry->getName();
+        }
       }
 
       $this->flush();

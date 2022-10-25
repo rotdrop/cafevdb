@@ -205,7 +205,7 @@ class PaymentsController extends Controller
 
               if (!empty($supportingDocument) && $supportingDocument->getNumberOfLinks() > 1) {
                 $storage->removeCompositePayment($compositePayment, flush:true);
-                $compositePayment->setSupportingDocument(null); // will decrease the link-count
+                $compositePayment->setSupportingDocument(null);
                 $supportingDocument = null;
               }
 
@@ -234,10 +234,8 @@ class PaymentsController extends Controller
                 ]));
               }
               if (!empty($supportingDocument)) {
-                $storage->removeCompositePayment($compositePayment, flush: true);
-                if ($supportingDocument->getNumberOfLinks() == 0) {
-                  $this->remove($supportingDocument, flush: true);
-                }
+                $storage->removeCompositePayment($compositePayment, flush: false);
+                $compositePayment->setSupportingDocument(null);
               }
               $supportingDocument = $originalFile;
               $mimeType = $supportingDocument->getMimeType();
@@ -245,10 +243,9 @@ class PaymentsController extends Controller
           }
 
           $this->persist($supportingDocument);
-          $this->flush(); // we need the file id
+          $dirEntry = $storage->addCompositePayment($compositePayment, $supportingDocument, flush: false);
+          $compositePayment->setSupportingDocument($dirEntry);
 
-          $compositePayment->setSupportingDocument($supportingDocument);
-          $dirEntry = $storage->addCompositePayment($compositePayment, flush: false);
 
           $this->flush();
 
@@ -324,10 +321,25 @@ class PaymentsController extends Controller
           return self::response($this->l->t('We have no supporting document for the payment "%1$s", so we cannot delete it.', $compositePaymentId));
         }
 
-        // ok, delete it
-        $compositePayment->setSupportingDocument(null);
-        if ($supportingDocument->getNumberOfLinks() == 0) {
-          $this->remove($supportingDocument, flush: true);
+        $storage = $this->storageFactory->getProjectParticipantsStorage($compositePayment->getProjectParticipant());
+
+        $this->entityManager->beginTransaction();
+        try {
+          // ok, delete it
+          $storage->removeCompositePayment($compositePayment);
+          $compositePayment->setSupportingDocument(null);
+
+          $this->flush();
+
+          $this->entityManager->commit();
+
+        } catch (\Throwable $t) {
+          $this->logException($t);
+          $this->entityManager->rollback();
+          $exceptionChain = $this->exceptionChainData($t);
+          $exceptionChain['message'] =
+            $this->l->t('Error, caught an exception. No changes were performed.');
+          return self::grumble($exceptionChain);
         }
 
         return self::response($this->l->t('Successfully deleted the supporting document for the payment "%1$s", please upload a new one!', $compositePaymentId));

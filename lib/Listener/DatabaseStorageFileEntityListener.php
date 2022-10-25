@@ -74,6 +74,7 @@ class DatabaseStorageFileEntityListener
    */
   public function postUpdate(Entities\DatabaseStorageFile $dirEntry, ORMEvent\LifecycleEventArgs $eventArgs)
   {
+    $this->cleanupOrphans();
   }
 
   /**
@@ -81,6 +82,7 @@ class DatabaseStorageFileEntityListener
    */
   public function postRemove(Entities\DatabaseStorageFile $dirEntry, ORMEvent\LifecycleEventArgs $eventArgs)
   {
+    $this->cleanupOrphans();
   }
 
   /**

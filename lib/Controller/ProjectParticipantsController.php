@@ -498,27 +498,15 @@ class ProjectParticipantsController extends Controller
               break;
             case FieldDataType::DB_FILE:
               $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
-              $storage->removeFieldDatumDocument($fieldDatum, flush: true);
+              $storage->removeFieldDatumDocument($fieldDatum, flush: false);
               $fieldDatum->setOptionValue(null);
-              $this->flush();
               $filePath = $dbFile->getFileName();
-              if ($dbFile->getNumberOfLinks() == 0) {
-                $this->remove($dbFile, hard: true);
-              } else {
-                $this->logInfo('NUMBER OF LINKS IS STILL ' . $dbFile->getNumberOfLinks() . ' ' . $filePath);
-              }
               break;
             case FieldDataType::SERVICE_FEE:
               $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
-              $storage->removeFieldDatumDocument($fieldDatum, flush: true);
+              $storage->removeFieldDatumDocument($fieldDatum, flush: false);
               $fieldDatum->setSupportingDocument(null);
-              $this->flush();
               $filePath = $dbFile->getFileName();
-              if ($dbFile->getNumberOfLinks() == 0) {
-                $this->remove($dbFile, hard: true);
-              } else {
-                $this->logInfo('NUMBER OF LINKS IS STILL ' . $dbFile->getNumberOfLinks() . ' ' . $filePath);
-              }
               $doDeleteFieldDatum = false;
               break;
           }
@@ -848,28 +836,25 @@ class ProjectParticipantsController extends Controller
                     $dbFile->setFileName($originalFileName ?? null);
                     break;
                   case UploadsController::UPLOAD_MODE_LINK:
-                    // Generate kind of a hard-link. The code below will just increase the link-count.
+                    // Generate kind of a hard-link.
                     if (!empty($dbFile)) {
-                      $storage->removeFieldDatumDocument($fieldDatum, flush: true);
-                      if ($dbFile->getNumberOfLinks() == 0) {
-                        $this->remove($dbFile, flush: true);
-                      }
+                      $storage->removeFieldDatumDocument($fieldDatum, flush: false);
                     }
                     $dbFile = $originalFile;
                     break;
                 }
 
                 $this->persist($dbFile);
+                $this->persist($fieldData);
+
+                $dirEntry = $storage->addFieldDatumDocument($fieldData, $dbFile, flush: false);
                 $this->flush();
 
                 if ($dataType == FieldDataType::DB_FILE) {
-                  $fieldData->setOptionValue($dbFile->getId());
+                  $fieldData->setOptionValue($dirEntry->getId());
                 } else {
-                  $fieldData->setSupportingDocument($dbFile); // will increase the link-count of $dbFile
+                  $fieldData->setSupportingDocument($dirEntry); // will increase the link-count of $dbFile
                 }
-                $this->persist($fieldData);
-
-                $storage->addFieldDatumDocument($fieldData, flush: false);
 
                 $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
                   'section' => 'database',

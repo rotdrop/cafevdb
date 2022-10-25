@@ -41,6 +41,9 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Common\Functions;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 
+use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
+use OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorage;
+
 /**
  * Do nothing implementation to have something implementing
  * the interface. Would rather belong to a test-suite.
@@ -56,6 +59,9 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   /** @var Repositories\InstrumentInsurancesRepository */
   private $insurancesRepository;
 
+  /** @var StorageFactory */
+  private $storageFactory;
+
   /** @var ToolTipsService */
   protected $toolTipsService;
 
@@ -69,11 +75,13 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     ToolTipsService $toolTipsService,
     EntityManager $entityManager,
     ProgressStatusService $progressStatusService,
+    StorageFactory $storageFactory,
   ) {
     parent::__construct($entityManager, $progressStatusService);
 
     $this->insuranceService = $insuranceService;
     $this->configService = $configService;
+    $this->storageFactory = $storageFactory;
     $this->l = $this->l10n();
     $this->toolTipsService = $toolTipsService;
 
@@ -190,6 +198,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $musician = $participant->getMusician();
     /** @var Entities\Project $project */
     $project = $participant->getProject();
+    /** @var ProjectParticipantsStorage $fileSystemStorage */
+    $fileSystemStorage = $this->storageFactory->getProjectParticipantsStorage($participant);
 
     if (!$openingBalance) {
       // "now" should in principle just do ...
@@ -233,8 +243,9 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
         if (!$openingBalance) {
           // store overview letter
-          $supportingDocument = new Entities\EncryptedFile(
+          $supportingDocumentFile = new Entities\EncryptedFile(
             $overviewFilename, $overviewLetter, 'application/pdf', $musician);
+          $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
           $datum->setSupportingDocument($supportingDocument);
         }
 
@@ -282,20 +293,23 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           $project->getParticipantFieldsData()->removeElement($datum);
           $removed = true;
         } else {
-          /** @var Entities\EncryptedFile $supportingDocument */
+          /** @var Entities\DatabaseStorageFile $supportingDocument */
           $supportingDocument = $datum->getSupportingDocument();
           if (empty($supportingDocument)) {
             // create overview letter
-            $supportingDocument = new Entities\EncryptedFile(
+            $supportingDocumentFile = new Entities\EncryptedFile(
               fileName: $overviewFilename,
               data: $overviewLetter,
               mimeType: 'application/pdf',
               owner: $musician
             );
+            $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
             $datum->setSupportingDocument($supportingDocument);
           } elseif (true || $fee != $datum->getOptionValue()) {
             // @todo FIXME: only update letter if fee changes?
             $supportingDocument
+              ->setName($overviewFilename)
+              ->getFile()
               ->setFileName($overviewFilename)
               ->setMimeType('application/pdf')
               ->setSize(strlen($overviewLetter))

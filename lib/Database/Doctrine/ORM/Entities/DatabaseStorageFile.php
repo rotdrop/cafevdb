@@ -125,6 +125,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
     'getFileData',
     'getMimeType',
     'setMimeType',
+    'getNumberOfLinks',
   ];
 
   /**

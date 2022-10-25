@@ -790,6 +790,9 @@ class SepaBulkTransactionService
 
     if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
 
+      /** @var BankTransactionsStorage $storage */
+      $storage = $this->appContainer->get(BankTransactionsStorage::class);
+
       /** @var IBulkTransactionExporter $exporter */
       $exporter = $this->getTransactionExporter($format);
       if (empty($exporter)) {
@@ -842,8 +845,8 @@ class SepaBulkTransactionService
       $this->entityManager->beginTransaction();
       try {
         $this->persist($exportFile);
-        $this->flush();
-        $bulkTransaction->addTransactionData($exportFile);
+        $document = $storage->addDocument($bulkTransaction, $exportFile, flush: false);
+        $bulkTransaction->addTransactionData($document);
         $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {
