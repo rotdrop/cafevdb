@@ -205,7 +205,9 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
    */
   public function cleanupOrphans(Event\LifecycleEventArgs $event)
   {
-    unset(self::$orphans[spl_object_id($this->file)]);
+    if (!empty($this->file)) {
+      unset(self::$orphans[spl_object_id($this->file)]);
+    }
   }
 
   /** @return array */
