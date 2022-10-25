@@ -142,7 +142,14 @@ class GeoCodingService
       } else {
         $this->debug($url);
       }
-      $response = file_get_contents($url);
+      $start = hrtime(true);
+      $ctx = stream_context_create([
+        'http'=> [
+          'timeout' => 240,
+        ]
+      ]);
+      $response = file_get_contents($url, false, $ctx);
+      $this->logInfo('DURATION ' . (float)(hrtime(true) - $start) / 1e9);
       if ($response !== false) {
         $json = json_decode($response, true, 512, JSON_BIGINT_AS_STRING);
         $this->debug(print_r($json, true));

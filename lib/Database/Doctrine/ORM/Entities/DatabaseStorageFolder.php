@@ -169,10 +169,6 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    */
   public function addDocument(EncryptedFile $file, ?string $fileName = null):?DatabaseStorageFile
   {
-    if (empty($file->getId())) {
-      throw new Exceptions\DatabaseException('The supporting document does not have an id.');
-    }
-    $fileId = $file->getId();
     $fileName = $fileName ?? $file->getFileName();
     $fileName = trim($fileName, Constants::PATH_SEP);
     $existing = $this->directoryEntries->filter(
@@ -184,7 +180,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     if ($existing->count() == 1) {
       /** @var DatabaseStorageFile $dirEntry */
       $dirEntry = $existing->first();
-      if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile()->getId() != $fileId) {
+      if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile() !== $file) {
         throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
       }
       return $dirEntry;
@@ -213,10 +209,6 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    */
   public function removeDocument(EncryptedFile $file, ?string $fileName = null):DatabaseStorageFolder
   {
-    if (empty($file->getId())) {
-      throw new RuntimeException('The supporting document does not have an id.');
-    }
-    $fileId = $file->getId();
     $fileName = $fileName ?? $file->getFileName();
     $fileName = trim($fileName, Constants::PATH_SEP);
     $existing = $this->directoryEntries->filter(
@@ -231,7 +223,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
 
     /** @var DatabaseStorageFile $dirEntry */
     $dirEntry = $existing->first();
-    if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile()->getId() != $fileId) {
+    if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile() !== $file) {
       throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
     }
 
