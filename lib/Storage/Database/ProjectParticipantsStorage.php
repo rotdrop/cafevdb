@@ -252,9 +252,7 @@ class ProjectParticipantsStorage extends Storage
       /** @var Entities\DatabaseStorageFile $dirEntry */
       foreach ($folderEntity->getDocuments() as $dirEntry) {
         if ($dirEntry->getFile()->getId() == $file->getId()) {
-          $dirEntry
-            ->setParent(null)
-            ->setFile(null);
+          $this->entityManager->remove($dirEntry);
         }
       }
 
@@ -321,64 +319,6 @@ class ProjectParticipantsStorage extends Storage
     }
 
     return $documentEntity;
-  }
-
-  /**
-   * Remove any directory entry referencing the supporting document of the payment.
-   *
-   * @param Entities\CompositePayment $compositePayment
-   *
-   * @param bool $flush
-   *
-   * @return void
-   */
-  public function removeCompositePayment(Entities\CompositePayment $compositePayment, bool $flush = true):void
-  {
-    $file = $compositePayment->getSupportingDocument();
-    if (empty($file)) {
-      throw new UnexpectedValueException($this->l->t('Composite payment "%d" has no hard-copy attached.', $compositePayment->getId()));
-    }
-
-    if ($flush) {
-      $this->entityManager->beginTransaction();
-    }
-    try {
-      // search for the folder
-      $rootFolder = $this->getRootFolder(create: false);
-      if (empty($rootFolder)) {
-        throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
-      }
-      $folderName = $this->getSupportingDocumentsFolderName();
-      $folderEntity = $rootFolder->getFolderByName($folderName);
-      if (empty($folderEntity)) {
-        throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $folderName));
-      }
-      $folderName = $this->getSupportingDocumentsFolderName();
-      $folderEntity = $folderEntity->getFolderByName($folderName);
-      if (empty($folderEntity)) {
-        throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $folderName));
-      }
-
-      /** @var Entities\DatabaseStorageFile $dirEntry */
-      foreach ($folderEntity->getDocuments() as $dirEntry) {
-        if ($dirEntry->getFile()->getId() == $file->getId()) {
-          $dirEntry
-            ->setParent(null)
-            ->setFile(null);
-        }
-      }
-
-      if ($flush) {
-        $this->flush();
-        $this->entityManager->commit();
-      }
-
-    } catch (Throwable $t) {
-      if ($this->entityManager->isTransactionActive()) {
-        $this->entityManager->rollback();
-      }
-      throw new Exceptions\DatabaseException($this->l->t('Unable to remove composite payment "%s".', $compositePayment->getId()));
-    }
   }
 
   /**
@@ -495,9 +435,7 @@ class ProjectParticipantsStorage extends Storage
       /** @var Entities\DatabaseStorageFile $dirEntry */
       foreach ($folderEntity->getDocuments() as $dirEntry) {
         if ($dirEntry->getFile()->getId() == $file->getId()) {
-          $dirEntry
-            ->setParent(null)
-            ->setFile(null);
+          $this->entityManager->remove($dirEntry);
         }
       }
 

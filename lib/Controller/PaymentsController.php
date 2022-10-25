@@ -204,7 +204,6 @@ class PaymentsController extends Controller
               $mimeType = $mimeTypeDetector->detectString($fileContent);
 
               if (!empty($supportingDocument) && $supportingDocument->getNumberOfLinks() > 1) {
-                $storage->removeCompositePayment($compositePayment, flush:true);
                 $compositePayment->setSupportingDocument(null);
                 $supportingDocument = null;
               }
@@ -234,7 +233,6 @@ class PaymentsController extends Controller
                 ]));
               }
               if (!empty($supportingDocument)) {
-                $storage->removeCompositePayment($compositePayment, flush: false);
                 $compositePayment->setSupportingDocument(null);
               }
               $supportingDocument = $originalFile;
@@ -326,7 +324,6 @@ class PaymentsController extends Controller
         $this->entityManager->beginTransaction();
         try {
           // ok, delete it
-          $storage->removeCompositePayment($compositePayment);
           $compositePayment->setSupportingDocument(null);
 
           $this->flush();
