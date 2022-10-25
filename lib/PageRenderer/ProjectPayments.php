@@ -1134,14 +1134,16 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'encrypt' => fn($value) => $this->ormEncrypt($value),
           'decrypt' => fn($value) => $this->ormDecrypt($value ?? ''),
         ],
-        'css|LF'  => [ 'postfix' => [ 'bank-account-iban', 'lazy-decryption', 'meta-data-popup', ], ],
+        'css|LF'  => [ 'postfix' => [ 'bank-account-iban', 'lazy-decryption', ], ],
         'encryption|LF' => [
           'encrypt' => fn($value) => $this->ormEncrypt($value),
           'decrypt' => function($value) {
-            // $value  $this->ormDecrypt($value);
-            $value = '<span class="iban encryption-placeholder"
+            if (empty($value)) {
+              return '';
+            }
+            $value = '<span class="iban encryption-placeholder meta-data-popup"
       data-crypto-hash="' . md5($value) . '"
-      title="' . $this->l->t('Fetching decrypted values in the background.') . '"
+      title="' . Util::htmlEscape($this->l->t('Fetching decrypted values in the background.')) . '"
 >'
               . $this->l->t('please wait')
               . '</span>';
@@ -1160,6 +1162,9 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
               return ''; // can happen
             }
             $info  = $this->financeService->getIbanInfo($data);
+            if (empty($info)) {
+              $this->logInfo('NO INFO FOR IBAN ' . $data);
+            }
             $result = '';
             foreach ($info as $key => $value) {
               $result .= $this->l->t($key).': '.$value.'<br/>';
