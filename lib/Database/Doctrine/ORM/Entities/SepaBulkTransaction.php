@@ -73,7 +73,7 @@ class SepaBulkTransaction implements \ArrayAccess
   /**
    * @var Collection
    *
-   * @ORM\ManyToMany(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY", cascade={"persist"}, orphanRemoval=true, indexBy="id")
+   * @ORM\ManyToMany(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY", cascade={"persist"}, orphanRemoval=true)
    * @ORM\JoinTable(
    *   name="SepaBulkTransactionData",
    *   inverseJoinColumns={
@@ -213,11 +213,8 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   public function addTransactionData(DatabaseStorageFile $data):SepaBulkTransaction
   {
-    if (empty($data->getId())) {
-      throw new RuntimeException('The transaction data does not have an id.');
-    }
-    if (!$this->sepaTransactionData->containsKey($data->getId())) {
-      $this->sepaTransactionData->set($data->getId(), $data);
+    if (!$this->sepaTransactionData->contains($data)) {
+      $this->sepaTransactionData->add($data);
     }
     return $this;
   }
