@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -202,7 +202,7 @@ class DatabaseSanitizers extends Command
             }
             if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
               $validationMessages = $sanitizer->getValidationMessages();
-              foreach ($validationMessages as $level => $messages)  {
+              foreach ($validationMessages as $level => $messages) {
                 foreach ($messages as $message) {
                   $output->writeln('  ' . $message, $level);
                 }
