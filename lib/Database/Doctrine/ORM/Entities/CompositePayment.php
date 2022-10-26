@@ -568,7 +568,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       if (!empty($this->supportingDocument)) {
         $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
 
-        $this->balanceDocumentsFolder->removeDocument($this->supportingDocument, $fileName);
+        $this->balanceDocumentsFolder->removeDocument($this->supportingDocument->getFile(), $fileName);
       }
     }
 
@@ -577,7 +577,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     if (!empty($this->balanceDocumentsFolder)) {
       if (!empty($this->supportingDocument)) {
         $fileName = $this->getPaymentRecordFileName($this, $this->supportingDocument->getExtension());
-        $this->balanceDocumentsFolder->addDocument($this->supportingDocument, $fileName);
+        $this->balanceDocumentsFolder->addDocument($this->supportingDocument->getFile(), $fileName);
       }
 
       /** @var ProjectPayment $part */

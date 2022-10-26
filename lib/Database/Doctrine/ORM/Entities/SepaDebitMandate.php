@@ -238,6 +238,9 @@ class SepaDebitMandate implements \ArrayAccess
    */
   public function getMusician():?Musician
   {
+    if (is_string($this->musician)) {
+      \OCP\Util::writeLog('cafevdb', 'MUS ' . $this->musician, \OCP\Util::INFO);
+    }
     return $this->musician;
   }
 

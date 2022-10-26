@@ -429,16 +429,16 @@ class ProjectParticipantsController extends Controller
         $dataType = $field->getDataType();
         switch ($dataType) {
           case FieldDataType::DB_FILE:
-            /** @var Entities\EncryptedFile $dbFile */
-            $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
+            /** @var Entities\DatabaseStorageFile $dbDocument */
+            $dbDocument = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)
               ->find($fieldDatum->getOptionValue());
-            if (empty($dbFile)) {
+            if (empty($dbDocument)) {
               return self::grumble($this->l->t(
                 'Unable to find the associated file with the id "%s" in data-base.',
                 $fieldDatum->getOptionValue()
               ));
             }
-            $filePath = $dbFile->getFileName();
+            $filePath = $dbDocument->getName();
             break;
 
           case FieldDataType::CLOUD_FILE:
@@ -452,14 +452,14 @@ class ProjectParticipantsController extends Controller
             break;
 
           case FieldDataType::SERVICE_FEE:
-            /** @var Entities\EncryptedFile $dbFile */
-            $dbFile = $fieldDatum->getSupportingDocument();
-            if (empty($dbFile)) {
+            /** @var Entities\DatabaseStorageFile $dbDocument */
+            $dbDocument = $fieldDatum->getSupportingDocument();
+            if (empty($dbDocument)) {
               return self::grumble($this->l->t('Unable to find any supporting document for the field "%1$s", musician "%2$s".', [
                 $field->getName(), $fieldDatum->getMusician()->getPublicName(),
               ]));
             }
-            $filePath = $dbFile->getFileName();
+            $filePath = $dbDocument->getName();
             break;
 
           default:
@@ -497,16 +497,12 @@ class ProjectParticipantsController extends Controller
               $fieldDatum->setOptionValue(null);
               break;
             case FieldDataType::DB_FILE:
-              $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
-              $storage->removeFieldDatumDocument($fieldDatum, flush: false);
+              $this->remove($dbDocument);
               $fieldDatum->setOptionValue(null);
-              $filePath = $dbFile->getFileName();
               break;
             case FieldDataType::SERVICE_FEE:
-              $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
-              $storage->removeFieldDatumDocument($fieldDatum, flush: false);
               $fieldDatum->setSupportingDocument(null);
-              $filePath = $dbFile->getFileName();
+              $this->remove($dbDocument);
               $doDeleteFieldDatum = false;
               break;
           }
@@ -685,11 +681,13 @@ class ProjectParticipantsController extends Controller
                 ->setMusician($musician)
                 ->setOptionKey($optionKey);
               $participant->getParticipantFieldsData()->add($fieldData);
+              $this->persist($fieldData);
             } else {
               $fieldData->setDeleted(null);
             }
 
             $optionValue = $fieldData->getOptionValue();
+            $dbDocument = null;
             $dbFile = null;
             switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
@@ -709,20 +707,22 @@ class ProjectParticipantsController extends Controller
                 if (empty($optionValue)) {
                   break;
                 }
-                $dbFile = $this->getDatabaseRepository(Entities\EncryptedFile::class)
+                $dbDocument = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)
                   ->find($fieldData->getOptionValue());
-                if (empty($dbFile)) {
+                if (empty($dbDocument)) {
                   return self::grumble($this->l->t(
                     'Unable to find the associated file with the id "%s" in data-base.',
                     $fieldData->getOptionValue()
                   ));
                 }
+                $dbFile = $dbDocument->getFile();
                 $conflict = 'replaced';
                 break;
               case FieldDataType::SERVICE_FEE:
-                $dbFile = $fieldData->getSupportingDocument();
-                if (!empty($dbFile)) {
+                $dbDocument = $fieldData->getSupportingDocument();
+                if (!empty($dbDocument)) {
                   $conflict = 'replaced';
+                  $dbFile = $dbDocument->getFile();
                 }
                 break;
               case FieldDataType::CLOUD_FOLDER:
@@ -773,7 +773,6 @@ class ProjectParticipantsController extends Controller
                   $optionValue = json_encode(array_values($optionValue));
                 }
                 $fieldData->setOptionValue($optionValue);
-                $this->persist($fieldData);
                 $this->entityManager->registerPreCommitAction(
                   new Common\UndoableFileReplace($filePath, $fileData, $oldPath, gracefully: true)
                 );
@@ -807,14 +806,11 @@ class ProjectParticipantsController extends Controller
                     $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
                     $mimeType = $mimeTypeDetector->detectString($fileData);
 
-                    if (!empty($dbFile) && $dbFile->getNumberOfLinks() > 1) {
+                    if (!empty($dbFile) && $dbFile->getFile()->getNumberOfLinks() > 1) {
                       // if the file has multiple links then it is probably
                       // better to remove the existing file rather than
                       // overwriting a file which has multiple links.
-                      $storage->removeFieldDatumDocument($fieldDatum, flush: true);
-                      if ($dataType == FieldDataType::SERVICE_FEE) {
-                        $fieldData->setSupportingDocument(null);
-                      }
+                      $dbFile->setFile(null);
                       $dbFile = null;
                     }
 
@@ -826,6 +822,7 @@ class ProjectParticipantsController extends Controller
                         mimeType: $mimeType,
                         owner: $musician
                       );
+                      $this->persist($dbFile);
                     } else {
                       $dbFile
                         ->setFileName($filePath)
@@ -836,29 +833,26 @@ class ProjectParticipantsController extends Controller
                     $dbFile->setFileName($originalFileName ?? null);
                     break;
                   case UploadsController::UPLOAD_MODE_LINK:
-                    // Generate kind of a hard-link.
-                    if (!empty($dbFile)) {
-                      $storage->removeFieldDatumDocument($fieldDatum, flush: false);
-                    }
                     $dbFile = $originalFile;
                     break;
                 }
 
-                $this->persist($dbFile);
-                $this->persist($fieldData);
-
-                $dirEntry = $storage->addFieldDatumDocument($fieldData, $dbFile, flush: false);
+                if (!empty($dbDocument)) {
+                  $dbDocument->setFile($dbFile);
+                } else {
+                  $dbDocument = $storage->addFieldDatumDocument($fieldData, $dbFile, flush: false);
+                }
                 $this->flush();
 
                 if ($dataType == FieldDataType::DB_FILE) {
-                  $fieldData->setOptionValue($dirEntry->getId());
+                  $fieldData->setOptionValue($dbDocument->getId());
                 } else {
-                  $fieldData->setSupportingDocument($dirEntry); // will increase the link-count of $dbFile
+                  $fieldData->setSupportingDocument($dbDocument);
                 }
 
                 $downloadLink = $this->urlGenerator()->linkToRoute($this->appName().'.downloads.get', [
                   'section' => 'database',
-                  'object' => $dbFile->getId(),
+                  'object' => $dbDocument->getId(),
                 ])
                   . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
                   . '&fileName=' . urlencode($filePath);

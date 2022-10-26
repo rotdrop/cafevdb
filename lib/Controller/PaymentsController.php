@@ -182,8 +182,9 @@ class PaymentsController extends Controller
 
         $originalFileName = $originalFilePath ? basename($originalFilePath) : null;
 
-        /** @var Entities\EncryptedFile $supportingDocument */
+        /** @var Entities\DatabaseStorageFile $supportingDocument */
         $supportingDocument = $compositePayment->getSupportingDocument();
+        $supportingDocumentFile = $supportingDocument ? $supportingDocument->getFile() : null;
 
         $conflict = null;
 
@@ -203,51 +204,54 @@ class PaymentsController extends Controller
               $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
               $mimeType = $mimeTypeDetector->detectString($fileContent);
 
-              if (!empty($supportingDocument) && $supportingDocument->getNumberOfLinks() > 1) {
-                $compositePayment->setSupportingDocument(null);
-                $supportingDocument = null;
+              if (!empty($supportingDocumentFile) && $supportingDocumentFile->getNumberOfLinks() > 1) {
+                // if the file has multiple links then it is probably
+                // better to remove the existing file rather than
+                // overwriting a file which has multiple links.
+                $supportingDocument->setFile(null); // unlink
+                $supportingDocumentFile = null;
               }
 
-              if (empty($supportingDocument)) {
-                $supportingDocument = new Entities\EncryptedFile(
+              if (empty($supportingDocumentFile)) {
+                $supportingDocumentFile = new Entities\EncryptedFile(
                   data: $fileContent,
                   mimeType: $mimeType,
                   owner: $compositePayment->getMusician()
                 );
+                $this->persist($supportingDocumentFile);
               } else {
                 $conflict = 'replaced';
-                $supportingDocument
+                $supportingDocumentFile
                   ->setMimeType($mimeType)
                   ->setSize(strlen($fileContent))
                   ->getFileData()->setData($fileContent);
               }
-              $supportingDocument->setFileName($originalFileName);
+              $supportingDocumentFile->setFileName($originalFileName);
 
               break;
             case UploadsController::UPLOAD_MODE_LINK:
               $fileContent = null;
               /** @var Entities\EncryptedFile $originalFile */
-              if (!empty($supportingDocument) && $supportingDocument->getId() == $originalFileId) {
+              if (!empty($supportingDocumentFile) && $supportingDocumentFile->getId() == $originalFileId) {
                 return self::grumble($this->l->t('Link operation requested, but the existing original file is the same as the target destination (%s@%s)', [
                   $originalFile->getFileName(), $originalFileId
                 ]));
               }
-              if (!empty($supportingDocument)) {
-                $compositePayment->setSupportingDocument(null);
-              }
-              $supportingDocument = $originalFile;
-              $mimeType = $supportingDocument->getMimeType();
+              $supportingDocumentFile = $originalFile;
               break;
           }
 
-          $this->persist($supportingDocument);
-          $dirEntry = $storage->addCompositePayment($compositePayment, $supportingDocument, flush: false);
-          $compositePayment->setSupportingDocument($dirEntry);
-
+          $mimeType = $supportingDocumentFile->getMimeType();
+          if (!empty($supportingDocument)) {
+            $supportingDocument->setFile($supportingDocumentFile);
+          } else {
+            $supportingDocument = $storage->addCompositePayment($compositePayment, $supportingDocumentFile, flush: false);
+            $compositePayment->setSupportingDocument($supportingDocument);
+          }
 
           $this->flush();
 
-          $supportingDocumentFileName = $dirEntry->getName();
+          $supportingDocumentFileName = $supportingDocument->getName();
 
           $this->entityManager->commit();
         } catch (\Throwable $t) {
@@ -319,14 +323,11 @@ class PaymentsController extends Controller
           return self::response($this->l->t('We have no supporting document for the payment "%1$s", so we cannot delete it.', $compositePaymentId));
         }
 
-        $storage = $this->storageFactory->getProjectParticipantsStorage($compositePayment->getProjectParticipant());
-
         $this->entityManager->beginTransaction();
         try {
           // ok, delete it
           $compositePayment->setSupportingDocument(null);
-
-          $this->flush();
+          $this->remove($supportingDocument, flush: true);
 
           $this->entityManager->commit();
 

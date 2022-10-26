@@ -317,7 +317,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->balanceDocumentsFolder->removeDirEntry($supportingDocument);
+        $this->balanceDocumentsFolder->removeDocument($supportingDocument->getFile(), $supportingDocument->getName());
       }
     }
 
@@ -326,7 +326,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->balanceDocumentsFolder->addDirEntry($supportingDocument);
+        $this->balanceDocumentsFolder->addDirEntry($supportingDocument->getFile(), $supportingDocument->getName());
       }
     }
 
@@ -379,7 +379,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->balanceDocumentsFolder->removeDocument($supportingDocument);
+        $this->balanceDocumentsFolder->removeDocument($supportingDocument->getFile(), $supportingDocument->getName());
       }
     }
 
@@ -388,7 +388,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
     if (!empty($this->balanceDocumentsFolder) && !empty($this->receivable)) {
       $supportingDocument = $this->receivable->getSupportingDocument();
       if (!empty($supportingDocument)) {
-        $this->balanceDocumentsFolder->addDocument($supportingDocument);
+        $this->balanceDocumentsFolder->addDocument($supportingDocument->getFile(), $supportingDocument->getName());
       }
     }
 

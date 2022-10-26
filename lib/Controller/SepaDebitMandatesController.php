@@ -828,7 +828,7 @@ class SepaDebitMandatesController extends Controller
 
     } else {
       $bankAccount = (new Entities\SepaBankAccount)
-        ->setMusician($musicianId);
+        ->setMusician($this->getReference(Entities\Musician::class, $musicianId));
     }
 
     if ($bankAccount->inUse() && $bankAccount->getIban() !== $bankAccountIBAN) {
@@ -928,7 +928,7 @@ class SepaDebitMandatesController extends Controller
       // $mandateProject = $debitMandate->getProject();
     } else {
       $debitMandate = (new Entities\SepaDebitMandate)
-        ->setMusician($musicianId);
+        ->setMusician($this->getReference(Entities\Musician::class, $musicianId));
     }
 
     // @todo check if this works as expected
@@ -1273,8 +1273,9 @@ class SepaDebitMandatesController extends Controller
 
     $originalFileName = $originalFilePath ? basename($originalFilePath) : null;
 
-    /** @var Entities\EncryptedFile $writtenMandate */
+    /** @var Entities\DatabaseStorageFile $writtenMandate */
     $writtenMandate = $debitMandate->getWrittenMandate();
+    $writtenMandateFile = $writtenMandate ? $writtenMandate->getFile() : null;
 
     $conflict = null;
     $this->entityManager->beginTransaction();
@@ -1297,65 +1298,48 @@ class SepaDebitMandatesController extends Controller
           $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
           $mimeType = $mimeTypeDetector->detectString($fileContent);
 
-          if (!empty($writtenMandate) && $writtenMandate->getNumberOfLinks() > count($participants)) {
-            // if the file has multiple links then it is probably
-            // better to remove the existing file rather than
-            // overwriting a file which has multiple links.
-            // remove the original file-entry
-            foreach ($participants as $participant) {
-              $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
-              $storage->removeDebitMandate($debitMandate, flush: false);
-            }
-            $this->flush();
-            $debitMandate->setWrittenMandate(null);
-            $writtenMandate = null;
+          if (!empty($writtenMandateFile) && $writtenMandateFile->getNumberOfLinks() > count($participants)) {
+            $writtenMandateFile = null;
           }
 
-          if (empty($writtenMandate)) {
-            $writtenMandate = new Entities\EncryptedFile(
+          if (empty($writtenMandateFile)) {
+            $writtenMandateFile = new Entities\EncryptedFile(
               data: $fileContent,
               mimeType: $mimeType,
               owner: $musician,
             );
+            $this->persist($writtenMandateFile);
           } else {
             $conflict = 'replaced';
-            $writtenMandate
+            $writtenMandateFile
               ->setMimeType($mimeType)
               ->setSize(strlen($fileContent))
               ->getFileData()->setData($fileContent);
           }
-          $writtenMandate->setFileName($originalFileName);
+          $writtenMandateFile->setFileName($originalFileName);
 
           break;
         case UploadsController::UPLOAD_MODE_LINK:
           $fileContent = null;
           /** @var Entities\EncryptedFile $originalFile */
-          if (!empty($writtenMandate) && $writtenMandate->getId() == $originalFileId) {
+          if (!empty($writtenMandateFile) && $writtenMandateFile->getId() == $originalFileId) {
             return self::grumble($this->l->t('Link operation requested, but the existing original file is the same as the target destination (%s@%s)', [
               $originalFile->getFileName(), $originalFileId
             ]));
           }
-          if (!empty($writtenMandate)) {
-            // remove the original file-entry
-            foreach ($participants as $participant) {
-              $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
-              $storage->removeDebitMandate($debitMandate, flush: false);
-            }
-          }
-          $writtenMandate = $originalFile;
-          $mimeType = $writtenMandate->getMimeType();
+          $writtenMandateFile = $originalFile;
           break;
       }
 
-      $this->persist($writtenMandate);
+      $mimeType = $writtenMandateFile->getMimeType();
 
       /** @var Entities\ProjectParticipant $participant */
       foreach ($participants as $participant) {
         $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
-        $dirEntry = $storage->addDebitMandate($debitMandate, flush: false);
+        $writtenMandate = $storage->replaceDebitMandate($debitMandate, $writtenMandateFile, flush: false);
         if ($participant->getProject() == $debitMandate->getProject()) {
-          $debitMandate->setWrittenMandate($dirEntry);
-          $writtenMandateFileName = $dirEntry->getName();
+          $debitMandate->setWrittenMandate($writtenMandate);
+          $writtenMandateFileName = $writtenMandate->getName();
         }
       }
 

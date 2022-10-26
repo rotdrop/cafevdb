@@ -111,7 +111,7 @@ class DownloadsController extends Controller
         } else {
           $fileId = $object;
           /** @var Entities\File $file */
-          $file = $this->getDatabaseRepository(Entities\File::class)->find($fileId);
+          $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($fileId);
           if (empty($file)) {
             return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
           }

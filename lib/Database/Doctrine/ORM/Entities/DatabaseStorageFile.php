@@ -102,9 +102,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
 
     if (!empty($this->file)) {
       $this->file->addDatabaseStorageDirEntry($this);
-      if ($this->file->getId()) {
-        unset(self::$orphans[spl_object_id($this->file)]);
-      }
+      unset(self::$orphans[spl_object_id($this->file)]);
     }
 
     return $this;
@@ -189,6 +187,9 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
    */
   public function preRemove(Event\LifecycleEventArgs $event)
   {
+    if (empty($this->file)) {
+      return;
+    }
     $this->file->removeDatabaseStorageDirEntry($this); // update the inverse side
     if ($this->file->getNumberOfLinks() == 0) {
       self::$orphans[spl_object_id($this->file)] = $this->file; // schedule for later removal
@@ -206,9 +207,10 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
    */
   public function cleanupOrphans(Event\LifecycleEventArgs $event)
   {
-    if (!empty($this->file)) {
-      unset(self::$orphans[spl_object_id($this->file)]);
+    if (empty($this->file)) {
+      return;
     }
+    unset(self::$orphans[spl_object_id($this->file)]);
   }
 
   /** @return array */
