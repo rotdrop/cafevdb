@@ -98,7 +98,7 @@ LEFT JOIN Musicians m
 LEFT JOIN Projects p
   ON p.id = sdm.project_id
 LEFT JOIN DatabaseStorages s
-  ON s.storage_id = CONCAT_WS("/", p.name, "participants", m.user_id_slug, "")
+  ON CONVERT(s.storage_id USING utf8mb4) = CONVERT(CONCAT_WS("/", p.name, "participants", m.user_id_slug, "") USING utf8mb4)
 INNER JOIN Files f
   ON sdm.written_mandate_id = f.id
 LEFT JOIN DatabaseStorageDirEntries de
@@ -119,7 +119,7 @@ LEFT JOIN Musicians m
 LEFT JOIN Projects p
   ON p.id = cp.project_id
 LEFT JOIN DatabaseStorages s
-  ON s.storage_id = CONCAT_WS("/", p.name, "participants", m.user_id_slug, "")
+  ON CONVERT(s.storage_id USING utf8mb4) = CONVERT(CONCAT_WS("/", p.name, "participants", m.user_id_slug, "") USING utf8mb4)
 INNER JOIN Files f
   ON cp.supporting_document_id = f.id
 LEFT JOIN DatabaseStorageDirEntries de
@@ -142,7 +142,7 @@ LEFT JOIN Musicians m
 LEFT JOIN Projects p
   ON p.id = ppf.project_id
 LEFT JOIN DatabaseStorages s
-  ON s.storage_id = CONCAT_WS("/", p.name, "participants", m.user_id_slug, "")
+  ON CONVERT(s.storage_id USING utf8mb4) = CONVERT(CONCAT_WS("/", p.name, "participants", m.user_id_slug, "") USING utf8mb4)
 INNER JOIN Files f
   ON ppfd.supporting_document_id = f.id
 LEFT JOIN DatabaseStorageDirEntries de
@@ -170,7 +170,7 @@ LEFT JOIN Projects p
 LEFT JOIN Musicians m
   ON ppfd.musician_id = m.id
 LEFT JOIN DatabaseStorages s
-  ON s.storage_id = CONCAT_WS("/", p.name, "participants", m.user_id_slug, "")
+  ON CONVERT(s.storage_id USING utf8mb4) = CONVERT(CONCAT_WS("/", p.name, "participants", m.user_id_slug, "") USING utf8mb4)
 INNER JOIN Files f
   ON ppfd.option_value = f.id
 LEFT JOIN DatabaseStorageDirEntries de

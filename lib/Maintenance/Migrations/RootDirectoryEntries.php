@@ -24,12 +24,16 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
+use Throwable;
+
 use DateTimeImmutable;
 use DateTimeInterface;
 
 use OCP\ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
+
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\InvalidFieldNameException;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -115,6 +119,75 @@ WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
   {
     if (!parent::execute()) {
       return false;
+    }
+
+    // determine potential conflicts caused by changing the target entity of
+    // join columns
+
+    // check on which side of the migrations we are
+    $migrationState = $this->determineDirEntryMigrationState();
+
+    $this->logInfo('MIGRATION STATE ' . $migrationState);
+
+    if ($migrationState == 0) {
+      throw new Exceptions\DatabaseMigrationException('Inconsistent database state');
+    }
+
+    if ($migrationState == -1) {
+      $connection = $this->entityManager->getConnection();
+      $sql = "SELECT f.id AS file_id, d.id AS dir_entry_id FROM Files f INNER JOIN DatabaseStorageDirEntries d ON f.id = d.id AND f.type = 'encrypted'";
+      $stmt = $connection->prepare($sql);
+      $conflictIds = $stmt->executeQuery()->fetchFirstColumn();
+      $stmt->closeCursor();
+      $this->logInfo('CONFLICTS ' . print_r($conflictIds, true));
+
+      if (!empty($conflictIds)) {
+        // as document reference are still EncryptedFile ids it is comparatively
+        // safe to resolve the conflicts by simply relocating the directory
+        // entries. If the directory entry is a file, we need only to adjust its
+        // id. If it is a directory, we need to additionally adjust the parent
+        // references of all children.
+        //
+        // If the conflicting node is a root node, we need also to adjust the
+        // DatabaseStorages table.
+        $sql = 'SELECT d.id AS dirEntryId, d.type AS dirEntryType, p.id AS parentId, s.id AS storageId
+FROM DatabaseStorageDirEntries d
+LEFT JOIN DatabaseStorageDirEntries p
+ON d.parent_id = p.id
+LEFT JOIN DatabaseStorages s
+ON d.id = s.root_id
+WHERE d.id IN (' . implode(',', $conflictIds) . ')';
+        $stmt = $connection->prepare($sql);
+        $conflicts = $stmt->executeQuery()->fetchAllAssociative();
+        $stmt->closeCursor();
+        $this->logInfo('CONFLICT IDS ' . print_r($conflicts, true));
+
+        $sql = 'SELECT MAX(t.id) FROM (SELECT id
+FROM DatabaseStorageDirEntries d
+UNION
+SELECT id FROM Files f) t';
+        $stmt = $connection->prepare($sql);
+        $maxReferenceId = $stmt->executeQuery()->fetchOne();
+        $stmt->closeCursor();
+        $this->logInfo('MAX ID ' . $maxReferenceId);
+        $nextReferenceId = $maxReferenceId + 1;
+
+        $connection->beginTransaction();
+        try {
+          foreach ($conflicts as $conflict) {
+            $oldReferenceId = $conflict['dirEntryId'];
+            $this->relocateDirectoryEntry($connection, $oldReferenceId, $nextReferenceId);
+            ++$nextReferenceId;
+          }
+          $connection->commit();
+        } catch (Throwable $t) {
+          if ($connection->isTransactionActive()) {
+            $connection->rollBack();
+          }
+          $this->logException($t);
+          throw new Exceptions\DatabaseMigrationException($this->l->t('Exception during relocation of directory entries.'), 0, $t);
+        }
+      }
     }
 
     $this->entityManager->beginTransaction();
@@ -211,7 +284,7 @@ WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
           }
           $participant->setDatabaseDocuments($storageEntity);
 
-          $walkFileSystem = function($path, $folderListing, $folderEntity) use (&$walkFileSystem, $storage) {
+          $walkFileSystem = function($path, $folderListing, $folderEntity) use (&$walkFileSystem, $storage, $storageId) {
             foreach ($folderListing as $nodeName => $node) {
               if ($nodeName == '.') {
                 $folderEntity->setUpdated(max($folderEntity->getUpdated(), $node->minimalModificationTime));
@@ -239,6 +312,7 @@ WHERE original_file_name IS NOT NULL AND file_name <> original_file_name',
                   $dirEntry = $folderEntity->addSubFolder($nodeName);
                   $dirEntry->setCreated($dirEntry->getUpdated());
                 }
+
                 $nodeListing = $storage->findFilesForMigration($nodePath);
 
                 $walkFileSystem($nodePath, $nodeListing, $dirEntry);
@@ -391,6 +465,7 @@ WHERE p.id = ?';
       if ($this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
       }
+      $this->logException($t);
       throw new Exceptions\DatabaseMigrationException($this->l->t('Exception during transactional part of the migration.'), 0, $t);
     }
 
@@ -428,6 +503,288 @@ WHERE p.id = ?';
 
     // pray that it worked out.
     return parent::execute();
+  }
+
+  /**
+   * @return int 1 if file references are already dir entries, -1 if
+   * references are still files, 0 if this cannot be determined.
+   */
+  private function determineDirEntryMigrationState():int
+  {
+    $state = $this->fieldDataSupportingDocumentsDirEntryState()
+      + $this->debitMandatesDirEntryState()
+      + $this->fieldDataOptionValuesDirEntryState()
+      + $this->compositePaymentsDirEntryState()
+      + $this->transactionDataDirEntryState();
+
+    return $state == 5 ? 1 : ($state == -5 ? -1 : 0);
+  }
+
+  /**
+   * @return int 1 if supporting documents references are already dir-entries,
+   * -1 if references are still files, 0 if this cannot be determined.
+   */
+  private function fieldDataSupportingDocumentsDirEntryState():int
+  {
+    $connection = $this->entityManager->getConnection();
+    // check on which side of the migrations we are
+    $sql = 'SELECT COUNT(*)
+FROM ProjectParticipantFieldsData fd
+INNER JOIN DatabaseStorageDirEntries d
+ON fd.supporting_document_id = d.id AND d.type = "file"';
+    $stmt = $connection->prepare($sql);
+    $dirEntriesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#DIRENTRIES ' . $dirEntriesCount);
+
+    $sql = 'SELECT COUNT(*)
+FROM ProjectParticipantFieldsData fd
+INNER JOIN Files f
+ON fd.supporting_document_id = f.id AND f.type = "encrypted"';
+    $stmt = $connection->prepare($sql);
+    $filesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#FILES ' . $filesCount);
+
+    $sql = 'SELECT COUNT(*) FROM ProjectParticipantFieldsData fd WHERE fd.supporting_document_id > 0';
+    $stmt = $connection->prepare($sql);
+    $referencesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    if ($filesCount == $referencesCount && $dirEntriesCount < $referencesCount) {
+      return -1; // pre dir-entry migration
+    } elseif ($dirEntriesCount == $referencesCount && $filesCount < $referencesCount) {
+      return 1; // post dir-entry migration
+    }
+    return 0;
+  }
+
+  /**
+   * @return int 1 if option-value file references are already dir-entries, -1
+   * if references are still files, 0 if this cannot be determined.
+   */
+  private function fieldDataOptionValuesDirEntryState():int
+  {
+    $connection = $this->entityManager->getConnection();
+    // check on which side of the migrations we are
+    $sql = 'SELECT COUNT(*)
+FROM ProjectParticipantFieldsData ppfd
+LEFT JOIN ProjectParticipantFields ppf
+ON ppfd.field_id = ppf.id
+INNER JOIN DatabaseStorageDirEntries d
+ON ppfd.option_value = d.id AND d.type = "file"
+WHERE ppf.data_type = "db-file"';
+    $stmt = $connection->prepare($sql);
+    $dirEntriesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#DIRENTRIES ' . $dirEntriesCount);
+
+    $sql = 'SELECT COUNT(*)
+FROM ProjectParticipantFieldsData ppfd
+LEFT JOIN ProjectParticipantFields ppf
+ON ppfd.field_id = ppf.id
+INNER JOIN Files f
+ON ppfd.option_value = f.id AND f.type = "encrypted"
+WHERE ppf.data_type = "db-file"';
+    $stmt = $connection->prepare($sql);
+    $filesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#FILES ' . $filesCount);
+
+    $sql = 'SELECT COUNT(*) FROM ProjectParticipantFieldsData ppfd
+LEFT JOIN ProjectParticipantFields ppf
+ON ppfd.field_id = ppf.id
+WHERE ppf.data_type = "db-file"
+AND ppfd.option_value > 0';
+    $stmt = $connection->prepare($sql);
+    $referencesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    if ($filesCount == $referencesCount && $dirEntriesCount < $referencesCount) {
+      return -1; // pre dir-entry migration
+    } elseif ($dirEntriesCount == $referencesCount && $filesCount < $referencesCount) {
+      return 1; // post dir-entry migration
+    }
+    return 0;
+  }
+
+  /**
+   * @return int 1 if written mandate references are already dir-entries, -1
+   * if references are still files, 0 if this cannot be determined.
+   */
+  private function debitMandatesDirEntryState():int
+  {
+    $connection = $this->entityManager->getConnection();
+    // check on which side of the migrations we are
+    $sql = 'SELECT COUNT(*)
+FROM SepaDebitMandates m
+INNER JOIN DatabaseStorageDirEntries d
+ON m.written_mandate_id = d.id AND d.type = "file"';
+    $stmt = $connection->prepare($sql);
+    $dirEntriesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#DIRENTRIES ' . $dirEntriesCount);
+
+    $sql = 'SELECT COUNT(*)
+FROM SepaDebitMandates m
+INNER JOIN Files f
+ON m.written_mandate_id = f.id AND f.type = "encrypted"';
+    $stmt = $connection->prepare($sql);
+    $filesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#FILES ' . $filesCount);
+
+    $sql = 'SELECT COUNT(*)
+FROM SepaDebitMandates m
+WHERE m.written_mandate_id > 0';
+    $stmt = $connection->prepare($sql);
+    $referencesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    if ($filesCount == $referencesCount && $dirEntriesCount < $referencesCount) {
+      return -1; // pre dir-entry migration
+    } elseif ($dirEntriesCount == $referencesCount && $filesCount < $referencesCount) {
+      return 1; // post dir-entry migration
+    }
+    return 0;
+  }
+
+  /**
+   * @return int 1 if written mandate references are already dir-entries, -1
+   * if references are still files, 0 if this cannot be determined.
+   */
+  private function compositePaymentsDirEntryState():int
+  {
+    $connection = $this->entityManager->getConnection();
+    // check on which side of the migrations we are
+    $sql = 'SELECT COUNT(*)
+FROM CompositePayments p
+INNER JOIN DatabaseStorageDirEntries d
+ON p.supporting_document_id = d.id AND d.type = "file"';
+    $stmt = $connection->prepare($sql);
+    $dirEntriesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#DIRENTRIES ' . $dirEntriesCount);
+
+    $sql = 'SELECT COUNT(*)
+FROM CompositePayments p
+INNER JOIN Files f
+ON p.supporting_document_id = f.id AND f.type = "encrypted"';
+    $stmt = $connection->prepare($sql);
+    $filesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#FILES ' . $filesCount);
+
+    $sql = 'SELECT COUNT(*)
+FROM CompositePayments p
+WHERE p.supporting_document_id > 0';
+    $stmt = $connection->prepare($sql);
+    $referencesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    if ($filesCount == $referencesCount && $dirEntriesCount < $referencesCount) {
+      return -1; // pre dir-entry migration
+    } elseif ($dirEntriesCount == $referencesCount && $filesCount < $referencesCount) {
+      return 1; // post dir-entry migration
+    }
+    return 0;
+  }
+
+  /**
+   * @return int 1 if written mandate references are already dir-entries, -1
+   * if references are still files, 0 if this cannot be determined.
+   */
+  private function transactionDataDirEntryState():int
+  {
+    $connection = $this->entityManager->getConnection();
+    $columns = [ 'encrypted_file_id', 'database_storage_file_id', ];
+    $fileReferenceColumn = null;
+    foreach ($columns as $column) {
+      // determine the column name
+      try {
+        $sql = 'SELECT t.' . $column . ' FROM SepaBulkTransactionData t';
+        $stmt = $connection->prepare($sql);
+        $stmt->executeQuery()->fetchOne();
+        $fileReferenceColumn = $column;
+      } catch (InvalidFieldNameException $e) {
+        // ignore
+      }
+    }
+    if ($fileReferenceColumn === null) {
+      return 0; // broken
+    }
+
+    // check on which side of the migrations we are
+    $sql = 'SELECT COUNT(*)
+FROM SepaBulkTransactionData btd
+INNER JOIN DatabaseStorageDirEntries d
+ON btd.' . $fileReferenceColumn . ' = d.id AND d.type = "file"';
+    $stmt = $connection->prepare($sql);
+    $dirEntriesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#DIRENTRIES ' . $dirEntriesCount);
+
+    $sql = 'SELECT COUNT(*)
+FROM SepaBulkTransactionData btd
+INNER JOIN Files f
+ON btd.' . $fileReferenceColumn . ' = f.id AND f.type = "encrypted"';
+    $stmt = $connection->prepare($sql);
+    $filesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    $this->logInfo('#FILES ' . $filesCount);
+
+    $sql = 'SELECT COUNT(*)
+FROM SepaBulkTransactionData btd
+WHERE btd.' . $fileReferenceColumn . ' > 0';
+    $stmt = $connection->prepare($sql);
+    $referencesCount = $stmt->executeQuery()->fetchOne();
+    $stmt->closeCursor();
+
+    if ($filesCount == $referencesCount && $dirEntriesCount < $referencesCount) {
+      return -1; // pre dir-entry migration
+    } elseif ($dirEntriesCount == $referencesCount && $filesCount < $referencesCount) {
+      return 1; // post dir-entry migration
+    }
+    return 0;
+  }
+
+  /**
+   * Relocate the given directory entry to a new id in order to resolve conflicts.
+   *
+   * @param DatabaseConnection $connection
+   *
+   * @param int $oldReferenceId
+   *
+   * @param int $newReferenceId
+   *
+   * @return void
+   */
+  private function relocateDirectoryEntry(DatabaseConnection $connection, int $oldReferenceId, int $newReferenceId):void
+  {
+    $sql = 'SET FOREIGN_KEY_CHECKS = 0;
+UPDATE DatabaseStorageDirEntries d
+  SET d.id = ' . $newReferenceId . '
+  WHERE d.id = ' . $oldReferenceId . ';
+UPDATE DatabaseStorages s
+  SET s.root_id = ' . $newReferenceId . '
+  WHERE s.root_id = ' . $oldReferenceId . ';
+UPDATE DatabaseStorageDirEntries d
+  SET d.parent_id = ' . $newReferenceId . '
+  WHERE d.parent_id = ' . $oldReferenceId;
+    $this->logInfo('SQL ' . $sql);
+    $stmt = $connection->prepare($sql);
+    $stmt->executeQuery();
+    $stmt->closeCursor();
   }
 
   /**
