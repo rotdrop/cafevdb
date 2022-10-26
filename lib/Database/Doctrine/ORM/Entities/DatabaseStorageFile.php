@@ -35,6 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Constants;
 
 /**
@@ -139,7 +140,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
         && is_callable([ $this->file, $method ])) {
       return call_user_func_array([ $this->file, $method ], $args);
     }
-    throw new Exception('Undefined method - ' . __CLASS__ . '::' . $method);
+    throw new Exceptions\DatabaseException('Undefined method - ' . __CLASS__ . '::' . $method);
   }
 
   /** @return null|string */
