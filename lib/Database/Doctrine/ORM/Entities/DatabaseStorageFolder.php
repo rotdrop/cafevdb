@@ -165,9 +165,11 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    *
    * @param null|string $fileName
    *
+   * @param bool $replace Replace an existing entry's file by the given file.
+   *
    * @return null|DatabaseStorageDirEntry The new or existing
    */
-  public function addDocument(EncryptedFile $file, ?string $fileName = null):?DatabaseStorageFile
+  public function addDocument(EncryptedFile $file, ?string $fileName = null, bool $replace = false):?DatabaseStorageFile
   {
     $fileName = $fileName ?? $file->getFileName();
     $fileName = trim($fileName, Constants::PATH_SEP);
@@ -180,19 +182,39 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     if ($existing->count() == 1) {
       /** @var DatabaseStorageFile $dirEntry */
       $dirEntry = $existing->first();
-      if (!($dirEntry instanceof DatabaseStorageFile) || $dirEntry->getFile() !== $file) {
+      if (!($dirEntry instanceof DatabaseStorageFile)) {
+        throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' but the existing entry is not a file.');
+      }
+      if (!$replace && $dirEntry->getFile() !== $file) {
         throw new Exceptions\DatabaseException('Directory entry "' . $fileName . '" already exists in directory ' . $this->id . ' and the existing entry does not point to the same file.');
       }
-      return $dirEntry;
+    } else {
+      // need a new one
+      $dirEntry = (new DatabaseStorageFile)
+        ->setName($fileName)
+        ->setParent($this);
     }
 
-    // need a new one
-    $dirEntry = (new DatabaseStorageFile)
-      ->setFile($file)
-      ->setName($fileName)
-      ->setParent($this);
+    $dirEntry->setFile($file);
 
     return $dirEntry;
+  }
+
+  /**
+   * Add the given file to the list of supporting documents if not already present.
+   *
+   * This increases the link-count of the file and add this entity to the
+   * container collection of the encrypted file.
+   *
+   * @param EncryptedFile $file
+   *
+   * @param null|string $fileName
+   *
+   * @return null|DatabaseStorageDirEntry The new or existing directory entry.
+   */
+  public function replaceDocument(EncryptedFile $file, ?string $fileName = null):?DatabaseStorageFile
+  {
+    return $this->addDocument($file, $fileName, replace: true);
   }
 
   /**

@@ -176,12 +176,17 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param bool $flush
    *
+   * @param bool $replace If \true replace the existing file references by the
+   * given file. Otherwise it is an error if an entry already exists and
+   * points to another file.
+   *
    * @return null|Entities\DatabaseStorageFile
    */
   public function addDebitMandate(
     Entities\SepaDebitMandate $debitMandate,
     Entities\EncryptedFile $file,
     bool $flush = true,
+    bool $replace = false,
   ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
@@ -204,7 +209,7 @@ class ProjectParticipantsStorage extends Storage
         $this->persist($folderEntity);
       }
 
-      $documentEntity = $folderEntity->addDocument($file, $fileName);
+      $documentEntity = $folderEntity->addDocument($file, $fileName, replace: $replace);
       $this->persist($documentEntity);
 
       if ($flush) {
@@ -220,6 +225,26 @@ class ProjectParticipantsStorage extends Storage
     }
 
     return $documentEntity;
+  }
+
+  /**
+   * Add or replace a directory entry for the given debit-mandate and file.
+   *
+   * @param Entities\SepaDebitMandate $debitMandate
+   *
+   * @param Entities\EncryptedFile $file
+   *
+   * @param bool $flush
+   *
+   * @return null|Entities\DatabaseStorageFile
+   */
+  public function replaceDebitMandate(
+    Entities\SepaDebitMandate $debitMandate,
+    Entities\EncryptedFile $file,
+    bool $flush = true,
+    bool $replace = false,
+  ):?Entities\DatabaseStorageFile {
+    return $this->addDebitMandate($debitMandate, $file, $flush, replace: true);
   }
 
   /**
