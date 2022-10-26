@@ -773,7 +773,7 @@ class SepaBulkTransactionService
     Entities\SepaBulkTransaction $bulkTransaction,
     ?Entities\Project $project = null,
     string $format = self::EXPORT_AQBANKING,
-  ):?Entities\EncryptedFile {
+  ):?Entities\DatabaseStorageFile {
 
     // as a safe-guard regenerate the subject in order to catch changes in
     // linked supporting documents.
@@ -834,19 +834,21 @@ class SepaBulkTransactionService
           data: $fileData,
           mimeType: $exporter->mimeType($bulkTransaction)
         );
+        $this->persist($exportFile);
       } else {
         $exportDocument
-          ->setName($fileName)
-          ->getFile()
+          ->setName($fileName);
+        $exportFile = $exportDocument->getFile();
+        $exportFile
           ->setFileName($fileName)
           ->setMimeType($exporter->mimeType($bulkTransaction))
           ->setSize(strlen($fileData))
           ->getFileData()->setData($fileData);
+
       }
 
       $this->entityManager->beginTransaction();
       try {
-        $this->persist($exportFile);
         $document = $storage->addDocument($bulkTransaction, $exportFile, flush: false);
         $bulkTransaction->addTransactionData($document);
         $this->flush();
@@ -864,6 +866,6 @@ class SepaBulkTransactionService
         );
       }
     }
-    return $exportFile;
+    return $exportDocument;
   }
 }
