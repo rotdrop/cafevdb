@@ -42,11 +42,11 @@ trait MusicianPhotoTrait
    *
    * @param string $action
    *
-   * @param int $imageId
+   * @param null|int $imageId
    *
    * @return string HTML fragment.
    */
-  public function photoImageLink(int $musicianId, string $action, int $imageId):string
+  public function photoImageLink(int $musicianId, string $action, ?int $imageId):string
   {
     if (empty($imageId)) {
       $imageId = ImagesService::IMAGE_ID_ANY;
