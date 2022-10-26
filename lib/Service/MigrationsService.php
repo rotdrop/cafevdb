@@ -37,6 +37,7 @@ use OCP\AppFramework\IAppContainer;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\IMigration;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\InvalidFieldNameException;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
 
 /** Manage database migrations. */
@@ -45,8 +46,8 @@ class MigrationsService
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  private const MIGRATIONS_FOLDER = __DIR__ . '/../Maintenance/Migrations/';
-  private const MIGRATIONS_NAMESPACE = 'OCA\CAFEVDB\\Maintenance\\Migrations';
+  public const MIGRATIONS_FOLDER = __DIR__ . '/../Maintenance/Migrations/';
+  public const MIGRATIONS_NAMESPACE = 'OCA\CAFEVDB\\Maintenance\\Migrations';
 
   /** @var IAppContainer */
   private $appContainer;
@@ -171,13 +172,25 @@ class MigrationsService
   {
     /** @var IMigration $instance */
     $instance = $this->appContainer->get($className);
+
+    $this->entityManager->close();
+    $this->entityManager->reopen();
+
     $result = $instance->execute();
     if ($result !== true) {
       throw new RuntimeException($this->l->t("Migration %s has failed to execute.", $className));
     }
 
+    $this->entityManager->close();
+    $this->entityManager->reopen();
+
+    $migrationClassName = self::getBaseClassName($className);
+
     /** @var Entities\Migration $migrationRecord */
-    $migrationRecord = (new Entities\Migration)->setVersion($version);
+    $migrationRecord = (new Entities\Migration)
+      ->setVersion($version)
+      ->setMigrationClassName($migrationClassName);
+
     $this->persist($migrationRecord);
     $this->flush();
   }
@@ -194,10 +207,38 @@ class MigrationsService
     }
   }
 
+  /** @return void */
+  protected function createMigrationsTable():void
+  {
+    $sql = "CREATE TABLE IF NOT EXISTS Migrations (
+  version char(14) CHARACTER SET ascii NOT NULL,
+  created datetime(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  updated datetime(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
+  PRIMARY KEY (version)
+)";
+    $connection = $this->entityManager->getConnection();
+    $stmt = $connection->prepare($sql);
+    $stmt->executeQuery();
+  }
+
+  /** @return void */
+  protected function sanitizeMigrationsTable():void
+  {
+    $sql = "ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS migration_class_name VARCHAR(512) NOT NULL;
+ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS version char(14) CHARACTER SET ascii NOT NULL;
+ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS created datetime(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)';
+ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS updated datetime(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'";
+    $connection = $this->entityManager->getConnection();
+    $stmt = $connection->prepare($sql);
+    $stmt->executeQuery();
+  }
+
   /**
+   * @param bool $autoFix
+   *
    * @return null|string The most recent migration applied, as stored in the database.
    */
-  protected function findLatestVersion():?string
+  protected function findLatestVersion(bool $autoFix = true):?string
   {
     if (!$this->entityManager->connected()) {
       return null;
@@ -208,6 +249,16 @@ class MigrationsService
     } catch (DBALException\TableNotFoundException $tnfe) {
       // Ok, there is no migrations table, handle this inside the initial migration
       $this->logInfo('NO MIGRATIONS TABLE');
+      if ($autoFix) {
+        $this->createMigrationsTable();
+        return $this->findLatestVersion(autoFix: false);
+      }
+    } catch (InvalidFieldNameException $ifne) {
+      $this->logInfo('MIGRATIONS TABLE SEEMS BROKEN');
+      if ($autoFix) {
+        $this->sanitizeMigrationsTable();
+        return $this->findLatestVersion(autoFix: false);
+      }
     } catch (\Throwable $t) {
       $this->logException($t);
     }
@@ -279,6 +330,16 @@ class MigrationsService
     }
 
     return $migrations;
+  }
+
+  /**
+   * @param string $className
+   *
+   * @return string
+   */
+  private static function getBaseClassName(string $className):string
+  {
+    return substr(strrchr(get_parent_class($className), '\\'), 1);
   }
 }
 
