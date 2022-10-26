@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use DateTime;
+use Exception;
+
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
@@ -37,6 +40,8 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /**
  * Update the content of the given text-file with the given content. The file
  * is created if it does not exist.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class UndoableTextFileUpdate extends AbstractFileSystemUndoable
 {
@@ -76,20 +81,20 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   protected $mkdir;
 
   /**
-   * Undoable folder rename, optionally ignoring non-existing source folder.
+   * @param string|callable $name
    *
-   * @param string|Callable $folderName
+   * @param null|string $content Content to place into the text-file.
    *
-   * @param string|null $replacableContent Optional old known content from a previos
+   * @param string|null $replacableContent Optional old known content from a previous
    * run which is then simply replaced.
    *
-   * @param bool $gracefully Do not throw if folder already exists
+   * @param bool $gracefully Do not throw if folder already exists.
    *
    * @param bool $mkdir Whether or not to create missing parent
    * directories. However, even if set to \false a regular which is in the way
    * will be removed.
    */
-  public function __construct($name, ?string $content, ?string $replacableContent = null, bool $gracefully = false, bool $mkdir = true)
+  public function __construct(mixed $name, ?string $content, ?string $replacableContent = null, bool $gracefully = false, bool $mkdir = true)
   {
     $this->name = $name;
     $this->content = $content ?? '';
@@ -100,13 +105,15 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function initialize(IAppContainer $appContainer) {
+  public function initialize(IAppContainer $appContainer):void
+  {
     parent::initialize($appContainer);
     $this->dateTimeFormatter = $appContainer->get(IDateTimeFormatter::class);
   }
 
   /** {@inheritdoc} */
-  public function do() {
+  public function do():void
+  {
     if (is_callable($this->name)) {
       $this->name = call_user_func($this->name);
     }
@@ -121,7 +128,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
     //   -> delete, undelete on undo, or just rename
     $components = explode(UserStorage::PATH_SEP, $this->name);
     if (empty($components)) {
-      throw new \Exception('Cannot create the root-node.');
+      throw new Exception('Cannot create the root-node.');
     }
 
     if (!$this->mkdir && empty($this->userStorage->get(dirname($this->name)))) {
@@ -156,18 +163,18 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
           $content = null;
           $this->nothingToUndo = true;
           return;
-        } else if (!empty($replacableContent) && $oldContentHead == $replacableContent) {
+        } elseif (!empty($replacableContent) && $oldContentHead == $replacableContent) {
           if ($separatorPos !== null) {
             $content .= substr($oldContent, $separatorPos);
           }
-        } else if (!empty($oldContent)) {
+        } elseif (!empty($oldContent)) {
           // annotate the old content
           if (empty($content)) {
             $content = '';
           } else {
             $content .= Constants::OLD_CONTENT_SEPARATOR;
           }
-          $now = new \DateTime;
+          $now = new DateTime;
           $content .= $this->l->t('The old ``%1$s`` content on %2$s at %3$s was:', [
             basename($this->name),
             $this->dateTimeFormatter->formatDate($now),
@@ -193,7 +200,8 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function undo() {
+  public function undo():void
+  {
     if ($this->nothingToUndo) {
       return;
     }
@@ -208,7 +216,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function reset()
+  public function reset():void
   {
     $this->renamedName = null;
     $this->oldContent = null;

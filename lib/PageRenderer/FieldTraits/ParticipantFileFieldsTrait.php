@@ -192,16 +192,12 @@ trait ParticipantFileFieldsTrait
       $subDirPrefix .= UserStorage::PATH_SEP . $subDir;
     }
     if (!empty($optionValue)) {
-      /** @var Entities\File $file */
-      $file = $this->findEntity(Entities\File::class, $optionValue);
-      $dbPathName = $file->getFileName();
-      if (!empty($dbPathName)) {
-        $dbPathInfo = pathinfo($dbPathName);
-        $dbFileName = $dbPathInfo['basename'];
-        $dbExtension = $dbPathInfo['extension'] ?? null;
-      } else {
-        $dbFileName = $fileBase;
-      }
+      /** @var Entities\DatabaseStorageFile $file */
+      $file = $this->findEntity(Entities\DatabaseStorageFile::class, $optionValue);
+      $dbPathName = $file->getName();
+      $dbPathInfo = pathinfo($dbPathName);
+      $dbFileName = $dbPathInfo['basename'];
+      $dbExtension = $dbPathInfo['extension'] ?? null;
       if (empty($dbExtension)) {
         $dbExtension = Util::fileExtensionFromMimeType($file->getMimeType());
       }
@@ -278,7 +274,8 @@ trait ParticipantFileFieldsTrait
   }
 
   /**
-   * Generate a link to the files-app if appropriate
+   * Generate a link to the files-app if appropriate. The link is always a
+   * link to a folder, so for FieldMultiplicity::SIMPLE the documents folder is used.
    *
    * @param null|Entities\ProjectParticipantField $field
    *
@@ -290,8 +287,12 @@ trait ParticipantFileFieldsTrait
    *
    * @return null|array
    */
-  private function getFilesAppLink(?Entities\ProjectParticipantField $field, Entities\Musician $musician, ?Entities\Project $project = null, ?string $subFolder = null):?array
-  {
+  private function getFilesAppLink(
+    ?Entities\ProjectParticipantField $field,
+    Entities\Musician $musician,
+    ?Entities\Project $project = null,
+    ?string $subFolder = null,
+  ):?array {
     $pathChain = [];
     $project = $project ?? $this->project;
     if (!empty($field)) {
@@ -373,8 +374,3 @@ trait ParticipantFileFieldsTrait
     return $html;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

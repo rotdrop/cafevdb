@@ -76,11 +76,11 @@ class SepaBulkTransactions extends PMETableViewBase
       'flags' => self::JOIN_READONLY,
     ],
     self::FILES_TABLE => [
-      'entity' => Entities\EncryptedFile::class,
+      'entity' => Entities\DatabaseStorageFile::class,
       'identifier' => [
-        'id' => [
+        'Id' => [
           'table' => self::DATA_TABLE,
-          'column' => 'encrypted_file_id',
+          'column' => 'database_storage_file_id',
         ],
       ],
       'column' => 'id',

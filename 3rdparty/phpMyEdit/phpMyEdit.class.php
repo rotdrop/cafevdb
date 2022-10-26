@@ -1720,6 +1720,10 @@ class phpMyEdit
 			}
 		}
 
+		/* Join WHERE parts by AND */
+		$where = implode(' AND ', $where);
+		$userFilter = !empty($where);
+
 		// allow some basic substitutions
 		$subs = array(
 			'main_table'  => $this->tb,
@@ -1737,24 +1741,68 @@ class phpMyEdit
 			}
 		}
 
-		// Add any coder specified 'AND' filters
-		if (!$text && $this->filters['AND']) {
-			$where[] = $this->substituteVars($this->filters['AND'], $subs);
+		/* Add any coder specified 'OR' filters. */
+		$orFilter = null;
+		if ($userFilter && !empty($this->filters['OR'])) {
+			if ($text) {
+				$orFilter = $this->filters['OR']['text'] ?? null;
+			} else {
+				$orFilter = $this->filters['OR']['sql'] ?? $this->filters['OR'];
+			}
+			if (!empty($orFilter)) {
+				$orFilter = $this->substituteVars($orFilter, $subs);
+			}
+		}
+		if ($where == $orFilter) {
+			$orFilter = null;
 		}
 
-		/* Join WHERE parts by AND */
-		$where = implode(' AND ', $where);
+		// Add any coder specified 'AND' filters
+		$andFilter = null;
+		if (!empty($this->filters['AND'])) {
+			if ($text) {
+				$andFilter = $this->filters['AND']['text'] ?? null;
+			} else {
+				$andFilter = $this->filters['AND']['sql'] ?? $this->filters['AND'];
+			}
+			if (!empty($andFilter)) {
+				$andFilter = $this->substituteVars($andFilter, $subs);
+			}
+		}
+		if ($where == $andFilter) {
+			$andFilter = null;
+		}
+
+		// we or first and and then
+		if (!empty($orFilter)) {
+			$where = empty($where)
+				? $orFilter
+				: $where . ' OR (' . $orFilter . ')';
+		}
+		if (!empty($andFilter)) {
+			if (!empty($where) && !empty($orFilter)) {
+				$where = '(' . $where . ')';
+			}
+			if (!empty($where)) {
+				$where .= ' AND ';
+			}
+			$where .= $andFilter;
+		}
 
 		if ($text) {
-			return str_replace('%', '*', $where);
-		}
-
-		/* Add any coder specified 'OR' filters. If where is still
-		 * empty at this point, then it is implicitly "true", hence
-		 * adding further "OR" filters does not make sense.
-		 */
-		if ($where !== '' && $this->filters['OR']) {
-			$where = '('.$where.') OR ('.$this->substituteVars($this->filters['OR'], $subs).')';
+			$where = str_replace([
+				'%',
+				' AND ',
+				' OR ',
+				' LIKE ',
+				' FIND_IN_SET ',
+			], [
+				'*',
+				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
+				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
+				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
+				' ' . strtoupper($this->labels['find_in_set'] ?? 'find_in_set') . ' ',
+			], $where);
 		}
 
 		return $where;
@@ -1883,23 +1931,65 @@ class phpMyEdit
 			}
 		}
 
-		// Add any coder specified 'AND' filters
-		if (!$text && $this->having['AND']) {
-			$having[] = $this->having['AND'];
+		$having = implode(' AND ', $having);
+		$userFilter = !empty($having);
+
+		/* Add any coder specified 'OR' filters. */
+		$orFilter = null;
+		if ($userFilter && !empty($this->having['OR'])) {
+			if ($text) {
+				$orFilter = $this->having['OR']['text'] ?? null;
+			} else {
+				$orFilter = $this->having['OR']['sql'] ?? $this->having['OR'];
+			}
+		}
+		if ($having == $orFilter) {
+			$orFilter = null;
 		}
 
-		$having = implode(' AND ', $having);
+		// Add any coder specified 'AND' filters
+		$andFilter = null;
+		if (!empty($this->having['AND'])) {
+			if ($text) {
+				$andFilter = $this->having['AND']['text'] ?? null;
+			} else {
+				$andFilter = $this->having['AND']['sql'] ?? $this->having['AND'];
+			}
+		}
+		if ($having == $andFilter) {
+			$andFilter = null;
+		}
+
+		// we or first and and then
+		if (!empty($orFilter)) {
+			$having = empty($having)
+				? $orFilter
+				: $having . ' OR (' . $orFilter . ')';
+		}
+		if (!empty($andFilter)) {
+			if (!empty($having) && !empty($orFilter)) {
+				$having = '(' . $having . ')';
+			}
+			if (empty($having)) {
+				$having .= ' AND ';
+			}
+			$having .= $andFilter;
+		}
 
 		if ($text) {
-			return str_replace('%', '*', $having);
-		}
-
-		/* Add any coder specified 'OR' filters. If where is still
-		 * empty at this point, then it is implicitly "true", hence
-		 * adding further "OR" filters does not make sense.
-		 */
-		if ($having !== '' && $this->having['OR']) {
-			$having = '('.$having.') OR ('.$this->having['OR'].')';
+			$having = str_replace([
+				'%',
+				' AND ',
+				' OR ',
+				' LIKE ',
+				' FIND_IN_SET ',
+			], [
+				'*',
+				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
+				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
+				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
+				' ' . strtoupper($this->labels['find_in_set'] ?? 'find_in_set') . ' ',
+			], $having);
 		}
 
 		return $having;
@@ -4573,7 +4663,6 @@ class phpMyEdit
 			echo '<span class="',$css_class_name,' label">',$this->labels['Filter'],':</span>';
 			echo $this->htmlSubmit('sw', 'Clear', $css_clear, $disabled);
 			echo "</td>\n";
-			$this->logInfo('TEXT QUERY ' . $text_query);
 			$htmlQuery = $text_query;
 			$shortHtmlQuery = preg_replace('/`PMEtable([0-9]+)`[.]/', 't$1.', $htmlQuery);
 			$shortHtmlQuery = preg_replace('/`PMEjoin([0-9]+)`[.]/', 'j$1.', $shortHtmlQuery);
@@ -6674,9 +6763,17 @@ class phpMyEdit
 					continue;
 				}
 				if (is_array($filter)) {
-					$this->filters[$junctor] = implode(' '.$junctor.' ', $filter);
+					$this->filters[$junctor]['sql'] = implode(
+						' ' . $junctor . ' ',
+						array_map(fn($value) => $value['sql'] ?? $value, $filter)
+					);
+					$this->filters[$junctor]['text'] = implode(
+						' ' . $junctor . ' ',
+						array_filter(array_map(fn($value) => $value['text'] ?? null,  $filter))
+					);
 				} else {
-					$this->filters[$junctor] = $filter;
+					$this->filters[$junctor]['sql'] = $filter;
+					$this->filters[$junctor]['text'] = null;
 				}
 			}
 		}
@@ -6703,9 +6800,17 @@ class phpMyEdit
 					continue;
 				}
 				if (is_array($filter)) {
-					$this->having[$junctor] = implode(' '.$junctor.' ', $filter);
+					$this->having[$junctor]['sql'] = implode(
+						' ' . $junctor . ' ',
+						array_map(fn($value) => $value['sql'] ?? $value, $filter)
+					);
+					$this->having[$junctor]['text'] = implode(
+						' ' . $junctor . ' ',
+						array_filter(array_map(fn($value) => $value['text'] ?? null,  $filter))
+					);
 				} else {
-					$this->having[$junctor] = $filter;
+					$this->having[$junctor]['default']['sql'] = $filter;
+					$this->having[$junctor]['default']['text'] = null;
 				}
 			}
 		}

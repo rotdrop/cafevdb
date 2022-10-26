@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,12 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use OCA\CAFEVDB\Storage\UserStorage;
+use Exception;
+
 use OCP\Files\Folder as CloudFolder;
+use OCP\Files\NotFoundException as FileNotFoundException;
+
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Rename the given paths. The target path will be created if it does
@@ -34,6 +38,8 @@ use OCP\Files\Folder as CloudFolder;
  *
  * If the target folder is empty, then the source folder will be
  * deleted if it is empty. Non empty folders will bot be deleted.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class UndoableFolderRename extends AbstractFileSystemUndoable
 {
@@ -69,6 +75,8 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
    *
    * @param bool $gracefully Do not throw if the source-folder given
    * as $oldName does not exist.
+   *
+   * @param bool $mkdir Create non-existing directories.
    */
   public function __construct(string $oldName, string $newName, bool $gracefully = false, bool $mkdir = true)
   {
@@ -79,13 +87,16 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Rename $from to $to with the following conventions:
    *
    * - if empty($from) then just create $to
    * - if empty($to) then just delete $from
    * - if both are non empty, then rename
    */
-  public function do() {
+  public function do():void
+  {
     $startTime = $this->timeFactory->getTime();
     if (is_callable($this->oldName)) {
       $this->oldName = call_user_func($this->oldName);
@@ -101,22 +112,22 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
     if (!empty($this->oldName)) {
       $oldDir = $this->userStorage->getFolder($this->oldName);
       if (empty($oldDir) && !$this->gracefully) {
-        throw new \OCP\Files\NotFoundException(sprintf('Cannot find old directory at location "%s".', $this->oldName));
+        throw new FileNotFoundException(sprintf('Cannot find old directory at location "%s".', $this->oldName));
       }
     }
 
     if (empty($this->newName)) {
       // delete if it exists
       if (!empty($oldDir)) {
-        $fromDir->delete();
+        $oldDir->delete();
         $this->undoAction = self::UNDO_RESTORE;
       }
-    } else if (!empty($oldDir)) {
+    } elseif (!empty($oldDir)) {
       // rename it
       if ($this->mkdir) {
         $toComponents = explode(UserStorage::PATH_SEP, $this->newName);
         if (empty($toComponents)) {
-          throw new \Exception('Cannot rename to the root-node.');
+          throw new Exception('Cannot rename to the root-node.');
         }
         $toPrefix = array_slice($toComponents, 0, count($toComponents) - 1);
         $this->userStorage->ensureFolderChain($toPrefix);
@@ -132,20 +143,22 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
           throw $t;
         }
       }
-    } else if ($this->mkdir) {
+    } elseif ($this->mkdir) {
       // otherwise just create the new folder.
       $this->userStorage->ensureFolder($this->newName);
       $this->undoAction = self::UNDO_DELETE;
     }
 
-
-    @time_sleep_until($startTime+1);
+    if ($startTime + 1 < $this->timeFactory->getTime()) {
+      time_sleep_until($startTime+1);
+    }
     $endTime = $this->timeFactory->getTime();
     $this->doneInterval = [ $startTime, $endTime ];
   }
 
   /** {@inheritdoc} */
-  public function undo() {
+  public function undo():void
+  {
     switch ($this->undoAction) {
       case self::UNDO_DELETE:
         $this->userStorage->delete($this->newName);
@@ -160,11 +173,11 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function reset() {
+  public function reset():void
+  {
     $this->undoAction = self::UNDO_NOTHING;
     $this->doneInterval = null;
   }
-
 }
 
 // Local Variables: ***

@@ -487,7 +487,7 @@ class ProjectsController extends Controller
               'Participant download share for project "%1$s" created as "%2$s"', [
                 $project->getName(),
                 $data['share'],
-            ]);
+              ]);
             return self::dataResponse($data);
           default:
             return self::grumble($this->l->t('Unknown share type "%s".', $subTopic));

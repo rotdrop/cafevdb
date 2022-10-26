@@ -773,22 +773,25 @@ class SepaBulkTransactionService
     Entities\SepaBulkTransaction $bulkTransaction,
     ?Entities\Project $project = null,
     string $format = self::EXPORT_AQBANKING,
-  ):?Entities\EncryptedFile {
+  ):?Entities\DatabaseStorageFile {
 
     // as a safe-guard regenerate the subject in order to catch changes in
     // linked supporting documents.
     $this->updateBulkTransaction($bulkTransaction, flush: true);
 
     $transcationData = $bulkTransaction->getSepaTransactionData();
-    /** @var Entities\EncryptedFile $exportFile */
-    foreach ($transcationData as $exportFile) {
-      if (strpos($exportFile->getFileName(), $format) !== false) {
+    /** @var Entities\DatabaseStorageFile $exportDocument */
+    foreach ($transcationData as $exportDocument) {
+      if (strpos($exportDocument->getName(), $format) !== false) {
         break;
       }
-      $exportFile = null;
+      $exportDocument = null;
     }
 
-    if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
+    if (empty($exportDocument) || $bulkTransaction->getUpdated() > $exportDocument->getUpdated()) {
+
+      /** @var BankTransactionsStorage $storage */
+      $storage = $this->appContainer->get(BankTransactionsStorage::class);
 
       /** @var IBulkTransactionExporter $exporter */
       $exporter = $this->getTransactionExporter($format);
@@ -825,25 +828,29 @@ class SepaBulkTransactionService
 
       $fileData = $exporter->fileData($bulkTransaction);
 
-      if (empty($exportFile)) {
+      if (empty($exportDocument)) {
         $exportFile = new Entities\EncryptedFile(
           fileName: $fileName,
           data: $fileData,
           mimeType: $exporter->mimeType($bulkTransaction)
         );
+        $this->persist($exportFile);
       } else {
+        $exportDocument
+          ->setName($fileName);
+        $exportFile = $exportDocument->getFile();
         $exportFile
           ->setFileName($fileName)
           ->setMimeType($exporter->mimeType($bulkTransaction))
           ->setSize(strlen($fileData))
           ->getFileData()->setData($fileData);
+
       }
 
       $this->entityManager->beginTransaction();
       try {
-        $this->persist($exportFile);
-        $this->flush();
-        $bulkTransaction->addTransactionData($exportFile);
+        $document = $storage->addDocument($bulkTransaction, $exportFile, flush: false);
+        $bulkTransaction->addTransactionData($document);
         $this->flush();
         $this->entityManager->commit();
       } catch (\Throwable $t) {
@@ -859,6 +866,6 @@ class SepaBulkTransactionService
         );
       }
     }
-    return $exportFile;
+    return $exportDocument;
   }
 }

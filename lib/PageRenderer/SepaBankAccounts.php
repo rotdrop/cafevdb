@@ -783,7 +783,7 @@ class SepaBankAccounts extends PMETableViewBase
 
     ///////////////////////////////////////////////////////////////////////////
 
-    $this->makeJoinTableField(
+    list($sequenceIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'sequence',
       [
         'tab'    => [ 'id' => 'mandate' ],
@@ -807,7 +807,7 @@ class SepaBankAccounts extends PMETableViewBase
         },
       ]);
 
-    $this->makeJoinTableField(
+    list($referenceIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
       [
         'tab'    => [ 'id' => 'mandate' ],
@@ -915,8 +915,18 @@ class SepaBankAccounts extends PMETableViewBase
         'maxlen'   => 10,
         'sort'     => true,
         'css'      => [ 'postfix' => [ 'written-mandate', 'empty-mandate-project-hidden', ], ],
-        'php|ACP' => function($writtenMandateId, $op, $k, $row, $recordId, $pme) {
-          $mandateReference = $row['qf'.($k - 5)] ?? null;
+        'php|ACP' => function(
+          $writtenMandateId,
+          $op,
+          $k,
+          $row,
+          $recordId,
+          $pme,
+        ) use (
+          $referenceIndex,
+          $sequenceIndex,
+        ) {
+          $mandateReference = $row['qf' . $referenceIndex] ?? null;
           if (empty($mandateReference)) {
             return $this->l->t('please upload written mandate after saving');
           }
@@ -929,7 +939,7 @@ class SepaBankAccounts extends PMETableViewBase
             . $this->dbFileUploadRowHtml(
               $writtenMandateId,
               fieldId: $recordId['musician_id'],
-              optionKey: $row['qf'.($k-4)],
+              optionKey: $row['qf' . $sequenceIndex],
               subDir: $this->getDebitMandatesFolderName(),
               fileBase: $this->getLegacyDebitMandateFileName($mandateReference),
               overrideFileName: true,

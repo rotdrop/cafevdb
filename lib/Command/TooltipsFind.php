@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,10 @@
 
 namespace OCA\CAFEVDB\Command;
 
-use \RecursiveDirectoryIterator;
-use \RecursiveIteratorIterator;
-use \RegexIterator;
+use RuntimeException;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RegexIterator;
 
 use OCP\IL10N;
 
@@ -37,6 +38,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 use OCA\CAFEVDB\Service\ToolTipsService;
 
+/** Search for tooltip-tags in PHP code. */
 class TooltipsFind extends Command
 {
   private const PHP_SOURCES = [
@@ -54,20 +56,23 @@ class TooltipsFind extends Command
   /** @var ToolTipsService */
   protected $toolTipsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IL10N $l10n
-    , ToolTipsService $toolTipsService
+    ?string $appName,
+    IL10N $l10n,
+    ToolTipsService $toolTipsService,
   ) {
     parent::__construct();
     $this->l = $l10n;
     $this->appName = $appName;
     if (empty($l10n)) {
-      throw new \RuntimeException('No IL10N :(');
+      throw new RuntimeException('No IL10N :(');
     }
     $this->toolTipsService = $toolTipsService;
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   protected function configure()
   {
     $this
@@ -75,7 +80,8 @@ class TooltipsFind extends Command
       ->setDescription('Find used tooltip- tags in the php-sources.');
   }
 
-  protected function execute(InputInterface $input, OutputInterface $output): int
+  /** {@inheritdoc} */
+  protected function execute(InputInterface $input, OutputInterface $output):int
   {
     $tooltipKeys = [];
     foreach (self::PHP_SOURCES as $dir => $instanceName) {
@@ -105,69 +111,69 @@ class TooltipsFind extends Command
               . ':'. $token[2]);
           }
           switch ($state) {
-          case self::TOOLTIP_SEARCHING:
-            if (is_array($token)
-                && $token[1] == $instanceName
-                && ($token[0] === T_STRING || $token[0] === T_VARIABLE)) {
-              $state = self::TOOLTIP_KEYWORD;
-            }
-            break;
-          case self::TOOLTIP_KEYWORD:
-            if (is_string($token) && $token == '[') {
-              $state = self::TOOLTIP_BRACKET;
-            } else if (is_array($token) && $token[0] === T_WHITESPACE) {
-              // skip whitespace
-              continue 2;
-            } else {
-              if (is_array($token)) {
-                $output->writeln(
-                  'UNEXPECTED '
-                  . token_name($token[0])
-                  . ': "' . $token[1] . '"'
-                  . ' ' . $phpFile
-                  . ':'. $token[2]);
-              } else {
-                if ($token !== '=' && $token !== ',' && $token !== '(' && $token !== ')' && $token !== ';') {
-                  throw new \RuntimeException(
-                    'UNEXPECTED '
-                    . ' ' . $phpFile
-                    . ': TOKEN '. $token);
-                }
+            case self::TOOLTIP_SEARCHING:
+              if (is_array($token)
+                  && $token[1] == $instanceName
+                  && ($token[0] === T_STRING || $token[0] === T_VARIABLE)) {
+                $state = self::TOOLTIP_KEYWORD;
               }
-              $state = self::TOOLTIP_SEARCHING;
-            }
-            break;
-          case self::TOOLTIP_BRACKET:
-            if (is_array($token) && $token[0] == T_CONSTANT_ENCAPSED_STRING) {
-              $state = self::TOOLTIP_KEY;
-              $tooltipKey = $token[1];
-            } else {
-              if (is_array($token)) {
-                if ($token[0] !== T_VARIABLE) {
-                  throw new \RuntimeException(
+              break;
+            case self::TOOLTIP_KEYWORD:
+              if (is_string($token) && $token == '[') {
+                $state = self::TOOLTIP_BRACKET;
+              } elseif (is_array($token) && $token[0] === T_WHITESPACE) {
+                // skip whitespace
+                continue 2;
+              } else {
+                if (is_array($token)) {
+                  $output->writeln(
                     'UNEXPECTED '
                     . token_name($token[0])
                     . ': "' . $token[1] . '"'
                     . ' ' . $phpFile
                     . ':'. $token[2]);
+                } else {
+                  if ($token !== '=' && $token !== ',' && $token !== '(' && $token !== ')' && $token !== ';') {
+                    throw new RuntimeException(
+                      'UNEXPECTED '
+                      . ' ' . $phpFile
+                      . ': TOKEN '. $token);
+                  }
                 }
-              } else {
-                throw new \RuntimeException(
-                  'UNEXPECTED '
-                  . ' ' . $phpFile
-                  . ': TOKEN '. $token);
+                $state = self::TOOLTIP_SEARCHING;
               }
+              break;
+            case self::TOOLTIP_BRACKET:
+              if (is_array($token) && $token[0] == T_CONSTANT_ENCAPSED_STRING) {
+                $state = self::TOOLTIP_KEY;
+                $tooltipKey = $token[1];
+              } else {
+                if (is_array($token)) {
+                  if ($token[0] !== T_VARIABLE) {
+                    throw new RuntimeException(
+                      'UNEXPECTED '
+                      . token_name($token[0])
+                      . ': "' . $token[1] . '"'
+                      . ' ' . $phpFile
+                      . ':'. $token[2]);
+                  }
+                } else {
+                  throw new RuntimeException(
+                    'UNEXPECTED '
+                    . ' ' . $phpFile
+                    . ': TOKEN '. $token);
+                }
+                $state = self::TOOLTIP_SEARCHING;
+              }
+              break;
+            case self::TOOLTIP_KEY:
+              if (is_string($token) && $token == ']') {
+                // $output->writeln('TOOLTIPKEY: '.$tooltipKey);
+                $tooltipKeys[] = trim($tooltipKey, "'");
+              }
+              $tooltipKey = null;
               $state = self::TOOLTIP_SEARCHING;
-            }
-            break;
-          case self::TOOLTIP_KEY:
-            if (is_string($token) && $token == ']') {
-              // $output->writeln('TOOLTIPKEY: '.$tooltipKey);
-              $tooltipKeys[] = trim($tooltipKey, "'");
-            }
-            $tooltipKey = null;
-            $state = self::TOOLTIP_SEARCHING;
-            break;
+              break;
           }
         }
       }
@@ -199,7 +205,8 @@ class TooltipsFind extends Command
     $output->writeln('');
 
     $output->writeln('*** First 100 unused Tooltip-Keys ***');
-    for ($i = 0; $i < min(100, count($unusedTooltipKeys)); ++$i) {
+    $unusedCount = min(100, count($unusedTooltipKeys));
+    for ($i = 0; $i < $unusedCount; ++$i) {
       $output->writeln($unusedTooltipKeys[$i]);
     }
     $output->writeln('');

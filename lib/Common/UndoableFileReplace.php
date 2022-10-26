@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,8 @@ use OCA\CAFEVDB\Storage\UserStorage;
 /**
  * Replace one file by another, maintaining an undo history in the cloud. Both
  * files may have different names.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class UndoableFileReplace extends AbstractFileSystemUndoable
 {
@@ -64,8 +66,10 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
    * @param string $content The content to place into the file system with name $name.
    *
    * @param null|string|callable $oldName A name of an old file to replace.
+   *
+   * @param bool $gracefully
    */
-  public function __construct($name, string $content, $oldName = null, bool $gracefully = false)
+  public function __construct(mixed $name, string $content, mixed $oldName = null, bool $gracefully = false)
   {
     $this->name = $name;
     $this->content = $content;
@@ -75,12 +79,14 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function initialize(IAppContainer $appContainer) {
+  public function initialize(IAppContainer $appContainer):void
+  {
     parent::initialize($appContainer);
   }
 
   /** {@inheritdoc} */
-  public function do() {
+  public function do():void
+  {
     $startTime = $this->timeFactory->getTime();
     if (is_callable($this->name)) {
       $this->name = call_user_func($this->name);
@@ -103,19 +109,25 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
       }
     } catch (\Throwable $t) {
       if ($this->gracefully) {
-        $this->logException($t, sprintf('Unable to rename the old file "%1$s" to the new name "%2$s". There will be no undo-history in the cloud file-space for this file.', $oldPath, $filePath));
+        $this->logException(
+          $t,
+          sprintf('Unable to rename the old file "%1$s" to the new name "%2$s".'
+                  . ' There will be no undo-history in the cloud file-space for this file.', $this->oldName, $this->name));
       } else {
         throw $t;
       }
     }
     $this->userStorage->putContent($this->name, $this->content);
-    @time_sleep_until($startTime + 1);
+    if ($startTime + 1 < $this->timeFactory->getTime()) {
+      time_sleep_until($startTime + 1);
+    }
     $endTime = $this->timeFactory->getTime();
     $this->doneInterval = [ $startTime, $endTime ];
   }
 
   /** {@inheritdoc} */
-  public function undo() {
+  public function undo():void
+  {
     if ($this->restoreOldName) {
       $this->userStorage->restore($this->oldName, $this->doneInterval);
     }
@@ -125,15 +137,10 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function reset()
+  public function reset():void
   {
     $this->restoreSameName = false;
     $this->restoreOldName = false;
     $this->doneInterval = null;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

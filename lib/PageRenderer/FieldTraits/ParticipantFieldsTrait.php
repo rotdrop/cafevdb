@@ -615,20 +615,16 @@ trait ParticipantFieldsTrait
                     return '';
                   }
 
-                  /** @var Entities\File $file */
-                  $file = $this->getDatabaseRepository(Entities\File::class)->find($value);
-                  $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+                  /** @var Entities\DatabaseStorageFile $file */
+                  $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
+                  $fileName = $file->getName();
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                  $fileBase = $field->getName();
-                  $fileName = $this->projectService->participantFilename($fileBase, $musician);
-                  $fileName .= '.' . $extension;
-                  $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
-                    $value, $fileName);
+                  $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($value);
                   $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
 
                   return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'"
-   href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
+   href="'.$downloadLink.'">' . $fileName . '</a>';
                 };
                 break;
               case FieldType::CLOUD_FILE:
@@ -2627,9 +2623,9 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     } else {
       $optionKey = $fieldOption->getKey();
     }
-    if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\EncryptedFile)) {
+    if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\DatabaseStorageFile)) {
       try {
-        $supportingDocument = $this->findEntity(Entities\EncryptedFile::class, $supportingDocument);
+        $supportingDocument = $this->findEntity(Entities\DatabaseStorageFile::class, $supportingDocument);
       } catch (\Throwable $t) {
         $supportingDocument = null;
       }

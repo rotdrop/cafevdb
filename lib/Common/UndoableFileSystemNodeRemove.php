@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,8 @@ use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Remove the given path which may either point to a file or folder
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
 {
@@ -60,7 +62,7 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
   /**
    * Undoable file system node remove.
    *
-   * @param string|Callable $folderName
+   * @param string|callable $name
    *
    * @param bool $gracefully Do not complain if folders are non-empty or do not exist.
    *
@@ -74,7 +76,7 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
    *
    * @param string|null $nodeType Only remove matching node type.
    */
-  public function __construct($name, bool $gracefully = false, bool $recursively = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i', ?string $nodeType = null)
+  public function __construct(mixed $name, bool $gracefully = false, bool $recursively = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i', ?string $nodeType = null)
   {
     $this->name = $name;
     $this->gracefully = $gracefully;
@@ -85,12 +87,14 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function initialize(IAppContainer $appContainer) {
+  public function initialize(IAppContainer $appContainer):void
+  {
     parent::initialize($appContainer);
   }
 
   /** {@inheritdoc} */
-  public function do() {
+  public function do():void
+  {
     $startTime = $this->timeFactory->getTime();
     if (is_callable($this->name)) {
       $this->name = call_user_func($this->name);
@@ -146,7 +150,8 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function undo() {
+  public function undo():void
+  {
     if ($this->nothingToUndo) {
       return;
     }
@@ -154,7 +159,7 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
   }
 
   /** {@inheritdoc} */
-  public function reset()
+  public function reset():void
   {
     $this->nothingToUndo = false;
     $this->doneInterval = null;

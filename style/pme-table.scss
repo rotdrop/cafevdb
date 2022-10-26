@@ -798,6 +798,10 @@ td.pme-sortinfo, td.pme-queryinfo {
   max-width: 60em;
   overflow:hidden;
   text-overflow:ellipsis;
+  .info {
+    font-weight:bold;
+    font-style:italic;
+  }
 }
 
 tr.pme-queryinfo, tr.pme-sortinfo {

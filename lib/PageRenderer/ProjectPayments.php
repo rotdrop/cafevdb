@@ -843,21 +843,18 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $musicianId = $row['qf'.$pme->fdn['musician_id']];
         /** @var Entities\Musician $musician */
         $musician = $this->findEntity(Entities\Musician::class, $musicianId);
-        $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $musician->getUserIdSlug());
 
         if (!empty($value)) {
 
-          /** @var Entities\File $file */
-          $file = $this->getDatabaseRepository(Entities\File::class)->find($value);
+          /** @var Entities\DatabaseStorageFile $file */
+          $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
           if (empty($file)) {
             $this->logError('File not found for musician "' . $musician->getPublicName(). ' file-id ' . $value);
             return $value;
           }
 
-          $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+          $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
 
-          $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
-            $value, $fileName);
 
           $subDirPrefix =
             UserStorage::PATH_SEP . $this->getDocumentsFolderName()
@@ -878,7 +875,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           return $filesAppLink
             . '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService['project-payments:payment:document'].'"
-   href="'.$downloadLink.'">' . $fileName . '.' . $extension . '</a>';
+   href="'.$downloadLink.'">' . $file->getName() . '</a>';
         } else {
           return $value;
         }
@@ -1941,7 +1938,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $valueHtml = '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer one-liner">' . $value . '</div></div>';
 
     if (!empty($fileInfo)) {
-      $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['file'], $fileInfo['baseName']);
+      $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['dirEntry']);
       $downloadAnchor = '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService['project-payments:receivable:document'].'"
    href="'.$downloadLink.'">' . $valueHtml . '</a>';

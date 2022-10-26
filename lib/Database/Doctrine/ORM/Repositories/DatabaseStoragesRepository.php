@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,9 +22,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Exceptions;
+namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-/** Thrown if a field has an incompatible type for the operation. */
-class DatabaseInvalidFieldException extends DatabaseException
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+/** Database repository for DatabaseStorages entities. */
+class DatabaseStoragesRepository extends EntityRepository
 {
+  /**
+   * @param Entities\DatabaseStorageDirEntry $dirEntry  A directory entry.
+   *
+   * @return Entities\DatabaseStorage The storage entity of the root-folder of
+   * $entity.
+   */
+  public function getStorage(Entities\DatabaseStorageDirEntry $dirEntry):Entities\DatabaseStorage
+  {
+    $root = $dirEntry->getRoot();
+    return $this->findOneBy([ 'root' => $root ]);
+  }
 }

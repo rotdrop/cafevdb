@@ -868,8 +868,10 @@ class Projects extends PMETableViewBase
       // unset the year filter, as it does not make sense
       unset($this->parameterService[$this->pme->cgiSysName('qf'.$yearIdx)]);
     } else {
-      $opts['filters']['OR'][] = '$table.type = "' . ProjectType::PERMANENT . '"';
-      $opts['filters']['OR'][] = '$table.type = "' . ProjectType::TEMPLATE . '"';
+      $opts['filters']['OR'][] = [
+        'sql' => '$table.type IN ("' . ProjectType::PERMANENT . '","' . ProjectType::TEMPLATE . '")',
+        'text' => $opts['fdd']['type']['name'] . ' IN ("' . $this->l->t(ProjectType::PERMANENT) . '","' . $this->l->t(ProjectType::TEMPLATE) . '")',
+      ];
     }
     if (!$this->showDisabled) {
       $opts['filters']['AND'][] = '$table.deleted IS NULL';
