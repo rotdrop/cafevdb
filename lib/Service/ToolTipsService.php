@@ -1189,17 +1189,28 @@ sent us a signed registration form. It is left blannk otherwise.'),
         'show-deleted' => $this->l->t('Show also the disabled bank accounts, if any.'),
       ],
 
-      'sepa-debit-mandate-active' => $this->l->t('Used SEPA mandates are not deleted from the DB, but just flagged as
-"inactive" if they expire or are manually pseudo-deleted.'),
-
-      'sepa-instant-validation' => $this->l->t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
-
-      'sepa-mandate-expired' => $this->l->t(
-        'This debit-mandate has not been used for more than %d month and
+      'sepa-bank-data-form' => [
+        'instant-validation' => $this->l->t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
+        'debit-mandate' => [
+          'expired' => $this->l->t(
+            'This debit-mandate has not been used for more than %d month and
 therefore is expired and cannot be used any longer. Pleae delete it
 and contact the treasurer for further instructions.',
-        FinanceService::SEPA_MANDATE_EXPIRE_MONTHS
-      ),
+            FinanceService::SEPA_MANDATE_EXPIRE_MONTHS
+          ),
+          'only-for-project' => $this->l->t('Use this debit-mandate only for the given project. Note that debit-mandates of club-members are always general debit-mandates for all receivables.'),
+          'for-all-receivables' => $this->l->t('Use this as a general debit-mandate for all receivables of this person.'),
+          'download' => [
+            'default' => $this->l->t('Download the existing signed hard-copy of the debit mandate.'),
+            'form' => $this->l->t('Download a prefilled debit-mandate form with the name and bank-account of this person, suitable to be handed to the person in order to be signed. Note that the email-form has also access to such pre-filled debit-mandates which can be attached to personalized mail-merged emails.'),
+          ],
+          'upload' => [
+            'from-client' => $this->l->t('Upload a signed hard-copy of the debit-mandate from the computer.'),
+            'from-cloud' => $this->l->t('Choose a signed hard-copy of the debit-mandate from the cloud file-system.'),
+            'later' => $this->l->t('For your inconvenience you have to check this box if you want skip the upload-step and store the mandate-data without a signed hard-copy.'),
+          ],
+        ],
+      ],
 
       'sharedfolder' => $this->l->t('Folder shared by the orchestra group.'),
       'postboxfolder' => $this->l->t('Public upload "postbox" folder. Meant for anonymous public uploads of larger files.'),
