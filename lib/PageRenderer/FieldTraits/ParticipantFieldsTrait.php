@@ -2623,9 +2623,9 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     } else {
       $optionKey = $fieldOption->getKey();
     }
-    if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\EncryptedFile)) {
+    if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\DatabaseStorageFile)) {
       try {
-        $supportingDocument = $this->findEntity(Entities\EncryptedFile::class, $supportingDocument);
+        $supportingDocument = $this->findEntity(Entities\DatabaseStorageFile::class, $supportingDocument);
       } catch (\Throwable $t) {
         $supportingDocument = null;
       }

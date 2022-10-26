@@ -780,15 +780,15 @@ class SepaBulkTransactionService
     $this->updateBulkTransaction($bulkTransaction, flush: true);
 
     $transcationData = $bulkTransaction->getSepaTransactionData();
-    /** @var Entities\EncryptedFile $exportFile */
-    foreach ($transcationData as $exportFile) {
-      if (strpos($exportFile->getFileName(), $format) !== false) {
+    /** @var Entities\DatabaseStorageFile $exportDocument */
+    foreach ($transcationData as $exportDocument) {
+      if (strpos($exportDocument->getName(), $format) !== false) {
         break;
       }
-      $exportFile = null;
+      $exportDocument = null;
     }
 
-    if (empty($exportFile) || $bulkTransaction->getUpdated() > $exportFile->getUpdated()) {
+    if (empty($exportDocument) || $bulkTransaction->getUpdated() > $exportDocument->getUpdated()) {
 
       /** @var BankTransactionsStorage $storage */
       $storage = $this->appContainer->get(BankTransactionsStorage::class);
@@ -828,14 +828,16 @@ class SepaBulkTransactionService
 
       $fileData = $exporter->fileData($bulkTransaction);
 
-      if (empty($exportFile)) {
+      if (empty($exportDocument)) {
         $exportFile = new Entities\EncryptedFile(
           fileName: $fileName,
           data: $fileData,
           mimeType: $exporter->mimeType($bulkTransaction)
         );
       } else {
-        $exportFile
+        $exportDocument
+          ->setName($fileName)
+          ->getFile()
           ->setFileName($fileName)
           ->setMimeType($exporter->mimeType($bulkTransaction))
           ->setSize(strlen($fileData))
