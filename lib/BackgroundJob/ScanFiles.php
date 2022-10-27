@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,8 @@ use OCP\ILogger;
  *
  * @package OCA\Files\BackgroundJob
  */
-class ScanFiles extends \OC\BackgroundJob\TimedJob {
+class ScanFiles extends \OC\BackgroundJob\TimedJob
+{
   /** @var IConfig */
   private $config;
   /** @var IEventDispatcher */
@@ -68,12 +69,15 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob {
     $this->dispatcher = $dispatcher;
     $this->logger = $logger;
     $this->connection = $connection;
-	}
+  }
 
   /**
    * @param string $user
+   *
+   * @return void
    */
-  protected function runScanner(string $user) {
+  protected function runScanner(string $user)
+  {
     try {
       $scanner = new Scanner(
         $user,
@@ -93,7 +97,8 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob {
    *
    * @return string|false
    */
-  private function getUserToScan() {
+  private function getUserToScan()
+  {
     $query = $this->connection->getQueryBuilder();
     $query->select('user_id')
       ->from('filecache', 'f')
@@ -105,11 +110,9 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob {
     return $query->execute()->fetchOne();
   }
 
-  /**
-   * @param $argument
-   * @throws \Exception
-   */
-  public function run($argument) {
+  /** {@inheritdoc} */
+  public function run($argument)
+  {
     $usersScanned = 0;
     $lastUser = '';
     $user = $this->getUserToScan();
