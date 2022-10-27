@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,10 @@ use OCA\CAFEVDB\BackgroundJob\LazyUpdateGeoCoding;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\BackgroundJob\ScanFiles;
 
+/**
+ * Run background-jobs triggered by AJAX pings from the front-end. The idea
+ * here is that these jobs are running with an authenticated user.
+ */
 class BackgroundJobController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -47,27 +51,33 @@ class BackgroundJobController extends Controller
   public const INTERVAL_SECONDS = 600;
   private const BACKGROUND_JOB_LAST_RUN = 'backgroundJobLastRun';
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
+    ?string $appName,
+    IRequest $request,
+    ConfigService $configService,
   ) {
     parent::__construct($appName, $request);
 
     $this->configService = $configService;
     $this->l = $this->l10N();
   }
+  // phpcs:enable
 
   /**
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function trigger()
+  public function trigger():DataResponse
   {
     try {
       if (!$this->inGroup()) {
         return self::grumble(
-          $this->l->t('User "%s" not in orchestra group "%s',
-                      [ $this->userId(), $this->groupId() ]),
+          $this->l->t(
+            'User "%s" not in orchestra group "%s', [
+              $this->userId(), $this->groupId()
+            ]),
           status: Http::STATUS_UNAUTHORIZED
         );
       }
@@ -91,14 +101,11 @@ class BackgroundJobController extends Controller
     } catch (\Throwable $t) {
       $this->logException($t);
       return self::grumble(
-        $this->l->t('Caught exception \`%s\' at %s:%s',
-                    [$t->getMessage(), $t->getFile(), $t->getLine()])
+        $this->l->t(
+          'Caught exception \`%s\' at %s:%s', [
+            $t->getMessage(), $t->getFile(), $t->getLine()
+          ])
       );
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
