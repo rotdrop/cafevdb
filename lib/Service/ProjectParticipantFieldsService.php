@@ -868,13 +868,13 @@ class ProjectParticipantFieldsService
    *
    * @param bool $singleResult
    *
-   * @return null|Collections\Collection
+   * @return null|object|Collections\Collection
    */
   public function filterByFieldName(
     Collections\Collection $things,
     string $fieldName,
     bool $singleResult = true,
-  ):?Collections\Collection {
+  ):mixed {
     if ($things->isEmpty()) {
       return $singleResult ? null :  new Collections\ArrayCollection;
     }
