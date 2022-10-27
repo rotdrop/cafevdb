@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Common\Util;
 
-/** TBD. */
+/** Render the instrument insurances of the club-members. */
 class InstrumentInsurances extends PMETableViewBase
 {
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
@@ -655,9 +655,7 @@ GROUP BY b.short_name',
       );
     }
 
-    $insuranceBillSubDir =
-      UserStorage::PATH_SEP . $this->getDocumentsFolderName()
-      . UserStorage::PATH_SEP . $this->getSupportingDocumentsFieldName();
+    $insuranceBillSubDir = $this->getSupportingDocumentsPathName();
 
     $opts['fdd']['bill'] = [
       'tab'   => [ 'id' => 'tab-all' ],
@@ -679,7 +677,7 @@ GROUP BY b.short_name',
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
        ></a>';
         } catch (\Throwable $t) {
-          $this->logException($t);
+          $this->logException($t, 'Looking for folder ' . $participantFolder . $insuranceBillSubDir);
           $filesAppLink = '';
         }
 
@@ -773,7 +771,7 @@ GROUP BY b.short_name',
   /**
    * Find the insurances field. Its name determines the folder in the participants storage.
    */
-  private function getSupportingDocumentsFieldName():?string
+  private function getSupportingDocumentsPathName():?string
   {
     if (empty($this->projectId)) {
       return null;
@@ -788,6 +786,11 @@ GROUP BY b.short_name',
       'dataOptions.data' => InstrumentInsuranceReceivablesGenerator::class,
     ]);
 
-    return empty($insuranceField) ? null : $insuranceField->getName();
+    if (empty($insuranceField)) {
+      return null;
+    }
+
+    return UserStorage::PATH_SEP . $this->getDocumentsFolderName()
+      . UserStorage::PATH_SEP . $this->projectService->getParticipantFieldFolderPath($insuranceField, includeDeleted: true);
   }
 }
