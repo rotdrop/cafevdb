@@ -2922,8 +2922,3 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     ];
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
