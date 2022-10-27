@@ -56,6 +56,7 @@ class Musicians extends PMETableViewBase
   use FieldTraits\MusicianPhotoTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianEmailsTrait;
+  use FieldTraits\AllProjectsTrait;
 
   const ALL_TEMPLATE = 'all-musicians';
   const ADD_TEMPLATE = 'add-musicians';
@@ -381,6 +382,14 @@ make sure that the musicians are also automatically added to the
     } else {
       $addCSS = '';
     }
+
+    // Tweak the join-structure with dynamic data.
+    list($allProjectsJoin, $allProjectsFieldGenerator) = $this->renderAllProjectsField(
+      musicianIdField: 'id',
+      tableTab: 'orchestra',
+      css: [],
+    );
+    $this->joinStructure = array_merge($this->joinStructure, $allProjectsJoin);
 
     list($emailJoin, $emailFieldGenerator) = $this->renderMusicianEmailFields(css: [ $addCSS ]);
     $this->joinStructure = array_merge($this->joinStructure, $emailJoin);
@@ -734,29 +743,7 @@ make sure that the musicians are also automatically added to the
       'display' => [ 'popup' => 'tooltip' ],
     ];
 
-    $opts['fdd']['projects'] = [
-      'tab' => ['id' => 'orchestra'],
-      'input' => 'VR',
-      'options' => 'LFVCD',
-      'select' => 'M',
-      'name' => $this->l->t('Projects'),
-      'sort' => true,
-      'css'      => ['postfix' => [ 'projects', 'tooltip-top', ], ],
-      'display|LVDF' => ['popup' => 'data'],
-      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
-      'filter' => [
-        'having' => false,
-        'flags' => PHPMyEdit::OMIT_DESC|PHPMyEdit::OMIT_SQL,
-      ],
-      'values' => [
-        'table' => self::PROJECTS_TABLE,
-        'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
-        'column' => 'name',
-        'orderby' => '$table.year ASC, $table.name ASC',
-        'groups' => 'year',
-        'join' => '$join_table.id = '.$joinTables[self::PROJECT_PARTICIPANTS_TABLE].'.project_id'
-      ],
-    ];
+    $allProjectsFieldGenerator($opts['fdd']);
 
     $opts['fdd']['mobile_phone'] = [
       'tab'      => ['id' => 'contact'],

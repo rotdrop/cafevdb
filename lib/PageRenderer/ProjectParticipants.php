@@ -64,6 +64,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianEmailsTrait;
+  use FieldTraits\AllProjectsTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
@@ -139,16 +140,6 @@ class ProjectParticipants extends PMETableViewBase
         'image_id' => false,
       ],
       'column' => 'image_id',
-    ],
-    // in order to get the participation in all projects
-    self::TABLE . self::VALUES_TABLE_SEP . 'allProjects' => [
-      'entity' => Entities\ProjectParticipant::class,
-      'identifier' => [
-        'project_id' => false,
-        'musician_id' => 'musician_id',
-      ],
-      'column' => 'project_id',
-      'flags' => self::JOIN_READONLY,
     ],
     self::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
@@ -364,6 +355,13 @@ class ProjectParticipants extends PMETableViewBase
     }
 
     // Tweak the join-structure with dynamic data.
+    list($allProjectsJoin, $allProjectsFieldGenerator) = $this->renderAllProjectsField(
+      musicianIdField: 'musician_id',
+      tableTab: 'musician',
+      css: [],
+    );
+    $this->joinStructure = array_merge($this->joinStructure, $allProjectsJoin);
+
     list($emailJoin, $emailFieldGenerator) = $this->renderMusicianEmailFields(
       musicianIdField: 'musician_id',
       tableTab: 'contactdata',
@@ -1054,28 +1052,7 @@ class ProjectParticipants extends PMETableViewBase
      *
      */
 
-    $opts['fdd']['all_projects'] = [
-      'tab' => ['id' => 'musician'],
-      'input' => 'VR',
-      'options' => 'LFVC',
-      'select' => 'M',
-      'name' => $this->l->t('Projects'),
-      'sort' => true,
-      'css'      => ['postfix' => [ 'projects', 'tooltip-top', ], ],
-      'display|LVF' => ['popup' => 'data'],
-      'sql' => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by SEPARATOR \',\')',
-      'filter' => [
-        'having' => false,
-        'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
-      ],
-      'values' => [
-        'table' => self::PROJECTS_TABLE,
-        'column' => 'name',
-        'orderby' => '$table.year ASC, $table.name ASC',
-        'groups' => 'year',
-        'join' => '$join_table.id = '.$this->joinTables[self::TABLE.self::VALUES_TABLE_SEP.'allProjects'].'.project_id'
-      ],
-    ];
+    $allProjectsFieldGenerator($opts['fdd']);
 
     $emailFieldGenerator($opts['fdd']);
 
