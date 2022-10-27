@@ -48,7 +48,7 @@ class BackgroundJobController extends Controller
    *
    * Do not run more often than this.
    */
-  public const INTERVAL_SECONDS = 600;
+  public const INTERVAL_SECONDS = 60; // 600;
   private const BACKGROUND_JOB_LAST_RUN = 'backgroundJobLastRun';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
@@ -92,11 +92,12 @@ class BackgroundJobController extends Controller
           'interval' => self::INTERVAL_SECONDS,
         ], Http::STATUS_TOO_MANY_REQUESTS);
       }
+      $this->setConfigValue(self::BACKGROUND_JOB_LAST_RUN, $now);
+
       $this->di(LazyUpdateGeoCoding::class)->run();
 
       $this->di(ScanFiles::class)->run(true);
 
-      $this->setConfigValue(self::BACKGROUND_JOB_LAST_RUN, $now);
       return self::response('Ran background jobs');
     } catch (\Throwable $t) {
       $this->logException($t);
