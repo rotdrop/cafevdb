@@ -173,7 +173,9 @@ class Storage extends AbstractStorage
         if (empty($folderDirEntry)) {
           $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
           throw new Exceptions\DatabaseEntityNotFoundException($this->l->t(
-            'Unable to find directory entry for folder "%s".', $dirName
+            'Unable to find directory entry for folder "%s", component "%s", storage "%s".', [
+              $dirName, $component, $this->getShortId(),
+            ],
           ));
         }
       }
