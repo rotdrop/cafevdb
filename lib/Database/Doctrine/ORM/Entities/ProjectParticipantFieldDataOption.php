@@ -72,6 +72,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UnusedTrait;
 
+  public const GENERATOR_KEY = Uuid::NIL;
+  public const GENERATOR_LABEL = '__generator__';
+
   /**
    * @var ProjectParticipantField
    *
@@ -174,7 +177,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     }
     $oldKey = $this->key;
     $this->__construct();
-    $this->key = $oldKey == Uuid::nil()
+    $this->key = (string)$oldKey == self::GENERATOR_KEY
                ? $oldKey
                : Uuid::create();
   }
@@ -480,6 +483,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   {
     if (($this->field instanceof ProjectParticipantField) && $this->isFileSystemContext()) {
       // Field name is used as file-system name, so keep it "constant", do not translate
+      return array_filter($fields, fn($field) => $field !== 'label');
+    }
+    if ((string)$this->key == self::GENERATOR_KEY || $this->label == self::GENERATOR_LABEL) {
       return array_filter($fields, fn($field) => $field !== 'label');
     }
     return $fields;

@@ -41,7 +41,7 @@ interface IRecurringReceivablesGenerator
    * Label for the "generator option", i.e. the
    * participant-field-option which stores the generator class.
    */
-  const GENERATOR_LABEL = '__generator__';
+  const GENERATOR_LABEL = Entities\ProjectParticipantFieldDataOption::GENERATOR_LABEL;
 
   /**
    * @var string

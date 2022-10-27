@@ -321,7 +321,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if (empty($uuid)) {
       throw new RuntimeException('Empty option key data.');
     }
-    if ($uuid == Uuid::NIL) {
+    if ($uuid == ProjectParticipantFieldDataOption::GENERATOR_KEY) {
       throw new RuntimeException('Generator options must not be linked to field data.');
     }
     $this->optionKey = $uuid;

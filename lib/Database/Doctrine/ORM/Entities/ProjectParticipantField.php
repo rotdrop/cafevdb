@@ -349,7 +349,7 @@ class ProjectParticipantField implements \ArrayAccess
     return $this->dataOptions->filter(function($option) use ($includeDeleted) {
       /** @var ProjectParticipantFieldDataOption $option */
       return ($includeDeleted || empty($option->getDeleted()))
-        && $option->getKey() != Uuid::nil();
+        && (string)$option->getKey() != ProjectParticipantFieldDataOption::GENERATOR_KEY;
     });
   }
 
@@ -379,7 +379,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function getManagementOption():?ProjectParticipantFieldDataOption
   {
-    return $this->getDataOption(Uuid::NIL);
+    return $this->getDataOption(ProjectParticipantFieldDataOption::GENERATOR_KEY);
   }
 
   /**
