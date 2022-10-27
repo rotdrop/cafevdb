@@ -885,7 +885,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * in the order of the instrument ids. Change the coressponding
    * field to include the ranking explicitly.
    *
-    * @param PHPMyEdit $pme The phpMyEdit instance.
+   * @param PHPMyEdit $pme The phpMyEdit instance.
    *
    * @param string $op The operation, 'insert', 'update' etc.
    *
