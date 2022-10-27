@@ -406,16 +406,16 @@ trait ParticipantFieldsTrait
                     ])
                 );
 
-                $valueFdd['php|VDLF'] = function(
+                $viewCallback = function(
                   $optionValue,
                   $op,
                   $k,
                   $row,
                   $recordId,
                   $pme,
+                  $valueFddOffset,
                 ) use (
                   $field,
-                  $valueFddOffset,
                   $invoiceFddOffset,
                 ) {
                   $html = $this->moneyValue($optionValue);
@@ -460,6 +460,22 @@ trait ParticipantFieldsTrait
                   $html = '<div class="pme-cell-wrapper flex-container flex-center flex-justify-end">' . $filesAppAnchor . $html . '</div>';
 
                   return $html;
+                };
+
+                $valueFdd['php|VDLF'] = function(
+                  $optionValue,
+                  $op,
+                  $k,
+                  $row,
+                  $recordId,
+                  $pme,
+                ) use (
+                  $field,
+                  $invoiceFddOffset,
+                  $valueFddOffset,
+                  $viewCallback,
+                ) {
+                  return $viewCallback($optionValue, $op, $k, $row, $recordId, $pme, $valueFddOffset);
                 };
 
                 $valueFdd['display|ACP']['postfix'] = function(
@@ -587,12 +603,29 @@ trait ParticipantFieldsTrait
                   ],
                 ]);
                 $depositFdd = &$fieldDescData[$depositFddName];
+                $depositFddOffset = count($fieldDescData) - $fddBaseIndex;
 
                 $depositFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                 if ($defaultValue !== '' && $defaultValue !== null) {
                   $depositFdd['display|ACP']['postfix'] .=
                     str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultDeposit' ], $defaultButton);
                 }
+
+                $depositFdd['php|VDLF'] = function(
+                  $optionValue,
+                  $op,
+                  $k,
+                  $row,
+                  $recordId,
+                  $pme,
+                ) use (
+                  $field,
+                  $invoiceFddOffset,
+                  $depositFddOffset,
+                  $viewCallback,
+                ) {
+                  return $viewCallback($optionValue, $op, $k, $row, $recordId, $pme, $depositFddOffset);
+                };
 
                 break;
 
@@ -2429,7 +2462,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           // $oldGroupId = $oldValues[$keyName];
           $newGroupId = $newValues[$keyName];
 
-          $this->logInfo('NEW GROUP ID ' . $newGroupId);
+          // $this->logInfo('NEW GROUP ID ' . $newGroupId);
 
           $max = PHP_INT_MAX;
           $label = $this->l->t('unknown');
@@ -2442,7 +2475,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             $newDataOption = $participantField->getDataOption($newGroupId);
             $max = $newDataOption['limit'];
             $label = $newDataOption['label'];
-            $this->logInfo('OPTION: ' . $newGroupId . ' ' . Functions\dump($newDataOption));
+            // $this->logInfo('OPTION: ' . $newGroupId . ' ' . Functions\dump($newDataOption));
           }
 
           // $oldMembers = Util::explode(',', $oldValues[$groupFieldName]);
