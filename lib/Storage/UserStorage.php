@@ -36,6 +36,7 @@ use OCP\IUser;
 use OCP\IUserSession;
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\IURLGenerator;
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
@@ -73,6 +74,9 @@ class UserStorage
 
   /** @var Folder */
   protected $userFolder;
+
+  /** @var array */
+  private $nodeCache = [];
 
   /** {@inheritdoc} */
   public function __construct(
@@ -144,17 +148,38 @@ class UserStorage
    * @param null|string $type Only consider nodes of this type, either
    * FileInfo::TYPE_FOLDER or FileInfo::TYPE_FILE.
    *
+   * @param bool $useCache Use any previously cached value.
+   *
+   * @param bool $throw Throw an exception instead of returning null if the
+   * file is not found.
+   *
    * @return null|Node The user-folder or the given sub-folder
    */
-  public function get(?string $path, ?string $type = null):?Node
+  public function get(?string $path, ?string $type = null, bool $useCache = false, bool $throw = false):?Node
   {
     try {
-      $node = empty($path) ? $this->userFolder : $this->userFolder->get($path);
+      if ($useCache && !empty($this->nodeCache[$path])) {
+        $node = $this->nodeCache[$path];
+      } else {
+        $node = empty($path) ? $this->userFolder : $this->userFolder->get($path);
+        $this->nodeCache[$path] = $node;
+      }
       if (!empty($type) && $node->getType() != $type) {
+        if ($throw) {
+          throw new FileNotFoundException($this->l->t('File-system node "%1$s" has been found but has not the required type "%2$s".', [
+            $path, $type,
+          ]));
+        }
         return null;
+      }
+      if (empty($node) && $throw) {
+        throw new FileNotFoundException($this->l->t('File-system node "%s" could not been found.', $path));
       }
       return $node;
     } catch (FileNotFoundException $t) {
+      if ($throw) {
+        throw $t;
+      }
       return null;
     }
   }
@@ -162,21 +187,25 @@ class UserStorage
   /**
    * @param string|null $path Path to lookup.
    *
+   * @param bool $useCache Use any previously cached value.
+   *
    * @return null|File The user-folder or the given sub-folder
    */
-  public function getFile(string $path):?File
+  public function getFile(string $path, bool $useCache = false):?File
   {
-    return $this->get($path, FileInfo::TYPE_FILE);
+    return $this->get($path, FileInfo::TYPE_FILE, $useCache);
   }
 
   /**
    * @param string $path Path to lookup.
    *
+   * @param bool $useCache Use any previously cached value.
+   *
    * @return null|Folder
    */
-  public function getFolder(string $path):?Folder
+  public function getFolder(string $path, bool $useCache = false):?Folder
   {
-    return $this->get($path, FileInfo::TYPE_FOLDER);
+    return $this->get($path, FileInfo::TYPE_FOLDER, $useCache);
   }
 
   /**
@@ -358,6 +387,7 @@ class UserStorage
   {
     try {
       $this->userFolder->get($path)->delete();
+      unset($this->nodeCache[$path]);
     } catch (\OCP\Files\NotFoundException $t) {
       $this->logInfo("Not deleting non-existing path $path");
     }
@@ -441,7 +471,9 @@ class UserStorage
   {
     try {
       $newFullPath = $this->userFolder->getFullPath($newPath);
-      $this->userFolder->get($oldPath)->move($newFullPath);
+      $newNode = $this->userFolder->get($oldPath)->move($newFullPath);
+      unset($this->nodeCache[$oldPath]);
+      $this->nodeCache[$newPath] = $newNode;
     } catch (\Throwable $t) {
       throw new Exception($this->l->t('Rename of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
     }
@@ -463,7 +495,8 @@ class UserStorage
   {
     try {
       $newPath = $this->userFolder->getFullPath($newPath);
-      $this->userFolder->get($oldPath)->copy($newPath);
+      $newNode = $this->userFolder->get($oldPath)->copy($newPath);
+      $this->nodeCache[$newPath] = $newNode;
     } catch (\Throwable $t) {
       throw new Exception($this->l->t('Copy of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
     }
@@ -489,11 +522,13 @@ class UserStorage
       $node = $this->userFolder->get($path);
       if ($node->getType() != FileInfo::TYPE_FOLDER) {
         $node->delete();
+        unset($this->nodeCache[$path]);
         throw new FileNotFoundException($this->l->t("Deleted non-directory %s", [$path]));
       }
     } catch (FileNotFoundException $e) {
       $node = $this->userFolder->newFolder($path);
     }
+    $this->nodeCache[$path] = $node;
     return $node;
   }
 
@@ -549,6 +584,7 @@ class UserStorage
       try {
         $file = $this->userFolder->get($path);
         $file->putContent($content);
+        $this->nodeCache[$path] = $file;
       } catch (\OCP\Files\NotFoundException $e) {
         $this->ensureFolder(dirname($path));
         $file = $this->userFolder->newFile($path, $content);
@@ -572,6 +608,7 @@ class UserStorage
     try {
       $file = $this->userFolder->get($path);
       if ($file instanceof File) {
+        $this->nodeCache[$path] = $file;
         return $file->getContent();
       } else {
         throw new RuntimeException($this->l->t('Cannot read from folder "%s".', $path));
@@ -630,17 +667,19 @@ class UserStorage
    * @param string|\OCP\Files\Node $pathOrNode The file-system path or node.
    *
    * @return null|string The download URL or null.
+   *
+   * @throws FileNotFoundException
    */
   public function getDownloadLink($pathOrNode):?string
   {
     if (is_string($pathOrNode)) {
-      $node = $this->userFolder->get($pathOrNode);
+      $node = $this->get($pathOrNode, useCache: true, throw: true);
     } elseif ($pathOrNode instanceof \OCP\Files\Node) {
       $node = $pathOrNode;
     } else {
       throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
     }
-    $this->logDebug('NODE '.$node->getPath().' '.$node->getInternalPath());
+    // $this->logDebug('NODE '.$node->getPath().' '.$node->getInternalPath());
 
     // Internal path is mount-point specific and in particular
     // relative to the share-root if sharing a folder. getPath()
@@ -682,22 +721,26 @@ class UserStorage
   {
     if (is_string($pathOrNode)) {
       try {
-        $node = $this->userFolder->get($pathOrNode);
+        $node = $this->get($pathOrNode, useCache: true, throw: true);
       } catch (Throwable $t) {
-        throw new FileNotFoundException('Cannot find directory entry', 0, $t);
+        throw new FileNotFoundException($this->l->t('Cannot find directory entry "%s".', $pathOrNode), 0, $t);
       }
     } elseif ($pathOrNode instanceof \OCP\Files\Node) {
       $node = $pathOrNode;
     } else {
       throw new InvalidArgumentException($this->l->t('Argument must be a valid path or already a file-system node.'));
     }
+    $this->nodes[$pathOrNode] = $node;
+
+    $nodePath = $node->getPath();
     if ($subDir === false || $node->getType() != FileInfo::TYPE_FOLDER) {
-      $node = $node->getParent();
+      // $node = $node->getParent();
+      $nodePath = dirname($nodePath);
     }
 
-    $nodePath = substr(strchr($node->getPath(), '/files/'), strlen('/files'));
+    $nodePath = substr(strchr($nodePath, '/files/'), strlen('/files'));
 
-    $urlGenerator = \OC::$server->getURLGenerator();
+    $urlGenerator = $this->appContainer->get(IURLGenerator::class);
     $filesUrl = $urlGenerator->linkToRoute('files.view.index', [ 'dir' => $nodePath ]);
 
     return $filesUrl;
