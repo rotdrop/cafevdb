@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\PageRenderer;
+
+use DateTime;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -96,9 +98,6 @@ class InstrumentInsurances extends PMETableViewBase
   /** @var Entities\Project */
   private $project = null;
 
-  /** @var array<Types\EnumGeographicalScope> */
-  private $geographicalScopes;
-
   /** @var InstrumentInsuranceService */
   private $insuranceService;
 
@@ -108,18 +107,21 @@ class InstrumentInsurances extends PMETableViewBase
   /** @var UserStorage */
   private $userStorage;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , InstrumentInsuranceService $insuranceService
-    , ProjectService $projectService
-    , UserStorage $userStorage
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    InstrumentInsuranceService $insuranceService,
+    ProjectService $projectService,
+    UserStorage $userStorage,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+
+    $this->showDisabled = true; // otherwise it is too confusing.
 
     $this->insuranceService = $insuranceService;
     $this->projectService = $projectService;
@@ -140,19 +142,19 @@ class InstrumentInsurances extends PMETableViewBase
       $this->scopeNames[$tag] = $this->l->t($tag);
     }
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     return $this->l->t('Overview over the Bulk Instrument Insurances');
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
-    $expertMode      = $this->expertMode;
 
     $opts            = [];
 
@@ -524,12 +526,12 @@ GROUP BY b.short_name',
       'sort'     => true,
     ];
 
-    $yearAutocomplete = range(1900, (new \DateTime)->format('Y')+1, 10);
+    $yearAutocomplete = range(1900, (new DateTime)->format('Y')+1, 10);
     $yearAutocomplete = array_merge(
       array_map(fn($year) => $this->l->t('around %1$04d', $year), $yearAutocomplete),
-      range(2001, (new \DateTime)->format('Y')+1)
+      range(2001, (new DateTime)->format('Y')+1)
     );
-    for ($century = 15; $century <= (new \DateTime)->format('Y') / 100; ++$century) {
+    for ($century = 15; $century <= (new DateTime)->format('Y') / 100; ++$century) {
       $yearAutocomplete[] = $this->l->t('end of %1$02dth century', $century);
     }
     sort($yearAutocomplete);
@@ -564,7 +566,7 @@ GROUP BY b.short_name',
             'step' => 1,
           ],
         ],
-        'php|LFPDV' => function($value) { return $this->moneyValue($value); },
+        'php|LFPDV' => fn($value) => $this->moneyValue($value),
       ]);
 
     $this->makeJoinTableField(
@@ -576,10 +578,10 @@ GROUP BY b.short_name',
         'options' => 'LFACPDV',
         'sql' => '$join_col_fqn',
         'php' => function($rate, $op, $k, $row, $rec, $pme) {
-          $css_postfix	= $pme->fdd[$k]['css']['postfix']??[];
-          $css_class_name = $pme->getCSSclass('input', null, false, $css_postfix);
+          $cssPostfix   = $pme->fdd[$k]['css']['postfix']??[];
+          $cssClassName = $pme->getCSSclass('input', null, false, $cssPostfix);
           return
-            $pme->htmlHiddenData('insurance_rate', $rate, $css_class_name)
+            $pme->htmlHiddenData('insurance_rate', $rate, $cssClassName)
             . '<span class="insurance-rate-display" data-value="'.$rate.'">'
             . $this->floatValue((float)$rate*100.0).' %'
             . '</span';
@@ -651,6 +653,8 @@ GROUP BY b.short_name',
           'name' => $this->l->t('End of Insurance'),
           'dateformat' => 'medium',
           'timeformat' => null,
+          'css' => [ 'postfix' => [ 'revocation-date', 'date', ], ],
+          'tooltip' => $this->toolTipsService['page-renderer:instrument-insurances:deleted'],
         ],
       );
     }
@@ -713,7 +717,7 @@ GROUP BY b.short_name',
       if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
-        $pme->options = str_replace('M', '', $opts['options']);
+        $pme->options = str_replace([ 'M', 'D' ], '', $opts['options']);
       } else {
         $pme->options = $opts['options'];
       }
@@ -733,23 +737,21 @@ GROUP BY b.short_name',
    * Cleanup "trigger" which relocates several virtual inputs to their
    * proper destination columns.
    *
-   * phpMyEdit calls the trigger (callback) with the following arguments:
+   * @param PHPMyEdit $pme The phpMyEdit instance.
    *
-   * @param $pme The phpMyEdit instance
+   * @param string $op The operation, 'insert', 'update' etc.
    *
-   * @param $op The operation, 'insert', 'update' etc.
+   * @param string $step 'before' or 'after'.
    *
-   * @param $step 'before' or 'after'
+   * @param array $oldValues Self-explanatory.
    *
-   * @param $oldvals Self-explanatory.
+   * @param array $changed Set of changed fields, may be modified by the callback.
    *
-   * @param &$changed Set of changed fields, may be modified by the callback.
-   *
-   * @param &$newvals Set of new values, which may also be modified.
+   * @param null|array $newValues Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated
    */
-  public function beforeUpdateOrInsertTrigger(&$pme, $op, $step, &$oldValues, &$changed, &$newValues)
+  public function beforeUpdateOrInsertTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
   {
     if ($op === PHPMyEdit::SQL_QUERY_INSERT) {
       // populate the empty $oldValues array with null in order to have
@@ -770,6 +772,8 @@ GROUP BY b.short_name',
 
   /**
    * Find the insurances field. Its name determines the folder in the participants storage.
+   *
+   * @return null|string
    */
   private function getSupportingDocumentsPathName():?string
   {
@@ -790,7 +794,13 @@ GROUP BY b.short_name',
       return null;
     }
 
+    $fieldFolderPath = $this->projectService->getParticipantFieldFolderPath($insuranceField, includeDeleted: $this->showDisabled);
+
+    if (empty($fieldFolderPath)) {
+      return null;
+    }
+
     return UserStorage::PATH_SEP . $this->getDocumentsFolderName()
-      . UserStorage::PATH_SEP . $this->projectService->getParticipantFieldFolderPath($insuranceField, includeDeleted: true);
+      . UserStorage::PATH_SEP . $fieldFolderPath;
   }
 }
