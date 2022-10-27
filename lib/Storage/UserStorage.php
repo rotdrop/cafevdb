@@ -24,9 +24,9 @@
 
 namespace OCA\CAFEVDB\Storage;
 
-use \Throwable;
-use \RuntimeException;
-use \InvalidArgumentException;
+use Throwable;
+use RuntimeException;
+use InvalidArgumentException;
 use ZipStream\ZipStream;
 use ZipStream\Option\Archive as ArchiveOptions;
 
@@ -681,7 +681,11 @@ class UserStorage
   public function getFilesAppLink($pathOrNode, bool $subDir = false):?string
   {
     if (is_string($pathOrNode)) {
-      $node = $this->userFolder->get($pathOrNode);
+      try {
+        $node = $this->userFolder->get($pathOrNode);
+      } catch (Throwable $t) {
+        throw new FileNotFoundException('Cannot find directory entry', 0, $t);
+      }
     } elseif ($pathOrNode instanceof \OCP\Files\Node) {
       $node = $pathOrNode;
     } else {
