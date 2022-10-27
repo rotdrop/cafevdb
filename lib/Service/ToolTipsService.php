@@ -500,6 +500,18 @@ field.'),
           'writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
 field. If left blank, every logged in user is allowed to change this field.'),
 
+          'show-data' => $this->l->t('Each option has an optional data-entry attached to it. Normally, this
+is only useful for surcharge options, where the "data-entry" just is
+the extra-charge amount associated to the option. Still, if you feel a
+need to view the data-items also for non-surcharge options, then just
+click here.'),
+
+          'show-deleted' => $this->l->t('Options already attached to musicians can no longer be deleted in
+order to prevent data-loss in the underlying data-base. It is even
+possible to recover those options by checking this checkbox in order to make them visible and
+clicking the "recover" button to the left of each deleted entry.'),
+
+
           'display' => [
             'revert-to-default' => $this->l->t('Revert this setting to its default value.'),
             'attachment' => [
@@ -541,6 +553,7 @@ field. If left blank, every logged in user is allowed to change this field.'),
           'instrument-holder' => $this->l->t('The person who actually uses or "has" this instrument or insured object.'),
           'bill-to-party' => $this->l->t('The person who pays the insurance fees. If left blank then the instrument-holder receives the bills.'),
           'instrument-owner' => $this->l->t('The person who has the legal possession of this instrument. If left blank then it is assumed that the instrument holder is also the instrument owner.'),
+          'deleted' => $this->l->t('End of insurance, either because the musician has with-drawn the element from the instrument insurances or maybe because the instrument got damaged or otherwise lost. In order to "undelete" this item please enable "expert-mode" in the settings-menu in the side-bar, reload the page and just delete the date.'),
         ],
         'project-payments' => [
           'project-balance' => [
@@ -649,17 +662,6 @@ needed, then please enter those in the <strong>Tooltip</strong> field in the
       'participant-fields-new-tab' => $this->l->t('Define a new table-tab. In order to do so, first deselect any
 predefined tab in the select box above, then enter the new name. The
 new tab-name will also be available as tab-option for other fields.'),
-
-      'participant-fields-show-data' => $this->l->t('Each option has an optional data-entry attached to it. Normally, this
-is only useful for surcharge options, where the "data-entry" just is
-the extra-charge amount associated to the option. Still, if you feel a
-need to view the data-items also for non-surcharge options, then just
-click here.'),
-
-      'participant-fields-show-deleted' => $this->l->t('Options already attached to musicians can no longer be deleted in
-order to prevent data-loss in the underlying data-base. It is even
-possible to recover those options by checking this checkbox in order to make them visible and
-clicking the "recover" button to the left of each deleted entry.'),
 
       'participant-fields-tab' => $this->l->t('Define the table-tab this entry should be grouped with. It is also
 possible to define new table-tabs. In order to do so, first deselect
