@@ -1966,11 +1966,12 @@ class phpMyEdit
 				? $orFilter
 				: $having . ' OR (' . $orFilter . ')';
 		}
+
 		if (!empty($andFilter)) {
 			if (!empty($having) && !empty($orFilter)) {
 				$having = '(' . $having . ')';
 			}
-			if (empty($having)) {
+			if (!empty($having)) {
 				$having .= ' AND ';
 			}
 			$having .= $andFilter;
@@ -6809,8 +6810,8 @@ class phpMyEdit
 						array_filter(array_map(fn($value) => $value['text'] ?? null,  $filter))
 					);
 				} else {
-					$this->having[$junctor]['default']['sql'] = $filter;
-					$this->having[$junctor]['default']['text'] = null;
+					$this->having[$junctor]['sql'] = $filter;
+					$this->having[$junctor]['text'] = null;
 				}
 			}
 		}
