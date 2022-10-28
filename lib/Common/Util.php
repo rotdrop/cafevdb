@@ -170,7 +170,7 @@ class Util
    */
   public static function removeSpaces(?string $name):?string
   {
-    if ($string === null) {
+    if ($name === null) {
       return null;
     }
     return self::normalizeSpaces($name, '');
