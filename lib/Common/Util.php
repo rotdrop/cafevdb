@@ -136,16 +136,19 @@ class Util
   /**
    * Normalize spaces and commas after and before spaces.
    *
-   * @param string $name
+   * @param null|string $name
    *
    * @param string $singleSpace
    *
    * @param bool $stripLinebreaks
    *
-   *  @return string
+   *  @return null|string
    */
-  public static function normalizeSpaces(string $name, string $singleSpace = ' ', bool $stripLinebreaks = false):string
+  public static function normalizeSpaces(?string $name, string $singleSpace = ' ', bool $stripLinebreaks = false):?string
   {
+    if ($name === null) {
+      return null;
+    }
     $name = str_replace("\xc2\xa0", "\x20", $name);
     $name = trim($name);
     $name = str_replace("\r\n", "\n", $name);
@@ -161,13 +164,16 @@ class Util
   /**
    * Remove all whitespace
    *
-   * @param string $name
+   * @param null|string $name
    *
-   * @return string
+   * @return null|string
    */
-  public static function removeSpaces(string $name):string
+  public static function removeSpaces(?string $name):?string
   {
-    return self:: normalizeSpaces($name, '');
+    if ($string === null) {
+      return null;
+    }
+    return self::normalizeSpaces($name, '');
   }
 
   /**
