@@ -182,8 +182,11 @@ class Util
    *
    * @return string
    */
-  public static function htmlEscape(string $string, mixed $ent = null, bool $doubleEncode = false):string
+  public static function htmlEscape(?string $string, mixed $ent = null, bool $doubleEncode = false):string
   {
+    if (empty($string)) {
+      return '';
+    }
     if (!$ent) {
       $ent = ENT_COMPAT;
       if (defined('ENT_HTML401')) {
