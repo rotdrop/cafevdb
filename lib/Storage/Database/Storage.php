@@ -93,7 +93,7 @@ class Storage extends AbstractStorage
       throw new Exception('not connected');
     }
 
-    $this->filesRepository = $this->getDatabaseRepository(Entities\File::class);
+    $this->filesRepository = $this->getDatabaseRepository(Entities\EncryptedFile::class);
   }
 
   /**
@@ -501,10 +501,6 @@ class Storage extends AbstractStorage
     if ($dirEntry instanceof DirectoryNode
         || $dirEntry instanceof Entities\DatabaseStorageFolder
     ) {
-      return true;
-    }
-    // @todo the following should probably be removed
-    if (!empty($this->filesRepository->findOneLike([ 'fileName' => trim($path, self::PATH_SEPARATOR) . self::PATH_SEPARATOR . '%' ]))) {
       return true;
     }
     return false;
