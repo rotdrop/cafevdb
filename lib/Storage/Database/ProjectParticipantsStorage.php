@@ -657,10 +657,12 @@ WHERE t.id = ' . $payment->getId();
     $sql = 'SELECT t.supporting_document_id
 FROM ProjectParticipantFieldsData t
 WHERE t.field_id = ?
+AND t.musician_id = ?
 AND t.option_key = ?';
     $stmt = $connection->prepare($sql);
     $stmt->bindValue(1, $fieldDatum->getField()->getId());
-    $stmt->bindValue(2, $fieldDatum->getOptionKey());
+    $stmt->bindValue(2, $fieldDatum->getMusician()->getId());
+    $stmt->bindValue(3, $fieldDatum->getOptionKey(), 'uuid_binary');
     try {
       $fileId = $stmt->executeQuery()->fetchOne();
       $stmt->closeCursor();
@@ -758,7 +760,8 @@ WHERE t.project_id = ? AND t.musician_id = ?';
 
           /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
           foreach ($activeFieldData as $fieldDatum) {
-            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+            $file = $this->getFieldDatumSupportingDocumentForMigration($fieldDatum);
+            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, newFile: $file, includeDeleted: true);
             if (empty($fileInfo)) {
               continue; // should not happen here because of ->filter().
             }
@@ -876,7 +879,11 @@ WHERE t.project_id = ? AND t.musician_id = ?';
             if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
               return false;
             }
-            if (empty($this->projectService->participantFileInfo($fieldDatum, includeDeleted: true))) {
+            $file = $this->getFieldDatumFileForMigration($fieldDatum);
+            if (empty($file)) {
+              return false;
+            }
+            if (empty($this->projectService->participantFileInfo($fieldDatum, newFile: $file, includeDeleted: true))) {
               return false;
             }
             return true;

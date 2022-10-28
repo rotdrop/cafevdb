@@ -258,6 +258,7 @@ SELECT id FROM Files f) t';
           $rootListing = $storage->findFilesForMigration('');
 
           if (count($rootListing) == 1 && isset($rootListing['.'])) {
+            // $this->logInfo('FOLDER FOR ' . $project->getName() . ': ' . $participant->getMusician()->getUserIdSlug() . ' IS EMPTY');
             continue; // skip essentially empty folders
           }
 
@@ -298,7 +299,7 @@ SELECT id FROM Files f) t';
                 /** @var Entities\EncryptedFile $node */
                 $dirEntry = $folderEntity->getFileByName($nodeName);
                 if (empty($dirEntry)) {
-                  $dirEntry = $folderEntity->addDocument($node, $nodeName);
+                  $dirEntry = $folderEntity->addDocument($node, $nodeName, replace: true);
                   $this->persist($dirEntry);
                   $dirEntry
                     ->setUpdated($node->getUpdated())

@@ -119,7 +119,7 @@ ON jt.encrypted_file_id = f.id',
       }
     } catch (DatabaseMigrationException $e) {
       $dbalException = $e->getPrevious();
-      if (!($dbalException instanceof DBALException\TableNotFoundException)) {
+      if (!($dbalException instanceof DBALException\TableNotFoundException) && !($dbalException instanceof DBALException\InvalidFieldNameException)) {
         throw $e;
       }
       $this->logException($e, sprintf('Table "%s" does not longer exist, assuming the migration has already been applied', self::PROJECT_BALANCE_SUPPORTING_DOCUMENTS_TABLE));
@@ -127,9 +127,11 @@ ON jt.encrypted_file_id = f.id',
 
     // danger zone:
     self::$sql[self::STRUCTURAL] = [
+      'ALTER TABLE CompositePayments DROP FOREIGN KEY IF EXISTS FK_65D9920C166D1F9C6A022FD1',
       'DROP INDEX IF EXISTS IDX_65D9920C166D1F9C6A022FD1 ON CompositePayments',
       'ALTER TABLE CompositePayments DROP COLUMN IF EXISTS balance_document_sequence',
       'ALTER TABLE Projects DROP COLUMN IF EXISTS financial_balance_supporting_documents_changed',
+      'ALTER TABLE ProjectPayments DROP FOREIGN KEY IF EXISTS FK_F6372AE2166D1F9C6A022FD1',
       'DROP INDEX IF EXISTS IDX_F6372AE2166D1F9C6A022FD1 ON ProjectPayments',
       'ALTER TABLE ProjectPayments DROP COLUMN IF EXISTS balance_document_sequence',
     ];
