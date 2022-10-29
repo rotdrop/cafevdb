@@ -1172,7 +1172,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             'data-meta-data' => 'iban',
           ],
         ],
-        'dislay|LF' => [
+        'display|LF' => [
           'popup' => 'data',
           'attributes' => [
             'data-meta-data' => 'iban',
