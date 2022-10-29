@@ -25,6 +25,7 @@ import $ from './jquery.js';
 import { appName } from './app-info.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
+import { TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as Dialogs from './dialogs.js';
 import { submitOuterForm, tableDialogLoadIndicator } from './pme.js';
@@ -200,7 +201,7 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
             if (data.amounts[musicianId]) {
               row.find('input.pme-input.service-fee').val(data.amounts[musicianId]);
             }
-            Notification.messages(data.message);
+            Notification.messages(data.message, { timeout: TOAST_PERMANENT_TIMEOUT });
             cleanup();
           });
       };
@@ -269,7 +270,7 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
             // just trigger reload
             $container.find('form.pme-form input.pme-reload').first().trigger('click');
             cleanup();
-            Notification.messages(data.message);
+            Notification.messages(data.message, { timeout: TOAST_PERMANENT_TIMEOUT });
           });
       };
       confirmedReceivablesUpdate(updateStrategy, requestHandler);
