@@ -1783,16 +1783,8 @@ Störung.';
                 ])
               );
             }
-            $this->entityManager->beginTransaction();
-            try {
-              $payment->setNotificationMessageId($messageId);
-              $this->flush();
-              $this->entityManager->commit();
-            } catch (Throwable $t) {
-              if ($this->entityManager->isTransactionActive()) {
-                $this->entityManager->rollback();
-              }
-            }
+            $payment->setNotificationMessageId($messageId);
+            // $this->flush();
           }
         } else {
           ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
@@ -2824,8 +2816,6 @@ Störung.';
       }
     }
 
-    $this->entityManager->beginTransaction();
-
     // Finally the point of no return. Send it out!!!
     try {
       // PHPMailer does only throw \Exception(), but sets the code in order to
@@ -2855,17 +2845,11 @@ Störung.';
       }
       $sentEmail->setMessageId($phpMailer->getLastMessageID());
       $this->persist($sentEmail);
-      $this->flush();
-
-      $this->entityManager->commit();
-
+      // $this->flush(); // nope, first references between sent emails need to be installed
     } catch (\Throwable $t) {
       $this->executionStatus = false;
       $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
       $this->logException($t);
-      if ($this->entityManager->isTransactionActive()) {
-        $this->entityManager->rollback();
-      }
       return false;
     }
 
