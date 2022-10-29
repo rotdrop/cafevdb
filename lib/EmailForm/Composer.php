@@ -32,6 +32,7 @@ use \Net_IMAP;
 use \Mail_RFC822;
 use \PHP_IBAN;
 use \DOMDocument;
+use Throwable;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -1782,7 +1783,16 @@ Störung.';
                 ])
               );
             }
-            $payment->setNotificationMessageId($messageId);
+            $this->entityManager->beginTransaction();
+            try {
+              $payment->setNotificationMessageId($messageId);
+              $this->flush();
+              $this->entityManager->commit();
+            } catch (Throwable $t) {
+              if ($this->entityManager->isTransactionActive()) {
+                $this->entityManager->rollback();
+              }
+            }
           }
         } else {
           ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
@@ -1837,10 +1847,15 @@ Störung.';
       }
     }
 
+    $this->entityManager->beginTransaction();
     try {
       $this->flush();
+      $this->entityManager->commit();
     } catch (\Throwable $t) {
       $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
     }
 
     return $this->executionStatus;
@@ -2809,6 +2824,8 @@ Störung.';
       }
     }
 
+    $this->entityManager->beginTransaction();
+
     // Finally the point of no return. Send it out!!!
     try {
       // PHPMailer does only throw \Exception(), but sets the code in order to
@@ -2838,11 +2855,17 @@ Störung.';
       }
       $sentEmail->setMessageId($phpMailer->getLastMessageID());
       $this->persist($sentEmail);
-      // $this->flush();
+      $this->flush();
+
+      $this->entityManager->commit();
+
     } catch (\Throwable $t) {
       $this->executionStatus = false;
       $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
       $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
       return false;
     }
 
