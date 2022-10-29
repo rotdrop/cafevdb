@@ -375,7 +375,7 @@ class SepaBulkTransactionService
 
     return [
       'dueDate' => $due,
-      'preNofificationDeadline' => $preNotification,
+      'preNotificationDeadline' => $preNotification,
     ];
   }
 
