@@ -189,7 +189,7 @@ class SepaBulkTransactionsController extends Controller
     int $projectId,
     array $bankAccountRecords,
     array $bulkTransactions = [],
-    ?string $dueDeadline = null,
+    mixed $dueDeadline = null,
   ):DataResponse {
     /** @var Entities\Project $project */
     $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
@@ -454,7 +454,7 @@ class SepaBulkTransactionsController extends Controller
         } else {
           // count backwards from desired deadline
           list(
-            'preNofiticationDeadline' => $notificationDeadline,
+            'preNotificationDeadline' => $notificationDeadline,
           ) = $this->bulkTransactionService->calculateDebitNoteDeadlines($debitMandate, $dueDeadline, fromDueDate:true);
           if ($notificationDeadline < $now) {
             $preNotificationConflicts[] = [
