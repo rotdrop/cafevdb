@@ -497,7 +497,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'tab' => [ 'id' => [ 'bookings', ], ],
         'name' => $this->l->t('Subject'),
         'input' => 'RD',
-        'css' => [ 'postfix' => ' subject squeeze-subsequent-lines', ],
+        'css' => [ 'postfix' => [ 'subject squeeze-subsequent-lines', 'clip-long-text', ], ],
         'sql|LFVD' => 'REPLACE($join_col_fqn, \'; \', \'<br/>\')',
         'sql|ACP' => '$join_col_fqn',
         'display' => [
