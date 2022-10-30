@@ -43,7 +43,7 @@ class UndoableFileRemove extends UndoableFileSystemNodeRemove
    *
    * @param bool $gracefully Do not complain if folders are non-empty or do not exist.
    */
-  public function __construct(mixd $name, bool $gracefully = false)
+  public function __construct(mixed $name, bool $gracefully = false)
   {
     parent::__construct($name, $gracefully, nodeType: FileInfo::TYPE_FILE);
   }
