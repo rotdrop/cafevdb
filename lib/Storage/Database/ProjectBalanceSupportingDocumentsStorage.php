@@ -477,6 +477,8 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         }
       }
 
+      $this->flush();
+
       $this->entityManager->commit();
 
       $this->unsetFileNameCache($path);

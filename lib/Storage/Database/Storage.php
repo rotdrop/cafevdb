@@ -574,6 +574,8 @@ class Storage extends AbstractStorage
   /** {@inheritdoc} */
   public function writeStream(string $path, $stream, int $size = null): int
   {
+    // $this->logInfo('WRITE STREAM ' . $path);
+
     if (!$this->touch($path)) {
       return false;
     }
@@ -589,14 +591,26 @@ class Storage extends AbstractStorage
     }
 
     $fileData = stream_get_contents($stream);
-    $file->getFileData()->setData($fileData);
-    /** @var IMimeTypeDetector $mimeTypeDetector */
-    $mimeTypeDetector = $this->di(IMimeTypeDetector::class);
-    $file->setMimeType($mimeTypeDetector->detectString($fileData));
-    $file->setSize(strlen($fileData));
-
-    $this->flush();
     fclose($stream);
+
+    $this->entityManager->beginTransaction();
+    try {
+      $file->getFileData()->setData($fileData);
+      /** @var IMimeTypeDetector $mimeTypeDetector */
+      $mimeTypeDetector = $this->di(IMimeTypeDetector::class);
+      $file->setMimeType($mimeTypeDetector->detectString($fileData));
+      $file->setSize(strlen($fileData));
+
+      $this->flush();
+
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      $this->logException($t, 'writeStream() failed');
+      if ($this->entityManager->isOwnTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      return -1;
+    }
 
     return $size;
   }
