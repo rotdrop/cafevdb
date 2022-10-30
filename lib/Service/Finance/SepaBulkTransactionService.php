@@ -779,6 +779,7 @@ class SepaBulkTransactionService
     // linked supporting documents.
     $this->updateBulkTransaction($bulkTransaction, flush: true);
 
+    $exportDocument = null;
     $transcationData = $bulkTransaction->getSepaTransactionData();
     /** @var Entities\DatabaseStorageFile $exportDocument */
     foreach ($transcationData as $exportDocument) {
