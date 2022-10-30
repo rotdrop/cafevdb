@@ -162,7 +162,7 @@ EOT;
    *
    * @param mixed $ownerId
    *
-   * @param int $imageId
+   * @param mixed $imageId
    *
    * @param int $width
    *
@@ -173,7 +173,7 @@ EOT;
   public function getPreviewImage(
     string $joinTable,
     mixed $ownerId,
-    int $imageId = self::IMAGE_ID_ANY,
+    mixed $imageId = self::IMAGE_ID_ANY,
     int $width = -1,
     int $height = -1
   ):array {
@@ -231,11 +231,11 @@ EOT;
    *
    * @param mixed $ownerId
    *
-   * @param int $imageId
+   * @param mixed $imageId
    *
    * @return array
    */
-  public function getImage(string $joinTable, mixed $ownerId, int $imageId = self::IMAGE_ID_ANY):array
+  public function getImage(string $joinTable, mixed $ownerId, mixed $imageId = self::IMAGE_ID_ANY):array
   {
     $image = null;
     $fileName = null;
@@ -259,6 +259,7 @@ EOT;
             /** @var UserStorage $storage */
             $storage = $this->di(UserStorage::class);
             $directory = $storage->getFolder($ownerId);
+
             /** @var \OCP\Files\File $file */
             if ($imageId == self::IMAGE_ID_ANY) {
               /** @var \OCP\Files\Node $node */

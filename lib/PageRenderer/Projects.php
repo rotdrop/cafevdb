@@ -837,10 +837,12 @@ class Projects extends PMETableViewBase
         if (empty($imageIds) || ($action != PHPMyEdit::OPERATION_DISPLAY)) {
           $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
         }
+        $this->logInfo('IMAGE IDS ' . $action . ' ' . print_r($imageIds, true));
         $numImages = count($imageIds);
         $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
-        $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
+        // $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
         $columns = self::MAX_POSTER_COLUMNS;
+        $this->logInfo('R / C ' . $rows . ' / ' . $columns);
         $html = '';
         for ($i = 0; $i < $numImages; ++$i) {
           $html .= $this->posterImageLink($postersFolder, $action, $columns, $imageIds[$i]);
@@ -962,7 +964,7 @@ project without a poster first.");
         $url .= '?timeStamp='.time();
         if ((int)$imageId >= ImagesService::IMAGE_ID_PLACEHOLDER) {
           $url .= '&imageId='.urlencode($imageId);
-          $url .= '&preview=128';
+          $url .= '&previewWidth=128';
         }
         $url .= '&requesttoken='.urlencode(\OCP\Util::callRegister());
         $div = ''
@@ -977,7 +979,7 @@ project without a poster first.");
           'ownerId' => urlencode($postersFolder),
           'imageId' => urlencode($imageId),
           'imageSize' => -1,
-          'preview' => 128,
+          'previewWidth' => 128,
         ]);
         $imagearea = ''
           .'<div data-image-info=\''.$imageInfo.'\' class="tip project-poster propertycontainer cafevdb_inline_image_wrapper image-wrapper multi '.$sizeCss.'" title="'

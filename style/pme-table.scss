@@ -883,38 +883,38 @@ td.pme-cell.pme-1 {
   background:#C6DEFF;
 }
 
-td.projectposter {
+td.projectposters {
   max-width:90%;
   white-space:normal;
-}
 
-td.projectposter div.image-wrapper {
-  display:inline-block;
-  min-width:128px; /* phototools need some space */
-  margin-left:3px;
-  margin-right:3px;
-  text-align:center;
-  float:left;
-}
+  div.image-wrapper {
+    display:inline-block;
+    min-width:128px; /* phototools need some space */
+    margin-left:3px;
+    margin-right:3px;
+    text-align:center;
+    float:left;
+  }
 
-td.projectposter .image-wrapper img,
-td.projectposter .image-wrapper.full img {
-  object-fit:contain;
-  height:512px;
-  max-width:512px;
-  max-height:512px;
-}
+  .image-wrapper img,
+  .image-wrapper.full img {
+    object-fit:contain;
+    height:512px;
+    max-width:512px;
+    max-height:512px;
+  }
 
-td.projectposter .image-wrapper.half img {
-  height:256px;
-  max-width:256px;
-  max-height:256px;
-}
+  .image-wrapper.half img {
+    height:256px;
+    max-width:256px;
+    max-height:256px;
+  }
 
-td.projectposter .image-wrapper.quarter img {
-  height:128px;
-  max-width:128px;
-  max-height:128px;
+  .image-wrapper.quarter img {
+    height:128px;
+    max-width:128px;
+    max-height:128px;
+  }
 }
 
 td.photo {
