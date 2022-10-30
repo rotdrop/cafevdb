@@ -251,6 +251,12 @@ form.pme-form {
       height:unset;
     }
   }
+  &.dialog-dropdown-shown {
+    overflow:visible;
+    .ui-dialog-content {
+      overflow:visible;
+    }
+  }
 }
 
 /* Hide the dialog behind the modal layer during loading of slow
