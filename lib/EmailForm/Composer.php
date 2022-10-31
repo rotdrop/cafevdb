@@ -4093,10 +4093,13 @@ Störung.';
   private function bankAccount():string
   {
     $iban = new PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
-    return
-      $this->getConfigValue('bankAccountOwner')."<br/>\n".
-      "IBAN ".$iban->HumanFormat()." (".$iban->MachineFormat().")<br/>\n".
-      "BIC ".$this->getConfigValue('bankAccountBIC');
+    $financeService = $this->di(FinanceService::class);
+    $info = $financeService->getIbanInfo($iban->MachineFormat());
+    return ($info['bank'] . "<br/>\n"
+	  . $this->getConfigValue('bankAccountOwner') . "<br/>\n"
+	  . "IBAN ".$iban->HumanFormat() . " (" . $iban->MachineFormat() . ")<br/>\n"
+	  . "BIC " . $this->getConfigValue('bankAccountBIC')
+    );
   }
 
   /**
