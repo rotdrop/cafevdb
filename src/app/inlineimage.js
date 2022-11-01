@@ -361,7 +361,16 @@ const attachHandlers = function(wrapper) {
       },
       false,
       ['image\\/.*'],
-      true);
+      true, // modal
+      undefined, // type
+      undefined /* path */, {
+        filter(file) {
+          if (file.type === 'dir') {
+            return true;
+          }
+          return /image\/.*/.test(file.mimetype);
+        },
+      });
     event.stopImmediatePropagation();
     return false;
   });
