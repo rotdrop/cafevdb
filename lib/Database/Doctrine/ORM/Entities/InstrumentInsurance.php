@@ -266,11 +266,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set accessory.
    *
-   * @param bool $accessory
+   * @param null|bool $accessory
    *
    * @return InstrumentInsurance
    */
-  public function setAccessory(bool $accessory):InstrumentInsurance
+  public function setAccessory(?bool $accessory):InstrumentInsurance
   {
     $this->accessory = $accessory;
 
