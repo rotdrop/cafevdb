@@ -1420,7 +1420,7 @@ __EOT__;
    *
    * @return string HTML data for one row.
    */
-  public function dataOptionInputRowHtml(array $value, int $index, bool $used, ?string $dataType = null):string
+  public function dataOptionInputRowHtml(mixed $value, int $index, bool $used, ?string $dataType = null):string
   {
     $pfx = $this->pme->cgiDataName('data_options');
     // $key = $value['key'];
