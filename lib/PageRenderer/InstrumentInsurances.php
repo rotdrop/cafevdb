@@ -181,7 +181,7 @@ class InstrumentInsurances extends PMETableViewBase
     ];
 
     // Name of field which is the unique key
-    $opts['key'] = [ 'id' => 'int', 'bill_to_party_id' => 'int' ];
+    $opts['key'] = [ 'id' => 'int' /* , 'bill_to_party_id' => 'int' */ ];
 
     // Sorting field(s)
     $opts['sort_field'] = [ 'broker_id', 'geographical_scope', 'instrument_holder_id', 'accessory', ];
