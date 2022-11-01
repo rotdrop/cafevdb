@@ -806,11 +806,11 @@ class ProjectParticipantsController extends Controller
                     $mimeTypeDetector = $this->di(\OCP\Files\IMimeTypeDetector::class);
                     $mimeType = $mimeTypeDetector->detectString($fileData);
 
-                    if (!empty($dbFile) && $dbFile->getFile()->getNumberOfLinks() > 1) {
+                    if (!empty($dbFile) && $dbFile->getNumberOfLinks() > 1) {
                       // if the file has multiple links then it is probably
                       // better to remove the existing file rather than
                       // overwriting a file which has multiple links.
-                      $dbFile->setFile(null);
+                      $dbDocument->setFile(null);
                       $dbFile = null;
                     }
 
@@ -963,7 +963,7 @@ class ProjectParticipantsController extends Controller
     $project = $participant->getProject();
     $listId = $project->getMailingListId();
     if (empty($listId)) {
-      return self::grumble($this->l->t('The project "%s" does not yet have a mailing-list.', $project->getName));
+      return self::grumble($this->l->t('The project "%s" does not yet have a mailing-list.', $project->getName()));
     }
 
     /** @var Entities\Musician $musician */
