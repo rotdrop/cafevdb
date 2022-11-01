@@ -419,9 +419,13 @@ class phpMyEdit
 			$delim = isset($this->key_delim[$key]) ? $this->key_delim[$key] : "'";
 			$comp = $this->fqn($key, self::VANILLA).' = '.$delim.$rec.$delim;
 			if (empty($rec)) {
-				// should we === null?
-				$comp = '(' . $comp . ' OR '
-					. $this->fqn($key, self::VANILLA) . ' IS NULL)';
+				if (empty($delim)) {
+					$comp = $this->fqn($key, self::VANILLA) . ' IS NULL';
+				} else {
+					// should we === null?
+					$comp = '(' . $comp . ' OR '
+						  . $this->fqn($key, self::VANILLA) . ' IS NULL)';
+				}
 			}
 			$wparts[] = $comp;
 		}
