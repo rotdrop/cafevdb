@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EncryptedFilesRepository")
  */
 class EncryptedFile extends File
 {

@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
  *     @ORM\UniqueConstraint(columns={"root_id"})
  *   }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStoragesRepository")
  */
 class DatabaseStorage implements \ArrayAccess
 {

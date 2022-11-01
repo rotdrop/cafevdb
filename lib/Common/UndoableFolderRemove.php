@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ class UndoableFolderRemove extends UndoableFileSystemNodeRemove
   /**
    * Undoable folder remove.
    *
-   * @param string|Callable $folderName
+   * @param string|callable $name
    *
    * @param bool $gracefully Do not complain if folders are non-empty or do not exist.
    *
@@ -47,15 +47,11 @@ class UndoableFolderRemove extends UndoableFileSystemNodeRemove
    * non-empty folders will be removed.
    *
    * @param string $ignoredFiles A regular expression masking out ignored
-   * files by their name in the decision whether a directory is empty or not. It defaults to ignoring all variants of README
+   * files by their name in the decision whether a directory is empty or
+   * not. It defaults to ignoring all variants of README.
    */
-  public function __construct($name, bool $gracefully = false, bool $recursively = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
+  public function __construct(mixed $name, bool $gracefully = false, bool $recursively = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
   {
     parent::__construct($name, $gracefully, $recursively, $ignoredFiles, FileInfo::TYPE_FOLDER);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

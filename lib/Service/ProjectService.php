@@ -867,19 +867,63 @@ class ProjectService
   }
 
   /**
-   * Fetch the (encrypted) file for a field-datum and return path-info like
-   * information for the file.
+   * Generatet the full path to the parent folder of the files attached to the
+   * given field data (if there are any)
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param bool $includeDeleted Include deleted entities in the result.
+   *
+   * @return null|string
+   */
+  public function getParticipantFieldFolderPath(
+    Entities\ProjectParticipantField $field,
+    bool $includeDeleted = false,
+  ):?string {
+    if (!$includeDeleted && ($field->isDeleted())) {
+      return null;
+    }
+    if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
+      $dirName = '';
+    } else {
+      $dirName = $this->participantFieldsService->getFileSystemFieldName($field);
+    }
+
+    if ($field->getDataType() == FieldDataType::SERVICE_FEE) {
+      $subDirPrefix =
+        $this->getSupportingDocumentsFolderName()
+        . UserStorage::PATH_SEP
+        . $this->getReceivablesFolderName();
+      $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . UserStorage::PATH_SEP . $dirName;
+    }
+
+    return $dirName;
+  }
+
+  /**
+   * Fetch the file for a field-datum and return path-info like information
+   * for the file. If an Entities\EncryptedFile instance is given then use
+   * this for determining the 'dbFileName' and extension as if the given
+   * file-entity would be used instead of the stored entity.
+   *
+   * Otherwise use just the information from the stored directory entry.
+   *
+   * The generated paths are relative to the encrypted per-participant
+   * database-storage mount.
    *
    * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @param null|Entities\EncryptedFile $newFile
    *
    * @param bool $includeDeleted Include deleted entities in the result.
    *
    * @return null|array
    * ```
    * [
-   *   'file' => ENTITY,
-   *   'baseName' => BASENAME, // generated, l10n
-   '   'dirName' => DIRENAME, // generated, l10n
+   *   'dirEntry' => DATBASE_STORAGE_FILE_ENTITY, // null if $newFile is given
+   *   'file' => FILE_ENTITY,
+   *   'baseName' => BASENAME, // generated
+   '   'dirName' => DIRENAME, // generated
    *   'extension' => FILE EXTENSION, // from db-file
    *   'fileName' => FILENAME, // basename without extension
    *   'pathName' => DIRNAME/BASENAME,
@@ -887,8 +931,11 @@ class ProjectService
    * ]
    * ```
    */
-  public function participantFileInfo(Entities\ProjectParticipantFieldDatum $fieldDatum, bool $includeDeleted = false):?array
-  {
+  public function participantFileInfo(
+    Entities\ProjectParticipantFieldDatum $fieldDatum,
+    ?Entities\EncryptedFile $newFile = null,
+    bool $includeDeleted = false,
+  ):?array {
     if (!$includeDeleted && $fieldDatum->isDeleted()) {
       return null;
     }
@@ -903,59 +950,71 @@ class ProjectService
       return null;
     }
     $dataType = $field->getDataType();
-    switch ($dataType) {
-      case FieldDataType::DB_FILE:
-        $fileId = (int)$fieldDatum->getOptionValue();
-        $file = $this->findEntity(Entities\File::class, $fileId);
-        break;
-      case FieldDataType::SERVICE_FEE:
-        $file = $fieldDatum->getSupportingDocument();
-        break;
-      default:
-        return null;
-    }
-    if (empty($file)) {
-      return null;
-    }
-    /** @var Entities\File $file */
-    $dbFileName = $file->getFileName();
-    $extension = pathinfo($dbFileName, PATHINFO_EXTENSION);
-    $fieldName = $this->participantFieldsService->getFileSystemFieldName($field);
-
-    if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
-      // construct the file-name from the field-name
-      $fileName = $this->participantFilename($fieldName, $fieldDatum->getMusician(), ignoreExtension: true);
-      $dirName = null;
-    } else {
-      // construct the file-name from the option label if non-empty or the file-name of the DB-file
-      $optionLabel = $this->participantFieldsService->getFileSystemOptionLabel($fieldOption);
-      if (!empty($optionLabel)) {
-        $fileName = $this->participantFilename($optionLabel, $fieldDatum->getMusician(), ignoreExtension: true);
-      } else {
-        $fileName = basename($dbFileName, '.' . $extension);
+    if (empty($newFile)) {
+      /** @var Entities\DatabaseStorageFile $file */
+      switch ($dataType) {
+        case FieldDataType::DB_FILE:
+          $fileId = (int)$fieldDatum->getOptionValue();
+          $dirEntry = $this->findEntity(Entities\DatabaseStorageFile::class, $fileId);
+          break;
+        case FieldDataType::SERVICE_FEE:
+          $dirEntry = $fieldDatum->getSupportingDocument();
+          break;
+        default:
+          return null;
       }
-      $dirName = $fieldName;
+      if (empty($dirEntry)) {
+        return null;
+      }
+      $file = $dirEntry->getFile();
+      $dbFileName = $dirEntry->getName();
+      $pathName = $dirEntry->getPathName();
+      list(
+        'basename' => $baseName,
+        'dirname' => $dirName,
+        'extension' => $extension,
+        'filename' => $fileName,
+      ) = pathinfo($pathName);
+    } else {
+      $dirEntry = null;
+      $file = $newFile;
+      /** @var Entities\EncryptedFile $file */
+      $dbFileName = $file->getFileName();
+      $extension = pathinfo($dbFileName, PATHINFO_EXTENSION);
+      $fieldName = $this->participantFieldsService->getFileSystemFieldName($field);
+
+      $musician = $fieldDatum->getMusician();
+
+      if ($field->getMultiplicity() == FieldMultiplicity::SIMPLE) {
+        // construct the file-name from the field-name
+        $fileName = $this->participantFilename($fieldName, $musician, ignoreExtension: true);
+      } else {
+        // construct the file-name from the option label if non-empty or the file-name of the DB-file
+        $optionLabel = $this->participantFieldsService->getFileSystemOptionLabel($fieldOption);
+        if (!empty($optionLabel)) {
+          $fileName = $this->participantFilename($optionLabel, $musician,ignoreExtension: true);
+        } else {
+          $fileName = basename($dbFileName, '.' . $extension);
+        }
+      }
+
+      // the following duplicates some of the logic above, but we need the path-name in other places
+      $dirName = $this->getParticipantFieldFolderPath($field, $includeDeleted);
+
+      $baseName = $fileName . '.' . $extension;
+      $pathName = empty($dirName) ? $baseName : $dirName . UserStorage::PATH_SEP . $baseName;
     }
 
-    if ($dataType == FieldDataType::SERVICE_FEE) {
-      $subDirPrefix =
-        $this->getSupportingDocumentsFolderName()
-        . UserStorage::PATH_SEP
-        . $this->getReceivablesFolderName();
-      $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . UserStorage::PATH_SEP . $dirName;
-    }
-
-    $baseName = $fileName . '.' . $extension;
-    $pathName = empty($dirName) ? $baseName : $dirName . UserStorage::PATH_SEP . $baseName;
-    return [
-      'file' => $file,
-      'baseName' => $baseName,
-      'dirName' => $dirName,
-      'extension' => $extension,
-      'fileName' => $fileName,
-      'pathName' => $pathName,
-      'dbFileName' => $dbFileName,
-    ];
+    return compact(
+      'dirEntry',
+      'file',
+      'baseName',
+      'dirName',
+      'extension',
+      'fileName',
+      'pathName',
+      'dbFileName',
+    );
   }
 
   /**

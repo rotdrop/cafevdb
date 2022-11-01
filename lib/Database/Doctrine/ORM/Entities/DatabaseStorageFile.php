@@ -31,15 +31,19 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 
+use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Constants;
 
 /**
  * File-name entry for a database-backed file.
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFilesRepository")
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\DatabaseStorageFileEntityListener"})
+ * @ORM\HasLifecycleCallbacks
  */
 class DatabaseStorageFile extends DatabaseStorageDirEntry
 {
@@ -47,9 +51,22 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   protected static $type = DirEntryType::FILE;
 
   /**
+   * @var array<int, EncryptedFile>
+   *
+   * Array of potentially orphaned files which are no longer linked to
+   * dir-entries. The array is indexed by spl_object_id().
+   *
+   * The actual work-horse for the orphans list is an entity listener which
+   * post-pones actual cleanup of orphans to a pre-commit handler of the
+   * decorated entity manager.
+   */
+  protected static $orphans = [];
+
+  /**
    * @var EncryptedFile
    *
    * @ORM\ManyToOne(targetEntity="EncryptedFile", inversedBy="databaseStorageDirEntries", cascade={"persist"})
+   * @ORM\JoinColumn(nullable="false")
    */
   protected $file;
 
@@ -66,6 +83,8 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   }
 
   /**
+   * Install a file entity
+   *
    * @param null|EncryptedFile $file
    *
    * @return DatabaseStorageFile
@@ -74,12 +93,16 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   {
     if (!empty($this->file)) {
       $this->file->removeDatabaseStorageDirEntry($this);
+      if ($this->file->getNumberOfLinks() == 0) {
+        self::$orphans[spl_object_id($this->file)] = $this->file;
+      }
     }
 
     $this->file = $file;
 
     if (!empty($this->file)) {
       $this->file->addDatabaseStorageDirEntry($this);
+      unset(self::$orphans[spl_object_id($this->file)]);
     }
 
     return $this;
@@ -101,6 +124,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
     'getFileData',
     'getMimeType',
     'setMimeType',
+    'getNumberOfLinks',
   ];
 
   /**
@@ -114,7 +138,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
         && is_callable([ $this->file, $method ])) {
       return call_user_func_array([ $this->file, $method ], $args);
     }
-    throw new Exception('Undefined method - ' . __CLASS__ . '::' . $method);
+    throw new Exceptions\DatabaseException('Undefined method - ' . __CLASS__ . '::' . $method);
   }
 
   /** @return null|string */
@@ -151,5 +175,63 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   public function getExtension(?string $extension = null):?string
   {
     return is_string($this->name) ? pathinfo($this->name, PATHINFO_EXTENSION) : null;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Update the inverse side of the file-association and mark the file as
+   * orphan when it is no longer owned by other directory entries.
+   *
+   * @ORM\PreRemove
+   */
+  public function preRemove(Event\LifecycleEventArgs $event)
+  {
+    if (empty($this->file)) {
+      return;
+    }
+    $this->file->removeDatabaseStorageDirEntry($this); // update the inverse side
+    if ($this->file->getNumberOfLinks() == 0) {
+      self::$orphans[spl_object_id($this->file)] = $this->file; // schedule for later removal
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Remove the associated file from the orphans list. May not be necessary ...
+   *
+   * @ORM\PostLoad
+   * @ORM\PostPersist
+   * @ORM\PostUpdate
+   */
+  public function cleanupOrphans(Event\LifecycleEventArgs $event)
+  {
+    if (empty($this->file)) {
+      return;
+    }
+    unset(self::$orphans[spl_object_id($this->file)]);
+  }
+
+  /** @return array */
+  public static function getOrphans():array
+  {
+    return self::$orphans;
+  }
+
+  /** @return void */
+  public static function clearOrphans():void
+  {
+    self::$orphans = [];
+  }
+
+  /**
+   * @param array $orphans
+   *
+   * @return void
+   */
+  public static function restoreOrphans(array $orphans):void
+  {
+    self::$orphans = $orphans;
   }
 }

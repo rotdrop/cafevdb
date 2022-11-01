@@ -406,16 +406,16 @@ trait ParticipantFieldsTrait
                     ])
                 );
 
-                $valueFdd['php|VDLF'] = function(
+                $viewCallback = function(
                   $optionValue,
                   $op,
                   $k,
                   $row,
                   $recordId,
                   $pme,
+                  $valueFddOffset,
                 ) use (
                   $field,
-                  $valueFddOffset,
                   $invoiceFddOffset,
                 ) {
                   $html = $this->moneyValue($optionValue);
@@ -460,6 +460,22 @@ trait ParticipantFieldsTrait
                   $html = '<div class="pme-cell-wrapper flex-container flex-center flex-justify-end">' . $filesAppAnchor . $html . '</div>';
 
                   return $html;
+                };
+
+                $valueFdd['php|VDLF'] = function(
+                  $optionValue,
+                  $op,
+                  $k,
+                  $row,
+                  $recordId,
+                  $pme,
+                ) use (
+                  $field,
+                  $invoiceFddOffset,
+                  $valueFddOffset,
+                  $viewCallback,
+                ) {
+                  return $viewCallback($optionValue, $op, $k, $row, $recordId, $pme, $valueFddOffset);
                 };
 
                 $valueFdd['display|ACP']['postfix'] = function(
@@ -587,12 +603,29 @@ trait ParticipantFieldsTrait
                   ],
                 ]);
                 $depositFdd = &$fieldDescData[$depositFddName];
+                $depositFddOffset = count($fieldDescData) - $fddBaseIndex;
 
                 $depositFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                 if ($defaultValue !== '' && $defaultValue !== null) {
                   $depositFdd['display|ACP']['postfix'] .=
                     str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultDeposit' ], $defaultButton);
                 }
+
+                $depositFdd['php|VDLF'] = function(
+                  $optionValue,
+                  $op,
+                  $k,
+                  $row,
+                  $recordId,
+                  $pme,
+                ) use (
+                  $field,
+                  $invoiceFddOffset,
+                  $depositFddOffset,
+                  $viewCallback,
+                ) {
+                  return $viewCallback($optionValue, $op, $k, $row, $recordId, $pme, $depositFddOffset);
+                };
 
                 break;
 
@@ -615,20 +648,16 @@ trait ParticipantFieldsTrait
                     return '';
                   }
 
-                  /** @var Entities\File $file */
-                  $file = $this->getDatabaseRepository(Entities\File::class)->find($value);
-                  $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+                  /** @var Entities\DatabaseStorageFile $file */
+                  $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
+                  $fileName = $file->getName();
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
-                  $fileBase = $field->getName();
-                  $fileName = $this->projectService->participantFilename($fileBase, $musician);
-                  $fileName .= '.' . $extension;
-                  $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
-                    $value, $fileName);
+                  $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($value);
                   $filesAppAnchor = $this->getFilesAppAnchor($field, $musician);
 
                   return $filesAppAnchor . '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'"
-   href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
+   href="'.$downloadLink.'">' . $fileName . '</a>';
                 };
                 break;
               case FieldType::CLOUD_FILE:
@@ -2433,7 +2462,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           // $oldGroupId = $oldValues[$keyName];
           $newGroupId = $newValues[$keyName];
 
-          $this->logInfo('NEW GROUP ID ' . $newGroupId);
+          // $this->logInfo('NEW GROUP ID ' . $newGroupId);
 
           $max = PHP_INT_MAX;
           $label = $this->l->t('unknown');
@@ -2446,7 +2475,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             $newDataOption = $participantField->getDataOption($newGroupId);
             $max = $newDataOption['limit'];
             $label = $newDataOption['label'];
-            $this->logInfo('OPTION: ' . $newGroupId . ' ' . Functions\dump($newDataOption));
+            // $this->logInfo('OPTION: ' . $newGroupId . ' ' . Functions\dump($newDataOption));
           }
 
           // $oldMembers = Util::explode(',', $oldValues[$groupFieldName]);
@@ -2627,9 +2656,9 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     } else {
       $optionKey = $fieldOption->getKey();
     }
-    if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\EncryptedFile)) {
+    if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\DatabaseStorageFile)) {
       try {
-        $supportingDocument = $this->findEntity(Entities\EncryptedFile::class, $supportingDocument);
+        $supportingDocument = $this->findEntity(Entities\DatabaseStorageFile::class, $supportingDocument);
       } catch (\Throwable $t) {
         $supportingDocument = null;
       }

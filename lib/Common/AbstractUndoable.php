@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,17 +26,15 @@ namespace OCA\CAFEVDB\Common;
 
 use OCP\AppFramework\IAppContainer;
 
+/** Default implementation for some methods. */
 abstract class AbstractUndoable implements IUndoable
 {
+  /** @var IAppContainer */
   protected $appContainer;
 
-  public function initialize(IAppContainer $appContainer)
+  /** {@inheritdoc} */
+  public function initialize(IAppContainer $appContainer):void
   {
     $this->appContainer = $appContainer;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

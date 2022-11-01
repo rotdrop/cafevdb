@@ -32,6 +32,7 @@ use \Net_IMAP;
 use \Mail_RFC822;
 use \PHP_IBAN;
 use \DOMDocument;
+use Throwable;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -196,27 +197,27 @@ Störung.';
    */
   const DEFAULT_HTML_TEMPLATES = [
     'transaction-parts' => [
-      'header' => '<table class="transaction-parts"><thead><tr>
-  <th>[PURPOSE]</th>
-  <th>[INVOICED]</th>
-  <th>[TOTALS]</th>
-  <th>[RECEIVED]</th>
-  <th>[REMAINING]</th>
+      'header' => '<table class="transaction-parts[CSSCLASS]"><thead><tr>
+  <th class="cell purpose">[PURPOSE]</th>
+  <th class="cell invoiced">[INVOICED]</th>
+  <th class="cell details totals">[TOTALS]</th>
+  <th class="cell details received">[RECEIVED]</th>
+  <th class="cell details remaining">[REMAINING]</th>
 </tr></thead><tbody>',
       'row' => '<tr>
-  <td>[PURPOSE]</td>
-  <td class="money">[INVOICED]</td>
-  <td class="money">[TOTALS]</td>
-  <td class="money">[RECEIVED]</td>
-  <td class="money">[REMAINING]</td>
+  <td class="cell purpose">[PURPOSE]</td>
+  <td class="cell invoiced money">[INVOICED]</td>
+  <td class="cell details totals money">[TOTALS]</td>
+  <td class="cell details received money">[RECEIVED]</td>
+  <td class="cell details remaining money">[REMAINING]</td>
 </tr>',
       'footer' => '</tbody><tbody class="footer">
   <tr class="totalsum">
-    <td>[PURPOSE]</td>
-    <td class="money">[INVOICED]</td>
-    <td class="money">[TOTALS]</td>
-    <td class="money">[RECEIVED]</td>
-    <td class="money">[REMAINING]</td>
+    <td class="cell purpose">[PURPOSE]</td>
+    <td class="cell invoiced money">[INVOICED]</td>
+    <td class="cell details totals money">[TOTALS]</td>
+    <td class="cell details received money">[RECEIVED]</td>
+    <td class="cell details remaining money">[REMAINING]</td>
   </tr>
 </tbody></table>'
     ],
@@ -259,6 +260,9 @@ Störung.';
   const EMAIL_PREVIEW_SELECTOR = '.ui-dialog.emailform #emailformdialog div#emailformwrapper form#cafevdb-email-form div#emailformdebug div#cafevdb-email-preview .email-body.reset-css';
   const DEFAULT_HTML_STYLES = [
     'transaction-parts' => '<style>
+[CSSPREFIX]table.transaction-parts.nothing-received-yet .cell.details {
+  display:none;
+}
 [CSSPREFIX]table.transaction-parts,
 [CSSPREFIX]table.transaction-parts tr,
 [CSSPREFIX]table.transaction-parts th,
@@ -1412,27 +1416,12 @@ Störung.';
           $totalSum = array_fill_keys($replacementKeys, 0.0);
           $totalSum['purpose'] = $this->l->t('Total Amount');
 
-          $html = ''; /* self::DEFAULT_TRANSACTION_PARTS_STYLE; */
-
-          $headerReplacements = [
-            'purpose' => $this->l->t('Purpose'),
-            'invoiced' => $this->l->t('Invoice Amount'),
-            'totals' => $this->l->t('Total Amount'),
-            'received' => $this->l->t('Received'),
-            'remaining' => $this->l->t('Remaining'),
-          ];
-          $header = $tableTemplate['header'];
-          foreach ($replacementKeys as $key) {
-            $keyVariants = array_map(
-              fn($key) => '['.$key.']',
-              $this->translationVariants($key)
-            );
-            $header = str_ireplace($keyVariants, $headerReplacements[$key], $header);
-          }
-          $html .= $header;
-
           $rowTemplate = $tableTemplate['row'];
 
+          // in order to have the chance to emit a more simple table
+          $receivedIsZero = true;
+
+          $rowHtml = '';
           $payments = $compositePayment->getProjectPayments();
           /** @var Entities\ProjectPayment $payment */
           foreach ($payments as $payment) {
@@ -1444,6 +1433,10 @@ Störung.';
             // otherwise one would have to account for the dueDate,
             // so keep it simple and just remove the current payment.
             $received -= $invoiced;
+
+            if (!empty($received)) {
+              $receivedIsZero = false;
+            }
 
             $remaining = $totals - $received;
 
@@ -1467,10 +1460,31 @@ Störung.';
               );
               $row = str_ireplace($keyVariants, $replacements[$key], $row);
             }
-            $html .= $row;
+            $rowHtml .= $row;
           }
 
-          $footer = $tableTemplate['footer'];
+          $headerReplacements = [
+            'purpose' => $this->l->t('Purpose'),
+            'invoiced' => $this->l->t('Invoice Amount'),
+            'totals' => $this->l->t('Total Amount'),
+            'received' => $this->l->t('Received'),
+            'remaining' => $this->l->t('Remaining'),
+          ];
+          $headerHtml = $tableTemplate['header'];
+          foreach ($replacementKeys as $key) {
+            $keyVariants = array_map(
+              fn($key) => '['.$key.']',
+              $this->translationVariants($key)
+            );
+            $headerHtml = str_ireplace($keyVariants, $headerReplacements[$key], $headerHtml);
+          }
+          $cssClass = '';
+          if ($receivedIsZero) {
+            $cssClass = ' nothing-received-yet';
+          }
+          $headerHtml = str_replace('[CSSCLASS]', $cssClass, $headerHtml);
+
+          $footerHtml = $tableTemplate['footer'];
           foreach ($replacementKeys as $key) {
             if ($key != 'purpose') {
               $totalSum[$key] = $this->moneyValue($totalSum[$key]);
@@ -1479,11 +1493,10 @@ Störung.';
               fn($key) => '['.$key.']',
               $this->translationVariants($key)
             );
-            $footer = str_ireplace($keyVariants, $totalSum[$key], $footer);
+            $footerHtml = str_ireplace($keyVariants, $totalSum[$key], $footerHtml);
           }
-          $html .= $footer;
 
-          return $html;
+          return $headerHtml . $rowHtml . $footerHtml;
         }
 
         return $keyArg[0];
@@ -1771,6 +1784,7 @@ Störung.';
               );
             }
             $payment->setNotificationMessageId($messageId);
+            // $this->flush();
           }
         } else {
           ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
@@ -1825,10 +1839,15 @@ Störung.';
       }
     }
 
+    $this->entityManager->beginTransaction();
     try {
       $this->flush();
+      $this->entityManager->commit();
     } catch (\Throwable $t) {
       $this->logException($t);
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
     }
 
     return $this->executionStatus;
@@ -2826,7 +2845,7 @@ Störung.';
       }
       $sentEmail->setMessageId($phpMailer->getLastMessageID());
       $this->persist($sentEmail);
-      // $this->flush();
+      // $this->flush(); // nope, first references between sent emails need to be installed
     } catch (\Throwable $t) {
       $this->executionStatus = false;
       $this->diagnostics[self::DIAGNOSTICS_MAILER_EXCEPTIONS][] = $this->formatExceptionMessage($t);
@@ -4074,10 +4093,13 @@ Störung.';
   private function bankAccount():string
   {
     $iban = new PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
-    return
-      $this->getConfigValue('bankAccountOwner')."<br/>\n".
-      "IBAN ".$iban->HumanFormat()." (".$iban->MachineFormat().")<br/>\n".
-      "BIC ".$this->getConfigValue('bankAccountBIC');
+    $financeService = $this->di(FinanceService::class);
+    $info = $financeService->getIbanInfo($iban->MachineFormat());
+    return ($info['bank'] . "<br/>\n"
+	  . $this->getConfigValue('bankAccountOwner') . "<br/>\n"
+	  . "IBAN ".$iban->HumanFormat() . " (" . $iban->MachineFormat() . ")<br/>\n"
+	  . "BIC " . $this->getConfigValue('bankAccountBIC')
+    );
   }
 
   /**

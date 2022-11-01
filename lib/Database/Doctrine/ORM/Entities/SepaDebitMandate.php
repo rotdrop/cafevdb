@@ -164,9 +164,9 @@ class SepaDebitMandate implements \ArrayAccess
   private $lastUsedDate;
 
   /**
-   * @var EncryptedFile
+   * @var DatabaseStorageFile
    *
-   * @ORM\OneToOne(targetEntity="EncryptedFile", cascade={"persist"}, orphanRemoval=true)
+   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", cascade={"all"}, orphanRemoval=true)
    */
   private $writtenMandate;
 
@@ -238,6 +238,9 @@ class SepaDebitMandate implements \ArrayAccess
    */
   public function getMusician():?Musician
   {
+    if (is_string($this->musician)) {
+      \OCP\Util::writeLog('cafevdb', 'MUS ' . $this->musician, \OCP\Util::INFO);
+    }
     return $this->musician;
   }
 
@@ -433,11 +436,11 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Set writtenMandate.
    *
-   * @param null|EncryptedFile $writtenMandate
+   * @param null|DatabaseStorageFile $writtenMandate
    *
    * @return SepaDebitMandate
    */
-  public function setWrittenMandate(?EncryptedFile $writtenMandate):SepaDebitMandate
+  public function setWrittenMandate(?DatabaseStorageFile $writtenMandate):SepaDebitMandate
   {
     $this->writtenMandate = $writtenMandate;
 
@@ -447,9 +450,9 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * Get writtenMandate.
    *
-   * @return null|EncryptedFile
+   * @return null|DatabaseStorageFile
    */
-  public function getWrittenMandate():?EncryptedFile
+  public function getWrittenMandate():?DatabaseStorageFile
   {
     return $this->writtenMandate;
   }

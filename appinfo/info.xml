@@ -49,6 +49,7 @@
     <command>OCA\CAFEVDB\Command\UpdateGeoCodingCache</command>
     <command>OCA\CAFEVDB\Command\FilesScan</command>
     <command>OCA\CAFEVDB\Command\DatabaseSanitizers</command>
+    <command>OCA\CAFEVDB\Command\DatabaseStorage</command>
   </commands>
   <background-jobs>
     <job>OCA\CAFEVDB\BackgroundJob\CleanupTemporaryFiles</job>

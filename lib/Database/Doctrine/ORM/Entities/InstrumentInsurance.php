@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use DateTimeInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -138,9 +140,12 @@ class InstrumentInsurance implements \ArrayAccess
    */
   private $startOfInsurance;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set id.
@@ -149,7 +154,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setId($id):InstrumentInsurance
+  public function setId(?int $id):InstrumentInsurance
   {
     $this->id = $id;
 
@@ -169,11 +174,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set instrumentHolder.
    *
-   * @param int $instrumentHolder
+   * @param null|int|Musician $instrumentHolder
    *
    * @return InstrumentInsurance
    */
-  public function setInstrumentHolder($instrumentHolder):InstrumentInsurance
+  public function setInstrumentHolder(mixed $instrumentHolder):InstrumentInsurance
   {
     $this->instrumentHolder = $instrumentHolder;
 
@@ -193,11 +198,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set instrumentOwner.
    *
-   * @param int $instrumentOwner
+   * @param null|int|Musician $instrumentOwner
    *
    * @return InstrumentInsurance
    */
-  public function setInstrumentOwner($instrumentOwner):InstrumentInsurance
+  public function setInstrumentOwner(mixed $instrumentOwner):InstrumentInsurance
   {
     $this->instrumentOwner = $instrumentOwner;
 
@@ -241,7 +246,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setObject($object):InstrumentInsurance
+  public function setObject(string $object):InstrumentInsurance
   {
     $this->object = $object;
 
@@ -261,11 +266,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set accessory.
    *
-   * @param bool $accessory
+   * @param null|bool $accessory
    *
    * @return InstrumentInsurance
    */
-  public function setAccessory($accessory):InstrumentInsurance
+  public function setAccessory(?bool $accessory):InstrumentInsurance
   {
     $this->accessory = $accessory;
 
@@ -289,7 +294,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setManufacturer($manufacturer):InstrumentInsurance
+  public function setManufacturer(string $manufacturer):InstrumentInsurance
   {
     $this->manufacturer = $manufacturer;
 
@@ -307,13 +312,14 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set yearOfConstruction.
+   * Set yearOfConstruction. This is a string as it may either "unknnow" or
+   * something else instead of the 4-digit year.
    *
    * @param string $yearOfConstruction
    *
    * @return InstrumentInsurance
    */
-  public function setYearOfConstruction($yearOfConstruction):InstrumentInsurance
+  public function setYearOfConstruction(string $yearOfConstruction):InstrumentInsurance
   {
     $this->yearOfConstruction = $yearOfConstruction;
 
@@ -337,7 +343,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setInsuranceAmount($insuranceAmount):InstrumentInsurance
+  public function setInsuranceAmount(int $insuranceAmount):InstrumentInsurance
   {
     $this->insuranceAmount = $insuranceAmount;
 
@@ -357,11 +363,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set billToParty.
    *
-   * @param int $billToParty
+   * @param null|int|Musician $billToParty
    *
    * @return InstrumentInsurance
    */
-  public function setBillToParty($billToParty):InstrumentInsurance
+  public function setBillToParty(mixed $billToParty):InstrumentInsurance
   {
     $this->billToParty = $billToParty;
 
@@ -373,17 +379,21 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return Musician
    */
-  public function getBillToParty():Musician
+  public function getBillToParty():?Musician
   {
     return $this->billToParty;
   }
 
   /**
+   * Internal helper, ensure that bill-to is non-empty.
+   *
+   * @return void
+   *
    * @ORM\PrePersist
    * @ORM\PreUpdate
    * @ORM\PreFlush
    */
-  public function ensureBillToParty()
+  public function ensureBillToParty():void
   {
     if (empty($this->billToParty) && !empty($this->instrumentHolder)) {
       $this->billToParty = $this->instrumentHolder;
@@ -393,7 +403,7 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set startOfInsurance.
    *
-   * @param string|\DateTimeInterface $submitDate
+   * @param string|DateTimeInterface $startOfInsurance
    *
    * @return InstrumentInsurance
    */
@@ -417,7 +427,7 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set insuranceRate.
    *
-   * @param int $insuranceRate
+   * @param InsuranceRate $insuranceRate
    *
    * @return InstrumentInsurance
    */

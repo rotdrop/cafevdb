@@ -230,7 +230,16 @@ class phpMyEdit
 	public $sd; public $ed;	// sql start and end delimiters '`' in case of MySQL
 
 	// Predefined variables
-	public $comp_ops  = array('<'=>'<','<='=>'<=','='=>'=','>='=>'>=','>'=>'>');
+
+	// numeric comparisons, also used as value => label for HTML selects.
+	public const COMP_OPS = [
+		'=' => '=',
+		'<>' => '<>',
+		'<' => '<',
+		'<=' => '<=',
+		'>=' => '>=',
+		'>' => '>',
+	];
 	// var $sql_aggrs = array(
 	// 	'sum'	=> 'Total',
 	// 	'avg'	=> 'Average',
@@ -410,9 +419,13 @@ class phpMyEdit
 			$delim = isset($this->key_delim[$key]) ? $this->key_delim[$key] : "'";
 			$comp = $this->fqn($key, self::VANILLA).' = '.$delim.$rec.$delim;
 			if (empty($rec)) {
-				// should we === null?
-				$comp = '(' . $comp . ' OR '
-					. $this->fqn($key, self::VANILLA) . ' IS NULL)';
+				if (empty($delim)) {
+					$comp = $this->fqn($key, self::VANILLA) . ' IS NULL';
+				} else {
+					// should we === null?
+					$comp = '(' . $comp . ' OR '
+						  . $this->fqn($key, self::VANILLA) . ' IS NULL)';
+				}
 			}
 			$wparts[] = $comp;
 		}
@@ -1641,18 +1654,31 @@ class phpMyEdit
 		return $join_clause;
 	} /* }}} */
 
-	function get_SQL_where_from_query_opts($text = 0) /* {{{ */
+	function get_SQL_where_from_query_opts($text = false) /* {{{ */
 	{
 		$qp = $this->query_opts;
 		$where = array();
 		foreach ($qp as $k => $ov) {
+
+			if ($text && $this->col_has_values($k)) {
+				$valgrp = $this->set_values($k);
+				$vals = $valgrp['values'];
+			}
+
 			if (empty($ov['fqn'])) {
 				// $ov is an array defining ORed conditions
 				$tmp_where = array();
 				foreach ($ov as $ov2) {
 					$fqn = $text ? $this->fdd[$k]['name'] : $ov2['fqn'];
+					$ov2_val = $ov2['value'];
+					if (is_callable($ov2_val)) {
+						$generatorValues = array_map(fn($value) => $vals[$value] ?? $value, $ov2['generatorValues']);
+						$ov2_val = $ov2_val($generatorValues, $text);
+					} elseif ($text && ($vals[$ov2_val] ?? null)) {
+						$ov2_val = $vals[$ov2_val];
+					}
 					$field2 = sprintf($ov2['fqnTemplate'], $fqn);
-					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2['value']);
+					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2_val);
 				}
 				$where[] = '('.implode(' OR ', $tmp_where).')';
 			} else {
@@ -1662,11 +1688,14 @@ class phpMyEdit
 					$tmp_ov_val = '';
 					$inner_null = false;
 					foreach ($ov['value'] as $ov_val) {
+						if ($text && ($vals[$ov_val] ?? null)) {
+							$ov_val = $vals[$ov_val];
+						}
 						strlen($tmp_ov_val) > 0 && $tmp_ov_val .= ' OR ';
 						// @todo should literal 0 match null?
-						if ($ov_val == '') {
+						if ($text || $ov_val == '') {
 							// interprete this as empty or NULL
-							$this_ov_val = sprintf("%s LIKE ''", $field);
+							$this_ov_val = sprintf("%s LIKE '%s'", $field, $ov_val);
 						} else {
 							$this_ov_val = sprintf('FIND_IN_SET("%s",%s)', $ov_val, $field);
 						}
@@ -1688,10 +1717,25 @@ class phpMyEdit
 					}
 					$where[] = "($tmp_ov_val)";
 				} else {
-					$where[] = sprintf('%s %s %s', $field, $ov['oper'], $ov['value']);
+					$ov_val = $ov['value'];
+					if ($text) {
+						if (is_callable($ov_val)) {
+							$generatorValues = array_map(fn($value) => $vals[$value] ?? $value, $ov['generatorValues']);
+							$ov_val = $ov_val($generatorValues, $text);
+						} elseif ($vals[$ov_val] ?? null) {
+							$ov_val = $vals[$ov_val];
+						}
+					} elseif (is_callable($ov_val)) {
+						$ov_val = $ov_val($ov['generatorValues']);
+					}
+					$where[] = sprintf('%s %s %s', $field, $ov['oper'], $ov_val);
 				}
 			}
 		}
+
+		/* Join WHERE parts by AND */
+		$where = implode(' AND ', $where);
+		$userFilter = !empty($where);
 
 		// allow some basic substitutions
 		$subs = array(
@@ -1710,24 +1754,68 @@ class phpMyEdit
 			}
 		}
 
-		// Add any coder specified 'AND' filters
-		if (!$text && $this->filters['AND']) {
-			$where[] = $this->substituteVars($this->filters['AND'], $subs);
+		/* Add any coder specified 'OR' filters. */
+		$orFilter = null;
+		if ($userFilter && !empty($this->filters['OR'])) {
+			if ($text) {
+				$orFilter = $this->filters['OR']['text'] ?? null;
+			} else {
+				$orFilter = $this->filters['OR']['sql'] ?? $this->filters['OR'];
+			}
+			if (!empty($orFilter)) {
+				$orFilter = $this->substituteVars($orFilter, $subs);
+			}
+		}
+		if ($where == $orFilter) {
+			$orFilter = null;
 		}
 
-		/* Join WHERE parts by AND */
-		$where = implode(' AND ', $where);
+		// Add any coder specified 'AND' filters
+		$andFilter = null;
+		if (!empty($this->filters['AND'])) {
+			if ($text) {
+				$andFilter = $this->filters['AND']['text'] ?? null;
+			} else {
+				$andFilter = $this->filters['AND']['sql'] ?? $this->filters['AND'];
+			}
+			if (!empty($andFilter)) {
+				$andFilter = $this->substituteVars($andFilter, $subs);
+			}
+		}
+		if ($where == $andFilter) {
+			$andFilter = null;
+		}
+
+		// we or first and and then
+		if (!empty($orFilter)) {
+			$where = empty($where)
+				? $orFilter
+				: $where . ' OR (' . $orFilter . ')';
+		}
+		if (!empty($andFilter)) {
+			if (!empty($where) && !empty($orFilter)) {
+				$where = '(' . $where . ')';
+			}
+			if (!empty($where)) {
+				$where .= ' AND ';
+			}
+			$where .= $andFilter;
+		}
 
 		if ($text) {
-			return str_replace('%', '*', $where);
-		}
-
-		/* Add any coder specified 'OR' filters. If where is still
-		 * empty at this point, then it is implicitly "true", hence
-		 * adding further "OR" filters does not make sense.
-		 */
-		if ($where !== '' && $this->filters['OR']) {
-			$where = '('.$where.') OR ('.$this->substituteVars($this->filters['OR'], $subs).')';
+			$where = str_replace([
+				'%',
+				' AND ',
+				' OR ',
+				' LIKE ',
+				' FIND_IN_SET ',
+			], [
+				'*',
+				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
+				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
+				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
+				' ' . strtoupper($this->labels['find_in_set'] ?? 'find_in_set') . ' ',
+			], $where);
 		}
 
 		return $where;
@@ -1784,18 +1872,31 @@ class phpMyEdit
 		return $qparts;
 	}
 
-	function get_SQL_having_query_opts($text = 0) /* {{{ */
+	function get_SQL_having_query_opts($text = false) /* {{{ */
 	{
 		$qp = $this->query_group_opts;
 		$having = array();
 		foreach ($qp as $k => $ov) {
+
+			if ($text && $this->col_has_values($k)) {
+				$valgrp = $this->set_values($k);
+				$vals = $valgrp['values'];
+			}
+
 			if (empty($ov['fqn'])) {
 				// $ov is an array defining ORed conditions
 				$tmp_where = array();
 				foreach ($ov as $ov2) {
 					$fqn = $text ? $this->fdd[$k]['name'] : $ov2['fqn'];
+					$ov2_val = $ov2['value'];
+					if (is_callable($ov2_val)) {
+						$generatorValues = array_map(fn($value) => $vals[$value] ?? $value, $ov2['generatorValues']);
+						$ov2_val = $ov2_val($generatorValues, $text);
+					} elseif ($text && ($vals[$ov2_val] ?? null)) {
+						$ov2_val = $vals[$ov2_val];
+					}
 					$field2 = sprintf($ov2['fqnTemplate'], $fqn);
-					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2['value']);
+					$tmp_where[] = sprintf('%s %s %s', $field2, $ov2['oper'], $ov2_val);
 				}
 				$having[] = '('.implode(' OR ', $tmp_where).')';
 			} else {
@@ -1804,6 +1905,9 @@ class phpMyEdit
 				if (is_array($ov['value'])) {
 					$tmp_ov_val = '';
 					foreach ($ov['value'] as $ov_val) {
+						if ($text && ($vals[$ov_val] ?? null)) {
+							$ov_val = $vals[$ov_val];
+						}
 						strlen($tmp_ov_val) > 0 && $tmp_ov_val .= ' OR ';
 						if ($ov_val == '') {
 							// interprete this as empty or NULL
@@ -1824,28 +1928,82 @@ class phpMyEdit
 					}
 					$having[] = "($tmp_ov_val)";
 				} else {
-					$having[] = sprintf('%s %s %s', $field, $ov['oper'], $ov['value']);
+					$ov_val = $ov['value'];
+					if ($text) {
+						if (is_callable($ov_val)) {
+							$generatorValues = array_map(fn($value) => $vals[$value] ?? $value, $ov['generatorValues']);
+							$ov_val = $ov_val($generatorValues, $text);
+						} elseif ($vals[$ov_val] ?? null) {
+							$ov_val = $vals[$ov_val];
+						}
+					} elseif (is_callable($ov_val)) {
+						$ov_val = $ov_val($ov['generatorValues']);
+					}
+					$having[] = sprintf('%s %s %s', $field, $ov['oper'], $ov_val);
 				}
 			}
 		}
 
-		// Add any coder specified 'AND' filters
-		if (!$text && $this->having['AND']) {
-			$having[] = $this->having['AND'];
+		$having = implode(' AND ', $having);
+		$userFilter = !empty($having);
+
+		/* Add any coder specified 'OR' filters. */
+		$orFilter = null;
+		if ($userFilter && !empty($this->having['OR'])) {
+			if ($text) {
+				$orFilter = $this->having['OR']['text'] ?? null;
+			} else {
+				$orFilter = $this->having['OR']['sql'] ?? $this->having['OR'];
+			}
+		}
+		if ($having == $orFilter) {
+			$orFilter = null;
 		}
 
-		$having = implode(' AND ', $having);
+		// Add any coder specified 'AND' filters
+		$andFilter = null;
+		if (!empty($this->having['AND'])) {
+			if ($text) {
+				$andFilter = $this->having['AND']['text'] ?? null;
+			} else {
+				$andFilter = $this->having['AND']['sql'] ?? $this->having['AND'];
+			}
+		}
+		if ($having == $andFilter) {
+			$andFilter = null;
+		}
+
+		// we or first and and then
+		if (!empty($orFilter)) {
+			$having = empty($having)
+				? $orFilter
+				: $having . ' OR (' . $orFilter . ')';
+		}
+
+		if (!empty($andFilter)) {
+			if (!empty($having) && !empty($orFilter)) {
+				$having = '(' . $having . ')';
+			}
+			if (!empty($having)) {
+				$having .= ' AND ';
+			}
+			$having .= $andFilter;
+		}
 
 		if ($text) {
-			return str_replace('%', '*', $having);
-		}
-
-		/* Add any coder specified 'OR' filters. If where is still
-		 * empty at this point, then it is implicitly "true", hence
-		 * adding further "OR" filters does not make sense.
-		 */
-		if ($having !== '' && $this->having['OR']) {
-			$having = '('.$having.') OR ('.$this->having['OR'].')';
+			$having = str_replace([
+				'%',
+				' AND ',
+				' OR ',
+				' LIKE ',
+				' FIND_IN_SET ',
+			], [
+				'*',
+				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
+				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
+				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
+				' ' . strtoupper($this->labels['find_in_set'] ?? 'find_in_set') . ' ',
+			], $having);
 		}
 
 		return $having;
@@ -1925,13 +2083,11 @@ class phpMyEdit
 					//error_log(print_r($qo, true));
 				} else {
 					$qf_op = '';
+					$values = [];
 					foreach (array_keys($m) as $key) {
-						$val = '"'.addslashes($m[$key]).'"';
+						$values[] = $m[$key];
 						if ($qf_op == '') {
 							$qf_op	 = ($not ? 'NOT ' : '').'IN';
-							$qf_val	 = $val;
-						} else {
-							$qf_val .= ','.$val;
 						}
 						$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l.'['.rawurlencode($key).']='.rawurlencode($m[$key]);
 					}
@@ -1941,7 +2097,8 @@ class phpMyEdit
 						'fqn' => $this->fqn($k, $fqn_flags),
 						'fqnTemplate' => '%s',
 						'oper' => $qf_op,
-						'value' => "($qf_val)",
+						'value' => fn($values, $text = false) => '("'. implode('","', $text ? $values : array_map(fn($value) => addslashes($value), $values)) . '")',
+						'generatorValues' => $values,
 					];
 				}
 			} else if (isset($mi)) {
@@ -1972,7 +2129,7 @@ class phpMyEdit
 				}
 				if ($this->fdd[$k][self::FDD_SELECT] == 'N') {
 					$afilter = addslashes($m);
-					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
+					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
 					$qo[$k] = [
 						'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
 						'fqnTemplate' => '%s',
@@ -2115,7 +2272,7 @@ class phpMyEdit
 								$afilter = str_replace('%', '.*', $afilter);
 								foreach ($this->fdd[$k][self::FDD_VALUES2] as $key => $val) {
 									if (strlen($val) > 0 && preg_match('/'.$afilter.'/', $val)) {
-										$ids[] = '"'.addslashes($key).'"';
+										$ids[] = $key;
 									}
 								}
 								if (count($ids) > 0) {
@@ -2123,7 +2280,8 @@ class phpMyEdit
 										'fqn' => $sqlKey,
 										'fqnTemplate' => '%s',
 										'oper' => 'IN',
-										'value' => '('.implode(',', $ids).')',
+										'value' => fn($values, $text = false) => '("'.implode('","', $text ? $value : array_map(fn($value) => addslashes($value), $values)).'")',
+										'generatorValues' => $ids,
 									];
 								}
 							}
@@ -2150,7 +2308,7 @@ class phpMyEdit
 								$afilter = str_replace('%', '.*', $afilter);
 								foreach ($this->fdd[$k][self::FDD_VALUES2] as $key => $val) {
 									if (preg_match('/'.$afilter.'/', $val) === false) {
-										$ids[] = '"'.addslashes($key).'"';
+										$ids[] = $key;
 									}
 								}
 								if (count($ids) > 0) {
@@ -2158,7 +2316,8 @@ class phpMyEdit
 										'fqn' => $sqlKey,
 										'fqnTemplate' => '%s',
 										'oper' => 'IN',
-										'value' => '('.implode(',', $ids).')',
+										'value' => fn($values, $text = false) => '("'.implode('","', $text ? $values : array_map(fn($value) => addslashes($value), $values)).'")',
+										'generatorValues' => $ids,
 									];
 								}
 							}
@@ -2169,7 +2328,7 @@ class phpMyEdit
 								// stristr() performs like %M%, so we
 								// implement the same augmented logic here, as described above.
 								if (strlen($m) > 0 && stristr($val, $m)) {
-									$ids[] = '"'.addslashes($key).'"';
+									$ids[] = $key;
 								}
 							}
 							if (count($ids) > 0) {
@@ -2177,7 +2336,8 @@ class phpMyEdit
 									'fqn' => $sqlKey,
 									'fqnTemplate' => '%s',
 									'oper' => 'IN',
-									'value' => '('.implode(',', $ids).')',
+									'value' => fn($values) => '("'.implode('","', array_map(fn($value) => addslashes($value), $values)).'")',
+									'geneatorValues' => $ids,
 								];
 							}
 							break;
@@ -2464,7 +2624,7 @@ class phpMyEdit
 				$data        = false;
 				$titles      = false;
 				if ($this->col_has_values($k)) {
-					$valgrp = $this->set_values($k);
+					// $valgrp = $this->set_values($k);
 					$vals   = $valgrp['values'];
 					$groups = $valgrp['groups'];
 					$titles = $valgrp['titles'];
@@ -4442,10 +4602,10 @@ class phpMyEdit
 				if ($this->fdd[$fd][self::FDD_SELECT] == 'N') {
 					$css_comp_class_name = $this->getCSSclass('comp-filter', null, null, $css_postfix);
 
-					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
+					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
 										   $css_comp_class_name,
-										   $this->comp_ops, null, null, null, $mc);
+										   self::COMP_OPS, null, null, null, $mc);
 				}
 				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
@@ -4517,13 +4677,13 @@ class phpMyEdit
 			echo '<span class="',$css_class_name,' label">',$this->labels['Filter'],':</span>';
 			echo $this->htmlSubmit('sw', 'Clear', $css_clear, $disabled);
 			echo "</td>\n";
-			$htmlQuery = $this->enc($text_query);
+			$htmlQuery = $text_query;
 			$shortHtmlQuery = preg_replace('/`PMEtable([0-9]+)`[.]/', 't$1.', $htmlQuery);
 			$shortHtmlQuery = preg_replace('/`PMEjoin([0-9]+)`[.]/', 'j$1.', $shortHtmlQuery);
 			// title="'.$htmlQuery.'"
 			echo '<td class="',$css_class_name,' ',$css_data,'" colspan="',$this->num_fields_displayed,'">';
 			echo '<span class="',$css_class_name,' label">',$this->labels['Current Query'],':</span>';
-			echo '<span class="',$css_class_name,' info" title="',$htmlQuery,'">',$shortHtmlQuery,'</span>';
+			echo '<span class="',$css_class_name,' info" title="',$this->enc($htmlQuery),'">',$shortHtmlQuery,'</span>';
 			echo '</td></tr>',"\n";
 		}
 	} /* }}} */
@@ -6617,9 +6777,17 @@ class phpMyEdit
 					continue;
 				}
 				if (is_array($filter)) {
-					$this->filters[$junctor] = implode(' '.$junctor.' ', $filter);
+					$this->filters[$junctor]['sql'] = implode(
+						' ' . $junctor . ' ',
+						array_map(fn($value) => $value['sql'] ?? $value, $filter)
+					);
+					$this->filters[$junctor]['text'] = implode(
+						' ' . $junctor . ' ',
+						array_filter(array_map(fn($value) => $value['text'] ?? null,  $filter))
+					);
 				} else {
-					$this->filters[$junctor] = $filter;
+					$this->filters[$junctor]['sql'] = $filter;
+					$this->filters[$junctor]['text'] = null;
 				}
 			}
 		}
@@ -6646,9 +6814,17 @@ class phpMyEdit
 					continue;
 				}
 				if (is_array($filter)) {
-					$this->having[$junctor] = implode(' '.$junctor.' ', $filter);
+					$this->having[$junctor]['sql'] = implode(
+						' ' . $junctor . ' ',
+						array_map(fn($value) => $value['sql'] ?? $value, $filter)
+					);
+					$this->having[$junctor]['text'] = implode(
+						' ' . $junctor . ' ',
+						array_filter(array_map(fn($value) => $value['text'] ?? null,  $filter))
+					);
 				} else {
-					$this->having[$junctor] = $filter;
+					$this->having[$junctor]['sql'] = $filter;
+					$this->having[$junctor]['text'] = null;
 				}
 			}
 		}

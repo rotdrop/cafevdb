@@ -37,6 +37,11 @@ import {
   data as pmeData,
   formSelector as pmeFormSelector,
 } from './pme-selectors.js';
+import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.js';
 
 require('project-payments.scss');
 require('project-participant-fields-display.scss');
@@ -89,9 +94,24 @@ const projectPaymentPopup = function(containerSel, post) {
   PHPMyEdit.tableDialogOpen($.extend({}, tableOptions, post));
 };
 
+const backgroundDecryption = function(container) {
+  const $container = PHPMyEdit.container(container);
+  rejectDecryptionPromise();
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.done((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+  lazyDecrypt($container);
+};
+
 const ready = function(selector, pmeParameters, resizeCB) {
 
   const $container = $(selector);
+
+  if (pmeParameters.reason !== 'dialogClose') {
+    backgroundDecryption($container);
+  }
 
   if (pmeParameters.reason === 'dialogOpen') {
 
@@ -294,6 +314,7 @@ const documentReady = function() {
 };
 
 export {
+  backgroundDecryption,
   ready,
   documentReady,
 };

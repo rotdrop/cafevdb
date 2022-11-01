@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ use OCP\ILogger;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 
+/** Base for file-system related IUndoable implementations. */
 abstract class AbstractFileSystemUndoable extends AbstractUndoable
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -44,7 +45,8 @@ abstract class AbstractFileSystemUndoable extends AbstractUndoable
   /** @var UserStorage */
   protected $userStorage;
 
-  public function initialize(IAppContainer $appContainer)
+  /** {@inheritdoc} */
+  public function initialize(IAppContainer $appContainer):void
   {
     parent::initialize($appContainer);
     $this->userStorage = $this->appContainer->get(UserStorage::class);
@@ -53,16 +55,28 @@ abstract class AbstractFileSystemUndoable extends AbstractUndoable
     $this->logger = $this->appContainer->get(ILogger::class);
   }
 
-  /** Remove multipled slashes */
-  static protected function normalizePath($path)
+  /**
+   * Remove multipled slashes.
+   *
+   * @param string $path
+   *
+   * @return string
+   */
+  protected static function normalizePath(string $path):string
   {
     return rtrim(
       preg_replace('|'.UserStorage::PATH_SEP.'+|', UserStorage::PATH_SEP, $path),
       UserStorage::PATH_SEP);
   }
 
-  /** Create a new unique name for renaming */
-  protected function renamedName($path)
+  /**
+   * Create a new unique name for renaming.
+   *
+   * @param string $path
+   *
+   * @return string
+   */
+  protected function renamedName(string $path):string
   {
     $time = $this->timeFactory->getTime();
     $pathInfo = pathinfo($path);
@@ -71,11 +85,4 @@ abstract class AbstractFileSystemUndoable extends AbstractUndoable
       . $pathInfo['filename'] . '-renamed-' . $time . '.' . $pathInfo['extension'];
     return $renamed;
   }
-
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

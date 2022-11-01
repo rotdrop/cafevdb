@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,55 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Common\Util;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
-
+/** Entity-repository for file enitites. */
 class FilesRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
-  use \OCA\CAFEVDB\Traits\DateTimeTrait;
-
-  protected function fetchAggregate(array $criteria, string $function, string $field):\DateTimeInterface
-  {
-    $qb = $this->createQueryBuilder('f');
-    $qb->select($function . '(' . 'f.' . $field . ')');
-    if (!empty($criteria)) {
-      $qb->groupBy('f.id');
-      $andX = $qb->expr()->andX();
-      foreach ($criteria as $key => &$value) {
-        $value = str_replace('*', '%', $value);
-        if (strpos($value, '%') !== false) {
-          $andX->add($qb->expr()->like('m'.'.'.$key, ':'.$key));
-        } else {
-          $andX->add($qb->expr()->eq('m'.'.'.$key, ':'.$key));
-        }
-      }
-      $qb->where($andX);
-      foreach ($criteria as $key => $value) {
-        $qb->setParameter($key, $value);
-      }
-    }
-    $date = $qb->getQuery()->getSingleScalarResult();
-    if (empty($date)) {
-      return (new \DateTimeImmutable)->setTimestamp(0);
-    }
-    return self::convertToDateTime($date);
-  }
-
-  public function fetchLatestModifiedTime($criteria = []):\DateTimeInterface
-  {
-    return $this->fetchAggregate($criteria, 'MAX', 'updated');
-  }
-
-  public function fetchLatestCreatedTime($criteria = []):\DateTimeInterface
-  {
-    return $this->fetchAggregate($criteria, 'MAX', 'created');
-  }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

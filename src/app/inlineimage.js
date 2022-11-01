@@ -630,7 +630,7 @@ const photoPopup = function(image) {
   const $image = $(image);
   const $imgClone = $('<img class="' + $image.attr('class') + '" src="">');
   $imgClone.on('load', onPopupLoad);
-  $imgClone.attr('src', $image.attr('src').replace(/&preview=[0-9]+/i, ''));
+  $imgClone.attr('src', $image.attr('src').replace(/&previewWidth=[0-9]+/i, ''));
 
 };
 

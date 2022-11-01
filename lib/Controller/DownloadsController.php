@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,10 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Common\Util;
 
+/**
+ * AJAX end-points for download requests independent from the cloud
+ * file-system.
+ */
 class DownloadsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -50,11 +54,12 @@ class DownloadsController extends Controller
   public const OBJECT_COLLECTION = 'collection';
   public const COLLECTION_ITEMS = 'items';
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
-    , EntityManager $entityManager
+    $appName,
+    IRequest $request,
+    ConfigService $configService,
+    EntityManager $entityManager,
   ) {
 
     parent::__construct($appName, $request);
@@ -63,13 +68,14 @@ class DownloadsController extends Controller
     $this->entityManager = $entityManager;
     $this->l = $this->l10N();
   }
+  // phpcs:enable
 
   /**
    * Fetch something and return it as download.
    *
    * @param string $section Origin of the download. Currently only
    * self::SECTION_DATABASE and self::SECTION_FILECACHE for data-base
-   * Entities\File objects and cache-objects of the per-user file-cache
+   * Entities\File objects and cache-objects of the per-user file-cache.
    *
    * @param string $object Something identifying the object in the
    * context of $section. If $object == self::OBJECT_COLLECTION the
@@ -79,18 +85,18 @@ class DownloadsController extends Controller
    * $collectionName.
    *
    * @param array $items Collection items if $object equals
-   * self::OBJECT_COLLECTION
+   * self::OBJECT_COLLECTION.
    *
-   * @param null|string $fileName Optional filename for the download
+   * @param null|string $fileName Optional filename for the download.
    *
-   * @return mixed \OCP\Response Something derived from \OCP\Response
+   * @return mixed \OCP\Response Something derived from \OCP\Response.
    *
    * @NoAdminRequired
    */
   public function fetch(string $section, string $object, array $items = [], ?string $fileName = null)
   {
     switch ($section) {
-      case self::SECTION_DATABASE: {
+      case self::SECTION_DATABASE:
         if ($object == self::OBJECT_COLLECTION) {
           $this->logInfo('ITEMS ' . print_r($items, true));
 
@@ -105,7 +111,7 @@ class DownloadsController extends Controller
         } else {
           $fileId = $object;
           /** @var Entities\File $file */
-          $file = $this->getDatabaseRepository(Entities\File::class)->find($fileId);
+          $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($fileId);
           if (empty($file)) {
             return self::grumble($this->l->t('File width id %d not found in database-storage.', $fileId));
           }
@@ -118,8 +124,7 @@ class DownloadsController extends Controller
           }
           return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
         }
-      }
-      case self::SECTION_FILECACHE: {
+      case self::SECTION_FILECACHE:
         $cacheKey = $object;
         /** @var OCP\ICache $fileCache */
         $fileCache = $this->di(\OCP\ICache::class);
@@ -145,7 +150,8 @@ class DownloadsController extends Controller
           ]) . '.' . Util::fileExtensionFromMimeType($mimeType);
         }
         return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
-      }
+      default:
+        break;
     }
     return self::grumble($this->l->t('Unknown Request'));
   }
@@ -153,17 +159,17 @@ class DownloadsController extends Controller
   /**
    * Fetch something and return it as download.
    *
-   * @param string $section Cosmetics, for grouping purposes
+   * @param string $section Cosmetics, for grouping purposes.
    *
    * @param string $object Something identifying the object in the
    * context of $section.
    *
    * @param array $items Collection items if $section equals
-   * self::OBJECT_COLLECTION
+   * self::OBJECT_COLLECTION.
    *
-   * @param null|string $fileName Optional filename for the download
+   * @param null|string $fileName Optional filename for the download.
    *
-   * @return mixed \OCP\Response Something derived from \OCP\Response
+   * @return mixed \OCP\Response Something derived from \OCP\Response.
    *
    * @NoAdminRequired
    */
@@ -171,10 +177,4 @@ class DownloadsController extends Controller
   {
     return $this->fetch($section, $object, $items, $fileName);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

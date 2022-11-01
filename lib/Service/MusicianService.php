@@ -269,7 +269,7 @@ class MusicianService
 
     $emailAddress = $this->generateDisabledEmailAddress($musician);
     $musician->setEmailAddresses(new Collections\ArrayCollection);
-    $musician->setEmailAddress($emailAddress);
+    $musician->setEmail($emailAddress);
 
     $this->persist($musician);
     $this->flush();

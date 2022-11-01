@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,21 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use NumberFormatter;
+use DateTimeImmutable;
+use DateTimeZone;
+use InvalidArgumentException;
+
 use League\HTMLToMarkdown\HtmlConverter as HtmlToMarkDown;
 
+use OCP\IL10N;
+
+/** General static utility routines. */
 class Util
 {
-  use \OCA\CAFEVDB\Traits\DateTimeTrait { convertToDateTime as public; }
+  use \OCA\CAFEVDB\Traits\DateTimeTrait {
+    convertToDateTime as public;
+  }
 
   private static $markDownConverter;
 
@@ -45,14 +55,19 @@ class Util
     'application/pdf' => 'pdf',
   ];
 
-  public static function fileExtensionFromMimeType($mimeType)
+  /**
+   * @param string $mimeType
+   *
+   * @return null|string
+   */
+  public static function fileExtensionFromMimeType(string $mimeType):?string
   {
     if (!empty(self::FILE_EXTENSIONS_BY_MIME_TYPE[$mimeType])) {
       return self::FILE_EXTENSIONS_BY_MIME_TYPE[$mimeType];
     }
     // as a wild guess we return anything after the slash if it is at
     // most 4 characters.
-    list($first, $second) = explode('/', $mimeType);
+    list(/* $first*/, $second) = explode('/', $mimeType);
     if (strlen($second) <= 4) {
       return $second;
     }
@@ -64,11 +79,11 @@ class Util
    * override the values of previous arguments and numeric keys are
    * just appended.
    *
-   * @param mxied ...$arrays
+   * @param array ...$arrays
    *
    * @return array
    */
-  public static function arrayMergeRecursive(...$arrays):array
+  public static function arrayMergeRecursive(array ...$arrays):array
   {
     if (count($arrays) == 0) {
       return [];
@@ -81,8 +96,16 @@ class Util
     return $result;
   }
 
-  /** Inner work-horse for arrayMergeRecursive. */
-  private static function arrayMergeTwoRecursive($dest, $override)
+  /**
+   * Inner work-horse for arrayMergeRecursive.
+   *
+   * @param array $dest
+   *
+   * @param array $override
+   *
+   * @return array
+   */
+  private static function arrayMergeTwoRecursive(array $dest, array $override):array
   {
     foreach ($override as $key => $value) {
       if (is_integer($key)) {
@@ -96,15 +119,36 @@ class Util
     return $dest;
   }
 
-  /** Array-map including keys. */
-  public static function arrayMapAssoc(callable $f, array $a)
+  /**
+   * Array-map including keys.
+   *
+   * @param callable $callback
+   *
+   * @param array $a
+   *
+   * @return array
+   */
+  public static function arrayMapAssoc(callable $callback, array $a):array
   {
-    return array_column(array_map($f, array_keys($a), $a), 1, 0);
+    return array_column(array_map($callback, array_keys($a), $a), 1, 0);
   }
 
-  /** Normalize spaces and commas after and before spaces. */
-  public static function normalizeSpaces($name, $singleSpace = ' ', $stripLinebreaks = false)
+  /**
+   * Normalize spaces and commas after and before spaces.
+   *
+   * @param null|string $name
+   *
+   * @param string $singleSpace
+   *
+   * @param bool $stripLinebreaks
+   *
+   *  @return null|string
+   */
+  public static function normalizeSpaces(?string $name, string $singleSpace = ' ', bool $stripLinebreaks = false):?string
   {
+    if ($name === null) {
+      return null;
+    }
     $name = str_replace("\xc2\xa0", "\x20", $name);
     $name = trim($name);
     $name = str_replace("\r\n", "\n", $name);
@@ -117,24 +161,45 @@ class Util
     return $name;
   }
 
-  /** Remove all whitespace */
-  public static function removeSpaces($name)
+  /**
+   * Remove all whitespace
+   *
+   * @param null|string $name
+   *
+   * @return null|string
+   */
+  public static function removeSpaces(?string $name):?string
   {
-    return self:: normalizeSpaces($name, '');
+    if ($name === null) {
+      return null;
+    }
+    return self::normalizeSpaces($name, '');
   }
 
-  /**Wrapper around htmlspecialchars(); avoid double encoding, standard
+  /**
+   * Wrapper around htmlspecialchars(); avoid double encoding, standard
    * options, UTF-8 for stone-age PHP versions.
+   *
+   * @param string $string
+   *
+   * @param mixed $ent
+   *
+   * @param bool $doubleEncode
+   *
+   * @return string
    */
-  public static function htmlEscape($string, $ent = null, $double_encode = false)
+  public static function htmlEscape(?string $string, mixed $ent = null, bool $doubleEncode = false):string
   {
+    if (empty($string)) {
+      return '';
+    }
     if (!$ent) {
       $ent = ENT_COMPAT;
       if (defined('ENT_HTML401')) {
           $ent |= ENT_HTML401;
       }
     }
-    return htmlspecialchars($string, $ent, 'UTF-8', $double_encode);
+    return htmlspecialchars($string, $ent, 'UTF-8', $doubleEncode);
   }
 
   /**
@@ -156,7 +221,14 @@ class Util
     }
   }
 
-  public static function arraySliceKeys($array, $keys = null)
+  /**
+   * @param mixed $array
+   *
+   * @param mixed $keys
+   *
+   * @return array
+   */
+  public static function arraySliceKeys(mixed $array, mixed $keys = null):array
   {
     if ($keys === null) {
       return is_array($array) ? $array : [];
@@ -188,7 +260,7 @@ class Util
    *
    * @return array
    */
-  static public function explode(string $delim, ?string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\'):array
+  public static function explode(string $delim, ?string $string, int $flags = self::OMIT_EMPTY_FIELDS|self::ESCAPED, string $escape = '\\'):array
   {
     if (empty($flags)) {
       return explode($delim, $string);
@@ -207,9 +279,23 @@ class Util
   }
 
   /**
-   * Counter-part to self::explode()
+   * Counter-part to self::explode().
+   *
+   * @param string $delim The delimiter string.
+   *
+   * @param array $array
+   *
+   * @param int $flags Default is self::OMIT_EMPTY_FIELDS|self::ESCAPED
+   * - self::OMIT_EMPTY_FIELDS Omit empty fields from the output array
+   * - self::TRIM Trim white-space around the delimiter
+   * - self::ESCAPED Ignore escaped delimiters and replace escaped delimiters
+   *   in the output array.. See paramterer $escape.
+   *
+   * @param string $escape The escape character when self::ESCAPED is set.
+   *
+   * @return string
    */
-  static public function implode(string $delim, array $array, int $flags = self::ESCAPED, string $escape = '\\'):string
+  public static function implode(string $delim, array $array, int $flags = self::ESCAPED, string $escape = '\\'):string
   {
     if ($flags & self::ESCAPED) {
       $array = self::escapeDelimiter($array, $delim, $escape);
@@ -217,7 +303,7 @@ class Util
     return implode($delim, $array);
   }
 
-  /*
+  /**
    * Escape delimiters in the given value.
    *
    * @param string|array $value
@@ -228,7 +314,7 @@ class Util
    *
    * @return string|array
    */
-  static public function escapeDelimiter($value, string $delim, string $escape = '\\')
+  public static function escapeDelimiter($value, string $delim, string $escape = '\\')
   {
     return str_replace(
         [ $escape, $delim ],
@@ -236,7 +322,7 @@ class Util
         $value);
   }
 
-  /*
+  /**
    * Un-escape delimiters in the given value.
    *
    * @param string|array $value
@@ -247,7 +333,7 @@ class Util
    *
    * @return string|array
    */
-  static public function unescapeDelimiter($value, string $delim, string $escape = '\\')
+  public static function unescapeDelimiter($value, string $delim, string $escape = '\\')
   {
     return str_replace(
       [ $escape . $escape, $escape . $delim ],
@@ -272,8 +358,20 @@ class Util
    *
    * Only the first $keyDelimiter is taken into account. This means
    * that it is not necessary to explode the key-delimiter.
+   *
+   * @param null|string $data
+   *
+   * @param mixed $default
+   *
+   * @param string $delimiter
+   *
+   * @param string $keyDelimiter
+   *
+   * @param string $escapeChar
+   *
+   * @return array
    */
-  static public function explodeIndexed(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':', string $escapeChar = '\\'):array
+  public static function explodeIndexed(?string $data, mixed $default = null, string $delimiter = ',', string $keyDelimiter = ':', string $escapeChar = '\\'):array
   {
     if (empty($data)) {
       return [];
@@ -304,8 +402,18 @@ class Util
    *   ...
    * ]
    * ```
+   *
+   * @param null|string $data
+   *
+   * @param mixed $default
+   *
+   * @param string $delimiter
+   *
+   * @param string $keyDelimiter
+   *
+   * @return array
    */
-  static public function explodeIndexedMulti(?string $data, $default = null, string $delimiter = ',', string $keyDelimiter = ':'):array
+  public static function explodeIndexedMulti(?string $data, mixed $default = null, string $delimiter = ',', string $keyDelimiter = ':'):array
   {
     $matrix = [];
     foreach (self::explode($delimiter, $data, self::TRIM|self::OMIT_EMPTY_FIELDS) as $item) {
@@ -320,8 +428,16 @@ class Util
 
   /**
    * Undo self::explodeIndexedMulti().
+   *
+   * @param null|array $data
+   *
+   * @param string $delimiter
+   *
+   * @param string $keyDelimiter
+   *
+   * @return string
    */
-  static public function implodeIndexedMulti(?array $data, string $delimiter = ',', string $keyDelimiter = ':'):string
+  public static function implodeIndexedMulti(?array $data, string $delimiter = ',', string $keyDelimiter = ':'):string
   {
     if (empty($data)) {
       return '';
@@ -363,19 +479,24 @@ class Util
    *
    * @param int $bytes The raw value in bytes.
    *
-   * @param null|string $locale Defaults to 'en_US_POSIX'
+   * @param null|string $locale Defaults to 'en_US_POSIX'.
    *
    * @param bool $binary Use MiB etc. if true, other decimal system.
+   *
+   * @param int $digits
+   *
+   * @return string
    */
-  public static function humanFileSize(int $bytes, string $locale = null, bool $binary = true, int $digits = 2)
+  public static function humanFileSize(int $bytes, ?string $locale = null, bool $binary = true, int $digits = 2):string
   {
     $prefix = [ '', 'K', 'M', 'G', 'T', 'P', 'E', 'Z' ];
     $locale = $locale ?? 'en_US_POSIX';
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+    $fmt = new NumberFormatter($locale, \NumberFormatter::DECIMAL);
     $multiplier = $binary ? 1024.0 : 1000.0;
     $bytes = (float)$bytes;
     $exp = 0;
-    while ($exp < count($prefix) && $bytes > $multiplier) {
+    $prefixCount = count($prefix);
+    while ($exp < $prefixCount && $bytes > $multiplier) {
       ++$exp;
       $bytes /= $multiplier;
     }
@@ -387,8 +508,20 @@ class Util
     return $fmt->format(round($bytes, $digits)) . ' ' . $postfix;
   }
 
-  /**Format the right way (tm). */
-  public static function strftime($format, $timestamp = null, $tz = null, $locale = null)
+  /**
+   * Format the right way (tm).
+   *
+   * @param string $format
+   *
+   * @param null|int $timestamp
+   *
+   * @param null|string $tz
+   *
+   * @param null|string $locale
+   *
+   * @return string|false
+   */
+  public static function strftime(string $format, ?int $timestamp = null, ?string $tz = null, ?string $locale = null)
   {
     $oldtz = date_default_timezone_get();
     if ($tz) {
@@ -474,7 +607,7 @@ class Util
           }
         }
       } while ($excess > 0 && $shortened);
-      $string = Util::dashesToCamelCase($parts, capitalizeFirstCharacter: true, separator: ' ');
+      $string = Util::dashesToCamelCase(implode(' ', $parts), capitalizeFirstCharacter: true, dashes: ' ');
     }
 
     return $string;
@@ -492,10 +625,12 @@ class Util
    * </pre>
    *
    * @param string $string
-   * @param array $options
-   * @param string|array
+   *
+   * @param null|array $options
+   *
+   * @return mixed
    */
-  public static function hexDump($string, array $options = null)
+  public static function hexDump(string $string, ?array $options = null)
   {
     if (!is_scalar($string)) {
       throw new InvalidArgumentException('$string argument must be a string');
@@ -503,33 +638,32 @@ class Util
     if (!is_array($options)) {
       $options = array();
     }
-    $line_sep       = isset($options['line_sep'])   ? $options['line_sep']          : "\n";
-    $bytes_per_line = @$options['bytes_per_line']   ? $options['bytes_per_line']    : 16;
-    $pad_char       = isset($options['pad_char'])   ? $options['pad_char']          : '.'; # padding for non-readable characters
+    $lineSep     = isset($options['line_sep']) ? $options['line_sep']          : "\n";
+    $bytesPerLine = $options['bytes_per_line']  ? $options['bytes_per_line']    : 16;
+    $padChar     = isset($options['pad_char']) ? $options['pad_char']          : '.'; // padding for non-readable characters
 
-    $text_lines = str_split($string, $bytes_per_line);
-    $hex_lines  = str_split(bin2hex($string), $bytes_per_line * 2);
+    $textLines = str_split($string, $bytesPerLine);
+    $hexLines  = str_split(bin2hex($string), $bytesPerLine * 2);
 
     $offset = 0;
     $output = array();
-    $bytes_per_line_div_2 = (int)($bytes_per_line / 2);
-    foreach ($hex_lines as $i => $hex_line) {
-      $text_line = $text_lines[$i];
+    $bytesPerLineDiv2 = (int)($bytesPerLine / 2);
+    foreach ($hexLines as $i => $hexLine) {
+      $textLine = $textLines[$i];
       $output [] =
-                sprintf('%08X',$offset) . '  ' .
+                sprintf('%08X', $offset) . '  ' .
                 str_pad(
-                  strlen($text_line) > $bytes_per_line_div_2
+                  strlen($textLine) > $bytesPerLineDiv2
                   ?
-                  implode(' ', str_split(substr($hex_line,0,$bytes_per_line),2)) . '  ' .
-                  implode(' ', str_split(substr($hex_line,$bytes_per_line),2))
+                  implode(' ', str_split(substr($hexLine, 0, $bytesPerLine), 2)) . '  ' .
+                  implode(' ', str_split(substr($hexLine, $bytesPerLine), 2))
                   :
-                  implode(' ', str_split($hex_line,2))
-                  , $bytes_per_line * 3) .
-                '  |' . preg_replace('/[^\x20-\x7E]/', $pad_char, $text_line) . '|';
-      $offset += $bytes_per_line;
+                  implode(' ', str_split($hexLine, 2)), $bytesPerLine * 3) .
+        '  |' . preg_replace('/[^\x20-\x7E]/', $padChar, $textLine) . '|';
+      $offset += $bytesPerLine;
     }
-    $output []= sprintf('%08X', strlen($string));
-    return @$options['want_array'] ? $output : join($line_sep, $output) . $line_sep;
+    $output[] = sprintf('%08X', strlen($string));
+    return $options['want_array'] ? $output : join($lineSep, $output) . $lineSep;
   }
 
   /**
@@ -543,7 +677,7 @@ class Util
    * the values need not be unique this can be any non-negative
    * integer.
    */
-  public static function unsetValue(array &$hayStack, $value):int
+  public static function unsetValue(array &$hayStack, mixed $value):int
   {
     $numUnset = 0;
     while (($key = array_search($value, $hayStack)) !== false) {
@@ -560,15 +694,15 @@ class Util
    * by either pass-through to the return value or converting it to a
    * \DateTimeImmutable.
    *
-   * @param string|\DateTimeImmutable|\DateTime|\DateTimeInterface TBD.
+   * @param string|\DateTimeImmutable|\DateTime|\DateTimeInterface $arg1
    *
-   * @param null|string|\DateTimeZone TBD.
+   * @param null|string|\DateTimeZone $arg2
    *
-   * @param null|string|\DateTimeZone TBD.
+   * @param null|string|\DateTimeZone $arg3
    *
-   * @return \DateTimeImmutable TBD.
+   * @return DateTimeImmutable TBD.
    */
-  public static function dateTime($arg1 = "now", $arg2 = null, $arg3 = null):\DateTimeImmutable
+  public static function dateTime($arg1 = "now", $arg2 = null, $arg3 = null):DateTimeImmutable
   {
     if ($arg1 instanceof \DateTimeImmutable) {
       if ($arg2 !== null || $arg3 !== null) {
@@ -590,17 +724,17 @@ class Util
     }
     if (is_string($arg1) && is_string($arg2)) {
       return \DateTimeImmutable::createFromFormat($arg1, $arg2, $arg3);
-    } else if ($arg2 === null && $arg3 === null) {
+    } elseif ($arg2 === null && $arg3 === null) {
       $timeStamp = filter_var($arg1, FILTER_VALIDATE_INT, [ 'min' => 0 ]);
       if ($timeStamp !== false) {
-        return (new \DateTimeImmutable())->setTimestamp($timeStamp);
-      } else if (is_string($arg1)) {
-         return new \DateTimeImmutable($arg1);
+        return (new DateTimeImmutable())->setTimestamp($timeStamp);
+      } elseif (is_string($arg1)) {
+         return new DateTimeImmutable($arg1);
       }
-    } else if ($arg3 === null) {
-      return new \DateTimeImmutable($arg1, $arg2);
+    } elseif ($arg3 === null) {
+      return new DateTimeImmutable($arg1, $arg2);
     }
-    throw new \InvalidArgumentException('Unsupported arguments');
+    throw new InvalidArgumentException('Unsupported arguments');
   }
 
   /**
@@ -620,11 +754,14 @@ class Util
    *   ],
    * ]
    * ```
+   *
+   * @param array $files
+   *
+   * @return array
    */
-  public static function transposeArray(array $files)
+  public static function transposeArray(array $files):array
   {
     $result = [];
-    $fileKeys = array_keys($files);
     foreach ($files as $key => $values) {
       if (!is_array($values)) {
         $values = [ $values ];
@@ -636,50 +773,38 @@ class Util
     return $result;
   }
 
-  public static function fileUploadError(int $code, \OCP\IL10N $l)
+  /**
+   * Decode an file-upload error into some "readable" error string.
+   *
+   * @param int $code
+   *
+   * @param IL10N $l
+   *
+   * @return string
+   */
+  public static function fileUploadError(int $code, IL10N $l):string
   {
     switch ($code) {
-    case UPLOAD_ERR_OK:
-      return $l->t('There is no error, the file uploaded with success');
-    case UPLOAD_ERR_INI_SIZE:
-      return $l->t('The uploaded file exceeds the upload_max_filesize directive in php.ini: %s',
-                   ini_get('upload_max_filesize'));
-    case UPLOAD_ERR_FORM_SIZE:
-      return $l->t('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form');
-    case UPLOAD_ERR_PARTIAL:
-      return $l->t('The uploaded file was only partially uploaded');
-    case UPLOAD_ERR_NO_FILE:
-      return $l->t('No file was uploaded');
-    case UPLOAD_ERR_NO_TMP_DIR:
-      return $l->t('Missing a temporary folder');
-    case UPLOAD_ERR_CANT_WRITE:
-      return $l->t('Failed to write to disk');
-    case UPLOAD_ERR_EXTENSION:
-      return $l->t('A PHP extension stopped the file upload.');
-    default:
-      return $l->t('Unknown upload error');
+      case UPLOAD_ERR_OK:
+        return $l->t('There is no error, the file uploaded with success');
+      case UPLOAD_ERR_INI_SIZE:
+        return $l->t(
+          'The uploaded file exceeds the upload_max_filesize directive in php.ini: %s',
+          ini_get('upload_max_filesize'));
+      case UPLOAD_ERR_FORM_SIZE:
+        return $l->t('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form');
+      case UPLOAD_ERR_PARTIAL:
+        return $l->t('The uploaded file was only partially uploaded');
+      case UPLOAD_ERR_NO_FILE:
+        return $l->t('No file was uploaded');
+      case UPLOAD_ERR_NO_TMP_DIR:
+        return $l->t('Missing a temporary folder');
+      case UPLOAD_ERR_CANT_WRITE:
+        return $l->t('Failed to write to disk');
+      case UPLOAD_ERR_EXTENSION:
+        return $l->t('A PHP extension stopped the file upload.');
+      default:
+        return $l->t('Unknown upload error');
     }
   }
-
-  static public function getEasterSunday($year = null, ?\DateTimeZone $timeZone = null)
-  {
-    if (empty($year)) {
-      $year = date('Y');
-    }
-    if (empty($timeZone)) {
-      $timeZone = new \DateTimeZone('UTC');
-    }
-    $base = new \DateTimeImmutable($year . '-03-21', $timeZone);
-    $days = easter_days($year);
-
-    $easterSunday = $base->add(new \DateInterval("P{$days}D"));
-
-    return $easterSunday;
-  }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

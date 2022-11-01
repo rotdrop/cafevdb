@@ -500,6 +500,18 @@ field.'),
           'writers' => $this->l->t('Members of these Cloud user-groups are allowed to change the
 field. If left blank, every logged in user is allowed to change this field.'),
 
+          'show-data' => $this->l->t('Each option has an optional data-entry attached to it. Normally, this
+is only useful for surcharge options, where the "data-entry" just is
+the extra-charge amount associated to the option. Still, if you feel a
+need to view the data-items also for non-surcharge options, then just
+click here.'),
+
+          'show-deleted' => $this->l->t('Options already attached to musicians can no longer be deleted in
+order to prevent data-loss in the underlying data-base. It is even
+possible to recover those options by checking this checkbox in order to make them visible and
+clicking the "recover" button to the left of each deleted entry.'),
+
+
           'display' => [
             'revert-to-default' => $this->l->t('Revert this setting to its default value.'),
             'attachment' => [
@@ -541,6 +553,7 @@ field. If left blank, every logged in user is allowed to change this field.'),
           'instrument-holder' => $this->l->t('The person who actually uses or "has" this instrument or insured object.'),
           'bill-to-party' => $this->l->t('The person who pays the insurance fees. If left blank then the instrument-holder receives the bills.'),
           'instrument-owner' => $this->l->t('The person who has the legal possession of this instrument. If left blank then it is assumed that the instrument holder is also the instrument owner.'),
+          'deleted' => $this->l->t('End of insurance, either because the musician has with-drawn the element from the instrument insurances or maybe because the instrument got damaged or otherwise lost. In order to "undelete" this item please enable "expert-mode" in the settings-menu in the side-bar, reload the page and just delete the date.'),
         ],
         'project-payments' => [
           'project-balance' => [
@@ -649,17 +662,6 @@ needed, then please enter those in the <strong>Tooltip</strong> field in the
       'participant-fields-new-tab' => $this->l->t('Define a new table-tab. In order to do so, first deselect any
 predefined tab in the select box above, then enter the new name. The
 new tab-name will also be available as tab-option for other fields.'),
-
-      'participant-fields-show-data' => $this->l->t('Each option has an optional data-entry attached to it. Normally, this
-is only useful for surcharge options, where the "data-entry" just is
-the extra-charge amount associated to the option. Still, if you feel a
-need to view the data-items also for non-surcharge options, then just
-click here.'),
-
-      'participant-fields-show-deleted' => $this->l->t('Options already attached to musicians can no longer be deleted in
-order to prevent data-loss in the underlying data-base. It is even
-possible to recover those options by checking this checkbox in order to make them visible and
-clicking the "recover" button to the left of each deleted entry.'),
 
       'participant-fields-tab' => $this->l->t('Define the table-tab this entry should be grouped with. It is also
 possible to define new table-tabs. In order to do so, first deselect
@@ -1189,17 +1191,28 @@ sent us a signed registration form. It is left blannk otherwise.'),
         'show-deleted' => $this->l->t('Show also the disabled bank accounts, if any.'),
       ],
 
-      'sepa-debit-mandate-active' => $this->l->t('Used SEPA mandates are not deleted from the DB, but just flagged as
-"inactive" if they expire or are manually pseudo-deleted.'),
-
-      'sepa-instant-validation' => $this->l->t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
-
-      'sepa-mandate-expired' => $this->l->t(
-        'This debit-mandate has not been used for more than %d month and
+      'sepa-bank-data-form' => [
+        'instant-validation' => $this->l->t('Toggle instant validation and automatic computation of derived bank account data. If instant validation is disabled, the final values will still be validated and an error message will appear if an error is detected. It is only possible to save of store the debit-mandate if instant validation is enabled.'),
+        'debit-mandate' => [
+          'expired' => $this->l->t(
+            'This debit-mandate has not been used for more than %d month and
 therefore is expired and cannot be used any longer. Pleae delete it
 and contact the treasurer for further instructions.',
-        FinanceService::SEPA_MANDATE_EXPIRE_MONTHS
-      ),
+            FinanceService::SEPA_MANDATE_EXPIRE_MONTHS
+          ),
+          'only-for-project' => $this->l->t('Use this debit-mandate only for the given project. Note that debit-mandates of club-members are always general debit-mandates for all receivables.'),
+          'for-all-receivables' => $this->l->t('Use this as a general debit-mandate for all receivables of this person.'),
+          'download' => [
+            'default' => $this->l->t('Download the existing signed hard-copy of the debit mandate.'),
+            'form' => $this->l->t('Download a prefilled debit-mandate form with the name and bank-account of this person, suitable to be handed to the person in order to be signed. Note that the email-form has also access to such pre-filled debit-mandates which can be attached to personalized mail-merged emails.'),
+          ],
+          'upload' => [
+            'from-client' => $this->l->t('Upload a signed hard-copy of the debit-mandate from the computer.'),
+            'from-cloud' => $this->l->t('Choose a signed hard-copy of the debit-mandate from the cloud file-system.'),
+            'later' => $this->l->t('For your inconvenience you have to check this box if you want skip the upload-step and store the mandate-data without a signed hard-copy.'),
+          ],
+        ],
+      ],
 
       'sharedfolder' => $this->l->t('Folder shared by the orchestra group.'),
       'postboxfolder' => $this->l->t('Public upload "postbox" folder. Meant for anonymous public uploads of larger files.'),

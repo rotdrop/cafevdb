@@ -172,16 +172,22 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param Entities\SepaDebitMandate $debitMandate
    *
+   * @param Entities\EncryptedFile $file
+   *
    * @param bool $flush
+   *
+   * @param bool $replace If \true replace the existing file references by the
+   * given file. Otherwise it is an error if an entry already exists and
+   * points to another file.
    *
    * @return null|Entities\DatabaseStorageFile
    */
-  public function addDebitMandate(Entities\SepaDebitMandate $debitMandate, bool $flush = true):?Entities\DatabaseStorageFile
-  {
-    $file = $debitMandate->getWrittenMandate();
-    if (empty($file)) {
-      throw new UnexpectedValueException($this->l->t('Debit-mandate "%s" has no hard-copy attached.', $debitMandate->getMandateReference()));
-    }
+  public function addDebitMandate(
+    Entities\SepaDebitMandate $debitMandate,
+    Entities\EncryptedFile $file,
+    bool $flush = true,
+    bool $replace = false,
+  ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
     if (empty($extension) && !empty($file['name'])) {
@@ -203,7 +209,7 @@ class ProjectParticipantsStorage extends Storage
         $this->persist($folderEntity);
       }
 
-      $documentEntity = $folderEntity->addDocument($file, $fileName);
+      $documentEntity = $folderEntity->addDocument($file, $fileName, replace: $replace);
       $this->persist($documentEntity);
 
       if ($flush) {
@@ -219,6 +225,26 @@ class ProjectParticipantsStorage extends Storage
     }
 
     return $documentEntity;
+  }
+
+  /**
+   * Add or replace a directory entry for the given debit-mandate and file.
+   *
+   * @param Entities\SepaDebitMandate $debitMandate
+   *
+   * @param Entities\EncryptedFile $file
+   *
+   * @param bool $flush
+   *
+   * @return null|Entities\DatabaseStorageFile
+   */
+  public function replaceDebitMandate(
+    Entities\SepaDebitMandate $debitMandate,
+    Entities\EncryptedFile $file,
+    bool $flush = true,
+    bool $replace = false,
+  ):?Entities\DatabaseStorageFile {
+    return $this->addDebitMandate($debitMandate, $file, $flush, replace: true);
   }
 
   /**
@@ -251,9 +277,7 @@ class ProjectParticipantsStorage extends Storage
       /** @var Entities\DatabaseStorageFile $dirEntry */
       foreach ($folderEntity->getDocuments() as $dirEntry) {
         if ($dirEntry->getFile()->getId() == $file->getId()) {
-          $dirEntry
-            ->setParent(null)
-            ->setFile(null);
+          $this->entityManager->remove($dirEntry);
         }
       }
 
@@ -275,16 +299,17 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param Entities\CompositePayment $compositePayment
    *
+   * @param Entities\EncryptedFile $file
+   *
    * @param bool $flush
    *
    * @return null|Entities\DatabaseStorageFile
    */
-  public function addCompositePayment(Entities\CompositePayment $compositePayment, bool $flush = true):?Entities\DatabaseStorageFile
-  {
-    $file = $compositePayment->getSupportingDocument();
-    if (empty($file)) {
-      throw new UnexpectedValueException($this->l->t('Composite payment "%d" has no hard-copy attached.', $compositePayment->getId()));
-    }
+  public function addCompositePayment(
+    Entities\CompositePayment $compositePayment,
+    Entities\EncryptedFile $file,
+    bool $flush = true,
+  ):?Entities\DatabaseStorageFile {
     $mimeType = $file->getMimeType();
     $extension = Util::fileExtensionFromMimeType($mimeType);
     if (empty($extension) && !empty($file['name'])) {
@@ -322,84 +347,25 @@ class ProjectParticipantsStorage extends Storage
   }
 
   /**
-   * Remove any directory entry referencing the supporting document of the payment.
-   *
-   * @param Entities\CompositePayment $compositePayment
-   *
-   * @param bool $flush
-   *
-   * @return void
-   */
-  public function removeCompositePayment(Entities\CompositePayment $compositePayment, bool $flush = true):void
-  {
-    $file = $compositePayment->getSupportingDocument();
-    if (empty($file)) {
-      throw new UnexpectedValueException($this->l->t('Composite payment "%d" has no hard-copy attached.', $compositePayment->getId()));
-    }
-
-    if ($flush) {
-      $this->entityManager->beginTransaction();
-    }
-    try {
-      // search for the folder
-      $rootFolder = $this->getRootFolder(create: false);
-      if (empty($rootFolder)) {
-        throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
-      }
-      $folderName = $this->getSupportingDocumentsFolderName();
-      $folderEntity = $rootFolder->getFolderByName($folderName);
-      if (empty($folderEntity)) {
-        throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $folderName));
-      }
-      $folderName = $this->getSupportingDocumentsFolderName();
-      $folderEntity = $folderEntity->getFolderByName($folderName);
-      if (empty($folderEntity)) {
-        throw new UnexpectedValueException($this->l->t('Folder "%s" does not exist.', $folderName));
-      }
-
-      /** @var Entities\DatabaseStorageFile $dirEntry */
-      foreach ($folderEntity->getDocuments() as $dirEntry) {
-        if ($dirEntry->getFile()->getId() == $file->getId()) {
-          $dirEntry
-            ->setParent(null)
-            ->setFile(null);
-        }
-      }
-
-      if ($flush) {
-        $this->flush();
-        $this->entityManager->commit();
-      }
-
-    } catch (Throwable $t) {
-      if ($this->entityManager->isTransactionActive()) {
-        $this->entityManager->rollback();
-      }
-      throw new Exceptions\DatabaseException($this->l->t('Unable to remove composite payment "%s".', $compositePayment->getId()));
-    }
-  }
-
-  /**
    * Add an directory entry for a ProjectParticipantFieldDatum of type
    * FieldType::DB_FILE or for the optional supporting document of fields of
    * type FieldType::SERVICE_FEE.
    *
    * @param Entities\ProjectParticipantFieldDatum $fieldDatum
    *
+   * @param Entities\EncryptedFile $file
+   *
    * @param bool $flush
    *
    * @return null|Entities\DatabaseStorageFile
    */
-  public function addFieldDatumDocument(Entities\ProjectParticipantFieldDatum $fieldDatum, bool $flush = true):?Entities\DatabaseStorageFile
-  {
+  public function addFieldDatumDocument(
+    Entities\ProjectParticipantFieldDatum $fieldDatum,
+    Entities\EncryptedFile $file,
+    bool $flush = true,
+  ):?Entities\DatabaseStorageFile {
     /** @var Entities\ProjectParticipantField $field */
-    $field = $fieldDatum->getField();
-    $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
-    if (empty($fileInfo)) {
-      throw new UnexpectedValueException($this->l->t('The field datum for field "%s" has no file attached to it.', [
-        (string)$field,
-      ]));
-    }
+    $fileInfo = $this->projectService->participantFileInfo($fieldDatum, newFile: $file, includeDeleted: true);
 
     if ($flush) {
       $this->entityManager->beginTransaction();
@@ -494,9 +460,7 @@ class ProjectParticipantsStorage extends Storage
       /** @var Entities\DatabaseStorageFile $dirEntry */
       foreach ($folderEntity->getDocuments() as $dirEntry) {
         if ($dirEntry->getFile()->getId() == $file->getId()) {
-          $dirEntry
-            ->setParent(null)
-            ->setFile(null);
+          $this->entityManager->remove($dirEntry);
         }
       }
 
@@ -532,11 +496,181 @@ WHERE t.id = ?';
     $stmt->bindValue(1, $id);
     try {
       $value = $stmt->executeQuery()->fetchOne();
+      $stmt->closeCursor();
     } catch (InvalidFieldNameException $t) {
       $this->logException($t, 'Column does not exist, migration probably has already been applied.');
       return self::ensureDate(null);
     }
     return self::convertToDateTime($value);
+  }
+
+  /**
+   * As the entities are already changed to contain directory entries but the
+   * data-base tables still may contain file ids we need to carefully allow both.
+   *
+   * This function fetches the file referenced by $id either directly from the
+   * Files table, or if a dir-entry is found, checks whether its root belongs
+   * to our storage and then uses the directory entry's file.
+   *
+   * @param null|int $fileId Either a file id or a directory entry id.
+   *
+   * @return null|Entities\EncryptedFile
+   */
+  private function getFileForMigration(?int $fileId):?Entities\EncryptedFile
+  {
+    if (empty($fileId)) {
+      return null;
+    }
+    $connection = $this->entityManager->getConnection();
+    try {
+      // determine if it exists in either table
+      $sql = 'SELECT COUNT(*)
+FROM Files t
+WHERE t.id = ' . $fileId;
+      $stmt = $connection->prepare($sql);
+      $numFiles = $stmt->executeQuery()->fetchOne();
+      $stmt->closeCursor();
+
+      $sql = 'SELECT COUNT(*)
+FROM DatabaseStorageDirEntries t
+WHERE t.id = ' . $fileId;
+      $stmt = $connection->prepare($sql);
+      $numDirEntries = $stmt->executeQuery()->fetchOne();
+      $stmt->closeCursor();
+
+      $this->logInfo('#FILES / #DIR_ENTRIES ' . $numFiles . ' / ' . $numDirEntries);
+
+      if ($numDirEntries != 0) {
+        /** @var Entities\DatabaseStorageFile $dirEntry */
+        $dirEntry = $this->entityManager->find(Entities\DatabaseStorageFile::class, $fileId);
+
+        // traverse the entry up to the root in order to determine if it is
+        // the correct entry
+        /** @var Entities\DatabaseStorage $storage */
+        $storage = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->getStorage($dirEntry);
+        if (empty($storage)) {
+          throw new UnexpectedValueException($this->l->t('Directory entry "%s" has no associated storage.', (string)$dirEntry));
+        }
+
+        if ($storage->getStorageId() == $this->getShortId()) {
+          return $dirEntry->getFile();
+        }
+      }
+
+      if ($numFiles != 0) {
+        $file = $this->getDatabaseRepository(Entities\EncryptedFile::class)->findOneBy([
+          'id' => $fileId
+        ]);
+        return $file;
+      }
+
+    } catch (Throwable $t) {
+      // empty
+    }
+    return null;
+  }
+
+  /**
+   * Fetch the file linked to a field datum. After changing to general
+   * directory entries the stored value may now be either the id of an
+   * EncryptedFile entitiy or the id of a directory entry.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @return null|Entities\EncryptedFile
+   */
+  private function getFieldDatumFileForMigration(Entities\ProjectParticipantFieldDatum $fieldDatum):?Entities\EncryptedFile
+  {
+    if ($fieldDatum->getField()->getDataType() != FieldType::DB_FILE) {
+      return null;
+    }
+    $fileId = $fieldDatum->getOptionValue();
+    return $this->getFileForMigration($fileId);
+  }
+
+  /**
+   * The value stored in the debit-mandate entity may now either be a
+   * reference to a directory entry or a file ...
+   *
+   * @param Entities\SepaDebitMandate $mandate
+   *
+   * @return null|Entities\EncryptedFile
+   */
+  private function getWrittenMandateForMigration(Entities\SepaDebitMandate $mandate):?Entities\EncryptedFile
+  {
+    $connection = $this->entityManager->getConnection();
+    // first fetch the raw id from the mandate's table
+    $sql = 'SELECT t.written_mandate_id
+FROM SepaDebitMandates t
+WHERE t.musician_id = ? AND t.sequence = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $mandate->getMusician()->getId());
+    $stmt->bindValue(2, $mandate->getSequence());
+    try {
+      $writtenMandateId = $stmt->executeQuery()->fetchOne();
+      $stmt->closeCursor();
+      return $this->getFileForMigration($writtenMandateId);
+    } catch (Throwable $t) {
+      // empty
+    }
+    return null;
+  }
+
+  /**
+   * The value stored in the payment-entity may now either be a
+   * reference to a directory entry or a file ...
+   *
+   * @param Entities\CompositePayment $payment
+   *
+   * @return null|Entities\EncryptedFile
+   */
+  private function getPaymentSupportingDocumentForMigration(Entities\CompositePayment $payment):?Entities\EncryptedFile
+  {
+    $connection = $this->entityManager->getConnection();
+    // first fetch the raw id from the mandate's table
+    $sql = 'SELECT t.supporting_document_id
+FROM CompositePayments t
+WHERE t.id = ' . $payment->getId();
+    $stmt = $connection->prepare($sql);
+    try {
+      $fileId = $stmt->executeQuery()->fetchOne();
+      $stmt->closeCursor();
+      return $this->getFileForMigration($fileId);
+    } catch (Throwable $t) {
+      // empty
+    }
+    return null;
+  }
+
+  /**
+   * The value stored in the payment-entity may now either be a
+   * reference to a directory entry or a file ...
+   *
+   * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @return null|Entities\EncryptedFile
+   */
+  private function getFieldDatumSupportingDocumentForMigration(Entities\ProjectParticipantFieldDatum $fieldDatum):?Entities\EncryptedFile
+  {
+    $connection = $this->entityManager->getConnection();
+    // first fetch the raw id from the mandate's table
+    $sql = 'SELECT t.supporting_document_id
+FROM ProjectParticipantFieldsData t
+WHERE t.field_id = ?
+AND t.musician_id = ?
+AND t.option_key = ?';
+    $stmt = $connection->prepare($sql);
+    $stmt->bindValue(1, $fieldDatum->getField()->getId());
+    $stmt->bindValue(2, $fieldDatum->getMusician()->getId());
+    $stmt->bindValue(3, $fieldDatum->getOptionKey(), 'uuid_binary');
+    try {
+      $fileId = $stmt->executeQuery()->fetchOne();
+      $stmt->closeCursor();
+      return $this->getFileForMigration($fileId);
+    } catch (Throwable $t) {
+      // empty
+    }
+    return null;
   }
 
   /**
@@ -556,6 +690,7 @@ WHERE t.id = ?';
     $stmt->bindValue(1, $id);
     try {
       $value = $stmt->executeQuery()->fetchOne();
+      $stmt->closeCursor();
     } catch (InvalidFieldNameException $t) {
       $this->logException($t, 'Column does not exist, migration probably has already been applied.');
       return self::ensureDate(null);
@@ -583,6 +718,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
     $stmt->bindValue(2, $musicianId);
     try {
       $value = $stmt->executeQuery()->fetchOne();
+      $stmt->closeCursor();
     } catch (InvalidFieldNameException $t) {
       $this->logException($t, 'Column does not exist, migration probably has already been applied.');
       return self::ensureDate(null);
@@ -610,17 +746,22 @@ WHERE t.project_id = ? AND t.musician_id = ?';
         ],
         'parentModificationTime' => fn() => $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId()),
         'hasLeafNodes' => fn() => !$this->participant->getParticipantFieldsData()->forAll(
-          fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum) => empty($fieldDatum->getSupportingDocument())
+          fn($key, Entities\ProjectParticipantFieldDatum $fieldDatum)
+          =>
+          empty($this->getFieldDatumSupportingDocumentForMigration($fieldDatum))
         ),
         'createLeafNodes' => function($dirName, $subDirectoryPath) {
           $modificationTime = $this->getParticipantFieldsDataChangedForMigration($this->project->getId(), $this->musician->getId());
           $activeFieldData = $this->participant->getParticipantFieldsData()->filter(
-            fn(Entities\ProjectParticipantFieldDatum $fieldDatum) => !empty($fieldDatum->getSupportingDocument())
+            fn(Entities\ProjectParticipantFieldDatum $fieldDatum)
+            =>
+            !empty($this->getFieldDatumSupportingDocumentForMigration($fieldDatum))
           );
 
           /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
           foreach ($activeFieldData as $fieldDatum) {
-            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+            $file = $this->getFieldDatumSupportingDocumentForMigration($fieldDatum);
+            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, newFile: $file, includeDeleted: true);
             if (empty($fileInfo)) {
               continue; // should not happen here because of ->filter().
             }
@@ -649,7 +790,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
             $compositePayment->getProjectPayments()->matching(
               DBUtil::criteriaWhere([ 'project' => $this->project ])
             )->count() == 0
-            || empty($compositePayment->getSupportingDocument())
+            || empty($this->getPaymentSupportingDocumentForMigration($compositePayment))
           )
         ),
         'createLeafNodes' => function($dirName, $subDirectoryPath) {
@@ -661,7 +802,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
             if ($projectPayments->count() == 0) {
               continue;
             }
-            $file = $compositePayment->getSupportingDocument();
+            $file = $this->getPaymentSupportingDocumentForMigration($compositePayment);
             if (empty($file)) {
               continue;
             }
@@ -684,7 +825,8 @@ WHERE t.project_id = ? AND t.musician_id = ?';
           $modificationTime = $this->getSepaDebitMandatesChangedForMigration($this->musician->getId());
           /** @var Entities\SepaDebitMandate $debitMandate */
           foreach ($this->musician->getSepaDebitMandates() as $debitMandate) {
-            $writtenMandate = $debitMandate->getWrittenMandate();
+
+            $writtenMandate = $this->getWrittenMandateForMigration($debitMandate);
             if (!empty($writtenMandate)) {
               $modificationTime = max($modificationTime, self::ensureDate($writtenMandate->getUpdated()));
             }
@@ -700,7 +842,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
           return !$this->musician->getSepaDebitMandates()->forAll(
             function($key, Entities\SepaDebitMandate $debitMandate) use ($membersProjectId, $projectId) {
               $mandateProjectId = $debitMandate->getProject()->getId();
-              return $mandateProjectId != $membersProjectId && $mandateProjectId != $projectId && empty($debitMandate->getWrittenMandate());
+              return $mandateProjectId != $membersProjectId && $mandateProjectId != $projectId && empty($this->getWrittenMandateForMigration($debitMandate));
             }
           );
         },
@@ -714,7 +856,7 @@ WHERE t.project_id = ? AND t.musician_id = ?';
               return $mandateProjectId === $membersProjectId || $mandateProjectId === $projectId;
             });
           foreach ($projectMandates as $debitMandate) {
-            $file = $debitMandate->getWrittenMandate();
+            $file = $this->getWrittenMandateForMigration($debitMandate);
             if (empty($file)) {
               continue;
             }
@@ -737,7 +879,11 @@ WHERE t.project_id = ? AND t.musician_id = ?';
             if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
               return false;
             }
-            if (empty($this->projectService->participantFileInfo($fieldDatum, includeDeleted: true))) {
+            $file = $this->getFieldDatumFileForMigration($fieldDatum);
+            if (empty($file)) {
+              return false;
+            }
+            if (empty($this->projectService->participantFileInfo($fieldDatum, newFile: $file, includeDeleted: true))) {
               return false;
             }
             return true;
@@ -749,11 +895,13 @@ WHERE t.project_id = ? AND t.musician_id = ?';
           /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
           foreach ($this->participant->getParticipantFieldsData() as $fieldDatum) {
 
-            if ($fieldDatum->getField()->getDataType() == FieldType::SERVICE_FEE) {
+            if ($fieldDatum->getField()->getDataType() != FieldType::DB_FILE) {
               continue;
             }
 
-            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, includeDeleted: true);
+            $file = $this->getFieldDatumFileForMigration($fieldDatum);
+
+            $fileInfo = $this->projectService->participantFileInfo($fieldDatum, newFile: $file, includeDeleted: true);
             if (empty($fileInfo)) {
               continue;
             }

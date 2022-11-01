@@ -70,24 +70,17 @@ class DatabaseStorageUtil
   /**
    * Find a database file by entity, file-id or file-name.
    *
-   * @param Entities\File|string|int $fileIdentifier Either the entity-id or
-   * the file-name. For convenience a file-entity is just passed-through when
-   * passed as parameter.
+   * @param Entities\DatabaseStorageFile|int $entityOrId Either the entity-id or the entity itself.
    *
    * @return null|Entities\File
    */
-  public function get($fileIdentifier):?Entities\File
+  public function get(mixed $entityOrId):?Entities\DatabaseStorageFile
   {
-    if ($fileIdentifier instanceof Entities\File) {
-      return $fileIdentifier;
+    if ($entityOrId instanceof Entities\DatabaseStorageFile) {
+      return $entityOrId;
     }
     try {
-      $id = filter_var($fileIdentifier, FILTER_VALIDATE_INT, ['min_range' => 1]);
-      if ($id !== false) {
-        return $this->getDatabaseRepository(Entities\File::class)->find($id);
-      } elseif (is_string($fileIdentifier)) {
-        return $this->getDatabaseRepository(Entities\File::class)->findOneBy([ 'fileName' => $fileIdentifier ]);
-      }
+      return $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($entityOrId);
     } catch (\Throwable $t) {
       // nothing
     }
@@ -98,8 +91,8 @@ class DatabaseStorageUtil
    * Get a download-link for either a single database file or a collection of
    * database files.
    *
-   * @param string|int|Entities\File|array $fileIdentifier Either a single
-   * object understood by DatabaseStorageUtil::get().
+   * @param int|Entities\DatabaseStorageFile|array $fileIdentifier Either a single
+   * object understood by DatabaseStorageUtil::get() or an array of such identifiers.
    *
    * @param null|string $fileName Download-filename.
    *
@@ -145,7 +138,7 @@ class DatabaseStorageUtil
    * Pack the collection of Entities\File into a zip-archive.
    *
    * @param array $items Something which can be converted by
-   * self::get() into Entities\File. null entries are gracefully
+   * self::get() into Entities\DatabaseStorageFile. null entries are gracefully
    * filtered away.
    *
    * @param null|string $folderName If not null the zip archive will

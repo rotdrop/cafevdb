@@ -1016,7 +1016,7 @@ class EntityManager extends EntityManagerDecorator
   public function registerPostCommitAction($action):UndoableRunQueue
   {
     if (is_callable($action)) {
-      $this->postCommitActions->register(new GenericUndoable($action, undo: null));
+      $this->postCommitActions->register(new GenericUndoable($action, undoCallback: null));
     } elseif ($action instanceof IUndoable) {
       $this->postCommitActions->register($action);
     } else {

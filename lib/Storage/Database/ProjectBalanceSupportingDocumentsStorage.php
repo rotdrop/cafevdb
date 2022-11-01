@@ -477,9 +477,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         }
       }
 
-      if ($file->getNumberOfLinks() == 0) {
-        $this->entityManager->remove($file);
-      }
       $this->flush();
 
       $this->entityManager->commit();

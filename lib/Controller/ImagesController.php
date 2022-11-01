@@ -87,7 +87,7 @@ class ImagesController extends Controller
    *
    * @param mixed $ownerId
    *
-   * @param int $imageId
+   * @param mixed $imageId
    *
    * @param int $imageSize
    *
@@ -100,16 +100,17 @@ class ImagesController extends Controller
   public function get(
     string $joinTable,
     mixed $ownerId,
-    int $imageId = ImagesService::IMAGE_ID_ANY,
+    mixed $imageId = ImagesService::IMAGE_ID_ANY,
     int $imageSize = -1,
     ?int $previewWidth = null,
   ):Http\Response {
 
     $ownerId = urldecode($ownerId);
+    $imageId = urldecode($imageId);
 
     if ((string)$imageId == (string)ImagesService::IMAGE_ID_PLACEHOLDER) {
       // placeholder reguested
-      return $this->getPlaceHolder($joinTable, $imageSize);
+      return $this->getPlaceHolder($joinTable, !empty($previewWidth) ? $previewWidth : $imageSize);
     }
 
     $image = null;
@@ -120,7 +121,7 @@ class ImagesController extends Controller
     }
 
     if (empty($image)) {
-      return $this->getPlaceHolder($joinTable, $imageSize);
+      return $this->getPlaceHolder($joinTable, !empty($previewWidth) ? $previewWidth : $imageSize);
     }
 
     return $this->dataDownloadResponse($image->data(), $fileName, $image->mimeType());

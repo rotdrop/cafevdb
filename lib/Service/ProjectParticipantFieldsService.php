@@ -278,7 +278,7 @@ class ProjectParticipantFieldsService
           break;
       }
     }
-    return $selectOptions;
+    return array_filter($selectOptions, fn($option) => !empty($option['name']));
   }
 
   /**
@@ -460,10 +460,14 @@ class ProjectParticipantFieldsService
   /**
    * @param null|string $name Name to sanitize.
    *
-   * @return string Sanitized file-name, no dots, no slashes, no spaces
+   * @return null|string Sanitized file-name, no dots, no slashes, no
+   * spaces. null if the argument was null.
    */
-  public static function sanitizeFileName(?string $name):string
+  public static function sanitizeFileName(?string $name):?string
   {
+    if (empty($name)) {
+      return null;
+    }
     $name = Util::normalizeSpaces($name);
     $name = preg_replace([ '|\s*/\s*|', '/[.]/', '/\s*/' ], [ '-', '_', '' ], $name);
 
@@ -475,9 +479,9 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantField $field
    *
-   * @return string
+   * @return null|string
    */
-  public function getFileSystemFieldName(Entities\ProjectParticipantField $field):string
+  public function getFileSystemFieldName(Entities\ProjectParticipantField $field):?string
   {
     assert($field->isFileSystemContext());
 
@@ -489,9 +493,9 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantFieldDataOption $option
    *
-   * @return string
+   * @return null|string
    */
-  public function getFileSystemOptionLabel(Entities\ProjectParticipantFieldDataOption $option):string
+  public function getFileSystemOptionLabel(Entities\ProjectParticipantFieldDataOption $option):?string
   {
     assert($option->isFileSystemContext());
 
@@ -594,7 +598,7 @@ class ProjectParticipantFieldsService
         if (empty($value)) {
           return null;
         }
-        return $this->getDatabaseRepository(Entities\EncryptedFile::class)->find($value);
+        return $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
       case DataType::TEXT:
       case DataType::HTML:
       default:
@@ -864,13 +868,13 @@ class ProjectParticipantFieldsService
    *
    * @param bool $singleResult
    *
-   * @return null|Collections\Collection
+   * @return null|object|Collections\Collection
    */
   public function filterByFieldName(
     Collections\Collection $things,
     string $fieldName,
     bool $singleResult = true,
-  ):?Collections\Collection {
+  ):mixed {
     if ($things->isEmpty()) {
       return $singleResult ? null :  new Collections\ArrayCollection;
     }

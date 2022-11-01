@@ -185,7 +185,7 @@ class OrganizationalRolesService
       return null;
     }
     $signatureFile = $fieldsService->getEffectiveFieldDatum($signatureData);
-    if (!$signatureFile instanceof Entities\EncryptedFile) {
+    if (!$signatureFile instanceof Entities\DatabaseStorageFile) {
       return null;
     }
     $image = new \OCP\Image();

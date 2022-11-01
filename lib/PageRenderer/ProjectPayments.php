@@ -221,28 +221,40 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
     ],
-    // link only the balance directories via their parent_id
+    // link in the storages table to get the root directory for the balances
+    self::DATABASE_STORAGES_TABLE => [
+      'entity' => Entities\DatabaseStorage::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'id' => [
+          'table' => self::PROJECTS_TABLE,
+          'column' => 'financial_balance_documents_storage_id',
+        ],
+      ],
+      'column' => 'id',
+    ],
+    // link the balance directories via their parent_id for the composite payment
     self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'composite' => [
       'entity' => Entities\DatabaseStorageFolder::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'parent_id' => [
-          'table' => self::PROJECTS_TABLE,
-          'column' => 'financial_balance_documents_folder_id',
+          'table' => self::DATABASE_STORAGES_TABLE,
+          'column' => 'root_id'
         ],
         'id' => 'balance_documents_folder_id',
       ],
       'column' => 'id',
     ],
 
-    // link only the balance directories via their parent_id
+    // link the balance directories via their parent_id for the split payments
     self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'split' => [
       'entity' => Entities\DatabaseStorageFolder::class,
       'flags' => self::JOIN_READONLY,
       'identifier' => [
         'parent_id' => [
-          'table' => self::PROJECTS_TABLE,
-          'column' => 'financial_balance_documents_folder_id',
+          'table' => self::DATABASE_STORAGES_TABLE,
+          'column' => 'root_id'
         ],
         'id' => [
           'table' => self::PROJECT_PAYMENTS_TABLE,
@@ -831,21 +843,18 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
         $musicianId = $row['qf'.$pme->fdn['musician_id']];
         /** @var Entities\Musician $musician */
         $musician = $this->findEntity(Entities\Musician::class, $musicianId);
-        $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $musician->getUserIdSlug());
 
         if (!empty($value)) {
 
-          /** @var Entities\File $file */
-          $file = $this->getDatabaseRepository(Entities\File::class)->find($value);
+          /** @var Entities\DatabaseStorageFile $file */
+          $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
           if (empty($file)) {
             $this->logError('File not found for musician "' . $musician->getPublicName(). ' file-id ' . $value);
             return $value;
           }
 
-          $extension = pathinfo($file->getFileName(), PATHINFO_EXTENSION);
+          $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
 
-          $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink(
-            $value, $fileName);
 
           $subDirPrefix =
             UserStorage::PATH_SEP . $this->getDocumentsFolderName()
@@ -866,12 +875,16 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           return $filesAppLink
             . '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService['project-payments:payment:document'].'"
-   href="'.$downloadLink.'">' . $fileName . '.' . $extension . '</a>';
+   href="'.$downloadLink.'">' . $file->getName() . '</a>';
         } else {
           return $value;
         }
       },
     ];
+
+    $balanceRootid = empty($this->project->getFinancialBalanceDocumentsFolder())
+      ? 0
+      : $this->project->getFinancialBalanceDocumentsFolder()->getId();
 
     $opts['fdd']['balance_documents_folder_id'] = [
       'name' => $this->l->t('Composite Project Balance'),
@@ -899,7 +912,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'cast' => [ false ],
         ],
         'data' => 'CONCAT($table.name, "/")',
-        'filters' => '$table.parent_id = ' . $this->project->getFinancialBalanceDocumentsFolder()->getId(),
+        'filters' => '$table.parent_id = ' . $balanceRootid,
       ],
       'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
       'display' => [
@@ -994,7 +1007,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             'cast' => [ false ],
           ],
           'data' => 'CONCAT($table.name, "/")',
-          'filters' => '$table.parent_id = ' . $this->project->getFinancialBalanceDocumentsFolder()->getId(),
+          'filters' => '$table.parent_id = ' . $balanceRootid,
         ],
         'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
           if ($this->isCompositeRow($row, $pme)) {
@@ -1110,12 +1123,35 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       [
         'name' => $this->l->t('IBAN'),
         'input'  => 'R',
-        'options' => 'LFVD',
-        'css'  => [ 'postfix' => [ 'bank-account-iban', ], ],
+        'options' => 'LFVDCP',
+        'select|LF' => 'D',
+        'css'  => [ 'postfix' => [ 'bank-account-iban', 'meta-data-popup', ], ],
         'php|LF' => [$this, 'compositeRowOnly'],
         'encryption' => [
           'encrypt' => fn($value) => $this->ormEncrypt($value),
-          'decrypt' => fn($value) => $this->ormDecrypt($value),
+          'decrypt' => fn($value) => $this->ormDecrypt($value ?? ''),
+        ],
+        'css|LF'  => [ 'postfix' => [ 'bank-account-iban', 'lazy-decryption', 'meta-data-popup', ], ],
+        'encryption|LF' => [
+          'encrypt' => fn($value) => $this->ormEncrypt($value),
+          'decrypt' => function($value) {
+            if (empty($value)) {
+              return '';
+            }
+            $value = '<span class="iban encryption-placeholder"
+      data-crypto-hash="' . md5($value) . '"
+      title="' . Util::htmlEscape($this->l->t('Fetching decrypted values in the background.')) . '"
+>'
+              . $this->l->t('please wait')
+              . '</span>';
+            return $value;
+          },
+        ],
+        'values' => [
+          'data' => [
+            'crypto-hash' => 'MD5($table.$column)',
+            'meta-data' => '"iban"', // SQL STRING
+          ],
         ],
         'display' => [
           'popup' => function($data) {
@@ -1123,12 +1159,24 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
               return ''; // can happen
             }
             $info  = $this->financeService->getIbanInfo($data);
+            if (empty($info)) {
+              $this->logInfo('NO INFO FOR IBAN ' . $data);
+            }
             $result = '';
             foreach ($info as $key => $value) {
               $result .= $this->l->t($key).': '.$value.'<br/>';
             }
             return $result;
           },
+          'attributes' => [
+            'data-meta-data' => 'iban',
+          ],
+        ],
+        'display|LF' => [
+          'popup' => 'data',
+          'attributes' => [
+            'data-meta-data' => 'iban',
+          ],
         ],
       ]);
 
@@ -1890,7 +1938,7 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     $valueHtml = '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer one-liner">' . $value . '</div></div>';
 
     if (!empty($fileInfo)) {
-      $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['file'], $fileInfo['baseName']);
+      $downloadLink = $this->databaseStorageUtil->getDownloadLink($fileInfo['dirEntry']);
       $downloadAnchor = '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService['project-payments:receivable:document'].'"
    href="'.$downloadLink.'">' . $valueHtml . '</a>';

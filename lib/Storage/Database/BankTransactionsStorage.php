@@ -199,12 +199,6 @@ class BankTransactionsStorage extends Storage
           $this->flush();
         }
       }
-      if ($file->getNumberOfLinks() == 0) {
-        if ($flush) {
-          $this->flush();
-        }
-        $this->entityManager->remove($file);
-      }
 
       if ($flush) {
         $this->flush();

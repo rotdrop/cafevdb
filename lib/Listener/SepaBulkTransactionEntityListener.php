@@ -123,9 +123,6 @@ class SepaBulkTransactionEntityListener
       foreach (SepaBulkTransactionService::EXPORTERS as $format) {
         $this->service->generateTransactionData($transaction, format: $format);
       }
-      foreach ($transaction->getSepaTransactionData() as $file) {
-        $this->storage->addDocument($transaction, $file);
-      }
     });
   }
 
@@ -137,10 +134,11 @@ class SepaBulkTransactionEntityListener
     if (!$this->lockEntity($transaction)) {
       return;
     }
-    /** @var Entities\EncryptedFile $file */
-    foreach ($transaction->getSepaTransactionData() as $file) {
-      $transaction->removeTransactionData($file);
-      $this->storage->removeDocument($transaction, $file, flush: false);
+    /** @var Entities\DatabaseStorageFile $dirEntry */
+    foreach ($transaction->getSepaTransactionData() as $dirEntry) {
+      $transaction->removeTransactionData($dirEntry);
+      $this->remove($dirEntry);
+      // $this->storage->removeDocument($transaction, $file, flush: false);
     }
     $this->flush();
     $this->unlockEntity($transaction);

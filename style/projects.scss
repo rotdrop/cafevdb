@@ -125,6 +125,21 @@
       }
     }
 
+    &.pme-view, &.pme-delete {
+      td.pme-value {
+	&.projects--instrumentation,
+	&.projects--instrumentation-voices,
+	&.projects--participant-fields {
+          width:38em;
+          max-width:38em;
+          max-height:1em;
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
+	}
+      }
+    }
+
     &.pme-copyadd td.pme-value.projects--participant-fields {
       overflow:inherit;
       text-overflow:inherit;

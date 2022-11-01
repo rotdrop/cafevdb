@@ -70,17 +70,17 @@ class SepaBulkTransactions extends PMETableViewBase
     self::DATA_TABLE => [
       'identifier' => [
         'sepa_bulk_transaction_id' => 'id',
-        'encrypted_file_id' => false,
+        'database_storage_file_id' => false,
       ],
-      'column' => 'encrypted_file_id',
+      'column' => 'database_storage_file_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::FILES_TABLE => [
-      'entity' => Entities\EncryptedFile::class,
+    self::DATABASE_STORAGE_DIR_ENTRIES_TABLE => [
+      'entity' => Entities\DatabaseStorageFile::class,
       'identifier' => [
         'id' => [
           'table' => self::DATA_TABLE,
-          'column' => 'encrypted_file_id',
+          'column' => 'database_storage_file_id',
         ],
       ],
       'column' => 'id',
@@ -497,7 +497,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'tab' => [ 'id' => [ 'bookings', ], ],
         'name' => $this->l->t('Subject'),
         'input' => 'RD',
-        'css' => [ 'postfix' => ' subject squeeze-subsequent-lines', ],
+        'css' => [ 'postfix' => [ 'subject squeeze-subsequent-lines', 'clip-long-text', ], ],
         'sql|LFVD' => 'REPLACE($join_col_fqn, \'; \', \'<br/>\')',
         'sql|ACP' => '$join_col_fqn',
         'display' => [

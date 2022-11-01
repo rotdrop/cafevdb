@@ -1420,7 +1420,7 @@ __EOT__;
    *
    * @return string HTML data for one row.
    */
-  public function dataOptionInputRowHtml(array $value, int $index, bool $used, ?string $dataType = null):string
+  public function dataOptionInputRowHtml(mixed $value, int $index, bool $used, ?string $dataType = null):string
   {
     $pfx = $this->pme->cgiDataName('data_options');
     // $key = $value['key'];
@@ -1440,11 +1440,11 @@ __EOT__;
     $html .= '<td class="operations">
   <input
     class="operation delete-undelete"
-    title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:delete-undelete']).'"
+    title="'.$this->toolTipsService['participant-fields-data-options:delete-undelete'].'"
     type="button"/>
   <input
     class="operation regenerate only-multiplicity-recurring"
-    title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:regenerate']).'"
+    title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate'].'"
     '.($deleted ? ' disabled' : '').'
     type="button"/>
     </td>';
@@ -1482,7 +1482,7 @@ __EOT__;
           .' type="text"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
           .' size="16"'
           .' maxlength="32"'
           .'/>'
@@ -1512,7 +1512,7 @@ __EOT__;
       .' type="text"'
       .' name="'.$pfx.'['.$index.']['.$prop.']"'
       .' value="'.$fieldValue.'"'
-      .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
+      .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
       .' size="'.$size.'"'
       .'/></td>';
     // deposit
@@ -1537,7 +1537,7 @@ __EOT__;
           .' required'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1550,7 +1550,7 @@ __EOT__;
           .' type="number"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
           .' value="'.$value[$prop].'"'
-          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
           .' maxlength="8"'
           .' size="9"'
           .'/></td>';
@@ -1562,7 +1562,7 @@ __EOT__;
           .($deleted ? ' readonly="readonly"' : '')
           .' class="'.$cssClass.'"'
           .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$prop]).'"'
+          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
           .' cols="32"'
           .' rows="1"'
           .'>'
@@ -1606,7 +1606,7 @@ __EOT__;
       type="text"
       name="'.$pfx.'[-1][label]"
       value=""
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:placeholder']).'"
+      title="'.$this->toolTipsService['participant-fields-data-options:placeholder'].'"
       placeholder="'.$this->l->t('new option').'"
       size="33"
       maxlength="32"
@@ -1676,13 +1676,13 @@ __EOT__;
   <td class="operations">
     <input
       class="operation regenerate-all"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:regenerate-all:everybody']).'"
+      title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all:everybody'].'"
       type="button"
       '.(empty($generator) || empty($fieldId) ? 'disabled' : '').'
     />
     <input
       class="operation generator-run"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:generator-run']).'"
+      title="'.$this->toolTipsService['participant-fields-recurring-data:generator-run'].'"
       type="button"
       '.(empty($generator) || empty($fieldId) ? 'disabled' : '').'
     />
@@ -1697,7 +1697,7 @@ __EOT__;
       data-default-value="'.IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION.'"
       class="recurring-multiplicity-required recurring-receivables-update-strategy"
       name="recurringReceivablesUpdateStrategy"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:update-strategy']).'"
+      title="'.$this->toolTipsService['participant-fields-recurring-data:update-strategy'].'"
     >
 '
       . $updateStrategies
@@ -1709,7 +1709,7 @@ __EOT__;
       type="text"
       name="'.$pfx.'[-1][data]"
       value="'.$generator.'"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:generator']).'"
+      title="'.$this->toolTipsService['participant-fields-recurring-data:generator'].'"
       placeholder="'.$this->l->t('field generator').'"
       size="33"
       maxlength="1024"
@@ -1733,7 +1733,7 @@ __EOT__;
       type="text"
       name="'.$pfx.'[-1]['.$prop.']"
       value="'.$value.'"
-      title="'.Util::htmlEscape($this->toolTipsService['participant-fields-recurring-data:generator-startdate']).'"
+      title="'.$this->toolTipsService['participant-fields-recurring-data:generator-startdate'].'"
       placeholder="'.$this->l->t('start date').'"
       size="10"
       maxlength="10"
@@ -1824,13 +1824,13 @@ __EOT__;
       // controls for showing soft-deleted options or normally
       // unneeded inputs
       $showDeletedLabel = $this->l->t("Show deleted items.");
-      $showDeletedTip = Util::htmlEscape($this->toolTipsService['participant-fields-show-deleted']);
+      $showDeletedTip = $this->toolTipsService['page-renderer:participant-fields:show-deleted'];
       $showDataLabel = $this->l->t("Show data-fields.");
-      $showDataTip = Util::htmlEscape($this->toolTipsService['participant-fields-show-data']);
+      $showDataTip = $this->toolTipsService['page-renderer:participant-fields:show-data'];
       $displayOptions = '
 <div class="field-display-options dropdown-container">
   <div class="field-display-options dropdown-button icon-menu"
-       title="'.Util::htmlEscape($this->toolTipsService['page-renderer:participant-fields:show-display-options']).'">
+       title="' . $this->toolTipsService['page-renderer:participant-fields:show-display-options'] . '">
   </div>
   <nav class="field-display-options dropdown-content dropdown-dropup dropdown-align-right">
     <ul class="menu-list">
@@ -1935,7 +1935,7 @@ __EOT__;
       $html .=
             '<th'
             .' class="'.$cssClass.'"'
-            .' title="'.Util::htmlEscape($this->toolTipsService['participant-fields-data-options:'.$key]).'"'
+            .' title="'.$this->toolTipsService['participant-fields-data-options:'.$key].'"'
             .'>'
             .$value
             .'</th>';

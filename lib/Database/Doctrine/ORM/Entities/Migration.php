@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,18 +52,28 @@ class Migration implements \ArrayAccess
    */
   private $version;
 
-  public function __construct() {
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=512)
+   */
+  private $migrationClassName;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set version.
    *
-   * @param string $version
+   * @param null|string $version
    *
-   * @return Project
+   * @return Migration
    */
-  public function setVersion($version)
+  public function setVersion(?string $version):Migration
   {
     $this->version = $version;
 
@@ -75,8 +85,32 @@ class Migration implements \ArrayAccess
    *
    * @return string
    */
-  public function getVersion()
+  public function getVersion():?string
   {
     return $this->version;
+  }
+
+  /**
+   * Set the migration class name.
+   *
+   * @param string $className
+   *
+   * @return Migration
+   */
+  public function setMigrationClassName(string $className):Migration
+  {
+    $this->migrationClassName = $className;
+
+    return $this;
+  }
+
+  /**
+   * Get migrationClassName.
+   *
+   * @return string
+   */
+  public function getMigrationClassName():?string
+  {
+    return $this->migrationClassName;
   }
 }

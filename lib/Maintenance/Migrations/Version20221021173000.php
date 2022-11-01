@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This library is free software; you can redistribute it and/or
@@ -24,9 +24,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-class Version20220928183000 extends SanitizeProjectBalanceDocuments {}
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+/** No comment. */
+class Version20221021173000 extends ConvertFileReferencesToDirEntries
+{
+}

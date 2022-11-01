@@ -311,6 +311,7 @@ class InstrumentInsuranceService
       $amount = $insurance->getInsuranceAmount();
       $annualFee = $amount * $rate->getRate();
       $annualFee *= $this->yearFraction($insuranceStart, $insuranceEnd, $dueDate);
+
       $fee += $annualFee * (1.0 + self::TAXES);
     }
     $dueInterval = [ 'min' => $minDueDate, 'max' => $maxDueDate ];

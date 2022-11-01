@@ -145,11 +145,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   private $payments;
 
   /**
-   * @var EncryptedFile
+   * @var DatabaseStorageFile
    *
    * Optional. ATM only used for particular auto-generated monetary fields.
    *
-   * @ORM\ManyToOne(targetEntity="EncryptedFile", cascade={"all"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", cascade={"all"}, fetch="EXTRA_LAZY", orphanRemoval=true)
    */
   private $supportingDocument;
 
@@ -321,7 +321,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if (empty($uuid)) {
       throw new RuntimeException('Empty option key data.');
     }
-    if ($uuid == Uuid::NIL) {
+    if ($uuid == ProjectParticipantFieldDataOption::GENERATOR_KEY) {
       throw new RuntimeException('Generator options must not be linked to field data.');
     }
     $this->optionKey = $uuid;
@@ -366,11 +366,11 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Set supportingDocument.
    *
-   * @param null|EncryptedFile $supportingDocument
+   * @param null|DatabaseStorageFile $supportingDocument
    *
    * @return ProjectParticipantFieldDatum
    */
-  public function setSupportingDocument(?EncryptedFile $supportingDocument):ProjectParticipantFieldDatum
+  public function setSupportingDocument(?DatabaseStorageFile $supportingDocument):ProjectParticipantFieldDatum
   {
     $this->supportingDocument = $supportingDocument;
 
@@ -380,9 +380,9 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * Get supportingDocument.
    *
-   * @return null|EncryptedFile
+   * @return null|DatabaseStorageFile
    */
-  public function getSupportingDocument():?EncryptedFile
+  public function getSupportingDocument():?DatabaseStorageFile
   {
     return $this->supportingDocument;
   }
