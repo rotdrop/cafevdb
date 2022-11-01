@@ -153,6 +153,16 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    */
   private $supportingDocument;
 
+  /**
+   * @var Musician
+   *
+   * Link to potentially different person who is in charge of actually paying
+   * or receiving the money if the field-type is DataType::SERVICE_FEE.
+   *
+   * @ORM\OneToOne(targetEntity="Musician")
+   */
+  private $billToParty;
+
   /** TBD. */
   public function __construct()
   {
@@ -409,6 +419,30 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   public function getPayments():?Collection
   {
     return $this->payments;
+  }
+
+  /**
+   * Set billToParty.
+   *
+   * @param null|Musician $billToParty
+   *
+   * @return ProjectParticipantFieldDatum
+   */
+  public function setBillToParty(?Musician $billToParty):ProjectParticipantFieldDatum
+  {
+    $this->billToParty = $billToParty;
+
+    return $this;
+  }
+
+  /**
+   * Get billToParty.
+   *
+   * @return null|Musician
+   */
+  public function getBillToParty():?Musician
+  {
+    return $this->billToParty;
   }
 
   /**
