@@ -230,7 +230,16 @@ class phpMyEdit
 	public $sd; public $ed;	// sql start and end delimiters '`' in case of MySQL
 
 	// Predefined variables
-	public $comp_ops  = array('<'=>'<','<='=>'<=','='=>'=','>='=>'>=','>'=>'>');
+
+	// numeric comparisons, also used as value => label for HTML selects.
+	public const COMP_OPS = [
+		'=' => '=',
+		'<>' => '<>',
+		'<' => '<',
+		'<=' => '<=',
+		'>=' => '>=',
+		'>' => '>',
+	];
 	// var $sql_aggrs = array(
 	// 	'sum'	=> 'Total',
 	// 	'avg'	=> 'Average',
@@ -2116,7 +2125,7 @@ class phpMyEdit
 				}
 				if ($this->fdd[$k][self::FDD_SELECT] == 'N') {
 					$afilter = addslashes($m);
-					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
+					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
 					$qo[$k] = [
 						'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
 						'fqnTemplate' => '%s',
@@ -4589,10 +4598,10 @@ class phpMyEdit
 				if ($this->fdd[$fd][self::FDD_SELECT] == 'N') {
 					$css_comp_class_name = $this->getCSSclass('comp-filter', null, null, $css_postfix);
 
-					$mc = in_array($mc, $this->comp_ops) ? $mc : '=';
+					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
 										   $css_comp_class_name,
-										   $this->comp_ops, null, null, null, $mc);
+										   self::COMP_OPS, null, null, null, $mc);
 				}
 				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
