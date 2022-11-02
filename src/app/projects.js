@@ -38,6 +38,7 @@ import {
   sys as pmeSys,
   classSelector as pmeClassSelector,
   formSelector as pmeFormSelector,
+  token as pmeToken,
 } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
@@ -283,12 +284,44 @@ const handleProjectActions = function($menuItem, containerSel) {
 
 const actionMenu = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
-  const container = PHPMyEdit.container(containerSel);
+  const $container = PHPMyEdit.container(containerSel);
 
-  container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
+  $container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
     handleProjectActions($(this), containerSel);
     return false;
   });
+
+  $container
+    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
+    .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
+      console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
+
+      const $contentTarget = $(originalEvent.target).closest('.dropdown-content');
+      console.info('TARGET', $contentTarget);
+      if ($contentTarget.length > 0) {
+        // use standard context menu inside dropdown
+        return;
+      }
+
+      originalEvent.preventDefault();
+      originalEvent.stopImmediatePropagation();
+
+      const $row = $(this);
+      const $form = $row.closest(pmeFormSelector);
+      const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
+      const $actionMenu = $actionMenuContainer.find('.project-actions.dropdown-container').first();
+      const $actionMenuToggle = $actionMenu.find('.action-menu-toggle');
+      const $actionMenuContent = $actionMenu.find('.dropdown-content');
+      $actionMenuContent.css({
+        position: 'fixed',
+        left: originalEvent.originalEvent.clientX,
+        top: originalEvent.originalEvent.clientY,
+      });
+      $actionMenu.addClass('context-menu');
+      $actionMenuToggle.trigger('click');
+
+      return false;
+    });
 };
 
 const pmeFormInit = function(containerSel) {

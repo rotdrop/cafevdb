@@ -85,11 +85,19 @@ $routes = [
       data-project-id="<?php p($projectId); ?>"
       data-project-name="<?php p($projectName); ?>"
 >
-  <button class="menu-title action-menu-toggle"
+  <button class="menu-title action-menu-toggle tooltip-auto"
           title="<?php echo $toolTips['project-actions']; ?>"
   >...</button>
   <nav class="dropdown-content dropdown-align-<?php p($direction); ?> dropdown-drop<?php p($dropDirection); ?>">
     <ul>
+      <li class="project-name context-menu"
+          data-operation="none"
+      >
+        <a href="#">
+          <span class="context-menu-title"><?php p($projectName); ?></span>
+        </a>
+      </li>
+      <li class="separator show-if-context-menu"><span class="rule"></span></li>
       <?php if ($isOverview) { ?>
         <li class="project-action project-infopage tooltip-auto"
             data-operation="infopage"
