@@ -47,7 +47,7 @@ if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
 }
 
-let initialState = getInitialState();
+const initialState = getInitialState();
 
 const projectBalancesFolder = initialState.sharing.files.folders.projectBalances;
 const supportingDocumentsFolder = initialState.sharing.files.subFolders.supportingDocuments;
@@ -280,7 +280,7 @@ window.addEventListener('DOMContentLoaded', () => {
           await this.fileList.createDirectory(dirName);
         },
         async yearFolderHandler(name) {
-          const nameRegExp = /^(\\d{4}|YYYY)$/;
+          const nameRegExp = /^(\d{4}|YYYY)$/;
           const yearMatch = name.match(nameRegExp);
           if (!yearMatch) {
             showError(t(appName, 'The name of the new folder must match the format "YYYY" where "YYYY" is a placeholder for 4 decimal digits or a literal "YYYY" in which case a folder for the current year is created if it does not exist already.'));
