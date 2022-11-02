@@ -318,13 +318,13 @@ class PageController extends Controller
    *
    * @param string $renderAs
    *
-   * @param string $template
+   * @param null|string $template
    *
-   * @param string $projectName
+   * @param null|string $projectName
    *
-   * @param null|int $projectId
+   * @param mixed $projectId
    *
-   * @param null|int $musicianId
+   * @param mixed $musicianId
    *
    * @param string $historyAction
    *
@@ -335,10 +335,10 @@ class PageController extends Controller
    */
   public function loader(
     string $renderAs,
-    string $template,
-    string $projectName = '',
-    ?int $projectId = null,
-    ?int $musicianId = null,
+    ?string $template,
+    ?string $projectName = '',
+    mixed $projectId = null,
+    mixed $musicianId = null,
     string $historyAction = self::HISTORY_ACTION_PUSH,
   ) {
 
