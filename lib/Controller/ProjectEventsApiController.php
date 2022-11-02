@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+/** API for project events. */
 class ProjectEventsApiController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -47,37 +48,55 @@ class ProjectEventsApiController extends OCSController
   /** @var EventsService */
   private $eventsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
-    , EventsService $eventsService
-    , EntityManager $entityManager
+    ?string $appName,
+    IRequest $request,
+    ConfigService $configService,
+    EventsService $eventsService,
+    EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
     $this->configService = $configService;
     $this->eventsService = $eventsService;
     $this->entityManager = $entityManager;
     $this->l = $this->l10n();
-
-    if (false) {
-      try {
-        $credentialsStore = $this->di(IStore::class);
-        $credentials = $credentialsStore->getLoginCredentials();
-        //$this->logInfo($credentials->getLoginName() . ' ' . $credentials->getPassword());
-      } catch (\Throwable $t) {
-        $this->logException($t);
-      }
-    }
+    // if (false) {
+    //   try {
+    //     $credentialsStore = $this->di(IStore::class);
+    //     $credentials = $credentialsStore->getLoginCredentials();
+    //     //$this->logInfo($credentials->getLoginName() . ' ' . $credentials->getPassword());
+    //   } catch (\Throwable $t) {
+    //     $this->logException($t);
+    //   }
+    // }
   }
+  // phpcs:enable
 
   /**
+   * @param string $indexObject
+   *
+   * @param int $objectId
+   *
+   * @param string $calendar
+   *
+   * @param string $timezone
+   *
+   * @param string $locale
+   *
+   * @return DataResponse
+   *
    * @CORS
    * @NoCSRFRequired
    * @NoAdminRequired
    */
-  public function serviceSwitch($indexObject, $objectId, $calendar, $timezone, $locale)
-  {
+  public function serviceSwitch(
+    string $indexObject,
+    int $objectId,
+    string $calendar,
+    string $timezone,
+    string $locale,
+  ):DataResponse {
     // OC uses symphony which rawurldecodes the request URL. This
     // implies that in order to pass a slash / we caller must
     // urlencode that thingy twice, and Symphony consequently will
@@ -89,47 +108,41 @@ class ProjectEventsApiController extends OCSController
     $locale = rawurldecode($locale);
 
     switch ($indexObject) {
-    case self::INDEX_BY_PROJECT:
-      $projectId = $objectId;
-      $calendar == 'all' && $calendar = null;
-      $eventData = $this->eventsService->projectEventData($projectId, $calendar, $timezone, $locale);
-      return new DataResponse($eventData);
-    case self::INDEX_BY_WEB_PAGE:
-      $articleId = $objectId;
-      $timeZone = $timeZone ?? $this->getTimezone();
-      $locale = $locale ?? $this->getLocale();
+      case self::INDEX_BY_PROJECT:
+        $projectId = $objectId;
+        $calendar == 'all' && $calendar = null;
+        $eventData = $this->eventsService->projectEventData($projectId, $calendar, $timezone, $locale);
+        return new DataResponse($eventData);
+      case self::INDEX_BY_WEB_PAGE:
+        $articleId = $objectId;
+        $timeZone = $timeZone ?? $this->getTimezone();
+        $locale = $locale ?? $this->getLocale();
 
-      switch ($calendar) {
-      case 'all':
-        $calendar = null;
-        break;
-      case 'concerts':
-      case 'rehearsals':
-      case 'other':
-        $calendar = $this->getConfigValue($calendar.'calendar'.'id');
-        break;
+        switch ($calendar) {
+          case 'all':
+            $calendar = null;
+            break;
+          case 'concerts':
+          case 'rehearsals':
+          case 'other':
+            $calendar = $this->getConfigValue($calendar.'calendar'.'id');
+            break;
+          default:
+            throw new OCSException\OCSBadRequestException($this->l->t('Invalid calendar type: "%1$s"', $calendar));
+        }
+
+        $articles = $this->getDatabaseRepository(Entities\ProjectWebPage::class)
+          ->findBy(['articleId' => $articleId ], [ 'project' => 'ASC', 'articleId' => 'ASC' ]);
+
+        $data = [];
+        /** @var Entities\ProjectWebPage $article */
+        foreach ($articles as $article) {
+          $project = $article->getProject();
+          $data[$project->getName()] = $this->eventsService->projectEventData($project->getId(), $calendar, $timezone, $locale);
+        }
+        return new DataResponse($data);
       default:
-        throw new OCSException\OCSBadRequestException($this->l->t('Invalid calendar type: "%1$s"', $calendar));
-      }
-
-      $articles = $this->getDatabaseRepository(Entities\ProjectWebPage::class)
-                       ->findBy(['articleId' => $articleId ], [ 'project' => 'ASC', 'articleId' => 'ASC' ]);
-
-      $data = [];
-      /** @var Entities\ProjectWebPage $article */
-      foreach ($articles as $article) {
-        $project = $article->getProject();
-        $data[$project->getName()] = $this->eventsService->projectEventData($project->getId(), $calendar, $timezone, $locale);
-      }
-      return new DataResponse($data);
-    default:
-      throw new OCS\OCSNotFoundException;
+        throw new OCS\OCSNotFoundException;
     }
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

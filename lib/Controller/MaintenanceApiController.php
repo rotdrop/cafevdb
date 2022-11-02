@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
 
+/** AJAX end-points for an app-maintenance API. */
 class MaintenanceApiController extends OCSController
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -49,105 +50,130 @@ class MaintenanceApiController extends OCSController
 
   const WIKI_PROJECTS_OVERVIEW = 'projects-overview';
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
+    ?string $appName,
+    IRequest $request,
+    ConfigService $configService,
   ) {
     parent::__construct($appName, $request);
     $this->configService = $configService;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
+   * @param string $topic
+   *
+   * @param string $operation
+   *
+   * @return DataResponse
+   *
+   * @throws OCS\OCSNotFoundException
+   *
    * @CORS
    * @NoCSRFRequired
    * @NoAdminRequired
    * @ServiceAccountRequired
    */
-  public function serviceSwitch($topic, $operation)
+  public function serviceSwitch(string $topic, string $operation):DataResponse
   {
     switch ($topic) {
-    case self::TOPIC_ENCRYPTION_KEY:
-      switch ($operation) {
-      case self::ENCRYPTION_KEY_DISTRIBUTE:
-        return new DataResponse($this->distributeEncryptionKey());
-      case self::ENCRYPTION_KEY_SET:
-        // unconditionally set the encryption key just for the current
-        // of given user
-        $userId = $this->request->getParam('user-id', $this->userId());
-        if (!$this->encryptionKeyValid()) {
-          // perhaps this should throw
-          $data = [ 'keyStatus' => 'invalid', ];
-        } else {
-          $appEncryptionKey = $this->getAppEncryptionKey();
-          $data = [
-            'keyStatus' => empty($appEncryptionKey) ? 'unset' : 'set',
-            'userStatus' => [
-              $this->setUserEncryptionKey($userId, $appEncryptionKey),
-            ],
-          ];
-        }
-        return new DataResponse($data);
-      case self::ENCRYPTION_KEY_RECRYPT:
-        // perhaps ...
-      }
-      break;
-    case self::TOPIC_WIKI:
-      switch ($operation) {
-      case self::WIKI_PROJECTS_OVERVIEW:
-        /** @var ProjectService $projectService */
-        $projectService = $this->di(ProjectService::class);
-        if ($projectService->generateWikiOverview()) {
-          return new DataResponse([ 'status' => 'ok' ]);
-        } else {
-          return new DataResponse([ 'status' => 'failed' ]);
+      case self::TOPIC_ENCRYPTION_KEY:
+        switch ($operation) {
+          case self::ENCRYPTION_KEY_DISTRIBUTE:
+            return new DataResponse($this->distributeEncryptionKey());
+          case self::ENCRYPTION_KEY_SET:
+            // unconditionally set the encryption key just for the current
+            // of given user
+            $userId = $this->request->getParam('user-id', $this->userId());
+            if (!$this->encryptionKeyValid()) {
+              // perhaps this should throw
+              $data = [ 'keyStatus' => 'invalid', ];
+            } else {
+              $appEncryptionKey = $this->getAppEncryptionKey();
+              $data = [
+                'keyStatus' => empty($appEncryptionKey) ? 'unset' : 'set',
+                'userStatus' => [
+                  $this->setUserEncryptionKey($userId, $appEncryptionKey),
+                ],
+              ];
+            }
+            return new DataResponse($data);
+          case self::ENCRYPTION_KEY_RECRYPT:
+            // perhaps ...
         }
         break;
-      }
-      break;
+      case self::TOPIC_WIKI:
+        switch ($operation) {
+          case self::WIKI_PROJECTS_OVERVIEW:
+            /** @var ProjectService $projectService */
+            $projectService = $this->di(ProjectService::class);
+            if ($projectService->generateWikiOverview()) {
+              return new DataResponse([ 'status' => 'ok' ]);
+            } else {
+              return new DataResponse([ 'status' => 'failed' ]);
+            }
+            break;
+        }
+        break;
     }
     throw new OCS\OCSNotFoundException;
   }
 
   /**
+   * @param string $topic
+   *
+   * @param string $subTopic
+   *
+   * @return DataResponse
+   *
+   * @throws OCS\OCSNotFoundException
+   *
    * @CORS
    * @NoCSRFRequired
    * @NoAdminRequired
    * @ServiceAccountRequired
    */
-  public function get($topic, $subTopic)
+  public function get(string $topic, string $subTopic):DataResponse
   {
     switch ($topic) {
-    case self::TOPIC_PLAYGROUND:
-      switch ($subTopic) {
-      case self::PLAYGROUND_HELLO:
-        return new DataResponse([ 'response' => 'Hello World!' ]);
-      default:
-        break;
-      }
-      break;
-    case self::TOPIC_ENCRYPTION_KEY:
-      switch ($subTopic) {
-      case self::ENCRYPTION_KEY_STATUS:
-        if (!$this->encryptionKeyValid()) {
-          $data = [
-            'keyStatus' => 'invalid',
-          ];
-        } else {
-          $appEncryptionKey = $this->getAppEncryptionKey();
-          $data = [
-            'keyStatus' => empty($appEncryptionKey) ? 'unset' : 'set',
-          ];
+      case self::TOPIC_PLAYGROUND:
+        switch ($subTopic) {
+          case self::PLAYGROUND_HELLO:
+            return new DataResponse([ 'response' => 'Hello World!' ]);
+          default:
+            break;
         }
-        return new DataResponse($data);
-      }
-      break;
+        break;
+      case self::TOPIC_ENCRYPTION_KEY:
+        switch ($subTopic) {
+          case self::ENCRYPTION_KEY_STATUS:
+            if (!$this->encryptionKeyValid()) {
+              $data = [
+                'keyStatus' => 'invalid',
+              ];
+            } else {
+              $appEncryptionKey = $this->getAppEncryptionKey();
+              $data = [
+                'keyStatus' => empty($appEncryptionKey) ? 'unset' : 'set',
+              ];
+            }
+            return new DataResponse($data);
+        }
+        break;
     }
     throw new OCS\OCSNotFoundException;
   }
 
-  private function setUserEncryptionKey($userId, $appEncryptionKey)
+  /**
+   * @param string $userId
+   *
+   * @param null|string $appEncryptionKey
+   *
+   * @return array
+   */
+  private function setUserEncryptionKey(string $userId, ?string $appEncryptionKey):array
   {
     $data = [
       'user' => $userId,
@@ -167,8 +193,10 @@ class MaintenanceApiController extends OCSController
   /**
    * Distribute the encryption key to all users by storing them in
    * their personal preferences, encrypted with their SSL key-pair.
+   *
+   * @return array
    */
-  private function distributeEncryptionKey()
+  private function distributeEncryptionKey():array
   {
     if (!$this->encryptionKeyValid()) {
       return [
@@ -181,18 +209,12 @@ class MaintenanceApiController extends OCSController
       'keyStatus' => empty($appEncryptionKey) ? 'unset' : 'set',
       'userStatus' => [],
     ];
-    $noKeyUsers = [];
-    $fatalUsers = [];
-    $modifiedUsers = [];
-    foreach ($this->group()->getUsers() as $user)  {
+    // $noKeyUsers = [];
+    // $fatalUsers = [];
+    // $modifiedUsers = [];
+    foreach ($this->group()->getUsers() as $user) {
       $data['userStatus'][] = $this->setUserEncryptionKey($user->getUID(), $appEncryptionKey);
     }
     return $data;
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

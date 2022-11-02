@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,33 +31,43 @@ use OCP\ILogger;
 use OCP\IL10N;
 use OCP\IConfig;
 
-class CspViolationController extends Controller {
+/** AJAX endpoints for reporting CSP violation errors. */
+class CspViolationController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   /** @var \OCP\IConfig */
   private $config;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , IConfig $config
-    , ILogger $logger
-    , IL10N $l10n
+    ?string $appName,
+    IRequest $request,
+    IConfig $config,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     parent::__construct($appName, $request);
     $this->config = $config;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /**
+   * @param string $operation
+   *
+   * @param null|string $cspFailureToken
+   *
+   * @return Http\Response
+   *
    * @NoCSRFRequired
    * @NoAdminRequired
    * @PublicPage
    * @NoGroupMemberRequired
    */
-  public function post($operation, $cspFailureToken = null)
+  public function post(string $operation, ?string $cspFailureToken = null):Http\Response
   {
     if ($operation != 'report') {
       return self::grumble($this->l->t('Unknown Request'));
@@ -71,8 +82,3 @@ class CspViolationController extends Controller {
     return (new Http\Response)->setStatus(Http::STATUS_NO_CONTENT);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

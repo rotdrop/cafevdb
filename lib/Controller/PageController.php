@@ -7,9 +7,25 @@
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright Claus-Justus Heine 2014-2022
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFEVDB\Controller;
+
+use OutOfBoundsException;
 
 use OCP\IRequest;
 use OCP\ISession;
@@ -39,7 +55,9 @@ use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 
-class PageController extends Controller {
+/** Main UI entry point providing the front pages. */
+class PageController extends Controller
+{
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
@@ -88,21 +106,22 @@ class PageController extends Controller {
    */
   private $configCheck;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ISession $session
-    , IAppContainer $appContainer
-    , AssetService $assetService
-    , ConfigService $configService
-    , HistoryService $historyService
-    , OrganizationalRolesService $organizationalRolesService
-    , RequestParameterService $parameterService
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
-    , IInitialStateService $initialStateService
-    , ConfigCheckService $configCheckService
-    , \OCP\IURLGenerator $urlGenerator
+    ?string $appName,
+    IRequest $request,
+    ISession $session,
+    IAppContainer $appContainer,
+    AssetService $assetService,
+    ConfigService $configService,
+    HistoryService $historyService,
+    OrganizationalRolesService $organizationalRolesService,
+    RequestParameterService $parameterService,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
+    IInitialStateService $initialStateService,
+    ConfigCheckService $configCheckService,
+    \OCP\IURLGenerator $urlGenerator,
   ) {
 
     parent::__construct($appName, $request);
@@ -124,16 +143,19 @@ class PageController extends Controller {
     // See if we are configured
     $this->configCheck = $this->configCheckService->configured();
   }
+  // phpcs:enable
 
   /**
    * Load the main page of the App.
+   *
+   * @return Http\Response
    *
    * @NoAdminRequired
    * @NoGroupMemberRequired
    * @NoCSRFRequired
    * @UseSession
    */
-  public function index()
+  public function index():Http\Response
   {
     if ($this->parameterService->getParam('history', '') == 'discard') {
       $this->historyService->push([]);
@@ -148,7 +170,12 @@ class PageController extends Controller {
     }
   }
 
-  private function shouldLoadHistory($level = 0)
+  /**
+   * @param int $level
+   *
+   * @return bool
+   */
+  private function shouldLoadHistory(int $level = 0):bool
   {
     if ($this->getUserValue('restorehistory') !== 'on') {
       return false;
@@ -156,7 +183,8 @@ class PageController extends Controller {
     if ($this->request->getMethod() !== 'GET') {
       return false;
     }
-    if (empty($template = $this->parameterService->getParam('template'))) {
+    $template = $this->parameterService->getParam('template');
+    if (empty($template)) {
       return true;
     }
     $get = $this->request->get;
@@ -173,11 +201,27 @@ class PageController extends Controller {
   }
 
   /**
+   * @param mixed $a
+   *
+   * @param mixed $b
+   *
+   * @param mixed $c
+   *
+   * @param mixed $d
+   *
+   * @param mixed $e
+   *
+   * @param mixed $f
+   *
+   * @param mixed $g
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    * @NoGroupMemberRequired
    * @NoCSRFRequired
    */
-  public function post($a, $b, $c, $d, $e, $f, $g)
+  public function post(mixed $a, mixed $b, mixed $c, mixed $d, mixed $e, mixed $f, mixed $g):Http\Response
   {
     $parts = [ $a, $b, $c, $d, $e, $f, $g ];
     $request = implode('/', array_filter($parts));
@@ -194,21 +238,28 @@ class PageController extends Controller {
    * Load a page at the specified offset from the history. Returns an
    * error if the entry cannot be found in the history.
    *
+   * @param int $level
+   *
+   * @param string $renderAs
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    * @UseSession
    */
-  public function history($level = 0, $renderAs = 'blank')
+  public function history(int $level = 0, string $renderAs = 'blank'):Http\Response
   {
     try {
       $originalParams = $this->parameterService->getParams();
       $this->parameterService->setParams($this->historyService->fetch($level));
       $this->parameterService['originalRequestParameters'] = $originalParams;
       $this->parameterService->setParam('renderAs', $renderAs);
-    } catch(\OutOfBoundsException $e) {
-      return new DataResponse(['message' => $e->getMessage(),
-                               'history' => ['size' => $this->historyService->size(),
-                                             'position' => $this->historyService->position()] ],
-                              Http::STATUS_NOT_FOUND);
+    } catch (OutOfBoundsException $e) {
+      return new DataResponse(
+        ['message' => $e->getMessage(),
+         'history' => ['size' => $this->historyService->size(),
+                       'position' => $this->historyService->position()] ],
+        Http::STATUS_NOT_FOUND);
     }
     return $this->loader(
       $renderAs,
@@ -223,10 +274,14 @@ class PageController extends Controller {
   /**
    * Load a page and remembers the request parameters in the history.
    *
+   * @param string $renderAs
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    * @UseSession
    */
-  public function remember($renderAs = 'user')
+  public function remember(string $renderAs = 'user'):Http\Response
   {
     $this->historyService->push($this->parameterService->getParams());
     return $this->loader(
@@ -240,11 +295,14 @@ class PageController extends Controller {
   }
 
   /**
+   * @return Http\Response
+   *
    * @NoAdminRequired
    * @NoCSRFRequired
    * @UseSession
    */
-  public function debug() {
+  public function debug():Http\Response
+  {
     return $this->loader(
       'user',
       'maintenance/debug', // template
@@ -258,16 +316,30 @@ class PageController extends Controller {
   /**
    * Load a specific page, also used to dynamically replace html content.
    *
+   * @param string $renderAs
+   *
+   * @param string $template
+   *
+   * @param string $projectName
+   *
+   * @param null|int $projectId
+   *
+   * @param null|int $musicianId
+   *
+   * @param string $historyAction
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    * @UseSession
    */
   public function loader(
-    $renderAs
-    , $template
-    , $projectName = ''
-    , $projectId = null
-    , $musicianId = null
-    , $historyAction = self::HISTORY_ACTION_PUSH
+    string $renderAs,
+    string $template,
+    string $projectName = '',
+    ?int $projectId = null,
+    ?int $musicianId = null,
+    string $historyAction = self::HISTORY_ACTION_PUSH,
   ) {
 
     // Initial state injecton for JS
@@ -275,9 +347,6 @@ class PageController extends Controller {
 
     // The most important ...
     $encrkey = $this->getAppEncryptionKey();
-
-    // Are we a group-admin?
-    $isGroupAdmin = $this->isSubAdminOfGroup();
 
     $showToolTips = $this->getUserValue('tooltips', 'on');
     $usrFiltVis   = $this->getUserValue('filtervisibility', 'off');
@@ -300,7 +369,7 @@ class PageController extends Controller {
           'error' => 'notamember',
           'userId' => $this->userId(),
         ],
-      'user');
+        'user');
     };
 
     $template = $this->getTemplate($template, $renderAs);
@@ -394,7 +463,14 @@ class PageController extends Controller {
     return $response;
   }
 
-  private function getTemplate(?string $template, string $renderAs)
+  /**
+   * @param null|string $template
+   *
+   * @param string $renderAs
+   *
+   * @return string
+   */
+  private function getTemplate(?string $template, string $renderAs):string
   {
     if ($template != 'maintenance/debug' && !$this->configCheck['summary']) {
       return 'maintenance/configcheck';
@@ -412,13 +488,29 @@ class PageController extends Controller {
   }
 
   /**
+   * @param mixed $a
+   *
+   * @param mixed $b
+   *
+   * @param mixed $c
+   *
+   * @param mixed $d
+   *
+   * @param mixed $e
+   *
+   * @param mixed $f
+   *
+   * @param mixed $g
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    */
-  public function notFound($a, $b, $c, $d, $e)
+  public function notFound(mixed $a, mixed $b, mixed $c, mixed $d, mixed $e, mixed $f, mixed $g):Http\Response
   {
-    $parts = [ $a, $b, $c, $d, $e ];
+    $parts = [ $a, $b, $c, $d, $e, $f, $g ];
     $route = '/ajax';
-    foreach($parts as $part) {
+    foreach ($parts as $part) {
       if (empty($part)) {
         break;
       }
@@ -426,10 +518,4 @@ class PageController extends Controller {
     }
     return self::response($this->l->t("Page `%s\' not found.", [$route]), Http::STATUS_NOT_FOUND);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +24,12 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use DateTime;
+use DateTimeZone;
+use Throwable;
+
+use Sabre\VObject\Component\VCalendar;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -40,7 +47,8 @@ use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Serves the requests issued by the old OC v8 event popups.*/
-class LegacyEventsController extends Controller {
+class LegacyEventsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
@@ -77,19 +85,20 @@ class LegacyEventsController extends Controller {
   private $ocCalendarObject;
 
   /** @var ToolTipsService */
-  private $tolTipsService;
+  private $toolTipsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
-    , ConfigCheckService $configCheckService
-    , RequestParameterService $parameterService
-    , ProjectService $projectService
-    , CalDavService $calDavService
-    , VCalendarService $vCalendarService
-    , ToolTipsService $toolTipsService
-    , ISession $session
+    ?string $appName,
+    IRequest $request,
+    ConfigService $configService,
+    ConfigCheckService $configCheckService,
+    RequestParameterService $parameterService,
+    ProjectService $projectService,
+    CalDavService $calDavService,
+    VCalendarService $vCalendarService,
+    ToolTipsService $toolTipsService,
+    ISession $session,
   ) {
     parent::__construct($appName, $request);
 
@@ -105,58 +114,68 @@ class LegacyEventsController extends Controller {
 
     $this->l = $this->l10N();
   }
+  // phpcs:enable
 
   /**
+   * @param string $topic
+   *
+   * @param string $subTopic
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    * @UseSession
    */
-  public function serviceSwitch($topic, $subTopic)
+  public function serviceSwitch(string $topic, string $subTopic):Http\Response
   {
     switch ($topic) {
-    case 'forms':
-      switch ($subTopic) {
-      case self::SUBTOPIC_NEW:
-        return $this->newEventForm();
-      case self::SUBTOPIC_EDIT:
+      case 'forms':
+        switch ($subTopic) {
+          case self::SUBTOPIC_NEW:
+            return $this->newEventForm();
+          case self::SUBTOPIC_EDIT:
+            $this->session->close();
+            return $this->editEventForm($subTopic);
+          case self::SUBTOPIC_CLONE:
+            return $this->editEventForm($subTopic);
+          default:
+            break;
+        }
+        break;
+      case 'actions':
         $this->session->close();
-        return $this->editEventForm($subTopic);
-      case self::SUBTOPIC_CLONE:
-        return $this->editEventForm($subTopic);
-      default:
+        switch ($subTopic) {
+          case self::SUBTOPIC_NEW:
+            return $this->newEvent();
+          case self::SUBTOPIC_EDIT:
+            return $this->editEvent();
+          case self::SUBTOPIC_DELETE:
+            return $this->deleteEvent();
+          case self::SUBTOPIC_EXPORT:
+            return $this->exportEvent();
+          default:
+            break;
+        }
         break;
-      }
-      break;
-    case 'actions':
-      $this->session->close();
-      switch ($subTopic) {
-      case self::SUBTOPIC_NEW:
-        return $this->newEvent();
-      case self::SUBTOPIC_EDIT:
-        return $this->editEvent();
-      case self::SUBTOPIC_DELETE:
-        return $this->deleteEvent();
-      case self::SUBTOPIC_EXPORT:
-        return $this->exportEvent();
       default:
+        $this->session->close();
         break;
-      }
-      break;
-    default:
-      $this->session->close();
-      break;
     }
     return self::grumble($this->l->t("unknown service requested: `%s/%s'.", [$topic, $subTopic]));
   }
 
-  private function newEventForm()
+  /** @return Http\Response */
+  private function newEventForm():Http\Response
   {
     $projectId = $this->parameterService['projectId'];
     $projectName = $this->parameterService['projectName'];
     $eventKind = $this->parameterService['eventKind'];
 
-    if ($projectId < 0 ||
-        (empty($projectName) &&
-         empty($projectName = $this->projectService->fetchName($projectId)))) {
+    if ($projectId > 0 && empty($projectName)) {
+      $projectName = $this->projectService->fetchName($projectId);
+    }
+
+    if ($projectId <= 0 || empty($projectName)) {
       return self::grumble($this->l->t('Project-id and/or name not set'));
     }
 
@@ -170,7 +189,6 @@ class LegacyEventsController extends Controller {
     $calendarUri  = $eventKind.'calendar';
     $calendarName = $this->getConfigValue($calendarUri, ucfirst($this->l->t($eventKind)));
     $calendarId   = $this->getConfigValue($calendarUri.'id', null);
-    $shareOwner   = $this->getConfigValue('shareowner');
 
     // Default title for the event
     $summary        = $this->l->t($eventKind).', '.$projectName;
@@ -181,13 +199,13 @@ class LegacyEventsController extends Controller {
 
     if ($newId == false) {
       return self::grumble($this->l->t('Cannot access calendar: `%s\'', [$calendarUri]));
-    } else if ($newId != $calendarId) {
+    } elseif ($newId != $calendarId) {
       $this->setConfigValue($calendarUri, $newId);
       $calendarId = $newId;
     }
 
     if (!$start) {
-      $start = new \DateTime('now');
+      $start = new DateTime('now');
       $start->setTime($start->format('H'), ceil($start->format('i') / 15) * 15);
       $start = $start->getTimeStamp();
     }
@@ -200,11 +218,11 @@ class LegacyEventsController extends Controller {
 
     $duration = $end - $start;
 
-    $start = new \DateTime('@'.$start);
-    $end = new \DateTime('@'.$end);
+    $start = new DateTime('@'.$start);
+    $end = new DateTime('@'.$end);
     $timezone = $this->getTimezone();
-    $start->setTimezone(new \DateTimeZone($timezone));
-    $end->setTimezone(new \DateTimeZone($timezone));
+    $start->setTimezone(new DateTimeZone($timezone));
+    $end->setTimezone(new DateTimeZone($timezone));
 
     // compute the list of all writable calendars of the user
     $calendars = $this->calDavService->getCalendars(true);
@@ -222,25 +240,25 @@ class LegacyEventsController extends Controller {
     usort($calendarOptions, function($a, $b) use ($calendarId) {
       if ($a['id'] == $b['id']) {
         return 0;
-      } else if ($a['id'] == $calendarId) {
+      } elseif ($a['id'] == $calendarId) {
         return -1;
-      } else if ($b['id'] == $calendarId) {
+      } elseif ($b['id'] == $calendarId) {
         return 1;
       }
       return strcmp($a['displayname'], $b['displayname']);
     });
 
-    $access_class_options = $this->ocCalendarObject->getAccessClassOptions();
-    $repeat_options = $this->ocCalendarObject->getRepeatOptions();
-    $repeat_end_options = $this->ocCalendarObject->getEndOptions();
-    $repeat_month_options = $this->ocCalendarObject->getMonthOptions();
-    $repeat_year_options = $this->ocCalendarObject->getYearOptions();
-    $repeat_weekly_options = $this->ocCalendarObject->getWeeklyOptions();
-    $repeat_weekofmonth_options = $this->ocCalendarObject->getWeekofMonth();
-    $repeat_byyearday_options = $this->ocCalendarObject->getByYearDayOptions();
-    $repeat_bymonth_options = $this->ocCalendarObject->getByMonthOptions();
-    $repeat_byweekno_options = $this->ocCalendarObject->getByWeekNoOptions();
-    $repeat_bymonthday_options = $this->ocCalendarObject->getByMonthDayOptions();
+    $accessClassOptions = $this->ocCalendarObject->getAccessClassOptions();
+    $repeatOptions = $this->ocCalendarObject->getRepeatOptions();
+    $repeatEndOptions = $this->ocCalendarObject->getEndOptions();
+    $repeatMonthOptions = $this->ocCalendarObject->getMonthOptions();
+    $repeatYearOptions = $this->ocCalendarObject->getYearOptions();
+    $repeatWeeklyOptions = $this->ocCalendarObject->getWeeklyOptions();
+    $repeatWeekOfMonthOptions = $this->ocCalendarObject->getWeekofMonth();
+    $repeatByYearDayOptions = $this->ocCalendarObject->getByYearDayOptions();
+    $repeatByMonthOptions = $this->ocCalendarObject->getByMonthOptions();
+    $repeatByWeekNoOptions = $this->ocCalendarObject->getByWeekNoOptions();
+    $repeatByMonthDayOptions = $this->ocCalendarObject->getByMonthDayOptions();
 
     return new TemplateResponse(
       $this->appName(),
@@ -259,17 +277,17 @@ class LegacyEventsController extends Controller {
 
         'access' => 'owner',
         'accessclass' => 'PUBLIC',
-        'access_class_options' => $access_class_options,
-        'repeat_options' => $repeat_options,
-        'repeat_month_options' => $repeat_month_options,
-        'repeat_weekly_options' => $repeat_weekly_options,
-        'repeat_end_options' => $repeat_end_options,
-        'repeat_year_options' => $repeat_year_options,
-        'repeat_byyearday_options' => $repeat_byyearday_options,
-        'repeat_bymonth_options' => $repeat_bymonth_options,
-        'repeat_byweekno_options' => $repeat_byweekno_options,
-        'repeat_bymonthday_options' => $repeat_bymonthday_options,
-        'repeat_weekofmonth_options' => $repeat_weekofmonth_options,
+        'access_class_options' => $accessClassOptions,
+        'repeat_options' => $repeatOptions,
+        'repeat_month_options' => $repeatMonthOptions,
+        'repeat_weekly_options' => $repeatWeeklyOptions,
+        'repeat_end_options' => $repeatEndOptions,
+        'repeat_year_options' => $repeatYearOptions,
+        'repeat_byyearday_options' => $repeatByYearDayOptions,
+        'repeat_bymonth_options' => $repeatByMonthOptions,
+        'repeat_byweekno_options' => $repeatByWeekNoOptions,
+        'repeat_bymonthday_options' => $repeatByMonthDayOptions,
+        'repeat_weekofmonth_options' => $repeatWeekOfMonthOptions,
 
         'eventuri' => self::SUBTOPIC_NEW,
         'startdate' => $start->format('d-m-Y'),
@@ -302,8 +320,12 @@ class LegacyEventsController extends Controller {
   /**
    * Edit an existing event. If $subTopic equals self::SUBTOPIC_CLONE then a
    * new event will be generated on save.
+   *
+   * @param string $subTopic
+   *
+   * @return Http\Response
    */
-  private function editEventForm(string $subTopic)
+  private function editEventForm(string $subTopic):Http\Response
   {
     // all this mess ...
     $uri = $this->parameterService['uri'];
@@ -329,14 +351,14 @@ class LegacyEventsController extends Controller {
     // $permissions = OC_Calendar_App::getPermissions($id, OC_Calendar_App::EVENT, $accessClass);
     $permissions = $calendar->getPermissions();
     switch ($accessClass) {
-    case 'PUBLIC':
-      break;
-    case 'CONFIDENTIAL':
-      $permissions &= ~Constants::PERMISSION_READ;
-      break;
-    case 'PRIVATE':
-      $permissions &= ~Constants::PERMISSION_UPDATE;
-      break;
+      case 'PUBLIC':
+        break;
+      case 'CONFIDENTIAL':
+        $permissions &= ~Constants::PERMISSION_READ;
+        break;
+      case 'PRIVATE':
+        $permissions &= ~Constants::PERMISSION_UPDATE;
+        break;
     }
     //$permissions &= ~Constants::PERMISSION_UPDATE;
     $this->logError("Permissions: " . $calendar->getPermissions());
@@ -353,13 +375,13 @@ class LegacyEventsController extends Controller {
     if ($dtstart->hasTime()) {
       // UTC ?
       if (!$dtstart->isFloating()) {
-		$timezone = new \DateTimeZone($this->getTimezone());
-		$newDT = $dtstart->getDateTime();
-		$newDT->setTimezone($timezone);
-		$dtstart->setDateTime($newDT);
-		$newDT = $dtend->getDateTime();
-		$newDT->setTimezone($timezone);
-		$dtend->setDateTime($newDT);
+        $timezone = new DateTimeZone($this->getTimezone());
+        $newDT = $dtstart->getDateTime();
+        $newDT->setTimezone($timezone);
+        $dtstart->setDateTime($newDT);
+        $newDT = $dtend->getDateTime();
+        $newDT->setTimezone($timezone);
+        $dtend->setDateTime($newDT);
       } // else it's LOCALTZ/LOCAL
 
       $startdate = $dtstart->getDateTime()->format('d-m-Y');
@@ -382,26 +404,27 @@ class LegacyEventsController extends Controller {
     $protectCategories = $this->parameterService->getParam('protectCategories', 1);
     $categories = $vEvent->CATEGORIES;
     //$this->logError(print_r($categories, true));
-    $last_modified = $vEvent->__get('LAST-MODIFIED');
-    if ($last_modified) {
-      $lastmodified = $last_modified->getDateTime()->format('U');
-    }else{
+    $lastModified = $vEvent->__get('LAST-MODIFIED');
+    if ($lastModified) {
+      $lastmodified = $lastModified->getDateTime()->format('U');
+    } else {
       $lastmodified = 0;
     }
 
+    $repeat = [];
     // if ($data['repeating'] == 1) {
     if (isset($vEvent->RRULE)) {
       $rrule = explode(';', $vEvent->RRULE);
       $rrulearr = [];
       foreach ($rrule as $rule) {
-		list($attr, $val) = explode('=', $rule);
-		$rrulearr[$attr] = $val;
+        list($attr, $val) = explode('=', $rule);
+        $rrulearr[$attr] = $val;
       }
       if (!isset($rrulearr['INTERVAL']) || $rrulearr['INTERVAL'] == '') {
-		$rrulearr['INTERVAL'] = 1;
+        $rrulearr['INTERVAL'] = 1;
       }
       if (array_key_exists('BYDAY', $rrulearr)) {
-		if (substr_count($rrulearr['BYDAY'], ',') == 0) {
+        if (substr_count($rrulearr['BYDAY'], ',') == 0) {
           if (strlen($rrulearr['BYDAY']) == 2) {
             $repeat['weekdays'] = array($rrulearr['BYDAY']);
           } elseif (strlen($rrulearr['BYDAY']) == 3) {
@@ -411,119 +434,119 @@ class LegacyEventsController extends Controller {
             $repeat['weekofmonth'] = substr($rrulearr['BYDAY'], 0, 2);
             $repeat['weekdays'] = array(substr($rrulearr['BYDAY'], 2, 2));
           }
-		} else {
-          $byday_days = explode(',', $rrulearr['BYDAY']);
-          foreach ($byday_days as $byday_day) {
-            if (strlen($byday_day) == 2) {
-              $repeat['weekdays'][] = $byday_day;
-            } elseif (strlen($byday_day) == 3) {
-              $repeat['weekofmonth'] = substr($byday_day , 0, 1);
-              $repeat['weekdays'][] = substr($byday_day , 1, 2);
-            } elseif (strlen($byday_day) == 4) {
-              $repeat['weekofmonth'] = substr($byday_day , 0, 2);
-              $repeat['weekdays'][] = substr($byday_day , 2, 2);
+        } else {
+          $byDayDays = explode(',', $rrulearr['BYDAY']);
+          foreach ($byDayDays as $byDayDay) {
+            if (strlen($byDayDay) == 2) {
+              $repeat['weekdays'][] = $byDayDay;
+            } elseif (strlen($byDayDay) == 3) {
+              $repeat['weekofmonth'] = substr($byDayDay, 0, 1);
+              $repeat['weekdays'][] = substr($byDayDay, 1, 2);
+            } elseif (strlen($byDayDay) == 4) {
+              $repeat['weekofmonth'] = substr($byDayDay, 0, 2);
+              $repeat['weekdays'][] = substr($byDayDay, 2, 2);
             }
           }
-		}
+        }
       }
       if (array_key_exists('BYMONTHDAY', $rrulearr)) {
-		if (substr_count($rrulearr['BYMONTHDAY'], ',') == 0) {
+        if (substr_count($rrulearr['BYMONTHDAY'], ',') == 0) {
           $repeat['bymonthday'][] = $rrulearr['BYMONTHDAY'];
-		}else{
+        } else {
           $bymonthdays = explode(',', $rrulearr['BYMONTHDAY']);
           foreach ($bymonthdays as $bymonthday) {
             $repeat['bymonthday'][] = $bymonthday;
           }
-		}
+        }
       }
       if (array_key_exists('BYYEARDAY', $rrulearr)) {
-		if (substr_count($rrulearr['BYYEARDAY'], ',') == 0) {
+        if (substr_count($rrulearr['BYYEARDAY'], ',') == 0) {
           $repeat['byyearday'][] = $rrulearr['BYYEARDAY'];
-		} else {
+        } else {
           $byyeardays = explode(',', $rrulearr['BYYEARDAY']);
-          foreach ($byyeardays  as $yearday) {
+          foreach ($byyeardays as $yearday) {
             $repeat['byyearday'][] = $yearday;
           }
-		}
+        }
       }
       if (array_key_exists('BYWEEKNO', $rrulearr)) {
-		if (substr_count($rrulearr['BYWEEKNO'], ',') == 0) {
+        if (substr_count($rrulearr['BYWEEKNO'], ',') == 0) {
           $repeat['byweekno'][] = (string) $rrulearr['BYWEEKNO'];
-		} else {
+        } else {
           $byweekno = explode(',', $rrulearr['BYWEEKNO']);
           foreach ($byweekno as $weekno) {
             $repeat['byweekno'][] = (string) $weekno;
           }
-		}
+        }
       }
       if (array_key_exists('BYMONTH', $rrulearr)) {
-		$months = $this->ocCalendarObject->getByMonthOptions();
-		if (substr_count($rrulearr['BYMONTH'], ',') == 0) {
+        $months = $this->ocCalendarObject->getByMonthOptions();
+        if (substr_count($rrulearr['BYMONTH'], ',') == 0) {
           $repeat['bymonth'][] = $months[(string)$rrulearr['BYMONTH']];
-		} else {
+        } else {
           $bymonth = explode(',', $rrulearr['BYMONTH']);
           foreach ($bymonth as $month) {
             $repeat['bymonth'][] = $months[$month];
           }
-		}
+        }
       }
       switch ($rrulearr['FREQ']) {
-      case 'DAILY':
-        $repeat['repeat'] = 'daily';
-        break;
-      case 'WEEKLY':
-        if (array_key_exists('BYDAY', $rrulearr) === false) {
-          $rrulearr['BYDAY'] = '';
-        }
-        if ($rrulearr['INTERVAL'] % 2 == 0) {
-          $repeat['repeat'] = 'biweekly';
-          $rrulearr['INTERVAL'] = $rrulearr['INTERVAL'] / 2;
-        } elseif ($rrulearr['BYDAY'] == 'MO,TU,WE,TH,FR') {
-          $repeat['repeat'] = 'weekday';
-        } else {
-          $repeat['repeat'] = 'weekly';
-        }
-        break;
-      case 'MONTHLY':
-        $repeat['repeat'] = 'monthly';
-        if (array_key_exists('BYDAY', $rrulearr)) {
-          $repeat['month'] = 'weekday';
-        }else{
-          $repeat['month'] = 'monthday';
-        }
-        break;
-      case 'YEARLY':
-        $repeat['repeat'] = 'yearly';
-        if (array_key_exists('BYMONTH', $rrulearr)) {
-          $repeat['year'] = 'bydaymonth';
-        }elseif (array_key_exists('BYWEEKNO', $rrulearr)) {
-          $repeat['year'] = 'byweekno';
-        }elseif (array_key_exists('BYYEARDAY', $rrulearr)) {
-          $repeat['year'] = 'byyearday';
-        }else {
-          $repeat['year'] = 'bydate';
-        }
+        case 'DAILY':
+          $repeat['repeat'] = 'daily';
+          break;
+        case 'WEEKLY':
+          if (array_key_exists('BYDAY', $rrulearr) === false) {
+            $rrulearr['BYDAY'] = '';
+          }
+          if ($rrulearr['INTERVAL'] % 2 == 0) {
+            $repeat['repeat'] = 'biweekly';
+            $rrulearr['INTERVAL'] = $rrulearr['INTERVAL'] / 2;
+          } elseif ($rrulearr['BYDAY'] == 'MO,TU,WE,TH,FR') {
+            $repeat['repeat'] = 'weekday';
+          } else {
+            $repeat['repeat'] = 'weekly';
+          }
+          break;
+        case 'MONTHLY':
+          $repeat['repeat'] = 'monthly';
+          if (array_key_exists('BYDAY', $rrulearr)) {
+            $repeat['month'] = 'weekday';
+          } else {
+            $repeat['month'] = 'monthday';
+          }
+          break;
+        case 'YEARLY':
+          $repeat['repeat'] = 'yearly';
+          if (array_key_exists('BYMONTH', $rrulearr)) {
+            $repeat['year'] = 'bydaymonth';
+          } elseif (array_key_exists('BYWEEKNO', $rrulearr)) {
+            $repeat['year'] = 'byweekno';
+          } elseif (array_key_exists('BYYEARDAY', $rrulearr)) {
+            $repeat['year'] = 'byyearday';
+          } else {
+            $repeat['year'] = 'bydate';
+          }
       }
       $repeat['interval'] = $rrulearr['INTERVAL'];
       if (array_key_exists('COUNT', $rrulearr)) {
-		$repeat['end'] = 'count';
-		$repeat['count'] = $rrulearr['COUNT'];
+        $repeat['end'] = 'count';
+        $repeat['count'] = $rrulearr['COUNT'];
       } elseif (array_key_exists('UNTIL', $rrulearr)) {
-		$repeat['end'] = 'date';
-		$endbydate_day = substr($rrulearr['UNTIL'], 6, 2);
-		$endbydate_month = substr($rrulearr['UNTIL'], 4, 2);
-		$endbydate_year = substr($rrulearr['UNTIL'], 0, 4);
-		$repeat['date'] = $endbydate_day . '-' .  $endbydate_month . '-' . $endbydate_year;
+        $repeat['end'] = 'date';
+        $endByDateDay = substr($rrulearr['UNTIL'], 6, 2);
+        $endByDateMonth = substr($rrulearr['UNTIL'], 4, 2);
+        $endByDateYear = substr($rrulearr['UNTIL'], 0, 4);
+        $repeat['date'] = $endByDateDay . '-' .  $endByDateMonth . '-' . $endByDateYear;
       } else {
-		$repeat['end'] = 'never';
+        $repeat['end'] = 'never';
       }
       if (array_key_exists('weekdays', $repeat)) {
-		$repeat_weekdays_ = [];
-		$days = $this->ocCalendarObject->getWeeklyOptions();
-		foreach ($repeat['weekdays'] as $weekday) {
-          $repeat_weekdays_[] = $days[$weekday];
-		}
-		$repeat['weekdays'] = $repeat_weekdays_;
+        $repeatWeekdaysTmp = [];
+        $days = $this->ocCalendarObject->getWeeklyOptions();
+        foreach ($repeat['weekdays'] as $weekday) {
+          $repeatWeekdaysTmp[] = $days[$weekday];
+        }
+        $repeat['weekdays'] = $repeatWeekdaysTmp;
       }
     } else {
       $repeat['repeat'] = 'doesnotrepeat';
@@ -545,24 +568,24 @@ class LegacyEventsController extends Controller {
       return strcmp($a['displayname'], $b['displayname']);
     });
 
-    $access_class_options = $this->ocCalendarObject->getAccessClassOptions();
-    $repeat_options = $this->ocCalendarObject->getRepeatOptions();
-    $repeat_end_options = $this->ocCalendarObject->getEndOptions();
-    $repeat_month_options = $this->ocCalendarObject->getMonthOptions();
-    $repeat_year_options = $this->ocCalendarObject->getYearOptions();
-    $repeat_weekly_options = $this->ocCalendarObject->getWeeklyOptions();
-    $repeat_weekofmonth_options = $this->ocCalendarObject->getWeekofMonth();
-    $repeat_byyearday_options = $this->ocCalendarObject->getByYearDayOptions();
-    $repeat_bymonth_options = $this->ocCalendarObject->getByMonthOptions();
-    $repeat_byweekno_options = $this->ocCalendarObject->getByWeekNoOptions();
-    $repeat_bymonthday_options = $this->ocCalendarObject->getByMonthDayOptions();
+    $accessClassOptions = $this->ocCalendarObject->getAccessClassOptions();
+    $repeatOptions = $this->ocCalendarObject->getRepeatOptions();
+    $repeatEndOptions = $this->ocCalendarObject->getEndOptions();
+    $repeatMonthOptions = $this->ocCalendarObject->getMonthOptions();
+    $repeatYearOptions = $this->ocCalendarObject->getYearOptions();
+    $repeatWeeklyOptions = $this->ocCalendarObject->getWeeklyOptions();
+    $repeatWeekOfMonthOptions = $this->ocCalendarObject->getWeekofMonth();
+    $repeatByYearDayOptions = $this->ocCalendarObject->getByYearDayOptions();
+    $repeatByMonthOptions = $this->ocCalendarObject->getByMonthOptions();
+    $repeatByWeekNoOptions = $this->ocCalendarObject->getByWeekNoOptions();
+    $repeatByMonthDayOptions = $this->ocCalendarObject->getByMonthDayOptions();
 
     $template = '';
     if ($subTopic == self::SUBTOPIC_CLONE
         && $permissions & Constants::PERMISSION_READ) {
       $template = 'legacy/calendar/part.newevent';
       $uri = self::SUBTOPIC_NEW;
-    } else if ($permissions & Constants::PERMISSION_UPDATE) {
+    } elseif ($permissions & Constants::PERMISSION_UPDATE) {
       $template = 'legacy/calendar/part.editevent';
     } elseif ($permissions & Constants::PERMISSION_READ) {
       $template = 'legacy/calendar/part.showevent';
@@ -589,17 +612,17 @@ class LegacyEventsController extends Controller {
       'calendar_options' => $calendarOptions,
       'permissions' => $permissions,
       'lastmodified' => $lastmodified,
-      'access_class_options' => $access_class_options,
-      'repeat_options' => $repeat_options,
-      'repeat_month_options' => $repeat_month_options,
-      'repeat_weekly_options' => $repeat_weekly_options,
-      'repeat_end_options' => $repeat_end_options,
-      'repeat_year_options' => $repeat_year_options,
-      'repeat_byyearday_options' => $repeat_byyearday_options,
-      'repeat_bymonth_options' => $repeat_bymonth_options,
-      'repeat_byweekno_options' => $repeat_byweekno_options,
-      'repeat_bymonthday_options' => $repeat_bymonthday_options,
-      'repeat_weekofmonth_options' => $repeat_weekofmonth_options,
+      'access_class_options' => $accessClassOptions,
+      'repeat_options' => $repeatOptions,
+      'repeat_month_options' => $repeatMonthOptions,
+      'repeat_weekly_options' => $repeatWeeklyOptions,
+      'repeat_end_options' => $repeatEndOptions,
+      'repeat_year_options' => $repeatYearOptions,
+      'repeat_byyearday_options' => $repeatByYearDayOptions,
+      'repeat_bymonth_options' => $repeatByMonthOptions,
+      'repeat_byweekno_options' => $repeatByWeekNoOptions,
+      'repeat_bymonthday_options' => $repeatByMonthDayOptions,
+      'repeat_weekofmonth_options' => $repeatWeekOfMonthOptions,
 
       // 'summary' => $summary,
       'title' => $summary,
@@ -622,7 +645,7 @@ class LegacyEventsController extends Controller {
     ];
     if ($repeat['repeat'] != 'doesnotrepeat') {
       if (array_key_exists('weekofmonth', $repeat) === false) {
-		$repeat['weekofmonth'] = 1;
+        $repeat['weekofmonth'] = 1;
       }
       $repeatParameters = [
         'repeat_month' => isset($repeat['month']) ? $repeat['month'] : 'monthday',
@@ -644,11 +667,11 @@ class LegacyEventsController extends Controller {
       $start = $dtstart->getDateTime();
       $tWeekDay = $start->format('l');
       $shortWeekDay = strtoupper(substr($tWeekDay, 0, 2));
-      $transWeekDay = $this->l->t((string)$tWeekDay);
+      // $transWeekDay = $this->l->t((string)$tWeekDay);
       $tDayOfMonth = $start->format('j');
       $numMonth = $start->format('n');
-      $tMonth = $start->format('F');
-      $transMonth = $this->l->t((string)$tMonth);
+      // $tMonth = $start->format('F');
+      // $transMonth = $this->l->t((string)$tMonth);
       $transByWeekNo = $start->format('W');
       $transByYearDay = $start->format('z');
 
@@ -676,10 +699,11 @@ class LegacyEventsController extends Controller {
       $this->appName(),
       $template,
       $templateParameters,
-    'blank');
+      'blank');
   }
 
-  private function newEvent()
+  /** @return Http\Response */
+  private function newEvent():Http\Response
   {
     $errarr = $this->vCalendarService->validateRequest($this->parameterService);
     if ($errarr) {
@@ -692,14 +716,15 @@ class LegacyEventsController extends Controller {
     try {
       $localUri = $this->calDavService->createCalendarObject($cal, null, $vCalendar);
       $this->logError(__METHOD__ . ": created object with uri " . $localUri);
-    } catch(\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       return self::grumble($this->exceptionChainData($t));
     }
     return self::valueResponse($localUri, $this->l->t("Calendar object successfully created."));
   }
 
-  private function editEvent()
+  /** @return Http\Response */
+  private function editEvent():Http\Response
   {
     $errarr = $this->vCalendarService->validateRequest($this->parameterService);
     if ($errarr) {
@@ -724,14 +749,15 @@ class LegacyEventsController extends Controller {
 
     if ($data['calendarid'] != $calendarId) {
       $this->calDavService->deleteCalendarObject($data['calendarid'], $uri);
-      $this->calDavService->createCalendarObject($data['calendarid'], $uri,  $vCalendar);
+      $this->calDavService->createCalendarObject($data['calendarid'], $uri, $vCalendar);
     } else {
       $this->calDavService->updateCalendarObject($data['calendarid'], $uri, $vCalendar);
     }
     return self::response($this->l->t("Successfully updated `%s'.", [$uri]));
   }
 
-  private function deleteEvent()
+  /** @return Http\Response */
+  private function deleteEvent():Http\Response
   {
     $uri = $this->parameterService['uri'];
     $calendarId = $this->parameterService['calendarid'];
@@ -740,9 +766,11 @@ class LegacyEventsController extends Controller {
   }
 
   /**
+   * @return Http\Response
+   *
    * @NoAdminRequired
    */
-  public function exportEvent()
+  public function exportEvent():Http\Response
   {
     $calendarId = $this->parameterService['calendarid'];
     $uri = $this->parameterService['eventuri'];
@@ -763,18 +791,19 @@ class LegacyEventsController extends Controller {
         null, Http::STATUS_FORBIDDEN);
     }
     $calendarUris = $this->calDavService->calendarUris($calendarId);
-    $object = $this->ocCalendarObject->cleanByAccessClass($calendarUris['ownerid'], $object);
+    $ownerId = $calendarUris['ownerid'];
+    $object = $this->ocCalendarObject->cleanByAccessClass($ownerId, $object);
     $accessClass = $this->accessClass($object);
     $permissions = $calendar->getPermissions();
     switch ($accessClass) {
-    case 'PUBLIC':
-      break;
-    case 'CONFIDENTIAL':
-      $permissions &= ~Constants::PERMISSION_READ;
-      break;
-    case 'PRIVATE':
-      $permissions &= ~Constants::PERMISSION_UPDATE;
-      break;
+      case 'PUBLIC':
+        break;
+      case 'CONFIDENTIAL':
+        $permissions &= ~Constants::PERMISSION_READ;
+        break;
+      case 'PRIVATE':
+        $permissions &= ~Constants::PERMISSION_UPDATE;
+        break;
     }
 
     $this->logError("Permissions: " . $permissions);
@@ -785,17 +814,20 @@ class LegacyEventsController extends Controller {
       'text/calendar');
   }
 
-  private function notImplemented($method)
-  {
-    return self::grumble($this->l->t("Method %s is not yet implemented.", [$method]));
-  }
-
   /**
-   * @brief exports an event and convert all times to UTC
-   * @param integer $id id of the event
+   * Exports an event and convert all times to UTC
+   *
+   * @param string $uri
+   *
+   * @param VCalendar $vObject
+   *
+   * @param string $ownerId
+   *
+   * @param int $permissions
+   *
    * @return string
    */
-  private function generateEvent($uri, $vObject, $ownerId, $permissions)
+  private function generateEvent(string $uri, VCalendar $vObject, string $ownerId, int $permissions):string
   {
     $return = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:Nextloud cafevdb " . $this->appVersion() . "\nX-WR-CALNAME:" . $uri . "\n";
     $return .= $this->generateEventData($vObject, $ownerId, $permissions);
@@ -804,59 +836,67 @@ class LegacyEventsController extends Controller {
   }
 
   /**
-   * @brief generates the VEVENT/VTODO/VJOURNAL with UTC dates
-   * @param array $event
+   * Serializes the VEVENT/VTODO/VJOURNAL with UTC dates.
+   *
+   * @param VCalendar $vObject
+   *
+   * @param string $ownerId
+   *
+   * @param int $permissions
+   *
    * @return string
    */
-  private function generateEventData($vObject, $ownerId, $permissions)
+  private function generateEventData(VCalendar $vObject, string $ownerId, int $permissions):string
   {
-    if(!$vObject){
+    if (!$vObject) {
       return false;
     }
     if ($ownerId != $this->userId() && !($permissions & Constants::PERMISSION_READ)) {
-        return '';
+      return '';
     }
-    if($vObject->VEVENT){
+    if ($vObject->VEVENT) {
       return $vObject->VEVENT->serialize();
     }
-    if($vObject->VTODO){
+    if ($vObject->VTODO) {
       return $vObject->VTODO->serialize();
     }
-    if($vObject->VJOURNAL){
+    if ($vObject->VJOURNAL) {
       return $vObject->VJOURNAL->serialize();
     }
     return '';
   }
 
-  private function accessClass($vObject)
+  /**
+   * @param VCalendar $vObject
+   *
+   * @return string
+   */
+  private function accessClass(VCalendar $vObject):string
   {
-    if($vObject->VEVENT && $vObject->VEVENT->CLASS) {
+    if ($vObject->VEVENT && $vObject->VEVENT->CLASS) {
       return $vObject->VEVENT->CLASS->getValue();
     }
-    if($vObject->VTODO && $vObject->VTODO->CLASS) {
+    if ($vObject->VTODO && $vObject->VTODO->CLASS) {
       return $vObject->VTODO->CLASS->getValue();
     }
-    if($vObject->VJOURNAL && $vObject->VJOURNAL->CLASS) {
+    if ($vObject->VJOURNAL && $vObject->VJOURNAL->CLASS) {
       return $vObject->VJOURNAL->CLASS->getValue();
     }
     return 'PUBLIC';
   }
 
   /**
-   * @brief fixes new line breaks
-   * (fixes problems with Apple iCal)
-   * @param string $string to fix
+   * Fixes new line breaks (fixes problems with Apple iCal).
+   *
+   * @param string $string to fix.
+   *
    * @return string
    */
-  private function fixLineBreaks($string) {
+  private function fixLineBreaks(string $string)
+  {
     $string = str_replace("\r\n", "\n", $string);
     $string = str_replace("\r", "\n", $string);
     $string = str_replace("\n", "\r\n", $string);
     return $string;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -68,14 +68,15 @@ class MusiciansController extends Controller
   /** @var array */
   private $countryNames;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , IRequest $request
-    , $userId
-    , IL10N $l10n
-    , ILogger $logger
-    , EntityManager $entityManager
-    , ConfigService $configService
+    string $appName,
+    IRequest $request,
+    ?string $userId,
+    IL10N $l10n,
+    ILogger $logger,
+    EntityManager $entityManager,
+    ConfigService $configService,
   ) {
     parent::__construct($appName, $request);
     $this->l = $l10n;
@@ -85,10 +86,9 @@ class MusiciansController extends Controller
     $this->configService = $configService;
     $this->countryNames = $this->localeCountryNames();
   }
+  // phpcs:enable
 
   /**
-   * @NoAdminRequired
-   *
    * Get all the data of the given musician. This mess removes "circular"
    * associations as we are really only interested into the data for this
    * single person.
@@ -96,8 +96,10 @@ class MusiciansController extends Controller
    * @param int $musicianId
    *
    * @return DataResponse
+   *
+   * @NoAdminRequired
    */
-  public function get(int $musicianId):Response
+  public function get(int $musicianId):DataResponse
   {
     $musician = $this->musiciansRepository->find($musicianId);
 
@@ -107,12 +109,35 @@ class MusiciansController extends Controller
   }
 
   /**
-   * @NoAdminRequired
-   *
    * Search by user-id and names. Pattern may contain wildcards (* and %).
+   *
+   * @param string $pattern
+   *
+   * @param null|int $limit
+   *
+   * @param null|int $offset
+   *
+   * @param null|string $projectName
+   *
+   * @param null|int $projectId
+   *
+   * @param array $ids
+   *
+   * @param string $scope
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
    */
-  public function search(string $pattern, ?int $limit = null, ?int $offset = null, ?string $projectName = null, ?int $projectId = null, array $ids = [], string $scope = self::SCOPE_MUSICIANS):Response
-  {
+  public function search(
+    string $pattern,
+    ?int $limit = null,
+    ?int $offset = null,
+    ?string $projectName = null,
+    ?int $projectId = null,
+    array $ids = [],
+    string $scope = self::SCOPE_MUSICIANS
+  ):DataResponse {
 
     switch ($scope) {
       case self::SCOPE_ADDRESSBOOK:
@@ -191,28 +216,41 @@ class MusiciansController extends Controller
     return self::dataResponse($musiciansData);
   }
 
-  private function getFlatMusician(Entities\Musician $musician, array $only = null)
+  /**
+   * @param Entities\Musician $musician
+   *
+   * @param array $only
+   *
+   * @return array
+   */
+  private function getFlatMusician(Entities\Musician $musician, array $only = null):array
   {
-    return array_merge([
-      'id' => $musician->getId(),
-      'firstName' => $musician->getFirstName(),
-      'surName' => $musician->getSurName(),
-      'displayName' => $musician->getDisplayName(),
-      'nickName' => $musician->getNickName(),
-      'formalDisplayName' => $musician->getPublicName(firstNameFirst: false),
-      'informalDisplayName' => $musician->getPublicName(firstNameFirst: true),
-      'userId' => $musician->getUserIdSlug(),
-      'countryName' => $this->countryNames[$musician->getCountry()] ?? '',
-    ], $this->flattenMusician($musician, only: [])
+    return array_merge(
+      [
+        'id' => $musician->getId(),
+        'firstName' => $musician->getFirstName(),
+        'surName' => $musician->getSurName(),
+        'displayName' => $musician->getDisplayName(),
+        'nickName' => $musician->getNickName(),
+        'formalDisplayName' => $musician->getPublicName(firstNameFirst: false),
+        'informalDisplayName' => $musician->getPublicName(firstNameFirst: true),
+        'userId' => $musician->getUserIdSlug(),
+        'countryName' => $this->countryNames[$musician->getCountry()] ?? '',
+      ],
+      $this->flattenMusician($musician, only: [])
     );
   }
 
   /**
-   * @NoAdminRequired
-   *
    * Get a short description of the project with no extra data.
-   */
-  public function getProject(int $projectId):Response
+   *
+   * @param int $projectId
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   *   */
+  public function getProject(int $projectId):DataResponse
   {
     $project = $this->getDatabaseRepository(Entities\Project::class)->find($projectId);
 
@@ -220,11 +258,21 @@ class MusiciansController extends Controller
   }
 
   /**
-   * @NoAdminRequired
-   *
    * Search by user-id and names. Pattern may contain wildcards (* and %).
+   *
+   * @param string $pattern
+   *
+   * @param null|int $limit
+   *
+   * @param null|int $offset
+   *
+   * @param null|int $year
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
    */
-  public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null): Response
+  public function searchProjects(string $pattern, ?int $limit = null, ?int $offset = null, ?int $year = null):DataResponse
   {
     $repository = $this->getDatabaseRepository(Entities\Project::class);
 
@@ -253,10 +301,4 @@ class MusiciansController extends Controller
 
     return self::dataResponse(array_map(fn($project) => $this->flattenProject($project), $projects));
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

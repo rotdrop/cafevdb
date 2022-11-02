@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,12 @@ use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
+/**
+ * AJAX end-points for "expert-mode" operations.
+ *
+ * @todo This is at least partly a relict of the pre-nextcloud time. Check
+ * whether it is still needed.
+ */
 class ExpertModeController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -70,17 +76,18 @@ class ExpertModeController extends Controller
   /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
   private $pageNavigation;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
-    , ToolTipsService $toolTipsService
-    , GeoCodingService $geoCodingService
-    , ProjectService $projectService
-    , EventsService $eventsService
-    , CalDavService $calDavService
-    , instrumentationService $instrumentationService
-    , PageNavigation $pageNavigation
+    ?string $appName,
+    IRequest $request,
+    ConfigService $configService,
+    ToolTipsService $toolTipsService,
+    GeoCodingService $geoCodingService,
+    ProjectService $projectService,
+    EventsService $eventsService,
+    CalDavService $calDavService,
+    instrumentationService $instrumentationService,
+    PageNavigation $pageNavigation,
   ) {
     parent::__construct($appName, $request);
 
@@ -94,20 +101,26 @@ class ExpertModeController extends Controller
     $this->instrumentationService = $instrumentationService;
     $this->l = $this->l10N();
   }
+  // phpcs:enable
 
   /**
-   * Return settings form
+   * @param string $operation
+   *
+   * @param mixed $data
+   *
+   * @return Http\Response
    *
    * @NoAdminRequired
    */
-  public function action($operation, $data) {
+  public function action(string $operation, mixed $data):Http\Response
+  {
     switch ($operation) {
       case 'syncevents':
         $result = [];
         //$calendarIds = $this->eventsService->defaultCalendars();
         $calendars = $this->calDavService->getCalendars(true);
         foreach ($calendars as $calendar) {
-          if (!$this->calDavService->isGroupSharedCalendar($calendar->getKey(), $this->groupId()))  {
+          if (!$this->calDavService->isGroupSharedCalendar($calendar->getKey(), $this->groupId())) {
             continue;
           }
           $events = $calendar->search('', [], [ 'types' => [ 'VEVENT' ] ]);
@@ -156,8 +169,3 @@ class ExpertModeController extends Controller
     return self::grumble($this->l->t('Unknown Request'));
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

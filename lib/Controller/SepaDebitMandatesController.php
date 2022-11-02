@@ -1646,8 +1646,3 @@ class SepaDebitMandatesController extends Controller
     return self::response($messages);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

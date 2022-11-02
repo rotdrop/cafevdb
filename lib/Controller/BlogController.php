@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,11 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IUserSession;
@@ -39,7 +42,14 @@ use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
-class BlogController extends Controller {
+/**
+ * AJAX end-points for the db-app blog.
+ *
+ * @todo Check whether the blog is still needed at all. Perhaps replace by
+ * context sensisitive one-time popup messages.
+ */
+class BlogController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
@@ -67,17 +77,18 @@ class BlogController extends Controller {
   /** @var ILogger */
   protected $logger;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , IURLGenerator $urlGenerator
-    , RequestParameterService $parameterService
-    , ToolTipsService $toolTipsService
-    , BlogMapper $blogMapper
-    , $userId
-    , IL10N $l10n
-    , IDateTimeZone $timeZone
-    , ILogger $logger
+    ?string $appName,
+    IRequest $request,
+    IURLGenerator $urlGenerator,
+    RequestParameterService $parameterService,
+    ToolTipsService $toolTipsService,
+    BlogMapper $blogMapper,
+    ?string $userId,
+    IL10N $l10n,
+    IDateTimeZone $timeZone,
+    ILogger $logger,
   ) {
     parent::__construct($appName, $request);
 
@@ -90,13 +101,16 @@ class BlogController extends Controller {
     $this->l = $l10n;
     $this->timeZone = $timeZone;
   }
+  // phpcs:enable
 
   /**
-   * Return template for editor
+   * Return template for editor.
+   *
+   * @return Response
    *
    * @NoAdminRequired
    */
-  public function editEntry()
+  public function editEntry():Response
   {
     $author   = $this->parameterService->getParam('author', $this->userId);
 
@@ -115,9 +129,9 @@ class BlogController extends Controller {
       // This is an edit attempt.
       try {
         $entry = $this->blogMapper->find($blogId);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logger->logException($t);
-        return self::grumble($this->l->t('Error, caught an exception `%s\'.', [$e->getMessage()]));
+        return self::grumble($this->l->t('Error, caught an exception `%s\'.', [$t->getMessage()]));
       }
       if (!$entry) {
         return self::grumble('Blog entry with id `%s\' could not be retrieved.', [$blogId]);
@@ -131,7 +145,7 @@ class BlogController extends Controller {
       }
       $popup   = $entry->getPopup() != 0;
       $reader  = $entry->getReader();
-    } else if ($inReplyTo >= 0) {
+    } elseif ($inReplyTo >= 0) {
       $priority = false;
       $popup    = false;
       $reader   = '';
@@ -165,9 +179,13 @@ class BlogController extends Controller {
   /**
    * Return template for editor
    *
+   * @param string $operation
+   *
+   * @return Response
+   *
    * @NoAdminRequired
    */
-  public function action($operation)
+  public function action(string $operation):Response
   {
     $author    = $this->parameterService->getParam('author', $this->userId);
     $blogId    = $this->parameterService->getParam('blogId', null);
@@ -181,8 +199,8 @@ class BlogController extends Controller {
     $realValue = filter_var($popup, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
     if ($realValue === null) {
       return self::grumble(
-        $this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.',
-                    [$popup, 'popup']));
+        $this->l->t(
+          'Value "%1$s" for set "%2$s" is not convertible to boolean.', [$popup, 'popup']));
     }
     $popup = $realValue;
 
@@ -196,8 +214,7 @@ class BlogController extends Controller {
 
     if ($priority !== false && !is_numeric($priority)) {
       return self::grumble(
-        $this->l->t('Message priority should be numeric (and in principle positiv and in the range 0 - 255). I got `%s\'',
-                    [$priority]));
+        $this->l->t('Message priority should be numeric (and in principle positiv and in the range 0 - 255). I got `%s\'', [ $priority ]));
     }
 
     $generateContents = true;
@@ -210,30 +227,30 @@ class BlogController extends Controller {
           return self::grumble($this->l->t('Refusing to create empty blog entry.'));
         }
         $priority = intval($priority) % 256;
-        $result = $this->blogMapper->createNote($author, $inReplyTo, $content, $priority, $popup);
+        /* $result = */$this->blogMapper->createNote($author, $inReplyTo, $content, $priority, $popup);
         break;
-    case 'modify':
-      if ($blogId < 0) {
-        return self::grumble($this->l->t('Cannot modify a blog-entry without id.'));
-      }
-      $priority = intval($priority) % 256;
-      $result = $this->blogMapper->modifyNote($author, $blogId, trim($content), $priority, $popup, $reader);
-      break;
-    case 'markread':
-      if ($blogId < 0) {
-        return self::grumble($this->l->t('Cannot modify a blog-entry without id.'));
-      }
-      $result = $this->blogMapper->modifyNote($author, $blogId, '', false, null, $author);
-      $generateContents = false;
-      break;
-    case 'delete':
-      if ($blogId < 0) {
-        return self::grumble($this->l->t('Cannot delete a blog-thread without id.'));
-      }
-      $result = $this->blogMapper->deleteNote($blogId, false);
-      break;
-    default:
-      return self::grumble($this->l->t('Unknown Request'));
+      case 'modify':
+        if ($blogId < 0) {
+          return self::grumble($this->l->t('Cannot modify a blog-entry without id.'));
+        }
+        $priority = intval($priority) % 256;
+        /* $result = */$this->blogMapper->modifyNote($author, $blogId, trim($content), $priority, $popup, $reader);
+        break;
+      case 'markread':
+        if ($blogId < 0) {
+          return self::grumble($this->l->t('Cannot modify a blog-entry without id.'));
+        }
+        /* $result = */$this->blogMapper->modifyNote($author, $blogId, '', false, null, $author);
+        $generateContents = false;
+        break;
+      case 'delete':
+        if ($blogId < 0) {
+          return self::grumble($this->l->t('Cannot delete a blog-thread without id.'));
+        }
+        /* $result = */$this->blogMapper->deleteNote($blogId, false);
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown Request'));
     }
 
     if ($generateContents) {
@@ -257,11 +274,4 @@ class BlogController extends Controller {
 
     return self::dataResponse($responseData);
   }
-
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

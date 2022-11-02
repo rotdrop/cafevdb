@@ -128,7 +128,7 @@ trait FileUploadRowTrait
       $file['max_human_file_size']  = $maxHumanFileSize;
       if ($file['upload_mode'] == UploadsController::UPLOAD_MODE_COPY && !empty($file['original_name'])) {
         $file['name'] = $file['original_name'];
-      } elseif (empty($file['original_name']))  {
+      } elseif (empty($file['original_name'])) {
         $file['original_name'] = $file['name']; // clone
       }
 
@@ -162,6 +162,8 @@ trait FileUploadRowTrait
 
   /**
    * @param array $file File-upload data as prepared by self::prepareUploadInfo().
+   *
+   * @return void
    */
   protected function removeStashedFile(array $file):void
   {
