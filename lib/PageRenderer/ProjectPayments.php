@@ -221,26 +221,29 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       'column' => 'key',
       'encode' => 'BIN2UUID(%s)',
     ],
-    // link in the storages table to get the root directory for the balances
-    self::DATABASE_STORAGES_TABLE => [
-      'entity' => Entities\DatabaseStorage::class,
-      'flags' => self::JOIN_READONLY,
-      'identifier' => [
-        'id' => [
-          'table' => self::PROJECTS_TABLE,
-          'column' => 'financial_balance_documents_storage_id',
-        ],
-      ],
-      'column' => 'id',
-    ],
+
     // link the balance directories via their parent_id for the composite payment
-    self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'composite' => [
+    self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE => [
       'entity' => Entities\DatabaseStorageFolder::class,
       'flags' => self::JOIN_READONLY,
+      'sql' => 'SELECT
+  dsf.*,
+  s.root_id,
+  pdsf.name AS parent_name,
+  p.id AS project_id
+FROM Projects p
+INNER JOIN DatabaseStorages s
+  ON s.id = p.financial_balance_documents_storage_id
+LEFT JOIN DatabaseStorageDirEntries pdsf
+  ON pdsf.type = "folder" AND (p.type = "permanent" AND pdsf.parent_id = s.root_id)
+LEFT JOIN DatabaseStorageDirEntries dsf
+  ON dsf.type = "folder" AND ((p.type = "permanent" AND dsf.parent_id = pdsf.id)
+     OR (p.type= "temporary" AND dsf.parent_id = s.root_id))
+WHERE dsf.id IS NOT NULL',
       'identifier' => [
-        'parent_id' => [
-          'table' => self::DATABASE_STORAGES_TABLE,
-          'column' => 'root_id'
+        'project_id' => [
+          'table' => self::PROJECTS_TABLE,
+          'column' => 'id',
         ],
         'id' => 'balance_documents_folder_id',
       ],
@@ -248,13 +251,27 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
     ],
 
     // link the balance directories via their parent_id for the split payments
-    self::DATABASE_STORAGE_DIR_ENTRIES_TABLE . self::VALUES_TABLE_SEP . 'split' => [
+    self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE => [
       'entity' => Entities\DatabaseStorageFolder::class,
       'flags' => self::JOIN_READONLY,
+      'sql' => 'SELECT
+  dsf.*,
+  s.root_id,
+  pdsf.name AS parent_name,
+  p.id AS project_id
+FROM Projects p
+INNER JOIN DatabaseStorages s
+  ON s.id = p.financial_balance_documents_storage_id
+LEFT JOIN DatabaseStorageDirEntries pdsf
+  ON pdsf.type = "folder" AND (p.type = "permanent" AND pdsf.parent_id = s.root_id)
+LEFT JOIN DatabaseStorageDirEntries dsf
+  ON dsf.type = "folder" AND ((p.type = "permanent" AND dsf.parent_id = pdsf.id)
+     OR (p.type= "temporary" AND dsf.parent_id = s.root_id))
+WHERE dsf.id IS NOT NULL',
       'identifier' => [
-        'parent_id' => [
-          'table' => self::DATABASE_STORAGES_TABLE,
-          'column' => 'root_id'
+        'project_id' => [
+          'table' => self::PROJECTS_TABLE,
+          'column' => 'id',
         ],
         'id' => [
           'table' => self::PROJECT_PAYMENTS_TABLE,
@@ -882,10 +899,6 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
       },
     ];
 
-    $balanceRootid = empty($this->project->getFinancialBalanceDocumentsFolder())
-      ? 0
-      : $this->project->getFinancialBalanceDocumentsFolder()->getId();
-
     $opts['fdd']['balance_documents_folder_id'] = [
       'name' => $this->l->t('Composite Project Balance'),
       'tab' => [ 'id' => 'booking' ],
@@ -911,8 +924,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
           'ifnull' => [ false ],
           'cast' => [ false ],
         ],
+        'groups' => 'CONCAT($table.parent_name, "/")',
+        'orderby' => '$table.parent_name ASC, $table.name ASC',
         'data' => 'CONCAT($table.name, "/")',
-        'filters' => '$table.parent_id = ' . $balanceRootid,
+        'filters' => '$table.project_id = ' . $this->projectId,
       ],
       'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
       'display' => [
@@ -1006,8 +1021,10 @@ FROM ".self::PROJECT_PAYMENTS_TABLE." __t2",
             'ifnull' => [ false ],
             'cast' => [ false ],
           ],
+          'groups' => 'CONCAT($table.parent_name, "/")',
+          'orderby' => '$table.parent_name ASC, $table.name ASC',
           'data' => 'CONCAT($table.name, "/")',
-          'filters' => '$table.parent_id = ' . $balanceRootid,
+          'filters' => '$table.project_id = ' . $this->projectId,
         ],
         'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
           if ($this->isCompositeRow($row, $pme)) {
