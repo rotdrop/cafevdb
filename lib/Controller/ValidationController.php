@@ -1,11 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license GNU AGPL version 3 or any later version
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
+use OCP\AppFramework\Http\DataResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -33,7 +34,14 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 
 use OCA\CAFEVDB\Common\Util;
 
-class ValidationController extends Controller {
+/**
+ * General data validation controller.
+ *
+ * @todo This controller almost has no code in it, check whether it is needed
+ * or move more validation code here.
+ */
+class ValidationController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
@@ -43,12 +51,13 @@ class ValidationController extends Controller {
   /** @var \OCA\CAFEVDB\Service\FuzzyInputService */
   private $fuzzyInput;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , RequestParameterService $parameterService
-    , ConfigService $configService
-    , FuzzyInputService $fuzzyInput
+    ?string $appName,
+    IRequest $request,
+    RequestParameterService $parameterService,
+    ConfigService $configService,
+    FuzzyInputService $fuzzyInput,
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
@@ -56,31 +65,32 @@ class ValidationController extends Controller {
     $this->fuzzyInput = $fuzzyInput;
     $this->l = $this->l10N();
   }
+  // phpcs:enable
 
   /**
+   * @param string $topic
+   *
+   * @param string $value
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic, $value)
+  public function serviceSwitch(string $topic, string $value):DataResponse
   {
     switch ($topic) {
-    case 'monetary_value':
-    case 'monetary-value':
-      $value = Util::normalizeSpaces($value);
-      $amount = 0;
-      if (!empty($value)) {
-        $amount = $this->fuzzyInput->currencyValue($value);
-        if ($amount === false) {
-          return self::grumble($this->l->t('Could not parse number: "%s"', [ $value ]));
+      case 'monetary_value':
+      case 'monetary-value':
+        $value = Util::normalizeSpaces($value);
+        $amount = 0;
+        if (!empty($value)) {
+          $amount = $this->fuzzyInput->currencyValue($value);
+          if ($amount === false) {
+            return self::grumble($this->l->t('Could not parse number: "%s"', [ $value ]));
+          }
         }
-      }
-      return self::dataResponse([ 'amount' => $amount ]);
+        return self::dataResponse([ 'amount' => $amount ]);
     }
     return self::grumble($this->l->t('Unknown Request'));
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

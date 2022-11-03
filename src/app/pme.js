@@ -1589,6 +1589,32 @@ const installTabHandler = function(containerSel, changeCallback) {
 };
 
 /**
+ * Fire a custom context menu event with the database key data if
+ * right-clicking on a row.
+ *
+ * @param {jQuery} element The tr element of the list-view.
+ *
+ * @param {object} event The event which triggered the handler.
+ *
+ * @param {jQuery} container The form or div containing the form.
+ */
+const pmeContextMenu = function(element, event, container) {
+
+  const $row = $(element).closest('tr.' + pmeToken('row'));
+  const recordId = $row.data(pmePrefix + '_sys_rec');
+  const groupByRecordId = $row.data(pmePrefix + '_sys_groupby_rec');
+
+  const databaseRecords = {
+    recordId,
+    groupByRecordId,
+  };
+
+  console.info('CONTEXT DATA', databaseRecords, element, event, container);
+
+  $row.trigger('pme:contextmenu', [event, databaseRecords]);
+};
+
+/**
  * Open the view or modification dialog for the data-set of the
  * respective row after clicking on the row.
  *
@@ -1597,7 +1623,6 @@ const installTabHandler = function(containerSel, changeCallback) {
  * @param {object} event The event which triggered the handler.
  *
  * @param {jQuery} container The form or div containing the form.
- *
  */
 const pmeOpenRowDialog = function(element, event, container) {
 
@@ -1806,6 +1831,16 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
         pmeOpenRowDialog(this, event, container);
       });
   }
+
+  const contextMenuRowSelector = formSel + ' tr.' + pmeToken('row');
+  container
+    .off('contextmenu', contextMenuRowSelector)
+    .on('contextmenu', contextMenuRowSelector, function(event) {
+      if (event.ctrlKey) {
+        return; // let the user see the normal context menu
+      }
+      pmeContextMenu(this, event, container);
+    });
 
   if (!noSubmitHandlers) {
     // All remaining submit event result in a reload

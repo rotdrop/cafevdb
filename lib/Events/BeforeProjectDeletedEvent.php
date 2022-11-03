@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,46 +26,7 @@ namespace OCA\CAFEVDB\Events;
 
 use OCP\EventDispatcher\Event;
 
-class BeforeProjectDeletedEvent extends Event {
-
-  /** @var int */
-  private $projectId;
-
-  /** @var string */
-  private $projectName;
-
-  /**
-   * @var bool
-   *
-   * Set to true if the project was kept but disabled.
-   */
-  private $disabled;
-
-  public function __construct($projectId, $projectName, $disabled)
-  {
-    parent::__construct();
-    $this->projectId = $projectId;
-    $this->projectName = $projectName;
-    $this->diabled = $disabled;
-  }
-
-  public function getProjectId():int
-  {
-    return $this->projectId;
-  }
-
-  public function getProjectName():string
-  {
-    return $this->projectName;
-  }
-
-  public function getDisabled():bool
-  {
-    return $this->disabled;
-  }
+/** Fired before the project is actually deleted or soft-deleted. */
+class BeforeProjectDeletedEvent extends ProjectEvent
+{
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

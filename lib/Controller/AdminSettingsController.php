@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  S$parameteree the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\RequestService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 
+/** AJAX end-points for admin setttings. */
 class AdminSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -44,11 +45,12 @@ class AdminSettingsController extends Controller
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
   private $wikiRPC;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
-    , WikiRPC $wikiRPC
+    ?string $appName,
+    IRequest $request,
+    ConfigService $configService,
+    WikiRPC $wikiRPC,
   ) {
     parent::__construct($appName, $request);
 
@@ -57,13 +59,18 @@ class AdminSettingsController extends Controller
     $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
     $this->l = $this->l10N();
   }
+  // phpcs:enable
 
   /**
+   * @param string $parameter
+   *
+   * @return DataResponse
+   *
    * @NoGroupMemberRequired
    * _AT_SubAdminRequired
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
-  public function get($parameter)
+  public function get(string $parameter):DataResponse
   {
     $value = null;
     switch ($parameter) {
@@ -93,19 +100,31 @@ class AdminSettingsController extends Controller
   }
 
   /**
+   * @param string $parameter
+   *
+   * @param mixed $value
+   *
+   * @return DataResponse
+   *
    * @NoGroupMemberRequired
    */
-  public function setAdminOnly($parameter, $value)
+  public function setAdminOnly(string $parameter, mixed $value):DataResponse
   {
     return $this->set($parameter, $value);
   }
 
   /**
+   * @param string $parameter
+   *
+   * @param mixed $value
+   *
+   * @return DataResponse
+   *
    * @NoGroupMemberRequired
    * _AT_SubAdminRequired
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
-  public function setDelegated($parameter, $value)
+  public function setDelegated(string $parameter, mixed $value):DataResponse
   {
     switch ($parameter) {
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
@@ -114,7 +133,14 @@ class AdminSettingsController extends Controller
     return self::grumble($this->l->t('Settings is reserved to cloud-administrators: "%s".', $parameter));
   }
 
-  private function set($parameter, $value = null)
+  /**
+   * @param string $parameter
+   *
+   * @param mixed $value
+   *
+   * @return DataResponse
+   */
+  private function set(string $parameter, mixed $value = null):DataResponse
   {
     $wikiNameSpace = $this->getAppValue('wikinamespace');
     $orchestraUserGroup = $this->getAppValue('usergroup');
@@ -153,7 +179,7 @@ class AdminSettingsController extends Controller
           if (empty($userGroup)) {
             return self::grumble($this->l->t('Orchestra management group is unset or non-existent'));
           }
-          $currentAdmins = array_map(function($user) { return $user->getUID(); }, $this->getGroupSubAdmins());
+          $currentAdmins = array_map(fn($user) => user->getUID(), $this->getGroupSubAdmins());
           $missing = array_diff($value, $currentAdmins);
           $remaining = array_intersect($value, $currentAdmins);
           $excess = array_diff($currentAdmins, $value);
@@ -257,8 +283,14 @@ class AdminSettingsController extends Controller
 
   /**
    * Grant access to wiki-namespace
+   *
+   * @param string $nameSpace
+   *
+   * @param string $group
+   *
+   * @return void
    */
-  private function grantWikiAccess($nameSpace, $group)
+  private function grantWikiAccess(string $nameSpace, string $group):void
   {
     $this->wikiRPC->addAcl($nameSpace.':*', '@'.$group, WikiRPC::AUTH_DELETE);
     $this->wikiRPC->addAcl('*', '@'.$group, WikiRPC::AUTH_READ);
@@ -266,15 +298,16 @@ class AdminSettingsController extends Controller
 
   /**
    * Revoke access to wiki-namespace
+   *
+   * @param string $nameSpace
+   *
+   * @param string $group
+   *
+   * @return void
    */
-  private function revokeWikiAccess($nameSpace, $group)
+  private function revokeWikiAccess(string $nameSpace, string $group):void
   {
     $this->wikiRPC->delAcl('*', '@'.$group);
     $this->wikiRPC->delAcl($nameSpace.':*', '@'.$group);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

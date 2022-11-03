@@ -23,10 +23,18 @@
 
 import { $, appName } from './globals.js';
 
-function markDialog($element) {
-  const $dialog = $element.closest('.ui-dialog.pme-table-dialog');
+function markDialog($dropDownContainer) {
+  const $dialog = $dropDownContainer.closest('.ui-dialog.pme-table-dialog');
   $dialog.toggleClass('dialog-dropdown-shown', $dialog.find('.dropdown-shown').length > 0);
 }
+
+const hideActionMenu = function($dropDownContainer) {
+  $dropDownContainer
+    .removeClass('dropdown-shown')
+    .removeClass('context-menu');
+  $dropDownContainer.find('.dropdown-content').removeAttr('style');
+  return $dropDownContainer;
+};
 
 const installActionMenuHandlers = function($container) {
   $container = $container || $('#content.app-' + appName);
@@ -36,9 +44,12 @@ const installActionMenuHandlers = function($container) {
     $this.toggleClass('dropdown-shown');
     if ($this.hasClass('dropdown-shown')) {
       // only keep one menu open
-      $('.dropdown-container.dropdown-no-hover').not($this).removeClass('dropdown-shown');
+      hideActionMenu($('.dropdown-container.dropdown-no-hover').not($this));
+    } else {
+      hideActionMenu($this);
     }
     markDialog($this);
+    $.fn.cafevTooltip.remove();
     if ($(event.target).is('button.action-menu-toggle')) {
       return false;
     }
@@ -48,9 +59,9 @@ const installActionMenuHandlers = function($container) {
   $container.on('click', function(event) {
     const $menuContainer = $(event.target).closest('.dropdown-container.dropdown-no-hover');
     if ($menuContainer.length === 0) {
-      $('.dropdown-container.dropdown-no-hover').removeClass('dropdown-shown');
-      markDialog($('.dropdown-container.dropdown-no-hover').removeClass('dropdown-shown'));
+      markDialog(hideActionMenu($('.dropdown-container.dropdown-no-hover')));
     }
+    $.fn.cafevTooltip.remove();
   });
 };
 
@@ -63,7 +74,8 @@ function closeActionMenu(element) {
   const $menuContainer = $element.length > 0
     ? $element.closest('.dropdown-container.dropdown-no-hover')
     : $('.dropdown-container.dropdown-no-hover');
-  markDialog($menuContainer.removeClass('dropdown-shown'));
+  markDialog(hideActionMenu($menuContainer));
+  $.fn.cafevTooltip.remove();
 }
 
 export default installActionMenuHandlers;

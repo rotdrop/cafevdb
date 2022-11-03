@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-11-01 18:36+0100\n"
+"POT-Creation-Date: 2022-11-03 08:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,7 +61,7 @@ msgid "Hello!"
 msgstr ""
 
 #: lib/Command/HelloWorld.php:94
-#: lib/Controller/ExpertModeController.php:151
+#: lib/Controller/ExpertModeController.php:164
 msgid "Hello World!"
 msgstr ""
 
@@ -174,71 +174,71 @@ msgstr ""
 msgid "Unknown upload error"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:114
+#: lib/Controller/AdminSettingsController.php:133
 #, php-format
 msgid "Settings is reserved to cloud-administrators: \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:142
+#: lib/Controller/AdminSettingsController.php:168
 #, php-format
 msgid ""
 "Setting orchestra group to \"%s\". Please login as group administrator and "
 "configure the Camerata DB application."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:150
+#: lib/Controller/AdminSettingsController.php:176
 msgid "Expecting a list of user-ids."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:154
+#: lib/Controller/AdminSettingsController.php:180
 msgid "Orchestra management group is unset or non-existent"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:163
+#: lib/Controller/AdminSettingsController.php:189
 #, php-format
 msgid "Already as sub-admin of \"%1$s\" configured: %2$s."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:169
+#: lib/Controller/AdminSettingsController.php:195
 #, php-format
 msgid "Added \"%1$s\" as sub-admin of \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:172
+#: lib/Controller/AdminSettingsController.php:198
 #, php-format
 msgid "Failed to add \"%1$s\" as sub-admin to \"%2$s\": %3$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:179
+#: lib/Controller/AdminSettingsController.php:205
 #, php-format
 msgid "Deleted \"%1$s\" as sub-admin from \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:182
+#: lib/Controller/AdminSettingsController.php:208
 #, php-format
 msgid "Failed to delete \"%1$s\" as sub-admin from \"%2$s\": %3$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:209
+#: lib/Controller/AdminSettingsController.php:235
 #, php-format
 msgid "Setting wiki name-space to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:228
+#: lib/Controller/AdminSettingsController.php:254
 #, php-format
 msgid "\"%1$s\" controller answered with \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:237
+#: lib/Controller/AdminSettingsController.php:263
 #, php-format
 msgid ""
 "Please head over to the %1$s settings and check the generated \"%2$s\"-"
 "configuration."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:255
-#: lib/Controller/PersonalSettingsController.php:1854
-#: lib/Controller/PersonalSettingsController.php:1904
+#: lib/Controller/AdminSettingsController.php:281
+#: lib/Controller/PersonalSettingsController.php:1886
+#: lib/Controller/PersonalSettingsController.php:1941
 #: lib/Controller/ProjectParticipantsController.php:929
 #, php-format
 msgid "Unknown Request: \"%s\""
@@ -254,61 +254,61 @@ msgstr ""
 msgid "Caught exception \\`%s' at %s:%s"
 msgstr ""
 
-#: lib/Controller/BlogController.php:111
-#: lib/Controller/BlogController.php:194
+#: lib/Controller/BlogController.php:125
+#: lib/Controller/BlogController.php:212
 msgid "Refusing to create blog entry without author identity."
 msgstr ""
 
-#: lib/Controller/BlogController.php:120
+#: lib/Controller/BlogController.php:134
 #, php-format
 msgid "Error, caught an exception `%s'."
 msgstr ""
 
-#: lib/Controller/BlogController.php:184
-#: lib/Controller/PersonalSettingsController.php:190
-#: lib/Controller/PersonalSettingsController.php:1706
+#: lib/Controller/BlogController.php:203
+#: lib/Controller/PersonalSettingsController.php:205
+#: lib/Controller/PersonalSettingsController.php:1738
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not convertible to boolean."
 msgstr ""
 
-#: lib/Controller/BlogController.php:199
+#: lib/Controller/BlogController.php:217
 #, php-format
 msgid ""
 "Message priority should be numeric (and in principle positiv and in the "
 "range 0 - 255). I got `%s'"
 msgstr ""
 
-#: lib/Controller/BlogController.php:210
+#: lib/Controller/BlogController.php:227
 msgid "Refusing to create empty blog entry."
 msgstr ""
 
-#: lib/Controller/BlogController.php:217
-#: lib/Controller/BlogController.php:224
+#: lib/Controller/BlogController.php:234
+#: lib/Controller/BlogController.php:241
 msgid "Cannot modify a blog-entry without id."
 msgstr ""
 
-#: lib/Controller/BlogController.php:231
+#: lib/Controller/BlogController.php:248
 msgid "Cannot delete a blog-thread without id."
 msgstr ""
 
-#: lib/Controller/BlogController.php:236
-#: lib/Controller/CspViolationController.php:62
+#: lib/Controller/BlogController.php:253
+#: lib/Controller/CspViolationController.php:73
 #: lib/Controller/DownloadsController.php:156
-#: lib/Controller/ExpertModeController.php:156
+#: lib/Controller/ExpertModeController.php:169
 #: lib/Controller/ImagesController.php:380
 #: lib/Controller/MusicianValidationController.php:499
-#: lib/Controller/PersonalSettingsController.php:283
-#: lib/Controller/ProgressStatusController.php:148
-#: lib/Controller/ProjectEventsController.php:146
+#: lib/Controller/PersonalSettingsController.php:298
+#: lib/Controller/ProgressStatusController.php:161
+#: lib/Controller/ProjectEventsController.php:157
 #: lib/Controller/ProjectParticipantsController.php:210
-#: lib/Controller/ProjectWebPagesController.php:161
+#: lib/Controller/ProjectWebPagesController.php:186
 #: lib/Controller/ProjectsController.php:179
 #: lib/Controller/ProjectsController.php:198
-#: lib/Controller/ValidationController.php:78
+#: lib/Controller/ValidationController.php:94
 msgid "Unknown Request"
 msgstr ""
 
-#: lib/Controller/ContactsController.php:82
+#: lib/Controller/ContactsController.php:84
 #: lib/Controller/EmailFormController.php:1058
 #: lib/Controller/PaymentsController.php:345
 #: lib/Controller/SepaDebitMandatesController.php:1218
@@ -485,15 +485,15 @@ msgstr ""
 msgid "Unable to set app-encryption-key for user \"%s\"."
 msgstr ""
 
-#: lib/Controller/ExpertModeController.php:145
+#: lib/Controller/ExpertModeController.php:158
 msgid "Triggered GeoCoding update."
 msgstr ""
 
-#: lib/Controller/ExpertModeController.php:149
+#: lib/Controller/ExpertModeController.php:162
 msgid "TO BE IMPLEMENTED"
 msgstr ""
 
-#: lib/Controller/ExpertModeController.php:153
+#: lib/Controller/ExpertModeController.php:166
 #: lib/PageRenderer/ProjectParticipantFields.php:1818
 #: templates/expertmode.php:118
 #: templates/expertmode.php:119
@@ -576,53 +576,53 @@ msgstr ""
 msgid "Unable to resize temporary image %s to size %s"
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:115
+#: lib/Controller/InstrumentInsuranceController.php:126
 #, php-format
 msgid "Broker-name has been simplified from \"%s\" to \"%s\"."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:130
-#: lib/Controller/InstrumentInsuranceController.php:169
+#: lib/Controller/InstrumentInsuranceController.php:143
+#: lib/Controller/InstrumentInsuranceController.php:182
 #, php-format
 msgid "Unknown request: \"%s\""
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:156
+#: lib/Controller/InstrumentInsuranceController.php:169
 #, php-format
 msgid ""
 "Invalid insurance rate %f, should be larger than 0 and less than 1 percent."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:160
+#: lib/Controller/InstrumentInsuranceController.php:173
 #, php-format
 msgid "Rate has been simplified from \"%s\" to \"%s\"."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:204
+#: lib/Controller/InstrumentInsuranceController.php:217
 msgid "Insured musician is missing"
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:226
+#: lib/Controller/InstrumentInsuranceController.php:241
 msgid "Insurance broker is missing."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:236
+#: lib/Controller/InstrumentInsuranceController.php:252
 msgid "Geographical scope for the insurance is missing."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:245
+#: lib/Controller/InstrumentInsuranceController.php:262
 msgid "Insured object has not been specified."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:254
+#: lib/Controller/InstrumentInsuranceController.php:272
 msgid "Object classification (instrument, accessory) is missing."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:262
+#: lib/Controller/InstrumentInsuranceController.php:281
 msgid "Manufacturer field is empty."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:272
+#: lib/Controller/InstrumentInsuranceController.php:292
 #: lib/Database/EntityManager.php:299
 #: lib/Documents/OpenDocumentFiller.php:300
 #: lib/Documents/OpenDocumentFiller.php:317
@@ -643,123 +643,118 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:273
+#: lib/Controller/InstrumentInsuranceController.php:293
 msgid "Construction year is unknown."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:284
+#: lib/Controller/InstrumentInsuranceController.php:305
 msgid "The insurance amount is missing."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:289
+#: lib/Controller/InstrumentInsuranceController.php:310
 #, php-format
 msgid "Unable to parse currency value \"%s\"."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:293
+#: lib/Controller/InstrumentInsuranceController.php:314
 msgid "Insurance amount should be an integral number."
 msgstr ""
 
-#: lib/Controller/InstrumentInsuranceController.php:304
-#: lib/Controller/InstrumentInsuranceController.php:315
+#: lib/Controller/InstrumentInsuranceController.php:325
+#: lib/Controller/InstrumentInsuranceController.php:338
 #, php-format
 msgid "Unknown Request: \"%s / %s\"."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:148
+#: lib/Controller/LegacyEventsController.php:164
 #, php-format
 msgid "unknown service requested: `%s/%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:160
+#: lib/Controller/LegacyEventsController.php:179
 msgid "Project-id and/or name not set"
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:183
+#: lib/Controller/LegacyEventsController.php:201
 #, php-format
 msgid "Cannot access calendar: `%s'"
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:313
-#: lib/Controller/LegacyEventsController.php:713
-#: lib/Controller/LegacyEventsController.php:752
+#: lib/Controller/LegacyEventsController.php:335
+#: lib/Controller/LegacyEventsController.php:738
+#: lib/Controller/LegacyEventsController.php:780
 #, php-format
 msgid "Could not fetch object `%s' from calendar `%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:317
-#: lib/Controller/LegacyEventsController.php:756
+#: lib/Controller/LegacyEventsController.php:339
+#: lib/Controller/LegacyEventsController.php:784
 #, php-format
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:322
-#: lib/Controller/LegacyEventsController.php:762
+#: lib/Controller/LegacyEventsController.php:344
+#: lib/Controller/LegacyEventsController.php:790
 #, php-format
 msgid "Unable to access calendar with id `%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:570
+#: lib/Controller/LegacyEventsController.php:593
 #, php-format
 msgid "Don't know how to react to permissions `%s'"
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:687
+#: lib/Controller/LegacyEventsController.php:711
 msgid "Failed to validate event creating request."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:699
+#: lib/Controller/LegacyEventsController.php:723
 msgid "Calendar object successfully created."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:707
+#: lib/Controller/LegacyEventsController.php:732
 msgid "Failed to validate event updating request."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:720
+#: lib/Controller/LegacyEventsController.php:745
 msgid "Race-condition, event was modified in between."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:731
+#: lib/Controller/LegacyEventsController.php:756
 #, php-format
 msgid "Successfully updated `%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:739
+#: lib/Controller/LegacyEventsController.php:765
 #, php-format
 msgid "Successfully deleted `%s'."
 msgstr ""
 
-#: lib/Controller/LegacyEventsController.php:790
-#, php-format
-msgid "Method %s is not yet implemented."
-msgstr ""
-
-#: lib/Controller/MailMergeController.php:208
-#: lib/Controller/MailMergeController.php:300
-#: lib/Controller/MailMergeController.php:325
+#: lib/Controller/MailMergeController.php:237
+#: lib/Controller/MailMergeController.php:329
+#: lib/Controller/MailMergeController.php:354
 msgid "Mail-merge successful, %n file substituted."
 msgid_plural "Mail-merge successful, %n files substituted."
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/Controller/MailMergeController.php:342
+#: lib/Controller/MailMergeController.php:371
 #, php-format
 msgid "Exception: \"%s\""
 msgstr ""
 
 #. TRANSLATORS: folder-name
-#: lib/Controller/MailMergeController.php:357
+#: lib/Controller/MailMergeController.php:393
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1567
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:64
 msgid "Documents"
 msgstr ""
 
-#: lib/Controller/MailMergeController.php:358
-#: lib/Controller/MailMergeController.php:366
-#: src/files-hooks.js:123
-#: src/files-hooks.js:179
+#: lib/Controller/MailMergeController.php:394
+#: lib/Controller/MailMergeController.php:402
+#: src/files-hooks.js:146
+#: src/files-hooks.js:202
 msgid "MailMerge"
 msgstr ""
 
@@ -780,14 +775,14 @@ msgstr ""
 msgid "Email-address must not be empty."
 msgstr ""
 
-#: lib/Controller/MigrationsController.php:75
-#: lib/Controller/MigrationsController.php:143
+#: lib/Controller/MigrationsController.php:82
+#: lib/Controller/MigrationsController.php:160
 #, php-format
 msgid "Unknown Request \"%s\"."
 msgstr ""
 
 #: lib/Controller/MusicianValidationController.php:171
-#: lib/Controller/PersonalSettingsController.php:576
+#: lib/Controller/PersonalSettingsController.php:602
 #, php-format
 msgid "The phone number %s does not appear to be a valid phone number. "
 msgstr ""
@@ -852,28 +847,28 @@ msgstr ""
 msgid "Musician(s) with the same first and sur-name already exist: %s"
 msgstr ""
 
-#: lib/Controller/MusiciansController.php:120
+#: lib/Controller/MusiciansController.php:145
 msgid ""
 "Picking users from the cloud or the address-books is not yet supported, "
 "sorry."
 msgstr ""
 
-#: lib/Controller/PageController.php:186
+#: lib/Controller/PageController.php:230
 #, php-format
 msgid "Post to end-point \"%s\" not implemented."
 msgstr ""
 
-#: lib/Controller/PageController.php:189
+#: lib/Controller/PageController.php:233
 #, php-format
 msgid "Post to base-url of app \"%s\" not allowed."
 msgstr ""
 
-#: lib/Controller/PageController.php:313
+#: lib/Controller/PageController.php:382
 #, php-format
 msgid "Template-renderer for template `%s' is empty."
 msgstr ""
 
-#: lib/Controller/PageController.php:427
+#: lib/Controller/PageController.php:519
 #, php-format
 msgid "Page `%s\\' not found."
 msgstr ""
@@ -981,567 +976,567 @@ msgid ""
 "please upload a new one!"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:194
-#: lib/Controller/PersonalSettingsController.php:1710
+#: lib/Controller/PersonalSettingsController.php:209
+#: lib/Controller/PersonalSettingsController.php:1742
 #, php-format
 msgid "Switching %2$s %1$s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:201
-#: lib/Controller/PersonalSettingsController.php:1353
+#: lib/Controller/PersonalSettingsController.php:216
+#: lib/Controller/PersonalSettingsController.php:1383
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not in the allowed range."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:204
-#: lib/Controller/PersonalSettingsController.php:226
-#: lib/Controller/PersonalSettingsController.php:234
-#: lib/Controller/PersonalSettingsController.php:280
+#: lib/Controller/PersonalSettingsController.php:219
+#: lib/Controller/PersonalSettingsController.php:241
+#: lib/Controller/PersonalSettingsController.php:249
+#: lib/Controller/PersonalSettingsController.php:295
 #, php-format
 msgid "Setting %2$s to %1$s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:216
+#: lib/Controller/PersonalSettingsController.php:231
 #, php-format
 msgid "Unknown debug modes in request: %s$s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:231
+#: lib/Controller/PersonalSettingsController.php:246
 #, php-format
 msgid "Unknown WYSIWYG-editor: %s$s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:238
+#: lib/Controller/PersonalSettingsController.php:253
 #, php-format
 msgid "Invalid request data: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:245
+#: lib/Controller/PersonalSettingsController.php:260
 #, php-format
 msgid "Invalid password for \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:250
+#: lib/Controller/PersonalSettingsController.php:265
 msgid "Invalid encryption key."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:266
+#: lib/Controller/PersonalSettingsController.php:281
 msgid "Encryption key stored."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:276
+#: lib/Controller/PersonalSettingsController.php:291
 #, php-format
 msgid ""
 "Value \"%1$s\" for set \"%2$s\" must be a non-negative integer or false."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:303
-#: lib/Controller/PersonalSettingsController.php:313
-#: lib/Controller/PersonalSettingsController.php:829
-#: lib/Controller/PersonalSettingsController.php:852
+#: lib/Controller/PersonalSettingsController.php:325
+#: lib/Controller/PersonalSettingsController.php:337
+#: lib/Controller/PersonalSettingsController.php:850
+#: lib/Controller/PersonalSettingsController.php:873
 #, php-format
 msgid "\"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:320
+#: lib/Controller/PersonalSettingsController.php:344
 msgid "DB-test passed and DB-password set."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:323
+#: lib/Controller/PersonalSettingsController.php:347
 msgid ""
 "DB-test failed. Check the account settings. Check was performed with the new "
 "password."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:328
+#: lib/Controller/PersonalSettingsController.php:352
 msgid "DB-test passed with stored password (empty input ignored)."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:330
+#: lib/Controller/PersonalSettingsController.php:354
 msgid "DB-test failed with stored password (empty input ignored)."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:334
+#: lib/Controller/PersonalSettingsController.php:358
 #, php-format
 msgid "DB-test failed with exception \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:339
+#: lib/Controller/PersonalSettingsController.php:363
 #, php-format
 msgid "Missing parameter \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:350
+#: lib/Controller/PersonalSettingsController.php:374
 msgid "Wrong old encryption key"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:359
-#: lib/Controller/PersonalSettingsController.php:365
+#: lib/Controller/PersonalSettingsController.php:383
+#: lib/Controller/PersonalSettingsController.php:389
 msgid "Configuration locked, refusing to change encryption key."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:448
+#: lib/Controller/PersonalSettingsController.php:472
 #, php-format
 msgid ""
 "Failed to restore config-values %s, keeping all backup values with suffix "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:461
-#: lib/Controller/PersonalSettingsController.php:487
+#: lib/Controller/PersonalSettingsController.php:485
+#: lib/Controller/PersonalSettingsController.php:511
 #, php-format
 msgid "Failed to remove backups for config-values %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:501
+#: lib/Controller/PersonalSettingsController.php:525
 msgid "Stored new encryption key."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:503
+#: lib/Controller/PersonalSettingsController.php:527
 msgid ""
 "Stored the new encryption key, however, distributing the new encryption key "
 "failed for at least some of the users."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:523
-#: lib/Controller/PersonalSettingsController.php:1826
+#: lib/Controller/PersonalSettingsController.php:547
+#: lib/Controller/PersonalSettingsController.php:1858
 #, php-format
 msgid " \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:529
-#: lib/Controller/PersonalSettingsController.php:1100
-#: lib/Controller/PersonalSettingsController.php:1179
+#: lib/Controller/PersonalSettingsController.php:553
+#: lib/Controller/PersonalSettingsController.php:1124
+#: lib/Controller/PersonalSettingsController.php:1204
 msgid "Invalid request parameters: "
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:538
-#: lib/Controller/PersonalSettingsController.php:1110
-#: lib/Controller/PersonalSettingsController.php:1189
+#: lib/Controller/PersonalSettingsController.php:563
+#: lib/Controller/PersonalSettingsController.php:1134
+#: lib/Controller/PersonalSettingsController.php:1214
 #, php-format
 msgid "Submitted \"%s\" != \"%s\" (stored)"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:542
+#: lib/Controller/PersonalSettingsController.php:566
 msgid "Share-owner user id must not be empty."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:547
+#: lib/Controller/PersonalSettingsController.php:571
 #, php-format
 msgid "New share-owner \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:549
+#: lib/Controller/PersonalSettingsController.php:573
 #, php-format
 msgid "Failure creating account for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:556
+#: lib/Controller/PersonalSettingsController.php:580
 #, php-format
 msgid "Failure checking account for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:559
+#: lib/Controller/PersonalSettingsController.php:583
 #, php-format
 msgid "Share-owner user \"%s\" ok."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:573
+#: lib/Controller/PersonalSettingsController.php:598
 #, php-format
 msgid "Orchestra Phone Number set to %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:603
-#: lib/Controller/PersonalSettingsController.php:795
-#: lib/Controller/PersonalSettingsController.php:2140
+#: lib/Controller/PersonalSettingsController.php:627
+#: lib/Controller/PersonalSettingsController.php:816
+#: lib/Controller/PersonalSettingsController.php:2200
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:615
-#: lib/Controller/PersonalSettingsController.php:622
-#: lib/Controller/PersonalSettingsController.php:632
+#: lib/Controller/PersonalSettingsController.php:639
+#: lib/Controller/PersonalSettingsController.php:646
 #: lib/Controller/PersonalSettingsController.php:656
-#: lib/Controller/PersonalSettingsController.php:667
-#: lib/Controller/PersonalSettingsController.php:676
-#: lib/Controller/PersonalSettingsController.php:686
-#: lib/Controller/PersonalSettingsController.php:719
-#: lib/Controller/PersonalSettingsController.php:731
-#: lib/Controller/PersonalSettingsController.php:752
-#: lib/Controller/PersonalSettingsController.php:767
+#: lib/Controller/PersonalSettingsController.php:680
+#: lib/Controller/PersonalSettingsController.php:691
+#: lib/Controller/PersonalSettingsController.php:700
+#: lib/Controller/PersonalSettingsController.php:710
+#: lib/Controller/PersonalSettingsController.php:741
+#: lib/Controller/PersonalSettingsController.php:753
+#: lib/Controller/PersonalSettingsController.php:774
+#: lib/Controller/PersonalSettingsController.php:789
 #: lib/Controller/SepaDebitMandatesController.php:505
 #, php-format
 msgid "Value for \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:695
+#: lib/Controller/PersonalSettingsController.php:719
 #, php-format
 msgid "Invalid IBAN: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:774
+#: lib/Controller/PersonalSettingsController.php:796
 #, php-format
 msgid "Value for \"%s\" invalid: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:801
+#: lib/Controller/PersonalSettingsController.php:822
 msgid "Delete old Project?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:803
+#: lib/Controller/PersonalSettingsController.php:824
 #, php-format
 msgid "Delete old project \"%s\" (%d) and all its associated data?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:819
+#: lib/Controller/PersonalSettingsController.php:840
 #, php-format
 msgid "Sanitized project name from \"%s\" to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:840
+#: lib/Controller/PersonalSettingsController.php:861
 msgid "Rename Project?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:842
+#: lib/Controller/PersonalSettingsController.php:863
 #, php-format
 msgid "\"%s\" project already exists, rename it from \"%s\" to \"%s?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:858
+#: lib/Controller/PersonalSettingsController.php:879
 #, php-format
 msgid "Type of project \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:863
+#: lib/Controller/PersonalSettingsController.php:884
 msgid "Create project?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:865
+#: lib/Controller/PersonalSettingsController.php:886
 #, php-format
 msgid "A project with name \"%s\" does not exist, shall we create it?"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:884
+#: lib/Controller/PersonalSettingsController.php:905
 #, php-format
 msgid ""
 "Configured project-id %d and submitted project id %d differ, please reload "
 "the page."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:898
+#: lib/Controller/PersonalSettingsController.php:919
 #, php-format
 msgid "Unable to create project with name \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:902
+#: lib/Controller/PersonalSettingsController.php:924
 #, php-format
 msgid "Created Project \"%s\" with id \"%d\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:912
+#: lib/Controller/PersonalSettingsController.php:934
 #, php-format
 msgid "Unable to find the project with id %d."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:921
+#: lib/Controller/PersonalSettingsController.php:943
 #, php-format
 msgid "Project \"%s\" successfully validated."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:934
+#: lib/Controller/PersonalSettingsController.php:956
 #, php-format
 msgid "Deleted project \"%s\" with id \"%d\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:936
+#: lib/Controller/PersonalSettingsController.php:958
 #, php-format
 msgid ""
 "Project \"%s\", id \"%d\" has been marked as disabled as it is still needed "
 "for financial book-keeping."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:942
-#: lib/Service/ProjectService.php:2506
+#: lib/Controller/PersonalSettingsController.php:965
+#: lib/Service/ProjectService.php:2550
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:962
+#: lib/Controller/PersonalSettingsController.php:985
 msgid "Result of rename is empty without throwing an exception."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:967
+#: lib/Controller/PersonalSettingsController.php:990
 #, php-format
 msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:975
-#: lib/Service/ProjectService.php:2739
+#: lib/Controller/PersonalSettingsController.php:999
+#: lib/Service/ProjectService.php:2793
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1003
+#: lib/Controller/PersonalSettingsController.php:1026
 #, php-format
 msgid "SETTING %s NOT YET IMPLEMENTED"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1009
+#: lib/Controller/PersonalSettingsController.php:1032
 msgid "Please create the share-owner user first."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1013
+#: lib/Controller/PersonalSettingsController.php:1036
 msgid "Share-owner does not seem to exist, please recreate."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1016
+#: lib/Controller/PersonalSettingsController.php:1039
 msgid "Authentication backend does not support changing passwords."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1020
+#: lib/Controller/PersonalSettingsController.php:1043
 msgid "Password must not be empty"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1023
+#: lib/Controller/PersonalSettingsController.php:1046
 #, php-format
 msgid "Unable to set password for \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1026
+#: lib/Controller/PersonalSettingsController.php:1049
 #, php-format
 msgid "Successfully changed passsword for \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1041
+#: lib/Controller/PersonalSettingsController.php:1064
 msgid "Shared folder is not configured, cannot store templates."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1046
+#: lib/Controller/PersonalSettingsController.php:1069
 msgid "Document template folder is not configured, cannot store templates."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1061
+#: lib/Controller/PersonalSettingsController.php:1084
 #, php-format
 msgid "Removed setting for document-template \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1066
+#: lib/Controller/PersonalSettingsController.php:1089
 #, php-format
 msgid "Unable to find the file \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1070
+#: lib/Controller/PersonalSettingsController.php:1093
 #, php-format
 msgid "Document-template \"%s\" successfully set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1079
+#: lib/Controller/PersonalSettingsController.php:1103
 #, php-format
 msgid "Successfully deleted old document-template \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1091
-#: lib/Controller/PersonalSettingsController.php:1165
+#: lib/Controller/PersonalSettingsController.php:1115
+#: lib/Controller/PersonalSettingsController.php:1190
 msgid "App user-group is not set."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1095
-#: lib/Controller/PersonalSettingsController.php:1169
+#: lib/Controller/PersonalSettingsController.php:1119
+#: lib/Controller/PersonalSettingsController.php:1194
 msgid "Share-owner is not set."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1107
-#: lib/Controller/PersonalSettingsController.php:1186
+#: lib/Controller/PersonalSettingsController.php:1131
+#: lib/Controller/PersonalSettingsController.php:1211
 msgid "Folder must not be empty."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1124
-#: lib/Controller/PersonalSettingsController.php:1241
+#: lib/Controller/PersonalSettingsController.php:1148
+#: lib/Controller/PersonalSettingsController.php:1266
 #, php-format
 msgid "Created and shared new folder \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1128
-#: lib/Controller/PersonalSettingsController.php:1245
+#: lib/Controller/PersonalSettingsController.php:1152
+#: lib/Controller/PersonalSettingsController.php:1270
 #, php-format
 msgid "Failed to create new shared folder \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1140
-#: lib/Controller/PersonalSettingsController.php:1268
+#: lib/Controller/PersonalSettingsController.php:1164
+#: lib/Controller/PersonalSettingsController.php:1293
 #, php-format
 msgid "\"%s\" which is configured as \"%s\" exists and is usable."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1144
-#: lib/Controller/PersonalSettingsController.php:1272
+#: lib/Controller/PersonalSettingsController.php:1168
+#: lib/Controller/PersonalSettingsController.php:1297
 #, php-format
 msgid "\"%s\" does not exist or is unaccessible."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1149
-#: lib/Controller/PersonalSettingsController.php:1277
+#: lib/Controller/PersonalSettingsController.php:1174
+#: lib/Controller/PersonalSettingsController.php:1303
 #, php-format
 msgid "Failure checking folder \"%s\", caught an exception \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1173
+#: lib/Controller/PersonalSettingsController.php:1198
 msgid "Shared folder is not set."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1195
+#: lib/Controller/PersonalSettingsController.php:1220
 #, php-format
 msgid "Participants-folder set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1198
+#: lib/Controller/PersonalSettingsController.php:1223
 #, php-format
 msgid "Posters-folder set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1201
+#: lib/Controller/PersonalSettingsController.php:1226
 #, php-format
 msgid "Participants downloads-folder set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1208
+#: lib/Controller/PersonalSettingsController.php:1233
 #, php-format
 msgid "\"%s\" has to be defined first before defining \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1298
+#: lib/Controller/PersonalSettingsController.php:1325
 #, php-format
 msgid "Created and shared new calendar \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1299
+#: lib/Controller/PersonalSettingsController.php:1326
 #, php-format
 msgid "Validated shared calendar \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1302
+#: lib/Controller/PersonalSettingsController.php:1329
 #, php-format
 msgid "Failed to create new shared calendar \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1307
+#: lib/Controller/PersonalSettingsController.php:1335
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1319
+#: lib/Controller/PersonalSettingsController.php:1348
 #, php-format
 msgid "Failed to create new shared address book \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1325
+#: lib/Controller/PersonalSettingsController.php:1354
 #, php-format
 msgid "Created and shared new address book \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1329
+#: lib/Controller/PersonalSettingsController.php:1359
 #, php-format
 msgid "Failure checking address book \"%s\", caught an exception \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1340
+#: lib/Controller/PersonalSettingsController.php:1370
 #, php-format
 msgid "Display name of musicians-addressbook reset to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1342
+#: lib/Controller/PersonalSettingsController.php:1372
 #, php-format
 msgid "Display name of musicians-addressbook set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1345
+#: lib/Controller/PersonalSettingsController.php:1375
 #, php-format
 msgid ""
 "Unable to set display-name of musicians-addressbook to \"%s\", it remains at "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1356
+#: lib/Controller/PersonalSettingsController.php:1386
 #, php-format
 msgid "Setting %2$s to %1$s minutes."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1361
-#: lib/Controller/PersonalSettingsController.php:1456
-#: lib/Controller/PersonalSettingsController.php:1606
+#: lib/Controller/PersonalSettingsController.php:1391
+#: lib/Controller/PersonalSettingsController.php:1486
+#: lib/Controller/PersonalSettingsController.php:1637
 #, php-format
 msgid "Value \"%s\" for set \"%s\" is not convertible to boolean."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1423
+#: lib/Controller/PersonalSettingsController.php:1453
 msgid "Cloud-user-views have been regenerated successfully."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1491
+#: lib/Controller/PersonalSettingsController.php:1521
 msgid ""
 "Personalized single-row database-views have been regenerated successfully."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1520
+#: lib/Controller/PersonalSettingsController.php:1550
 #, php-format
 msgid "Successfully distributed the email credentials for %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1522
+#: lib/Controller/PersonalSettingsController.php:1552
 msgid "Unable to distribute the email credentials to any user."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1525
+#: lib/Controller/PersonalSettingsController.php:1555
 #, php-format
 msgid "Email credentials could not be set for %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1528
+#: lib/Controller/PersonalSettingsController.php:1558
 #, php-format
 msgid "Setting the email credentials for %s failed fatally: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1548
+#: lib/Controller/PersonalSettingsController.php:1578
 #, php-format
 msgid "%s connection seems functional."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1549
+#: lib/Controller/PersonalSettingsController.php:1579
 #, php-format
 msgid "Unable to establish %s connection to %s@%s:%d"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1570
+#: lib/Controller/PersonalSettingsController.php:1599
 #, php-format
 msgid "Server name \"%s\" has neither an IPV4 nor an IPV6 address"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1581
+#: lib/Controller/PersonalSettingsController.php:1612
 #, php-format
 msgid "\"%s\" is not an integral number in the range [%d, %d]"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1590
+#: lib/Controller/PersonalSettingsController.php:1620
 #, php-format
 msgid "Unknown transport security method: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1596
+#: lib/Controller/PersonalSettingsController.php:1627
 #, php-format
 msgid "Using transport security \"%s\" for protocol \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1615
+#: lib/Controller/PersonalSettingsController.php:1646
 msgid ""
 "Please configure the mailing-list address first, otherweise I do not know "
 "which list I have to work on."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1628
+#: lib/Controller/PersonalSettingsController.php:1659
 msgid "none"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1626
+#: lib/Controller/PersonalSettingsController.php:1657
 #, php-format
 msgid ""
 "Autoconfiguration of the mailing list \"%1$s\" successful, owner set to "
@@ -1549,173 +1544,173 @@ msgid ""
 "responses: %4$s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1639
+#: lib/Controller/PersonalSettingsController.php:1670
 #, php-format
 msgid "Unable to parse email address \"%1$s\": %2$s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1642
+#: lib/Controller/PersonalSettingsController.php:1673
 #, php-format
 msgid ""
 "\"%s\" seems to contain multiple email address, only a single address is "
 "allowed here."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1646
+#: lib/Controller/PersonalSettingsController.php:1677
 #, php-format
 msgid ""
 "\"%s\" does not contain the host-part of the email-address, local addresses "
 "are not allowed here."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1650
+#: lib/Controller/PersonalSettingsController.php:1681
 #, php-format
 msgid "\"%s\" does not seem to be a valid email address"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1683
+#: lib/Controller/PersonalSettingsController.php:1714
 #, php-format
 msgid ""
 "The Mailing list \"%1$s\" does not seem to exist on the configured mailing-"
 "list service."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1690
-#: lib/Controller/PersonalSettingsController.php:1770
+#: lib/Controller/PersonalSettingsController.php:1721
+#: lib/Controller/PersonalSettingsController.php:1802
 msgid "announcements"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1691
-#: lib/Controller/PersonalSettingsController.php:1771
+#: lib/Controller/PersonalSettingsController.php:1722
+#: lib/Controller/PersonalSettingsController.php:1803
 #, php-format
 msgid ""
 "Link-shared auto-responses directory for the announcements mailing list is "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1722
+#: lib/Controller/PersonalSettingsController.php:1754
 #: lib/Settings/PersonalForm.php:428
 #, php-format
 msgid "%d days"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1759
-#: lib/Controller/PersonalSettingsController.php:1765
+#: lib/Controller/PersonalSettingsController.php:1791
+#: lib/Controller/PersonalSettingsController.php:1797
 #, php-format
 msgid "Unable to connect to mailing list service at \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1774
+#: lib/Controller/PersonalSettingsController.php:1806
 msgid "projects"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1775
+#: lib/Controller/PersonalSettingsController.php:1807
 #, php-format
 msgid ""
 "Link-shared auto-responses directory for project mailing lists is \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1782
+#: lib/Controller/PersonalSettingsController.php:1814
 msgid "Empty translation phrase or language"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1785
+#: lib/Controller/PersonalSettingsController.php:1817
 msgid "Missing translation"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1789
+#: lib/Controller/PersonalSettingsController.php:1821
 #, php-format
 msgid "Empty translation for phrase \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1793
+#: lib/Controller/PersonalSettingsController.php:1825
 #, php-format
 msgid ""
 "Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1797
+#: lib/Controller/PersonalSettingsController.php:1829
 msgid "Recording the translation failed"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1799
+#: lib/Controller/PersonalSettingsController.php:1831
 #, php-format
 msgid "Successfully recorded the given translation for the language \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1802
+#: lib/Controller/PersonalSettingsController.php:1834
 msgid "Failed to erase all recorded translations."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1804
+#: lib/Controller/PersonalSettingsController.php:1836
 msgid "All recorded translations have been erased."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1816
+#: lib/Controller/PersonalSettingsController.php:1848
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not a valid URL."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1820
+#: lib/Controller/PersonalSettingsController.php:1852
 #, php-format
 msgid "\"%1$s\" must be a http(s) URL, scheme \"%2$s\" not supported."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1841
+#: lib/Controller/PersonalSettingsController.php:1873
 #, php-format
 msgid "Unknown configuation key %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1845
+#: lib/Controller/PersonalSettingsController.php:1877
 #, php-format
 msgid "Value \"%s\" for setting \"%s\" is not in the allowed range."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1850
+#: lib/Controller/PersonalSettingsController.php:1882
 #, php-format
 msgid "Redaxo categorie Id for \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1883
+#: lib/Controller/PersonalSettingsController.php:1920
 #, php-format
 msgid "Unknown link target %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1892
+#: lib/Controller/PersonalSettingsController.php:1929
 msgid "Shared folder is not configured."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1896
+#: lib/Controller/PersonalSettingsController.php:1933
 msgid "Document template folder is not configured."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1951
-#: lib/Controller/PersonalSettingsController.php:2080
+#: lib/Controller/PersonalSettingsController.php:1998
+#: lib/Controller/PersonalSettingsController.php:2123
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1973
-#: lib/Controller/PersonalSettingsController.php:2000
-#: lib/Controller/PersonalSettingsController.php:2026
-#: lib/Controller/PersonalSettingsController.php:2046
+#: lib/Controller/PersonalSettingsController.php:2021
+#: lib/Controller/PersonalSettingsController.php:2047
+#: lib/Controller/PersonalSettingsController.php:2072
+#: lib/Controller/PersonalSettingsController.php:2091
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2064
+#: lib/Controller/PersonalSettingsController.php:2108
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2109
+#: lib/Controller/PersonalSettingsController.php:2152
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
 "sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2126
+#: lib/Controller/PersonalSettingsController.php:2168
 #: lib/Controller/PmeTableController.php:151
 #: lib/Controller/ProjectsController.php:390
 #: lib/Controller/SepaBulkTransactionsController.php:165
@@ -1723,30 +1718,30 @@ msgstr ""
 msgid "Unknown Request: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2152
+#: lib/Controller/PersonalSettingsController.php:2212
 #, php-format
 msgid "Value for \"%1$s\" set to \"%2$s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2169
+#: lib/Controller/PersonalSettingsController.php:2231
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2192
+#: lib/Controller/PersonalSettingsController.php:2254
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2194
+#: lib/Controller/PersonalSettingsController.php:2256
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2197
+#: lib/Controller/PersonalSettingsController.php:2259
 #, php-format
 msgid "Public key missing for %s, key distribution failed."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2202
+#: lib/Controller/PersonalSettingsController.php:2264
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -1778,32 +1773,32 @@ msgstr ""
 msgid "Template-exporter for template \"%s\" cannot be found."
 msgstr ""
 
-#: lib/Controller/ProgressStatusController.php:79
-#: lib/Controller/ProgressStatusController.php:103
-#: lib/Controller/ProgressStatusController.php:111
-#: lib/Controller/ProgressStatusController.php:121
-#: lib/Controller/ProgressStatusController.php:129
-#: lib/Controller/ProgressStatusController.php:136
+#: lib/Controller/ProgressStatusController.php:88
+#: lib/Controller/ProgressStatusController.php:116
+#: lib/Controller/ProgressStatusController.php:124
+#: lib/Controller/ProgressStatusController.php:134
+#: lib/Controller/ProgressStatusController.php:142
+#: lib/Controller/ProgressStatusController.php:149
 #, php-format
 msgid "Exception \"%s\""
 msgstr ""
 
-#: lib/Controller/ProgressStatusController.php:82
+#: lib/Controller/ProgressStatusController.php:91
 #, php-format
 msgid "Unable to find the status of the job \"%s\""
 msgstr ""
 
-#: lib/Controller/ProgressStatusController.php:133
+#: lib/Controller/ProgressStatusController.php:146
 #, php-format
 msgid "Progress \"%s\" successfully deleted."
 msgstr ""
 
-#: lib/Controller/ProjectEventsApiController.php:112
+#: lib/Controller/ProjectEventsApiController.php:131
 #, php-format
 msgid "Invalid calendar type: \"%1$s\""
 msgstr ""
 
-#: lib/Controller/ProjectEventsController.php:76
+#: lib/Controller/ProjectEventsController.php:87
 #, php-format
 msgid "Project-id AND -name have to be specified (%s / %s)"
 msgstr ""
@@ -1934,7 +1929,7 @@ msgstr ""
 
 #: lib/Controller/ProjectParticipantFieldsController.php:522
 #: lib/Controller/ProjectParticipantFieldsController.php:529
-#: lib/Controller/ValidationController.php:73
+#: lib/Controller/ValidationController.php:89
 #, php-format
 msgid "Could not parse number: \"%s\""
 msgstr ""
@@ -2201,60 +2196,60 @@ msgstr ""
 msgid "disabled by moderator"
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:64
+#: lib/Controller/ProjectWebPagesController.php:83
 #, php-format
 msgid "Invalid or unset project-id: `%s'"
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:71
+#: lib/Controller/ProjectWebPagesController.php:91
 #, php-format
 msgid ""
 "Submitted article id %d does not match the id %d stored in the article-data."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:79
+#: lib/Controller/ProjectWebPagesController.php:99
 #, php-format
 msgid "Invalid or unset article-id: `%s'"
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:83
+#: lib/Controller/ProjectWebPagesController.php:104
 #, php-format
 msgid ""
 "Cannot perform action `%s' with article with id %d, project with id %d: "
 "missing article-data."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:92
+#: lib/Controller/ProjectWebPagesController.php:113
 msgid "Unable to ping project web-pages CMS"
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:104
+#: lib/Controller/ProjectWebPagesController.php:126
 #, php-format
 msgid ""
 "Created a new public web page with name %s and id %d for the project with id "
 "%d."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:125
+#: lib/Controller/ProjectWebPagesController.php:147
 msgid "Created additionally a new rehearsal web page."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:127
+#: lib/Controller/ProjectWebPagesController.php:149
 msgid "Failed to create additionally a new rehearsal web-page."
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:138
+#: lib/Controller/ProjectWebPagesController.php:161
 #, php-format
 msgid ""
 "Linked the existing public web-article %s (id %d) to the project with id %d"
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:147
+#: lib/Controller/ProjectWebPagesController.php:171
 #, php-format
 msgid "Detached the public web-article %s (id %d) from the project with id %d"
 msgstr ""
 
-#: lib/Controller/ProjectWebPagesController.php:156
+#: lib/Controller/ProjectWebPagesController.php:181
 #, php-format
 msgid "Removed public web page %s (id %d) from the project with id %d."
 msgstr ""
@@ -3195,7 +3190,7 @@ msgstr ""
 #: lib/EmailForm/Composer.php:1020
 #: lib/EmailForm/Composer.php:1417
 #: lib/EmailForm/Composer.php:1469
-#: lib/PageRenderer/ProjectPayments.php:527
+#: lib/PageRenderer/ProjectPayments.php:544
 msgid "Total Amount"
 msgstr ""
 
@@ -4052,7 +4047,7 @@ msgstr ""
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:151
 #: lib/PageRenderer/InstrumentInsurances.php:272
-#: lib/PageRenderer/ProjectPayments.php:499
+#: lib/PageRenderer/ProjectPayments.php:516
 #: lib/PageRenderer/SepaBankAccounts.php:553
 #: lib/PageRenderer/SepaBulkTransactions.php:380
 msgid "Musician"
@@ -4338,8 +4333,8 @@ msgid "Actions"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1604
-#: lib/PageRenderer/ProjectPayments.php:588
-#: lib/PageRenderer/ProjectPayments.php:609
+#: lib/PageRenderer/ProjectPayments.php:605
+#: lib/PageRenderer/ProjectPayments.php:626
 #: lib/PageRenderer/SepaBulkTransactions.php:498
 #: templates/emailform/part.emailform.composer.php:197
 msgid "Subject"
@@ -4428,7 +4423,7 @@ msgid "SEPA Bank Accounts"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:184
-#: lib/PageRenderer/ProjectPayments.php:1143
+#: lib/PageRenderer/ProjectPayments.php:1160
 #: lib/PageRenderer/SepaBankAccounts.php:629
 #: lib/PageRenderer/SepaBankAccounts.php:707
 #: lib/PageRenderer/SepaBulkTransactions.php:432
@@ -4437,7 +4432,7 @@ msgid "Fetching decrypted values in the background."
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:186
-#: lib/PageRenderer/ProjectPayments.php:1145
+#: lib/PageRenderer/ProjectPayments.php:1162
 #: lib/PageRenderer/SepaBankAccounts.php:631
 #: lib/PageRenderer/SepaBankAccounts.php:709
 #: lib/PageRenderer/SepaBulkTransactions.php:434
@@ -4525,7 +4520,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:354
 #: lib/PageRenderer/ProjectParticipantFields.php:268
 #: lib/PageRenderer/ProjectParticipants.php:1566
-#: lib/PageRenderer/ProjectPayments.php:435
+#: lib/PageRenderer/ProjectPayments.php:452
 #: lib/PageRenderer/SepaBankAccounts.php:1138
 #: lib/PageRenderer/SepaBulkTransactions.php:258
 #: lib/Service/InstrumentationService.php:190
@@ -4775,7 +4770,7 @@ msgstr ""
 
 #: lib/PageRenderer/Musicians.php:564
 #: lib/PageRenderer/ProjectParticipants.php:556
-#: lib/PageRenderer/ProjectPayments.php:521
+#: lib/PageRenderer/ProjectPayments.php:538
 msgid "User Id"
 msgstr ""
 
@@ -4882,7 +4877,7 @@ msgstr ""
 
 #: lib/PageRenderer/PME/Config.php:65
 #: lib/PageRenderer/PMETableViewBase.php:662
-#: templates/fragments/projects/project-actions.php:168
+#: templates/fragments/projects/project-actions.php:177
 msgid "Em@il"
 msgstr ""
 
@@ -5033,7 +5028,7 @@ msgstr ""
 
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:103
 #: lib/PageRenderer/Util/Navigation.php:647
-#: templates/fragments/projects/project-actions.php:119
+#: templates/fragments/projects/project-actions.php:128
 msgid "Instrumentation Numbers"
 msgstr ""
 
@@ -5276,7 +5271,7 @@ msgid "Limit"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:2242
-#: lib/PageRenderer/ProjectPayments.php:541
+#: lib/PageRenderer/ProjectPayments.php:558
 #: lib/PageRenderer/SepaBankAccounts.php:1092
 #: lib/PageRenderer/SepaBulkTransactions.php:372
 msgid "Amount"
@@ -5314,7 +5309,7 @@ msgid "Project-Id"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipants.php:421
-#: lib/PageRenderer/ProjectPayments.php:466
+#: lib/PageRenderer/ProjectPayments.php:483
 #: lib/PageRenderer/SepaBankAccounts.php:474
 msgid "Musician-Id"
 msgstr ""
@@ -5393,100 +5388,100 @@ msgstr ""
 msgid "Miscinfo"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:299
+#: lib/PageRenderer/ProjectPayments.php:316
 #, php-format
 msgid "Payments for project \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:426
+#: lib/PageRenderer/ProjectPayments.php:443
 msgid "General accounting data"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:427
+#: lib/PageRenderer/ProjectPayments.php:444
 msgid "Booking Entry"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:430
+#: lib/PageRenderer/ProjectPayments.php:447
 msgid "Bulk-transaction data"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:431
+#: lib/PageRenderer/ProjectPayments.php:448
 msgid "Bank Transaction"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:477
+#: lib/PageRenderer/ProjectPayments.php:494
 msgid "Bulk-Transaction Id"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:554
+#: lib/PageRenderer/ProjectPayments.php:571
 msgid "Imbalance"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:583
+#: lib/PageRenderer/ProjectPayments.php:600
 msgid "Date of Receipt"
 msgstr ""
 
 #. TRANSLATORS: folder-name
-#: lib/PageRenderer/ProjectPayments.php:635
-#: lib/PageRenderer/ProjectPayments.php:721
+#: lib/PageRenderer/ProjectPayments.php:652
+#: lib/PageRenderer/ProjectPayments.php:738
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:98
 msgid "Receivables"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:705
-#: lib/PageRenderer/ProjectPayments.php:769
+#: lib/PageRenderer/ProjectPayments.php:722
+#: lib/PageRenderer/ProjectPayments.php:786
 msgid "Single Options"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:708
+#: lib/PageRenderer/ProjectPayments.php:725
 msgid "Operations"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:709
+#: lib/PageRenderer/ProjectPayments.php:726
 msgid "Add a new Receivable"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:811
+#: lib/PageRenderer/ProjectPayments.php:828
 msgid "Supporting Document"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:890
+#: lib/PageRenderer/ProjectPayments.php:903
 msgid "Composite Project Balance"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:975
+#: lib/PageRenderer/ProjectPayments.php:990
 msgid "Parts Project Balances"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:1095
+#: lib/PageRenderer/ProjectPayments.php:1112
 #: lib/PageRenderer/SepaBulkTransactions.php:249
 msgid "Bulk Transaction"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:1113
+#: lib/PageRenderer/ProjectPayments.php:1130
 msgid "Filing Date"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:1124
+#: lib/PageRenderer/ProjectPayments.php:1141
 #: lib/PageRenderer/SepaBulkTransactions.php:410
 msgid "IBAN"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:1186
+#: lib/PageRenderer/ProjectPayments.php:1203
 #: lib/PageRenderer/SepaBankAccounts.php:814
 #: lib/PageRenderer/SepaBulkTransactions.php:472
 msgid "Mandate Reference"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:1194
+#: lib/PageRenderer/ProjectPayments.php:1211
 msgid "Message-ID"
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:1212
+#: lib/PageRenderer/ProjectPayments.php:1229
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 
-#: lib/PageRenderer/ProjectPayments.php:1307
+#: lib/PageRenderer/ProjectPayments.php:1324
 msgid "Project Balance"
 msgstr ""
 
@@ -5555,7 +5550,7 @@ msgstr ""
 
 #: lib/PageRenderer/Projects.php:793
 #: lib/PageRenderer/Util/Navigation.php:617
-#: templates/fragments/projects/project-actions.php:110
+#: templates/fragments/projects/project-actions.php:119
 msgid "Participants"
 msgstr ""
 
@@ -6665,29 +6660,33 @@ msgstr ""
 msgid "Unable to find participant field for id \"%s\""
 msgstr ""
 
-#: lib/Service/ProjectService.php:523
+#: lib/Service/ProjectService.php:401
+msgid "templates"
+msgstr ""
+
+#: lib/Service/ProjectService.php:562
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:767
+#: lib/Service/ProjectService.php:811
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
 "project \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:777
+#: lib/Service/ProjectService.php:821
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1157
+#: lib/Service/ProjectService.php:1201
 #, php-format
 msgid "Projects of %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1217
+#: lib/Service/ProjectService.php:1261
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -6717,146 +6716,146 @@ msgid ""
 "Whatever."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1326
+#: lib/Service/ProjectService.php:1370
 #, php-format
 msgid "%1$s has been renamed to %2$s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1413
+#: lib/Service/ProjectService.php:1457
 msgid "Preview"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1415
-#: lib/Service/ProjectService.php:1470
-#: lib/Service/ProjectService.php:1635
+#: lib/Service/ProjectService.php:1459
+#: lib/Service/ProjectService.php:1514
 #: lib/Service/ProjectService.php:1679
-#: lib/Service/ProjectService.php:1739
+#: lib/Service/ProjectService.php:1723
+#: lib/Service/ProjectService.php:1783
 #: lib/Settings/PersonalForm.php:334
 msgid "Rehearsals"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1417
+#: lib/Service/ProjectService.php:1461
 msgid "Archive"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1419
+#: lib/Service/ProjectService.php:1463
 msgid "Trashbin"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1464
+#: lib/Service/ProjectService.php:1508
 msgid "Empty project."
-msgstr ""
-
-#: lib/Service/ProjectService.php:1491
-#, php-format
-msgid "Unable to fetch web-pages like \"%s\"."
-msgstr ""
-
-#: lib/Service/ProjectService.php:1514
-#, php-format
-msgid "Unable to create web-page \"%s\"."
 msgstr ""
 
 #: lib/Service/ProjectService.php:1535
 #, php-format
+msgid "Unable to fetch web-pages like \"%s\"."
+msgstr ""
+
+#: lib/Service/ProjectService.php:1558
+#, php-format
+msgid "Unable to create web-page \"%s\"."
+msgstr ""
+
+#: lib/Service/ProjectService.php:1579
+#, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1574
+#: lib/Service/ProjectService.php:1618
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1617
+#: lib/Service/ProjectService.php:1661
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1781
+#: lib/Service/ProjectService.php:1825
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1825
+#: lib/Service/ProjectService.php:1869
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1841
+#: lib/Service/ProjectService.php:1885
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1863
+#: lib/Service/ProjectService.php:1907
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1915
+#: lib/Service/ProjectService.php:1959
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
 "instrumentation list for the project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1969
+#: lib/Service/ProjectService.php:2013
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1978
+#: lib/Service/ProjectService.php:2022
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2032
+#: lib/Service/ProjectService.php:2076
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2094
+#: lib/Service/ProjectService.php:2138
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2232
+#: lib/Service/ProjectService.php:2276
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2305
+#: lib/Service/ProjectService.php:2349
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2346
+#: lib/Service/ProjectService.php:2390
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2376
+#: lib/Service/ProjectService.php:2420
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2817
+#: lib/Service/ProjectService.php:2871
 msgid "Project not found."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2850
+#: lib/Service/ProjectService.php:2904
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
 "background and a resolution of 600 DPI or more."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2856
+#: lib/Service/ProjectService.php:2910
 msgid "Validation of projects not yet implemented."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2902
+#: lib/Service/ProjectService.php:2956
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr ""
@@ -9369,22 +9368,22 @@ msgstr ""
 msgid "DebitMandates"
 msgstr ""
 
-#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:425
+#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:473
 #, php-format
 msgid "Unable to find database entity for path \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:430
+#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:478
 #, php-format
 msgid "Path \"%s\" is a directory."
 msgstr ""
 
-#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:437
+#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:485
 #, php-format
 msgid "Unable to find document container for path \"%s\"."
 msgstr ""
 
-#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:443
+#: lib/Storage/Database/ProjectBalanceSupportingDocumentsStorage.php:491
 #, php-format
 msgid "The directory entry \"%s\" is not linked to a file."
 msgstr ""
@@ -9699,7 +9698,7 @@ msgstr ""
 #. TRANSLATORS src/components/AdminSettings.vue:439
 #: specialVueFakeDummyForL10nScript.js:60
 #: src/app/project-participants.js:819
-#: src/app/projects.js:534
+#: src/app/projects.js:567
 #: src/app/sepa-debit-mandate.js:851
 msgid "Confirmation Required"
 msgstr ""
@@ -10997,7 +10996,7 @@ msgid ""
 msgstr ""
 
 #: src/app/project-participants.js:824
-#: src/app/projects.js:539
+#: src/app/projects.js:572
 msgid "Unconfirmed, doing nothing."
 msgstr ""
 
@@ -11021,35 +11020,35 @@ msgid ""
 "musicians ({musicians})."
 msgstr ""
 
-#: src/app/projects.js:277
+#: src/app/projects.js:278
 msgid "Unknown operation: {operation}"
 msgstr ""
 
-#: src/app/projects.js:506
+#: src/app/projects.js:539
 msgid "Share-link has been copied to the clipboard."
 msgstr ""
 
-#: src/app/projects.js:508
+#: src/app/projects.js:541
 msgid "Failed copying share-link to the clipboard: {reason}."
 msgstr ""
 
-#: src/app/projects.js:659
+#: src/app/projects.js:692
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 
-#: src/app/projects.js:660
+#: src/app/projects.js:693
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: src/app/projects.js:685
+#: src/app/projects.js:718
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: src/app/projects.js:686
+#: src/app/projects.js:719
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: src/app/projects.js:732
+#: src/app/projects.js:765
 msgid "No values match"
 msgstr ""
 
@@ -11229,21 +11228,22 @@ msgstr ""
 msgid "User Manual: {section}"
 msgstr ""
 
-#: src/files-hooks.js:154
+#: src/files-hooks.js:177
 msgid ""
 "Fill the template with substitutions. Opens the \"Details\" view for further "
 "options."
 msgstr ""
 
-#: src/files-hooks.js:218
+#: src/files-hooks.js:241
+#: src/files-hooks.js:349
 msgid "New Supporting Document"
 msgstr ""
 
-#: src/files-hooks.js:219
+#: src/files-hooks.js:242
 msgid "PROJECTNAME-XXX"
 msgstr ""
 
-#: src/files-hooks.js:228
+#: src/files-hooks.js:253
 msgid ""
 "The name of the new document in support must match the format "
 "\"{projectName}-XXX\" where \"XXX\" is a placeholder for 3 decimal digits or "
@@ -11251,8 +11251,27 @@ msgid ""
 "automatically."
 msgstr ""
 
-#: src/files-hooks.js:253
+#: src/files-hooks.js:278
 msgid "Document sequence determined as {sequence}."
+msgstr ""
+
+#: src/files-hooks.js:286
+msgid ""
+"The name of the new folder must match the format \"YYYY\" where \"YYYY\" is "
+"a placeholder for 4 decimal digits or a literal \"YYYY\" in which case a "
+"folder for the current year is created if it does not exist already."
+msgstr ""
+
+#: src/files-hooks.js:292
+msgid "Year determined as {year}."
+msgstr ""
+
+#: src/files-hooks.js:296
+msgid "There is already a directory or file with the name \"{dirName}\"."
+msgstr ""
+
+#: src/files-hooks.js:343
+msgid "New Year Folder"
 msgstr ""
 
 #: src/legacy/calendar/calendar.js:25
@@ -12218,35 +12237,35 @@ msgstr ""
 msgid "Project Wiki for %s"
 msgstr ""
 
-#: templates/fragments/projects/project-actions.php:99
+#: templates/fragments/projects/project-actions.php:108
 msgid "Project Overview"
 msgstr ""
 
-#: templates/fragments/projects/project-actions.php:128
+#: templates/fragments/projects/project-actions.php:137
 msgid "Extra Member Data"
 msgstr ""
 
-#: templates/fragments/projects/project-actions.php:139
+#: templates/fragments/projects/project-actions.php:148
 msgid "Project Files"
 msgstr ""
 
-#: templates/fragments/projects/project-actions.php:150
+#: templates/fragments/projects/project-actions.php:159
 msgid "Project Notes"
 msgstr ""
 
-#: templates/fragments/projects/project-actions.php:159
+#: templates/fragments/projects/project-actions.php:168
 msgid "Events"
 msgstr ""
 
-#: templates/fragments/projects/project-actions.php:179
+#: templates/fragments/projects/project-actions.php:188
 msgid "Debit Mandates"
 msgstr ""
 
-#: templates/fragments/projects/project-actions.php:188
+#: templates/fragments/projects/project-actions.php:197
 msgid "Payments"
 msgstr ""
 
-#: templates/fragments/projects/project-actions.php:198
+#: templates/fragments/projects/project-actions.php:207
 msgid "Financial Balance"
 msgstr ""
 

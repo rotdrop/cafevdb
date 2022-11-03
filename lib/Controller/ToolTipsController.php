@@ -4,9 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license GNU AGPL version 3 or any later version
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,6 +37,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 
 use OCA\CAFEVDB\Common\Util;
 
+/** Fetch one or multiple tooltip via AJAX. */
 class ToolTipsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
@@ -49,22 +49,32 @@ class ToolTipsController extends Controller
   /** @var ToolTipsService */
   private $toolTipsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ToolTipsService $toolTipsService
-    , ILogger $logger
+    ?string $appName,
+    IRequest $request,
+    ToolTipsService $toolTipsService,
+    ILogger $logger,
   ) {
     parent::__construct($appName, $request);
     $this->toolTipsService = $toolTipsService;
     $this->logger = $logger;
   }
+  // phpcs:enable
 
   /**
+   * @param string $key
+   *
+   * @param null|bool $debug
+   *
+   * @param bool $unescaped
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    * @NoGroupMemberRequired
    */
-  public function get(string $key, ?bool $debug = null, bool $unescaped = false)
+  public function get(string $key, ?bool $debug = null, bool $unescaped = false):DataResponse
   {
     $this->toolTipsService->debug($debug);
     $tooltip = $this->toolTipsService->fetch($key, escape: false);
@@ -79,6 +89,14 @@ class ToolTipsController extends Controller
   }
 
   /**
+   * @param array $keys
+   *
+   * @param null|bool $debug
+   *
+   * @param bool $unescaped
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    * @NoGroupMemberRequired
    */
@@ -95,10 +113,4 @@ class ToolTipsController extends Controller
     }
     return new DataResponse($tooltips, Http::STATUS_OK);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

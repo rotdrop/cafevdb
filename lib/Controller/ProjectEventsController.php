@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +26,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -33,7 +35,9 @@ use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
-class ProjectEventsController extends Controller {
+/** AJAX end-points to manage events linked to projects */
+class ProjectEventsController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
@@ -46,13 +50,14 @@ class ProjectEventsController extends Controller {
   /** @var \OCA\CAFEVDB\Service\CalDavService */
   private $calDavService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , RequestParameterService $parameterService
-    , ConfigService $configService
-    , EventsService $eventsService
-    , CalDavService $calDavService
+    ?string $appName,
+    IRequest $request,
+    RequestParameterService $parameterService,
+    ConfigService $configService,
+    EventsService $eventsService,
+    CalDavService $calDavService,
   ) {
     parent::__construct($appName, $request);
     $this->parameterService = $parameterService;
@@ -61,11 +66,16 @@ class ProjectEventsController extends Controller {
     $this->calDavService = $calDavService;
     $this->l = $this->l10N();
   }
+  // phpcs:enable
 
   /**
+   * @param string $topic
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic)
+  public function serviceSwitch(string $topic):Http\Response
   {
     try {
       $projectId = $this->parameterService['projectId'];
@@ -73,9 +83,10 @@ class ProjectEventsController extends Controller {
 
       if (empty($projectId) || empty($projectName)) {
         return self::grumble(
-          $this->l->t('Project-id AND -name have to be specified (%s / %s)',
-                      [ empty($projectId) ? '?' : $projectId,
-                        empty($projectName) ? '?' : $projectName ]));
+          $this->l->t(
+            'Project-id AND -name have to be specified (%s / %s)',
+            [ empty($projectId) ? '?' : $projectId,
+              empty($projectName) ? '?' : $projectName ]));
       }
 
       $selectedEvents = $this->parameterService->getParam('eventSelect', []);
@@ -127,7 +138,7 @@ class ProjectEventsController extends Controller {
 
           if (count($selected) > 0) {
             $exports = [];
-            foreach ($selected as $eventUri => $select) {
+            foreach (array_keys($selected) as $eventUri) {
               $exports[$eventUri] = $calendarIds[$eventUri];
             }
           } else {
@@ -178,10 +189,4 @@ class ProjectEventsController extends Controller {
       return self::grumble($this->exceptionChainData($t));
     }
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

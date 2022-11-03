@@ -380,6 +380,46 @@ class ProjectService
   }
 
   /**
+   * Depending on the type of the project generate the partial project-folder
+   * path:
+   * - ProjectType::TEMPORARY -- path is YEAR/PROJECT_NAME
+   * - ProjectType::PERMANENT -- path is just PROJECT_NAME
+   * - ProjectType::TEMPLATE -- path is L10N_TEMPLATE_NAME/PROJECT_NAME
+   *
+   * @param array|Entities\Project $project
+   *
+   * @return array
+   */
+  public function getProjectPathComponents(mixed $project):array
+  {
+    switch ($project['type']) {
+      case ProjectType::TEMPORARY:
+        return [ $project['year'], $project['name'] ];
+      case ProjectType::PERMANENT:
+        return [ $project['name'], ];
+      case ProjectType::TEMPLATE:
+        return [ $this->l->t('templates'), $project['name'] ];
+    }
+    return null;
+  }
+
+  /**
+   * Depending on the type of the project generate the partial project-folder
+   * path:
+   * - ProjectType::TEMPORARY -- path is YEAR/PROJECT_NAME
+   * - ProjectType::PERMANENT -- path is just PROJECT_NAME
+   * - ProjectType::TEMPLATE -- path is L10N_TEMPLATE_NAME/PROJECT_NAME
+   *
+   * @param array|Entities\Project $project
+   *
+   * @return string
+   */
+  public function getProjectPathPrefix(mixed $project):string
+  {
+    return implode(Constants::PATH_SEP, $this->getProjectPathComponents($project));
+  }
+
+  /**
    * Get the configured name of the or all or the specified folder.
    *
    * @param int|Entities\Project $projectOrId
@@ -393,9 +433,8 @@ class ProjectService
   public function getProjectFolder($projectOrId, ?string $only = null)
   {
     $project = $this->repository->ensureProject($projectOrId);
-    $pathSep = UserStorage::PATH_SEP;
-    $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
-    $sharedFolder = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $pathPrefix = $this->getProjectPathPrefix($project);
+    $sharedFolder = Constants::PATH_SEP . $this->getConfigValue(ConfigService::SHARED_FOLDER);
     $folders = $only ? [ $only ] : self::PROJECT_FOLDER_CONFIG_KEYS;
 
     $paths = [];
@@ -405,19 +444,21 @@ class ProjectService
         case ConfigService::PROJECT_PARTICIPANTS_FOLDER:
         case ConfigService::PROJECT_POSTERS_FOLDER:
         case ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER:
-          $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
+          $projectsFolder = $sharedFolder
+            . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+            . Constants::PATH_SEP . $pathPrefix;
           if ($key == ConfigService::PROJECTS_FOLDER) {
             $paths[$key] = $projectsFolder;
             break;
           }
-          $paths[$key] = $projectsFolder.$pathSep.$this->getConfigValue($key);
+          $paths[$key] = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue($key);
           break;
         case ConfigService::BALANCES_FOLDER:
           $paths[$key] = $sharedFolder
-            . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
-            . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
-            . $pathSep . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
-            . $yearName;
+            . Constants::PATH_SEP . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
+            . Constants::PATH_SEP . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
+            . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+            . Constants::PATH_SEP . $pathPrefix;
           break;
       }
     }
@@ -429,8 +470,6 @@ class ProjectService
    * of folders (balance and general files).
    *
    * @param int|Entities\Project $projectOrId Database entity or id.
-   *
-   * @param null|string $projectName Name of the project.
    *
    * @param null|string $only If a string create only this folder, can be one
    * of self::FOLDER_TYPE_PROJECT, self::FOLDER_TYPE_BALANCE,
@@ -444,20 +483,14 @@ class ProjectService
    */
   public function ensureProjectFolders(
     mixed $projectOrId,
-    ?string $projectName = null,
     ?string $only = null,
     bool $dry = false
   ):array {
+    /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
 
     if (empty($project)) {
       throw new Exception('CANNOT FIND PROJECT FOR ID ' . $projectOrId);
-    }
-
-    if (empty($projectName)) {
-      $projectName = $project['name'];
-    } elseif ($projectName !== $project['name']) {
-      return false;
     }
 
     $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
@@ -468,40 +501,37 @@ class ProjectService
     $downloadsFolder = $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
     $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
 
+    $pathPrefix = $this->getProjectPathPrefix($project);
+
     $projectPaths = [
       self::FOLDER_TYPE_PROJECT => [
         $sharedFolder,
         $projectsFolder,
-        $project['year'],
-        $project['name'],
+        $pathPrefix,
       ],
       self::FOLDER_TYPE_BALANCE => [
         $sharedFolder,
         $financeFolder,
         $balancesFolder,
         $projectsFolder,
-        $project['year'],
-        $project['name'],
+        $pathPrefix,
       ],
       self::FOLDER_TYPE_PARTICIPANTS => [
         $sharedFolder,
         $projectsFolder,
-        $project['year'],
-        $project['name'],
+        $pathPrefix,
         $participantsFolder,
       ],
       self::FOLDER_TYPE_POSTERS => [
         $sharedFolder,
         $projectsFolder,
-        $project['year'],
-        $project['name'],
+        $pathPrefix,
         $postersFolder,
       ],
       self::FOLDER_TYPE_DOWNLOADS => [
         $sharedFolder,
         $projectsFolder,
-        $project['year'],
-        $project['name'],
+        $pathPrefix,
         $downloadsFolder,
       ],
     ];
@@ -515,13 +545,13 @@ class ProjectService
         if (!$dry) {
           $this->userStorage->ensureFolderChain($chain);
         }
-        $returnPaths[$key] = UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain);
+        $returnPaths[$key] = Constants::PATH_SEP . implode(Constants::PATH_SEP, $chain);
       } catch (Throwable $t) {
         if (!empty($only)) {
           throw new Exception(
             $this->l->t(
               'Unable to ensure existence of folder "%s".',
-              UserStorage::PATH_SEP.implode(UserStorage::PATH_SEP, $chain)),
+              Constants::PATH_SEP . implode(Constants::PATH_SEP, $chain)),
             $t->getCode(),
             $t);
         } else {
@@ -547,19 +577,20 @@ class ProjectService
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
 
-    $pathSep = UserStorage::PATH_SEP;
-    $yearName = $pathSep.$project->getYear().$pathSep.$project->getName();
+    $pathPrefix = $this->getProjectPathPrefix($project);
 
-    $sharedFolder   = $pathSep.$this->getConfigValue(ConfigService::SHARED_FOLDER);
-    $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
-    // $participantsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
-    // $postersFolder  = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
-    // $downloadsFolder = $projectsFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
+    $sharedFolder   = Constants::PATH_SEP . $this->getConfigValue(ConfigService::SHARED_FOLDER);
+    $projectsFolder = $sharedFolder
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+      . Constants::PATH_SEP . $pathPrefix;
+    // $participantsFolder = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+    // $postersFolder  = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
+    // $downloadsFolder = $projectsFolder . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
     $balanceFolder  = $sharedFolder
-                    . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
-                    . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
-                    . $pathSep . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
-                    . $yearName;
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+      . Constants::PATH_SEP . $pathPrefix;
 
     $projectPaths = [
       // self::FOLDER_TYPE_POSTERS => $postersFolder,
@@ -579,7 +610,7 @@ class ProjectService
    * Restore the folders for the given project in order to undelete or
    * during error recovery.
    *
-   * @param Project|array $project Project entity or plain query result.
+   * @param Entities\Project $project Project entity.
    *
    * @param null|array $timeInterval Unfortunately the time-stamp in
    * the trash bin is hard to get hold of. If $timeInterval is given,
@@ -587,18 +618,19 @@ class ProjectService
    *
    * @return bool Status
    */
-  public function restoreProjectFolders($project, ?array $timeInterval = null):bool
+  private function restoreProjectFolders(Entities\Project $project, ?array $timeInterval = null):bool
   {
-    $pathSep = UserStorage::PATH_SEP;
-    $yearName = $pathSep.$project['year'].$pathSep.$project['name'];
+    $pathPrefix = $this->getProjectPathPrefix($project);
 
     $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
-    $projectsFolder = $sharedFolder.$pathSep.$this->getConfigValue(ConfigService::PROJECTS_FOLDER).$yearName;
+    $projectsFolder = $sharedFolder
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+      . Constants::PATH_SEP . $pathPrefix;
     $balanceFolder  = $sharedFolder
-                    . $pathSep . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
-                    . $pathSep . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
-                    . $pathSep . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
-                    . $yearName;
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::FINANCE_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::BALANCES_FOLDER)
+      . Constants::PATH_SEP . $this->getConfigValue(ConfigService::PROJECTS_FOLDER)
+      . Constants::PATH_SEP . $pathPrefix;
 
     $projectPaths = [
       self::FOLDER_TYPE_PROJECT => $projectsFolder,
@@ -633,6 +665,9 @@ class ProjectService
     if (!isset($newProject['year'])) {
       $newProject['year'] = $oldProject['year'];
     }
+    if (!isset($newProject['type'])) {
+      $newProject['type'] = $oldProject['type'];
+    }
 
     $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
@@ -640,17 +675,29 @@ class ProjectService
     $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
 
     $prefixPath = [
-      self::FOLDER_TYPE_PROJECT => '/'.$sharedFolder.'/'.$projectsFolder.'/',
-      self::FOLDER_TYPE_BALANCE => '/'.$sharedFolder.'/'.$financeFolder.'/'.$balancesFolder.'/'.$projectsFolder.'/',
+      self::FOLDER_TYPE_PROJECT => (
+        Constants::PATH_SEP . $sharedFolder
+        . Constants::PATH_SEP . $projectsFolder
+        . Constants::PATH_SEP),
+      self::FOLDER_TYPE_BALANCE => (
+        Constants::PATH_SEP . $sharedFolder
+        . Constants::PATH_SEP . $financeFolder
+        . Constants::PATH_SEP . $balancesFolder
+        . Constants::PATH_SEP . $projectsFolder
+        . Constants::PATH_SEP),
     ];
 
     $returnPaths = [];
     foreach ($prefixPath as $key => $prefix) {
 
-      $oldPath = $prefix.$oldProject['year']."/".$oldProject['name'];
-      $newPrefixPath = $prefix.$newProject['year'];
+      $oldPath = $prefix . $this->getProjectPathPrefix($oldProject);
 
-      $newPath = $newPrefixPath.'/'.$newProject['name'];
+      $newPathComponents = $this->getProjectPathComponents($newProject);
+
+      if (count($newPathComponents) > 1) {
+        $newPrefixPath = $prefix . $newPathComponents[0];
+      }
+      $newPath = $newPrefixPath . Constants::PATH_SEP . array_pop($newPathComponents);
 
       $oldDir = $this->userStorage->get($oldPath);
       if (!empty($oldDir)) {
@@ -664,7 +711,7 @@ class ProjectService
           // Otherwise there is nothing to move; we simply create the new directory.
           $returnPaths = array_merge(
             $returnPaths,
-            $this->ensureProjectFolders($newProject, null, $key /* only */));
+            $this->ensureProjectFolders($newProject, only: $key));
         } catch (Throwable $t) {
           $this->logException($t);
         }
@@ -686,7 +733,7 @@ class ProjectService
    */
   public function ensurePostersFolder($projectOrId, bool $dry = false)
   {
-    list(self::FOLDER_TYPE_POSTERS => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_POSTERS, $dry);
+    list(self::FOLDER_TYPE_POSTERS => $path,) = $this->ensureProjectFolders($projectOrId, only: self::FOLDER_TYPE_POSTERS, dry: $dry);
     return $path;
   }
 
@@ -702,7 +749,7 @@ class ProjectService
    */
   public function ensureDownloadsFolder($projectOrId, bool $dry = false)
   {
-    list(self::FOLDER_TYPE_DOWNLOADS => $path,) = $this->ensureProjectFolders($projectOrId, null, self::FOLDER_TYPE_DOWNLOADS, $dry);
+    list(self::FOLDER_TYPE_DOWNLOADS => $path,) = $this->ensureProjectFolders($projectOrId, only: self::FOLDER_TYPE_DOWNLOADS, dry: $dry);
     return $path;
   }
 
@@ -801,9 +848,9 @@ class ProjectService
    */
   public function ensureParticipantFolder(Entities\Project $project, Entities\Musician $musician, bool $dry = false):string
   {
-    list(self::FOLDER_TYPE_PARTICIPANTS => $parentPath,) = $this->ensureProjectFolders($project, null, self::FOLDER_TYPE_PARTICIPANTS, $dry);
+    list(self::FOLDER_TYPE_PARTICIPANTS => $parentPath,) = $this->ensureProjectFolders($project, only: self::FOLDER_TYPE_PARTICIPANTS, dry: $dry);
     $userIdSlug = $this->musicianService->ensureUserIdSlug($musician);
-    $participantFolder = $parentPath.UserStorage::PATH_SEP.$userIdSlug;
+    $participantFolder = $parentPath . Constants::PATH_SEP . $userIdSlug;
     if (!$dry) {
       $this->userStorage->ensureFolder($participantFolder);
     }
@@ -830,12 +877,11 @@ class ProjectService
       return null;
     }
 
-    return UserStorage::PATH_SEP . implode(
-      UserStorage::PATH_SEP, [
+    return Constants::PATH_SEP . implode(
+      Constants::PATH_SEP, [
         $sharedFolder,
         $projectsFolder,
-        $project['year'],
-        $project['name'],
+        $this->getProjectPathPrefix($project),
         $participantsFolder,
         $userIdSlug,
       ]);
@@ -892,9 +938,9 @@ class ProjectService
     if ($field->getDataType() == FieldDataType::SERVICE_FEE) {
       $subDirPrefix =
         $this->getSupportingDocumentsFolderName()
-        . UserStorage::PATH_SEP
+        . Constants::PATH_SEP
         . $this->getReceivablesFolderName();
-      $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . UserStorage::PATH_SEP . $dirName;
+      $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . Constants::PATH_SEP . $dirName;
     }
 
     return $dirName;
@@ -992,7 +1038,7 @@ class ProjectService
         // construct the file-name from the option label if non-empty or the file-name of the DB-file
         $optionLabel = $this->participantFieldsService->getFileSystemOptionLabel($fieldOption);
         if (!empty($optionLabel)) {
-          $fileName = $this->participantFilename($optionLabel, $musician,ignoreExtension: true);
+          $fileName = $this->participantFilename($optionLabel, $musician, ignoreExtension: true);
         } else {
           $fileName = basename($dbFileName, '.' . $extension);
         }
@@ -1002,7 +1048,7 @@ class ProjectService
       $dirName = $this->getParticipantFieldFolderPath($field, $includeDeleted);
 
       $baseName = $fileName . '.' . $extension;
-      $pathName = empty($dirName) ? $baseName : $dirName . UserStorage::PATH_SEP . $baseName;
+      $pathName = empty($dirName) ? $baseName : $dirName . Constants::PATH_SEP . $baseName;
     }
 
     return compact(
@@ -1043,11 +1089,11 @@ class ProjectService
 
       $participantsFolder = $this->getProjectFolder($project, ConfigService::PROJECT_PARTICIPANTS_FOLDER);
 
-      $newFolderPath = $participantsFolder . UserStorage::PATH_SEP . $newUserIdSlug;
+      $newFolderPath = $participantsFolder . Constants::PATH_SEP . $newUserIdSlug;
 
       if (!empty($oldUserIdSlug)) {
 
-        $oldFolderPath = $participantsFolder . UserStorage::PATH_SEP . $oldUserIdSlug;
+        $oldFolderPath = $participantsFolder . Constants::PATH_SEP . $oldUserIdSlug;
 
         // apart from the project folder the user-id-slug is also potentially
         // part of the file-name of several files.
@@ -1073,16 +1119,16 @@ class ProjectService
           } else {
             // name based on option label
             $nameBase = $this->participantFieldsService->getFileSystemOptionLabel($fieldDatum->getDataOption());
-            $subDir = $fileSystemFieldName . UserStorage::PATH_SEP;
+            $subDir = $fileSystemFieldName . Constants::PATH_SEP;
           }
           $oldFilePath =
-            $oldFolderPath . UserStorage::PATH_SEP
+            $oldFolderPath . Constants::PATH_SEP
             . $subDir
             . $this->participantFilename($nameBase, $oldUserIdSlug)
             . '.' . $extension;
 
           $newFilePath =
-            $oldFolderPath . UserStorage::PATH_SEP
+            $oldFolderPath . Constants::PATH_SEP
             . $subDir
             . $this->participantFilename($nameBase, $newUserIdSlug)
             . '.' . $extension;
@@ -1150,17 +1196,35 @@ class ProjectService
     $orchestra = $this->getConfigValue('orchestra');
     $orchestra = $this->getConfigValue('streetAddressName01', $orchestra);
 
-    $projects = $this->repository->findBy(
-      [ '!id' => $exclude ],
-      [ 'year' => 'DESC', 'name' => 'ASC' ]);
+    $projects = [];
+    foreach (ProjectType::toArray() as $projectType) {
+      $projects[$projectType] = $this->repository->findBy(
+        [
+          [ '!id' => $exclude ],
+          [ 'type' => $projectType ],
+        ],
+        [ 'year' => 'DESC', 'name' => 'ASC' ]);
+      if ($projects[$projectType] === null) {
+        $this->logInfo('NULL PROJECTS? ' . $projectType);
+      }
+    }
+    $projects = array_merge(
+      $projects[ProjectType::PERMANENT],
+      $projects[ProjectType::TEMPORARY],
+      $projects[ProjectType::TEMPLATE],
+    );
 
     $page = "====== ".($this->l->t('Projects of %s', [$orchestra]))."======\n\n";
 
-    $year = -1;
+    $projectGroup = null;
+    /** @var Entities\Project $project */
     foreach ($projects as $project) {
-      if ($project['year'] != $year) {
-        $year = $project['year'];
-        $page .= "\n==== ".$year."====\n";
+      $currentProjectGroup = $project->getType() == ProjectType::TEMPORARY
+        ? $project->getYear()
+        : $this->l->t($project->getType());
+      if ($currentProjectGroup != $projectGroup) {
+        $projectGroup = $currentProjectGroup;
+        $page .= "\n==== " . $projectGroup . "====\n";
       }
       $name = $project['name'];
 
@@ -1207,11 +1271,11 @@ class ProjectService
    *
    * @param string $projectName Project name.
    *
-   * @return mixed
+   * @return void
    *
    * @see WikiRPC::putPage()
    */
-  public function generateProjectWikiPage(int $projectId, string $projectName):mixed
+  public function generateProjectWikiPage(int $projectId, string $projectName):void
   {
     $page = $this->l->t(
       '====== Project %s ======
@@ -1311,11 +1375,11 @@ Whatever.',
    * @param array|Entities\Project $oldProject Array-like object,
    * "name" and "year" keys need to be present.
    *
-   * @return mixed
+   * @return void
    *
    * @see generateWikiOverview()
    */
-  public function renameProjectWikiPage(mixed $newProject, mixed $oldProject):mixed
+  public function renameProjectWikiPage(mixed $newProject, mixed $oldProject):void
   {
     $wikiRPC = $this->wikiRPC();
     $oldName = $oldProject['name'];
@@ -1623,11 +1687,11 @@ Whatever.',
    *
    * @param int $projectId Project Id.
    *
-   * @param int $article Article id from CMS.
+   * @param array $article Article description from CMS system.
    *
    * @return void
    */
-  public function attachProjectWebPage(int $projectId, int $article):void
+  public function attachProjectWebPage(int $projectId, array $article):void
   {
     // Try to remove from trashbin, if appropriate.
     $trashCategory = $this->getConfigValue('redaxoTrashbin');
@@ -1999,8 +2063,9 @@ Whatever.',
 
     $listId = $project->getMailingListId();
 
-    if ($listId === 'keep-empty') {
+    if ($listId === 'keep-empty' || $project->getType() == ProjectType::TEMPLATE) {
       $project->setMailingListId(null);
+      $this->flush();
       return null;
     } elseif ($listId === 'create') {
       $listId = null;
@@ -2011,6 +2076,7 @@ Whatever.',
     $listsService = $this->di(MailingListsService::class);
 
     if (!$listsService->isConfigured()) {
+      $this->flush();
       return null;
     }
 
@@ -2257,7 +2323,7 @@ Whatever.',
     $runQueue = (clone $this->appContainer()->get(Common\UndoableRunQueue::class))
       ->register(new Common\GenericUndoable(
         function() use ($project) {
-          /* $projectPaths = */$this->ensureProjectFolders($project->getId(), $project->getName());
+          $this->ensureProjectFolders($project);
         },
         function() use ($project) {
           $this->logInfo('TRY REMOVE FOLDERS FOR ' . $project->getId());
@@ -2377,9 +2443,26 @@ Whatever.',
     }
 
     $projectId = $project->getId();
-    // $projectName = $project->getName();
+    $projectName = $project->getName();
+    $projectYear = $project->getYear();
+    $projectType = $project->getType();
 
     $softDelete  = count($project['payments']??[]) > 0;
+
+    $preEvent =  new Events\BeforeProjectDeletedEvent(
+      $projectId,
+      $projectName,
+      $projectYear,
+      $projectType,
+      $softDelete,
+    );
+    $postEvent = new Events\AfterProjectDeletedEvent(
+      $projectId,
+      $projectName,
+      $projectYear,
+      $projectType,
+      $softDelete,
+    );
 
     $this->entityManager
       ->registerPreFlushAction(new Common\GenericUndoable(
@@ -2406,7 +2489,7 @@ Whatever.',
             $this->logException($t, 'Unable to delete wiki-page for project ' . $project->getName());
             $pageVersion = null;
           }
-          $this->generateWikiOverview([ $projectId ]);
+          $this->generateWikiOverview([ $project->getId() ]);
           return $pageVersion;
         },
         function($pageVersion) use ($project) {
@@ -2452,8 +2535,7 @@ Whatever.',
     $this->entityManager->beginTransaction();
     try {
 
-      $this->eventDispatcher->dispatchTyped(
-        new Events\BeforeProjectDeletedEvent($project->getId(), $project->getName(), $softDelete));
+      $this->eventDispatcher->dispatchTyped($preEvent);
 
       $this->entityManager->executePreFlushActions();
 
@@ -2517,8 +2599,7 @@ Whatever.',
     }
 
     try {
-      $this->eventDispatcher->dispatchTyped(
-        new Events\AfterProjectDeletedEvent($project->getId(), $project->getName(), $softDelete));
+      $this->eventDispatcher->dispatchTyped($postEvent);
     } catch (Throwable $t) {
       $this->logException($t, 'After project-deleted handlers failed.');
     }
@@ -2613,7 +2694,7 @@ Whatever.',
     // already reflects the new state, so rather rely on the data.
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
-    $projectId = $project['id'];
+    $projectId = $project->getId();
 
     $oldName = $projectOrId['name'] ?? $project->getName();
     $oldYear = $projectOrId['year'] ?? $project->getYear();
@@ -2625,15 +2706,25 @@ Whatever.',
       $newName = $newData['name'];
       $newYear = $newData['year'];
     }
-    $newYear = $newYear?:$project['year'];
+    $newYear = $newYear ?: $project->getYear();
 
     if ($oldName == $newName && $oldYear == $newYear) {
       return $project; // nothing to do
     }
 
     // project-entity is changed during the update.
-    $oldProject = [ 'id' => $projectId, 'name' => $oldName, 'year' => $oldYear ];
-    $newProject = [ 'id' => $projectId, 'name' => $newName, 'year' => $newYear ];
+    $oldProject = [
+      'id' => $projectId,
+      'name' => $oldName,
+      'year' => $oldYear,
+      'type' => $project->getType(),
+    ];
+    $newProject = [
+      'id' => $projectId,
+      'name' => $newName,
+      'year' => $newYear,
+      'type' => $project->getType(),
+    ];
 
     /** @var CloudUserConnectorService $cloudService */
     $cloudService = $this->di(CloudUserConnectorService::class);

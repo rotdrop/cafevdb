@@ -319,6 +319,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
    */
   public function getFolderByName(string $name):?DatabaseStorageFolder
   {
+    $name = trim($name, Constants::PATH_SEP);
     $matches = $this->directoryEntries
       ->matching(DBUtil::criteriaWhere([ 'name' => $name ]))
       ->filter(fn(DatabaseStorageDirEntry $dirEntry) => $dirEntry instanceof DatabaseStorageFolder);

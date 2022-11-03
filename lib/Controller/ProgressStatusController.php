@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,7 +37,9 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\IProgressStatus;
 
-class ProgressStatusController extends Controller {
+/** AJAX end-point for progress status. */
+class ProgressStatusController extends Controller
+{
   use \OCA\CAFEVDB\Traits\ResponseTrait;
 
   /** @var ProgressStatusService */
@@ -51,13 +54,14 @@ class ProgressStatusController extends Controller {
   /** @var ILogger */
   private $logger;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ProgressStatusService $progressStatusService
-    , $userId
-    , ILogger $logger
-    , IL10N $l10n
+    ?string $appName,
+    IRequest $request,
+    ProgressStatusService $progressStatusService,
+    ?string $userId,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     parent::__construct($appName, $request);
 
@@ -66,11 +70,16 @@ class ProgressStatusController extends Controller {
     $this->userId = $userId;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /**
+   * @param string $id
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    */
-  public function get($id)
+  public function get(string $id):Http\Response
   {
     try {
       $progress = $this->progressStatusService->get($id);
@@ -85,71 +94,80 @@ class ProgressStatusController extends Controller {
   }
 
   /**
+   * @param string $operation
+   *
+   * @return Http\Response
+   *
    * @NoAdminRequired
    */
-  public function action($operation)
+  public function action(string $operation):Http\Response
   {
-    switch($operation) {
-    case 'create':
-      try {
-        $progress = $this->progressStatusService->create(
-          $this->request['current'],
-          $this->request['target'],
-          $this->request['data']
-        );
-        return self::progressResponse($progress);
-      } catch (\Throwable $t) {
-        $this->logger->logException($t);
-        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-      }
-      break;
-    case 'update':
-      try {
-        $progress = $this->progressStatusService->get($this->request['id']);
-      } catch (\Throwable $t) {
-        $this->logger->logException($t);
-        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-      }
-      try {
-        foreach ([ 'current', 'target', 'data' ] as $key) {
-          ${$key} = $this->request[$key]?:null;
+    switch ($operation) {
+      case 'create':
+        try {
+          $progress = $this->progressStatusService->create(
+            $this->request['current'],
+            $this->request['target'],
+            $this->request['data']
+          );
+          return self::progressResponse($progress);
+        } catch (\Throwable $t) {
+          $this->logger->logException($t);
+          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
-        $progress->update($current, $target, $data);
-        return self::progressResponse($progress);
-      } catch (\Throwable $t) {
-        $this->logger->logException($t);
-        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-      }
-      break;
-    case 'delete':
-      try {
-        $progress = $this->progressStatusService->get($this->request['id']);
-      } catch (\Throwable $t) {
-        $this->logger->logException($t);
-        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-      }
-      try {
-        $progress->delete();
-        return self::response($this->l->t('Progress "%s" successfully deleted.', $this->request['id']));
-      } catch (\Throwable $t) {
-        $this->logger->logException($t);
-        return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
-      }
-    case 'test':
-      $target = $this->request['target']?:100;
-      $progress = $this->progressStatusService->create(0, $target, $this->request['data'], $this->request['id']);
-      for ($i = 0; $i <= $progress->getTarget(); $i++) {
-        $progress->update($i);
-        usleep(500000);
-      }
-      return self::dataResponse([]);
-      break;
-    default:
-      return self::grumble($this->l->t('Unknown Request'));
+        break;
+      case 'update':
+        try {
+          $progress = $this->progressStatusService->get($this->request['id']);
+        } catch (\Throwable $t) {
+          $this->logger->logException($t);
+          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+        }
+        try {
+          foreach ([ 'current', 'target', 'data' ] as $key) {
+            ${$key} = $this->request[$key]?:null;
+          }
+          $progress->update($current, $target, $data);
+          return self::progressResponse($progress);
+        } catch (\Throwable $t) {
+          $this->logger->logException($t);
+          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+        }
+        break;
+      case 'delete':
+        try {
+          $progress = $this->progressStatusService->get($this->request['id']);
+        } catch (\Throwable $t) {
+          $this->logger->logException($t);
+          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+        }
+        try {
+          $progress->delete();
+          return self::response($this->l->t('Progress "%s" successfully deleted.', $this->request['id']));
+        } catch (\Throwable $t) {
+          $this->logger->logException($t);
+          return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
+        }
+      case 'test':
+        $target = $this->request['target']?:100;
+        $progress = $this->progressStatusService->create(0, $target, $this->request['data'], $this->request['id']);
+        for ($i = 0; $i <= $progress->getTarget(); $i++) {
+          $progress->update($i);
+          usleep(500000);
+        }
+        return self::dataResponse([]);
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown Request'));
     }
   }
 
-  static private function progressResponse(IProgressStatus $progress)
+  /**
+   * @param IProgressStatus $progress
+   *
+   * @return DataResponse
+   */
+  private static function progressResponse(IProgressStatus $progress):DataResponse
   {
     return self::dataResponse([
       'id' => $progress->getId(),
@@ -158,10 +176,4 @@ class ProgressStatusController extends Controller {
       'data' => $progress->getData(),
     ]);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

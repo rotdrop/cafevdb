@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MigrationsService;
 
+/** AJAX end-points for database migrations. */
 class MigrationsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -46,11 +47,12 @@ class MigrationsController extends Controller
   /** @var MigrationsService */
   private $migrationsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IRequest $request
-    , ConfigService $configService
-    , MigrationsService $migrationsService
+    ?string $appName,
+    IRequest $request,
+    ConfigService $configService,
+    MigrationsService $migrationsService,
   ) {
     parent::__construct($appName, $request);
 
@@ -58,27 +60,36 @@ class MigrationsController extends Controller
     $this->migrationsService = $migrationsService;
     $this->l = $this->l10N();
   }
+  // phpcs:enable
 
   /**
+   * @param string $what
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function get($what)
+  public function get(string $what):DataResponse
   {
     switch ($what) {
-    case self::ALL_MIGRATIONS:
-      return self::dataResponse([ 'migrations' => $this->migrationsService->getAll(), ]);
-    case self::UNAPPLIED_MIGRATIONS:
-      return self::dataResponse([ 'migrations' => $this->migrationsService->getUnapplied(), ]);
-    case self::LATEST_MIGRATION:
-      return self::dataResponse([ 'latest' => $this->migrationsService->getLatest(), ]);
+      case self::ALL_MIGRATIONS:
+        return self::dataResponse([ 'migrations' => $this->migrationsService->getAll(), ]);
+      case self::UNAPPLIED_MIGRATIONS:
+        return self::dataResponse([ 'migrations' => $this->migrationsService->getUnapplied(), ]);
+      case self::LATEST_MIGRATION:
+        return self::dataResponse([ 'latest' => $this->migrationsService->getLatest(), ]);
     }
     return self::grumble($this->l->t('Unknown Request "%s".', $what));
   }
 
   /**
+   * @param string $migrationVersion
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function getDescription($migrationVersion)
+  public function getDescription(string $migrationVersion):DataResponse
   {
     return self::dataResponse([
       'version' => $migrationVersion,
@@ -87,64 +98,65 @@ class MigrationsController extends Controller
   }
 
   /**
+   * @param string $topic
+   *
+   * @param string $subTopic
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function serviceSwitch($topic, $subTopic)
+  public function serviceSwitch(string $topic, string $subTopic):DataResponse
   {
     switch ($topic) {
-    case 'apply':
-      switch ($subTopic) {
-      case 'all':
-        $unapplied = $this->migrationsService->getUnapplied();
-        $applied = [];
-        foreach ($unapplied as $version => $description) {
-          try {
-            $this->migrationsService->apply($version);
-            $applied[] = $version;
-          } catch (\Throwable $t) {
-            $data = $this->exceptionChainData($t);
-            $data['migrations'] = [
-              'payload' => $unapplied,
-              'handled' => $applied,
-              'failing' => $version,
-            ];
-            return self::grumble($data);
-          }
+      case 'apply':
+        switch ($subTopic) {
+          case 'all':
+            $unapplied = $this->migrationsService->getUnapplied();
+            $applied = [];
+            foreach (array_keys($unapplied) as $version) {
+              try {
+                $this->migrationsService->apply($version);
+                $applied[] = $version;
+              } catch (\Throwable $t) {
+                $data = $this->exceptionChainData($t);
+                $data['migrations'] = [
+                  'payload' => $unapplied,
+                  'handled' => $applied,
+                  'failing' => $version,
+                ];
+                return self::grumble($data);
+              }
+            }
+            return self::dataResponse([
+              'migrations' => [
+                'payload' => $unapplied,
+                'handled' => $applied,
+                'failing' => [],
+              ],
+            ]);
+          default:
+            $version = $subTopic;
+            try {
+              $this->migrationsService->apply($version);
+            } catch (\Throwable $t) {
+              $data = $this->exceptionChainData($t);
+              $data['migrations'] = [
+                'payload' => [ $version, ],
+                'handled' => [],
+                'failing' => $version,
+              ];
+              return self::grumble($data);
+            }
+            return self::dataResponse([
+              'migrations' => [
+                'payload' => [ $version, ],
+                'handled' => [ $version, ],
+                'failing' => [],
+              ],
+            ]);
         }
-        return self::dataResponse([
-          'migrations' => [
-            'payload' => $unapplied,
-            'handled' => $applied,
-            'failing' => [],
-          ],
-        ]);
-      default:
-        $version = $subTopic;
-        try {
-          $this->migrationsService->apply($version);
-        } catch (\Throwable $t) {
-          $data = $this->exceptionChainData($t);
-          $data['migrations'] = [
-            'payload' => [ $version, ],
-            'handled' => [],
-            'failing' => $version,
-          ];
-          return self::grumble($data);
-        }
-        return self::dataResponse([
-          'migrations' => [
-            'payload' => [ $version, ],
-            'handled' => [ $version, ],
-            'failing' => [],
-          ],
-        ]);
-      }
     }
     return self::grumble($this->l->t('Unknown Request "%s".', $topic));
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

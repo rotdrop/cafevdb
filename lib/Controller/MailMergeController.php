@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -74,7 +74,12 @@ class MailMergeController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
-  const AS_PDF = false; // @todo maybe add another download-option to the mail-merge menu
+  /**
+   * @var bool
+   *
+   * @todo maybe add another download-option to the mail-merge menu
+   */
+  const AS_PDF = false;
 
   const OPERATION_DOWNLOAD = 'download';
   const OPERATION_CLOUD = 'cloud';
@@ -95,19 +100,20 @@ class MailMergeController extends Controller
   /** @var IContactsManager */
   private $contactsManager;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , IRequest $request
-    , $userId
-    , IL10N $l10n
-    , ILogger $logger
-    , EntityManager $entityManager
-    , ConfigService $configService
-    , OrganizationalRolesService $rolesService
-    , InstrumentInsuranceService $insuranceService
-    , OpenDocumentFiller $documentFiller
-    , UserStorage $storage
-    , IContactsManager $contactsManager
+    string $appName,
+    IRequest $request,
+    ?string $userId,
+    IL10N $l10n,
+    ILogger $logger,
+    EntityManager $entityManager,
+    ConfigService $configService,
+    OrganizationalRolesService $rolesService,
+    InstrumentInsuranceService $insuranceService,
+    OpenDocumentFiller $documentFiller,
+    UserStorage $storage,
+    IContactsManager $contactsManager,
   ) {
     parent::__construct($appName, $request);
     $this->l = $l10n;
@@ -120,25 +126,48 @@ class MailMergeController extends Controller
     $this->userStorage = $storage;
     $this->contactsManager = $contactsManager;
   }
+  // phpcs:enable
 
   /**
-   * @NoAdminRequired
-   *
    * Try to perform a mail-merge of a document which is assumed to need
    * somehow a sender/recipient context (i.e. a letter).
+   *
+   * @param int $fileId
+   *
+   * @param string $fileName
+   *
+   * @param int $senderId
+   *
+   * @param array $recipientIds
+   *
+   * @param int $projectId
+   *
+   * @param array $contactKeys
+   *
+   * @param array $addressBookUris
+   *
+   * @param string $operation
+   *
+   * @param null|int $limit
+   *
+   * @param null|int $offset
+   *
+   * @return Response
+   *
+   * @NoAdminRequired
    */
   public function merge(
-    int $fileId
-    , string $fileName
-    , int $senderId
-    , array $recipientIds = []
-    , int $projectId = 0
-    , array $contactKeys = []
-    , array $addressBookUris = []
-    , string $operation = self::OPERATION_DOWNLOAD
-    , ?int $limit = null
-    , ?int $offset = null
-  ) {
+    int $fileId,
+    string $fileName,
+    int $senderId,
+    array $recipientIds = [],
+    int $projectId = 0,
+    array $contactKeys = [],
+    array $addressBookUris = [],
+    string $operation = self::OPERATION_DOWNLOAD,
+    ?int $limit = null,
+    ?int $offset = null,
+  ):Response {
 
     $templateData = [];
     $blocks = [];
@@ -347,6 +376,13 @@ class MailMergeController extends Controller
     }
   }
 
+  /**
+   * @param null|Entities\Project $project
+   *
+   * @param null|string $timeStamp
+   *
+   * @return Folder
+   */
   private function ensureCloudDestinationFolder(?Entities\Project $project = null, ?string $timeStamp = null):Folder
   {
     $timeStamp = $timeStamp ?? $this->formatTimeStamp();
@@ -362,7 +398,7 @@ class MailMergeController extends Controller
       /** @var ProjectService $projectService */
       $projectService = $this->di(ProjectService::class);
       $pathChain = [
-        $projectFolder = reset($projectService->ensureProjectFolders($project, only: ProjectService::FOLDER_TYPE_PROJECT, dry: true)),
+        /* $projectFolder = */reset($projectService->ensureProjectFolders($project, only: ProjectService::FOLDER_TYPE_PROJECT, dry: true)),
         $this->l->t('MailMerge'),
       ];
     }
@@ -373,8 +409,14 @@ class MailMergeController extends Controller
   /**
    * In order to simplify the program flow we generate fake musician entities
    * for each provided contact.
+   *
+   * @param array $contactKeys
+   *
+   * @param array $addressBookUris
+   *
+   * @return array
    */
-  private function contactsToEntities(array $contactKeys, array $addressBookUris)
+  private function contactsToEntities(array $contactKeys, array $addressBookUris):array
   {
     $addressBooks = $this->contactsManager->getUserAddressBooks();
     $addressBooks = array_combine(
@@ -387,7 +429,8 @@ class MailMergeController extends Controller
     foreach ($contactKeys as $contactInfo) {
       $bookKey = $contactInfo['book'];
       /** @var IAddressBook $addressBook */
-      if ($addressBook = $addressBooks[$bookKey] ?? null) {
+      $addressBook = $addressBooks[$bookKey] ?? null;
+      if ($addressBook) {
         $searchProperties = [];
         if ($contactInfo['uri'] ?? null) {
           $searchProperties[] = 'URI';
@@ -413,10 +456,4 @@ class MailMergeController extends Controller
 
     return $entities;
   }
-
 }
-
-// local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

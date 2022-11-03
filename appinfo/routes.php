@@ -224,17 +224,6 @@ $routes = [
       'url' => '/settings/app/get/{parameter}',
       'verb' => 'POST',
     ],
-    // expert mode operations
-    // [
-    //   'name' => 'expert_mode#form',
-    //   'url' => '/expertmode/form',
-    //   'verb' => 'GET',
-    // ],
-    [
-      'name' => 'expert_mode#action',
-      'url' => '/expertmode/action/{operation}',
-      'verb' => 'POST',
-    ],
     // migrations, maintenance
     [
       'name' => 'migrations#service_switch',

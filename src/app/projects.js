@@ -38,6 +38,7 @@ import {
   sys as pmeSys,
   classSelector as pmeClassSelector,
   formSelector as pmeFormSelector,
+  token as pmeToken,
 } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
@@ -283,12 +284,50 @@ const handleProjectActions = function($menuItem, containerSel) {
 
 const actionMenu = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
-  const container = PHPMyEdit.container(containerSel);
+  const $container = PHPMyEdit.container(containerSel);
 
-  container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
+  $container.find('.project-actions.dropdown-container .project-action').on('click', function(event) {
     handleProjectActions($(this), containerSel);
     return false;
   });
+
+  $container
+    .off('pme:contextmenu', 'tr.' + pmeToken('row'))
+    .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
+      console.info('CONTEXTMENU EVENT', $(this), event, originalEvent, databaseIdentifier);
+
+      const $contentTarget = $(originalEvent.target).closest('.dropdown-content');
+      console.info('TARGET', $contentTarget);
+      if ($contentTarget.length > 0) {
+        // use standard context menu inside dropdown
+        return;
+      }
+
+      const $row = $(this);
+      const $form = $row.closest(pmeFormSelector);
+      const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
+      const $actionMenu = $actionMenuContainer.find('.project-actions.dropdown-container').first();
+
+      if ($actionMenu.length === 0) {
+        return;
+      }
+
+      const $actionMenuToggle = $actionMenu.find('.action-menu-toggle');
+      const $actionMenuContent = $actionMenu.find('.dropdown-content');
+
+      originalEvent.preventDefault();
+      originalEvent.stopImmediatePropagation();
+
+      $actionMenuContent.css({
+        position: 'fixed',
+        left: originalEvent.originalEvent.clientX,
+        top: originalEvent.originalEvent.clientY,
+      });
+      $actionMenu.addClass('context-menu');
+      $actionMenuToggle.trigger('click');
+
+      return false;
+    });
 };
 
 const pmeFormInit = function(containerSel) {
@@ -302,14 +341,22 @@ const pmeFormInit = function(containerSel) {
   if ($form.find(submitSel).length > 0) {
     const nameSelector = 'input.projectname';
     const yearSelector = 'select[name="' + pmeData('year') + '"]';
-    const typeSelector = 'select[name="' + pmeData('temporal_type') + '"]';
+    const typeSelector = 'select[name="' + pmeData('type') + '"]';
+    const mailingListSelector = 'input[type="radio"][name^="' + pmeData('mailing_list_id') + '"]';
 
     const $name = $container.find(nameSelector);
     const $year = $container.find(yearSelector);
     const $projectType = $container.find(typeSelector);
 
     let oldProjectYear = SelectUtils.selectedOptions($year).text();
-    let oldprojectName = $name.val();
+    let oldProjectName = $name.val();
+    let oldProjectType = $projectType.val();
+
+    // make sure the some legacy stuff is also up to date
+    const $persistentCgiProjectName = $container.find('input[name="projectName"]');
+    if ($persistentCgiProjectName.val() !== oldProjectName) {
+      $persistentCgiProjectName.val(oldProjectName);
+    }
 
     /**
      * Verify the user submitted name and year settings,
@@ -335,7 +382,7 @@ const pmeFormInit = function(containerSel) {
 
       const cleanup = function() {
         if ($name.val() === '') {
-          $name.val(oldprojectName);
+          $name.val(oldProjectName);
         }
         if ($year.val() === '') {
           $year.val(oldProjectYear);
@@ -360,7 +407,7 @@ const pmeFormInit = function(containerSel) {
           $year.val(rqData.projectYear);
           $year.trigger('chosen:updated');
           oldProjectYear = rqData.projectYear;
-          oldprojectName = rqData.projectName;
+          oldProjectName = rqData.projectName;
           if (postAddOn === 'submit') {
             if (typeof button !== 'undefined') {
               $form.off('click', submitSel);
@@ -373,22 +420,34 @@ const pmeFormInit = function(containerSel) {
         });
     };
 
-    $projectType.off('change').on('change', function(event) {
-      if ($name.val() !== '') {
-        $name.trigger('blur');
-      }
-      return false;
-    });
+    $projectType
+      .off('change')
+      .on('change', function(event) {
+        const value = $(this).val();
+        $container.find(mailingListSelector).prop('disabled', value === 'template');
+        $form
+          .removeClass('project-type-' + oldProjectType)
+          .addClass('project-type-' + value);
+        oldProjectType = value;
+        if ($name.val() !== '') {
+          $name.trigger('blur');
+        }
+        return false;
+      });
 
-    $year.off('change').on('change', function(event) {
-      verifyYearName('year');
-      return false;
-    });
+    $year
+      .off('change')
+      .on('change', function(event) {
+        verifyYearName('year');
+        return false;
+      });
 
-    $name.off('blur').on('blur', function(event) {
-      verifyYearName('name');
-      return false;
-    });
+    $name
+      .off('blur')
+      .on('blur', function(event) {
+        verifyYearName('name');
+        return false;
+      });
 
     // Attach a delegate handler to the form; this gives the
     // possibility to attach another delegate handler to the

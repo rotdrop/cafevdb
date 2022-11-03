@@ -416,8 +416,3 @@ class UploadsController extends Controller
     return self::dataResponse($uploads);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

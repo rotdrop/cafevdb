@@ -113,6 +113,8 @@ class CryptoController extends Controller
    * @param string $sealedData
    *
    * @param null|string $metaData
+   *
+   * @return array
    */
   private function getUnsealedData(string $sealedData, ?string $metaData):array
   {

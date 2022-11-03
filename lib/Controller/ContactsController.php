@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,23 +52,23 @@ class ContactsController extends Controller
   /** @var IContactsManager */
   private $contactsManager;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , IRequest $request
-    , $userId
-    , IL10N $l10n
-    , ILogger $logger
-    , IContactsManager $contactsManager
+    string $appName,
+    IRequest $request,
+    ?string $userId,
+    IL10N $l10n,
+    ILogger $logger,
+    IContactsManager $contactsManager,
   ) {
     parent::__construct($appName, $request);
     $this->l = $l10n;
     $this->logger = $logger;
     $this->contactsManager = $contactsManager;
   }
+  // phpcs:enable
 
   /**
-   * @NoAdminRequired
-   *
    * Get all the data of the given musician. This mess removes "circular"
    * associations as we are really only interested into the data for this
    * single person.
@@ -76,19 +76,41 @@ class ContactsController extends Controller
    * @param int $contactUid
    *
    * @return DataResponse
+   *
+   * @NoAdminRequired
    */
-  public function get(int $contactUid):Response
+  public function get(int $contactUid):DataResponse
   {
     return self::grumble($this->l->t('UNIMPLEMENTED'));
   }
 
   /**
-   * @NoAdminRequired
-   *
    * Search by user-id and names. Pattern may contain wildcards (* and %).
+   *
+   * @param string $pattern
+   *
+   * @param null|int $limit
+   *
+   * @param null|int $offset
+   *
+   * @param array $groupIds
+   *
+   * @param array $contactUids
+   *
+   * @param array $onlyAddressBooks
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
    */
-  public function search(string $pattern, ?int $limit = null, ?int $offset = null, array $groupIds = [], array $contactUids = [], array $onlyAddressBooks = []):Response
-  {
+  public function search(
+    string $pattern,
+    ?int $limit = null,
+    ?int $offset = null,
+    array $groupIds = [],
+    array $contactUids = [],
+    array $onlyAddressBooks = [],
+  ):DataResponse {
 
     // $this->logInfo('SEARCH: ' . $pattern . ' / ' . print_r(array_filter(compact('limit', 'offset')), true));
     $searchProperties = [ 'FN', 'EMAIL' ];
@@ -129,19 +151,16 @@ class ContactsController extends Controller
   }
 
   /**
-   * @NoAdminRequired
-   *
    * Just return the list of addressbooks. Could also be made an "initial state".
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
    */
-  public function getAddressBooks()
+  public function getAddressBooks():DataResponse
   {
     $addressBooks = $this->contactsManager->getUserAddressBooks();
     $result = self::flattenAdressBooks($addressBooks);
     return self::dataResponse($result);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Constants;
@@ -173,8 +174,46 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
    */
   private function isContainerDirectory(string $path):?int
   {
-    if (preg_match('|^/?' . $this->project->getName() . '-' . '(\d{3})/?$|', $path, $matches)) {
-      return $matches[1];
+    switch ($this->project->getType()) {
+      case ProjectType::TEMPLATE:
+        break;
+      case ProjectType::PERMANENT:
+        // Folder have a year prefix and the supporting document has the year in its name
+        if (preg_match('|^/?' . '\d{4}' . '/' . $this->project->getName() . '-' . '\d{4}' . '-' . '(\d{3})/?$|', $path, $matches)) {
+          return $matches[1];
+        }
+        break;
+      case ProjectType::TEMPORARY:
+        // project-name contains already the year
+        if (preg_match('|^/?' . $this->project->getName() . '-' . '(\d{3})/?$|', $path, $matches)) {
+          return $matches[1];
+        }
+        break;
+    }
+    return null;
+  }
+
+  /**
+   * Return the year if the basename of the path is a 4-digit number,
+   * interpreted as year. Always return null for temporary and template
+   * projects.
+   *
+   * @param string $path File-system path.
+   *
+   * @return null|int
+   */
+  private function isYearDirectory(string $path):?int
+  {
+    switch ($this->project->getType()) {
+      case ProjectType::TEMPLATE:
+        break;
+      case ProjectType::PERMANENT:
+        if (preg_match('|^/?(\d{4})/?$|', $path, $matches)) {
+          return $matches[1];
+        }
+        break;
+      case ProjectType::TEMPORARY:
+        break;
     }
     return null;
   }
@@ -205,14 +244,20 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   public function mkdir($path)
   {
     $sequence = $this->isContainerDirectory($path);
-    if ($sequence === null) {
+    $year = $this->isYearDirectory($path);
+    if ($sequence === null && $year === null) {
       return false;
     }
-    $baseName = self::pathinfo($path, PATHINFO_BASENAME);
+    list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
 
     $this->entityManager->beginTransaction();
     try {
-      $parent = $this->getRootFolder();
+      if (empty($dirName)) {
+        $parent = $this->getRootFolder();
+      } else {
+        $this->logInfo('SEARCH FOR PARENT WITH NAME "' . $dirName . '"');
+        $parent = $this->getRootFolder()->getFolderByName($dirName);
+      }
 
       /** @var Entities\DatabaseStorageFolder $documentContainer */
       $documentContainer = $parent->addSubFolder($baseName);
@@ -238,7 +283,8 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
   public function rmdir($path)
   {
     $sequence = $this->isContainerDirectory($path);
-    if ($sequence === null) {
+    $year = $this->isYearDirectory($path);
+    if ($sequence === null && $year === null) {
       return false;
     }
 
@@ -270,19 +316,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     return true;
   }
 
-  // /**
-  //  * @param string $baseName
-  //  *
-  //  * @return bool
-  //  */
-  // private static function isReadMe(string $baseName):bool
-  // {
-  //   // Readme.md.ocTransferId950400209.part
-  //   return strtolower($baseName) == strtolower(Constants::README_NAME)
-  //     || (str_starts_with(strtolower($baseName), strtolower(Constants::README_NAME))
-  //         && str_ends_with($baseName, '.part'));
-  // }
-
   /**
    * {@inheritdoc}
    *
@@ -309,7 +342,17 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     $sequence2 = $this->isContainerDirectory($path2);
 
     if (($sequence1 === null) !== ($sequence2 === null)) {
-      // balance folder may only be rename to balance folders
+      // balance folder may only be renamed to balance folders
+      // $this->logInfo('SEQUENCES ' . $sequence1 . ' / ' . $sequence2);
+      return false;
+    }
+
+    $year1 = $this->isYearDirectory($path1);
+    $year2 = $this->isYearDirectory($path2);
+
+    if (($year1 === null) !== ($year2 === null)) {
+      // year directories may only be renamed to year directories
+      // $this->logInfo('YEARS ' . $year1 . ' / ' . $year2);
       return false;
     }
 
@@ -362,7 +405,12 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
     list('basename' => $baseName, 'dirname' => $dirName) = self::pathinfo($path);
 
     if ($this->isContainerDirectory($path) !== null) {
-      // $this->logInfo('CONTAINER DIR CHCEK ' . $path);
+      // avoid creating plain files with the same name name as the balance directories
+      return false;
+    }
+
+    if ($this->isYearDirectory($path) !== null) {
+      // avoid creating plain file with the same name name as the year sub-directories
       return false;
     }
 

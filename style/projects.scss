@@ -215,6 +215,12 @@
       }
     }
 
+    &.project-type-template {
+      td .list-id.dropdown-container {
+        display:none;
+      }
+    }
+
     td {
       .list-id {
         position:relative;
@@ -230,7 +236,7 @@
           z-index:1;
           white-space:nowrap;
         }
-        &.status-unknown.dropdown-container {
+        &.dropdown-container.status-unknown {
           display:none;
         }
         &.status-unset {

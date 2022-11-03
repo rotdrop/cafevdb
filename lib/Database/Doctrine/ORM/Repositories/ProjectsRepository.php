@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,13 +26,18 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+/** Entity repository for projects. */
 class ProjectsRepository extends EntityRepository
 {
   // use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
 
   const ALIAS = 'proj';
 
-  /**Sort by configured sorting column. */
+  /**
+   * Sort by configured sorting column.
+   *
+   * @return iterable
+   */
   public function findAll()
   {
     return $this->findBy([], [
@@ -100,7 +106,9 @@ class ProjectsRepository extends EntityRepository
    */
   public function shortDescription()
   {
-    $byId = []; $nameByName = []; $yearByName = [];
+    $byId = [];
+    $nameByName = [];
+    $yearByName = [];
     foreach ($this->findAll() as $entity) {
       $name = $entity['Name'];
       $year = $entity['Year'];
@@ -137,9 +145,13 @@ class ProjectsRepository extends EntityRepository
   }
 
   /**
-   * Fetch a flat array of mailing list ids associated with the matching projects
+   * Fetch a flat array of mailing list ids associated with the matching projects.
+   *
+   * @param array $criteria
+   *
+   * @return array
    */
-  public function fetchMailingListIds(array $criteria = [])
+  public function fetchMailingListIds(array $criteria = []):array
   {
     $criteria['!mailingListId'] = null;
     $queryParts = $this->prepareFindBy($criteria, [
@@ -155,8 +167,3 @@ class ProjectsRepository extends EntityRepository
     return $query->getResult('COLUMN_HYDRATOR');
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
