@@ -79,13 +79,13 @@ class WikiOverview extends Command
     }
 
     /** @var AuthDokuWiki $wikiRPC */
-    $wikiRPC = \OC::$server->query(AuthDokuWiki::class);
+    $wikiRPC = $this->appContainer->get(AuthDokuWiki::class);
     if (!$wikiRPC->login($this->userId, $this->userPassword)) {
       return 1;
     }
 
     /** @var ProjectService $projectService */
-    $projectService = \OC::$server->query(ProjectService::class);
+    $projectService = $this->appContainer->get(ProjectService::class);
     if (!$projectService->generateWikiOverview()) {
       return 1;
     }
