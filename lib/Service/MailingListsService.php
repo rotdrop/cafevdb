@@ -1166,8 +1166,8 @@ class MailingListsService
         return null;
       }
 
-      if (!$rootView->nodeExists($folderPath)
-          || ($node = $rootView->get($folderPath))->getType() != FileInfo::TYPE_FOLDER) {
+      $node = $rootView->nodeExists($folderPath) ? $rootView->get($folderPath) : null;
+      if (empty($node) || $node->getType() != FileInfo::TYPE_FOLDER) {
         throw new RuntimeException($this->l->t('Folder \`%s\' could not be created', [$folderPath]));
       }
 
