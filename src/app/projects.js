@@ -303,15 +303,21 @@ const actionMenu = function(containerSel) {
         return;
       }
 
-      originalEvent.preventDefault();
-      originalEvent.stopImmediatePropagation();
-
       const $row = $(this);
       const $form = $row.closest(pmeFormSelector);
       const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
       const $actionMenu = $actionMenuContainer.find('.project-actions.dropdown-container').first();
+
+      if ($actionMenu.length === 0) {
+        return;
+      }
+
       const $actionMenuToggle = $actionMenu.find('.action-menu-toggle');
       const $actionMenuContent = $actionMenu.find('.dropdown-content');
+
+      originalEvent.preventDefault();
+      originalEvent.stopImmediatePropagation();
+
       $actionMenuContent.css({
         position: 'fixed',
         left: originalEvent.originalEvent.clientX,
@@ -335,7 +341,8 @@ const pmeFormInit = function(containerSel) {
   if ($form.find(submitSel).length > 0) {
     const nameSelector = 'input.projectname';
     const yearSelector = 'select[name="' + pmeData('year') + '"]';
-    const typeSelector = 'select[name="' + pmeData('temporal_type') + '"]';
+    const typeSelector = 'select[name="' + pmeData('type') + '"]';
+    const mailingListSelector = 'input[type="radio"][name^="' + pmeData('mailing_list_id') + '"]';
 
     const $name = $container.find(nameSelector);
     const $year = $container.find(yearSelector);
@@ -406,22 +413,29 @@ const pmeFormInit = function(containerSel) {
         });
     };
 
-    $projectType.off('change').on('change', function(event) {
-      if ($name.val() !== '') {
-        $name.trigger('blur');
-      }
-      return false;
-    });
+    $projectType
+      .off('change')
+      .on('change', function(event) {
+        $container.find(mailingListSelector).prop('disabled', $projectType.val() === 'template');
+        if ($name.val() !== '') {
+          $name.trigger('blur');
+        }
+        return false;
+      });
 
-    $year.off('change').on('change', function(event) {
-      verifyYearName('year');
-      return false;
-    });
+    $year
+      .off('change')
+      .on('change', function(event) {
+        verifyYearName('year');
+        return false;
+      });
 
-    $name.off('blur').on('blur', function(event) {
-      verifyYearName('name');
-      return false;
-    });
+    $name
+      .off('blur')
+      .on('blur', function(event) {
+        verifyYearName('name');
+        return false;
+      });
 
     // Attach a delegate handler to the form; this gives the
     // possibility to attach another delegate handler to the
