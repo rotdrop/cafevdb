@@ -349,7 +349,14 @@ const pmeFormInit = function(containerSel) {
     const $projectType = $container.find(typeSelector);
 
     let oldProjectYear = SelectUtils.selectedOptions($year).text();
-    let oldprojectName = $name.val();
+    let oldProjectName = $name.val();
+    let oldProjectType = $projectType.val();
+
+    // make sure the some legacy stuff is also up to date
+    const $persistentCgiProjectName = $container.find('input[name="projectName"]');
+    if ($persistentCgiProjectName.val() !== oldProjectName) {
+      $persistentCgiProjectName.val(oldProjectName);
+    }
 
     /**
      * Verify the user submitted name and year settings,
@@ -375,7 +382,7 @@ const pmeFormInit = function(containerSel) {
 
       const cleanup = function() {
         if ($name.val() === '') {
-          $name.val(oldprojectName);
+          $name.val(oldProjectName);
         }
         if ($year.val() === '') {
           $year.val(oldProjectYear);
@@ -400,7 +407,7 @@ const pmeFormInit = function(containerSel) {
           $year.val(rqData.projectYear);
           $year.trigger('chosen:updated');
           oldProjectYear = rqData.projectYear;
-          oldprojectName = rqData.projectName;
+          oldProjectName = rqData.projectName;
           if (postAddOn === 'submit') {
             if (typeof button !== 'undefined') {
               $form.off('click', submitSel);
@@ -416,7 +423,12 @@ const pmeFormInit = function(containerSel) {
     $projectType
       .off('change')
       .on('change', function(event) {
-        $container.find(mailingListSelector).prop('disabled', $projectType.val() === 'template');
+        const value = $(this).val();
+        $container.find(mailingListSelector).prop('disabled', value === 'template');
+        $form
+          .removeClass('project-type-' + oldProjectType)
+          .addClass('project-type-' + value);
+        oldProjectType = value;
         if ($name.val() !== '') {
           $name.trigger('blur');
         }

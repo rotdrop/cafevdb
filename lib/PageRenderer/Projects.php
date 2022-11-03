@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer;
 
-use \RuntimeException;
+use Throwable;
+use RuntimeException;
 
 use OCP\AppFramework\Http\TemplateResponse;
 
@@ -78,6 +79,9 @@ class Projects extends PMETableViewBase
 
   /** @var UserStorage */
   private $userStorage;
+
+  /** @var Entities\Project */
+  private $project = null;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -140,9 +144,10 @@ class Projects extends PMETableViewBase
 
     if (empty($this->projectId)) {
       $this->projectId = $this->pmeRecordId['id']??null;
-      if (!empty($this->projectId)) {
-        $this->projectName = $this->projectService->fetchName($this->projectId);
-      }
+    }
+    if (!empty($this->projectId)) {
+      $this->project = $this->projectService->findById($this->projectId);
+      $this->projectName = $this->project->getName();
     }
 
     if ($this->listOperation()) {
@@ -187,6 +192,9 @@ class Projects extends PMETableViewBase
     $opts['css']['postfix'] = [
       'show-hide-disabled',
     ];
+    if (!empty($this->project)) {
+      $opts['css']['postfix'][] = 'project-type-' . (string)$this->project->getType();
+    }
 
     // Number of records to display on the screen
     // Value of -1 lists all records in a table
@@ -639,6 +647,9 @@ class Projects extends PMETableViewBase
       },
       'display|CV' => [ 'popup' => false ],
       'php|CV' => function($value, $op, $field, $row, $recordId, $pme) {
+
+        $projectType = $row['qf' . $pme->fdn['type']];
+
         $projectId = $recordId['id'];
         $listAddress = strtolower($row[$this->queryField('name', $pme->fdd)]);
         $listAddress = $listAddress . '@' . $this->getConfigValue('mailingListEmailDomain');
@@ -657,17 +668,24 @@ class Projects extends PMETableViewBase
             }
             $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($listAddress));
             // $archiveUrl = Util::htmlEscape($this->listsService->getArchiveUrl($listAddress));
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             $this->logException($t, 'Unable to communicate with mailing list server.');
             $l10nStatus = $this->l->t($status = 'unknown');
             $listAddress = preg_replace('/\./', '@', $value, 1);
             $configUrl = Util::htmlEscape($this->listsService->getConfigurationUrl($value));
+          }
+        } else {
+          try {
+            $this->listsService->getServerConfig();
+          } catch (Throwable $t) {
+            $l10nStatus = $this->l->t($status = 'unknown');
           }
         }
         $cssPostfix   = $pme->fdd[$field]['css']['postfix']??[];
         $cssClassName = $pme->getCSSclass('input', null, false, $cssPostfix);
 
         $templateParameters = [
+          'projectType' => $projectType,
           'listId' => $value,
           'status' => $status,
           'l10nStatus' => $l10nStatus,

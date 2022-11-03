@@ -24,7 +24,10 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+
 /**
+ * @param string $projectType The type of the project, temporary, permanent, template.
  * @param string $listId The list id. The value stored in the DB.
  * @param string $status Mailing-list status
  * @param string $l10nStatus Translated status
@@ -60,9 +63,9 @@ if (!empty($configUrl)) {
       <ul>
         <li class="list-action list-action-create tooltip-auto"
             data-operation="create"
-            title="<?php echo $toolTips['projects:mailing-list:create']; ?>
+            title="<?php echo $toolTips['projects:mailing-list:create']; ?>"
         >
-          <a href="#">
+          <a href="#" class="flex-container flex-center">
             <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/add.svg'); ?>">
             <?php p($l->t('create')); ?>
           </a>
@@ -70,7 +73,7 @@ if (!empty($configUrl)) {
         <li class="list-action list-action-manage tooltip-auto"
             title="<?php echo $toolTips['projects:mailing-list:manage']; ?>"
           >
-          <a href="' . $configUrl . '" target="' . md5($listAddress); ?>">
+          <a href="' . $configUrl . '" target="' . md5($listAddress); ?>" class="flex-container flex-center">
             <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/settings-dark.svg'); ?>">
             <?php p($l->t('manage')); ?>
           </a>
@@ -79,7 +82,7 @@ if (!empty($configUrl)) {
             data-operation="subscribe"
             title="<?php echo $toolTips['projects:mailing-list:subscribe']; ?>"
         >
-          <a href="#">
+          <a href="#" class="flex-container flex-center">
             <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/confirm.svg'); ?>">
             <?php p($l->t('subscribe')); ?>
           </a>
@@ -88,7 +91,7 @@ if (!empty($configUrl)) {
             data-operation="close"
             title="<?php echo $toolTips['projects:mailing-list:close']; ?>"
         >
-          <a href="#">
+          <a href="#" class="flex-container flex-center">
             <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/pause.svg'); ?>">
             <?php p($l->t('close')); ?>
           </a>
@@ -97,7 +100,7 @@ if (!empty($configUrl)) {
             data-operation="reopen"
             title="<?php echo $toolTips['projects:mailing-list:reopen']; ?>"
         >
-          <a href="#">
+          <a href="#" class="flex-container flex-center">
             <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/play.svg'); ?>">
             <?php p($l->t('reopen')); ?>
           </a>
@@ -106,7 +109,7 @@ if (!empty($configUrl)) {
             data-operation="delete"
             title="<?php echo $toolTips['projects:mailing-list:delete']; ?>"
         >
-          <a href="#">
+          <a href="#" class="flex-container flex-center">
             <img alt="" src="<?php echo $urlGenerator->imagePath('core', 'actions/delete.svg'); ?>">
             <?php p($l->t('delete')); ?>
           </a>

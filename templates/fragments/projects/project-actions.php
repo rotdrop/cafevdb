@@ -35,7 +35,7 @@
  * @param string $dropDirection 'up' or 'down'
  */
 
-$projectFolders = $projectService->ensureProjectFolders($projectId, $projectName, null, true);
+$projectFolders = $projectService->ensureProjectFolders($projectId, dry: true);
 $wikiPage = $projectService->projectWikiLink($projectName);
 $wikiTitle = $l->t('Project Wiki for %s', [ $projectName ]);
 
