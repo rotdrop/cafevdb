@@ -47,6 +47,12 @@ html:not(.ie8) {
     &:checked + span.pme-label::before {
       background-image: url('../img/actions/checkbox-checked.svg');
     }
+
+    &:disabled {
+      + span.pme-label, + span.pme-label::before {
+        opacity: 0.3;
+      }
+    }
   }
 
   input[type="radio"].pme-input {
@@ -73,6 +79,12 @@ html:not(.ie8) {
       box-shadow: inset 0px 0px 0px 2px var(--color-main-background);
       background-color: var(--color-primary-element);
       border-color: var(--color-primary-element);
+    }
+
+    &:disabled {
+      + span.pme-label, + span.pme-label::before {
+        opacity: 0.3;
+      }
     }
   }
 }
