@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,48 +29,6 @@ use OCP\EventDispatcher\Event;
 /**
  * Dispatched before flushing entities to the data-base.
  */
-class PreProjectUpdatedEvent extends Event {
-
-  /** @var int */
-  private $projectId;
-
-  /**
-   * @var array
-   * ```
-   * [ 'id' => PROJECT_ID, 'name' => NAME, 'year' => YEAR ]
-   * ```
-   */
-  private $oldData;
-
-  /**
-   * @var array
-   * ```
-   * [ 'id' => PROJECT_ID, 'name' => NAME, 'year' => YEAR ]
-   * ```
-   */
-  private $newData;
-
-  public function __construct($projectId, $oldData, $newData) {
-    parent::__construct();
-    $this->projectId = $projectId;
-    $this->oldData = $oldData;
-    $this->newData = $newData;
-  }
-
-  public function getProjectId(): int {
-    return $this->projectId;
-  }
-
-  public function getOldData(): array {
-    return $this->oldData;
-  }
-
-  public function getNewData(): array {
-    return $this->newData;
-  }
+class PreProjectUpdatedEvent extends ProjectUpdatedEvent
+{
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

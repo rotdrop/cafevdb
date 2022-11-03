@@ -26,15 +26,23 @@ namespace OCA\CAFEVDB\Events;
 
 use OCP\EventDispatcher\Event;
 
-/** Event fired after project deletion. */
-class AfterProjectDeletedEvent extends ProjectEvent
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+
+/** Base class for project events. */
+class ProjectEvent extends Event
 {
-  /**
-   * @var bool
-   *
-   * Set to true if the project was kept but disabled.
-   */
-  private $disabled;
+
+  /** @var int */
+  private $projectId;
+
+  /** @var string */
+  private $projectName;
+
+  /** @var int */
+  private $projectYear;
+
+  /** @var ProjectType */
+  private $projectType;
 
   /**
    * @param int $projectId
@@ -50,15 +58,35 @@ class AfterProjectDeletedEvent extends ProjectEvent
     string $projectName,
     int $projectYear,
     ProjectType $projectType,
-    bool $disabled
   ) {
-    parent::__construct($projectId, $projectName, $projectYear, $projectType);
-    $this->diabled = $disabled;
+    parent::__construct();
+    $this->projectId = $projectId;
+    $this->projectName = $projectName;
+    $this->projectYear = $projectYear;
+    $this->projectType = $projectType;
   }
 
-  /** @return bool */
-  public function getDisabled():bool
+  /** @return int */
+  public function getProjectId():int
   {
-    return $this->disabled;
+    return $this->projectId;
+  }
+
+  /** @return string */
+  public function getProjectName():string
+  {
+    return $this->projectName;
+  }
+
+  /** @return int */
+  public function getProjectYear():int
+  {
+    return $this->projectYear;
+  }
+
+  /** @return ProjectType */
+  public function getProjectType():ProjectType
+  {
+    return $this->projectType;
   }
 }
