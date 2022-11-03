@@ -76,7 +76,7 @@ SELECT CONVERT((CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE asc
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
-WHERE p.id IN (SELECT DISTINCT pp.project_id FROM ProjectParticipants pp WHERE pp.deleted IS NULL)
+WHERE p.type IN ("temporary", "permanent") AND p.deleted IS NULL
 WITH CHECK OPTION';
 
   const USER_SQL_USER_GROUP_VIEW = 'CREATE OR REPLACE
