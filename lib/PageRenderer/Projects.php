@@ -617,12 +617,12 @@ class Projects extends PMETableViewBase
       'tooltip|AP' => $this->toolTipsService['projects:mailing-list:create'],
       'input' => 'R',
       'input|AP' => '',
-      'select|AP' => 'C',
-      'values2|AP' => [ 1 => $this->l->t('create') ],
+      'select|AP' => 'O',
+      'values2|AP' => [ 'create' => $this->l->t('create'), 'keep-empty' => $this->l->t('do not create'), ],
+      'default|AP' => 'create',
       'select'  => 'T',
       'sort'    => true,
       'align'   => 'right',
-      'default' => 1,
       'display|LFD'  => [
         'popup' => 'data',
         'prefix' => '<div class="cell-wrapper">',
@@ -897,14 +897,16 @@ class Projects extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] = function($pme, $op, $step, &$row) {
       if ($this->copyOperation()) {
         // tweak the name
-        $row['qf'.$pme->fdn['name']] = $this->l->t('Copy of %s', $row['qf'.$pme->fdn['name']]);
+        $nameIndex = $pme->fdn['name'];
+        $row['qf' . $nameIndex] = $this->l->t('Copy of %s', $row['qf' . $nameIndex]);
       }
       return true;
     };
 
-    $opts['display']['custom_navigation'] = function($rec, $groupby_rec, $row, $pme) use ($nameIdx) {
+    $opts['display']['custom_navigation'] = function($rec, $groupby_rec, $row, $pme) {
+      $nameIndex = $pme->fdn['name'];
       $projectId = $rec['id'];
-      $projectName = $row['qf' . $nameIdx];
+      $projectName = $row['qf' . $nameIndex];
       return $this->projectActionMenu($projectId, $projectName, overview: true, direction: 'left');
     };
 
@@ -938,7 +940,7 @@ class Projects extends PMETableViewBase
    *
    * @param int $imageColumns Number of display columns.
    *
-   * @param int $imageId Entity id.
+   * @param string $imageId Entity id.
    *
    * @return string HTML snippet for the project posters.
    */
@@ -1180,8 +1182,10 @@ project without a poster first.");
       }
     }
 
-    // handle mailing-list generation
-    $newVals['mailing_list_id'] = $newVals['mailing_list_id'] ? 'create' : 'keep-empty';
+    if ($newVals['type'] == ProjectType::TEMPLATE) {
+      // do not create mailing lists for templates
+      $newVals['mailing_list_id'] = 'keep-empty';
+    }
 
     // unset 'copy_participants'
     Util::unsetValue($changed, 'copy_participants');
@@ -1296,6 +1300,8 @@ project without a poster first.");
    * @param array $newVals Set of new values, which may also be modified.
    *
    * @return bool If returning @c false the operation will be terminated.
+   *
+   * @todo This should be moved to the ORM event system.
    */
   public function afterInsertTrigger(
     PHPMyEdit &$pme,
