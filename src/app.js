@@ -26,7 +26,6 @@ import { runReadyCallbacks } from './app/cafevdb.js';
 import settings from './app/settings.js';
 import appSettings from './app/app-settings.js';
 import personalSettings from './app/personal-settings.js';
-import exportMode from './app/expertmode.js';
 // import backgroundJobs from './app/backgroundjobs.js';
 import { documentReady as pageDocumentReady } from './app/page.js';
 import { documentReady as projectExtraDocumentReady } from './app/project-participant-fields.js';
@@ -69,7 +68,6 @@ $(function() {
   phpMyEditDocumentReady();
   // backgroundJobs();
   settings();
-  exportMode();
   appSettings();
   personalSettings();
   beforeReady();
