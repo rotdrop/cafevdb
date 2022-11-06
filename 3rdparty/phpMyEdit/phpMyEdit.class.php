@@ -4535,7 +4535,8 @@ class phpMyEdit
 				$m	= $this->get_sys_cgi_var($l);
 				$mc = $this->get_sys_cgi_var($lc);
 				$mi = $this->get_sys_cgi_var($li)?:[];
-				if (empty($m) && empty($mi)) {
+
+				if ((empty($m) && $m !== '0' && $m !== 0) && empty($mi)) {
 					// retry with field-name to ease programmatic queries
 					$fd   = $this->fds[$k];
 					$l	  = 'qf'.$fd;
