@@ -64,6 +64,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   const SUBJECT_ITEM_SEPARATOR = ', ';
   const SUBJECT_OPTION_SEPARATOR = ': ';
 
+  const SUBJECT_FIELD_LENGTH = 1024;
+
   /**
    * @var int
    *
@@ -646,7 +648,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       dashes: ' ',
     );
 
-    $subjectPrefix = Util::shortenCamelCaseString($projectName, self::SUBJECT_PREFIX_LIMIT, minLen: 2);
+    // $subjectPrefix = Util::shortenCamelCaseString($projectName, self::SUBJECT_PREFIX_LIMIT, minLen: 2);
+    $subjectPrefix = $projectName;
 
     if (count($balanceSequences) >= 1) {
       $sequenceSuffix = sprintf('%03d', array_shift($balanceSequences));
@@ -666,7 +669,14 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     $postfix = [];
     $purpose = '';
     foreach ($subjects as $subject) {
-      $parts = Util::explode(trim(self::SUBJECT_OPTION_SEPARATOR), $subject, Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED);
+      $parts = array_map(
+        fn($part) => Util::dashesToCamelCase(
+          preg_replace('/([^0-9]|^)[0-9]{2}([0-9]{2})([^0-9]|$)/', '\1\2\3', $part),
+          capitalizeFirstCharacter: true,
+          dashes: ' -_',
+        ),
+        Util::explode(trim(self::SUBJECT_OPTION_SEPARATOR), $subject, Util::TRIM|Util::OMIT_EMPTY_FIELDS|Util::ESCAPED),
+      );
       $prefix = $parts[0];
       if (count($parts) < 2 || $oldPrefix != $prefix) {
         $purpose .= implode(self::SUBJECT_ITEM_SEPARATOR, $postfix);
@@ -692,6 +702,14 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     $purpose = $transliterate(Util::unescapeDelimiter($purpose, trim(self::SUBJECT_OPTION_SEPARATOR)));
 
     $subject = $subjectPrefix . self::SUBJECT_PREFIX_SEPARATOR . $purpose;
+
+    if (strlen($subject) > self::SUBJECT_FIELD_LENGTH) {
+      $subject = substr(
+        Util::shortenCamelCaseString($subject, self::SUBJECT_FIELD_LENGTH, minLen: 4),
+        0,
+        self::SUBJECT_FIELD_LENGTH,
+      );
+    }
 
     return $subject;
   }
