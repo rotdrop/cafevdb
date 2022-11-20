@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Create all participant sub-folder for each project. */
 class ParticipantFolders extends Command
@@ -70,7 +71,7 @@ class ParticipantFolders extends Command
   protected function configure()
   {
     $this
-      ->setName('cafevdb:projects:participans:generate-folders')
+      ->setName('cafevdb:projects:participants:generate-folders')
       ->setDescription('Ensure all or selected participant-folders exist.')
       ->addOption(
         'user',
@@ -96,6 +97,12 @@ class ParticipantFolders extends Command
         InputOption::VALUE_NONE,
         'Just simulate, do not generate any folders.',
       )
+      ->addOption(
+        'check',
+        'c',
+        InputOption::VALUE_NONE,
+        'Check if the folders exist, exit with non-zero status if any is missing, print warnings.',
+      )
       ;
   }
 
@@ -106,6 +113,10 @@ class ParticipantFolders extends Command
     $projectName = $input->getOption('project');
     $all = $input->getOption('all');
     $dry = $input->getOption('dry');
+    $check = $input->getOption('check');
+    if ($check) {
+      $dry = true;
+    }
 
     if (empty($memberUserId) && empty($projectName) && empty($all)) {
       $output->writeln('<error>' . $this->l->t('One of the options "--user=USER", "--project=PROJECT" or "--all" has to be specified.') . '</error>');
@@ -125,7 +136,10 @@ class ParticipantFolders extends Command
     $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var ProjectService $projectService */
-    $projectService = \OC::$server->query(ProjectService::class);
+    $projectService = $this->appContainer->get(ProjectService::class);
+
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->appContainer->get(UserStorage::class);
 
     $totals = 0;
 
@@ -157,10 +171,13 @@ class ParticipantFolders extends Command
     $section1 = $output->section();
     $section2 = $output->section();
     $section3 = $output->section();
+    $section4 = $output->section();
 
     $progress0 = new ProgressBar($section0);
     $progress1 = new ProgressBar($section1);
     $progress2 = new ProgressBar($section2);
+
+    $errorCount = 0;
 
     $progress0->start(count($projects));
     $progress2->start($totals);
@@ -173,7 +190,16 @@ class ParticipantFolders extends Command
           continue;
         }
         $folder = $projectService->ensureParticipantFolder($project, $participant->getMusician(), dry: $dry);
-        $section3->overwrite($this->l->t('Ensured existence of folder "%s".', $folder), OutputInterface::VERBOSITY_VERBOSE);
+        if ($check) {
+          if (empty($userStorage->get($folder))) {
+            $section4->writeln('<error>' . $this->l->t('Folder "%s" does not exist.', $folder) . '</error>');
+            ++$errorCount;
+          } else {
+            $section3->overwrite($this->l->t('Folder "%s" exists.', $folder), OutputInterface::VERBOSITY_VERBOSE);
+          }
+        } else {
+          $section3->overwrite($this->l->t('Ensured existence of folder "%s".', $folder), OutputInterface::VERBOSITY_VERBOSE);
+        }
         $progress1->advance();
         $progress2->advance();
       }
@@ -183,6 +209,6 @@ class ParticipantFolders extends Command
     $progress2->finish();
     $progress0->finish();
 
-    return 0;
+    return $errorCount > 0 ? 1 : 0;
   }
 }
