@@ -165,6 +165,11 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $this->bulkTransactionService = $bulkTransactionService;
     $this->bulkTransactionExpanded = $this->requestParameters['bulkTransactionExpanded'];
 
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $this->projectName = $this->project->getName();
+    }
+
     $this->initCrypto();
   }
 
@@ -182,9 +187,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $recordsPerPage  = $this->recordsPerPage;
 
     $projectMode = $this->projectId > 0;
-    if ($projectMode) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-    }
 
     $opts            = [];
 
