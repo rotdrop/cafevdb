@@ -69,8 +69,11 @@ class SepaBulkTransactionService
    * @var int
    * The hard bank deadline, 1 working day in advance, otherwise the debit
    * note will not be accepted.
+   *
+   * Update: our preferred client banking tool seemingly has this hard-coded
+   * to 2 days. Mmmh.
    */
-  const DEBIT_NOTE_SUBMISSION_DEADLINE = 1;
+  const DEBIT_NOTE_SUBMISSION_DEADLINE = 2;
 
   /**
    * @var int
