@@ -386,10 +386,15 @@ class Storage extends AbstractStorage
   /**
    * {@inheritdoc}
    *
-   * The AbstractStorage class relies on mtime($path) > $time for triggering a
-   * cache invalidation. This, however, does not cover cases where a directory
-   * has been removed. Hence we also return true if mtime returns false
-   * meaning that the file does not exist.
+   * @param string $path Directory-entry to check.
+   *
+   * @param int $time The value of storage_mtime from the row of the
+   * filescache table for $path.
+   *
+   * This function controls cache invalidation. We return \true if either the
+   * file is still there and its mtime is larger then the supplied
+   * storage_mtime of the $time argument, or if the file has vanished in which
+   * case it should be removed from the filescache table.
    */
   public function hasUpdated($path, $time)
   {
