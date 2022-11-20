@@ -350,7 +350,7 @@ class InstrumentInsuranceController extends Controller
    *
    * @NoAdminRequired
    */
-  public function download(int $musicianId, int $insuranceId):Http\DataDisplayResponse
+  public function download(int $musicianId, int $insuranceId):Http\DataDownloadResponse
   {
     $overview = $this->insuranceService->musicianOverview($musicianId);
     $fileData = $this->insuranceService->musicianOverviewLetter($overview);
