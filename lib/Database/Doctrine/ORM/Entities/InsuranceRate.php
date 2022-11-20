@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,7 +70,7 @@ class InsuranceRate implements \ArrayAccess
   /**
    * @var \DateTimeImmutable
    *
-   * @ORM\Column(type="date_immutable", nullable=false, options={"comment"="start of the yearly insurance period"})
+   * @ORM\Column(type="date_immutable", nullable=true, options={"comment"="start of the yearly insurance period"})
    */
   private $dueDate;
 
@@ -88,19 +88,22 @@ class InsuranceRate implements \ArrayAccess
    */
   private $instrumentInsurances;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->instrumentInsurances = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set broker.
    *
-   * @param string $broker
+   * @param null|int|InsuranceBroker $broker
    *
    * @return InsuranceRate
    */
-  public function setBroker($broker):InsuranceRate
+  public function setBroker(mixed $broker):InsuranceRate
   {
     $this->broker = $broker;
 
