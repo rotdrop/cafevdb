@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $ } from './globals.js';
+import { globalState, $ } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Notification from './notification.js';
 import * as Ajax from './ajax.js';
@@ -29,7 +29,6 @@ import * as Page from './page.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
 import * as PHPMyEdit from './pme.js';
 import * as SelectUtils from './select-utils.js';
-// import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
@@ -337,28 +336,11 @@ const pmeFormInit = function(containerSel) {
   } // found submit inputs
 
   container
-    .off('click', '.instrument-insurance-bill a.bill')
-    .on('click', '.instrument-insurance-bill a.bill', function(event) {
-      const self = $(this);
-      const post = self.data('post');
-      const action = 'insurance/download';
-
-      Page.busyIcon(true);
-
-      fileDownload(
-        action,
-        post, {
-          done(url) {
-            console.log('ready');
-            Page.busyIcon(false);
-          },
-          errorMessage(data, url) {
-            return t(appName, 'Unable to export insurance overview.');
-          },
-          fail(data) {
-            Page.busyIcon(false);
-          },
-        });
+    .off('click', 'a.download-link.ajax-download')
+    .on('click', 'a.download-link.ajax-download', function(event) {
+      const $this = $(this);
+      const post = $this.data('post');
+      fileDownload($this.attr('href'), post);
       return false;
     });
 };
