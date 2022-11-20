@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +24,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer\Export;
 
+use DateTimeImmutable;
 use PhpOffice\PhpSpreadsheet;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
@@ -31,6 +35,11 @@ use OCA\CAFEVDB\PageRenderer;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
+/**
+ * Exporter for the instrument insurances. This is special as it must only
+ * contain official data and should be in a ready-to-send state in order to
+ * just hand it on to the insurance brokers.
+ */
 class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 {
   use \OCA\CAFEVDB\Traits\SloppyTrait;
@@ -76,17 +85,17 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   /**
    * Construct a spread-sheet exporter for selected tables.
    *
-   * @param PageRenderer\PMETableViewBase $renderer
-   * Underlying renderer, see self::fillSheet()
+   * @param PageRenderer\InstrumentInsurances $renderer
+   * Underlying renderer, see self::fillSheet().
    *
    * @param InstrumentInsuranceService $insuranceService
    *
    * @param FuzzyInputService $fuzzyInputService
    */
   public function __construct(
-    PageRenderer\InstrumentInsurances $renderer
-    , InstrumentInsuranceService $insuranceService
-    , FuzzyInputService $fuzzyInputService
+    PageRenderer\InstrumentInsurances $renderer,
+    InstrumentInsuranceService $insuranceService,
+    FuzzyInputService $fuzzyInputService,
   ) {
     parent::__construct($renderer->configService());
     $this->renderer = $renderer;
@@ -107,7 +116,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param PhpSpreadsheet\Spreadsheet $spreadSheet Spread-sheet to be filled.
    *
    * @param array $meta An array with at least the keys 'creator',
-   * 'email', 'date'
+   * 'email', 'date'.
    *
    * @return array
    * ```
@@ -127,11 +136,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $sheet = $spreadSheet->getActiveSheet();
     $creator = $meta['creator'];
     $email = $meta['email'];
-    $date = $meta['date'];
+    // $date = $meta['date'];
 
     $name  = $this->l->t('Instrument Insurances');
 
-    $template = $this->renderer->template();
+    // $template = $this->renderer->template();
 
     $offset = $headerOffset = 6;
     $rowCnt = 0;
@@ -163,7 +172,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $renderer->navigation(false); // inhibit navigation elements
     $renderer->render(false); // dry-run, prepare export
 
-    $humanDate = $this->dateTimeFormatter()->formatDate(new \DateTimeImmutable);
+    $humanDate = $this->dateTimeFormatter()->formatDate(new DateTimeImmutable);
 
     $renderer->export(
       // Cell-data filter
@@ -177,10 +186,28 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         return $cellData;
       },
       /* We rely on the table layout A = musician, C = broker, D = scope */
-      function ($i, $lineData) use (&$sheet, &$spreadSheet, &$offset, &$rowCnt, $headerLine,
-                                    &$brokerScope, &$musician, &$musicianTotal, &$total,
-                                    &$numRecords, $name, $creator, $email, $brokerNames, $rates,
-                                    $humanDate, $headerOffset) {
+      function (
+        $i,
+        $lineData
+      ) use (
+        &$sheet,
+        &$spreadSheet,
+        &$offset,
+        &$rowCnt,
+        $headerLine,
+        &$brokerScope,
+        &$musician,
+        &$musicianTotal,
+        &$total,
+        &$numRecords,
+        $name,
+        $creator,
+        $email,
+        $brokerNames,
+        $rates,
+        $humanDate,
+        $headerOffset,
+      ) {
         if ($i == 1) {
           $this->dumpRow($headerLine, $sheet, $i, $offset, $rowCnt, true);
           return;
@@ -288,9 +315,9 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
       $sheet = $spreadSheet->getActiveSheet();
 
       // Make the header a little bit prettier
-      $pt_height = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
-      $sheet->getRowDimension(1+$headerOffset)->setRowHeight($pt_height+$pt_height/4);
-      $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->applyFromArray([
+      $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
+      $sheet->getRowDimension(1+$headerOffset)->setRowHeight($ptHeight + $ptHeight / 4);
+      $sheet->getStyle("A" . (1 + $headerOffset) . ":" . $sheet->getHighestColumn() . (1 + $headerOffset))->applyFromArray([
         'font' => [
           'bold' => true
         ],
@@ -337,14 +364,14 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
        *
        ***************************************************************************/
 
-      /****************************************************************************
+      /*-***************************************************************************
        *
        * Header fields
        *
        */
 
       $highCol = $sheet->getHighestColumn();
-      for($i = 1; $i < $headerOffset; ++$i) {
+      for ($i = 1; $i < $headerOffset; ++$i) {
         $sheet->mergeCells("A".$i.":".$highCol.$i);
       }
 
@@ -382,13 +409,34 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     return $meta;
   }
 
-  private function dumpRow($exportData, $sheet, $row, $offset, &$rowCnt, $header = false)
-  {
+  /**
+   * @param array $exportData
+   *
+   * @param Worksheet $sheet
+   *
+   * @param int $row
+   *
+   * @param int $offset
+   *
+   * @param int $rowCnt Mutable.
+   *
+   * @param bool $header
+   *
+   * @return void
+   */
+  private function dumpRow(
+    array $exportData,
+    Worksheet $sheet,
+    int $row,
+    int $offset,
+    int &$rowCnt,
+    bool $header = false,
+  ):void {
     $moneyColumns = ['E', 'F', 'G']; // aligned right
     $column = 'A';
     foreach (self::EXPORT_COLUMNS as $columnKey) {
       $cellValue = $exportData[$columnKey];
-      $sheet->setCellValue($column.($row+$offset), $cellValue);
+      $sheet->setCellValue($column . ($row + $offset), $cellValue);
       if ($header) {
         $sheet->getColumnDimension($column)->setAutoSize(true);
       }
@@ -403,9 +451,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
             'argb' => ($rowCnt % 2 == 0) ? 'FFB7CEEC' : 'FFC6DEFF',
           ],
         ],
-      ]
-      );
-      foreach($moneyColumns as $col) {
+      ]);
+      foreach ($moneyColumns as $col) {
         $sheet->getStyle($col.($row+$offset))->applyFromArray([
           'alignment' => [
             'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
@@ -416,18 +463,54 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     }
   }
 
-  private function dumpMusicianTotal($sheet, $row, $offset, &$rowCnt, $musicianTotal)
-  {
+  /**
+   * @param Worksheet $sheet
+   *
+   * @param int $row
+   *
+   * @param int $offset
+   *
+   * @param int $rowCnt Mutable.
+   *
+   * @param float $musicianTotal
+   *
+   * @return void
+   */
+  private function dumpMusicianTotal(
+    Worksheet $sheet,
+    int $row,
+    int $offset,
+    int &$rowCnt,
+    float $musicianTotal,
+  ):void {
     $exportData = array_combine(self::EXPORT_COLUMNS, array_fill(0, count(self::EXPORT_COLUMNS), ''));
-    $exportData[self::TOTALS_KEY] = $musicianTotal.preg_quote('€');
+    $exportData[self::TOTALS_KEY] = $musicianTotal . preg_quote('€');
     $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
   }
 
-  private function dumpTotal($sheet, $row, $offset, &$rowCnt, &$total)
-  {
+  /**
+   * @param Worksheet $sheet
+   *
+   * @param int $row
+   *
+   * @param int $offset
+   *
+   * @param int $rowCnt Mutable.
+   *
+   * @param float $total
+   *
+   * @return void
+   */
+  private function dumpTotal(
+    Worksheet $sheet,
+    int $row,
+    int $offset,
+    int &$rowCnt,
+    float &$total,
+  ):void {
     $exportData = array_combine(self::EXPORT_COLUMNS, array_fill(0, count(self::EXPORT_COLUMNS), ''));
     $exportData[self::MUSICIAN_KEY] = $this->l->t('Total Insurance Amount');
-    $exportData[self::TOTALS_KEY] = $total.preg_quote('€');
+    $exportData[self::TOTALS_KEY] = $total . preg_quote('€');
     $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
     $total = 0.0;
     $highRow = $sheet->getHighestRow();
