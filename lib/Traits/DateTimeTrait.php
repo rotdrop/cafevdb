@@ -24,11 +24,11 @@
 
 namespace OCA\CAFEVDB\Traits;
 
-use \DateTime;
-use \DateTimeImmutable;
-use \DateTimeInterface;
-use \DateTimeZone;
-use \InvalidArgumentException;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
+use DateTimeZone;
+use InvalidArgumentException;
 
 /** Support traits for date-time stuff */
 trait DateTimeTrait
@@ -91,6 +91,6 @@ trait DateTimeTrait
    */
   public static function convertToTimezoneDate(DateTimeInterface $date, DateTimeZone $timeZone):DateTimeImmutable
   {
-    return \DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $timeZone);
+    return DateTimeImmutable::createFromFormat('Y-m-d|', $date->format('Y-m-d'), $timeZone);
   }
 }
