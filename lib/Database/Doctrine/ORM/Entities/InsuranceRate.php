@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\CJH\Doctrine\Extensions\Mapping\Annotation as CJH;
@@ -171,7 +174,7 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Set dueDate.
    *
-   * @param string|\DateTimeInterface $dueDate
+   * @param null|string|DateTimeInterface $dueDate
    *
    * @return InsuranceRate
    */
@@ -184,9 +187,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get dueDate.
    *
-   * @return \DateTimeImmutable
+   * @return DateTimeInterface
    */
-  public function getDueDate():\DateTimeImmutable
+  public function getDueDate():?DateTimeInterface
   {
     return $this->dueDate;
   }
