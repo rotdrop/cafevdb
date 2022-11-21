@@ -3326,6 +3326,11 @@ class phpMyEdit
 		}
 		if ($this->col_has_URL($k)) {
 			$value = $this->urlDisplay($k, $original_value, $value, $css, $key_rec);
+		} else {
+			$escape = $this->fdd[$k]['escape'] ?? false;
+			if ($escape) {
+				$value = $this->enc($value);
+			}
 		}
 		return $value;
 	}
@@ -3460,6 +3465,9 @@ class phpMyEdit
 						if (!empty($this->fdd[$cell])) {
 							$cell_popup = $this->cellDisplay($cell, $row);
 						}
+					}
+					if ($this->fdd[$k]['escape'] ?? false) {
+						$cell_popup = $this->enc($cell_popup, true);
 					}
 					break;
 				case 'tooltip':
@@ -3703,8 +3711,8 @@ class phpMyEdit
 			if ($lastGroup) {
 				$ret .= ' data-group-id="'.$groupId.'"';
 			}
-			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = $this->enc($value);
+			$strip_tags && $value = strip_tags($value);
 			$ret .= '>'.$value.'</option>'."\n";
 		}
 		if (isset($lastGroup)) {
@@ -4579,7 +4587,7 @@ class phpMyEdit
 				$readonly	= false;
 				$strip_tags = true;
 				//$escape	  = true;
-				$escape	  = false;
+				$escape	  = $this->fdd[$k]['escape'] ?? false;
 				$attributes = $this->htmlAttributes(self::OPERATION_FILTER, $k, []);
 				echo '<div class="'.$negate_css_class_name.'">';
 				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp',
