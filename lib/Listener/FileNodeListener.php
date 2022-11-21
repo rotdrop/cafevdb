@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,18 +51,20 @@ class FileNodeListener implements IEventListener
   /** @var string */
   protected $appName;
 
-  /** @var IUser */
-  private $user;
-
   /** @var IAppContainer */
   private $appContainer;
 
+  /**
+   * @param IAppContainer $appContainer
+   */
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
     $eventClass = null;
     foreach (self::EVENT as $handledEvent) {
       if (is_a($event, $handledEvent)) {
@@ -72,8 +74,6 @@ class FileNodeListener implements IEventListener
     if (empty($eventClass)) {
       return;
     }
-
-    $appName = $this->appContainer->get('appName');
 
     /** @var IUserSession $userSession */
     $userSession = $this->appContainer->get(IUserSession::class);
@@ -104,49 +104,49 @@ class FileNodeListener implements IEventListener
     $templatesFolder = $userFolder . '/' . $sharedFolder . '/' . $templatesFolder . '/';
 
     switch ($eventClass) {
-    case NodeDeletedEvent::class:
-      /** @var NodeDeletedEvent $event */
+      case NodeDeletedEvent::class:
+        /** @var NodeDeletedEvent $event */
 
-      $path = $event->getNode()->getPath();
-      $path = self::matchPrefixDirectory($path, $templatesFolder);
-      if (empty($path)) {
-        return;
-      }
-      list($templateKey,) = $this->matchDocumentTemplates($path, $configService);
-      if (empty($templateKey)) {
-        return;
-      }
+        $path = $event->getNode()->getPath();
+        $path = self::matchPrefixDirectory($path, $templatesFolder);
+        if (empty($path)) {
+          return;
+        }
+        list($templateKey,) = $this->matchDocumentTemplates($path, $configService);
+        if (empty($templateKey)) {
+          return;
+        }
 
-      $this->logInfo('REMOVE CONFIG VALUE FOR '.$templateKey);
-      $configService->deleteConfigValue($templateKey);
-
-      break;
-    case NodeRenamedEvent::class:
-      /** @var NodeRenamedEvent $event */
-
-      $sourcePath = $event->getSource()->getPath();
-      $targetPath = $event->getTarget()->getPath();
-
-      $sourcePath = self::matchPrefixDirectory($sourcePath, $templatesFolder);
-      if (empty($sourcePath)) {
-        return;
-      }
-
-      list($templateKey, $subFolder) = $this->matchDocumentTemplates($sourcePath, $configService);
-      if (empty($templateKey)) {
-        return;
-      }
-
-      $targetPath = self::matchPrefixDirectory($targetPath, $templatesFolder . $subFolder);
-      if (empty($targetPath)) {
         $this->logInfo('REMOVE CONFIG VALUE FOR '.$templateKey);
         $configService->deleteConfigValue($templateKey);
-      } else {
-        $this->logInfo('CHANGE CONFIG VALUE FOR '.$templateKey.' from '.$sourcePath.' to '.$targetPath);
-        $configService->setConfigValue($templateKey, $targetPath);
-      }
 
-      break;
+        break;
+      case NodeRenamedEvent::class:
+        /** @var NodeRenamedEvent $event */
+
+        $sourcePath = $event->getSource()->getPath();
+        $targetPath = $event->getTarget()->getPath();
+
+        $sourcePath = self::matchPrefixDirectory($sourcePath, $templatesFolder);
+        if (empty($sourcePath)) {
+          return;
+        }
+
+        list($templateKey, $subFolder) = $this->matchDocumentTemplates($sourcePath, $configService);
+        if (empty($templateKey)) {
+          return;
+        }
+
+        $targetPath = self::matchPrefixDirectory($targetPath, $templatesFolder . $subFolder);
+        if (empty($targetPath)) {
+          $this->logInfo('REMOVE CONFIG VALUE FOR '.$templateKey);
+          $configService->deleteConfigValue($templateKey);
+        } else {
+          $this->logInfo('CHANGE CONFIG VALUE FOR '.$templateKey.' from '.$sourcePath.' to '.$targetPath);
+          $configService->setConfigValue($templateKey, $targetPath);
+        }
+
+        break;
     }
   }
 
@@ -162,7 +162,7 @@ class FileNodeListener implements IEventListener
    * @return null|string The config-key $path is referring to or null
    * if no key could be determine.
    */
-  private function matchDocumentTemplates($path, $configService)
+  private function matchDocumentTemplates(string $path, ConfigService $configService)
   {
     foreach (ConfigService::DOCUMENT_TEMPLATES as $templateKey => $templateInfo) {
       $subFolder = $templateInfo['folder']??'';
@@ -180,7 +180,7 @@ class FileNodeListener implements IEventListener
   }
 
   /**
-   * @param string $path The path to match
+   * @param string $path The path to match.
    *
    * @param string $folderPrefix The folder-prefix to compare the
    * first part of the string to.
@@ -188,17 +188,11 @@ class FileNodeListener implements IEventListener
    * @return null|string The sub-string after remove the $folderPrefix
    * or null if $folderPrefix is not the first part of the string.
    */
-  private static function matchPrefixDirectory($path, $folderPrefix)
+  private static function matchPrefixDirectory(?string $path, ?string $folderPrefix):?string
   {
     if (strpos($path, $folderPrefix) !== 0) {
       return null;
     }
     return substr($path, strlen($folderPrefix));
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
