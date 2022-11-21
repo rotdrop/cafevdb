@@ -91,8 +91,10 @@ class SepaBulkTransactions extends PMETableViewBase
   CONCAT('".self::ROW_TAG_PREFIX."', __t1.sepa_transaction_id) AS row_tag,
   __t1.sepa_transaction_id AS sepa_transaction_id,
   GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.id) AS id,
+  GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.project_id) AS project_id,
   GROUP_CONCAT(DISTINCT __t1.musician_id ORDER BY __t1.id) AS musician_id,
   GROUP_CONCAT(DISTINCT __t1.subject ORDER BY __t1.id) AS subject,
+  GROUP_CONCAT(DISTINCT __t1.notification_message_id ORDER BY __t1.id) AS notification_message_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.musician_id, __t1.bank_account_sequence) ORDER BY __t1.id) AS bank_account_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.musician_id, __t1.debit_mandate_sequence) ORDER BY __t1.id) AS debit_mandate_id,
   SUM(__t1.amount) AS amount
@@ -103,8 +105,10 @@ SELECT
   __t2.id AS row_tag,
   __t2.sepa_transaction_id AS sepa_transaction_id,
   __t2.id AS id,
+  __t2.project_id AS project_id,
   __t2.musician_id AS musician_id,
   __t2.subject AS subject,
+  __t2.notification_message_id AS notification_message_id,
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t2.musician_id, __t2.bank_account_sequence) AS bank_account_id,
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t2.musician_id, __t2.debit_mandate_sequence) AS debit_mandate_id,
   __t2.amount AS amount
@@ -380,7 +384,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       [
         'tab' => [ 'id' =>[ 'bookings', 'transaction' ], ],
         'name'     => $this->l->t('Musician'),
-        'css'      => [ 'postfix' => ' musician-id squeeze-subsequent-lines' ],
+        'css'      => [ 'postfix' => [ 'musician-id', 'squeeze-subsequent-lines', ], ],
         'select' => 'M',
         'input' => 'R',
         'sql' => $this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
@@ -569,6 +573,25 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'tooltip' => $this->toolTipsService['bulk-transaction-due-date'],
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
       ]);
+
+    list(, $msgIdField) = $this->makeJoinTableField(
+      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'notification_message_id', [
+        'name' => $this->l->t('Pre-Notification'),
+        'tab' => [ 'id' => 'transaction' ],
+        'css' => [ 'postfix' => [ 'squeeze-subsequent-lines', 'medium-width', ], ],
+        'input' => 'R',
+        'select' => 'M',
+        'escape' => true,
+        'values2glue' => '<br/>',
+        'display' => [
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+          'popup' => 'data',
+        ],
+    ]);
+    if ($this->projectId > 0) {
+      $opts['fdd'][$msgIdField]['value']['filters'] = '$table.project_id = ' . $this->projectId;
+    }
 
     $opts['fdd']['actions'] = [
       'tab' => [ 'id' => 'transaction' ],
