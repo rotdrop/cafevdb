@@ -42,7 +42,7 @@ class SepaBulkTransactionAnnouncedListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
-  const EVENT = Events\PostChangeCompositePaymentNotificationMessageId::class;
+  const EVENT = Events\PostChangeCompositePaymentNotificationMessage::class;
 
   /** @var IAppContainer */
   private $appContainer;
@@ -61,7 +61,7 @@ class SepaBulkTransactionAnnouncedListener implements IEventListener
     if (get_class($event) !== self::EVENT) {
       return;
     }
-    /** @var Events\PostChangeCompositePaymentNotificationMessageId $event */
+    /** @var Events\PostChangeCompositePaymentNotificationMessage $event */
 
     $payment = $event->getEntity();
     $bulkTransaction = $payment->getSepaTransaction();

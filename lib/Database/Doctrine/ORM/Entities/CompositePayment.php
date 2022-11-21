@@ -147,9 +147,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * This is the unique message id from the email sent to the payees.
    *
-   * @ORM\Column(type="string", length=512, nullable=true)
+   * @ORM\OneToOne(targetEntity="SentEmail")
+   * @ORM\JoinColumn(name="notification_message_id", referencedColumnName="message_id", nullable=true)
    */
-  private $notificationMessageId;
+  private $notificationMessage;
 
   /**
    * @var Project
@@ -494,27 +495,27 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set notificationMessageId.
+   * Set notificationMessage.
    *
-   * @param null|string $notificationMessageId
+   * @param null|SentEmail $notificationMessage
    *
    * @return CompositePayment
    */
-  public function setNotificationMessageId(?string $notificationMessageId):CompositePayment
+  public function setNotificationMessage(?SentEmail $notificationMessage):CompositePayment
   {
-    $this->notificationMessageId = $notificationMessageId;
+    $this->notificationMessage = $notificationMessage;
 
     return $this;
   }
 
   /**
-   * Get notificationMessageId.
+   * Get notificationMessage.
    *
-   * @return null|string
+   * @return null|SentEmail
    */
-  public function getNotificationMessageId():?string
+  public function getNotificationMessage():?SentEmail
   {
-    return $this->notificationMessageId;
+    return $this->notificationMessage;
   }
 
   /**
@@ -742,7 +743,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
-    $field = 'notificationMessageId';
+    $field = 'notificationMessage';
     if ($event->hasChangedField($field)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       // $entityManager = EntityManager::getDecorator($event->getEntityManager());
@@ -759,11 +760,11 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    */
   public function postUpdate(Event\LifecycleEventArgs $event)
   {
-    $field = 'notificationMessageId';
+    $field = 'notificationMessage';
     if (array_key_exists($field, $this->preUpdateValue)) {
       /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
       $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostChangeCompositePaymentNotificationMessageId($entityManager, $this, $this->preUpdateValue[$field]));
+      $entityManager->dispatchEvent(new Events\PostChangeCompositePaymentNotificationMessage($entityManager, $this, $this->preUpdateValue[$field]));
       unset($this->preUpdateValue[$field]);
     }
   }

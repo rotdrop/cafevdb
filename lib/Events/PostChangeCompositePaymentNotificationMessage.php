@@ -37,7 +37,7 @@ use OCP\EventDispatcher\Event;
  *
  * @SuppressWarnings(PHPMD.LongClassName)
  */
-class PostChangeCompositePaymentNotificationMessageId extends Event
+class PostChangeCompositePaymentNotificationMessage extends Event
 {
   /** @var EntityManager */
   private $entityManager;
@@ -45,7 +45,7 @@ class PostChangeCompositePaymentNotificationMessageId extends Event
   /** @var Entities\CompositePayment */
   private $entity;
 
-  /** @var DateTimeInterface */
+  /** @var Entities\SentEmail */
   private $oldValue;
 
   /**
@@ -58,7 +58,7 @@ class PostChangeCompositePaymentNotificationMessageId extends Event
   public function __construct(
     EntityManager $entityManager,
     Entities\CompositePayment $entity,
-    ?string $oldValue
+    ?Entities\SentEmail $oldValue,
   ) {
     $this->entityManager = $entityManager;
     $this->entity = $entity;
@@ -90,7 +90,7 @@ class PostChangeCompositePaymentNotificationMessageId extends Event
    *
    * @return null|string
    */
-  public function getOldValue():?string
+  public function getOldValue():?Entities\SentEmail
   {
     return $this->oldValue;
   }
@@ -100,8 +100,8 @@ class PostChangeCompositePaymentNotificationMessageId extends Event
    *
    * @return null|string
    */
-  public function getNewValue():?string
+  public function getNewValue():?Entities\SentEmail
   {
-    return $this->entity->getNotificationMessageId();
+    return $this->entity->getNotificationMessage();
   }
 }

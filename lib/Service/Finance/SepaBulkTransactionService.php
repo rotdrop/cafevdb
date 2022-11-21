@@ -283,7 +283,7 @@ class SepaBulkTransactionService
       $preNotificationTask = $this->financeService->findFinanceCalendarEntry($preNotificationTaskUri);
       if (!empty($preNotificationTask)) {
         $notifiedCount = $debitNote->getPayments()->filter(
-          fn(Entities\CompositePayment $payment) => !empty($payment->getNotificationMessageId())
+          fn(Entities\CompositePayment $payment) => !empty($payment->getNotificationMessage())
         )->count();
         $totalCount = $debitNote->getPayments()->count();
 
@@ -315,7 +315,7 @@ class SepaBulkTransactionService
           . "\n"
           . $this->l->t('Date: %s', $configService->dateTimeFormatter()->formatDateTime(new DateTimeImmutable))
           . "\n"
-          . $this->l->t('MessageId: %s', $payment->getNotificationMessageId());
+          . $this->l->t('MessageId: %s', $payment->getNotificationMessage()->getMessageId());
         $this->eventsService->updateCalendarEntry($preNotificationEvent, [
           'description' => $description,
         ]);

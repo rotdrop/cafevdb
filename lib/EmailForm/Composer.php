@@ -1783,7 +1783,7 @@ Störung.';
                 ])
               );
             }
-            $payment->setNotificationMessageId($messageId);
+            $payment->setNotificationMessage($msg['sentEmail']);
             // $this->flush();
           }
         } else {
@@ -2856,6 +2856,7 @@ Störung.';
     return [
       'messageId' => $phpMailer->getLastMessageID(),
       'message' => $phpMailer->GetSentMIMEMessage(),
+      'sentEmail' => $sentEmail,
     ];
   }
 
