@@ -48,7 +48,7 @@ class BackgroundJobController extends Controller
    *
    * Do not run more often than this.
    */
-  public const INTERVAL_SECONDS = 60; // 600;
+  public const INTERVAL_SECONDS = 600;
   private const BACKGROUND_JOB_LAST_RUN = 'backgroundJobLastRun';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
