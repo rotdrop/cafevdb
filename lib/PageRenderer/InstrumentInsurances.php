@@ -245,6 +245,7 @@ class InstrumentInsurances extends PMETableViewBase
     }
 
     $opts['groupby_fields'] = [ 'id' ];
+    $opts['mrec_fields'] = [ 'bill_to_party_id' ];
 
     ///////////////////////////////////////////////////////////////////////////
     //
