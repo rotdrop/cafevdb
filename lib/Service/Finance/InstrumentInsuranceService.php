@@ -24,8 +24,8 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \DateTimeZone;
-use \DateTimeImmutable as DateTime;
+use DateTimeZone;
+use DateTimeImmutable as DateTime;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCA\CAFEVDB\Service;
