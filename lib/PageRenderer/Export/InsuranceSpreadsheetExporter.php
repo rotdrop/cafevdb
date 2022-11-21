@@ -538,7 +538,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $sheet->setCellValue('A' . $cnt++, $this->l->t('Geographical Scope') . ': ' . $rate['scope']);
     $sheet->setCellValue('A' . $cnt++, $this->l->t('Insurance Period') . ': ' . $humanLastDueDate . ' - ' . $humanDueDate);
     $sheet->setCellValue('A' . $cnt++, $this->l->t('Orchestra Contact') . ': ' . $meta['creator'] . ' &lt;' . $meta['email'] . '&gt;');
-    $sheet->setCellValue('A' . $cnt++, $this->l->t('Datum') . ': ' . $humanDate);
+    $sheet->setCellValue('A' . $cnt++, $this->l->t('Date') . ': ' . $humanDate);
 
     return $cnt;
   }
