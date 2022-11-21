@@ -193,7 +193,7 @@ class InstrumentInsurances extends PMETableViewBase
     // Options you wish to give the users
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
-    $opts['options'] = 'ACVDFM';
+    $opts['options'] = 'ACPVDFM';
 
     // controls display an location of edit/misc buttons
     $opts['navigation'] = self::PME_NAVIGATION_MULTI;
@@ -542,6 +542,7 @@ GROUP BY b.short_name',
       'name'     => $this->l->t('Year of Construction'),
       'css'      => [ 'postfix' => [ 'construction-year', ], ],
       'input'    => 'M', // required
+      'select'   => 'T',
       'tooltip'  => $this->toolTipsService['instrument-insurance:year-of-construction'],
       'display' => [
         'attributes' => [
@@ -566,7 +567,7 @@ GROUP BY b.short_name',
             'step' => 1,
           ],
         ],
-        'php|LFPDV' => fn($value) => $this->moneyValue($value),
+        'php|LFDV' => fn($value) => $this->moneyValue($value),
       ]);
 
     $this->makeJoinTableField(
@@ -591,21 +592,35 @@ GROUP BY b.short_name',
     $opts['fdd']['insurance_fee'] = [
       'tab'  => [ 'id' => 'finance' ],
       'input' => 'V',
+      'select' => 'T',
       'css' => [ 'postfix' => [ 'insurance-fee', 'align-right', ], ],
-      'name' => $this->l->t('Insurance Fee').'<br/>'.$this->l->t('including taxes'),
+      'name' => $this->l->t('Insurance Fee w/ taxes'),
       'options' => 'LFACPDV',
+      'sort' => true,
       'sql' => 'ROUND($table.insurance_amount
- * '.$joinTables[self::RATES_TABLE].'.rate
- * (1+'.floatval(InstrumentInsuranceService::TAXES).'), 2)',
+ * ' . $joinTables[self::RATES_TABLE] . '.rate
+ * (1 + ' . floatval(InstrumentInsuranceService::TAXES) . '), 2)',
       'php' => function($value) {
         return '<span class="insurance-fee-display"
-  data-currency-code="'.$this->currencyCode().'"
-  data-tax-rate="'.InstrumentInsuranceService::TAXES.'"
+  data-currency-code="' . $this->currencyCode() . '"
+  data-tax-rate="' . InstrumentInsuranceService::TAXES . '"
 >'
           . $this->moneyValue($value)
           . '</span>';
       },
     ];
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::RATES_TABLE, 'due_date', array_merge(
+        $this->defaultFDD['date'], [
+          'name' => $this->l->t('Due Date'),
+          'tab'  => [ 'id' => 'finance' ],
+          'css' => [ 'postfix' => [ 'insurance-rate -due-date', ], ],
+          // 'sql' => 'DATE_ADD($join_col_fqn, INTERVAL (YEAR(NOW()) - YEAR($join_col_fqn) + 1) YEAR)',
+          'sql' => 'DATE_ADD($join_col_fqn, INTERVAL (YEAR(NOW()) - YEAR($join_col_fqn) + 0) YEAR)',
+          'input' => 'VR',
+        ])
+    );
 
     $allItemsTable = self::TABLE . self::VALUES_TABLE_SEP . 'allItems';
     $this->makeJoinTableField(
@@ -618,7 +633,7 @@ GROUP BY b.short_name',
       'sql' => 'SUM($join_col_fqn)',
       'escape' => false,
       'nowrap' => true,
-      'sort' =>false,
+      'sort' => true,
       'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
         $musicianId = $row[$this->queryField('instrument_holder_id', $pme->fdd)];
         $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
@@ -651,6 +666,7 @@ GROUP BY b.short_name',
         $this->defaultFDD['deleted'], [
           'tab'  => [ 'id' => 'overview' ],
           'name' => $this->l->t('End of Insurance'),
+          'select' => 'T',
           'dateformat' => 'medium',
           'timeformat' => null,
           'css' => [ 'postfix' => [ 'revocation-date', 'date', ], ],
@@ -666,6 +682,7 @@ GROUP BY b.short_name',
       'name'  => $this->l->t('Bill'),
       'css'   => [ 'postfix' => [ 'instrument-insurance-bill', ], ],
       'input' => 'VR',
+      'options' => 'ACVDFM',
       'sql'   => '$main_table.bill_to_party_id',
       'sort'  => false,
       'php|LFCDV' => function($musicianId, $op, $field, $row, $recordId, $pme) use ($insuranceBillSubDir) {
