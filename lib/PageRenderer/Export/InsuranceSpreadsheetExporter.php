@@ -50,6 +50,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
   protected const MUSICIAN_KEY = 'musician';
   protected const OBJECT_KEY = 'object';
+  protected const START_KEY = 'start';
   protected const DELETED_KEY = 'deleted';
   protected const ACCESSORY_KEY = 'accessory';
   protected const MANUFACTURER_KEY = 'manufacturer';
@@ -60,6 +61,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   protected const EXPORT_COLUMNS = [
     self::MUSICIAN_KEY,
     self::OBJECT_KEY,
+    self::START_KEY,
     self::DELETED_KEY,
     self::ACCESSORY_KEY,
     self::MANUFACTURER_KEY,
@@ -79,7 +81,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   protected const INPUT_INDEX_YEAR_OF_CONSTRUCTION = self::INPUT_INDEX_MANUFACTURER + 1;
   protected const INPUT_INDEX_INSURED_AMOUNT = self::INPUT_INDEX_YEAR_OF_CONSTRUCTION + 1;
   protected const INPUT_INDEX_INSURANCE_RATE = self::INPUT_INDEX_INSURED_AMOUNT + 1;
-  protected const INPUT_INDEX_INSURANCE_FEES = self::INPUT_INDEX_INSURANCE_RATE + 1;
+  protected const INPUT_INDEX_DUE_DATE = self::INPUT_INDEX_INSURANCE_RATE + 1;
+  protected const INPUT_INDEX_INSURANCE_FEES = self::INPUT_INDEX_DUE_DATE + 1;
   protected const INPUT_INDEX_INSURANCE_START = self::INPUT_INDEX_INSURANCE_FEES + 1;
   protected const INPUT_INDEX_INSURANCE_END = self::INPUT_INDEX_INSURANCE_START + 1;
 
@@ -160,16 +163,13 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   {
     $renderer = $this->renderer; // short-cut
     $sheet = $spreadSheet->getActiveSheet();
-    $creator = $meta['creator'];
-    $email = $meta['email'];
     // $date = $meta['date'];
 
-    $name  = $this->l->t('Instrument Insurances');
+    $meta['name'] = $this->l->t('Instrument Insurances');
+
+    $this->logInfo('META ' . print_r($meta, true));
 
     // $template = $this->renderer->template();
-
-    $offset = $headerOffset = 6;
-    $rowCnt = 0;
 
     /* Export the table, create extra lines for each musician with its
      * total insurance amount and one extra row at the end which states
@@ -187,6 +187,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $headerLine  = [
       self::MUSICIAN_KEY => $this->l->t('Musician'),
       self::OBJECT_KEY => $this->l->t('Insured Object'),
+      self::START_KEY => $this->l->t('Start Date'),
       self::DELETED_KEY => $this->l->t('End Date'),
       self::ACCESSORY_KEY => $this->l->t('Accessory'),
       self::MANUFACTURER_KEY => $this->l->t('Manufacturer'),
@@ -201,7 +202,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $renderer->navigation(false); // inhibit navigation elements
     $renderer->render(false); // dry-run, prepare export
 
-    $humanDate = $this->dateTimeFormatter()->formatDate(new DateTimeImmutable);
+    $nowDate = new DateTimeImmutable;
 
     $dueDate = null;
     $lastDueDate = null;
@@ -227,6 +228,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         &$sheet,
         &$spreadSheet,
         &$offset,
+        &$headerOffset,
         &$rowCnt,
         $headerLine,
         &$brokerScope,
@@ -237,19 +239,16 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         &$nextTotal,
         &$numRecords,
         &$newMusician,
-        $name,
-        $creator,
-        $email,
+        $meta,
         $brokerNames,
         $rates,
-        $humanDate,
-        $headerOffset,
+        $nowDate,
         &$dueDate,
         &$lastDueDate,
         $utc,
       ) {
         if ($i == 1) {
-          $this->dumpRow($headerLine, $sheet, $i, $offset, $rowCnt, true);
+          // $this->dumpRow($headerLine, $sheet, $i, $offset, $rowCnt, true);
           return;
         }
 
@@ -271,13 +270,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           $dueDate = self::convertToTimezoneDate($rates[$brokerScope]['due'], $utc);
           $lastDueDate = $dueDate->modify('-1 year - 1 day');
 
-          $this->logInfo('DATES ' . print_r($dueDate, true) . ' ' . print_r($lastDueDate, true));
+          $headerOffset = $this->generateHeader($sheet, $meta, $rates[$brokerScope], $brokerNames[$broker], $nowDate);
 
-          $sheet->setCellValue("A1", $name . ", " . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name'] . ', ' . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['address']);
-          $sheet->setCellValue("A2", $creator . " &lt;" . $email . "&gt;");
-          $sheet->setCellValue("A3", $this->l->t('Policy Number').": " . $rates[$brokerScope]['policy']);
-          $sheet->setCellValue("A4", $this->l->t('Geographical Scope') . ": " . $lineData[self::INPUT_INDEX_SCOPE]);
-          $sheet->setCellValue("A5", $this->l->t('Date') . ": " . $humanDate);
+          $offset = $headerOffset;
+          $rowCnt = 0;
+          $this->dumpRow($headerLine, $sheet, 1, $offset, $rowCnt, true);
         } else {
 
           $broker   = $lineData[self::INPUT_INDEX_BROKER];
@@ -317,19 +314,12 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
             $dueDate = self::convertToTimezoneDate($rates[$brokerScope]['due'], $utc);
             $lastDueDate = $dueDate->modify('-1 year');
 
+            $headerOffset = $this->generateHeader($sheet, $meta, $rates[$brokerScope], $brokerNames[$broker], $nowDate);
+
             $offset = $headerOffset - $i + 2;
             $rowCnt = 0;
-            $this->dumpRow($headerLine, $sheet, $i - 1, $offset, $rowCnt, true);
 
-            $sheet->setCellValue(
-              "A1", $name
-              . ", " . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name']
-              . ", " . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['address']
-            );
-            $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
-            $sheet->setCellValue("A3", $this->l->t('Policy Number').": ".$rates[$brokerScope]['policy']);
-            $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[self::INPUT_INDEX_SCOPE]);
-            $sheet->setCellValue("A5", $this->l->t('Date').": ".$humanDate);
+            $this->dumpRow($headerLine, $sheet, $i - 1, $offset, $rowCnt, true);
           }
         }
 
@@ -340,11 +330,19 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           $endDate = null;
         }
 
-        if ($endDate !== null && $endDate < $lastDueDate) {
+        if ($endDate !== null && $endDate <= $lastDueDate) {
           // ended before current insurance year, so skip it
           $this->logInfo('SKIPPING ' . $rowCnt . ' ' . $i);
           --$offset;
           return;
+        }
+
+        $exportData[self::START_KEY] = $lineData[self::INPUT_INDEX_INSURANCE_START];
+        $startDate = self::convertToTimezoneDate(self::convertToDateTime($exportData[self::START_KEY]), $utc);
+
+        if ($startDate <= $lastDueDate) {
+          // only note start-dates within or after the current period
+          $exportData[self::START_KEY] = '';
         }
 
         $exportData[self::MUSICIAN_KEY] = $newMusician ? $musician : '';
@@ -357,7 +355,9 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
         $monetary = $this->fuzzyInputService->parseCurrency($lineData[self::INPUT_INDEX_INSURED_AMOUNT]);
         if ($monetary !== false) {
-          $musicianTotal += $monetary['amount'];
+          if ($startDate < $dueDate) {
+            $musicianTotal += $monetary['amount'];
+          }
           if ($endDate === null || $endDate >= $dueDate) {
             $musicianNextTotal += $monetary['amount'];
           }
@@ -411,8 +411,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
       // Make the header a little bit prettier
       $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
-      $sheet->getRowDimension(1+$headerOffset)->setRowHeight($ptHeight + $ptHeight / 4);
-      $sheet->getStyle("A" . (1 + $headerOffset) . ":" . $sheet->getHighestColumn() . (1 + $headerOffset))->applyFromArray([
+      $sheet->getRowDimension(1 + $headerOffset)->setRowHeight($ptHeight + $ptHeight / 4);
+      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $sheet->getHighestColumn() . (1 + $headerOffset))->applyFromArray([
         'font' => [
           'bold' => true
         ],
@@ -449,9 +449,12 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
        *
        */
 
+      $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
+
       $highCol = $sheet->getHighestColumn();
       for ($i = 1; $i <= $headerOffset; ++$i) {
         $sheet->mergeCells('A' . $i . ':' . $highCol . $i);
+        $sheet->getRowDimension($i)->setRowHeight($ptHeight + $ptHeight / 6);
       }
 
       // Format the mess a little bit
@@ -471,21 +474,73 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         ],
       ]);
 
-      $sheet->getStyle('A1:'.$highCol.($headerOffset-1))->applyFromArray([
+      // @todo This seem to undo horizonatl alignment above
+      $sheet->getStyle('A1:' . $highCol . ($headerOffset - 1))->applyFromArray([
         'alignment' => [
           'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
           'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
         ],
       ]);
+
+      $font = clone $spreadSheet->getDefaultStyle()->getFont();
+      $fontSize = $font->getSize() * 1.5;
+      $font->setSize($fontSize);
+      $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($font);
+      $sheet->getStyle('A1:' . $highCol . '1')->applyFromArray([
+        'font' => [
+          'bold' => true,
+          'size' => $fontSize,
+        ],
+      ]);
+      $sheet->getRowDimension(1)->setRowHeight($ptHeight + $ptHeight / 6);
     }
 
     /*
      *
      ***************************************************************************/
 
-    $meta['name'] = $name;
-
     return $meta;
+  }
+
+  /**
+   * @param Worksheet $sheet
+   *
+   * @param array $meta Meta information like creator, its email etc.
+   *
+   * @param array $rate Insurance rate data.
+   *
+   * @param array $broker Broker data.
+   *
+   * @param DateTimeInterface $nowDate
+   *
+   * @return int The number generated header lines.
+   */
+  protected function generateHeader(
+    Worksheet $sheet,
+    array $meta,
+    array $rate,
+    array $broker,
+    DateTimeInterface $nowDate,
+  ):int {
+    $utc = new DateTimeZone('UTC');
+
+    $dueDate = self::convertToTimezoneDate($rate['due'], $utc);
+    $lastDueDate = $dueDate->modify('-1 year - 1 day');
+
+    $humanDueDate = $this->dateTimeFormatter()->formatDate($dueDate, 'medium');
+    $humanLastDueDate = $this->dateTimeFormatter()->formatDate($lastDueDate, 'medium');
+    $humanDate = $this->dateTimeFormatter()->formatDate($nowDate);
+
+    $cnt = 1;
+    $sheet->setCellValue('A' . $cnt++, $this->l->t('Instrument Insurances'));
+    $sheet->setCellValue('A' . $cnt++, $this->l->t('Provider') . ': ' . $broker['name'] . ', ' . $broker['address']);
+    $sheet->setCellValue('A' . $cnt++, $this->l->t('Policy Number') . ': ' . $rate['policy']);
+    $sheet->setCellValue('A' . $cnt++, $this->l->t('Geographical Scope') . ': ' . $rate['scope']);
+    $sheet->setCellValue('A' . $cnt++, $this->l->t('Insurance Period') . ': ' . $humanLastDueDate . ' - ' . $humanDueDate);
+    $sheet->setCellValue('A' . $cnt++, $this->l->t('Orchestra Contact') . ': ' . $meta['creator'] . ' &lt;' . $meta['email'] . '&gt;');
+    $sheet->setCellValue('A' . $cnt++, $this->l->t('Datum') . ': ' . $humanDate);
+
+    return $cnt;
   }
 
   /**
@@ -511,7 +566,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     int &$rowCnt,
     bool $header = false,
   ):void {
-    $highLightColumns = [ self::DELETED_KEY ];
+    $hightLightColumns = [ self::START_KEY ];
+    $alertColumns = [ self::DELETED_KEY ];
     $moneyColumns = [
       self::YEAR_OF_CONSTRUCTION_KEY,
       self::AMOUNT_KEY,
@@ -545,13 +601,14 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           ],
         ]);
       }
-      foreach ($highLightColumns as $key) {
+      foreach ($alertColumns as $key) {
         if (!empty($exportData[$key])) {
           $col = $this->spreadSheetColumns[$key];
           $styleArray['font'] = [
             'italic' => true,
           ];
-          $sheet->getStyle('B' . ($row + $offset).':'.$sheet->getHighestColumn().($row+$offset))->applyFromArray(
+          $italicRange = 'B' . ($row + $offset) . ':' . $sheet->getHighestColumn() . ($row + $offset);
+          $sheet->getStyle($italicRange)->applyFromArray(
             $styleArray,
           );
           $styleArray = [
@@ -565,7 +622,33 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
               ],
             ],
           ];
-          $sheet->getStyle($col . ($row + $offset))->applyFromArray($styleArray);
+          $colorRange = 'B' . ($row + $offset) . ':' . $sheet->getHighestColumn() . ($row + $offset);
+          $sheet->getStyle($colorRange)->applyFromArray($styleArray);
+        }
+      }
+      foreach ($hightLightColumns as $key) {
+        if (!empty($exportData[$key])) {
+          $col = $this->spreadSheetColumns[$key];
+          $styleArray['font'] = [
+            'italic' => true,
+          ];
+          $italicRange = 'B' . ($row + $offset) . ':' . $sheet->getHighestColumn() . ($row + $offset);
+          $sheet->getStyle($italicRange)->applyFromArray(
+            $styleArray,
+          );
+          $styleArray = [
+            'font' => [
+              'bold' => true
+            ],
+            'fill' => [
+              'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
+              'color' => [
+                'argb' => 'FF00FF00',
+              ],
+            ],
+          ];
+          $colorRange = 'B' . ($row + $offset) . ':' . $sheet->getHighestColumn() . ($row + $offset);
+          $sheet->getStyle($colorRange)->applyFromArray($styleArray);
         }
       }
     }
