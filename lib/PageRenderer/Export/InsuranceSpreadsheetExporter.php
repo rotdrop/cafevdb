@@ -24,7 +24,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer\Export;
 
+use DateTimeInterface;
 use DateTimeImmutable;
+use DateTimeZone;
+
 use PhpOffice\PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
@@ -43,9 +46,11 @@ use OCA\CAFEVDB\Service\ConfigService;
 class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 {
   use \OCA\CAFEVDB\Traits\SloppyTrait;
+  use \OCA\CAFEVDB\Traits\DateTimeTrait;
 
   protected const MUSICIAN_KEY = 'musician';
   protected const OBJECT_KEY = 'object';
+  protected const DELETED_KEY = 'deleted';
   protected const ACCESSORY_KEY = 'accessory';
   protected const MANUFACTURER_KEY = 'manufacturer';
   protected const YEAR_OF_CONSTRUCTION_KEY = 'year';
@@ -55,6 +60,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   protected const EXPORT_COLUMNS = [
     self::MUSICIAN_KEY,
     self::OBJECT_KEY,
+    self::DELETED_KEY,
     self::ACCESSORY_KEY,
     self::MANUFACTURER_KEY,
     self::YEAR_OF_CONSTRUCTION_KEY,
@@ -72,6 +78,10 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   protected const INPUT_INDEX_MANUFACTURER = self::INPUT_INDEX_IS_ACCESSORY + 1;
   protected const INPUT_INDEX_YEAR_OF_CONSTRUCTION = self::INPUT_INDEX_MANUFACTURER + 1;
   protected const INPUT_INDEX_INSURED_AMOUNT = self::INPUT_INDEX_YEAR_OF_CONSTRUCTION + 1;
+  protected const INPUT_INDEX_INSURANCE_RATE = self::INPUT_INDEX_INSURED_AMOUNT + 1;
+  protected const INPUT_INDEX_INSURANCE_FEES = self::INPUT_INDEX_INSURANCE_RATE + 1;
+  protected const INPUT_INDEX_INSURANCE_START = self::INPUT_INDEX_INSURANCE_FEES + 1;
+  protected const INPUT_INDEX_INSURANCE_END = self::INPUT_INDEX_INSURANCE_START + 1;
 
   /** @var PageRenderer\PMETableViewBase */
   protected $renderer;
@@ -81,6 +91,15 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
   /** @var FuzzyInputService */
   protected $fuzzyInputService;
+
+  /** @var array */
+  protected $spreadSheetColumns;
+
+  /** @var string */
+  protected $lastColumnAddress;
+
+  /** @var string */
+  protected $preLastColumnAddress;
 
   /**
    * Construct a spread-sheet exporter for selected tables.
@@ -101,6 +120,13 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $this->renderer = $renderer;
     $this->insuranceService = $insuranceService;
     $this->fuzzyInputService = $fuzzyInputService;
+
+    $this->preLastColumnAddress = chr(ord('A') + count(self::EXPORT_COLUMNS) - 2);
+    $this->lastColumnAddress = chr(ord('A') + count(self::EXPORT_COLUMNS) - 1);
+
+    $this->logInfo('COLUMNS ' . $this->preLastColumnAddress . ' ' . $this->lastColumnAddress);
+    $chars = range('A', $this->lastColumnAddress);
+    $this->spreadSheetColumns = array_combine(self::EXPORT_COLUMNS, $chars);
   }
 
   /**
@@ -153,12 +179,15 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $brokerScope   = false;
     $musician      = false;
     $musicianTotal = 0.0;
+    $musicianNextTotal = 0.0;
     $total         = 0.0;
+    $nextTotal     = 0.0;
     $numRecords    = 0;
 
     $headerLine  = [
       self::MUSICIAN_KEY => $this->l->t('Musician'),
       self::OBJECT_KEY => $this->l->t('Insured Object'),
+      self::DELETED_KEY => $this->l->t('End Date'),
       self::ACCESSORY_KEY => $this->l->t('Accessory'),
       self::MANUFACTURER_KEY => $this->l->t('Manufacturer'),
       self::YEAR_OF_CONSTRUCTION_KEY => $this->l->t('Year of Construction'),
@@ -174,6 +203,12 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
     $humanDate = $this->dateTimeFormatter()->formatDate(new DateTimeImmutable);
 
+    $dueDate = null;
+    $lastDueDate = null;
+    $utc = new DateTimeZone('UTC');
+
+    $newMusician = false;
+
     $renderer->export(
       // Cell-data filter
       function ($i, $j, $cellData) {
@@ -185,7 +220,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         $cellData = html_entity_decode($cellData, ENT_COMPAT|ENT_HTML401, 'UTF-8');
         return $cellData;
       },
-      /* We rely on the table layout A = musician, C = broker, D = scope */
       function (
         $i,
         $lineData
@@ -198,8 +232,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         &$brokerScope,
         &$musician,
         &$musicianTotal,
+        &$musicianNextTotal,
         &$total,
+        &$nextTotal,
         &$numRecords,
+        &$newMusician,
         $name,
         $creator,
         $email,
@@ -207,6 +244,9 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         $rates,
         $humanDate,
         $headerOffset,
+        &$dueDate,
+        &$lastDueDate,
+        $utc,
       ) {
         if ($i == 1) {
           $this->dumpRow($headerLine, $sheet, $i, $offset, $rowCnt, true);
@@ -218,47 +258,68 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           $exportData[$k] = '';
         }
 
-        $newMusician = false;
-
         if ($brokerScope === false) { // setup
-          $musician    = $lineData[self::INPUT_INDEX_MUSICIAN];
+          $musician    = strip_tags($lineData[self::INPUT_INDEX_MUSICIAN]);
           // $billTo      = $lineData[1];
           $broker      = $lineData[self::INPUT_INDEX_BROKER];
           $scope       = $lineData[self::INPUT_INDEX_SCOPE];
-          $brokerScope = $broker.$scope;
+          $brokerScope = $broker . $scope;
           $newMusician = true;
 
           $sheet->setTitle($this->ellipsizeFirst($broker, $scope, PhpSpreadsheet\Worksheet\Worksheet::SHEET_TITLE_MAXIMUM_LENGTH, '; '));
 
+          $dueDate = self::convertToTimezoneDate($rates[$brokerScope]['due'], $utc);
+          $lastDueDate = $dueDate->modify('-1 year - 1 day');
+
+          $this->logInfo('DATES ' . print_r($dueDate, true) . ' ' . print_r($lastDueDate, true));
+
           $sheet->setCellValue("A1", $name . ", " . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['name'] . ', ' . $brokerNames[$lineData[self::INPUT_INDEX_BROKER]]['address']);
-          $sheet->setCellValue("A2", $creator." &lt;".$email."&gt;");
-          $sheet->setCellValue("A3", $this->l->t('Policy Number').": ".$rates[$brokerScope]['policy']);
-          $sheet->setCellValue("A4", $this->l->t('Geographical Scope').": ".$lineData[self::INPUT_INDEX_SCOPE]);
-          $sheet->setCellValue("A5", $this->l->t('Date').": ".$humanDate);
+          $sheet->setCellValue("A2", $creator . " &lt;" . $email . "&gt;");
+          $sheet->setCellValue("A3", $this->l->t('Policy Number').": " . $rates[$brokerScope]['policy']);
+          $sheet->setCellValue("A4", $this->l->t('Geographical Scope') . ": " . $lineData[self::INPUT_INDEX_SCOPE]);
+          $sheet->setCellValue("A5", $this->l->t('Date') . ": " . $humanDate);
         } else {
+
           $broker   = $lineData[self::INPUT_INDEX_BROKER];
           $scope    = $lineData[self::INPUT_INDEX_SCOPE];
-          $newScope = $broker.$scope;
+          $newScope = $broker . $scope;
 
-          if ($musician != $lineData[self::INPUT_INDEX_MUSICIAN] || $newScope != $brokerScope) {
-            $this->dumpMusicianTotal($sheet, $i, $offset++, $rowCnt, $musicianTotal);
+          $thisLineMusician = strip_tags($lineData[self::INPUT_INDEX_MUSICIAN]);
+          if ($musician != $thisLineMusician || $newScope != $brokerScope) {
+            $this->dumpMusicianTotal($sheet, $i, $offset++, $rowCnt, $musicianTotal, $musician);
+            // if ($musicianTotal != $musicianNextTotal) {
+            //   $this->dumpMusicianNextTotal($sheet, $i, $offset++, $rowCnt, $musicianNextTotal, $musician, $dueDate);
+            // }
             $total += $musicianTotal;
+            $nextTotal += $musicianNextTotal;
             $musicianTotal = 0.0;
+            $musicianNextTotal = 0.0;
             $newMusician = true;
-            $musician = $lineData[self::INPUT_INDEX_MUSICIAN];
+            $musician = $thisLineMusician;
           }
 
           if ($newScope != $brokerScope) {
-            $this->dumpTotal($sheet, $i, $offset, $rowCnt, $total);
+            $this->dumpTotal($sheet, $i, $offset, $rowCnt, null);
+            $this->dumpTotal($sheet, $i + 1, $offset, $rowCnt, $total);
+            if ($nextTotal != $total) {
+              $this->dumpTotal($sheet, $i + 2, $offset, $rowCnt, null);
+              $this->dumpNextTotal($sheet, $i + 3, $offset, $rowCnt, $nextTotal, $dueDate);
+            }
+            $total = 0.0;
+            $nextTotal = 0.0;
 
             $spreadSheet->createSheet();
             $spreadSheet->setActiveSheetIndex($spreadSheet->getSheetCount() - 1);
             $sheet = $spreadSheet->getActiveSheet();
             $sheet->setTitle($this->ellipsizeFirst($broker, $scope, PhpSpreadsheet\Worksheet\Worksheet::SHEET_TITLE_MAXIMUM_LENGTH, '; '));
             $brokerScope = $newScope;
+
+            $dueDate = self::convertToTimezoneDate($rates[$brokerScope]['due'], $utc);
+            $lastDueDate = $dueDate->modify('-1 year');
+
             $offset = $headerOffset - $i + 2;
             $rowCnt = 0;
-            $this->dumpRow($headerLine, $sheet, $i-1, $offset, $rowCnt, true);
+            $this->dumpRow($headerLine, $sheet, $i - 1, $offset, $rowCnt, true);
 
             $sheet->setCellValue(
               "A1", $name
@@ -272,20 +333,21 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           }
         }
 
-        //  0: musician
-        //  1: bill-to
-        //  2: broker
-        //  3: scope
-        //  4: object
-        //  5: is-accessory
-        //  6: manufacturer
-        //  7: year-of-construction
-        //  8: insured amount
-        //  9: insurance rate
-        // 10: amount-to-pay with taxes
-        // 11: start of insurance
+        $exportData[self::DELETED_KEY] = $lineData[self::INPUT_INDEX_INSURANCE_END];
+        if (!empty($exportData[self::DELETED_KEY])) {
+          $endDate = self::convertToTimezoneDate(self::convertToDateTime($exportData[self::DELETED_KEY]), $utc);
+        } else {
+          $endDate = null;
+        }
 
-        $exportData[self::MUSICIAN_KEY] = $newMusician ? $lineData[self::INPUT_INDEX_MUSICIAN] : '';
+        if ($endDate !== null && $endDate < $lastDueDate) {
+          // ended before current insurance year, so skip it
+          $this->logInfo('SKIPPING ' . $rowCnt . ' ' . $i);
+          --$offset;
+          return;
+        }
+
+        $exportData[self::MUSICIAN_KEY] = $newMusician ? $musician : '';
         $exportData[self::OBJECT_KEY] = $lineData[self::INPUT_INDEX_OBJECT];
         $exportData[self::ACCESSORY_KEY] = $lineData[self::INPUT_INDEX_IS_ACCESSORY];
         $exportData[self::MANUFACTURER_KEY] = $lineData[self::INPUT_INDEX_MANUFACTURER];
@@ -296,23 +358,56 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         $monetary = $this->fuzzyInputService->parseCurrency($lineData[self::INPUT_INDEX_INSURED_AMOUNT]);
         if ($monetary !== false) {
           $musicianTotal += $monetary['amount'];
+          if ($endDate === null || $endDate >= $dueDate) {
+            $musicianNextTotal += $monetary['amount'];
+          }
         }
 
         $this->dumpRow($exportData, $sheet, $i, $offset, $rowCnt);
 
-        $numRecords = $i+1;
+        $numRecords = $i + 1;
+
+        $newMusician = false;
       });
 
-    $this->dumpMusicianTotal($sheet, $numRecords, $offset++, $rowCnt, $musicianTotal);
+    $this->dumpMusicianTotal($sheet, $numRecords, $offset++, $rowCnt, $musicianTotal, $musician);
+    // if ($musicianTotal != $musicianNextTotal) {
+    //   $this->dumpMusicianNextTotal($sheet, $numRecords, $offset++, $rowCnt, $musicianNextTotal, $musician, $dueDate);
+    // }
     $total += $musicianTotal;
+    $nextTotal += $musicianNextTotal;
     $musicianTotal = 0.0;
-    $this->dumpTotal($sheet, $numRecords, $offset, $rowCnt, $total);
+    $musicianNextTotal = 0.0;
 
     // Then also dump the total insurance amount for the last sheet:
+    $this->dumpTotal($sheet, $numRecords, $offset, $rowCnt, null);
+    $this->dumpTotal($sheet, $numRecords + 1, $offset, $rowCnt, $total);
+    if ($nextTotal != $total) {
+      $this->dumpTotal($sheet, $numRecords + 2, $offset, $rowCnt, null);
+      $this->dumpNextTotal($sheet, $numRecords + 3, $offset, $rowCnt, $nextTotal, $dueDate);
+    }
+    $total = 0.0;
+    $nextTotal = 0.0;
 
     for ($sheetIdx = 0; $sheetIdx < $spreadSheet->getSheetCount(); $sheetIdx++) {
       $spreadSheet->setActiveSheetIndex($sheetIdx);
       $sheet = $spreadSheet->getActiveSheet();
+
+      $sheet->getStyle($sheet->calculateWorkSheetDimension())->applyFromArray([
+        'borders' => [
+          'outline' => [
+            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+          ],
+        ],
+      ]);
+
+      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $sheet->getHighestColumn() . $sheet->getHighestRow())->applyFromArray([
+        'borders' => [
+          'allBorders' => [
+            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+          ],
+        ],
+      ]);
 
       // Make the header a little bit prettier
       $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
@@ -331,7 +426,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
             'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
           ],
           'bottom' => [
-            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_DOUBLE,
           ],
         ],
         'fill' => [
@@ -342,23 +437,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         ],
       ]);
 
-      $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().(1+$headerOffset))->getAlignment()->setWrapText(true);
-
-      $sheet->getStyle("A".(1+$headerOffset).":".$sheet->getHighestColumn().$sheet->getHighestRow())->applyFromArray([
-        'borders' => [
-          'allBorders' => [
-            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
-          ],
-        ],
-      ]);
-
-      $sheet->getStyle($sheet->calculateWorkSheetDimension())->applyFromArray([
-        'borders' => [
-          'outline' => [
-            'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
-          ],
-        ],
-      ]);
+      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $sheet->getHighestColumn() . (1 + $headerOffset))->getAlignment()->setWrapText(true);
 
       /*
        *
@@ -371,12 +450,12 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
        */
 
       $highCol = $sheet->getHighestColumn();
-      for ($i = 1; $i < $headerOffset; ++$i) {
-        $sheet->mergeCells("A".$i.":".$highCol.$i);
+      for ($i = 1; $i <= $headerOffset; ++$i) {
+        $sheet->mergeCells('A' . $i . ':' . $highCol . $i);
       }
 
       // Format the mess a little bit
-      $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray([
+      $sheet->getStyle('A1:' . $highCol . $headerOffset)->applyFromArray([
         'font' => [
           'bold'=> true,
         ],
@@ -392,7 +471,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         ],
       ]);
 
-      $sheet->getStyle("A1:".$highCol.($headerOffset-1))->applyFromArray([
+      $sheet->getStyle('A1:'.$highCol.($headerOffset-1))->applyFromArray([
         'alignment' => [
           'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
           'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
@@ -432,7 +511,12 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     int &$rowCnt,
     bool $header = false,
   ):void {
-    $moneyColumns = ['E', 'F', 'G']; // aligned right
+    $highLightColumns = [ self::DELETED_KEY ];
+    $moneyColumns = [
+      self::YEAR_OF_CONSTRUCTION_KEY,
+      self::AMOUNT_KEY,
+      self::TOTALS_KEY,
+    ];
     $column = 'A';
     foreach (self::EXPORT_COLUMNS as $columnKey) {
       $cellValue = $exportData[$columnKey];
@@ -444,7 +528,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     }
     if (!$header) {
       ++$rowCnt;
-      $sheet->getStyle('A'.($row+$offset).':'.$sheet->getHighestColumn().($row+$offset))->applyFromArray([
+      $sheet->getStyle('A' . ($row + $offset).':'.$sheet->getHighestColumn().($row+$offset))->applyFromArray([
         'fill' => [
           'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
           'color' => [
@@ -452,13 +536,37 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           ],
         ],
       ]);
-      foreach ($moneyColumns as $col) {
-        $sheet->getStyle($col.($row+$offset))->applyFromArray([
+      foreach ($moneyColumns as $key) {
+        $col = $this->spreadSheetColumns[$key];
+        $sheet->getStyle($col . ($row + $offset))->applyFromArray([
           'alignment' => [
             'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
             'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
           ],
         ]);
+      }
+      foreach ($highLightColumns as $key) {
+        if (!empty($exportData[$key])) {
+          $col = $this->spreadSheetColumns[$key];
+          $styleArray['font'] = [
+            'italic' => true,
+          ];
+          $sheet->getStyle('B' . ($row + $offset).':'.$sheet->getHighestColumn().($row+$offset))->applyFromArray(
+            $styleArray,
+          );
+          $styleArray = [
+            'font' => [
+              'bold' => true
+            ],
+            'fill' => [
+              'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
+              'color' => [
+                'argb' => 'FFFF0000',
+              ],
+            ],
+          ];
+          $sheet->getStyle($col . ($row + $offset))->applyFromArray($styleArray);
+        }
       }
     }
   }
@@ -474,6 +582,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
    *
    * @param float $musicianTotal
    *
+   * @param string $musician
+   *
    * @return void
    */
   private function dumpMusicianTotal(
@@ -482,10 +592,117 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     int $offset,
     int &$rowCnt,
     float $musicianTotal,
+    string $musician,
   ):void {
     $exportData = array_combine(self::EXPORT_COLUMNS, array_fill(0, count(self::EXPORT_COLUMNS), ''));
     $exportData[self::TOTALS_KEY] = $musicianTotal . preg_quote('€');
+    // $label = $this->l->t('sub total %s', $musician);
+    $exportData[self::MUSICIAN_KEY] = ''; // $label ?? '';
     $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
+    $spreadSheetRow = $row + $offset;
+    $sheet->mergeCells('A' . $spreadSheetRow . ':' . $this->preLastColumnAddress . $spreadSheetRow);
+    // $sheet->getStyle('A' . $spreadSheetRow . ':' . $this->lastColumnAddress . $spreadSheetRow)->applyFromArray([
+    //   'font' => [
+    //     'bold' => true
+    //   ],
+    //   'alignment' => [
+    //     'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+    //     'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+    //   ],
+    // ]);
+  }
+
+  /**
+   * @param Worksheet $sheet
+   *
+   * @param int $row
+   *
+   * @param int $offset
+   *
+   * @param int $rowCnt Mutable.
+   *
+   * @param float $musicianNextTotal
+   *
+   * @param string $musician
+   *
+   * @param DateTimeInterface $dueDate
+   *
+   * @return void
+   */
+  protected function dumpMusicianNextTotal(
+    Worksheet $sheet,
+    int $row,
+    int $offset,
+    int &$rowCnt,
+    float $musicianNextTotal,
+    string $musician,
+    DateTimeInterface $dueDate,
+  ):void {
+    $exportData = array_combine(self::EXPORT_COLUMNS, array_fill(0, count(self::EXPORT_COLUMNS), ''));
+    $exportData[self::TOTALS_KEY] = '';
+    $label = $this->l->t('total insured amount %s from %s: %s', [
+      $musician,
+      $this->dateTimeFormatter()->formatDate($dueDate, 'medium'),
+      $musicianNextTotal . preg_quote('€'),
+    ]);
+    $exportData[self::MUSICIAN_KEY] = $label;
+    $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
+    $spreadSheetRow = $row + $offset;
+    $sheet->mergeCells('A' . $spreadSheetRow . ':' . $this->preLastColumnAddress . $spreadSheetRow);
+    $sheet->getStyle('A' . $spreadSheetRow . ':' . $this->lastColumnAddress . $spreadSheetRow)->applyFromArray([
+      'font' => [
+        'bold' => true
+      ],
+      'alignment' => [
+        'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+        'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+      ],
+    ]);
+  }
+
+  /**
+   * @param Worksheet $sheet
+   *
+   * @param int $row
+   *
+   * @param int $offset
+   *
+   * @param int $rowCnt Mutable.
+   *
+   * @param null|float $total
+   *
+   * @return void
+   */
+  private function dumpTotal(
+    Worksheet $sheet,
+    int $row,
+    int $offset,
+    int &$rowCnt,
+    ?float $total,
+  ):void {
+    $exportData = array_combine(self::EXPORT_COLUMNS, array_fill(0, count(self::EXPORT_COLUMNS), ''));
+    if ($total !== null) {
+      $exportData[self::MUSICIAN_KEY] = $this->l->t('Total Insurance Amount');
+      $exportData[self::TOTALS_KEY] = $total . preg_quote('€');
+    }
+    $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
+    $highRow = $sheet->getHighestRow();
+    $sheet->mergeCells('A' . $highRow . ':' . $this->preLastColumnAddress . $highRow);
+    $sheet->getStyle('A' . $highRow . ':' . $this->lastColumnAddress . $highRow)->applyFromArray([
+      'font' => [
+        'bold' => true
+      ],
+      'alignment' => [
+        'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+        'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+      ],
+      'fill' => [
+        'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
+        'color' => [
+          'argb' => 'FFF0F0F0',
+        ],
+      ],
+    ]);
   }
 
   /**
@@ -499,25 +716,28 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
    *
    * @param float $total
    *
+   * @param DateTimeInterface $dueDate
+   *
    * @return void
    */
-  private function dumpTotal(
+  private function dumpNextTotal(
     Worksheet $sheet,
     int $row,
     int $offset,
     int &$rowCnt,
-    float &$total,
+    float $total,
+    DateTimeInterface $dueDate,
   ):void {
     $exportData = array_combine(self::EXPORT_COLUMNS, array_fill(0, count(self::EXPORT_COLUMNS), ''));
-    $exportData[self::MUSICIAN_KEY] = $this->l->t('Total Insurance Amount');
+    $label = $this->l->t(
+      'Next Total Insurance Amount from %s',
+      $this->dateTimeFormatter()->formatDate($dueDate, 'medium'));
+    $exportData[self::MUSICIAN_KEY] = $label;
     $exportData[self::TOTALS_KEY] = $total . preg_quote('€');
     $this->dumpRow($exportData, $sheet, $row, $offset, $rowCnt);
-    $total = 0.0;
     $highRow = $sheet->getHighestRow();
-    $lastColumnChr = $sheet->getHighestColumn();
-    $preLastColumnChr = chr(ord($lastColumnChr)-1);
-    $sheet->mergeCells("A".$highRow.":".$preLastColumnChr.$highRow);
-    $sheet->getStyle("A".$highRow.":".$lastColumnChr.$highRow)->applyFromArray([
+    $sheet->mergeCells('A' . $highRow . ':' . $this->preLastColumnAddress . $highRow);
+    $sheet->getStyle('A' . $highRow . ':' . $this->lastColumnAddress . $highRow)->applyFromArray([
       'font' => [
         'bold' => true
       ],
