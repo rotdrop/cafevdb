@@ -148,6 +148,17 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
+    self::SENT_EMAILS_TABLE => [
+      'entity' => Entities\SentEmail::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'message_id' => [
+          'table' => self::COMPOSITE_PAYMENTS_TABLE,
+          'column' => 'notification_message_id',
+        ],
+      ],
+      'column' => 'message_id',
+    ],
   ];
 
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
@@ -575,20 +586,67 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       ]);
 
     list(, $msgIdField) = $this->makeJoinTableField(
+      $opts['fdd'], self::SENT_EMAILS_TABLE, 'message_id', [
+        'name' => $this->l->t('Pre-Notification'),
+        'tab' => [ 'id' => 'transaction' ],
+        'css' => [ 'postfix' => [ 'squeeze-subsequent-lines', 'medium-width', ], ],
+        'input' => 'RH',
+        // 'options'  => 'LFVCD',
+        'select|LF' => 'D',
+        'escape' => false,
+        'values' => [
+          'description' => [
+            'columns' => [
+              'REPLACE(REPLACE($table.bulk_recipients, "<", "&lt;"), ">", "&gt;")',
+              'subject',
+              'created',
+              'created_by',
+              'REPLACE(REPLACE($table.message_id, "<", "&lt;"), ">", "&gt;")',
+            ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+            'divs' => [
+              -1 => $this->l->t('To') . ': ',
+              0 => '<br/>' . $this->l->t('Subject') . ': ',
+              1 => '<br/>' . $this->l->t('Date') . ': ',
+              2 => '<br/>' . $this->l->t('From') . ': ',
+              3 => '<br/>' . 'Message-ID: ',
+            ],
+          ],
+        ],
+        'display' => [
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+          'popup' => 'data',
+        ],
+      ]);
+    if ($this->projectId > 0) {
+      $opts['fdd'][$msgIdField]['value']['filters'] = '$table.project_id = ' . $this->projectId;
+    }
+
+    list(, $msgIdField) = $this->makeJoinTableField(
       $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'notification_message_id', [
         'name' => $this->l->t('Pre-Notification'),
         'tab' => [ 'id' => 'transaction' ],
         'css' => [ 'postfix' => [ 'squeeze-subsequent-lines', 'medium-width', ], ],
         'input' => 'R',
+        'options'  => 'LFVCD',
         'select' => 'M',
         'escape' => true,
         'values2glue' => '<br/>',
         'display' => [
           'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
           'postfix' => '</div></div>',
-          'popup' => 'data',
+          'popup' => 'data:previous',
         ],
-    ]);
+        'php|C' => function($value, $action, $k, $row, $recordId, $pme) {
+          if ($this->isBulkTransactionRow($row, $pme)) {
+            return str_replace(',', '<br/>', Util::htmlEscape($value));
+          }
+          $html = $pme->cellDisplay($k - 1, $row);
+          return empty($html) ? Util::htmlEscape($value) : $html;
+        },
+      ]);
     if ($this->projectId > 0) {
       $opts['fdd'][$msgIdField]['value']['filters'] = '$table.project_id = ' . $this->projectId;
     }
