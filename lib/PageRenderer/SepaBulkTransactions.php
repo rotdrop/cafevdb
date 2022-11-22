@@ -91,8 +91,10 @@ class SepaBulkTransactions extends PMETableViewBase
   CONCAT('".self::ROW_TAG_PREFIX."', __t1.sepa_transaction_id) AS row_tag,
   __t1.sepa_transaction_id AS sepa_transaction_id,
   GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.id) AS id,
+  GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.project_id) AS project_id,
   GROUP_CONCAT(DISTINCT __t1.musician_id ORDER BY __t1.id) AS musician_id,
   GROUP_CONCAT(DISTINCT __t1.subject ORDER BY __t1.id) AS subject,
+  GROUP_CONCAT(DISTINCT __t1.notification_message_id ORDER BY __t1.id) AS notification_message_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.musician_id, __t1.bank_account_sequence) ORDER BY __t1.id) AS bank_account_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.musician_id, __t1.debit_mandate_sequence) ORDER BY __t1.id) AS debit_mandate_id,
   SUM(__t1.amount) AS amount
@@ -103,8 +105,10 @@ SELECT
   __t2.id AS row_tag,
   __t2.sepa_transaction_id AS sepa_transaction_id,
   __t2.id AS id,
+  __t2.project_id AS project_id,
   __t2.musician_id AS musician_id,
   __t2.subject AS subject,
+  __t2.notification_message_id AS notification_message_id,
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t2.musician_id, __t2.bank_account_sequence) AS bank_account_id,
   CONCAT_WS('".self::JOIN_KEY_SEP."', __t2.musician_id, __t2.debit_mandate_sequence) AS debit_mandate_id,
   __t2.amount AS amount
@@ -144,6 +148,17 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       'column' => 'id',
       'flags' => self::JOIN_READONLY,
     ],
+    self::SENT_EMAILS_TABLE => [
+      'entity' => Entities\SentEmail::class,
+      'flags' => self::JOIN_READONLY,
+      'identifier' => [
+        'message_id' => [
+          'table' => self::COMPOSITE_PAYMENTS_TABLE,
+          'column' => 'notification_message_id',
+        ],
+      ],
+      'column' => 'message_id',
+    ],
   ];
 
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
@@ -165,6 +180,11 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $this->bulkTransactionService = $bulkTransactionService;
     $this->bulkTransactionExpanded = $this->requestParameters['bulkTransactionExpanded'];
 
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $this->projectName = $this->project->getName();
+    }
+
     $this->initCrypto();
   }
 
@@ -182,9 +202,6 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     $recordsPerPage  = $this->recordsPerPage;
 
     $projectMode = $this->projectId > 0;
-    if ($projectMode) {
-      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-    }
 
     $opts            = [];
 
@@ -378,7 +395,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       [
         'tab' => [ 'id' =>[ 'bookings', 'transaction' ], ],
         'name'     => $this->l->t('Musician'),
-        'css'      => [ 'postfix' => ' musician-id squeeze-subsequent-lines' ],
+        'css'      => [ 'postfix' => [ 'musician-id', 'squeeze-subsequent-lines', ], ],
         'select' => 'M',
         'input' => 'R',
         'sql' => $this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
@@ -567,6 +584,72 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'tooltip' => $this->toolTipsService['bulk-transaction-due-date'],
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
       ]);
+
+    list(, $msgIdField) = $this->makeJoinTableField(
+      $opts['fdd'], self::SENT_EMAILS_TABLE, 'message_id', [
+        'name' => $this->l->t('Pre-Notification'),
+        'tab' => [ 'id' => 'transaction' ],
+        'css' => [ 'postfix' => [ 'squeeze-subsequent-lines', 'medium-width', ], ],
+        'input' => 'RH',
+        // 'options'  => 'LFVCD',
+        'select|LF' => 'D',
+        'escape' => false,
+        'values' => [
+          'description' => [
+            'columns' => [
+              'REPLACE(REPLACE($table.bulk_recipients, "<", "&lt;"), ">", "&gt;")',
+              'subject',
+              'created',
+              'created_by',
+              'REPLACE(REPLACE($table.message_id, "<", "&lt;"), ">", "&gt;")',
+            ],
+            'ifnull' => [ false ],
+            'cast' => [ false ],
+            'divs' => [
+              -1 => $this->l->t('To') . ': ',
+              0 => '<br/>' . $this->l->t('Subject') . ': ',
+              1 => '<br/>' . $this->l->t('Date') . ': ',
+              2 => '<br/>' . $this->l->t('From') . ': ',
+              3 => '<br/>' . 'Message-ID: ',
+            ],
+          ],
+        ],
+        'display' => [
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+          'popup' => 'data',
+        ],
+      ]);
+    if ($this->projectId > 0) {
+      $opts['fdd'][$msgIdField]['value']['filters'] = '$table.project_id = ' . $this->projectId;
+    }
+
+    list(, $msgIdField) = $this->makeJoinTableField(
+      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'notification_message_id', [
+        'name' => $this->l->t('Pre-Notification'),
+        'tab' => [ 'id' => 'transaction' ],
+        'css' => [ 'postfix' => [ 'squeeze-subsequent-lines', 'medium-width', ], ],
+        'input' => 'R',
+        'options'  => 'LFVCD',
+        'select' => 'M',
+        'escape' => true,
+        'values2glue' => '<br/>',
+        'display' => [
+          'prefix' => '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">',
+          'postfix' => '</div></div>',
+          'popup' => 'data:previous',
+        ],
+        'php|C' => function($value, $action, $k, $row, $recordId, $pme) {
+          if ($this->isBulkTransactionRow($row, $pme)) {
+            return str_replace(',', '<br/>', Util::htmlEscape($value));
+          }
+          $html = $pme->cellDisplay($k - 1, $row);
+          return empty($html) ? Util::htmlEscape($value) : $html;
+        },
+      ]);
+    if ($this->projectId > 0) {
+      $opts['fdd'][$msgIdField]['value']['filters'] = '$table.project_id = ' . $this->projectId;
+    }
 
     $opts['fdd']['actions'] = [
       'tab' => [ 'id' => 'transaction' ],

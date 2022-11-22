@@ -24,8 +24,8 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \DateTimeZone;
-use \DateTimeImmutable as DateTime;
+use DateTimeZone;
+use DateTimeImmutable as DateTime;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCA\CAFEVDB\Service;
@@ -355,8 +355,9 @@ class InstrumentInsuranceService
       if ($translate) {
         $scope = $this->l->t($scope);
       }
-      $shortBroker = $entity->getBroker()->getShortName();
-      $rateKey = $shortBroker.$scope;
+      $brokerEntity = $entity->getBroker();
+      $shortBroker = $brokerEntity->getShortName();
+      $rateKey = $shortBroker . $scope;
       $dueDate = $entity->getDueDate();
       if (!empty($dueDate)) {
         $dueDate = $this->dueDate($dueDate);
@@ -365,6 +366,8 @@ class InstrumentInsuranceService
         'rate' => $entity->getRate(),
         'due' => $dueDate,
         'policy' => $entity->getPolicyNumber(),
+        'scope' => $scope,
+        'broker' => $shortBroker,
       ];
       if ($nested) {
         $nestedRates[$shortBroker][$scope] = $rates[$rateKey];

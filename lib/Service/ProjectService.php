@@ -2116,12 +2116,16 @@ Whatever.',
         'max_num_recipients' => 0,
       ];
       $listsService->setListConfig($listId, $configuration);
+
+      // Configure Owner
       $defaultOwner = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['owner']);
       if (!empty($defaultOwner)) {
         if (empty($listsService->getSubscription($listId, $defaultOwner, MailingListsService::ROLE_OWNER))) {
           $listsService->subscribe($listId, email: $defaultOwner, role: MailingListsService::ROLE_OWNER);
         }
       }
+
+      // Configure Moderator
       $defaultModerator = $this->getConfigValue(ConfigService::MAILING_LIST_CONFIG['moderator']);
       if (!empty($defaultModerator)) {
         if (empty($listsService->getSubscription($listId, $defaultModerator, MailingListsService::ROLE_MODERATOR))) {

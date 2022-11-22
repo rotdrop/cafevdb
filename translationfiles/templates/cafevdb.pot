@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-11-03 08:17+0100\n"
+"POT-Creation-Date: 2022-11-21 14:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,8 +61,39 @@ msgid "Hello!"
 msgstr ""
 
 #: lib/Command/HelloWorld.php:94
-#: lib/Controller/ExpertModeController.php:164
 msgid "Hello World!"
+msgstr ""
+
+#: lib/Command/ParticipantFolders.php:122
+msgid ""
+"One of the options \"--user=USER\", \"--project=PROJECT\" or \"--all\" has "
+"to be specified."
+msgstr ""
+
+#: lib/Command/ParticipantFolders.php:127
+msgid ""
+"\"--all\" cannot be compbined with \"--user=USER\" or \"--project=PROJECT\"."
+msgstr ""
+
+#: lib/Command/ParticipantFolders.php:149
+#, php-format
+msgid "Unable to find the project with name \"%s\"."
+msgstr ""
+
+#: lib/Command/ParticipantFolders.php:195
+#: lib/Storage/Database/ProjectParticipantsStorage.php:456
+#, php-format
+msgid "Folder \"%s\" does not exist."
+msgstr ""
+
+#: lib/Command/ParticipantFolders.php:198
+#, php-format
+msgid "Folder \"%s\" exists."
+msgstr ""
+
+#: lib/Command/ParticipantFolders.php:201
+#, php-format
+msgid "Ensured existence of folder \"%s\"."
 msgstr ""
 
 #: lib/Command/WikiOverview.php:93
@@ -134,43 +165,43 @@ msgstr ""
 msgid "The old ``%1$s`` content on %2$s at %3$s was:"
 msgstr ""
 
-#: lib/Common/Util.php:789
+#: lib/Common/Util.php:790
 msgid "There is no error, the file uploaded with success"
 msgstr ""
 
-#: lib/Common/Util.php:792
+#: lib/Common/Util.php:793
 #, php-format
 msgid ""
 "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
 msgstr ""
 
-#: lib/Common/Util.php:795
+#: lib/Common/Util.php:796
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
 msgstr ""
 
-#: lib/Common/Util.php:797
+#: lib/Common/Util.php:798
 msgid "The uploaded file was only partially uploaded"
 msgstr ""
 
-#: lib/Common/Util.php:799
+#: lib/Common/Util.php:800
 msgid "No file was uploaded"
 msgstr ""
 
-#: lib/Common/Util.php:801
+#: lib/Common/Util.php:802
 msgid "Missing a temporary folder"
 msgstr ""
 
-#: lib/Common/Util.php:803
+#: lib/Common/Util.php:804
 msgid "Failed to write to disk"
 msgstr ""
 
-#: lib/Common/Util.php:805
+#: lib/Common/Util.php:806
 msgid "A PHP extension stopped the file upload."
 msgstr ""
 
-#: lib/Common/Util.php:807
+#: lib/Common/Util.php:808
 msgid "Unknown upload error"
 msgstr ""
 
@@ -237,8 +268,8 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/AdminSettingsController.php:281
-#: lib/Controller/PersonalSettingsController.php:1886
-#: lib/Controller/PersonalSettingsController.php:1941
+#: lib/Controller/PersonalSettingsController.php:1889
+#: lib/Controller/PersonalSettingsController.php:1944
 #: lib/Controller/ProjectParticipantsController.php:929
 #, php-format
 msgid "Unknown Request: \"%s\""
@@ -266,7 +297,7 @@ msgstr ""
 
 #: lib/Controller/BlogController.php:203
 #: lib/Controller/PersonalSettingsController.php:205
-#: lib/Controller/PersonalSettingsController.php:1738
+#: lib/Controller/PersonalSettingsController.php:1741
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not convertible to boolean."
 msgstr ""
@@ -294,7 +325,6 @@ msgstr ""
 #: lib/Controller/BlogController.php:253
 #: lib/Controller/CspViolationController.php:73
 #: lib/Controller/DownloadsController.php:156
-#: lib/Controller/ExpertModeController.php:169
 #: lib/Controller/ImagesController.php:380
 #: lib/Controller/MusicianValidationController.php:499
 #: lib/Controller/PersonalSettingsController.php:298
@@ -485,21 +515,6 @@ msgstr ""
 msgid "Unable to set app-encryption-key for user \"%s\"."
 msgstr ""
 
-#: lib/Controller/ExpertModeController.php:158
-msgid "Triggered GeoCoding update."
-msgstr ""
-
-#: lib/Controller/ExpertModeController.php:162
-msgid "TO BE IMPLEMENTED"
-msgstr ""
-
-#: lib/Controller/ExpertModeController.php:166
-#: lib/PageRenderer/ProjectParticipantFields.php:1818
-#: templates/expertmode.php:118
-#: templates/expertmode.php:119
-msgid "empty"
-msgstr ""
-
 #: lib/Controller/FileUploadRowTrait.php:103
 #, php-format
 msgid ""
@@ -633,9 +648,10 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:151
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2468
 #: lib/PageRenderer/Instruments.php:377
-#: lib/PageRenderer/Projects.php:662
-#: lib/Service/Finance/InstrumentInsuranceService.php:618
-#: lib/Service/Finance/InstrumentInsuranceService.php:622
+#: lib/PageRenderer/Projects.php:673
+#: lib/PageRenderer/Projects.php:681
+#: lib/Service/Finance/InstrumentInsuranceService.php:621
+#: lib/Service/Finance/InstrumentInsuranceService.php:625
 #: lib/Service/PhoneNumberService.php:136
 #: lib/Service/PhoneNumberService.php:263
 #: src/app/cafevdb.js:48
@@ -753,8 +769,8 @@ msgstr ""
 
 #: lib/Controller/MailMergeController.php:394
 #: lib/Controller/MailMergeController.php:402
-#: src/files-hooks.js:146
-#: src/files-hooks.js:202
+#: src/files-hooks.js:155
+#: src/files-hooks.js:211
 msgid "MailMerge"
 msgstr ""
 
@@ -977,7 +993,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:209
-#: lib/Controller/PersonalSettingsController.php:1742
+#: lib/Controller/PersonalSettingsController.php:1745
 #, php-format
 msgid "Switching %2$s %1$s"
 msgstr ""
@@ -1099,7 +1115,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:547
-#: lib/Controller/PersonalSettingsController.php:1858
+#: lib/Controller/PersonalSettingsController.php:1861
 #, php-format
 msgid " \"%s\" set to \"%s\"."
 msgstr ""
@@ -1148,7 +1164,7 @@ msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:627
 #: lib/Controller/PersonalSettingsController.php:816
-#: lib/Controller/PersonalSettingsController.php:2200
+#: lib/Controller/PersonalSettingsController.php:2203
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr ""
@@ -1256,7 +1272,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:965
-#: lib/Service/ProjectService.php:2550
+#: lib/Service/ProjectService.php:2592
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr ""
@@ -1271,7 +1287,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:999
-#: lib/Service/ProjectService.php:2793
+#: lib/Service/ProjectService.php:2834
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -1463,7 +1479,7 @@ msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:1391
 #: lib/Controller/PersonalSettingsController.php:1486
-#: lib/Controller/PersonalSettingsController.php:1637
+#: lib/Controller/PersonalSettingsController.php:1640
 #, php-format
 msgid "Value \"%s\" for set \"%s\" is not convertible to boolean."
 msgstr ""
@@ -1492,51 +1508,52 @@ msgid "Email credentials could not be set for %s."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:1558
+#: lib/Controller/PersonalSettingsController.php:1561
 #, php-format
 msgid "Setting the email credentials for %s failed fatally: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1578
+#: lib/Controller/PersonalSettingsController.php:1581
 #, php-format
 msgid "%s connection seems functional."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1579
+#: lib/Controller/PersonalSettingsController.php:1582
 #, php-format
 msgid "Unable to establish %s connection to %s@%s:%d"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1599
+#: lib/Controller/PersonalSettingsController.php:1602
 #, php-format
 msgid "Server name \"%s\" has neither an IPV4 nor an IPV6 address"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1612
+#: lib/Controller/PersonalSettingsController.php:1615
 #, php-format
 msgid "\"%s\" is not an integral number in the range [%d, %d]"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1620
+#: lib/Controller/PersonalSettingsController.php:1623
 #, php-format
 msgid "Unknown transport security method: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1627
+#: lib/Controller/PersonalSettingsController.php:1630
 #, php-format
 msgid "Using transport security \"%s\" for protocol \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1646
+#: lib/Controller/PersonalSettingsController.php:1649
 msgid ""
 "Please configure the mailing-list address first, otherweise I do not know "
 "which list I have to work on."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1659
+#: lib/Controller/PersonalSettingsController.php:1662
 msgid "none"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1657
+#: lib/Controller/PersonalSettingsController.php:1660
 #, php-format
 msgid ""
 "Autoconfiguration of the mailing list \"%1$s\" successful, owner set to "
@@ -1544,173 +1561,173 @@ msgid ""
 "responses: %4$s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1670
+#: lib/Controller/PersonalSettingsController.php:1673
 #, php-format
 msgid "Unable to parse email address \"%1$s\": %2$s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1673
+#: lib/Controller/PersonalSettingsController.php:1676
 #, php-format
 msgid ""
 "\"%s\" seems to contain multiple email address, only a single address is "
 "allowed here."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1677
+#: lib/Controller/PersonalSettingsController.php:1680
 #, php-format
 msgid ""
 "\"%s\" does not contain the host-part of the email-address, local addresses "
 "are not allowed here."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1681
+#: lib/Controller/PersonalSettingsController.php:1684
 #, php-format
 msgid "\"%s\" does not seem to be a valid email address"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1714
+#: lib/Controller/PersonalSettingsController.php:1717
 #, php-format
 msgid ""
 "The Mailing list \"%1$s\" does not seem to exist on the configured mailing-"
 "list service."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1721
-#: lib/Controller/PersonalSettingsController.php:1802
+#: lib/Controller/PersonalSettingsController.php:1724
+#: lib/Controller/PersonalSettingsController.php:1805
 msgid "announcements"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1722
-#: lib/Controller/PersonalSettingsController.php:1803
+#: lib/Controller/PersonalSettingsController.php:1725
+#: lib/Controller/PersonalSettingsController.php:1806
 #, php-format
 msgid ""
 "Link-shared auto-responses directory for the announcements mailing list is "
 "\"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1754
+#: lib/Controller/PersonalSettingsController.php:1757
 #: lib/Settings/PersonalForm.php:428
 #, php-format
 msgid "%d days"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1791
-#: lib/Controller/PersonalSettingsController.php:1797
+#: lib/Controller/PersonalSettingsController.php:1794
+#: lib/Controller/PersonalSettingsController.php:1800
 #, php-format
 msgid "Unable to connect to mailing list service at \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1806
+#: lib/Controller/PersonalSettingsController.php:1809
 msgid "projects"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1807
+#: lib/Controller/PersonalSettingsController.php:1810
 #, php-format
 msgid ""
 "Link-shared auto-responses directory for project mailing lists is \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1814
+#: lib/Controller/PersonalSettingsController.php:1817
 msgid "Empty translation phrase or language"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1817
+#: lib/Controller/PersonalSettingsController.php:1820
 msgid "Missing translation"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1821
+#: lib/Controller/PersonalSettingsController.php:1824
 #, php-format
 msgid "Empty translation for phrase \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1825
+#: lib/Controller/PersonalSettingsController.php:1828
 #, php-format
 msgid ""
 "Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1829
+#: lib/Controller/PersonalSettingsController.php:1832
 msgid "Recording the translation failed"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1831
+#: lib/Controller/PersonalSettingsController.php:1834
 #, php-format
 msgid "Successfully recorded the given translation for the language \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1834
+#: lib/Controller/PersonalSettingsController.php:1837
 msgid "Failed to erase all recorded translations."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1836
+#: lib/Controller/PersonalSettingsController.php:1839
 msgid "All recorded translations have been erased."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1848
+#: lib/Controller/PersonalSettingsController.php:1851
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not a valid URL."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1852
+#: lib/Controller/PersonalSettingsController.php:1855
 #, php-format
 msgid "\"%1$s\" must be a http(s) URL, scheme \"%2$s\" not supported."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1873
+#: lib/Controller/PersonalSettingsController.php:1876
 #, php-format
 msgid "Unknown configuation key %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1877
+#: lib/Controller/PersonalSettingsController.php:1880
 #, php-format
 msgid "Value \"%s\" for setting \"%s\" is not in the allowed range."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1882
+#: lib/Controller/PersonalSettingsController.php:1885
 #, php-format
 msgid "Redaxo categorie Id for \"%s\" set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1920
+#: lib/Controller/PersonalSettingsController.php:1923
 #, php-format
 msgid "Unknown link target %s"
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1929
+#: lib/Controller/PersonalSettingsController.php:1932
 msgid "Shared folder is not configured."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1933
+#: lib/Controller/PersonalSettingsController.php:1936
 msgid "Document template folder is not configured."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:1998
-#: lib/Controller/PersonalSettingsController.php:2123
+#: lib/Controller/PersonalSettingsController.php:2001
+#: lib/Controller/PersonalSettingsController.php:2126
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2021
-#: lib/Controller/PersonalSettingsController.php:2047
-#: lib/Controller/PersonalSettingsController.php:2072
-#: lib/Controller/PersonalSettingsController.php:2091
+#: lib/Controller/PersonalSettingsController.php:2024
+#: lib/Controller/PersonalSettingsController.php:2050
+#: lib/Controller/PersonalSettingsController.php:2075
+#: lib/Controller/PersonalSettingsController.php:2094
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2108
+#: lib/Controller/PersonalSettingsController.php:2111
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2152
+#: lib/Controller/PersonalSettingsController.php:2155
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
 "sorry."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2168
+#: lib/Controller/PersonalSettingsController.php:2171
 #: lib/Controller/PmeTableController.php:151
 #: lib/Controller/ProjectsController.php:390
 #: lib/Controller/SepaBulkTransactionsController.php:165
@@ -1718,30 +1735,30 @@ msgstr ""
 msgid "Unknown Request: \"%s\"."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2212
+#: lib/Controller/PersonalSettingsController.php:2215
 #, php-format
 msgid "Value for \"%1$s\" set to \"%2$s\""
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2231
+#: lib/Controller/PersonalSettingsController.php:2234
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2254
+#: lib/Controller/PersonalSettingsController.php:2257
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2256
+#: lib/Controller/PersonalSettingsController.php:2259
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2259
+#: lib/Controller/PersonalSettingsController.php:2262
 #, php-format
 msgid "Public key missing for %s, key distribution failed."
 msgstr ""
 
-#: lib/Controller/PersonalSettingsController.php:2264
+#: lib/Controller/PersonalSettingsController.php:2267
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -2313,13 +2330,13 @@ msgstr ""
 
 #: lib/Controller/ProjectsController.php:272
 #: lib/Controller/ProjectsController.php:293
-#: lib/PageRenderer/Projects.php:656
+#: lib/PageRenderer/Projects.php:667
 msgid "closed"
 msgstr ""
 
 #: lib/Controller/ProjectsController.php:274
 #: lib/Controller/ProjectsController.php:296
-#: lib/PageRenderer/Projects.php:654
+#: lib/PageRenderer/Projects.php:665
 msgid "active"
 msgstr ""
 
@@ -2349,7 +2366,7 @@ msgid "Successfully deleted \"%s\"."
 msgstr ""
 
 #: lib/Controller/ProjectsController.php:321
-#: lib/PageRenderer/Projects.php:645
+#: lib/PageRenderer/Projects.php:656
 msgid "unset"
 msgstr ""
 
@@ -2583,25 +2600,25 @@ msgid "Bulk-transaction-id: %d"
 msgstr ""
 
 #: lib/Controller/SepaBulkTransactionsController.php:669
-#: lib/Service/Finance/SepaBulkTransactionService.php:218
+#: lib/Service/Finance/SepaBulkTransactionService.php:221
 #, php-format
 msgid "Total amount to receive: %s."
 msgstr ""
 
 #: lib/Controller/SepaBulkTransactionsController.php:674
-#: lib/Service/Finance/SepaBulkTransactionService.php:222
+#: lib/Service/Finance/SepaBulkTransactionService.php:225
 #, php-format
 msgid "%s pays %s."
 msgstr ""
 
 #: lib/Controller/SepaBulkTransactionsController.php:681
-#: lib/Service/Finance/SepaBulkTransactionService.php:232
+#: lib/Service/Finance/SepaBulkTransactionService.php:235
 #, php-format
 msgid "Total amount to pay: %s."
 msgstr ""
 
 #: lib/Controller/SepaBulkTransactionsController.php:686
-#: lib/Service/Finance/SepaBulkTransactionService.php:236
+#: lib/Service/Finance/SepaBulkTransactionService.php:239
 #, php-format
 msgid "%s receives %s."
 msgstr ""
@@ -3213,6 +3230,7 @@ msgid "Remaining"
 msgstr ""
 
 #: lib/EmailForm/Composer.php:1001
+#: lib/PageRenderer/InstrumentInsurances.php:617
 #: lib/PageRenderer/PMETableViewBase.php:707
 msgid "Due Date"
 msgstr ""
@@ -4041,69 +4059,97 @@ msgstr ""
 msgid "Protest"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:132
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:168
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:535
 msgid "Instrument Insurances"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:151
-#: lib/PageRenderer/InstrumentInsurances.php:272
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:188
+#: lib/PageRenderer/InstrumentInsurances.php:273
 #: lib/PageRenderer/ProjectPayments.php:516
 #: lib/PageRenderer/SepaBankAccounts.php:553
-#: lib/PageRenderer/SepaBulkTransactions.php:380
+#: lib/PageRenderer/SepaBulkTransactions.php:382
 msgid "Musician"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:152
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:189
 #: lib/PageRenderer/InstrumentInsurances.php:223
-#: lib/PageRenderer/InstrumentInsurances.php:479
+#: lib/PageRenderer/InstrumentInsurances.php:480
 msgid "Insured Object"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:153
-#: lib/PageRenderer/InstrumentInsurances.php:498
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:190
+msgid "Start Date"
+msgstr ""
+
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:191
+msgid "End Date"
+msgstr ""
+
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:192
+#: lib/PageRenderer/InstrumentInsurances.php:499
 msgid "Accessory"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:154
-#: lib/PageRenderer/InstrumentInsurances.php:515
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:193
+#: lib/PageRenderer/InstrumentInsurances.php:516
 msgid "Manufacturer"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:155
-#: lib/PageRenderer/InstrumentInsurances.php:542
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:194
+#: lib/PageRenderer/InstrumentInsurances.php:543
 msgid "Year of Construction"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:156
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:195
 #: lib/PageRenderer/InstrumentInsurances.php:228
-#: lib/PageRenderer/InstrumentInsurances.php:560
+#: lib/PageRenderer/InstrumentInsurances.php:562
 msgid "Insurance Amount"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:157
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:196
 msgid "Musician Insurance Total"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:208
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:242
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:536
+msgid "Provider"
+msgstr ""
+
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:537
 #: lib/PageRenderer/InsuranceRates.php:194
 msgid "Policy Number"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:209
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:243
-#: lib/PageRenderer/InstrumentInsurances.php:467
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:538
+#: lib/PageRenderer/InstrumentInsurances.php:468
 msgid "Geographical Scope"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:210
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:244
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:539
+msgid "Insurance Period"
+msgstr ""
+
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:540
+msgid "Orchestra Contact"
+msgstr ""
+
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:541
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1574
 msgid "Date"
 msgstr ""
 
-#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:429
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:726
+#, php-format
+msgid "total insured amount %s from %s: %s"
+msgstr ""
+
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:768
 msgid "Total Insurance Amount"
+msgstr ""
+
+#: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:816
+#, php-format
+msgid "Next Total Insurance Amount from %s"
 msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:128
@@ -4188,7 +4234,7 @@ msgid "Projects"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:75
-#: lib/PageRenderer/Projects.php:615
+#: lib/PageRenderer/Projects.php:623
 #: templates/settings/email-settings.php:127
 msgid "Mailing List"
 msgstr ""
@@ -4261,7 +4307,7 @@ msgstr ""
 #: lib/PageRenderer/Musicians.php:600
 #: lib/PageRenderer/ProjectParticipantFields.php:383
 #: lib/PageRenderer/ProjectParticipants.php:591
-#: lib/PageRenderer/Projects.php:311
+#: lib/PageRenderer/Projects.php:319
 msgid "Deleted"
 msgstr ""
 
@@ -4328,14 +4374,14 @@ msgid "File"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1603
-#: lib/PageRenderer/SepaBulkTransactions.php:574
+#: lib/PageRenderer/SepaBulkTransactions.php:576
 msgid "Actions"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1604
 #: lib/PageRenderer/ProjectPayments.php:605
 #: lib/PageRenderer/ProjectPayments.php:626
-#: lib/PageRenderer/SepaBulkTransactions.php:498
+#: lib/PageRenderer/SepaBulkTransactions.php:500
 #: templates/emailform/part.emailform.composer.php:197
 msgid "Subject"
 msgstr ""
@@ -4426,8 +4472,8 @@ msgstr ""
 #: lib/PageRenderer/ProjectPayments.php:1160
 #: lib/PageRenderer/SepaBankAccounts.php:629
 #: lib/PageRenderer/SepaBankAccounts.php:707
-#: lib/PageRenderer/SepaBulkTransactions.php:432
-#: lib/PageRenderer/SepaBulkTransactions.php:452
+#: lib/PageRenderer/SepaBulkTransactions.php:434
+#: lib/PageRenderer/SepaBulkTransactions.php:454
 msgid "Fetching decrypted values in the background."
 msgstr ""
 
@@ -4435,8 +4481,8 @@ msgstr ""
 #: lib/PageRenderer/ProjectPayments.php:1162
 #: lib/PageRenderer/SepaBankAccounts.php:631
 #: lib/PageRenderer/SepaBankAccounts.php:709
-#: lib/PageRenderer/SepaBulkTransactions.php:434
-#: lib/PageRenderer/SepaBulkTransactions.php:454
+#: lib/PageRenderer/SepaBulkTransactions.php:436
+#: lib/PageRenderer/SepaBulkTransactions.php:456
 msgid "please wait"
 msgstr ""
 
@@ -4522,85 +4568,81 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipants.php:1566
 #: lib/PageRenderer/ProjectPayments.php:452
 #: lib/PageRenderer/SepaBankAccounts.php:1138
-#: lib/PageRenderer/SepaBulkTransactions.php:258
+#: lib/PageRenderer/SepaBulkTransactions.php:260
 #: lib/Service/InstrumentationService.php:190
 msgid "Display all columns"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:256
+#: lib/PageRenderer/InstrumentInsurances.php:257
 msgid "Insurance Id"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:311
+#: lib/PageRenderer/InstrumentInsurances.php:312
 msgid "Bill-to Party"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:354
+#: lib/PageRenderer/InstrumentInsurances.php:355
 msgid "Owner"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:394
+#: lib/PageRenderer/InstrumentInsurances.php:395
 msgid "Club Member"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:414
-#: lib/PageRenderer/InstrumentInsurances.php:421
+#: lib/PageRenderer/InstrumentInsurances.php:415
+#: lib/PageRenderer/InstrumentInsurances.php:422
 msgid "Insurance Broker"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:520
+#: lib/PageRenderer/InstrumentInsurances.php:521
 msgid "e.g. Bilbo Beutlin, Hobbiton, The Shire"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:531
+#: lib/PageRenderer/InstrumentInsurances.php:532
 #, php-format
 msgid "around %1$04d"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:535
+#: lib/PageRenderer/InstrumentInsurances.php:536
 #, php-format
 msgid "end of %1$02dth century"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:548
+#: lib/PageRenderer/InstrumentInsurances.php:550
 msgid "e.g. \"1921\" or \"around 1900\""
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:577
+#: lib/PageRenderer/InstrumentInsurances.php:579
 msgid "Insurance Rate"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:595
-msgid "Insurance Fee"
+#: lib/PageRenderer/InstrumentInsurances.php:598
+msgid "Insurance Fee w/ taxes"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:595
-msgid "including taxes"
-msgstr ""
-
-#: lib/PageRenderer/InstrumentInsurances.php:615
+#: lib/PageRenderer/InstrumentInsurances.php:631
 msgid "Total Insurance"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:626
+#: lib/PageRenderer/InstrumentInsurances.php:642
 #: lib/PageRenderer/Musicians.php:915
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:645
+#: lib/PageRenderer/InstrumentInsurances.php:661
 msgid "Start of Insurance"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:653
+#: lib/PageRenderer/InstrumentInsurances.php:669
 msgid "End of Insurance"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:666
+#: lib/PageRenderer/InstrumentInsurances.php:683
 msgid "Bill"
 msgstr ""
 
-#: lib/PageRenderer/InstrumentInsurances.php:691
+#: lib/PageRenderer/InstrumentInsurances.php:709
 msgid "bill"
 msgstr ""
 
@@ -4860,7 +4902,7 @@ msgstr ""
 
 #: lib/PageRenderer/Musicians.php:996
 #: lib/PageRenderer/ProjectParticipants.php:1272
-#: lib/PageRenderer/Projects.php:862
+#: lib/PageRenderer/Projects.php:880
 msgid "Last Updated"
 msgstr ""
 
@@ -5041,7 +5083,7 @@ msgstr ""
 #. TRANSLATORS src/views/FilesTab.vue:142
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:180
 #: lib/PageRenderer/ProjectParticipantFields.php:315
-#: lib/PageRenderer/SepaBulkTransactions.php:351
+#: lib/PageRenderer/SepaBulkTransactions.php:353
 #: specialVueFakeDummyForL10nScript.js:162
 msgid "Project"
 msgstr ""
@@ -5247,6 +5289,10 @@ msgstr ""
 msgid "start date"
 msgstr ""
 
+#: lib/PageRenderer/ProjectParticipantFields.php:1818
+msgid "empty"
+msgstr ""
+
 #: lib/PageRenderer/ProjectParticipantFields.php:1826
 msgid "Show deleted items."
 msgstr ""
@@ -5273,7 +5319,7 @@ msgstr ""
 #: lib/PageRenderer/ProjectParticipantFields.php:2242
 #: lib/PageRenderer/ProjectPayments.php:558
 #: lib/PageRenderer/SepaBankAccounts.php:1092
-#: lib/PageRenderer/SepaBulkTransactions.php:372
+#: lib/PageRenderer/SepaBulkTransactions.php:374
 msgid "Amount"
 msgstr ""
 
@@ -5454,7 +5500,7 @@ msgid "Parts Project Balances"
 msgstr ""
 
 #: lib/PageRenderer/ProjectPayments.php:1112
-#: lib/PageRenderer/SepaBulkTransactions.php:249
+#: lib/PageRenderer/SepaBulkTransactions.php:251
 msgid "Bulk Transaction"
 msgstr ""
 
@@ -5463,13 +5509,13 @@ msgid "Filing Date"
 msgstr ""
 
 #: lib/PageRenderer/ProjectPayments.php:1141
-#: lib/PageRenderer/SepaBulkTransactions.php:410
+#: lib/PageRenderer/SepaBulkTransactions.php:412
 msgid "IBAN"
 msgstr ""
 
 #: lib/PageRenderer/ProjectPayments.php:1203
 #: lib/PageRenderer/SepaBankAccounts.php:814
-#: lib/PageRenderer/SepaBulkTransactions.php:472
+#: lib/PageRenderer/SepaBulkTransactions.php:474
 msgid "Mandate Reference"
 msgstr ""
 
@@ -5485,142 +5531,146 @@ msgstr ""
 msgid "Project Balance"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:149
+#: lib/PageRenderer/Projects.php:154
 msgid "New Project"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:169
+#: lib/PageRenderer/Projects.php:174
 #, php-format
 msgid "%s Project %s"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:171
+#: lib/PageRenderer/Projects.php:176
 #, php-format
 msgid "%s Projects"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:280
+#: lib/PageRenderer/Projects.php:288
 msgid "year"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:292
+#: lib/PageRenderer/Projects.php:300
 msgid "Project-Name"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:317
+#: lib/PageRenderer/Projects.php:325
 msgid "Kind"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:339
-#: lib/PageRenderer/Projects.php:407
+#: lib/PageRenderer/Projects.php:347
+#: lib/PageRenderer/Projects.php:415
 msgid "Instrumentation"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:369
-#: lib/PageRenderer/Projects.php:441
-#: lib/PageRenderer/Projects.php:756
+#: lib/PageRenderer/Projects.php:377
+#: lib/PageRenderer/Projects.php:449
+#: lib/PageRenderer/Projects.php:774
 msgid "Clear"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:406
+#: lib/PageRenderer/Projects.php:414
 msgid "Voices"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:461
+#: lib/PageRenderer/Projects.php:469
 #, php-format
 msgid "%1$s, #voices"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:596
+#: lib/PageRenderer/Projects.php:604
 msgid "Quantity"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:621
-#: templates/fragments/projects/project-mailing-list.php:67
+#: lib/PageRenderer/Projects.php:629
+#: templates/fragments/projects/project-mailing-list.php:70
 msgid "create"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:696
+#: lib/PageRenderer/Projects.php:629
+msgid "do not create"
+msgstr ""
+
+#: lib/PageRenderer/Projects.php:714
 msgid "Public Downloads"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:730
+#: lib/PageRenderer/Projects.php:748
 msgid "Participant Fields"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:793
+#: lib/PageRenderer/Projects.php:811
 #: lib/PageRenderer/Util/Navigation.php:617
 #: templates/fragments/projects/project-actions.php:119
 msgid "Participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:800
+#: lib/PageRenderer/Projects.php:818
 msgid "Copy participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:801
+#: lib/PageRenderer/Projects.php:819
 msgid "Do not copy participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:809
+#: lib/PageRenderer/Projects.php:827
 msgid "Program"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:826
+#: lib/PageRenderer/Projects.php:844
 msgid "Posters"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:900
+#: lib/PageRenderer/Projects.php:919
 #, php-format
 msgid "Copy of %s"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:956
+#: lib/PageRenderer/Projects.php:976
 msgid ""
 "Posters can only be added to existing projects, please add the new\n"
 "project without a poster first."
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:986
+#: lib/PageRenderer/Projects.php:1006
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:989
+#: lib/PageRenderer/Projects.php:1009
 msgid "Delete current poster"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:990
+#: lib/PageRenderer/Projects.php:1010
 msgid "Edit current poster"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:991
+#: lib/PageRenderer/Projects.php:1011
 msgid "Upload new poster"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:992
+#: lib/PageRenderer/Projects.php:1012
 msgid "Select image from Cloud"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:998
+#: lib/PageRenderer/Projects.php:1018
 msgid ""
 "Internal error, don't know what to do concerning project-posters in the "
 "given context."
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1027
+#: lib/PageRenderer/Projects.php:1047
 msgid "edit"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1315
+#: lib/PageRenderer/Projects.php:1339
 msgid "Copying participants is requested, but the new project id is not given."
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1327
+#: lib/PageRenderer/Projects.php:1351
 msgid "Copying is requested, but the old project id is not given."
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1481
+#: lib/PageRenderer/Projects.php:1505
 #, php-format
 msgid "%s (deleted)"
 msgstr ""
@@ -5775,58 +5825,58 @@ msgid ""
 "IBAN \"%3$s\"."
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:174
+#: lib/PageRenderer/SepaBulkTransactions.php:179
 #, php-format
 msgid "Bulk-transactions for project \"%s\""
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:250
+#: lib/PageRenderer/SepaBulkTransactions.php:252
 msgid "Transaction"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:253
+#: lib/PageRenderer/SepaBulkTransactions.php:255
 msgid "Booking Entries"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:254
+#: lib/PageRenderer/SepaBulkTransactions.php:256
 msgid "Bookings"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:322
+#: lib/PageRenderer/SepaBulkTransactions.php:324
 msgid "Id"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:520
+#: lib/PageRenderer/SepaBulkTransactions.php:522
 msgid "Time Created"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:530
+#: lib/PageRenderer/SepaBulkTransactions.php:532
 msgid "Submission Deadline"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:541
+#: lib/PageRenderer/SepaBulkTransactions.php:543
 msgid "Date of Submission"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:591
+#: lib/PageRenderer/SepaBulkTransactions.php:593
 #: templates/fragments/participant-fields/attachment-file-upload-menu.php:110
 #: templates/fragments/participant-fields/attachment-file-upload-menu.php:120
 msgid "download"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:596
+#: lib/PageRenderer/SepaBulkTransactions.php:598
 msgid "announce"
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:683
-#: lib/Service/Finance/SepaBulkTransactionService.php:684
+#: lib/PageRenderer/SepaBulkTransactions.php:685
+#: lib/Service/Finance/SepaBulkTransactionService.php:687
 #, php-format
 msgid ""
 "The bulk-transaction with id \"%1$d\" has already been submitted to the "
 "bank, it cannot be deleted."
 msgstr ""
 
-#: lib/PageRenderer/SepaBulkTransactions.php:700
+#: lib/PageRenderer/SepaBulkTransactions.php:702
 #, php-format
 msgid "Data inconsistency in bulk-transaction payments: %d / %d"
 msgstr ""
@@ -6250,7 +6300,7 @@ msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr ""
 
 #: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:97
-#: lib/Service/Finance/InstrumentInsuranceService.php:545
+#: lib/Service/Finance/InstrumentInsuranceService.php:548
 #: :-1
 #, php-format
 msgid "insurance"
@@ -6286,14 +6336,14 @@ msgstr ""
 msgid "Unknonw update strategy: \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:570
+#: lib/Service/Finance/InstrumentInsuranceService.php:573
 msgid ""
 "There is no document template for the insurance overview letter. Please "
 "upload one in the application's orchestra settings, sub-section \"Document "
 "Templates\"."
 msgstr ""
 
-#: lib/Service/Finance/InstrumentInsuranceService.php:613
+#: lib/Service/Finance/InstrumentInsuranceService.php:616
 msgid "Jane"
 msgstr ""
 
@@ -6335,79 +6385,79 @@ msgstr ""
 msgid "Unable to construct generator class \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:214
+#: lib/Service/Finance/SepaBulkTransactionService.php:217
 #, php-format
 msgid "Debit-notes submitted for %s"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:216
+#: lib/Service/Finance/SepaBulkTransactionService.php:219
 #, php-format
 msgid "Debit-notes have been submitted, due-date is %s."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:228
+#: lib/Service/Finance/SepaBulkTransactionService.php:231
 #, php-format
 msgid "Bank-transfers submitted for %s"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:230
+#: lib/Service/Finance/SepaBulkTransactionService.php:233
 #, php-format
 msgid "Bank-transfers have been submitted, due-date is %s."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:309
+#: lib/Service/Finance/SepaBulkTransactionService.php:312
 msgid "PRENOTIFICATION HAS BEEN SENT:"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:311
+#: lib/Service/Finance/SepaBulkTransactionService.php:314
 #, php-format
 msgid "Person: %s"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:313
+#: lib/Service/Finance/SepaBulkTransactionService.php:316
 #, php-format
 msgid "Date: %s"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:315
+#: lib/Service/Finance/SepaBulkTransactionService.php:318
 #, php-format
 msgid "MessageId: %s"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:482
+#: lib/Service/Finance/SepaBulkTransactionService.php:485
 #, php-format
 msgid ""
 "Refusing to generate payments for mismatching projects, current is \"%s\", "
 "but the receivable belongs to project \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:495
+#: lib/Service/Finance/SepaBulkTransactionService.php:498
 #, php-format
 msgid ""
 "Payable amount \"%f\" and deposit amount \"%f\" should have the compatible "
 "signs."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:717
+#: lib/Service/Finance/SepaBulkTransactionService.php:720
 #, php-format
 msgid "Failed to remove bulk-transaction with id %d"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:752
+#: lib/Service/Finance/SepaBulkTransactionService.php:755
 msgid "Unable to update payment subject while generating bank export data."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:800
+#: lib/Service/Finance/SepaBulkTransactionService.php:803
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:817
+#: lib/Service/Finance/SepaBulkTransactionService.php:820
 #, php-format
 msgid "Conflicting projects \"%1$s\" vs. \"%2$s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:861
+#: lib/Service/Finance/SepaBulkTransactionService.php:864
 #, php-format
 msgid ""
 "Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."
@@ -6664,29 +6714,29 @@ msgstr ""
 msgid "templates"
 msgstr ""
 
-#: lib/Service/ProjectService.php:562
+#: lib/Service/ProjectService.php:553
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:811
+#: lib/Service/ProjectService.php:814
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
 "project \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:821
+#: lib/Service/ProjectService.php:824
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1201
+#: lib/Service/ProjectService.php:1217
 #, php-format
 msgid "Projects of %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1261
+#: lib/Service/ProjectService.php:1281
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -6716,146 +6766,146 @@ msgid ""
 "Whatever."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1370
+#: lib/Service/ProjectService.php:1390
 #, php-format
 msgid "%1$s has been renamed to %2$s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1457
+#: lib/Service/ProjectService.php:1477
 msgid "Preview"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1459
-#: lib/Service/ProjectService.php:1514
-#: lib/Service/ProjectService.php:1679
-#: lib/Service/ProjectService.php:1723
-#: lib/Service/ProjectService.php:1783
+#: lib/Service/ProjectService.php:1479
+#: lib/Service/ProjectService.php:1534
+#: lib/Service/ProjectService.php:1699
+#: lib/Service/ProjectService.php:1743
+#: lib/Service/ProjectService.php:1803
 #: lib/Settings/PersonalForm.php:334
 msgid "Rehearsals"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1461
+#: lib/Service/ProjectService.php:1481
 msgid "Archive"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1463
+#: lib/Service/ProjectService.php:1483
 msgid "Trashbin"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1508
+#: lib/Service/ProjectService.php:1528
 msgid "Empty project."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1535
+#: lib/Service/ProjectService.php:1555
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1558
+#: lib/Service/ProjectService.php:1578
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1579
+#: lib/Service/ProjectService.php:1599
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1618
+#: lib/Service/ProjectService.php:1638
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1661
+#: lib/Service/ProjectService.php:1681
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1825
+#: lib/Service/ProjectService.php:1845
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1869
+#: lib/Service/ProjectService.php:1889
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1885
+#: lib/Service/ProjectService.php:1905
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1907
+#: lib/Service/ProjectService.php:1927
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1959
+#: lib/Service/ProjectService.php:1979
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
 "instrumentation list for the project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2013
+#: lib/Service/ProjectService.php:2033
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2022
+#: lib/Service/ProjectService.php:2042
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2076
+#: lib/Service/ProjectService.php:2098
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2138
+#: lib/Service/ProjectService.php:2164
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2276
+#: lib/Service/ProjectService.php:2302
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2349
+#: lib/Service/ProjectService.php:2375
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2390
+#: lib/Service/ProjectService.php:2416
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2420
+#: lib/Service/ProjectService.php:2446
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2871
+#: lib/Service/ProjectService.php:2912
 msgid "Project not found."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2904
+#: lib/Service/ProjectService.php:2945
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
 "background and a resolution of 600 DPI or more."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2910
+#: lib/Service/ProjectService.php:2951
 msgid "Validation of projects not yet implemented."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2956
+#: lib/Service/ProjectService.php:2997
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr ""
@@ -9423,11 +9473,6 @@ msgstr ""
 msgid "The field datum for field \"%s\" has no file attached to it."
 msgstr ""
 
-#: lib/Storage/Database/ProjectParticipantsStorage.php:456
-#, php-format
-msgid "Folder \"%s\" does not exist."
-msgstr ""
-
 #: lib/Storage/Database/ProjectParticipantsStorage.php:476
 #, php-format
 msgid "Unable to remove file for field-datum \"%s\"."
@@ -9698,7 +9743,7 @@ msgstr ""
 #. TRANSLATORS src/components/AdminSettings.vue:439
 #: specialVueFakeDummyForL10nScript.js:60
 #: src/app/project-participants.js:819
-#: src/app/projects.js:567
+#: src/app/projects.js:593
 #: src/app/sepa-debit-mandate.js:851
 msgid "Confirmation Required"
 msgstr ""
@@ -10674,18 +10719,6 @@ msgstr ""
 msgid "Unable to download calendar events."
 msgstr ""
 
-#: src/app/expertmode.js:84
-msgid "Successfull:"
-msgstr ""
-
-#: src/app/expertmode.js:88
-msgid "Unsuccessfull:"
-msgstr ""
-
-#: src/app/expertmode.js:93
-msgid "Result of expert operation \"setupdb\""
-msgstr ""
-
 #: src/app/file-download.js:60
 msgid "unknown error"
 msgstr ""
@@ -10771,10 +10804,6 @@ msgstr ""
 
 #: src/app/inlineimage.js:532
 msgid "Photo Zoom"
-msgstr ""
-
-#: src/app/insurance.js:356
-msgid "Unable to export insurance overview."
 msgstr ""
 
 #: src/app/invalid-inputs-downcounter.js:51
@@ -10996,7 +11025,7 @@ msgid ""
 msgstr ""
 
 #: src/app/project-participants.js:824
-#: src/app/projects.js:572
+#: src/app/projects.js:598
 msgid "Unconfirmed, doing nothing."
 msgstr ""
 
@@ -11024,31 +11053,31 @@ msgstr ""
 msgid "Unknown operation: {operation}"
 msgstr ""
 
-#: src/app/projects.js:539
+#: src/app/projects.js:565
 msgid "Share-link has been copied to the clipboard."
 msgstr ""
 
-#: src/app/projects.js:541
+#: src/app/projects.js:567
 msgid "Failed copying share-link to the clipboard: {reason}."
 msgstr ""
 
-#: src/app/projects.js:692
+#: src/app/projects.js:718
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 
-#: src/app/projects.js:693
+#: src/app/projects.js:719
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: src/app/projects.js:718
+#: src/app/projects.js:744
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 
-#: src/app/projects.js:719
+#: src/app/projects.js:745
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr ""
 
-#: src/app/projects.js:765
+#: src/app/projects.js:791
 msgid "No values match"
 msgstr ""
 
@@ -11228,22 +11257,22 @@ msgstr ""
 msgid "User Manual: {section}"
 msgstr ""
 
-#: src/files-hooks.js:177
+#: src/files-hooks.js:186
 msgid ""
 "Fill the template with substitutions. Opens the \"Details\" view for further "
 "options."
 msgstr ""
 
-#: src/files-hooks.js:241
-#: src/files-hooks.js:349
+#: src/files-hooks.js:250
+#: src/files-hooks.js:358
 msgid "New Supporting Document"
 msgstr ""
 
-#: src/files-hooks.js:242
+#: src/files-hooks.js:251
 msgid "PROJECTNAME-XXX"
 msgstr ""
 
-#: src/files-hooks.js:253
+#: src/files-hooks.js:262
 msgid ""
 "The name of the new document in support must match the format "
 "\"{projectName}-XXX\" where \"XXX\" is a placeholder for 3 decimal digits or "
@@ -11251,26 +11280,26 @@ msgid ""
 "automatically."
 msgstr ""
 
-#: src/files-hooks.js:278
+#: src/files-hooks.js:287
 msgid "Document sequence determined as {sequence}."
 msgstr ""
 
-#: src/files-hooks.js:286
+#: src/files-hooks.js:295
 msgid ""
 "The name of the new folder must match the format \"YYYY\" where \"YYYY\" is "
 "a placeholder for 4 decimal digits or a literal \"YYYY\" in which case a "
 "folder for the current year is created if it does not exist already."
 msgstr ""
 
-#: src/files-hooks.js:292
+#: src/files-hooks.js:301
 msgid "Year determined as {year}."
 msgstr ""
 
-#: src/files-hooks.js:296
+#: src/files-hooks.js:305
 msgid "There is already a directory or file with the name \"{dirName}\"."
 msgstr ""
 
-#: src/files-hooks.js:343
+#: src/files-hooks.js:352
 msgid "New Year Folder"
 msgstr ""
 
@@ -12082,81 +12111,6 @@ msgstr ""
 msgid "no events"
 msgstr ""
 
-#: templates/expertmode.php:37
-msgid "Synchronize Events"
-msgstr ""
-
-#: templates/expertmode.php:42
-msgid "Recreate Wiki Project TOC"
-msgstr ""
-
-#: templates/expertmode.php:43
-msgid "Recreate table of contents for the project pages in the wiki"
-msgstr ""
-
-#: templates/expertmode.php:47
-msgid "Attach matching Web-Pages"
-msgstr ""
-
-#: templates/expertmode.php:48
-msgid "Link all web-pages matching the project name to the respective project"
-msgstr ""
-
-#: templates/expertmode.php:52
-msgid "Sanitize Phone Numbers"
-msgstr ""
-
-#: templates/expertmode.php:53
-msgid ""
-"Perform some sanity checks on the stored telephone numbers, move the mobile "
-"numbers to their respective column, format all numbers in an "
-"``international'' format."
-msgstr ""
-
-#: templates/expertmode.php:57
-msgid "Update Geo-Data"
-msgstr ""
-
-#: templates/expertmode.php:58
-msgid ""
-"Update the internal cache of geographical data using some backend. We are "
-"currently only interested into ZIP codes, the respective name of the "
-"corresponding location and the country/continent name"
-msgstr ""
-
-#: templates/expertmode.php:72
-msgid "Example"
-msgstr ""
-
-#: templates/expertmode.php:73
-msgid "Example Do-Nothing Button"
-msgstr ""
-
-#: templates/expertmode.php:103
-msgid "Advanced operations, use with care"
-msgstr ""
-
-#: templates/expertmode.php:106
-msgid "Predefined data-base operations"
-msgstr ""
-
-#: templates/expertmode.php:108
-msgid "Operation generated Response"
-msgstr ""
-
-#: templates/expertmode.php:112
-msgid "Clear Output"
-msgstr ""
-
-#: templates/expertmode.php:114
-msgid "Remove output, if any is present."
-msgstr ""
-
-#: templates/expertmode.php:122
-#: templates/settings/devel-settings.php:35
-msgid "Links"
-msgstr ""
-
 #: templates/fragments/instrument-voices.php:46
 #, php-format
 msgid "e.g. %s"
@@ -12176,7 +12130,7 @@ msgstr ""
 #: templates/fragments/mailing-lists/announcements-list-controls-add-copy.php:48
 #: templates/fragments/mailing-lists/announcements-list-controls.php:85
 #: templates/fragments/mailing-lists/project-list-controls.php:56
-#: templates/fragments/projects/project-mailing-list.php:84
+#: templates/fragments/projects/project-mailing-list.php:87
 #: lib/PageRenderer/Musicians.php:694
 #, php-format
 msgid "subscribe"
@@ -12285,19 +12239,19 @@ msgstr ""
 msgid "e.g. 29.04.2032"
 msgstr ""
 
-#: templates/fragments/projects/project-mailing-list.php:75
+#: templates/fragments/projects/project-mailing-list.php:78
 msgid "manage"
 msgstr ""
 
-#: templates/fragments/projects/project-mailing-list.php:93
+#: templates/fragments/projects/project-mailing-list.php:96
 msgid "close"
 msgstr ""
 
-#: templates/fragments/projects/project-mailing-list.php:102
+#: templates/fragments/projects/project-mailing-list.php:105
 msgid "reopen"
 msgstr ""
 
-#: templates/fragments/projects/project-mailing-list.php:111
+#: templates/fragments/projects/project-mailing-list.php:114
 msgid "delete"
 msgstr ""
 
@@ -13059,6 +13013,10 @@ msgstr ""
 #: templates/settings/cms-settings.php:159
 #, php-format
 msgid "Id of Redaxo %s Module"
+msgstr ""
+
+#: templates/settings/devel-settings.php:35
+msgid "Links"
 msgstr ""
 
 #: templates/settings/devel-settings.php:40

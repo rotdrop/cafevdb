@@ -105,7 +105,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($transaction->getPayments() as $compositePayment) {
 
-      $purpose = self::generatePurpose($compositePayment->getSubject());
+      $purpose = $this->generatePurpose($compositePayment->getSubject());
 
       $transactionTable[] = [
         'localBic' => $this->bic,
@@ -164,7 +164,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     /** @var Entities\CompositePayment $compositePayment */
     foreach ($transaction->getPayments() as $compositePayment) {
 
-      $purpose = self::generatePurpose($compositePayment->getSubject());
+      $purpose = $this->generatePurpose($compositePayment->getSubject());
 
       $transactionTable[] = [
         'localBic' => $this->bic,
@@ -219,11 +219,15 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     ];
   }
 
-  private static function generatePurpose($subject):array
+  private function generatePurpose($subject):array
   {
     if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
       $subject = Util::removeSpaces($subject);
     }
+    if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
+      $subject = Util::shortenCamelCaseString($subject, FinanceService::SEPA_PURPOSE_LENGTH, 4);
+    }
+
     $purpose = [];
     for ($i = 0; $i < FinanceService::SEPA_PURPOSE_LENGTH; $i += self::PURPOSE_LINE_LENGTH) {
       $purpose[] = '"' . substr($subject, $i, self::PURPOSE_LINE_LENGTH) . '"';

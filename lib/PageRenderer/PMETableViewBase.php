@@ -130,6 +130,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
   const MUSICIAN_PHOTO_JOIN_TABLE = 'MusicianPhoto';
   const FILES_TABLE = 'Files';
+  const SENT_EMAILS_TABLE = 'SentEmails';
 
   const VALUES_SEP = ',';
   const JOIN_FIELD_NAME_SEPARATOR = ':';

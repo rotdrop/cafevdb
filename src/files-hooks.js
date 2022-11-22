@@ -68,7 +68,7 @@ const validTemplatePath = function(path) {
 const getProjectNameFromProjectBalancesFolders = function(dirInfo) {
   let dirName = dirInfo.path;
   if (!dirName.startsWith(initialState.sharing.files.folders.projectBalances)) {
-    return false;
+    return null;
   }
   dirName = dirName.substring(initialState.sharing.files.folders.projectBalances.length);
   dirName = dirName.replace(/^\/?(\d{4}|)\/?/, '');
@@ -78,6 +78,9 @@ const getProjectNameFromProjectBalancesFolders = function(dirInfo) {
 };
 
 const getProjectYearFromProjectName = function(projectName) {
+  if (!projectName) {
+    return null;
+  }
   const yearMatch = projectName.match(/\d{4}$/);
   if (Array.isArray(yearMatch) && yearMatch.length === 1) {
     return yearMatch[0];
@@ -87,6 +90,9 @@ const getProjectYearFromProjectName = function(projectName) {
 
 const isProjectBalanceSupportingDocumentsTopFolder = function(dirInfo, projectName) {
   projectName = projectName || getProjectNameFromProjectBalancesFolders(dirInfo);
+  if (!projectName) {
+    return false;
+  }
   const dirName = dirInfo.path;
   const baseName = dirInfo.name;
   return dirName.startsWith(projectBalancesFolder)
@@ -95,6 +101,9 @@ const isProjectBalanceSupportingDocumentsTopFolder = function(dirInfo, projectNa
 
 const isProjectBalanceSupportingDocumentsFolder = function(dirInfo, projectName, projectYear) {
   projectName = projectName || getProjectNameFromProjectBalancesFolders(dirInfo);
+  if (!projectName) {
+    return false;
+  }
   projectYear = projectYear || getProjectYearFromProjectName(projectName);
   const dirName = dirInfo.path;
   const baseName = dirInfo.name;
@@ -317,8 +326,8 @@ window.addEventListener('DOMContentLoaded', () => {
         const projectName = getProjectNameFromProjectBalancesFolders(dirInfo);
         const projectYear = getProjectYearFromProjectName(projectName);
 
-        const isTopFolder = isProjectBalanceSupportingDocumentsTopFolder(dirInfo, projectName);
-        const isDocumentsFolder = isProjectBalanceSupportingDocumentsFolder(dirInfo, projectName, projectYear);
+        const isTopFolder = projectName && isProjectBalanceSupportingDocumentsTopFolder(dirInfo, projectName);
+        const isDocumentsFolder = projectName && isProjectBalanceSupportingDocumentsFolder(dirInfo, projectName, projectYear);
 
         if (!isTopFolder && !isDocumentsFolder) {
           if (this.savedMenuItems) {

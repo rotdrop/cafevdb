@@ -167,6 +167,9 @@ class phpMyEdit
 	public $groupby_rec; // values of the group-by fields
 	public $groupby_where; // whether to use groupby field in single record retrieval
 	public $mrecs;     // array of custom-multi records selected
+	public $mrec;      // array of all fields provided as data in the misc checkboxes
+	public $mrec_num;  // field numbers of mrec fields
+	public $mrec_rec; // values of the union or the rec, groupby_rec and additional mrec fields.
 	public $deselect_invisible_mrecs; // deselect non-visible mrecs when +/- action is issued
 	public $inc;		// number of records to display
 	public $total_recs; // total number of records available
@@ -1563,7 +1566,7 @@ class phpMyEdit
 		$fields = array();
 		$fieldAliases = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (/*false*/ !$this->displayed[$k] && !in_array($k, $this->key_num) && !in_array($k, $this->groupby_num)) {
+			if (/*false*/ !$this->displayed[$k] && !in_array($k, $this->key_num) && !in_array($k, $this->mrec_num)) {
 				continue;
 			}
 			$flags = 0;
@@ -3323,6 +3326,11 @@ class phpMyEdit
 		}
 		if ($this->col_has_URL($k)) {
 			$value = $this->urlDisplay($k, $original_value, $value, $css, $key_rec);
+		} else {
+			$escape = $this->fdd[$k]['escape'] ?? false;
+			if ($escape) {
+				$value = $this->enc($value);
+			}
 		}
 		return $value;
 	}
@@ -3457,6 +3465,9 @@ class phpMyEdit
 						if (!empty($this->fdd[$cell])) {
 							$cell_popup = $this->cellDisplay($cell, $row);
 						}
+					}
+					if ($this->fdd[$k]['escape'] ?? false) {
+						$cell_popup = $this->enc($cell_popup, true);
 					}
 					break;
 				case 'tooltip':
@@ -3700,8 +3711,8 @@ class phpMyEdit
 			if ($lastGroup) {
 				$ret .= ' data-group-id="'.$groupId.'"';
 			}
-			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = $this->enc($value);
+			$strip_tags && $value = strip_tags($value);
 			$ret .= '>'.$value.'</option>'."\n";
 		}
 		if (isset($lastGroup)) {
@@ -4535,7 +4546,8 @@ class phpMyEdit
 				$m	= $this->get_sys_cgi_var($l);
 				$mc = $this->get_sys_cgi_var($lc);
 				$mi = $this->get_sys_cgi_var($li)?:[];
-				if (empty($m) && empty($mi)) {
+
+				if ((empty($m) && $m !== '0' && $m !== 0) && empty($mi)) {
 					// retry with field-name to ease programmatic queries
 					$fd   = $this->fds[$k];
 					$l	  = 'qf'.$fd;
@@ -4575,7 +4587,7 @@ class phpMyEdit
 				$readonly	= false;
 				$strip_tags = true;
 				//$escape	  = true;
-				$escape	  = false;
+				$escape	  = $this->fdd[$k]['escape'] ?? false;
 				$attributes = $this->htmlAttributes(self::OPERATION_FILTER, $k, []);
 				echo '<div class="'.$negate_css_class_name.'">';
 				echo $this->htmlRadioCheck($this->cgi['prefix']['sys'].$l.'_comp',
@@ -5087,12 +5099,27 @@ class phpMyEdit
 						$groupby_rec[$key] = $row['qf'.$key_num];
 					}
 				}
-				$mrecRecordData = json_encode($groupby_rec);
+				$groupbyRecordData = json_encode($groupby_rec);
 			} else {
 				$groupby_rec = $key_rec;
-				$mrecRecordData = $recordData;
+				$groupbyRecordData = $recordData;
 			}
-			$mrecRecordQueryData = $this->key_record_query_data($groupby_rec, 'groupby_rec');
+			if (!empty($this->mrec)) {
+				$mrec_rec = [];
+				foreach ($this->mrec_num as $key => $key_num) {
+					if ($this->col_has_description($key_num)) {
+						$mrec_rec[$key] = $row['qf'.$key_num.'_idx'];
+					} else {
+						$mrec_rec[$key] = $row['qf'.$key_num];
+					}
+				}
+				$mrecRecordData = json_encode($mrec_rec);
+			} else {
+				$mrec_rec = $groupby_rec;
+				$mrecRecordData = $groupbyRecordData;
+			}
+			$mrecRecordQueryData = $this->key_record_query_data($mrec_rec, 'mrec_rec');
+			$groupbyRecordQueryData = $this->key_record_query_data($groupby_rec, 'groupby_rec');
 
 			$operationCss = [];
 			if ($this->view_enabled()) {
@@ -5118,7 +5145,8 @@ class phpMyEdit
 				'<tr class="'.$this->getCSSclass('row', null, 'next', $this->css['row'], $row).' '.$operationCss.'"'."\n".
 				'    data-'.$this->css['prefix'].'-options="'.$this->options.'"'."\n".
 				'    data-'.$this->cgi['prefix']['sys']."rec='".$recordData."'"."\n".
-				'    data-'.$this->cgi['prefix']['sys']."groupby_rec='".$mrecRecordData."'"."\n".
+				'    data-'.$this->cgi['prefix']['sys']."groupby_rec='".$groupbyRecordData."'"."\n".
+				'    data-'.$this->cgi['prefix']['sys']."mrec_rec='".$mrecRecordData."'"."\n".
 				'>';
 			if ($this->sys_cols) { /* {{{ */
 				$css_class_name = $this->getCSSclass('navigation', null, true);
@@ -5127,9 +5155,9 @@ class phpMyEdit
 						echo '<td class="',$css_class_name,'">';
 					}
 					if ($this->nav_text_links() || $this->nav_graphic_links()) {
-						$queryAppend = '&' .
-									 $this->enc($recordQueryData) . '&' .
-									 $this->enc($mrecRecordQueryData);
+						$queryAppend = '&' . $this->enc($recordQueryData)
+									 . '&' . $this->enc($groupbyRecordQueryData)
+									 . '&' . $this->enc($mrecRecordQueryData);
 						$viewQuery	 = $qpviewStr	. $queryAppend;
 						$copyQuery	 = $qpcopyStr	. $queryAppend;
 						$changeQuery = $qpchangeStr . $queryAppend;
@@ -5152,7 +5180,7 @@ class phpMyEdit
 						if ($this->view_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$viewTitle.'?'.$recordQueryData.'&'.$mrecRecordQueryData,
+								$viewTitle.'?'.$recordQueryData.'&'.$groupbyRecordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('view-navigation'),
 								$this->view_enabled() == false,
 								sprintf($imgstyle, 'pme-view.png'));
@@ -5160,7 +5188,7 @@ class phpMyEdit
 						if ($this->change_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$changeTitle.'?'.$recordQueryData.'&'.$mrecRecordQueryData,
+								$changeTitle.'?'.$recordQueryData.'&'.$groupbyRecordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('change-navigation'),
 								$this->change_enabled() == false,
 								sprintf($imgstyle, 'pme-change.png'));
@@ -5168,7 +5196,7 @@ class phpMyEdit
 						if ($this->copy_nav_displayed()) {
 							$navButtons[] = $this->htmlSubmit(
 								'operation',
-								$copyTitle.'?'.$recordQueryData.'&'.$mrecRecordQueryData,
+								$copyTitle.'?'.$recordQueryData.'&'.$groupbyRecordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('copy-navigation'),
 								$this->copy_enabled() == false,
 								sprintf($imgstyle, 'pme-copy.png'));
@@ -5176,7 +5204,7 @@ class phpMyEdit
 						if ($this->delete_nav_displayed()) {
 							$navButtons[] =$this->htmlSubmit(
 								'operation',
-								$deleteTitle.'?'.$recordQueryData.'&'.$mrecRecordQueryData,
+								$deleteTitle.'?'.$recordQueryData.'&'.$groupbyRecordQueryData.'&'.$mrecRecordQueryData,
 								$this->getCSSclass('delete-navigation'),
 								$this->delete_enabled() == false,
 								sprintf($imgstyle, 'pme-delete.png'));
@@ -6277,6 +6305,13 @@ class phpMyEdit
 				$this->fdd[$field_num]['options'] .= 'LF';
 			}
 		}
+		foreach ($this->mrec as $key) {
+			$field_num = $this->fdn[$key];
+			$this->mrec_num[$key] = $field_num;
+			if (isset($this->fdd[$field_num]['options'])) {
+				$this->fdd[$field_num]['options'] .= 'LF';
+			}
+		}
 
 		/* Adds first displayed column into sorting fields by replacing last
 		   array entry. Also remove duplicite values and change column names to
@@ -6749,6 +6784,9 @@ class phpMyEdit
 				$this->groupby_where = 'ACDPV'; // any single record view
 			}
 		}
+		// additional data to push in to the "misc" checkboxes
+		$this->mrec = $opts['mrec_fields'] ?? [];
+		$this->mrec = array_values(array_unique(array_merge($this->groupby, $this->mrec)));
 
 		$this->inc		 = $opts['inc'];
 		$this->options	 = $opts['options'];

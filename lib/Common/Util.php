@@ -576,7 +576,7 @@ class Util
    */
   public static function camelCaseToDashes(string $string, string $separator = '-'):string
   {
-    return strtolower(preg_replace('/([A-Z]|[0-9]+)/', $separator.'$1', lcfirst($string)));
+    return strtolower(preg_replace('/([A-Z]|[0-9]+|[[:punct:]]+)/', $separator.'$1', lcfirst($string)));
   }
 
   /**
@@ -597,6 +597,7 @@ class Util
     $excess = strlen($string) - $limit;
     if ($excess > 0) {
       $parts = explode(' ', Util::camelCaseToDashes($string, ' '));
+      \OCP\Util::writeLog('cafevdb', print_r($parts, true), \OCP\Util::INFO);
       do {
         $shortened = false;
         foreach ($parts as &$part) {

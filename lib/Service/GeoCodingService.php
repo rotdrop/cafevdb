@@ -730,8 +730,8 @@ class GeoCodingService
         $lat  = (double)($zipCodePlace['lat']);
         $lng  = (double)($zipCodePlace['lng']);
         $name = $zipCodePlace['placeName'];
-        $stateCode = $zipCodePlace[self::POSTAL_CODE_STATE_CODE_TAG];
-        // $stateName = $zipCodePlace[self::POSTAL_CODE_STATE_NAME_TAG];
+        $stateCode = $zipCodePlace[self::POSTAL_CODE_STATE_CODE_TAG] ?? null;
+        $stateName = $zipCodePlace[self::POSTAL_CODE_STATE_NAME_TAG] ?? null;
 
         $translations = [];
         $stateTranslations = [];

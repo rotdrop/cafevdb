@@ -1356,12 +1356,14 @@ class RecipientsFilter
   {
     if (empty($this->project)) {
       // this is not a project email
+      $this->logInfo('NO PROJECT');
       return false;
     }
 
     if (!($this->userBase & self::MUSICIANS_FROM_PROJECT_CONFIRMED)) {
       // intentionally not for the list which should contain all confirmed
       // participants + further people.
+      $this->logInfo('NOT FOR THE LIST');
       return false;
     }
 
@@ -1370,11 +1372,13 @@ class RecipientsFilter
     if (array_intersect($memberFilter, $defaultByStatus) !== $defaultByStatus) {
       // intentionally not for the list as less than the default status type
       // were addressed
+      $this->logInfo('MEMBER FILTER INCOMPATIBLE');
       return false;
     }
 
     if (!empty($this->instrumentsFilter)) {
       // intentionally not for the list, which is also archived
+      $this->logInfo('INSTRUMENTS FILTER NOT EMPTY');
       return false;
     }
 
@@ -1384,6 +1388,7 @@ class RecipientsFilter
       // although the recipient options intentionally include the list members
       // there is a particular choice of selected recipients, so this should
       // not go to the list.
+      $this->logInfo('SPECIFIC CHOICE OF RECIPIENTS');
       return false;
     }
 

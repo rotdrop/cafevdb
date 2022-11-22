@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use DateTimeImmutable;
+use DateTimeInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -70,7 +73,7 @@ class InsuranceRate implements \ArrayAccess
   /**
    * @var \DateTimeImmutable
    *
-   * @ORM\Column(type="date_immutable", nullable=false, options={"comment"="start of the yearly insurance period"})
+   * @ORM\Column(type="date_immutable", nullable=true, options={"comment"="start of the yearly insurance period"})
    */
   private $dueDate;
 
@@ -88,19 +91,22 @@ class InsuranceRate implements \ArrayAccess
    */
   private $instrumentInsurances;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->instrumentInsurances = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set broker.
    *
-   * @param string $broker
+   * @param null|int|InsuranceBroker $broker
    *
    * @return InsuranceRate
    */
-  public function setBroker($broker):InsuranceRate
+  public function setBroker(mixed $broker):InsuranceRate
   {
     $this->broker = $broker;
 
@@ -168,7 +174,7 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Set dueDate.
    *
-   * @param string|\DateTimeInterface $dueDate
+   * @param null|string|DateTimeInterface $dueDate
    *
    * @return InsuranceRate
    */
@@ -181,9 +187,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get dueDate.
    *
-   * @return \DateTimeImmutable
+   * @return DateTimeInterface
    */
-  public function getDueDate():\DateTimeImmutable
+  public function getDueDate():?DateTimeInterface
   {
     return $this->dueDate;
   }

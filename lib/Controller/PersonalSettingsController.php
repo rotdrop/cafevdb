@@ -1540,9 +1540,9 @@ class PersonalSettingsController extends Controller
             $roundCubeConfig->setEmailCredentials($userId, $emailUser, $emailPassword);
             $modifiedUsers[] = $userId;
           } catch (Exception $e) {
-            $noEmailUsers[] = [ $userId => $e->getMessage() ];
+            $noEmailUsers[$userId] = $e->getMessage();
           } catch (Throwable $t) {
-            $fatalUsers[] = [ $userId => $t->getMessage() ];
+            $fatalUsers[$userId] = $t->getMessage();
           }
         }
         $messages = [];
@@ -1552,7 +1552,10 @@ class PersonalSettingsController extends Controller
           $messages[] = $this->l->t('Unable to distribute the email credentials to any user.');
         }
         if (!empty($noEmailUsers)) {
-          $messages[] = $this->l->t('Email credentials could not be set for %s.', implode(', ', $noEmailUsers));
+          $messages[] = $this->l->t('Email credentials could not be set for %s.', implode(', ', array_keys($noEmailUsers)));
+        }
+        foreach ($noEmailUsers as $userId => $message) {
+          $messages[] = $this->l->t('Setting the email credentials for %s failed fatally: "%s".', [ $userId, $message ]);
         }
         foreach ($fatalUsers as $userId => $message) {
           $messages[] = $this->l->t('Setting the email credentials for %s failed fatally: "%s".', [ $userId, $message ]);

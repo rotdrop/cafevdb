@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\Events;
 
 use OCP\EventDispatcher\Event;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+
 /** Event fired after project deletion. */
 class AfterProjectDeletedEvent extends ProjectEvent
 {
