@@ -82,6 +82,7 @@ module.exports = {
         ],
       },
     ],
+    'import/extensions': 'off',
     'node/no-unpublished-import': 'off',
     'node/no-unpublished-require': 'off',
     'no-console': 'off',
