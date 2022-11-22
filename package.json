@@ -27,6 +27,9 @@
   "engines": {
     "node": ">=12.0.0"
   },
+  "browserslist": [
+    "extends @nextcloud/browserslist-config"
+  ],
   "devDependencies": {
     "@ckeditor/ckeditor5-build-classic": "^35.1.0",
     "@csstools/normalize.css": "^11.0.1",
