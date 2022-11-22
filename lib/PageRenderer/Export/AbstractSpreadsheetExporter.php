@@ -1,10 +1,11 @@
-<?php // Hey, Emacs, we are -*- php -*- mode!
-/* Orchestra member, musician and project management application.
+<?php
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,11 +24,14 @@
 
 namespace OCA\CAFEVDB\PageRenderer\Export;
 
+use DateTimeImmutable;
+
 use PhpOffice\PhpSpreadsheet;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\FontService;
 
+/** Abstract base class for spread-sheet export */
 abstract class AbstractSpreadsheetExporter
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -61,12 +65,14 @@ abstract class AbstractSpreadsheetExporter
     ],
   ];
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
+    ConfigService $configService,
   ) {
     $this->configService = $configService;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Fill the given work-sheet with data. Do whatever is necessary.
@@ -76,7 +82,7 @@ abstract class AbstractSpreadsheetExporter
    * and such).
    *
    * @param array $meta An array with at least the keys 'creator',
-   * 'email', 'date'
+   * 'email', 'date'.
    *
    * @return array
    * ```
@@ -127,7 +133,7 @@ abstract class AbstractSpreadsheetExporter
     $valueBinder = \OC::$server->query(PhpSpreadsheetValueBinder::class);
     PhpSpreadsheet\Cell\Cell::setValueBinder($valueBinder);
 
-    foreach (FontService::MS_TTF_CORE_FONTS as $distro => $fontPath) {
+    foreach (FontService::MS_TTF_CORE_FONTS as $fontPath) {
       try {
         /** @todo Make the font path configurable, disable feature if fonts not found. */
         if (!file_exists($fontPath) || !is_dir($fontPath)) {
@@ -152,7 +158,7 @@ abstract class AbstractSpreadsheetExporter
     $meta = $this->fillSheet($spreadSheet, [
       'creator' => $creator,
       'email' => $email,
-      'date' => new \DateTimeImmutable,
+      'date' => new DateTimeImmutable,
     ]);
 
     /*
@@ -202,10 +208,4 @@ abstract class AbstractSpreadsheetExporter
 
     return array_merge($fileType, $meta);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
