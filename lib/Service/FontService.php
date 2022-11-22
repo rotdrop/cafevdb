@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
+/** Truetype font-file locator, in particular for PhpOffice. */
 class FontService
 {
   const MS_TTF_CORE_FONTS = [
@@ -31,21 +32,21 @@ class FontService
     'debian/ubuntu' => '/usr/share/fonts/truetype/msttcorefonts/',
   ];
 
-  static public function findTrueTypeFontFile(string $name)
+  /**
+   * @param string $fontName
+   *
+   * @return string The full path to the font file.
+   */
+  public static function findTrueTypeFontFile(string $fontName)
   {
-    if (dirname($name) != '.') {
-      return $name;
+    if (dirname($fontName) != '.') {
+      return $fontName;
     }
-    foreach (self::MS_TTF_CORE_FONTS as $distro => $fontPath)  {
-      if (file_exists($fontPath . $name)) {
-        return $fontPath . $name;
+    foreach (self::MS_TTF_CORE_FONTS as $fontPath)  {
+      if (file_exists($fontPath . $fontName)) {
+        return $fontPath . $fontName;
       }
     }
     return null;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
