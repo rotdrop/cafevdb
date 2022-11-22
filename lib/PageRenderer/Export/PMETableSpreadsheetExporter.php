@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +24,8 @@
 
 namespace OCA\CAFEVDB\PageRenderer\Export;
 
+use InvalidArgumentException;
+
 use PhpOffice\PhpSpreadsheet;
 
 use OCA\CAFEVDB\Service\ProjectService;
@@ -31,6 +34,7 @@ use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
+/** Export general PME-tables as spread-sheet. */
 class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
 {
   /** @var PageRenderer\PMETableViewBase */
@@ -45,11 +49,11 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param PageRenderer\PMETableViewBase $renderer
    * Underlying renderer, see self::fillSheet()
    *
-   * @param null|ProjectService
+   * @param null|ProjectService $projectService
    */
   public function __construct(
-    PageRenderer\PMETableViewBase $renderer
-    , ?ProjectService $projectService = null
+    PageRenderer\PMETableViewBase $renderer,
+    ?ProjectService $projectService = null,
   ) {
     parent::__construct($renderer->configService());
     $this->renderer = $renderer;
@@ -69,7 +73,7 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param PhpSpreadsheet\Spreadsheet $spreadSheet Spread-sheet to be filled.
    *
    * @param array $meta An array with at least the keys 'creator',
-   * 'email', 'date'
+   * 'email', 'date'.
    *
    * @return array
    * ```
@@ -93,21 +97,21 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
 
     $template = $this->renderer->template();
     switch ($template) {
-    case 'all-musicians':
-      $name  = $this->l->t('Musicians');
-      break;
-    case 'project-participants':
-      $projectId = $renderer->getProjectId();
-      $projectName = $renderer->getProjectName();
-      $name = $this->l->t('project participants for %s', $projectName);
-      $instrumentLabel = $this->l->t('Instrument');
-      $instrumentCol = true;
-      break;
-    case 'sepa-bank-accounts':
-      $name = $this->l->t('SEPA bank accounts');
-      break;
-    default:
-      throw new \InvalidArgumentException($this->l->t('Table export for table "%s" not yet implemented.', $template));
+      case 'all-musicians':
+        $name  = $this->l->t('Musicians');
+        break;
+      case 'project-participants':
+        $projectId = $renderer->getProjectId();
+        $projectName = $renderer->getProjectName();
+        $name = $this->l->t('project participants for %s', $projectName);
+        $instrumentLabel = $this->l->t('Instrument');
+        $instrumentCol = true;
+        break;
+      case 'sepa-bank-accounts':
+        $name = $this->l->t('SEPA bank accounts');
+        break;
+      default:
+        throw new InvalidArgumentException($this->l->t('Table export for table "%s" not yet implemented.', $template));
     }
 
     $renderer->navigation(false); // inhibit navigation elements
@@ -239,8 +243,8 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
      *
      */
 
-    $pt_height = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
-    $workSheet->getRowDimension(1+$headerOffset)->setRowHeight($pt_height+$pt_height/4);
+    $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
+    $workSheet->getRowDimension(1+$headerOffset)->setRowHeight($ptHeight+$ptHeight/4);
     $workSheet->getStyle('A'.(1+$headerOffset).':'.$workSheet->getHighestColumn().(1+$headerOffset))->applyFromArray([
       'font' => [
         'bold' => true
@@ -295,7 +299,7 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
 
         $workSheet->setCellValue("A$rowNumber", $this->l->t('Missing Musicians'));
         $workSheet->mergeCells("A$rowNumber:D$rowNumber");
-        $workSheet->getRowDimension($rowNumber)->setRowHeight($pt_height+$pt_height/4);
+        $workSheet->getRowDimension($rowNumber)->setRowHeight($ptHeight+$ptHeight/4);
 
         // Format the mess a little bit
         $workSheet->getStyle("A$rowNumber:D$rowNumber")->applyFromArray(
@@ -322,7 +326,7 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
         $workSheet->setCellValue("B$rowNumber", $this->l->t('Required'));
         $workSheet->setCellValue("C$rowNumber", $this->l->t('Not Registered'));
         $workSheet->setCellValue("D$rowNumber", $this->l->t('Not Confirmed'));
-        $workSheet->getRowDimension($rowNumber)->setRowHeight($pt_height+$pt_height/4);
+        $workSheet->getRowDimension($rowNumber)->setRowHeight($ptHeight+$ptHeight/4);
 
         // Format the mess a little bit
         $workSheet->getStyle("A$rowNumber:D$rowNumber")->applyFromArray(
@@ -428,8 +432,3 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
     return $meta;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
