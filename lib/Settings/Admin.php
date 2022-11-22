@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,9 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 
-class Admin implements IDelegatedSettings {
+/** Admin settings class. */
+class Admin implements IDelegatedSettings
+{
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const TEMPLATE = "admin-settings";
@@ -62,12 +64,13 @@ class Admin implements IDelegatedSettings {
   /** @var CloudUserConnectorService */
   private $cloudUserConnector;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , AssetService $assetService
-    , WikiRPC $wikiRPC
-    , IAppManager $appManager
-    , CloudUserConnectorService $cloudUserConnector
+    ConfigService $configService,
+    AssetService $assetService,
+    WikiRPC $wikiRPC,
+    IAppManager $appManager,
+    CloudUserConnectorService $cloudUserConnector,
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
@@ -75,11 +78,13 @@ class Admin implements IDelegatedSettings {
     $this->appManager = $appManager;
     $this->cloudUserConnector = $cloudUserConnector;
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function getForm()
   {
     $cloudUserBackend = CloudUserConnectorService::CLOUD_USER_BACKEND;
-    $cloudUserBackendEnabled = $this->appManager->isInstalled($cloudUserBackend);
+    // $cloudUserBackendEnabled = $this->appManager->isInstalled($cloudUserBackend);
     $cloudUserBackendRestrictions = $this->appManager->getAppRestriction($cloudUserBackend);
     $haveCloudUserBackendConfig = $this->cloudUserConnector->haveCloudUserBackendConfig();
 
@@ -112,37 +117,28 @@ class Admin implements IDelegatedSettings {
       ]);
   }
 
-  /**
-   * @return string the section ID, e.g. 'sharing'
-   * @since 9.1
-   */
-  public function getSection() {
+  /** {@inheritdoc} */
+  public function getSection()
+  {
     return $this->appName();
   }
 
-  /**
-   * @return int whether the form should be rather on the top or bottom of
-   * the admin section. The forms are arranged in ascending order of the
-   * priority values. It is required to return a value between 0 and 100.
-   *
-   * E.g.: 70
-   * @since 9.1
-   */
-  public function getPriority() {
+  /** {@inheritdoc} */
+  public function getPriority()
+  {
     // @@todo could be made a configure option.
     return 50;
   }
 
-  public function getName(): ?string {
+  /** {@inheritdoc} */
+  public function getName():?string
+  {
     return null; // Only one setting in this section
   }
 
-  public function getAuthorizedAppConfig(): array {
+  /** {@inheritdoc} */
+  public function getAuthorizedAppConfig():array
+  {
     return []; // Custom controller
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
