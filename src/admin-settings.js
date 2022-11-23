@@ -40,10 +40,9 @@ __webpack_public_path__ = generateFilePath(appName, '', 'js');
 Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
 
 const vueAnchorId = 'admin-settings-vue';
-const vueAnchor = document.getElementById(vueAnchorId);
 
 export default new Vue({
   el: '#' + vueAnchorId,
-  render: h => h(AdminSettings, { props: { config: JSON.parse(vueAnchor.dataset.config) } }),
+  render: h => h(AdminSettings),
   pinia,
 });

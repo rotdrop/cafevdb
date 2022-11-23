@@ -27,11 +27,13 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\IDelegatedSettings;
 use OCP\App\IAppManager;
+use OCP\AppFramework\Services\IInitialState;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Service\FontService;
 
 /** Admin settings class. */
 class Admin implements IDelegatedSettings
@@ -40,13 +42,21 @@ class Admin implements IDelegatedSettings
 
   const TEMPLATE = "admin-settings";
 
+  const PERSONAL_APP_SETTINGS_LINK = 'personalAppSettingsLink';
   const ORCHESTRA_USER_GROUP_KEY = 'orchestraUserGroup';
   const WIKI_NAME_SPACE_KEY = 'wikiNameSpace';
+  const WIKI_VERSION = 'wikiVersion';
   const CLOUD_USER_BACKEND_CONFIG_KEY = 'cloudUserBackendConfig';
+  const CLOUD_USER_BACKEND = 'cloudUserBackend';
+  const CLOUD_USER_BACKEND_RESTRICTIONS = 'cloudUserBackendRestrictions';
+  const OFFICE_FONTS = 'officeFonts';
+  const SETTINGS_PROPERTIES = 'settingsProperties';
+  const IS_ADMIN = 'isAdmin';
+  const IS_SUB_ADMIN = 'isSubAdmin';
 
   const DELEGATABLE = 'delegatable';
   const ADMIN_ONLY = 'admin_only';
-  const SETTINGS_PROPERTIES = [
+  const SETTINGS_PROPERTY_VALUES = [
     self::ORCHESTRA_USER_GROUP_KEY => self::ADMIN_ONLY,
     self::WIKI_NAME_SPACE_KEY => self::DELEGATABLE,
     self::CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
@@ -61,22 +71,32 @@ class Admin implements IDelegatedSettings
   /** @var IAppManager */
   private $appManager;
 
+  /** @var IInitialState */
+  private $initialState;
+
   /** @var CloudUserConnectorService */
   private $cloudUserConnector;
+
+  /** @var FontService */
+  private $fontService;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
+    IInitialState $initialState,
     AssetService $assetService,
     WikiRPC $wikiRPC,
     IAppManager $appManager,
     CloudUserConnectorService $cloudUserConnector,
+    FontService $fontService,
   ) {
     $this->configService = $configService;
+    $this->initialState = $initialState;
     $this->assetService = $assetService;
     $this->wikiRPC = $wikiRPC;
     $this->appManager = $appManager;
     $this->cloudUserConnector = $cloudUserConnector;
+    $this->fontService = $fontService;
   }
   // phpcs:enable
 
@@ -93,26 +113,31 @@ class Admin implements IDelegatedSettings
     $isAdmin = $this->groupManager()->isAdmin($this->userId());
     $isSubAdmin = $this->isSubAdminOfGroup();
 
+    $configData = [
+      self::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue('usergroup'),
+      self::PERSONAL_APP_SETTINGS_LINK => $personalAppSettingsLink,
+      self::WIKI_NAME_SPACE_KEY => $this->getAppValue('wikinamespace'),
+      self::WIKI_VERSION => $this->wikiRPC->version(),
+      self::CLOUD_USER_BACKEND => $cloudUserBackend,
+      self::CLOUD_USER_BACKEND_RESTRICTIONS => $cloudUserBackendRestrictions,
+      self::CLOUD_USER_BACKEND_CONFIG_KEY => $haveCloudUserBackendConfig,
+      FontService::OFFICE_FONTS_FOLDER_CONFIG => $this->fontService->getFontsFolderName(),
+      self::OFFICE_FONTS => $this->fontService->scanFontsFolder(),
+      FontService::DEFAULT_OFFICE_FONT_CONFIG => $this->fontService->getDefaultFontName(),
+      self::SETTINGS_PROPERTIES => self::SETTINGS_PROPERTY_VALUES,
+      self::IS_ADMIN => $isAdmin,
+      self::IS_SUB_ADMIN => $isSubAdmin,
+    ];
+
+    $this->initialState->provideInitialState('adminConfig', $configData);
+
     return new TemplateResponse(
       $this->appName(),
-      self::TEMPLATE,
-      [
+      self::TEMPLATE, [
+        'appName' => $this->appName(),
         'assets' => [
           AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
           AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
-        ],
-        'appName' => $this->appName(),
-        'config' => [
-          self::ORCHESTRA_USER_GROUP_KEY =>  $this->getAppValue('usergroup'),
-          'personalAppSettingsLink' => $personalAppSettingsLink,
-          self::WIKI_NAME_SPACE_KEY => $this->getAppValue('wikinamespace'),
-          'wikiVersion' => $this->wikiRPC->version(),
-          'cloudUserBackend' => $cloudUserBackend,
-          'cloudUserBackendRestrictions' => $cloudUserBackendRestrictions,
-          self::CLOUD_USER_BACKEND_CONFIG_KEY => $haveCloudUserBackendConfig,
-          'settingsProperties' => self::SETTINGS_PROPERTIES,
-          'isAdmin' => $isAdmin,
-          'isSubAdmin' => $isSubAdmin,
         ],
       ]);
   }

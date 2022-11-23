@@ -28,4 +28,4 @@ script($appName, $assets['js']['asset']);
 style($appName, $assets['css']['asset']);
 
 ?>
-<div id="admin-settings-vue" data-config="<?php p(json_encode($config, true)); ?>"></div>
+<div id="admin-settings-vue"></div>
