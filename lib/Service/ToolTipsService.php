@@ -205,7 +205,11 @@ class ToolTipsService implements \ArrayAccess, \Countable
     $this->makeToolTips();
     $toolTipsData = $this->toolTipsData;
 
+    $oldKey = $key;
     $key = $this->preprocessKey($key);
+    if (str_starts_with($oldKey, 'pme-filter')) {
+      $this->logInfo('FILTER TT ' . $oldKey . ' -> ' . $key);
+    }
 
     $keys = explode(self::SUB_KEY_SEP, $key);
     while (\count($keys) > 0) {
@@ -974,7 +978,11 @@ It is also possible to match empty fields, in particular:
 <dt>!"%%"</dt>
 <dd>match any row with empty search-field</dd>
 </dl>'),
-
+          'numeric' => $this->l->t('Field for filter/search criteria.
+Short explanation: simply type somthing and press <code>ENTER</code>.
+This is a numeric field, you can choose from the comparison operators to the left.'),
+          'comp' => $this->l->t('Numeric comparison operators. To submit the query double-click into the search-field to the right or click on the "query" button.'),
+          'select' => $this->l->t('Select from the pull-down menu. Double-click will submit the form. The pull-down can be closed by clicking anywhere outside the menu.'),
           'negate' => $this->l->t('Negate the filter, i.e. search for anything not matching the selected options.'),
         ],
 

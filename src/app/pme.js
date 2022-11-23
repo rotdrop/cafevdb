@@ -1319,7 +1319,7 @@ const installFilterChosen = function(containerSel) {
   }
 
   const pmeFilter = pmeToken('filter');
-  const pmeCompFilter = pmeToken('comp-filter');
+  const pmeCompFilter = pmeToken('filter-comp');
 
   const container = pmeContainer(containerSel);
 
@@ -1362,8 +1362,11 @@ const installFilterChosen = function(containerSel) {
     container.find('td.' + pmeFilter + ' input.' + pmeToken('query')).trigger('click');
   });
 
-  container.find('td.' + pmeFilter + ' div.chosen-container')
-    .attr('title', PHPMyEdit.filterSelectChosenTitle);
+  container.find('td.' + pmeFilter + ' div.chosen-container').each(function() {
+    const $chosen = $(this);
+    const selectTitle = $chosen.prev('select').attr('title');
+    $chosen.attr('title', selectTitle || PHPMyEdit.filterSelectChosenTitle);
+  });
 };
 
 /**
@@ -1567,7 +1570,7 @@ const installTabHandler = function(containerSel, changeCallback) {
       const pfx = (tabClasses.includes('tab-all')) ? '' : 'td.' + tabClasses.join('.');
       const selector = pmeClassSelectors(
         pfx + ' ' + 'div.chosen-container',
-        ['input', 'filter', 'comp-filter']);
+        ['input', 'filter', 'filter-comp']);
       form.find(selector).each(function(idx) {
         const $this = $(this);
         if ($this.width() <= PHPMyEdit.singleDeselectOffset) {
@@ -1780,7 +1783,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     const pfx = 'tbody tr td' + (!tabClass || tabClass === 'all' ? '' : '.tab-' + tabClass);
     const selector = pmeClassSelectors(
       pfx + ' ' + 'div.chosen-container',
-      ['filter', 'comp-filter']);
+      ['filter', 'filter-comp']);
     $table.find(selector).each(function(idx) {
       if ($(this).width() === 0 || $(this).width() === 60) {
         $(this).prev().chosen('destroy');

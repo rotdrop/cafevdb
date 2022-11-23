@@ -4618,7 +4618,9 @@ class phpMyEdit
 										   $negate,
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
-				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx', $css_class_name,
+				$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-select', null, null);
+				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx',
+									   $css_second_class_name . ' ' . $css_class_name,
 									   $vals, $groups, $titles, $data, $selected,
 									   $multiple || true, $readonly, false, $strip_tags, $escape,
 									   null /* help */, $attributes);
@@ -4634,13 +4636,17 @@ class phpMyEdit
 				$len_props .= ' size="'.$size.'"';
 				$len_props .= ' maxlength="'.$maxlen.'"';
 				if ($this->fdd[$fd][self::FDD_SELECT] == 'N' || $this->col_has_datemask($k)) {
-					$css_comp_class_name = $this->getCSSclass('comp-filter', null, null, $css_postfix);
+					$css_comp_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-comp', null, null, $css_postfix);
 
 					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
 										   $css_comp_class_name,
 										   self::COMP_OPS, null, null, null, $mc);
+					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-numeric', null, null);
+				} else {
+					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-text', null, null);
 				}
+				$css_class_name = $css_second_class_name . ' ' . $css_class_name;
 				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
 				echo '" type="text" name="'.$name.'"',$len_props;

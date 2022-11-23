@@ -1174,7 +1174,7 @@ input.pme-filter {
 }
 
 form.pme-form {
-  select.pme-comp-filter ~ input[type="text"].pme-filter {
+  select.pme-filter-comp ~ input[type="text"].pme-filter {
     width:auto;
     white-space:nowrap;
   }
