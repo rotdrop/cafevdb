@@ -3513,6 +3513,13 @@ class phpMyEdit
 
 	function doFetchToolTip($css_class_name, $name, $label = false)
 	{
+		// otherwise use name, label, css in that order
+		if(isset($this->tooltips[$name])) {
+			return $this->tooltips[$name];
+		} elseif($label && isset($this->tooltips[$label])) {
+			return $this->tooltips[$label];
+		}
+
 		// First clean the CSS-class, it may consist of more than one
 		// class.
 		$css_classes = preg_split('/\s+/', $css_class_name);
@@ -3524,13 +3531,13 @@ class phpMyEdit
 			$css_classes);
 		array_unshift($css_classes, $first_css);
 
-		// otherwise use name, label, css in that order
-		if(isset($this->tooltips[$name])) {
-			return $this->tooltips[$name];
-		} elseif($label && isset($this->tooltips[$label])) {
-			return $this->tooltips[$label];
+		if (!str_starts_with($name, $this->cgi['prefix']['sys'])) {
+			$suffixes = [ ':'.$name, '' ];
+		} else {
+			$suffixes = [''];
 		}
-		foreach ([ ':'.$name, '' ] as $suffix) {
+
+		foreach ($suffixes as $suffix) {
 			foreach ($css_classes as $css_class_name) {
 				if (isset($this->tooltips[$css_class_name.$suffix])) {
 					return $this->tooltips[$css_class_name.$suffix];
