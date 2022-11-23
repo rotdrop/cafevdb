@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
 
+use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /** Export general PME-tables as spread-sheet. */
@@ -49,13 +50,16 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param PageRenderer\PMETableViewBase $renderer
    * Underlying renderer, see self::fillSheet()
    *
+   * @param FontService $fontService
+   *
    * @param null|ProjectService $projectService
    */
   public function __construct(
     PageRenderer\PMETableViewBase $renderer,
+    FontService $fontService,
     ?ProjectService $projectService = null,
   ) {
-    parent::__construct($renderer->configService());
+    parent::__construct($renderer->configService(), $fontService);
     $this->renderer = $renderer;
     $this->projectService = $projectService;
   }
@@ -243,9 +247,12 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
      *
      */
 
-    $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
-    $workSheet->getRowDimension(1+$headerOffset)->setRowHeight($ptHeight+$ptHeight/4);
-    $workSheet->getStyle('A'.(1+$headerOffset).':'.$workSheet->getHighestColumn().(1+$headerOffset))->applyFromArray([
+    $highestColumn = $workSheet->getHighestColumn();
+
+    // Set wrap-text for the header line, width and height calculations are done by the parent class.
+    $workSheet->getStyle('A' . (1 + $headerOffset) . ':' . $highestColumn . (1 + $headerOffset))->getAlignment()->setWrapText(true);
+
+    $workSheet->getStyle('A'.(1+$headerOffset).':'.$highestColumn.(1+$headerOffset))->applyFromArray([
       'font' => [
         'bold' => true
       ],
@@ -269,7 +276,7 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
       ],
     ]);
 
-    $workSheet->getStyle('A2:'.$workSheet->getHighestColumn().$workSheet->getHighestRow())->applyFromArray([
+    $workSheet->getStyle('A2:'.$highestColumn.$workSheet->getHighestRow())->applyFromArray([
       'borders' => [
         'allBorders'  => [
           'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -293,13 +300,14 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
      *
      */
 
+    $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
     if (isset($projectId)) {
       if (count($missing) > 0) {
         $missingStart = $rowNumber = $workSheet->getHighestRow() + 4;
 
         $workSheet->setCellValue("A$rowNumber", $this->l->t('Missing Musicians'));
         $workSheet->mergeCells("A$rowNumber:D$rowNumber");
-        $workSheet->getRowDimension($rowNumber)->setRowHeight($ptHeight+$ptHeight/4);
+        $workSheet->getRowDimension($rowNumber)->setRowHeight($ptHeight + $ptHeight/4);
 
         // Format the mess a little bit
         $workSheet->getStyle("A$rowNumber:D$rowNumber")->applyFromArray(
@@ -387,15 +395,14 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
      *
      */
 
-    $highCol = $workSheet->getHighestColumn();
-    $workSheet->mergeCells("A1:".$highCol.'1');
-    $workSheet->mergeCells("A2:".$highCol.'2');
+    $workSheet->mergeCells("A1:".$highestColumn.'1');
+    $workSheet->mergeCells("A2:".$highestColumn.'2');
 
     $workSheet->setCellValue('A1', $name.', '.$this->dateTimeFormatter()->formatDate($date));
     $workSheet->setCellValue('A2', $creator.' &lt;'.$email.'&gt;');
 
     // Format the mess a little bit
-    $workSheet->getStyle('A1:'.$highCol.'2')->applyFromArray(
+    $workSheet->getStyle('A1:'.$highestColumn.'2')->applyFromArray(
       array(
         'font'    => array(
           'bold'   => true,
@@ -413,7 +420,7 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
       )
     );
 
-    $workSheet->getStyle('A1:'.$highCol.'2')->applyFromArray(
+    $workSheet->getStyle('A1:'.$highestColumn.'2')->applyFromArray(
       array(
         'alignment' => array(
           'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,

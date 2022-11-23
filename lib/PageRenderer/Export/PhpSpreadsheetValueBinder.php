@@ -28,7 +28,10 @@ use PhpOffice\PhpSpreadsheet;
 
 use OCP\IL10N;
 use OCP\ILogger;
+use OCP\IURLGenerator;
+
 use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * Special value-binder class with tweaks the standard
@@ -42,6 +45,9 @@ class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder i
   /** @var IL10N */
   private $l;
 
+  /** @var IURLGenerator */
+  private $urlGenerator;
+
   /** @var FuzzyInputService */
   private $fuzzyInputService;
 
@@ -49,11 +55,14 @@ class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder i
   public function __construct(
     ILogger $logger,
     IL10n $l10n,
+    IURLGenerator $urlGenerator,
     FuzzyInputService $fuzzyInputService
   ) {
     //parent::__construct();
     $this->logger = $logger;
     $this->l10n = $l10n;
+    $this->urlGenerator = $urlGenerator;
+
     $this->l = $l10n;
     $this->fuzzyInputService = $fuzzyInputService;
   }
@@ -106,10 +115,39 @@ class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder i
       }
 
       // Interpret some basic html
-      $hrefre = '/^\s*<a[^>]+href="([^"]+)"[^>]*>(.*?)<\/a>\s*$/i';
-      if (preg_match($hrefre, $value, $matches)) {
-        $cell->setValueExplicit($matches[2], PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-        $cell->getHyperlink()->setUrl($matches[1]);
+      $hrefre = '#<a[^>]+href="([^"]+)"[^>]*>(.*?)</a>#i';
+      if (preg_match_all($hrefre, $value, $matches, PREG_SET_ORDER)) {
+        $absUrls = [];
+        $urlUuid = Uuid::create();
+        $absUrlCount = 0;
+        foreach ($matches as &$match) {
+          $url = $match[1];
+          if ($url[0] == '/' || !str_starts_with($url, 'mailto:')) {
+            $absUrl = $this->urlGenerator->getAbsoluteURL($url);
+            $match[1] = $absUrl;
+            $absUrlKey = $urlUuid . '_' . $absUrlCount;
+            $absUrls[$absUrlKey] = $absUrl;
+            $value = str_replace($url, $absUrlKey, $value);
+            $absUrlCount++;
+          }
+          if (str_starts_with($url, 'mailto:')) {
+            // strip potential query parameters
+            $queryPos = strrpos($url, '?');
+            if ($queryPos !== false) {
+              $match[1] = substr($url, 0, $queryPos);
+              str_replace($url, $match[1], $value);
+            }
+          }
+        }
+        $value = str_replace(array_keys($absUrls), array_values($absUrls), $value);
+        $cell->getHyperlink()->setUrl($matches[0][1]);
+        if (count($matches) == 1) {
+          $cell->setValueExplicit($matches[0][2], PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+        } else {
+          $h2t = new Html2Text($value, [ 'width' => 0 ]);
+          $value = trim($h2t->get_text());
+          $cell->setValueExplicit($value, PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+        }
         return true;
       }
 

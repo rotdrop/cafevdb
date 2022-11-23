@@ -28,6 +28,7 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
 use OCA\CAFEVDB\Database\Legacy\PME\IOptions as IPMEOptions;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+use OCA\CAFEVDB\Service\FontService;
 
 /** Register template-names as dependency injection tags. */
 class Registration
@@ -74,18 +75,21 @@ class Registration
 
     $context->registerService('export:'.'all-musicians', function($c) {
       $renderer = $c->query('template:'.'all-musicians');
-      return new Export\PMETableSpreadsheetExporter($renderer);
+      $fontService = $c->query(FontService::class);
+      return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
     $context->registerService('export:'.'project-participants', function($c) {
       $renderer = $c->query('template:'.'project-participants');
+      $fontService = $c->query(FontService::class);
       $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
-      return new Export\PMETableSpreadsheetExporter($renderer, $projectService);
+      return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
     });
 
     $context->registerService('export:'.'sepa-bank-accounts', function($c) {
       $renderer = $c->query('template:'.'sepa-bank-accounts');
-      return new Export\PMETableSpreadsheetExporter($renderer);
+      $fontService = $c->query(FontService::class);
+      return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
     $context->registerServiceAlias('export:'.'instrument-insurance', Export\InsuranceSpreadsheetExporter::class);

@@ -36,6 +36,9 @@ abstract class AbstractSpreadsheetExporter
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  protected const WIDTH_EXTRA_SPACE = 2; // pt
+  protected const MIN_WIDTH = 20; // pt
+
   /** Array of supported file-types */
   const FILE_TYPES = [
     ExportFormat::EXCEL => [
@@ -65,12 +68,17 @@ abstract class AbstractSpreadsheetExporter
     ],
   ];
 
+  /** @var FontService */
+  protected $fontService;
+
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
+    FontService $fontService,
   ) {
     $this->configService = $configService;
     $this->l = $this->l10n();
+    $this->fontService = $fontService;
   }
   // phpcs:enable
 
@@ -120,8 +128,14 @@ abstract class AbstractSpreadsheetExporter
 
     $locale = $this->getLocale();
 
+
+    $fontPath = $this->fontService->getFontsFolderName();
+    PhpSpreadsheet\Shared\Font::setTrueTypeFontPath($fontPath);
+    PhpSpreadsheet\Shared\Font::setAutoSizeMethod(PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
+
     $spreadSheet = new PhpSpreadsheet\Spreadsheet();
-    $spreadSheet->getDefaultStyle()->getFont()->setName('Arial');
+    $defaultFont = $this->fontService->getDefaultFontName();
+    $spreadSheet->getDefaultStyle()->getFont()->setName($defaultFont);
     $spreadSheet->getDefaultStyle()->getFont()->setSize(12);
 
     $validLocale = PhpSpreadsheet\Settings::setLocale($locale);
@@ -130,22 +144,8 @@ abstract class AbstractSpreadsheetExporter
     }
 
     /** @todo move to namespace */
-    $valueBinder = \OC::$server->query(PhpSpreadsheetValueBinder::class);
+    $valueBinder = $this->di(PhpSpreadsheetValueBinder::class);
     PhpSpreadsheet\Cell\Cell::setValueBinder($valueBinder);
-
-    foreach (FontService::MS_TTF_CORE_FONTS as $fontPath) {
-      try {
-        /** @todo Make the font path configurable, disable feature if fonts not found. */
-        if (!file_exists($fontPath) || !is_dir($fontPath)) {
-          continue;
-        }
-        PhpSpreadsheet\Shared\Font::setTrueTypeFontPath($fontPath);
-        PhpSpreadsheet\Shared\Font::setAutoSizeMethod(PhpSpreadsheet\Shared\Font::AUTOSIZE_METHOD_EXACT);
-        break;
-      } catch (\Throwable $t) {
-        $this->logException($t);
-      }
-    }
 
     /*
      *
@@ -160,6 +160,81 @@ abstract class AbstractSpreadsheetExporter
       'email' => $email,
       'date' => new DateTimeImmutable,
     ]);
+
+    /*
+     *
+     **************************************************************************
+     *
+     * Adjust the column height and width computations, PhpSpreadsheet is not
+     * godd in doing that ...
+     *
+     */
+
+    for ($sheetIdx = 0; $sheetIdx < $spreadSheet->getSheetCount(); $sheetIdx++) {
+      $spreadSheet->setActiveSheetIndex($sheetIdx);
+      $sheet = $spreadSheet->getActiveSheet();
+
+      $wrapTextValues = [];
+      $wrapTextRows = [];
+      $highestColumn = $sheet->getHighestColumn();
+      $highestRow = $sheet->getHighestRow();
+
+      // set wrap-text values to empty string in order not to spoil the width
+      // computations.
+      for ($column = 'A'; $column <= $highestColumn; $column++) {
+        $sheet->getColumnDimension($column)->setAutoSize(true);
+        for ($row = 1; $row <= $highestRow; $row++) {
+          $cellAddress = $column . $row;
+          $cell = $sheet->getCell($cellAddress);
+          if ($cell->getStyle()->getAlignment()->getWrapText()) {
+            $wrapTextValues[$cellAddress] = $cell->getValue();
+            $wrapTextRows[] = $row;
+            $cell->setValue('');
+          }
+        }
+      }
+
+      $sheet->calculateColumnWidths();
+
+      // restore cell-values
+      foreach ($wrapTextValues as $cellAddress => $cellValue) {
+        $sheet->getCell($cellAddress)->setValue($cellValue);
+      }
+
+      // disable auto-size and fetch column-width
+      $columnWidth = [];
+      for ($column = 'A'; $column <= $highestColumn; $column++) {
+        $columnDimensions = $sheet->getColumnDimension($column);
+        $columnDimensions->setAutoSize(false);
+        $width = $columnDimensions->getWidth('pt');
+        $width = max($width + 2.0 * self::WIDTH_EXTRA_SPACE, self::MIN_WIDTH);
+        $columnDimensions->setWidth($width, 'pt');
+        $columnWidth[$column] = $columnDimensions->getWidth(); // Excel units
+      }
+
+      // compute the height of the wrap-text rows
+      foreach ($wrapTextRows as $row) {
+        $font = $sheet->getStyle('A' . $row . ':' . $highestColumn . $row)->getFont();
+        $optimalHeight = 0;
+        for ($column = 'A'; $column <= $highestColumn; $column++) {
+          $cell = $sheet->getCell($column . $row);
+          $cellXf = $spreadSheet->getCellXfByIndex($cell->getXfIndex());
+          $font = $cellXf->getFont();
+          $singleLineHeaderWidth = PhpSpreadsheet\Shared\Font::calculateColumnWidth(
+            $font,
+            $cell->getValue(),
+            $cellXf->getAlignment()->getTextRotation(),
+            $font,
+            filterAdjustment: false,
+            indentAdjustment: 0,
+          );
+          $numberOfLines = (int)ceil($singleLineHeaderWidth / $columnWidth[$column]);
+          $fontHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($font);
+          $optimalHeight = max($optimalHeight, $numberOfLines * $fontHeight + $fontHeight / 4);
+        }
+        $sheet->getRowDimension($row)->setRowHeight($optimalHeight);
+      }
+    } // loop over sheets
 
     /*
      *
@@ -185,10 +260,15 @@ abstract class AbstractSpreadsheetExporter
      *
      */
 
-    $pageSetup = $spreadSheet->getActiveSheet()->getPageSetup();
-    $pageSetup->setFitToPage(true);
-    $pageSetup->setOrientation(PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
-    $pageSetup->setPaperSize(PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A3);
+    for ($sheetIdx = 0; $sheetIdx < $spreadSheet->getSheetCount(); $sheetIdx++) {
+      $spreadSheet->setActiveSheetIndex($sheetIdx);
+      $sheet = $spreadSheet->getActiveSheet();
+
+      $pageSetup = $sheet->getPageSetup();
+      $pageSetup->setFitToPage(true);
+      $pageSetup->setOrientation(PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+      $pageSetup->setPaperSize(PhpSpreadsheet\Worksheet\PageSetup::PAPERSIZE_A3);
+    }
 
     /*
      **************************************************************************
@@ -199,7 +279,7 @@ abstract class AbstractSpreadsheetExporter
 
     $fileType = self::FILE_TYPES[$format->getValue()];
 
-    $writerClass = '\\PhpOffice\\PhpSpreadsheet\\Writer\\'.$fileType['writer'];
+    $writerClass = '\\PhpOffice\\PhpSpreadsheet\\Writer\\' . $fileType['writer'];
     $writer = new $writerClass($spreadSheet);
 
     $writer->save($fileName);
