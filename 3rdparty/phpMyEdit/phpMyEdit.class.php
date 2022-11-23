@@ -2130,15 +2130,30 @@ class phpMyEdit
 					$this->fdd[$k][self::FDD_SELECT] != 'D' && $m == '') {
 					continue;
 				}
-				if ($this->fdd[$k][self::FDD_SELECT] == 'N') {
-					$afilter = addslashes($m);
+				if ($this->fdd[$k][self::FDD_SELECT] == 'N' || $this->col_has_datemask($k)) {
 					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
-					$qo[$k] = [
-						'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
-						'fqnTemplate' => '%s',
-						'oper' => $mc,
-						'value' => "'$afilter'",
-					];
+					if ($this->col_has_datemask($k)) {
+						$qo[$k] = [
+							'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
+							'fqnTemplate' => '%s',
+							'oper' => $mc,
+							'value' => fn($values, $text = false) => $text
+							? $values[0]
+							: "'" . $this->timestampToDatabase(
+								$this->makeTimeStampFromUser($values[0]),
+								$k
+							) . "'",
+							'generatorValues' => [ $m ],
+						];
+					} else {
+						$afilter = addslashes($m);
+						$qo[$k] = [
+							'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
+							'fqnTemplate' => '%s',
+							'oper' => $mc,
+							'value' => "'$afilter'",
+						];
+					}
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
 				} else {
@@ -4611,7 +4626,7 @@ class phpMyEdit
 					: ($maxlen < 30 ? min($maxlen, 8) : 12);
 				$len_props .= ' size="'.$size.'"';
 				$len_props .= ' maxlength="'.$maxlen.'"';
-				if ($this->fdd[$fd][self::FDD_SELECT] == 'N') {
+				if ($this->fdd[$fd][self::FDD_SELECT] == 'N' || $this->col_has_datemask($k)) {
 					$css_comp_class_name = $this->getCSSclass('comp-filter', null, null, $css_postfix);
 
 					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
