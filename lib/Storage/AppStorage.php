@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Storage;
 
+use InvalidArgumentException;
+
 use OCP\IL10N;
 use OCP\ILogger;
 use OCP\Files\IAppData;
@@ -36,6 +38,11 @@ use Spatie\TemporaryDirectory\TemporaryDirectory; // for ordinary file-system te
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 
+/**
+ * App-storage wrapper in order to have a common interface with the user-storage.
+ *
+ * @todo Maybe this class should not exists. Check whether its methods are used.
+ */
 class AppStorage
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -53,10 +60,11 @@ class AppStorage
   /** @var IFolder */
   private $draftsFolder;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IAppData $appData
-    , ILogger $logger
-    , IL10N $l10n
+    IAppData $appData,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->appData = $appData;
     $this->logger = $logger;
@@ -68,8 +76,16 @@ class AppStorage
       $this->logException($t);
     }
   }
+  // phpcs:enable
 
-  public function ensureFolder($name): ISimpleFolder
+  /**
+   * Ensure a folder exists withtout throwing an exception.
+   *
+   * @param string $name Folder name.
+   *
+   * @return ISimpleFolder
+   */
+  public function ensureFolder(string $name):ISimpleFolder
   {
     try {
       $folder = $this->getFolder($name);
@@ -79,29 +95,44 @@ class AppStorage
     return $folder;
   }
 
+  /**
+   * Generate a random file.
+   *
+   * @param string $folderName The name of the parent-folder of the new file.
+   * in.
+   *
+   * @return ISimpleFile
+   */
   public function newTemporaryFile(string $folderName):ISimpleFile
   {
     $name = Uuid::create();
     switch ($folderName) {
-    case self::UPLOAD_FOLDER:
-      $folder = $this->uploadFolder;
-      break;
-    case self::DRAFTS_FOLDER:
-      $folder = $this->draftsFolder;
-      break;
-    default:
-      $folder = $this->ensureFolder($folderName);
-      break;
+      case self::UPLOAD_FOLDER:
+        $folder = $this->uploadFolder;
+        break;
+      case self::DRAFTS_FOLDER:
+        $folder = $this->draftsFolder;
+        break;
+      default:
+        $folder = $this->ensureFolder($folderName);
+        break;
     }
     return $folder->newFile($name);
   }
 
-  public function getFile($dirName, $fileName = null):ISimpleFile
+  /**
+   * @param string $dirName
+   *
+   * @param null|string $fileName
+   *
+   * @return ISimpleFile
+   */
+  public function getFile(string $dirName, ?string $fileName = null):ISimpleFile
   {
     if (empty($fileName)) {
       $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
       if (count($components) != 2) {
-        throw new \InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
+        throw new InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
       }
       list($dirName, $fileName) = $components;
     }
@@ -110,12 +141,19 @@ class AppStorage
     return $folder->getFile($fileName);
   }
 
-  public function fileExists($dirName, $fileName = null):bool
+  /**
+   * @param string $dirName
+   *
+   * @param null|string $fileName
+   *
+   * @return bool
+   */
+  public function fileExists(string $dirName, ?string $fileName = null):bool
   {
     if (empty($fileName)) {
       $components = array_filter(Util::explode(self::PATH_SEP, $dirName));
       if (count($components) != 2) {
-        throw new \InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
+        throw new InvalidArgumentException($this->l->t('Path "%s" must consist of exactly one directory and exactly one file component.'));
       }
       list($dirName, $fileName) = $components;
     }
@@ -124,11 +162,18 @@ class AppStorage
     return $folder->fileExists($fileName);
   }
 
-  public function fileExistsInFolder($dirName, $fileName):bool
+  /**
+   * @param string $dirName
+   *
+   * @param string $fileName
+   *
+   * @return bool
+   */
+  public function fileExistsInFolder(string $dirName, string $fileName):bool
   {
     $components = array_filter(Util::explode(self::PATH_SEP, $fileName));
     if (count($components) == 2) {
-      if ($components[0] != $dirname) {
+      if ($components[0] != $dirName) {
         return false;
       }
       $fileName = $components[1];
@@ -136,34 +181,56 @@ class AppStorage
     return $this->fileExists($dirName, $fileName);
   }
 
-  public function uploadExists($fileName):bool
+  /**
+   * @param string $fileName
+   *
+   * @return bool
+   */
+  public function uploadExists(string $fileName):bool
   {
     return $this->fileExistsInFolder(self::UPLOAD_FOLDER, $fileName);
   }
 
-  public function draftExists($fileName):bool
+  /**
+   * @param string $fileName
+   *
+   * @return bool
+   */
+  public function draftExists(string $fileName):bool
   {
     return $this->fileExistsInFolder(self::DRAFTS_FOLDER, $fileName);
   }
 
+  /** @return ISimpleFile */
   public function newUploadFile():ISimpleFile
   {
     $name = Uuid::create();
     return $this->uploadFolder->newFile($name);
   }
 
-  public function getUploadFile($name):ISimpleFile
+  /**
+   * @param string $name
+   *
+   * @return ISimpleFile
+   */
+  public function getUploadFile(string $name):ISimpleFile
   {
     return $this->uploadFolder->getFile($name);
   }
 
+  /** @return ISimpleFile */
   public function newDraftsFile():ISimpleFile
   {
     $name = Uuid::create();
     return $this->draftsFolder->newFile($name);
   }
 
-  public function getDraftsFile($name):ISimpleFile
+  /**
+   * @param string $name
+   *
+   * @return ISimpleFile
+   */
+  public function getDraftsFile(string $name):ISimpleFile
   {
     return $this->draftsFolder->getFile($name);
   }
@@ -171,8 +238,14 @@ class AppStorage
   /**
    * Remove all files in $folder older than $age according to their
    * mtime.
+   *
+   * @param ISimpleFolder $folder
+   *
+   * @param int $age Unix time-stamp.
+   *
+   * @return void
    */
-  public function purgeFolder(ISimpleFolder $folder, $age)
+  public function purgeFolder(ISimpleFolder $folder, int $age):void
   {
     $now = time();
     /** @var ISimpleFile $file */
@@ -186,6 +259,12 @@ class AppStorage
 
   /**
    * Move the contents of a "real" file to the given app-folder.
+   *
+   * @param string $srcFile
+   *
+   * @param ISimpleFile $dstFile
+   *
+   * @return ISimpleFile
    */
   public function moveFileSystemFile(string $srcFile, ISimpleFile $dstFile):ISimpleFile
   {
@@ -195,7 +274,13 @@ class AppStorage
   }
 
   /**
-   * Move the contents of a "real" file to the given app-folder.
+   * Copy the contents of a "real" file to the given app-folder.
+   *
+   * @param string $srcFile
+   *
+   * @param ISimpleFile $dstFile
+   *
+   * @return ISimpleFile
    */
   public function copyFileSystemFile(string $srcFile, ISimpleFile $dstFile):ISimpleFile
   {
@@ -207,10 +292,11 @@ class AppStorage
    * Get the folder with name $name
    *
    * @param string $name
+   *
    * @return ISimpleFolder
+   *
    * @throws NotFoundException
    * @throws \RuntimeException
-   * @since 11.0.0
    */
   public function getFolder(string $name): ISimpleFolder
   {
@@ -221,11 +307,11 @@ class AppStorage
    * Get all the Folders
    *
    * @return ISimpleFolder[]
+   *
    * @throws NotFoundException
    * @throws \RuntimeException
-   * @since 11.0.0
    */
-  public function getDirectoryListing(): array
+  public function getDirectoryListing():array
   {
     return $this->appData->getDirectoryListing();
   }
@@ -234,27 +320,24 @@ class AppStorage
    * Create a new folder named $name
    *
    * @param string $name
+   *
    * @return ISimpleFolder
+   *
    * @throws NotPermittedException
    * @throws \RuntimeException
-   * @since 11.0.0
    */
-  public function newFolder(string $name): ISimpleFolder
+  public function newFolder(string $name):ISimpleFolder
   {
     return $this->appData->newFolder($name);
   }
 
   /**
    * Return a system-directory path to temporary storage.
+   *
+   * @return string
    */
-  public function getTemporaryDirectory()
+  public function getTemporaryDirectory():string
   {
     return sys_get_temp_dir();
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

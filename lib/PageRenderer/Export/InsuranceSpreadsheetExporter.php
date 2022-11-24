@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\PageRenderer;
 
+use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /**
@@ -113,13 +114,16 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param InstrumentInsuranceService $insuranceService
    *
    * @param FuzzyInputService $fuzzyInputService
+   *
+   * @param FontService $fontService
    */
   public function __construct(
     PageRenderer\InstrumentInsurances $renderer,
     InstrumentInsuranceService $insuranceService,
     FuzzyInputService $fuzzyInputService,
+    FontService $fontService,
   ) {
-    parent::__construct($renderer->configService());
+    parent::__construct($renderer->configService(), $fontService);
     $this->renderer = $renderer;
     $this->insuranceService = $insuranceService;
     $this->fuzzyInputService = $fuzzyInputService;
@@ -127,7 +131,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $this->preLastColumnAddress = chr(ord('A') + count(self::EXPORT_COLUMNS) - 2);
     $this->lastColumnAddress = chr(ord('A') + count(self::EXPORT_COLUMNS) - 1);
 
-    $this->logInfo('COLUMNS ' . $this->preLastColumnAddress . ' ' . $this->lastColumnAddress);
     $chars = range('A', $this->lastColumnAddress);
     $this->spreadSheetColumns = array_combine(self::EXPORT_COLUMNS, $chars);
   }
@@ -166,8 +169,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     // $date = $meta['date'];
 
     $meta['name'] = $this->l->t('Instrument Insurances');
-
-    $this->logInfo('META ' . print_r($meta, true));
 
     // $template = $this->renderer->template();
 
@@ -403,7 +404,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         ],
       ]);
 
-      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $sheet->getHighestColumn() . $sheet->getHighestRow())->applyFromArray([
+      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $this->lastColumnAddress . $sheet->getHighestRow())->applyFromArray([
         'borders' => [
           'allBorders' => [
             'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -412,9 +413,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
       ]);
 
       // Make the header a little bit prettier
-      $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
-      $sheet->getRowDimension(1 + $headerOffset)->setRowHeight($ptHeight + $ptHeight / 4);
-      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $sheet->getHighestColumn() . (1 + $headerOffset))->applyFromArray([
+
+      // Set wrap-text for the header line, width and height calculations are done by the parent class.
+      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $this->lastColumnAddress . (1 + $headerOffset))->getAlignment()->setWrapText(true);
+
+      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $this->lastColumnAddress . (1 + $headerOffset))->applyFromArray([
         'font' => [
           'bold' => true
         ],
@@ -439,8 +442,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         ],
       ]);
 
-      $sheet->getStyle('A' . (1 + $headerOffset) . ':' . $sheet->getHighestColumn() . (1 + $headerOffset))->getAlignment()->setWrapText(true);
-
       /*
        *
        ***************************************************************************/
@@ -453,10 +454,10 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
       $ptHeight = PhpSpreadsheet\Shared\Font::getDefaultRowHeightByFont($spreadSheet->getDefaultStyle()->getFont());
 
-      $highCol = $sheet->getHighestColumn();
+      $highCol = $this->lastColumnAddress;
       for ($i = 1; $i <= $headerOffset; ++$i) {
         $sheet->mergeCells('A' . $i . ':' . $highCol . $i);
-        $sheet->getRowDimension($i)->setRowHeight($ptHeight + $ptHeight / 6);
+        $sheet->getRowDimension($i)->setRowHeight(-1); // $ptHeight + $ptHeight / 6);
       }
 
       // Format the mess a little bit
@@ -580,14 +581,11 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     foreach (self::EXPORT_COLUMNS as $columnKey) {
       $cellValue = $exportData[$columnKey];
       $sheet->setCellValue($column . ($row + $offset), $cellValue);
-      if ($header) {
-        $sheet->getColumnDimension($column)->setAutoSize(true);
-      }
       ++$column;
     }
     if (!$header) {
       ++$rowCnt;
-      $sheet->getStyle('A' . ($row + $offset).':'.$sheet->getHighestColumn().($row+$offset))->applyFromArray([
+      $sheet->getStyle('A' . ($row + $offset).':'.$this->lastColumnAddress.($row+$offset))->applyFromArray([
         'fill' => [
           'fillType' => PhpSpreadsheet\Style\Fill::FILL_SOLID,
           'color' => [
@@ -610,7 +608,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           $styleArray['font'] = [
             'italic' => true,
           ];
-          $italicRange = 'B' . ($row + $offset) . ':' . $sheet->getHighestColumn() . ($row + $offset);
+          $italicRange = 'B' . ($row + $offset) . ':' . $this->lastColumnAddress . ($row + $offset);
           $sheet->getStyle($italicRange)->applyFromArray(
             $styleArray,
           );
@@ -625,7 +623,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
               ],
             ],
           ];
-          $colorRange = 'B' . ($row + $offset) . ':' . $sheet->getHighestColumn() . ($row + $offset);
+          $colorRange = 'B' . ($row + $offset) . ':' . $this->lastColumnAddress . ($row + $offset);
           $sheet->getStyle($colorRange)->applyFromArray($styleArray);
         }
       }
@@ -635,7 +633,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           $styleArray['font'] = [
             'italic' => true,
           ];
-          $italicRange = 'B' . ($row + $offset) . ':' . $sheet->getHighestColumn() . ($row + $offset);
+          $italicRange = 'B' . ($row + $offset) . ':' . $this->lastColumnAddress . ($row + $offset);
           $sheet->getStyle($italicRange)->applyFromArray(
             $styleArray,
           );
@@ -650,7 +648,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
               ],
             ],
           ];
-          $colorRange = 'B' . ($row + $offset) . ':' . $sheet->getHighestColumn() . ($row + $offset);
+          $colorRange = 'B' . ($row + $offset) . ':' . $this->lastColumnAddress . ($row + $offset);
           $sheet->getStyle($colorRange)->applyFromArray($styleArray);
         }
       }

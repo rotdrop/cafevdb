@@ -452,7 +452,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Name'),
         'tab'      => [ 'id' => 'musician' ],
-        'input|LF' => 'H',
+        'input|LF' => $this->pmeBare ? '' : 'H',
         'maxlen'   => 384,
       ]);
 
@@ -461,7 +461,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('First Name'),
         'tab'      => [ 'id' => 'musician' ],
-        'input|LF' => 'H',
+        'input|LF' => $this->pmeBare ? '' : 'H',
         'maxlen'   => 384,
       ]);
 
@@ -470,7 +470,7 @@ class ProjectParticipants extends PMETableViewBase
       [
         'name'     => $this->l->t('Nickname'),
         'tab'      => [ 'id' => 'musician' ],
-        'input|LF' => 'H',
+        'input|LF' => $this->pmeBare ? '' : 'H',
         'sql|LFVD' => 'IF($join_col_fqn IS NULL OR $join_col_fqn = \'\', $table.first_name, $join_col_fqn)',
         'maxlen'   => 384,
         'display|ACP' => [

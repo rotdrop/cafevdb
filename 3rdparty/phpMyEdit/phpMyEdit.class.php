@@ -2130,15 +2130,30 @@ class phpMyEdit
 					$this->fdd[$k][self::FDD_SELECT] != 'D' && $m == '') {
 					continue;
 				}
-				if ($this->fdd[$k][self::FDD_SELECT] == 'N') {
-					$afilter = addslashes($m);
+				if ($this->fdd[$k][self::FDD_SELECT] == 'N' || $this->col_has_datemask($k)) {
 					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
-					$qo[$k] = [
-						'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
-						'fqnTemplate' => '%s',
-						'oper' => $mc,
-						'value' => "'$afilter'",
-					];
+					if ($this->col_has_datemask($k)) {
+						$qo[$k] = [
+							'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
+							'fqnTemplate' => '%s',
+							'oper' => $mc,
+							'value' => fn($values, $text = false) => $text
+							? $values[0]
+							: "'" . $this->timestampToDatabase(
+								$this->makeTimeStampFromUser($values[0]),
+								$k
+							) . "'",
+							'generatorValues' => [ $m ],
+						];
+					} else {
+						$afilter = addslashes($m);
+						$qo[$k] = [
+							'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
+							'fqnTemplate' => '%s',
+							'oper' => $mc,
+							'value' => "'$afilter'",
+						];
+					}
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
 				} else {
@@ -3498,6 +3513,13 @@ class phpMyEdit
 
 	function doFetchToolTip($css_class_name, $name, $label = false)
 	{
+		// otherwise use name, label, css in that order
+		if(isset($this->tooltips[$name])) {
+			return $this->tooltips[$name];
+		} elseif($label && isset($this->tooltips[$label])) {
+			return $this->tooltips[$label];
+		}
+
 		// First clean the CSS-class, it may consist of more than one
 		// class.
 		$css_classes = preg_split('/\s+/', $css_class_name);
@@ -3509,13 +3531,13 @@ class phpMyEdit
 			$css_classes);
 		array_unshift($css_classes, $first_css);
 
-		// otherwise use name, label, css in that order
-		if(isset($this->tooltips[$name])) {
-			return $this->tooltips[$name];
-		} elseif($label && isset($this->tooltips[$label])) {
-			return $this->tooltips[$label];
+		if (!str_starts_with($name, $this->cgi['prefix']['sys'])) {
+			$suffixes = [ ':'.$name, '' ];
+		} else {
+			$suffixes = [''];
 		}
-		foreach ([ ':'.$name, '' ] as $suffix) {
+
+		foreach ($suffixes as $suffix) {
 			foreach ($css_classes as $css_class_name) {
 				if (isset($this->tooltips[$css_class_name.$suffix])) {
 					return $this->tooltips[$css_class_name.$suffix];
@@ -4596,7 +4618,9 @@ class phpMyEdit
 										   $negate,
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
-				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx', $css_class_name,
+				$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-select', null, null);
+				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx',
+									   $css_second_class_name . ' ' . $css_class_name,
 									   $vals, $groups, $titles, $data, $selected,
 									   $multiple || true, $readonly, false, $strip_tags, $escape,
 									   null /* help */, $attributes);
@@ -4611,14 +4635,18 @@ class phpMyEdit
 					: ($maxlen < 30 ? min($maxlen, 8) : 12);
 				$len_props .= ' size="'.$size.'"';
 				$len_props .= ' maxlength="'.$maxlen.'"';
-				if ($this->fdd[$fd][self::FDD_SELECT] == 'N') {
-					$css_comp_class_name = $this->getCSSclass('comp-filter', null, null, $css_postfix);
+				if ($this->fdd[$fd][self::FDD_SELECT] == 'N' || $this->col_has_datemask($k)) {
+					$css_comp_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-comp', null, null, $css_postfix);
 
 					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
 										   $css_comp_class_name,
 										   self::COMP_OPS, null, null, null, $mc);
+					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-numeric', null, null);
+				} else {
+					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-text', null, null);
 				}
+				$css_class_name = $css_second_class_name . ' ' . $css_class_name;
 				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
 				echo '" type="text" name="'.$name.'"',$len_props;

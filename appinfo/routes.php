@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
+use OCA\CAFEVDB\Controller\AdminSettingsController;
 use OCA\CAFEVDB\Service\MailingListsService;
 
 /**
@@ -178,25 +179,30 @@ $routes = [
     ],
     // admin settings
     [
-      'name' => 'admin_settings#set_admin_only',
+      'name' => 'admin_settings#post_admin_only',
       'url' => '/settings/admin/{parameter}',
       'verb' => 'POST',
       'requirements' => [
-        'parameter' => '^(?!' . AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY . ').*$',
+        'parameter' => '^(?!' . implode('|', AdminSettingsController::DELEGATABLE_POST_REQUESTS) . ').*$',
       ],
     ],
     [
-      'name' => 'admin_settings#set_delegated',
+      'name' => 'admin_settings#post_delegated',
       'url' => '/settings/admin/{parameter}',
       'verb' => 'POST',
       'requirements' => [
-        'parameter' => AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY, // regexp, can add more
+        'parameter' => '(' . implode('|', AdminSettingsController::DELEGATABLE_POST_REQUESTS) . ')', // regexp, can add more
       ],
     ],
     [
       'name' => 'admin_settings#get',
       'url' => '/settings/admin/{parameter}',
       'verb' => 'GET',
+    ],
+    [
+      'name' => 'admin_settings#post',
+      'url' => '/settings/admin/{section}/{operation}',
+      'verb' => 'POST',
     ],
     // personal settings
     [

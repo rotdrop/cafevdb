@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -34,6 +36,7 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\RequestService;
+use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 
 /** AJAX end-points for admin setttings. */
@@ -41,6 +44,17 @@ class AdminSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\ResponseTrait;
+
+  public const POST_REQUEST_FONT_CACHE = 'font-cache';
+  public const DELEGATABLE_POST_REQUESTS = [
+    self::POST_REQUEST_FONT_CACHE,
+    FontService::DEFAULT_OFFICE_FONT_CONFIG,
+    AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY,
+  ];
+
+  public const FONT_CACHE_UPDATE = 'update'; // scan for new entries
+  public const FONT_CACHE_RESCAN = 'rescan'; // == purge + update
+  public const FONT_CACHE_PURGE = 'purge'; // just remove everything
 
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
   private $wikiRPC;
@@ -91,6 +105,21 @@ class AdminSettingsController extends Controller
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
         $value = $this->di(CloudUserConnectorService::class)->haveCloudUserBackendConfig();
         break;
+      case FontService::TTF_FONTS_FOLDER_CONFIG:
+        /** @var FontService $fontService */
+        $fontService = $this->di(CloudUserConnectorService::class);
+        $value = $fontService->getFontsFolderName();
+        break;
+      case AdminSettings::TRUE_TYPE_FONTS:
+        /** @var FontService $fontService */
+        $fontService = $this->di(CloudUserConnectorService::class);
+        $value = $fontService->getFontFolderEntries();
+        break;
+      case FontService::DEFAULT_OFFICE_FONT:
+        /** @var FontService $fontService */
+        $fontService = $this->di(CloudUserConnectorService::class);
+        $value = $fontService->getDefaultFontName();
+        break;
     }
     if ($value != null) {
       return new DataResponse([ 'value' => $value ]);
@@ -108,27 +137,30 @@ class AdminSettingsController extends Controller
    *
    * @NoGroupMemberRequired
    */
-  public function setAdminOnly(string $parameter, mixed $value):DataResponse
+  public function postAdminOnly(string $parameter, mixed $value):DataResponse
   {
-    return $this->set($parameter, $value);
+    return $this->post($parameter, $value);
   }
 
   /**
    * @param string $parameter
    *
-   * @param mixed $value
+   * @param mixed $value Value to set.
+   *
+   * @param null|string $operation Operation to perform.
    *
    * @return DataResponse
    *
    * @NoGroupMemberRequired
-   * _AT_SubAdminRequired
    * @AuthorizedAdminSetting(settings=OCA\CAFEVDB\Settings\Admin)
    */
-  public function setDelegated(string $parameter, mixed $value):DataResponse
+  public function postDelegated(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
     switch ($parameter) {
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
-        return $this->set($parameter, $value);
+      case FontService::DEFAULT_OFFICE_FONT_CONFIG:
+      case self::POST_REQUEST_FONT_CACHE:
+        return $this->post($parameter, $value, $operation);
     }
     return self::grumble($this->l->t('Settings is reserved to cloud-administrators: "%s".', $parameter));
   }
@@ -136,11 +168,13 @@ class AdminSettingsController extends Controller
   /**
    * @param string $parameter
    *
-   * @param mixed $value
+   * @param mixed $value Value to set.
+   *
+   * @param null|string $operation Operation to perform.
    *
    * @return DataResponse
    */
-  private function set(string $parameter, mixed $value = null):DataResponse
+  private function post(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
     $wikiNameSpace = $this->getAppValue('wikinamespace');
     $orchestraUserGroup = $this->getAppValue('usergroup');
@@ -179,7 +213,7 @@ class AdminSettingsController extends Controller
           if (empty($userGroup)) {
             return self::grumble($this->l->t('Orchestra management group is unset or non-existent'));
           }
-          $currentAdmins = array_map(fn($user) => user->getUID(), $this->getGroupSubAdmins());
+          $currentAdmins = array_map(fn($user) => $user->getUID(), $this->getGroupSubAdmins());
           $missing = array_diff($value, $currentAdmins);
           $remaining = array_intersect($value, $currentAdmins);
           $excess = array_diff($currentAdmins, $value);
@@ -193,7 +227,7 @@ class AdminSettingsController extends Controller
               $user = $this->user($userId);
               $this->subAdminManager()->createSubAdmin($user, $userGroup);
               $success[] = $this->l->t('Added "%1$s" as sub-admin of "%2$s".', [ $userId, $userGroup->getGID(), ]);
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
               $this->logException($t);
               $failure[] = $this->t->t('Failed to add "%1$s" as sub-admin to "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
             }
@@ -203,7 +237,7 @@ class AdminSettingsController extends Controller
               $user = $this->user($userId);
               $this->subAdminManager()->deleteSubAdmin($user, $userGroup);
               $success[] = $this->l->t('Deleted "%1$s" as sub-admin from "%2$s".', [ $userId, $userGroup->getGID(), ]);
-            } catch (\Throwable $t) {
+            } catch (Throwable $t) {
               $this->logException($t);
               $failure[] = $this->t->t('Failed to delete "%1$s" as sub-admin from "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
             }
@@ -270,11 +304,17 @@ class AdminSettingsController extends Controller
               'permanent' => [ $settingsHint, ],
             ],
           ]);
-
+        case FontService::DEFAULT_OFFICE_FONT_CONFIG:
+          $this->setAppValue($parameter, $value);
+          return self::dataResponse([
+            'messages' => $this->l->t('Default office font set to "%s".', $value),
+          ]);
+        case self::POST_REQUEST_FONT_CACHE:
+          return $this->fontCache($operation);
         default:
           break;
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       return self::grumble($this->exceptionChainData($t));
     }
@@ -309,5 +349,48 @@ class AdminSettingsController extends Controller
   {
     $this->wikiRPC->delAcl('*', '@'.$group);
     $this->wikiRPC->delAcl($nameSpace.':*', '@'.$group);
+  }
+
+  /**
+   * Font cache maintenance.
+   *
+   * @param string $operation
+   *
+   * @return DataResponse
+   */
+  private function fontCache(string $operation):DataResponse
+  {
+    /** @var FontService $fontService */
+    $fontService = $this->di(FontService::class);
+    $fonts = null;
+    try {
+      switch ($operation) {
+        case self::FONT_CACHE_PURGE:
+          $fontService->purgeFontsFolder();
+          $fonts = [];
+          break;
+        case self::FONT_CACHE_RESCAN:
+          $fontService->purgeFontsFolder();
+          // fall through
+        case self::FONT_CACHE_UPDATE:
+          $fonts = $fontService->populateFontsFolder();
+          break;
+        default:
+          return self::grumble($this->l->t('Unknown font cache operation: "%s".', $operation));
+      }
+    } catch (Throwable $t) {
+      $this->logException($t);
+      return self::grumble($this->l->t('Font operation "%1$s" failed with exception "%2$s".', [
+        $operation, $t->getMessage(),
+      ]));
+    }
+    if ($fonts !== null) {
+      return self::dataResponse([
+        'message' => $this->l->t('Font operation "%s" successful.', $operation),
+        'fonts' => $fonts,
+        'default' => $fontService->getDefaultFontName(),
+      ]);
+    }
+    return self::grumble($this->l->t('Unknown internal error during font-cache operation: "%s".', $operation));
   }
 }

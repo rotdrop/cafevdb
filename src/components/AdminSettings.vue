@@ -24,7 +24,9 @@
 </script>
 <template>
   <div class="templateroot">
-    <SettingsSection :class="['major', { 'icon-loading': loading.general }]" :title="t(appName, 'Camerata DB')">
+    <SettingsSection :class="['major', { 'icon-loading': loading.general }]"
+                     :title="t(appName, 'Camerata DB')"
+    >
       <div v-if="config.isAdmin">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="info" v-html="forword">
@@ -56,6 +58,10 @@
                          @update="saveSetting('wikiNameSpace', ...arguments)"
                          @error="showErrorToast"
       />
+    </SettingsSection>
+    <SettingsSection v-if="config.isSubAdmin"
+                     :title="t(appName, 'Configure User Backend')"
+    >
       <div>
         <button type="button"
                 name="cloudUserBackendConfig"
@@ -187,26 +193,71 @@
         </Actions>
       </span>
     </SettingsSection>
+    <SettingsSection v-if="config.isSubAdmin"
+                     :class="['sub-admin', 'fonts-container', { 'icon-loading': loading.fonts || loading.general }]"
+                     :title="t(appName, 'Configure Office Fonts for Office Exports')"
+    >
+      <div>
+        <span class="file-name-label">{{ t(appName, 'Font Data Folder') }}</span>
+        <span class="file-name">{{ humanOfficeFontsFolder }}</span>
+      </div>
+      <div class="flex-container flex-align-center">
+        <label for="default-font" class="default-font">{{ t(appName, 'Default Font') }}</label>
+        <Multiselect id="default-font"
+                     v-model="defaultOfficeFont"
+                     :options="Object.values(config.officeFonts)"
+                     track-by="family"
+                     label="family"
+                     :multiple="false"
+                     :disabled="loading.general || loading.fonts"
+        />
+        <Actions :disabled="loading.general || loading.fonts">
+          <ActionButton icon="icon-add"
+                        @click="updateFontData"
+          >
+            {{ t(appName, 'Update Font Data') }}
+          </ActionButton>
+          <ActionButton icon="icon-play"
+                        @click="rescanFontData"
+          >
+            {{ t(appName, 'Rescan Font Data') }}
+          </ActionButton>
+          <ActionButton icon="icon-delete"
+                        @click="purgeFontData"
+          >
+            {{ t(appName, 'Purge Font Data') }}
+          </ActionButton>
+        </Actions>
+      </div>
+    </SettingsSection>
   </div>
 </template>
 <script>
 import Vue from 'vue'
-import { appName } from '../app/app-info.js'
+
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ProgressBar from '@nextcloud/vue/dist/Components/ProgressBar'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
+import axios from '@nextcloud/axios'
+import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import { loadState } from '@nextcloud/initial-state'
+import { showError, showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+
+import { appName } from '../app/app-info.js'
+
 import SelectMusicians from './SelectMusicians'
 import SelectProjects from './SelectProjects'
-import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SettingsInputText from './SettingsInputText'
 import SettingsSelectGroup from './SettingsSelectGroup'
 import SettingsSelectUsers from './SettingsSelectUsers'
-import { showError, showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
-import axios from '@nextcloud/axios'
-import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import tooltip from '../mixins/tooltips.js'
 import formatDate from '../mixins/formatDate.js'
+
+const initialState = loadState(appName, 'adminConfig')
+console.info('INITIAL ADMIN STATE', initialState)
 
 export default {
   name: 'AdminSettings',
@@ -214,6 +265,7 @@ export default {
     Actions,
     ActionButton,
     ActionCheckbox,
+    Multiselect,
     ProgressBar,
     SelectMusicians,
     SelectProjects,
@@ -222,22 +274,18 @@ export default {
     SettingsSelectGroup,
     SettingsSelectUsers,
   },
-  props: {
-    config: {
-      type: Object,
-      required: true,
-    }
-  },
   mixins: [
     tooltip,
     formatDate,
   ],
   data() {
     return {
+      defaultOfficeFont: null,
       loading: {
         general: true,
         recryption: true,
         tooltips: true,
+        fonts: true,
       },
       settings: {
         orchestraUserGroup: '',
@@ -245,12 +293,14 @@ export default {
         wikiNameSpace: '',
         cloudUserBackendConfig: '',
       },
+      config: initialState,
       hints: {
         'settings:admin:cloud-user-backend-conf': '',
         'settings:admin:wiki-name-space': '',
         'settings:admin:user-group': '',
         'settings:admin:user-group:admins': '',
         'settings:admin:access-control:musicians': '',
+        'settings:admin:true-type-fonts-folder': '',
       },
       forword: '',
       recryption: {
@@ -281,7 +331,18 @@ export default {
     this.clearTimeout(this.recryptionPollTimer)
     this.recryptionPollTimer = null
   },
+  watch: {
+    defaultOfficeFont(newValue, oldValue) {
+      console.info('DEFAULT FONT CHANGED', newValue, oldValue)
+      if (!this.loading.fonts && newValue !== oldValue) {
+        this.saveSetting('defaultOfficeFont', newValue.family, true)
+      }
+    }
+  },
   computed: {
+    humanOfficeFontsFolder() {
+      return '.../' + (this.config.officeFontsFolder + '/').replace(/\/+/, '/').split('/').splice(-4).join('/')
+    },
     groupAdminsDisabled() {
       return this.settings.orchestraUserGroup == ''
     },
@@ -319,7 +380,7 @@ export default {
       return this.access.action.failure
     },
     isLoading() {
-      return this.loading.general || this.loading.tooltips || this.loading.recryption
+      return this.loading.general || this.loading.tooltips || this.loading.recryption || this.loading.fonts
     },
   },
   methods: {
@@ -332,10 +393,17 @@ export default {
     async getData() {
       this.loading.general = true
       this.loading.recryption = true
+      this.loading.fonts = true
       this.loadTooltips()
       this.getSettingsData()
+
       // fetch recryption requests
       this.getRecryptionRequests()
+
+      this.disableUnavailableFontOptions()
+      this.defaultOfficeFont = this.config.officeFonts[this.config.defaultOfficeFont]
+      this.loading.fonts = false
+      console.info('CONFIG INITIAL STATE', this.config)
     },
     async loadTooltips() {
       this.loading.tooltips = true
@@ -711,6 +779,52 @@ export default {
       this.access.action.done = 0
       this.access.action.totals = 0
     },
+    async updateFontData() {
+      return this.fontCacheOperaton('update')
+    },
+    async rescanFontData() {
+      return this.fontCacheOperaton('rescan')
+    },
+    async purgeFontData() {
+      return this.fontCacheOperaton('purge')
+    },
+    async fontCacheOperaton(operation) {
+      this.loading.fonts = true
+      try {
+        const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/font-cache'), { operation })
+        const responseData = response.data
+        if (responseData.message) {
+          showInfo(responseData.message)
+        } else {
+          showInfo(t(appName, 'Font cache operation {operation} completed successfully.', { operation }))
+        }
+        this.config.officeFonts = responseData.fonts
+        this.config.defaultOfficeFont = responseData.default
+        this.defaultOfficeFont = this.config.officeFonts[this.config.defaultOfficeFont]
+        this.disableUnavailableFontOptions()
+        console.info('FONT DATA', responseData)
+      } catch (e) {
+        console.info('ERROR', e)
+        let message = t(appName, 'reason unknown')
+        if (e.response && e.response.data && e.response.data.message) {
+          message = e.response.data.message
+          console.error('RESPONSE', e.response)
+        }
+        showError(t(appName, 'Could not perform the requested font-cache operation "{operation}": {message}', { operation, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      }
+      this.loading.fonts = false
+    },
+    disableUnavailableFontOptions() {
+      for (const [fontName, fontFiles] of Object.entries(this.config.officeFonts)) {
+        if (fontFiles['x'] && fontFiles['xb'] && fontFiles['xi'] && fontFiles['xbi']) {
+          Vue.set(this.config.officeFonts[fontName], 'disabled', false)
+        } else {
+          Vue.set(this.config.officeFonts[fontName], 'disabled', true)
+          Vue.set(this.config.officeFonts[fontName], '$isDisabled', true)
+          console.info('DISABLE FONT', fontName, this.config.officeFonts[fontName])
+        }
+      }
+    },
   },
 }
 </script>
@@ -722,6 +836,9 @@ export default {
       &align- {
         &center {
           align-items: center;
+        }
+        &baseline {
+          align-items: baseline;
         }
       }
       &justify- {
@@ -808,6 +925,18 @@ export default {
     }
     .checkbox.request-mark + label {
       display:inline-block;
+    }
+  }
+  &.sub-admin {
+    &.fonts-container {
+      .file-name-label {
+      }
+      .file-name {
+        font-family: monospace;
+      }
+      label.default-font {
+        padding-right: 0.5em;
+      }
     }
   }
 }

@@ -52,6 +52,9 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /** @var string */
   private $lastKey = null;
 
+  /** @var string */
+  private $lastToolTip = null;
+
   /** @var array */
   private $failedKeys = [];
 
@@ -156,8 +159,8 @@ class ToolTipsService implements \ArrayAccess, \Countable
   }
 
   /**
-   * Pre-process the given $key, replacing some known prefix separated by the
-   * standard separator.
+   * Pre-process the given $key. If a key starts with a known prefix, but has
+   * a '-' as separator, then replace all dashes by our standard separator.
    *
    * @param string $key The key to process.
    *
@@ -166,8 +169,18 @@ class ToolTipsService implements \ArrayAccess, \Countable
   private function preProcessKey(string $key):string
   {
     foreach (self::SUBKEY_PREFIXES as $prefix) {
-      if (strpos($key, $prefix . '-') === 0) {
-        return $prefix.self::SUB_KEY_SEP.substr($key, strlen($prefix)+1);
+      if (str_starts_with($key, $prefix . '-')) {
+        $key = str_replace(['--', '+-'], ['-minus-', '-plus-'], $key);
+        $lastChar = substr($key, -1);
+        switch ($lastChar) {
+          case '-':
+            $key = substr($key, 0, -1) . '-minus';
+            break;
+          case '+':
+            $key = substr($key, 0, -1) . '-plus';
+            break;
+        }
+        return str_replace('-', self::SUB_KEY_SEP, $key);
       }
     }
     return $key;
@@ -184,11 +197,19 @@ class ToolTipsService implements \ArrayAccess, \Countable
    */
   public function fetch(string $key, bool $escape = true):?string
   {
+    if ($key == $this->lastKey && $escape) {
+      return $this->lastToolTip;
+    }
     $this->lastKey = $key;
+
     $this->makeToolTips();
     $toolTipsData = $this->toolTipsData;
 
+    $oldKey = $key;
     $key = $this->preprocessKey($key);
+    if (str_starts_with($oldKey, 'pme-filter')) {
+      $this->logInfo('FILTER TT ' . $oldKey . ' -> ' . $key);
+    }
 
     $keys = explode(self::SUB_KEY_SEP, $key);
     while (\count($keys) > 0) {
@@ -217,7 +238,9 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
     // idea: allow markdown?
 
-    return empty($tip) ? null : ($escape ? htmlspecialchars($tip) : $tip);
+    $this->lastToolTip = empty($tip) ? null : ($escape ? htmlspecialchars($tip) : $tip);
+
+    return $this->lastToolTip;
   }
 
   // phpcs:disable Generic.Files.LineLength.TooLong
@@ -782,27 +805,29 @@ row to the current table.'),
 
         'apply' => $this->l->t('Saves the current values; the current input form will remain active.'),
 
-        'bulkcommit' => $this->l->t('  Click me to add all selected musicians
+        'bulkcommit' => [
+          'default' => $this->l->t('  Click me to add all selected musicians
 to the selected project. All selected
 musicians on all pages will be added.'),
 
-        'bulkcommit+' => $this->l->t('  Click me to pre-select
+          'plus' => $this->l->t('  Click me to pre-select
 all musicians on all pages
 for the current project.
 Please click the ``Add all\'\'-button to
 actually add them.'),
 
-        'bulkcommit-' => $this->l->t('  Click me to remove
+          'minus' => $this->l->t('  Click me to remove
 all musicians on all pages
 from the pre-selection for
 the current project.'),
 
-        'bulkcommit-check' => $this->l->t('  Check me to pre-select
+          'check' => $this->l->t('  Check me to pre-select
 this musician for the current
 project. Please click the
  ``Add all\'\'-button to
 actually add all selected
 musicians.'),
+        ],
 
         'cancel' => [
           'default' => $this->l->t('Stop the current operation. Settings which already have been stored by
@@ -811,15 +836,17 @@ to the previous view.'),
           'canceldelete' => $this->l->t('Stop the current operation. You will be returned to the previous view.'),
         ],
 
-        'change' => $this->l->t('Directs you to a form with input fields. From there you can return to
+        'change' => [
+          'default' => $this->l->t('Directs you to a form with input fields. From there you can return to
 this form by means of the "Save" or "Back" resp. "Cancel" buttons.'),
 
-        'change-navigation' => [
+          'navigation' => [
           'operation' => $this->l->t('Einzelnen Datensatz anzeigen,
 zeigt ein neues Formular mit
 detaillierten Eingabefeldern
 und Abbruchmöglichkeit.'),
           ],
+        ],
 
         'clear' => [
           'sfn' => $this->l->t('  Klick mich, um die
@@ -829,30 +856,39 @@ Voreinstellung zurückzusetzen.'),
 aktuellen Filter zu löschen.'),
         ],
 
-        'copy-navigation' => [
+        'copy' => [
+          'navigation' => [
           'operation' => $this->l->t('Einzelnen Datensatz kopieren,
 zeigt ein neues Formular mit
 detaillierten Eingabefeldern
 und Abbruchmöglichkeit.'),
+          ],
         ],
 
-        'debit-note' => $this->l->t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli\'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
+        'debit' => [
+          'note' => [
+            'default' => $this->l->t('Click me to export a CSV-table with the selected debit notes suitable for use with AQBanking command-line tool `aqbanking-cli\'. Please refer to the HOWTO in the wiki for further information. Clicking this button will also open the email dialog in order to inform the selected musicians about debiting their bank account.'),
 
-        'debit-note+' => $this->l->t('Select all displayed debit-notes for export.'),
+            '+' => $this->l->t('Select all displayed debit-notes for export.'),
 
-        'debit-note-' => $this->l->t('Deselect all displayed debit-notes from export selection.'),
+            '-' => $this->l->t('Deselect all displayed debit-notes from export selection.'),
 
-        'debit-note-check' => $this->l->t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit\' button above.'),
+            'check' => $this->l->t('Select this debit note for debiting the project fees. In order to actually export the debit-note you have to hit the `Debit\' button above.'),
+          ],
+        ],
 
-        'delete-navigation' => [
-          'operation' => $this->l->t('Einzelnen Datensatz löschen,
+        'delete' => [
+          'navigation' => [
+            'operation' => $this->l->t('Einzelnen Datensatz löschen,
 zeigt den aktuellen Datensatz zunächst an.
 Gelöscht wird der erst nach einer
 weiteren Bestätigung. Trotzdem:
 VORSICHT!.'),
+          ],
         ],
 
-        'misc-email' => $this->l->t('Klick mich, um eine Em@il an die ausgewählten
+        'misc' => [
+          'email' => $this->l->t('Klick mich, um eine Em@il an die ausgewählten
 Musiker zu versenden. Auf der folgenden Seite kann
 die Auswahl dann noch modifiziert werden.
 `ausgewält\' bedeutet: nicht
@@ -860,8 +896,11 @@ nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
 entsprechen.'),
-
-        'misc+-email' => $this->l->t('Klick mich, um alle gerade
+          'debit' => [
+            'note' => $this->l->t('Click to generate bulk-transactions for the selected musicians and receivables.'),
+          ],
+          'plus' => [
+            'email' => $this->l->t('Klick mich, um alle gerade
 angezeigten Musiker zu der
 Em@il-Auswahl hinzuzufügen.
 `angezeigt\' bedeutet: nicht
@@ -869,38 +908,46 @@ nur die auf der aktuellen
 Anzeige-Seite, sondern
 alle, die den Such-Kriterien
 entsprechen.'),
-
-        'misc--email' => $this->l->t('Klick mich, um alle gerade
+            'debit' => [
+              'note' => $this->l->t('Click to select all displayed participants for bulk-transaction generation.'),
+            ],
+          ],
+          'minus' => [
+            'email' => $this->l->t('Klick mich, um alle gerade
 angezeigten Musiker von der
 Em@il-Auswahl zu entfernen'),
-
-        'misc-check-email' => $this->l->t('Adressaten in potentielle
+            'debit' => [
+              'note' => $this->l->t('Click to deselect all displayed participants from the bulk-transaction generation.'),
+            ],
+          ],
+          'check' => [
+            'email' => $this->l->t('Adressaten in potentielle
 Massenmail Adressliste aufnehmen.
 Die Adressaten kann man
 vor dem Senden der Em@il noch
 korrigieren.'),
+            'debit' => [
+              'note' => $this->l->t('Select and deselect this participant and bank-acccount to and from bulk-transaction generation.'),
+            ],
+          ],
+        ],
 
-        'misc-debit-note' => $this->l->t('Click to generate bulk-transactions for the selected musicians and receivables.'),
+        'export' => [
+          'choice' => $this->l->t('Export the visible part of the data-base to an office-format. The `Excel\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
 
-        'misc+-debit-note' => $this->l->t('Click to select all displayed participants for bulk-transaction generation.'),
+          'csv' => $this->l->t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
 
-        'misc--debit-note' => $this->l->t('Click to deselect all displayed participants from the bulk-transaction generation.'),
+          'ods' => $this->l->t('Export in OpenDocument-format (LibreOffice/OpenOffice)'),
 
-        'misc-check-debit-note' => $this->l->t('Select and deselect this participant and bank-acccount to and from bulk-transaction generation.'),
+          'pdf' => $this->l->t('Export as PDF in A3/Landscape, scaled to fit the page size'),
 
-        'export-choice' => $this->l->t('Export the visible part of the data-base to an office-format. The `Excel\'-export should produce useful input for either Libre- or OpenOffice or for the product of some well-known software-corporation with seat in Redmond, USA.'),
+          'excel' => $this->l->t('Export as `full-featured\' Excel-2007 table, `.xslx\'.'),
 
-        'export-csv' => $this->l->t('Export in CSV-format using a semicolon as delimiter (Excel convention)'),
+          'html' => $this->l->t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
+        ],
 
-        'export-ods' => $this->l->t('Export in OpenDocument-format (LibreOffice/OpenOffice)'),
-
-        'export-pdf' => $this->l->t('Export as PDF in A3/Landscape, scaled to fit the page size'),
-
-        'export-excel' => $this->l->t('Export as `full-featured\' Excel-2007 table, `.xslx\'.'),
-
-        'export-html' => $this->l->t('Export as HTML page without navigation elements; can also be loaded into your office-programs.'),
-
-        'filter' => $this->l->t('Field for filter/search criteria.
+        'filter' => [
+          'default' => $this->l->t('Field for filter/search criteria.
 Short explanation: simply type somthing and press <code>ENTER</code>.
 <br/>
 In more detail: For numerical fields there is a select-box with comparison
@@ -931,8 +978,13 @@ It is also possible to match empty fields, in particular:
 <dt>!"%%"</dt>
 <dd>match any row with empty search-field</dd>
 </dl>'),
-
-        'filter-negate' => $this->l->t('Negate the filter, i.e. search for anything not matching the selected options.'),
+          'numeric' => $this->l->t('Field for filter/search criteria.
+Short explanation: simply type somthing and press <code>ENTER</code>.
+This is a numeric field, you can choose from the comparison operators to the left.'),
+          'comp' => $this->l->t('Numeric comparison operators. To submit the query double-click into the search-field to the right or click on the "query" button.'),
+          'select' => $this->l->t('Select from the pull-down menu. Double-click will submit the form. The pull-down can be closed by clicking anywhere outside the menu.'),
+          'negate' => $this->l->t('Negate the filter, i.e. search for anything not matching the selected options.'),
+        ],
 
         'gotoselect' => $this->l->t('Jumps directly to the given page'),
 
@@ -942,12 +994,15 @@ Suchkriterien zu verstecken.'),
         ],
 
         'input' => [
-          'lock-empty' => $this->l->t('Click to unlock if the field is empty, click again to clear the field if the field contains data.'),
-
-          'lock-unlock' => $this->l->t('Click to lock and unlock this input field.'),
+          'lock' => [
+            'empty' => $this->l->t('Click to unlock if the field is empty, click again to clear the field if the field contains data.'),
+            'unlock' => $this->l->t('Click to lock and unlock this input field.'),
+          ],
         ],
 
-        'instrumentation-actions' => $this->l->t('Some usefull convenience actions (click me for details!)'),
+        'instrumentation' => [
+          'actions' => $this->l->t('Some usefull convenience actions (click me for details!)'),
+        ],
 
         'more' => [
           'moreadd' => $this->l->t('Saves the current values and start to generate another new data-set.'),
@@ -982,18 +1037,24 @@ Als Platzhalter verwendet man `%%\'.'),
 Suchkriterien anzuzeigen.'),
         ],
 
-        'showall-tab' => $this->l->t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
+        'showall' => [
+          'tab' => $this->l->t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
+        ],
 
-        'sort' => $this->l->t('Click me to sort by this field! Click again to reverse the search direction. Click another time to disable sorting by this field.'),
+        'sort' => [
+          'default' => $this->l->t('Click me to sort by this field! Click again to reverse the search direction. Click another time to disable sorting by this field.'),
 
-        'sort-rvrt' => $this->l->t('Click me to reverse the sort order by this field!'),
+          'rvrt' => $this->l->t('Click me to reverse the sort order by this field!'),
 
-        'sort-off' => $this->l->t('Click me to remove this field from the sorting criteria!'),
+          'off' => $this->l->t('Click me to remove this field from the sorting criteria!'),
+        ],
 
         'transpose' => $this->l->t('Transpose the displayed table; may be beneficial for tables with only a few rows but many columns!'),
 
-        'view-navigation' => [
-          'operation' => $this->l->t('Einzelnen Datensatz anzeigen'),
+        'view' => [
+          'navigation' => [
+            'operation' => $this->l->t('Einzelnen Datensatz anzeigen'),
+          ],
         ],
       ], // pme:
 
