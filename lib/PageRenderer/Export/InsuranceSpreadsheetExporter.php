@@ -268,7 +268,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           $sheet->setTitle($this->ellipsizeFirst($broker, $scope, PhpSpreadsheet\Worksheet\Worksheet::SHEET_TITLE_MAXIMUM_LENGTH, '; '));
 
           $dueDate = self::convertToTimezoneDate($rates[$brokerScope]['due'], $utc);
-          $lastDueDate = $dueDate->modify('-1 year - 1 day');
+          $lastDueDate = $dueDate->modify('-1 year'); // starting date of insurance period
+          $dueDate = $dueDate->modify('- 1 day'); // ending date of insurance period
 
           $headerOffset = $this->generateHeader($sheet, $meta, $rates[$brokerScope], $brokerNames[$broker], $nowDate);
 
@@ -312,7 +313,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
             $brokerScope = $newScope;
 
             $dueDate = self::convertToTimezoneDate($rates[$brokerScope]['due'], $utc);
-            $lastDueDate = $dueDate->modify('-1 year');
+            $lastDueDate = $dueDate->modify('-1 year'); // starting date of insurance period
+            $dueDate = $dueDate->modify('- 1 day'); // ending date of insurance period
 
             $headerOffset = $this->generateHeader($sheet, $meta, $rates[$brokerScope], $brokerNames[$broker], $nowDate);
 
@@ -330,7 +332,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
           $endDate = null;
         }
 
-        if ($endDate !== null && $endDate <= $lastDueDate) {
+        if ($endDate !== null && $endDate < $lastDueDate) {
           // ended before current insurance year, so skip it
           $this->logInfo('SKIPPING ' . $rowCnt . ' ' . $i);
           --$offset;
@@ -340,7 +342,7 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
         $exportData[self::START_KEY] = $lineData[self::INPUT_INDEX_INSURANCE_START];
         $startDate = self::convertToTimezoneDate(self::convertToDateTime($exportData[self::START_KEY]), $utc);
 
-        if ($startDate <= $lastDueDate) {
+        if ($startDate < $lastDueDate) {
           // only note start-dates within or after the current period
           $exportData[self::START_KEY] = '';
         }
@@ -355,10 +357,10 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
 
         $monetary = $this->fuzzyInputService->parseCurrency($lineData[self::INPUT_INDEX_INSURED_AMOUNT]);
         if ($monetary !== false) {
-          if ($startDate < $dueDate) {
+          if ($startDate <= $dueDate) {
             $musicianTotal += $monetary['amount'];
           }
-          if ($endDate === null || $endDate >= $dueDate) {
+          if ($endDate === null || $endDate > $dueDate) {
             $musicianNextTotal += $monetary['amount'];
           }
         }
@@ -525,7 +527,8 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
     $utc = new DateTimeZone('UTC');
 
     $dueDate = self::convertToTimezoneDate($rate['due'], $utc);
-    $lastDueDate = $dueDate->modify('-1 year - 1 day');
+    $lastDueDate = $dueDate->modify('-1 year'); // starting date of insurance period
+    $dueDate = $dueDate->modify('- 1 day'); // ending date of insurance period
 
     $humanDueDate = $this->dateTimeFormatter()->formatDate($dueDate, 'medium');
     $humanLastDueDate = $this->dateTimeFormatter()->formatDate($lastDueDate, 'medium');
