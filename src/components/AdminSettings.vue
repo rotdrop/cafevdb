@@ -239,7 +239,8 @@ import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ProgressBar from '@nextcloud/vue/dist/Components/ProgressBar'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+// import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import Multiselect from './Multiselect'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
@@ -335,7 +336,7 @@ export default {
     defaultOfficeFont(newValue, oldValue) {
       console.info('DEFAULT FONT CHANGED', newValue, oldValue)
       if (!this.loading.fonts && newValue !== oldValue) {
-        this.saveSetting('defaultOfficeFont', newValue.family, true)
+        this.saveSetting('defaultOfficeFont', newValue ? newValue.family : null, true)
       }
     }
   },
@@ -518,11 +519,18 @@ export default {
           const messages = responseData.messages || {}
           const transient = messages.transient || []
           const permanent = messages.permanent || []
+          if (responseData.value) {
+            value = responseData.value
+          }
           if (permanent.length === 0 && transient.length === 0) {
             if (Array.isArray(value)) {
               value = value.join(', ')
             }
-            transient.push(t(appName, 'Successfully set value for {settingsKey} to {value}', { settingsKey, value }))
+            if (value) {
+              transient.push(t(appName, 'Successfully set value for "{settingsKey}" to "{value}".', { settingsKey, value }))
+            } else {
+              transient.push(t(appName, 'Value for "{settingsKey}" has been erased.', { settingsKey }))
+            }
           }
           for (const message of transient) {
             showInfo(message, { timeout: TOAST_DEFAULT_TIMEOUT, isHTML: true })
