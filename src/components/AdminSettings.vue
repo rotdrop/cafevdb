@@ -402,8 +402,8 @@ export default {
 
       this.disableUnavailableFontOptions()
       this.defaultOfficeFont = this.config.officeFonts[this.config.defaultOfficeFont]
+      await Vue.nextTick()
       this.loading.fonts = false
-      console.info('CONFIG INITIAL STATE', this.config)
     },
     async loadTooltips() {
       this.loading.tooltips = true
