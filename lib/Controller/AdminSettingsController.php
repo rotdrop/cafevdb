@@ -305,9 +305,21 @@ class AdminSettingsController extends Controller
             ],
           ]);
         case FontService::DEFAULT_OFFICE_FONT_CONFIG:
-          $this->setAppValue($parameter, $value);
+          if (empty($value)) {
+            $this->deleteAppValue($parameter);
+            /** @var FontService $fontService */
+            $fontService = $this->di(FontService::class);
+            $defaultFont = $fontService->getDefaultFontName();
+            $value = $defaultFont;
+            $transient = [ $this->l->t('Default office font reset to default "%s".', $value), ];
+          } else {
+            $this->setAppValue($parameter, $value);
+            $transient = [ $this->l->t('Default office font set to "%s".', $value), ];
+          }
+
           return self::dataResponse([
-            'messages' => $this->l->t('Default office font set to "%s".', $value),
+            'messages' => [ 'transient' => $transient, ],
+            'value' => $value,
           ]);
         case self::POST_REQUEST_FONT_CACHE:
           return $this->fontCache($operation);
