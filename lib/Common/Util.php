@@ -544,16 +544,19 @@ class Util
    * Take any dashed or "underscored" lower-case string and convert to
    * camel-case.
    *
-   * @param string $string The string to convert.
+   * @param null|string $string The string to convert.
    *
    * @param bool $capitalizeFirstCharacter Self explaining.
    *
    * @param string $dashes Characters to replace.
    *
-   * @return string
+   * @return null|string Return null if $string is null, otherwise the result of the substitutions.
    */
-  public static function dashesToCamelCase(string $string, bool $capitalizeFirstCharacter = false, string $dashes = '_-'):string
+  public static function dashesToCamelCase(?string $string, bool $capitalizeFirstCharacter = false, string $dashes = '_-'):?string
   {
+    if ($string === null) {
+      return null;
+    }
     $str = str_replace(str_split($dashes), '', ucwords($string, $dashes));
 
     if (!$capitalizeFirstCharacter) {
