@@ -50,16 +50,30 @@ export default {
       const content = `<h4>${name}${userId}</h4>` + additionalInfo.join('<br/>');
       return this.addressPopup(content);
     },
+    contactNameFromContact(option) {
+      let name = option.name.value || option.name;
+      if (typeof name !== 'string') {
+        name = t(appName, '[empty name]');
+      }
+      return name;
+    },
     contactAddressPopup(option) {
-      const name = option.name;
+      const name = this.contactNameFromContact(option);
+      const additionalInfo = [];
       // const book = option.addressBookName || '';
       let emails = [];
       if (option.EMAIL) {
         for (const email of option.EMAIL) {
-          emails.push(`${email.value || email}`);
+          const emailValue = email.value || email;
+          if (typeof emailValue === 'string') {
+            emails.push(`${emailValue}`);
+          }
         }
       }
       emails = emails.join('<br/>');
+      if (emails) {
+        additionalInfo.push(emails);
+      }
       let address = [];
       if (option.ADR && option.ADR.length > 0) {
         address = (option.ADR[0].value || option.ADR[0]).split(';');
@@ -68,8 +82,9 @@ export default {
       const postalCode = (address[5] + ' ') || '';
       const city = address[3] || this.addressItemUnknownLabel('city');
       const country = address[6] || this.addressItemUnknownLabel('country');
+      additionalInfo.splice(additionalInfo.length, 0, street, postalCode + city, country);
       const content = `<h4>${name}</h4>`
-            + [emails, street, postalCode + city, country].join('<br/>');
+            + additionalInfo.join('<br/>');
       return this.addressPopup(content);
     },
     addressPopup(content) {

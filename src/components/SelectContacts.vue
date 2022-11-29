@@ -316,7 +316,7 @@ export default {
                     contact.name = contact.key
                   }
                 }
-                contact.label = contact.name
+                contact.label = this.contactNameFromContact(contact)
                 const addressBookKey = contact['addressbook-key']
                 if (addressBookKey && this.allAddressBooks[addressBookKey]) {
                   contact.addressBookName = this.allAddressBooks[addressBookKey].displayName
