@@ -48,6 +48,7 @@
     "blueimp-md5": "^2.18.0",
     "bootstrap": "^4.6.1",
     "bootstrap4-duallistbox": "file:3rdparty/bootstrap-duallistbox",
+    "buffer": "^6.0.3",
     "camelcase": "^5.2.0",
     "content-disposition": "*",
     "copy-webpack-plugin": "^v6.0.0",
