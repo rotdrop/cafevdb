@@ -355,6 +355,7 @@ class PageController extends Controller
     $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', 'off');
     $showDisabled = $this->getUserValue('showdisabled', 'off');
     $expertMode   = $this->getUserValue('expertMode', false);
+    $financeMode   = $this->getUserValue('financeMode', false);
     $pageRows     = $this->getUserValue('pagerows', 20);
 
     $debugMode    = (int)$this->getConfigValue('debugmode', 0);
@@ -410,6 +411,7 @@ class PageController extends Controller
       'groupadmin' => $this->isSubAdminOfGroup(),
       'user' => $this->userId(),
       'expertMode' => $expertMode,
+      'financeMode' => $financeMode,
       'showToolTips' => $showToolTips,
       'toolTips' => $this->toolTipsService,
       'urlGenerator' => $this->urlGenerator,
