@@ -625,14 +625,20 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
     }
 
     // collect the DatabaseStorageFolder's
-    $balanceDocuments = [ $this->balanceDocumentsFolder ];
+    $balanceDocuments = [];
+    if (!empty($this->balanceDocumentsFolder)) {
+      $balanceDocuments[$this->balanceDocumentsFolder->getName()] = true;
+    }
     /** @var ProjectPayment $projectPayment */
     foreach ($this->projectPayments as $projectPayment) {
-      $balanceDocuments[] = $projectPayment->getBalanceDocumentsFolder();
+      $documentFolder = $projectPayment->getBalanceDocumentsFolder();
+      if (!empty($documentFolder)) {
+        $balanceDocuments[$documentFolder->getName()] = true;
+      }
     }
     $balanceSequences =  array_map(
-      fn(DatabaseStorageFolder $document) => substr($document->getName() ?? '000', -3),
-      array_filter($balanceDocuments),
+      fn(string $folderName) => substr($folderName ?? '000', -3),
+      array_keys($balanceDocuments),
     );
     sort($balanceSequences, SORT_NUMERIC);
 
