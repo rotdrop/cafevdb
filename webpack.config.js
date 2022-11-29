@@ -220,6 +220,7 @@ module.exports = {
     },
     fallback: {
       path: require.resolve('path-browserify'),
+      buffer: false,
     },
     extensions: ['*', '.js', '.vue'],
   },
