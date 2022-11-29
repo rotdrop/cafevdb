@@ -3652,7 +3652,7 @@ class phpMyEdit
 		if ($help) {
 			$ret .= ' title="'.$this->enc($help).'"';
 		} else {
-			$ret .= ' '.$this->fetchToolTip($css, $name, $css.'select');
+			$ret .= ' '.$this->fetchToolTip($css, $name, strtok($css, ' ') . '-select');
 		}
 		if ($readonly !== false) {
 			$ret .= ' disabled="disabled"'; // readonly does not make sense
@@ -3836,7 +3836,7 @@ class phpMyEdit
 			$tip = empty($kt_array[$key]) ? $help : $kt_array[$key];
 			$labelhelp = !empty($tip)
 				? ' title="'.$this->enc($tip).'" '
-				: $this->fetchToolTip($css, $name, $css.'radiolabel');
+				: $this->fetchToolTip($css, $name, $css.'-radiolabel');
 			$ret .= '<label'.$labelhelp.' class="'.$this->enc($css).'-label">';
 			$ret .= '<input type="'.$type.'"'
 				.' name="'.$this->enc($name).'[]"'
@@ -3862,7 +3862,7 @@ class phpMyEdit
 
 			// $inputhelp = !empty($tip)
 			// 	? ' title="'.$this->enc($tip).'" '
-			// 	: $this->fetchToolTip($css, $name, $css.'radio');
+			// 	: $this->fetchToolTip($css, $name, $css.'-radio');
 			// $ret .= $inputhelp;
 			if ((! $found || $multiple) && in_array((string) $key, $selected, 1)
 				|| (count($kv_array) > 1 && count($selected) == 0 && ! $found && ! $multiple)) {
@@ -4650,7 +4650,7 @@ class phpMyEdit
 				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
 				echo '" type="text" name="'.$name.'"',$len_props;
-				echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
+				echo ' '.$this->fetchToolTip($css_class_name, $name, strtok($css_class_name, ' ') . '-text');
 				echo ' />';
 			} else {
 				echo '&nbsp;';

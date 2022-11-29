@@ -207,16 +207,12 @@ class ToolTipsService implements \ArrayAccess, \Countable
 
     $oldKey = $key;
     $key = $this->preprocessKey($key);
-    if (str_starts_with($oldKey, 'pme-filter')) {
-      $this->logInfo('FILTER TT ' . $oldKey . ' -> ' . $key);
-    }
-
     $keys = explode(self::SUB_KEY_SEP, $key);
     while (\count($keys) > 0) {
       $key = array_shift($keys);
-      $toolTipsData = $toolTipsData[$key]??($toolTipsData['default']??null);
+      $toolTipsData = $toolTipsData[$key] ?? ($toolTipsData['default'] ?? null);
     }
-    $tip = $toolTipsData['default']??$toolTipsData;
+    $tip = $toolTipsData['default'] ?? $toolTipsData;
 
     if (!is_scalar($tip)) {
       $tip = null;
