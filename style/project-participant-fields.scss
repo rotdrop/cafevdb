@@ -203,7 +203,7 @@
     @each $multiplicity in groupofpeople, groupsofpeople {
       @include columnShownIfMultiplicity($multiplicity);
     }
-    @each $property in expert-mode, show-data {
+    @each $property in finance-mode, expert-mode, show-data {
       @include columnShownIf($property, $important: true);
     }
     @each $multiplicity in recurring {

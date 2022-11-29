@@ -220,7 +220,7 @@ const documentReady = function() {
         showMessage(data.message);
         console.log(data);
         if (globalState.PHPMyEdit !== undefined) {
-          const pmeForm = $('#content ' + PHPMyEdit.formSelector() + '.show-hide-disabled');
+          const pmeForm = $('#content ' + PHPMyEdit.formSelector + '.show-hide-disabled');
           console.log('form', pmeForm);
           pmeForm.each(function(index) {
             const form = $(this);
@@ -251,15 +251,15 @@ const documentReady = function() {
     return false;
   });
 
-  container.on('change', '.expertmode', function(event) {
+  container.on('change', '.expert-mode', function(event) {
     const self = $(this);
     const checked = self.prop('checked');
-    $.post(setPersonalUrl('expertmode'), { value: checked })
+    $.post(setPersonalUrl('expert-mode'), { value: checked })
       .done(function(data) {
         showMessage(data.message);
         console.log(data);
         if (globalState.PHPMyEdit !== undefined) {
-          const pmeForm = $('#content ' + PHPMyEdit.formSelector());
+          const pmeForm = $('#content ' + PHPMyEdit.formSelector);
           pmeForm.each(function(index) {
             const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
             reload.trigger('click');
@@ -270,17 +270,42 @@ const documentReady = function() {
         showMessage(Ajax.failMessage(xhr, status, errorThrown));
         // console.error(data);
       });
-    if (checked) {
-      $('.expertmode-container').removeClass('hidden');
-      $('body').addClass('cafevdb-expert-mode');
-    } else {
-      $('.expertmode-container').addClass('hidden');
-      $('body').removeClass('cafevdb-expert-mode');
-    }
-    $('.personal-settings input[type="checkbox"].expertmode').prop('checked', checked);
+
+    $('.expert-mode-container').toggleClass('hidden', !checked);
+    $('body').toggleClass('cafevdb-expert-mode', checked);
+    $('.personal-settings input[type="checkbox"].expert-mode').prop('checked', checked);
     $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
     $.fn.cafevTooltip.remove(); // remove any left-over items.
     globalState.expertMode = checked;
+    return false;
+  });
+
+  container.on('change', '.finance-mode', function(event) {
+    const self = $(this);
+    const checked = self.prop('checked');
+    $.post(setPersonalUrl('finance-mode'), { value: checked })
+      .done(function(data) {
+        showMessage(data.message);
+        console.log(data);
+        // A reload should not be needed:
+        // if (globalState.PHPMyEdit !== undefined) {
+        //   const pmeForm = $('#content ' + PHPMyEdit.formSelector);
+        //   pmeForm.each(function(index) {
+        //     const reload = $(this).find(PHPMyEdit.classSelector('input', 'reload')).first();
+        //     reload.trigger('click');
+        //   });
+        // }
+      })
+      .fail(function(xhr, status, errorThrown) {
+        showMessage(Ajax.failMessage(xhr, status, errorThrown));
+        // console.error(data);
+      });
+    $('.finance-mode-container').toggleClass('hidden', !checked);
+    $('body').toggleClass('cafevdb-finance-mode', checked);
+    $('.personal-settings input[type="checkbox"].finance-mode').prop('checked', checked);
+    $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
+    $.fn.cafevTooltip.remove(); // remove any left-over items.
+    globalState.financeMode = checked;
     return false;
   });
 

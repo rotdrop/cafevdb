@@ -329,16 +329,18 @@ li.cafevdb-page-config-check {
   font-size: 12px;
 }
 
-#expertmode>input[type=button] {
-}
+#expert-mode, #finance-mode {
+  > input[type=button] {
+  }
 
-#expertmode a.button {
-  display: inline-block;
-}
+  a.button {
+    display: inline-block;
+  }
 
-#expertmode .error  {
-  font-weight:bold;
-  color:red;
+  .error  {
+    font-weight:bold;
+    color:red;
+  }
 }
 
 // @todo which actions?
@@ -379,6 +381,12 @@ li.cafevdb-page-config-check {
 
   li.finance {
     background-color:lightyellow;
+  }
+}
+
+body:not(.cafevdb-finance-mode) {
+  #app-navigation > ul > li.finance {
+    display:none;
   }
 }
 

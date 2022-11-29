@@ -66,7 +66,8 @@ trait InitialStateTrait
     $directChg  = $this->getUserValue('directchange', '');
     $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', '');
     $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
-    $expertMode = $this->getUserValue('expertmode');
+    $expertMode = $this->getUserValue('expertMode');
+    $financeMode = $this->getUserValue('financeMode');
 
     $expertMode = filter_var($expertMode, FILTER_VALIDATE_BOOLEAN);
 
@@ -91,6 +92,7 @@ trait InitialStateTrait
         'adminContact' => $adminContact,
         'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get from request
         'expertMode' => $expertMode,
+        'financeMode' => $financeMode,
         'Page' => [
           'historySize' => $this->historyService->size(),
           'historyPosition' => $this->historyService->position(),
@@ -136,8 +138,3 @@ trait InitialStateTrait
     );
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

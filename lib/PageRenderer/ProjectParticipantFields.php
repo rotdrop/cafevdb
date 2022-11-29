@@ -183,7 +183,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $opts = [];
 
-    $expertMode = $this->getUserValue('expertmode');
+    $expertMode = $this->getUserValue('expertMode');
 
     $projectMode  = $projectId > 0;
 
@@ -286,7 +286,7 @@ class ProjectParticipantFields extends PMETableViewBase
 
     $joinTables = $this->defineJoinStructure($opts);
 
-    // outside the expertmode "if", this is the index!
+    // outside the expertMode "if", this is the index!
     $opts['fdd']['id'] = [
       'tab'      => ['id' => 'miscinfo' ],
       'name'     => 'id',

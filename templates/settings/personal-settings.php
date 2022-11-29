@@ -119,18 +119,31 @@ namespace OCA\CAFEVDB;
         <?php echo $l->t('WYSIWYG Text-Editor'); ?>
       </label>
     </div>
-    <input id="expertmode"
+    <?php if ($roles->inTreasurerGroup()) { ?>
+    <input id="finance-mode"
            type="checkbox"
-           class="checkbox expertmode <?php p($toolTipClass); ?>"
-           name="expertmode" <?php echo $expertMode == 'on' ? 'checked="checked"' : ''; ?>
+           class="checkbox finance-mode <?php p($toolTipClass); ?>"
+           name="financeMode" <?php echo $financeMode == 'on' ? 'checked="checked"' : ''; ?>
     />
-    <label for="expertmode"
+    <label for="finance-mode"
+           class="<?php p($toolTipClass); ?>"
+           title="<?php echo $financetitle; ?>">
+      <?php echo $l->t('Finance-Mode') ?>
+    </label>
+    <br />
+    <?php } ?>
+    <input id="expert-mode"
+           type="checkbox"
+           class="checkbox expert-mode <?php p($toolTipClass); ?>"
+           name="expertMode" <?php echo $expertMode == 'on' ? 'checked="checked"' : ''; ?>
+    />
+    <label for="expert-mode"
            class="<?php p($toolTipClass); ?>"
            title="<?php echo $experttitle; ?>">
       <?php echo $l->t('Expert-Mode') ?>
     </label>
     <br />
-    <div class="expertmode-container<?php p($expertClass); ?>">
+    <div class="expert-mode-container<?php p($expertClass); ?>">
       <input id="showdisabled"
              type="checkbox"
              class="checkbox showdisabled <?php p($toolTipClass); ?>"
@@ -142,7 +155,7 @@ namespace OCA\CAFEVDB;
         <?php echo $l->t('Show Disabled Data-Sets'); ?>
       </label>
     </div>
-    <div class="debugmode-container expertmode-container<?php p($expertClass); ?>">
+    <div class="debugmode-container expert-mode-container<?php p($expertClass); ?>">
       <?php echo $this->inc('settings/part.debug-mode', [ 'toolTipsPos' => $toolTipsPos ]); ?>
     </div>
     <span class="statusmessage" id="msg"></span><span>&nbsp;</span>

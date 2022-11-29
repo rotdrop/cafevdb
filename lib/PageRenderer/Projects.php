@@ -1085,6 +1085,8 @@ project without a poster first.");
       'dropDirection' => $dropDirection,
       'rolesService' => $this->orgaRolesService,
       'currencySymbol' => $this->currencySymbol(),
+      'financeMode' => $this->financeMode,
+      'expertMode' => $this->expertMode,
     ];
     $template = new TemplateResponse($this->appName(), 'fragments/projects/project-actions', $templateParameters, 'blank');
     $html = $template->render();

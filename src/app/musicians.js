@@ -690,7 +690,7 @@ entry.`),
             cleanup();
             Notification.hide();
             const $mainContainer = $($container.data('ambientContainer'));
-            const $mainForm = $mainContainer.find(PHPMyEdit.formSelector());
+            const $mainForm = $mainContainer.find(PHPMyEdit.formSelector);
             $container.dialog('close');
             if (maxIds.length === 1) {
               const projectId = $mainForm.find('input[name="projectId"]').val();
@@ -732,7 +732,7 @@ the personal data of the respective musician up-to-date.`),
               return;
             }
             const $mainContainer = $($container.data('ambientContainer'));
-            const $mainForm = $mainContainer.find(PHPMyEdit.formSelector());
+            const $mainForm = $mainContainer.find(PHPMyEdit.formSelector);
             $container.dialog('close');
             if (numDuplicates === 1) {
               const projectId = $mainForm.find('input[name="ProjectId"]').val();

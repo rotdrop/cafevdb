@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,23 +49,25 @@ class Navigation
   /** @var OCA\CAFEVDB\Database\Legacy\PME\IOptions */
   protected $pmeOptions;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IL10N $l10n
-    , ILogger $logger
-    , ToolTipsService $toolTipsService
-    , PMEOptions $pmeOptions
+    string $appName,
+    IL10N $l10n,
+    ILogger $logger,
+    ToolTipsService $toolTipsService,
+    PMEOptions $pmeOptions,
   ) {
     $this->l = $l10n;
     $this->logger = $logger;
     $this->toolTipsService = $toolTipsService;
     $this->pmeOptions = $pmeOptions;
   }
+  // phpcs:enable
 
   /**
    * Emit select options
    *
-   * @param $options Array with option tags:
+   * @param array $options Array with option tags:
    *
    * value => option value
    * name  => option name
@@ -80,11 +82,13 @@ class Navigation
    *
    * Optional fields need not be present.
    *
-   * @param $selectedValues Optional. Set Navigation::SELECTED for the
+   * @param array $selectedValues Optional. Set Navigation::SELECTED for the
    * given values. $selectedValues may be a single value or an array of
    * values.
+   *
+   * @return string HTML fragment.
    */
-  static public function selectOptions($options, $selectedValues = [])
+  public static function selectOptions(array $options, array $selectedValues = []):string
   {
     $result = '';
     $indent = '';
@@ -110,7 +114,7 @@ class Navigation
       ';
       $indent = '  ';
     }
-    foreach($options as $option) {
+    foreach ($options as $option) {
       $value = $option['value'];
       $flags = isset($option['flags']) ? $option['flags'] : 0;
       $disabled = $flags & self::DISABLED ? ' disabled' : '';
@@ -170,8 +174,16 @@ class Navigation
     return $result;
   }
 
-  /** Simple select option array from flat value array. */
-  static public function simpleSelectOptions($options, $selected = null)
+  /**
+   * Simple select option array from flat value array.
+   *
+   * @param array $options
+   *
+   * @param null|string $selected Option to select by default.
+   *
+   * @return HTML fragment.
+   */
+  public static function simpleSelectOptions(array $options, ?string $selected = null)
   {
     $optionDescription = [];
     foreach ($options as $option) {
@@ -185,8 +197,14 @@ class Navigation
   /**
    * Recursively emit hidden input elements to represent the given
    * data. $value may be a nested array.
+   *
+   * @param mixed $key
+   *
+   * @param mixed $value
+   *
+   * @return string HTML fragment.
    */
-  static public function persistentCGI($key, $value = false)
+  public static function persistentCGI(mixed $key, mixed $value = false)
   {
     if (is_array($key)) {
       $result = '';
@@ -194,9 +212,9 @@ class Navigation
         $result .= self::persistentCGI($subkey, $subval);
       }
       return $result;
-    } else if (is_array($value)) {
+    } elseif (is_array($value)) {
       $result = '';
-      foreach($value as $subkey => $subval) {
+      foreach ($value as $subkey => $subval) {
         $result .= self::persistentCGI($key.'['.$subkey.']', $subval)."\n";
       }
       return $result;
@@ -206,11 +224,14 @@ class Navigation
   }
 
 
-  /**Acutally rather a multi-select than a button, meant as drop-down
+  /**
+   * Acutally rather a multi-select than a button, meant as drop-down
    * menu. Generates data which can be passed to prependTableButton()
    * below.
+   *
+   * @return array Return [ 'code' => HTML_FRAGMENT ]
    */
-  public function tableExportButton()
+  public function tableExportButton():array
   {
     $data = ''
           .'<span id="pme-export-block" class="pme-export-block pme-button-container">'
@@ -248,17 +269,17 @@ class Navigation
    * phpMyEdit buttons. This is a dirty hack. But so what. Only the
    * L and F (list and filter) views are augmented.
    *
-   * @param $button The new buttons.
+   * @param array $button The new buttons.
    *
-   * @param $misc Whether or not to include the extra misc-button.
+   * @param bool $misc Whether or not to include the extra misc-button.
    *
-   * @param $all Whether to add the button to non-list views.
+   * @param bool $all Whether to add the button to non-list views.
    *
-   * @return Array suitable to be plugged in $opts['buttons'].
+   * @return array suitable to be plugged in $opts['buttons'].
    */
-  public function prependTableButton($button, $misc = false, $all = false)
+  public function prependTableButton(array $button, bool $misc = false, bool $all = false)
   {
-    return self::prependTableButtons([$button], $misc, $all);
+    return self::prependTableButtons([ $button ], $misc, $all);
   }
 
   /**
@@ -266,15 +287,13 @@ class Navigation
    * phpMyEdit buttons. This is a dirty hack. But so what. Only the
    * L and F (list and filter) views are augmented.
    *
-   * @param $buttons The new buttons.
+   * @param array $buttons The new buttons.
    *
-   * @param $misc Whether or not to include the extra misc-button.
+   * @param bool $misc Whether or not to include the extra misc-button.
    *
-   * @param $all Whether to add the button to non-list views.
-   *
-   * @return Array suitable to be plugged in $opts['buttons'].
+   * @return array suitable to be plugged in $opts['buttons'].
    */
-  public function prependTableButtons($buttons, $misc = false)
+  public function prependTableButtons(array $buttons, bool $misc = false)
   {
     $defaultButtonsNoB = [
       'L' => [
@@ -305,12 +324,12 @@ class Navigation
       foreach ($buttons as &$modButton) {
         $modButton['name'] = 'placeholder';
       }
-    } else if ($misc === false && !empty($buttons)) {
+    } elseif ($misc === false && !empty($buttons)) {
       $misc = [ 'placeholder' ];
       foreach ($buttons as &$modButton) {
         $modButton['name'] = 'placeholder';
       }
-    } else if (!is_array($misc)) {
+    } elseif (!is_array($misc)) {
       $misc = [];
     }
 
@@ -319,6 +338,7 @@ class Navigation
     }
     $misc = array_merge([ 'up' => [], 'down' => [] ], $misc);
     foreach ($misc as $vPos => &$miscDef) {
+      $vPos = $vPos;
       if (!isset($miscDef['left']) && !isset($miscDef['right'])) {
         $miscDef = [ 'left' => $miscDef, 'right' => [] ];
       }
@@ -359,7 +379,14 @@ class Navigation
     return $result;
   }
 
-  public function buttonsFromArray($buttons)
+  /**
+   * @param array $buttons
+   *
+   * @return string HTML fragment
+   *
+   * @see htmlTagsFromArray
+   */
+  public function buttonsFromArray(array $buttons)
   {
     return self::htmlTagsFromArray($buttons);
   }
@@ -413,7 +440,7 @@ class Navigation
       case 'button':
         if ($type == 'resetbutton') {
           $buttonType = 'reset';
-        } else if ($type == 'submitbutton') {
+        } elseif ($type == 'submitbutton') {
           $buttonType = 'submit';
         } else {
           $buttonType = 'button';
@@ -516,10 +543,11 @@ class Navigation
    *
    * @return string The HTML form control requested.
    */
-  public function pageControlElement($id = 'projects',
-                                     $projectName = '',
-                                     $projectId = 0)
-  {
+  public function pageControlElement(
+    $id = 'projects',
+    $projectName = '',
+    $projectId = 0,
+  ):string {
     $controlid = $id.'-control';
     $controlclass = '';
     $form = '';
@@ -710,9 +738,4 @@ __EOT__;
 
     return $html;
   }
-};
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+}

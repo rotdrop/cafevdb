@@ -178,8 +178,8 @@ $routes = [
         </a>
       </li>
       <?php if ($rolesService->inTreasurerGroup()) { ?>
-        <li class="separator"><span class="rule"></span></li>
-        <li class="project-action project-sepa-bank-accounts tooltip-auto"
+        <li class="separator"><span class="rule finance-mode-only"></span></li>
+        <li class="finance-mode-only project-action project-sepa-bank-accounts tooltip-auto"
             data-operation="sepa-bank-accounts"
             title="<?php echo $toolTips['project-action:sepa-bank-accounts']; ?>"
         >
@@ -188,7 +188,7 @@ $routes = [
             <?php p($l->t('Debit Mandates')); ?>
           </a>
         </li>
-        <li class="project-action project-payments tooltip-auto"
+        <li class="finance-mode-only project-action project-payments tooltip-auto"
             data-operation="project-payments"
             title="<?php echo $toolTips['project-action:payments']; ?>"
         >
@@ -197,7 +197,7 @@ $routes = [
             <?php p($l->t('Payments')); ?>
           </a>
         </li>
-        <li class="project-action project-financial-balance tooltip-auto"
+        <li class="finance-mode-only project-action project-financial-balance tooltip-auto"
             data-operation="financial-balance"
             data-project-files="<?php p($projectFolders['balance']); ?>"
             title="<?php echo $toolTips['project-action:financial-balance']; ?>"

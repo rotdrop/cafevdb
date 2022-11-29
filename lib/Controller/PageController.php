@@ -354,7 +354,7 @@ class PageController extends Controller
     $directChg    = $this->getUserValue('directchange', 'off');
     $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', 'off');
     $showDisabled = $this->getUserValue('showdisabled', 'off');
-    $expertMode   = $this->getUserValue('expertmode', false);
+    $expertMode   = $this->getUserValue('expertMode', false);
     $pageRows     = $this->getUserValue('pagerows', 20);
 
     $debugMode    = (int)$this->getConfigValue('debugmode', 0);

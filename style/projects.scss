@@ -69,41 +69,9 @@
 
     /***************************************************************************
      *
-     * Further chosen stuff
+     * Further width styling
      *
      */
-
-    .project-actions-block {
-      div {
-        vertical-align:middle;
-        font-weight:bold;
-      }
-
-      .chosen-container .chosen-results {
-        max-height:300px;
-      }
-
-      a.chosen-default span {
-        /*font-weight:bold;*/
-        color:#555;
-      }
-
-      a.chosen-default span:hover,
-      a.chosen-default span:focus,
-      a.chosen-default span:active {
-        /*font-weight:bold;*/
-        color:#333;
-      }
-
-      /* inter-item lines to group things together */
-      ul.chosen-results li.group-result {
-        display: block;
-        height: 1px;
-        padding: 0px;
-        margin: 0px;
-        border-top: 1px solid #ccc;
-      }
-    }
 
     td.pme-value {
       &.projects--instrumentation,
@@ -281,6 +249,18 @@ body:not(.cafevdb-expert-mode) {
           .expert-mode-only {
             display:none !important;
           }
+        }
+      }
+    }
+  }
+}
+
+body:not(.cafevdb-finance-mode) {
+  #pme-table-container.projects {
+    form.pme-form {
+      td {
+        .finance-mode-only {
+          display:none !important;
         }
       }
     }

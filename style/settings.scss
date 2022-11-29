@@ -379,11 +379,12 @@ input.randomkey {
   }
 }
 
-#app-settings-content input[type="checkbox"].checkbox + label {
-  width:auto;
-}
+#app-settings-content {
+  input[type="checkbox"].checkbox + label {
+    width:auto;
+  }
 
-#app-settings-content a.settings {
+  a.settings {
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: left center;
@@ -394,18 +395,36 @@ input.randomkey {
     line-height:33px;
     padding-left:33px;
     padding-left:33px;
-}
+  }
 
-#app-settings-content a.generalsettings {
+  a.generalsettings {
     background-image: url('../../../core/img/actions/rename.svg');
-}
+  }
 
-#app-settings-content a.expertoperations {
+  a.expertoperations {
     background-image: url('../../../core/img/actions/settings.svg');
-}
+  }
 
-#app-settings-content li.expertmode.hidden {
+  li.expert-mode.hidden {
     display:none;
+  }
+
+  li.finance-mode.hidden {
+    display:none;
+  }
+
+  div.chosen-container li.search-choice {
+    width:auto;
+  }
+
+  div.chosen-container li.search-choice a.search-choice-close {
+    width:12px;
+    display:block;
+    margin:0px;
+    padding:0px;
+    line-height:inherit;
+    min-height:inherit;
+  }
 }
 
 #content.app-cafevdb #app-settings-content {
@@ -414,19 +433,6 @@ input.randomkey {
 
 #app-settings.open #app-settings-content {
   overflow-y: visible !important; /* for chosen drop-up */
-}
-
-#app-settings-content div.chosen-container li.search-choice {
-    width:auto;
-}
-
-#app-settings-content div.chosen-container li.search-choice a.search-choice-close {
-    width:12px;
-    display:block;
-    margin:0px;
-    padding:0px;
-    line-height:inherit;
-    min-height:inherit;
 }
 
 .popup {
