@@ -271,13 +271,14 @@ class Navigation
    *
    * @param array $button The new buttons.
    *
-   * @param bool $misc Whether or not to include the extra misc-button.
+   * @param bool|array $misc Whether or not to include the extra
+   * misc-button or a reordering of button positions.
    *
    * @param bool $all Whether to add the button to non-list views.
    *
    * @return array suitable to be plugged in $opts['buttons'].
    */
-  public function prependTableButton(array $button, bool $misc = false, bool $all = false)
+  public function prependTableButton(array $button, mixed $misc = false, bool $all = false)
   {
     return self::prependTableButtons([ $button ], $misc, $all);
   }
@@ -289,11 +290,12 @@ class Navigation
    *
    * @param array $buttons The new buttons.
    *
-   * @param bool $misc Whether or not to include the extra misc-button.
+   * @param bool|array $misc Whether or not to include the extra
+   * misc-button or a reordering of button positions.
    *
    * @return array suitable to be plugged in $opts['buttons'].
    */
-  public function prependTableButtons(array $buttons, bool $misc = false)
+  public function prependTableButtons(array $buttons, mixed $misc = false)
   {
     $defaultButtonsNoB = [
       'L' => [
