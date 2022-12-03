@@ -76,13 +76,13 @@ class VCalendarService
   /**
    * Validate the given request-data which is an associative array.
    *
-   * @param array $eventData Legacy request event data.
+   * @param mixed $eventData Legacy request event data.
    *
    * @param string $kind What kind of event to create.
    *
    * @return array|false Array of error messages or false on success
    */
-  public function validateRequest(array $eventData, string $kind = self::VEVENT)
+  public function validateRequest(mixed $eventData, string $kind = self::VEVENT)
   {
     switch ($kind) {
       case self::VEVENT:
@@ -95,7 +95,7 @@ class VCalendarService
   }
 
   /**
-   * @param array $vObjectData HTTP request submitted event data.
+   * @param mixed $vObjectData HTTP request submitted event data.
    *
    * @param string $kind What kind of object to create.
    * ```
@@ -142,7 +142,7 @@ class VCalendarService
    *
    * @return null|VCalendar
    */
-  public function createVCalendarFromRequest(array $vObjectData, string $kind = self::VEVENT):?VCalendar
+  public function createVCalendarFromRequest(mixed $vObjectData, string $kind = self::VEVENT):?VCalendar
   {
     switch ($kind) {
       case self::VEVENT:
@@ -159,7 +159,7 @@ class VCalendarService
    *
    * @return null|VCalendar
    */
-  private function createVEventFromRequest(array $objectData):?VCalendar
+  private function createVEventFromRequest(mixed $objectData):?VCalendar
   {
     $vObject = $this->legacyCalendarObject->createVCalendarFromRequest($objectData);
     if (empty($vObject) || empty($vObject->VEVENT)) {
@@ -199,7 +199,7 @@ class VCalendarService
    *
    * @return void
    */
-  public function addParticipants(VCalendar $vRoot, VComponent $vComponent, array $objectData):void
+  public function addParticipants(VCalendar $vRoot, VComponent $vComponent, mixed $objectData):void
   {
     $organizer = $objectData['participants']['organizer'] ?? [];
     if (!empty($organizer)) {
@@ -247,7 +247,7 @@ class VCalendarService
    *
    * @return void
    */
-  public function addRelations(VCalendar $vRoot, VComponent $vComponent, array $objectData):void
+  public function addRelations(VCalendar $vRoot, VComponent $vComponent, mixed $objectData):void
   {
     if (empty($objectData['related'])) {
       return;
@@ -289,10 +289,14 @@ class VCalendarService
    *
    * @return void
    */
-  public function addVAlarmsFromRequest(VCalendar $vRoot, VComponent $vComponent, array $objectData):void
+  public function addVAlarmsFromRequest(VCalendar $vRoot, VComponent $vComponent, mixed $objectData):void
   {
     unset($vComponent->VALARM);
+    if (!isset($objectData['alarm'])) {
+      return;
+    }
     $alarmData = is_array($objectData['alarm']) ? $objectData['alarm'] : [ $objectData['alarm'] ?? null ];
+    $this->logInfo('ALRAM DATA ' . print_r($alarmData, true));
     foreach ($alarmData as $alarmDatum) {
       if (is_array($alarmDatum)) {
         foreach ($alarmDatum as $related => $seconds) {
@@ -311,13 +315,13 @@ class VCalendarService
   /**
    * @param VCalendar $vCalendar Sabre calendar object.
    *
-   * @param array $objectData Calendar object description from HTTP request.
+   * @param mixed $objectData Calendar object description from HTTP request.
    *
    * @param string $kind What kind of object to create.
    *
    * @return null|VCalendar
    */
-  public function updateVCalendarFromRequest(VCalendar $vCalendar, array $objectData, string $kind = self::VEVENT):?VCalendar
+  public function updateVCalendarFromRequest(VCalendar $vCalendar, mixed $objectData, string $kind = self::VEVENT):?VCalendar
   {
     switch ($kind) {
       case self::VEVENT:
@@ -332,11 +336,11 @@ class VCalendarService
   /**
    * @param VCalendar $vCalendar
    *
-   * @param array $objectData Calendar object description from HTTP request.
+   * @param mixed $objectData Calendar object description from HTTP request.
    *
    * @return null|VCalendar
    */
-  private function updateVEventFromRequest(VCalendar $vCalendar, array $objectData):VCalendar
+  private function updateVEventFromRequest(VCalendar $vCalendar, mixed $objectData):VCalendar
   {
     $vCalendar = $this->legacyCalendarObject->updateVCalendarFromRequest($objectData, $vCalendar);
     if (empty($vCalendar) || empty($objectData['alarm'])) {
