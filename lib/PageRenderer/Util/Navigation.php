@@ -82,13 +82,13 @@ class Navigation
    *
    * Optional fields need not be present.
    *
-   * @param null|array $selectedValues Optional. Set Navigation::SELECTED for the
+   * @param null|int|array $selectedValues Optional. Set Navigation::SELECTED for the
    * given values. $selectedValues may be a single value or an array of
    * values.
    *
    * @return string HTML fragment.
    */
-  public static function selectOptions(array $options, ?array $selectedValues = []):string
+  public static function selectOptions(array $options, mixed $selectedValues = []):string
   {
     if (empty($selectedValues)) {
       $selectedValues = [];
