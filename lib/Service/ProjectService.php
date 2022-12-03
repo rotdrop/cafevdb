@@ -24,11 +24,12 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \Throwable;
-use \Exception;
-use \RuntimeException;
-use \DateInterval;
-use \DateTimeImmutable;
+use Throwable;
+use Exception;
+use RuntimeException;
+use InvalidArgumentException;
+use DateInterval;
+use DateTimeImmutable;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Share\Exceptions\ShareNotFound;
 
@@ -2323,6 +2324,10 @@ Whatever.',
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
 
+    if (empty($project)) {
+      throw new InvalidArgumentException($this->l->t('Unable to fetch the project for id "%s".', print_r($projectOrId, true)));
+    }
+
     // not an entity-manager run-queue
     $runQueue = (clone $this->appContainer()->get(Common\UndoableRunQueue::class))
       ->register(new Common\GenericUndoable(
@@ -2372,7 +2377,8 @@ Whatever.',
       $runQueue->executeActions();
     } catch (Exceptions\UndoableRunQueueException $qe) {
       $qe->getRunQueue()->executeUndo();
-      throw new RuntimeException($this->l->t('Unable to create the project-infrastructure for project id "%d".', $project->getId()), $qe->getCode(), $qe);
+      $projectId = $project ? $project->getId() : ($projectOrId['id'] ?? -1);
+      throw new RuntimeException($this->l->t('Unable to create the project-infrastructure for project id "%d".', $projectId), $qe->getCode(), $qe);
     }
   }
 
