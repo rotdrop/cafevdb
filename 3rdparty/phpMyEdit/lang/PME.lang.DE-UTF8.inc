@@ -21,6 +21,8 @@ return Array(
 	'not' => 'nicht',
 	'like' => 'wie',
 	'find_in_set' => 'finde',
+	'in' => 'in',
+	'not in' => 'nicht in',
 	'Sort Field'	=>'Sortierfeld',
 	'Misc'			=>'Vielzweck',
 	'+'				=>'+',

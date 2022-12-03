@@ -17,6 +17,8 @@ return Array(
 	'not' => 'not',
 	'like' => 'like',
 	'find_in_set' => 'find_in_set',
+	'in' => 'in',
+	'not in' => 'not in',
 	'Sort Field'    =>'Sort Field',
 	'Misc'          =>'Misc',
 	'+'             =>'+',

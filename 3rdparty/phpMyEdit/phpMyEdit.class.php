@@ -1811,12 +1811,16 @@ class phpMyEdit
 				' AND ',
 				' OR ',
 				' LIKE ',
+				' NOT ',
+				' IN ',
 				' FIND_IN_SET ',
 			], [
 				'*',
 				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
 				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
 				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
+				' ' . strtoupper($this->labels['not'] ?? 'not') . ' ',
+				' ' . strtoupper($this->labels['in'] ?? 'in') . ' ',
 				' ' . strtoupper($this->labels['find_in_set'] ?? 'find_in_set') . ' ',
 			], $where);
 		}
@@ -1999,12 +2003,16 @@ class phpMyEdit
 				' AND ',
 				' OR ',
 				' LIKE ',
+				' NOT ',
+				' IN ',
 				' FIND_IN_SET ',
 			], [
 				'*',
 				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
 				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
 				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
+				' ' . strtoupper($this->labels['not'] ?? 'not') . ' ',
+				' ' . strtoupper($this->labels['in'] ?? 'in') . ' ',
 				' ' . strtoupper($this->labels['find_in_set'] ?? 'find_in_set') . ' ',
 			], $having);
 		}
@@ -3836,7 +3844,7 @@ class phpMyEdit
 			$tip = empty($kt_array[$key]) ? $help : $kt_array[$key];
 			$labelhelp = !empty($tip)
 				? ' title="'.$this->enc($tip).'" '
-				: $this->fetchToolTip($css, $name, $css.'-radiolabel');
+				: $this->fetchToolTip($css, $name, strtok($css, ' ') . '-radiolabel');
 			$ret .= '<label'.$labelhelp.' class="'.$this->enc($css).'-label">';
 			$ret .= '<input type="'.$type.'"'
 				.' name="'.$this->enc($name).'[]"'
@@ -6745,13 +6753,6 @@ class phpMyEdit
 		$opquery = array();
 		if (isset($opreq['query'])) {
 			parse_str($opreq['query'], $opquery);
-		}
-		/* May be more complicated in the future, but for now
-		 * we only expect the record here, so only check for
-		 * that.
-		 */
-		if (count($opquery) > 2) {
-			$this->logWarn('Too many faked _GET parameters: '.print_r($opquery, true));
 		}
 		$key = $this->cgi['prefix']['sys'].'rec';
 		if (isset($opquery[$key])) {
