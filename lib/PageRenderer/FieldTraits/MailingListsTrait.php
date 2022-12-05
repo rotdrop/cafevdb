@@ -76,8 +76,11 @@ trait MailingListsTrait
       'tab'     => [ 'id' => $columnTabs ],
       'css'     => [ 'postfix' => [ 'mailing-list', 'announcements', 'tooltip-wide', ], ],
       'sql'     => $emailSql,
-      'options' => 'ACPVD',
+      'options' => 'LFACPVD',
       'input'   => 'V',
+      // 'sort'    => true,
+      // 'values2|LF' => MailingListsService::SUBSCRIPTION_STATUS_VALUES,
+      // 'select|LF' => 'D',
       'input|AP' => 'R',
       'tooltip' => $this->toolTipsService['page-renderer:musicians:mailing-list'],
       'php|AP' =>  function($email, $action, $k, $row, $recordId, PHPMyEdit $pme) {
@@ -89,7 +92,7 @@ trait MailingListsTrait
           'blank',
         ))->render();
       },
-      'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
+      'php|LFCVD' => function($email, $action, $k, $row, $recordId, $pme) {
         // Do not contact the mailing-list service here, as this really slows
         // down things if the mailing list service is unreachable.
         //
@@ -138,11 +141,14 @@ trait MailingListsTrait
       'tab' => [ 'id' => $columnTabs ],
       'css' => [ 'postfix' => [ 'mailing-list', 'tooltip-wide', 'project', ] ],
       'sql' => $emailSql,
-      'options' => 'ACPVD',
+      'options' => 'LFACPVD',
       'input'   => 'V',
+      // 'sort'    => true,
+      // 'values2|LF' => MailingListsService::SUBSCRIPTION_STATUS_VALUES,
+      // 'select|LF' => 'D',
       'tooltip' => $this->toolTipsService['page-renderer:participants:mailing-list'],
       // copy and add are disabled
-      'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
+      'php|LFCVD' => function($email, $action, $k, $row, $recordId, $pme) {
         $cssClasses = [ 'mailing-list', 'project', 'status' ];
         $registration = empty($row['qf' . $pme->fdn['registration']])
           ? 'preliminary' : 'confirmed';

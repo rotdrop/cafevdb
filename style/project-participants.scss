@@ -39,52 +39,53 @@
 
     @import 'mailing-lists.scss';
 
-    td.pme-value.mailing-list.project {
-      .status-label:not(.action-display) {
-        font-weight:bold;
-        font-style:italic;
-        margin: 3px 3px 3px 0;
-        padding: 6px 7px;
-      }
-      .subscription {
-        &.status-unknown {
-          .subscription-action:not(.status-unknown-enabled) {
-            @include styleHidden
+    td.pme-value, td.pme-cell {
+      &.mailing-list.project {
+	.status-label:not(.action-display) {
+          font-weight:bold;
+          font-style:italic;
+          margin: 3px 3px 3px 0;
+          padding: 6px 7px;
+	}
+	.subscription {
+          &.status-unknown {
+            .subscription-action:not(.status-unknown-enabled) {
+              @include styleHidden
+            }
           }
-        }
-        &.status-subscribed {
-          .subscription-action.status-subscribed-disabled {
-            @include styleHidden
+          &.status-subscribed {
+            .subscription-action.status-subscribed-disabled {
+              @include styleHidden
+            }
           }
-        }
-        &:not(.status-subscribed) {
-          .subscription-action.status-not-subscribed-disabled {
-            @include styleHidden
+          &:not(.status-subscribed) {
+            .subscription-action.status-not-subscribed-disabled {
+              @include styleHidden
+            }
           }
-        }
-        &.delivery-enabled {
-          .subscription-action.delivery-enabled-disabled {
-            @include styleHidden
+          &.delivery-enabled {
+            .subscription-action.delivery-enabled-disabled {
+              @include styleHidden
+            }
           }
-        }
-        &.delivery-disabled {
-          .subscription-action.delivery-disabled-disabled {
-            @include styleHidden
+          &.delivery-disabled {
+            .subscription-action.delivery-disabled-disabled {
+              @include styleHidden
+            }
           }
-        }
-        &.registration-confirmed {
-          .subscription-action.registration-confirmed-disabled {
-            @include styleDisabled
+          &.registration-confirmed {
+            .subscription-action.registration-confirmed-disabled {
+              @include styleDisabled
+            }
           }
-        }
-        &.registration-preliminary {
-          .subscription-action.registration-preliminary-disabled {
-            @include styleDisabled
+          &.registration-preliminary {
+            .subscription-action.registration-preliminary-disabled {
+              @include styleDisabled
+            }
           }
-        }
+	}
       }
     }
-
   } /* form.pme-form */
 
 } /* page container */

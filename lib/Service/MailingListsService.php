@@ -95,10 +95,19 @@ class MailingListsService
     self::TEMPLATE_FILE_PREFIX . self::TEMPLATE_FILE_USER,
   ];
 
+  const STATUS_UNKNOWN = 'unknown';
   const STATUS_SUBSCRIBED = 'subscribed';
   const STATUS_UNSUBSCRIBED = 'unsubscribed';
   const STATUS_INVITED = 'invited';
   const STATUS_WAITING = 'waiting';
+
+  const SUBSCRIPTION_STATUS_VALUES = [
+    self::STATUS_UNKNOWN,
+    self::STATUS_INVITED,
+    self::STATUS_WAITING,
+    self::STATUS_SUBSCRIBED,
+    self::STATUS_UNSUBSCRIBED,
+  ];
 
   const MODERATION_ACTION_ACCEPT = 'accept';
   const MODERATION_ACTION_REJECT = 'reject';

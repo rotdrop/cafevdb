@@ -85,7 +85,7 @@ class LegacyEventsController extends Controller
   private $ocCalendarObject;
 
   /** @var ToolTipsService */
-  private $toolTipsService;
+  protected $toolTipsService;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

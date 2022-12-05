@@ -45,22 +45,24 @@
   }
 }
 
-td.pme-value.mailing-list.announcements {
-  .status-label:not(.action-display) {
-    font-weight:bold;
-    font-style:italic;
-    margin: 3px 3px 3px 0;
-    padding: 6px 7px;
-  }
-  .subscription {
-    .subscription-action {
-      @include styleHidden
+td.pme-valuem, td.pme-cell {
+  &.mailing-list.announcements {
+    .status-label:not(.action-display) {
+      font-weight:bold;
+      font-style:italic;
+      margin: 3px 3px 3px 0;
+      padding: 6px 7px;
     }
-    .subscription-action.disabled {
-      @include styleDisabled
-    }
-    @each $status in unknown, subscribed, unsubscribed, waiting, invited {
-      @include conditionalVisibility($status)
+    .subscription {
+      .subscription-action {
+	@include styleHidden
+      }
+      .subscription-action.disabled {
+	@include styleDisabled
+      }
+      @each $status in unknown, subscribed, unsubscribed, waiting, invited {
+	@include conditionalVisibility($status)
+      }
     }
   }
 }
