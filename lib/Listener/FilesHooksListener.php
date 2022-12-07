@@ -118,7 +118,7 @@ class FilesHooksListener implements IEventListener
     $entityManager = $this->appContainer->get(EntityManager::class);
     try {
       $musicianId = $entityManager->getRepository(Entities\Musician::class)->findIdByUserId($userId);
-      $this->logInfo('MUS ID ' . print_r($musicianId, true));
+      // $this->logInfo('MUS ID ' . print_r($musicianId, true));
     } catch (\Throwable $t) {
       // ignore
       $this->logException($t);
