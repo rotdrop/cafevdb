@@ -249,6 +249,11 @@ trait ParticipantTotalFeesTrait
     $summaryName = $this->joinTableFieldName(PMETableViewBase::PROJECT_PAYMENTS_TABLE, 'amount');
     $outstandingName = $this->joinTableFieldName(PMETableViewBase::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE, 'total_amount_outstanding');
 
+    if (!isset($pme->fdn[$summaryName])) {
+      // happens if there are no finance fields.
+      return true;
+    }
+
     $summaryIndex = $pme->fdn[$summaryName];
     $outstandingIndex = $pme->fdn[$outstandingName];
 

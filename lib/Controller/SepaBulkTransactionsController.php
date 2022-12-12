@@ -436,7 +436,7 @@ class SepaBulkTransactionsController extends Controller
               'The debit-mandate for a bulk-transaction must either be all recurring or all one-time-only.'
               . ' The conflicting mandate of musician "%s", mandate-reference "%s" is %s, the previous mandates were %s.', [
                 $participant->getMusician()->getPublicName(),
-                $mandate->getMandateReference(),
+                $debitMandate->getMandateReference(),
                 ($nonRecurring ? $this->l->t('recurring') : $this->l->t('non-recurring')),
                 ($nonRecurring ? $this->l->t('non-recurring') : $this->l->t('recurring')),
               ]));
@@ -473,7 +473,7 @@ class SepaBulkTransactionsController extends Controller
     // notify the operator about all conflicts.
     if (!empty($preNotificationConflicts)) {
       $messages = [];
-      foreach ($preNotificationConflicts as list($debitMandate, $notificationDeadline)) {
+      foreach ($preNotificationConflicts as list('mandate' => $debitMandate, 'noticiation' => $notificationDeadline)) {
         $messages[] = $this->l->t(
           'Due-deadline %s conflicts with the pre-notification dead-line %s for the debit-mandate "%s".', [
             $this->dateTimeFormatter->formatDate($dueDeadline, 'medium'),

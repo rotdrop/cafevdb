@@ -334,7 +334,7 @@ window.addEventListener('DOMContentLoaded', () => {
             // the WOPI requests sent to the richdocuments do not
             // contain enough authentication to access our data-base.
             const menuItems = dirInfo.mountType === 'cafevdb-database'
-              ? this.savedMenuItems.filter((item) => !item.id.match('richdocuments') && (!projectYear || item.id !== 'folder'))
+              ? this.savedMenuItems.filter((item) => /* !item.id.match('richdocuments') && */ (!projectYear || item.id !== 'folder'))
               : this.savedMenuItems;
             menu._menuItems = menuItems;
           }
@@ -361,7 +361,7 @@ window.addEventListener('DOMContentLoaded', () => {
         this.menuData.fileList = menu.fileList;
 
         const menuItems = this.savedMenuItems
-          ? this.savedMenuItems.filter((item) => !item.id.match('richdocuments') && item.id !== 'folder')
+          ? this.savedMenuItems.filter((item) => /* !item.id.match('richdocuments') && */ item.id !== 'folder')
           : [];
         menu._menuItems = menuItems;
 

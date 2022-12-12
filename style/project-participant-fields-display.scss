@@ -69,7 +69,7 @@ form.pme-form.project-participant-fields-display {
   &:not(.pme-change) {
     span.allowed-option-name:empty {
       &, & ~ span.allowed-option-separator {
-        &, & ~ span.allowed-option-value {
+        &, & ~ span.allowed-option-value:empty {
           display:none;
         }
       }

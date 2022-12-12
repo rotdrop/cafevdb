@@ -297,7 +297,7 @@ class OpenDocumentFiller
 
       $contact = $rolesService->{$boardMember . 'Contact'}();
       foreach ($contact as $tag => $value) {
-        $substitutions['org'][$boardMember][$tag] = $value??$this->l->t('unknown');
+        $substitutions['org'][$boardMember][$tag] = $value ?? $this->l->t('unknown');
       }
 
       /** @var \OCP\Image $signature */
@@ -310,6 +310,7 @@ class OpenDocumentFiller
         $signature = 'data:'.$signature->mimeType().';base64,' . base64_encode($signature->data());
       }
       $substitutions['org'][$boardMember]['signature'] = $signature;
+      $substitutions['org'][$boardMember]['role'] = $this->l->t($boardMember);
     }
 
     // bank account information

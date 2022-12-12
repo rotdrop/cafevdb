@@ -1811,12 +1811,16 @@ class phpMyEdit
 				' AND ',
 				' OR ',
 				' LIKE ',
+				' NOT ',
+				' IN ',
 				' FIND_IN_SET ',
 			], [
 				'*',
 				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
 				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
 				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
+				' ' . strtoupper($this->labels['not'] ?? 'not') . ' ',
+				' ' . strtoupper($this->labels['in'] ?? 'in') . ' ',
 				' ' . strtoupper($this->labels['find_in_set'] ?? 'find_in_set') . ' ',
 			], $where);
 		}
@@ -1999,12 +2003,16 @@ class phpMyEdit
 				' AND ',
 				' OR ',
 				' LIKE ',
+				' NOT ',
+				' IN ',
 				' FIND_IN_SET ',
 			], [
 				'*',
 				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
 				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
 				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
+				' ' . strtoupper($this->labels['not'] ?? 'not') . ' ',
+				' ' . strtoupper($this->labels['in'] ?? 'in') . ' ',
 				' ' . strtoupper($this->labels['find_in_set'] ?? 'find_in_set') . ' ',
 			], $having);
 		}
@@ -2130,15 +2138,30 @@ class phpMyEdit
 					$this->fdd[$k][self::FDD_SELECT] != 'D' && $m == '') {
 					continue;
 				}
-				if ($this->fdd[$k][self::FDD_SELECT] == 'N') {
-					$afilter = addslashes($m);
+				if ($this->fdd[$k][self::FDD_SELECT] == 'N' || $this->col_has_datemask($k)) {
 					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
-					$qo[$k] = [
-						'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
-						'fqnTemplate' => '%s',
-						'oper' => $mc,
-						'value' => "'$afilter'",
-					];
+					if ($this->col_has_datemask($k)) {
+						$qo[$k] = [
+							'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
+							'fqnTemplate' => '%s',
+							'oper' => $mc,
+							'value' => fn($values, $text = false) => $text
+							? $values[0]
+							: "'" . $this->timestampToDatabase(
+								$this->makeTimeStampFromUser($values[0]),
+								$k
+							) . "'",
+							'generatorValues' => [ $m ],
+						];
+					} else {
+						$afilter = addslashes($m);
+						$qo[$k] = [
+							'fqn' => $this->fqn($k, $fqn_flags ?? self::COOKED),
+							'fqnTemplate' => '%s',
+							'oper' => $mc,
+							'value' => "'$afilter'",
+						];
+					}
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$l .'='.rawurlencode($m);
 					$this->qfn .= '&'.$this->cgi['prefix']['sys'].$lc.'='.rawurlencode($mc);
 				} else {
@@ -3498,6 +3521,13 @@ class phpMyEdit
 
 	function doFetchToolTip($css_class_name, $name, $label = false)
 	{
+		// otherwise use name, label, css in that order
+		if(isset($this->tooltips[$name])) {
+			return $this->tooltips[$name];
+		} elseif($label && isset($this->tooltips[$label])) {
+			return $this->tooltips[$label];
+		}
+
 		// First clean the CSS-class, it may consist of more than one
 		// class.
 		$css_classes = preg_split('/\s+/', $css_class_name);
@@ -3509,13 +3539,13 @@ class phpMyEdit
 			$css_classes);
 		array_unshift($css_classes, $first_css);
 
-		// otherwise use name, label, css in that order
-		if(isset($this->tooltips[$name])) {
-			return $this->tooltips[$name];
-		} elseif($label && isset($this->tooltips[$label])) {
-			return $this->tooltips[$label];
+		if (!str_starts_with($name, $this->cgi['prefix']['sys'])) {
+			$suffixes = [ ':'.$name, '' ];
+		} else {
+			$suffixes = [''];
 		}
-		foreach ([ ':'.$name, '' ] as $suffix) {
+
+		foreach ($suffixes as $suffix) {
 			foreach ($css_classes as $css_class_name) {
 				if (isset($this->tooltips[$css_class_name.$suffix])) {
 					return $this->tooltips[$css_class_name.$suffix];
@@ -3630,7 +3660,7 @@ class phpMyEdit
 		if ($help) {
 			$ret .= ' title="'.$this->enc($help).'"';
 		} else {
-			$ret .= ' '.$this->fetchToolTip($css, $name, $css.'select');
+			$ret .= ' '.$this->fetchToolTip($css, $name, strtok($css, ' ') . '-select');
 		}
 		if ($readonly !== false) {
 			$ret .= ' disabled="disabled"'; // readonly does not make sense
@@ -3814,7 +3844,7 @@ class phpMyEdit
 			$tip = empty($kt_array[$key]) ? $help : $kt_array[$key];
 			$labelhelp = !empty($tip)
 				? ' title="'.$this->enc($tip).'" '
-				: $this->fetchToolTip($css, $name, $css.'radiolabel');
+				: $this->fetchToolTip($css, $name, strtok($css, ' ') . '-radiolabel');
 			$ret .= '<label'.$labelhelp.' class="'.$this->enc($css).'-label">';
 			$ret .= '<input type="'.$type.'"'
 				.' name="'.$this->enc($name).'[]"'
@@ -3840,7 +3870,7 @@ class phpMyEdit
 
 			// $inputhelp = !empty($tip)
 			// 	? ' title="'.$this->enc($tip).'" '
-			// 	: $this->fetchToolTip($css, $name, $css.'radio');
+			// 	: $this->fetchToolTip($css, $name, $css.'-radio');
 			// $ret .= $inputhelp;
 			if ((! $found || $multiple) && in_array((string) $key, $selected, 1)
 				|| (count($kv_array) > 1 && count($selected) == 0 && ! $found && ! $multiple)) {
@@ -4596,7 +4626,9 @@ class phpMyEdit
 										   $negate,
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
-				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx', $css_class_name,
+				$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-select', null, null);
+				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx',
+									   $css_second_class_name . ' ' . $css_class_name,
 									   $vals, $groups, $titles, $data, $selected,
 									   $multiple || true, $readonly, false, $strip_tags, $escape,
 									   null /* help */, $attributes);
@@ -4611,18 +4643,22 @@ class phpMyEdit
 					: ($maxlen < 30 ? min($maxlen, 8) : 12);
 				$len_props .= ' size="'.$size.'"';
 				$len_props .= ' maxlength="'.$maxlen.'"';
-				if ($this->fdd[$fd][self::FDD_SELECT] == 'N') {
-					$css_comp_class_name = $this->getCSSclass('comp-filter', null, null, $css_postfix);
+				if ($this->fdd[$fd][self::FDD_SELECT] == 'N' || $this->col_has_datemask($k)) {
+					$css_comp_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-comp', null, null, $css_postfix);
 
 					$mc = in_array($mc, self::COMP_OPS) ? $mc : '=';
 					echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_comp',
 										   $css_comp_class_name,
 										   self::COMP_OPS, null, null, null, $mc);
+					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-numeric', null, null);
+				} else {
+					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-text', null, null);
 				}
+				$css_class_name = $css_second_class_name . ' ' . $css_class_name;
 				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
 				echo '" type="text" name="'.$name.'"',$len_props;
-				echo ' '.$this->fetchToolTip($css_class_name, $name, $css_class_name.'text');
+				echo ' '.$this->fetchToolTip($css_class_name, $name, strtok($css_class_name, ' ') . '-text');
 				echo ' />';
 			} else {
 				echo '&nbsp;';
@@ -6717,13 +6753,6 @@ class phpMyEdit
 		$opquery = array();
 		if (isset($opreq['query'])) {
 			parse_str($opreq['query'], $opquery);
-		}
-		/* May be more complicated in the future, but for now
-		 * we only expect the record here, so only check for
-		 * that.
-		 */
-		if (count($opquery) > 2) {
-			$this->logWarn('Too many faked _GET parameters: '.print_r($opquery, true));
 		}
 		$key = $this->cgi['prefix']['sys'].'rec';
 		if (isset($opquery[$key])) {

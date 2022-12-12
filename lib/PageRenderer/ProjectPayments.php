@@ -1246,7 +1246,7 @@ WHERE dsf.id IS NOT NULL',
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($musicianReceivableFilter) {
 
-        $this->logInfo('RECORD ID ' . print_r($pme->rec, true) . ' op ' . $op);
+        // $this->logInfo('RECORD ID ' . print_r($pme->rec, true) . ' op ' . $op);
 
         $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
         $rowTag = $row['qf'.$rowTagIndex];
@@ -1255,7 +1255,7 @@ WHERE dsf.id IS NOT NULL',
         $pme->fdd[$balanceDocumentsFolderIdIndex]['select'] = $this->isCompositeRowTag($rowTag) ? 'M' : 'D';
 
         if ($this->listOperation()) {
-          $this->logInfo('LIST OPERATION');
+          // $this->logInfo('LIST OPERATION');
           return true;
         }
 

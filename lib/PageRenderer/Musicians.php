@@ -441,7 +441,7 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Surname'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, 'duplicates-indicator', ], ],
-      'input|LF' => 'H',
+      'input|LF' => $this->pmeBare ? '' : 'H',
       'input|ACP' => 'M',
       // 'options'  => 'AVCPD',
       'select'   => 'T',
@@ -453,7 +453,7 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Forename'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, 'duplicates-indicator', ], ],
-      'input|LF' => 'H',
+      'input|LF' => $this->pmeBare ? '' : 'H',
       'input|ACP' => 'M',
       'select'   => 'T',
       'maxlen'   => 128,
@@ -464,7 +464,7 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => 'contact' ],
       'name'     => $this->l->t('Nickname'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, 'duplicates-indicator', ], ],
-      'input|LF' => 'H',
+      'input|LF' => $this->pmeBare ? '' : 'H',
       'sql|LFVD' => 'IF($column IS NULL OR $column = \'\', $table.first_name, $column)',
       'select'   => 'T',
       'maxlen'   => 380,
@@ -933,7 +933,7 @@ make sure that the musicians are also automatically added to the
         'input' => 'VRS',
         'name' => $this->l->t('Photo'),
         'select' => 'T',
-        'options' => 'APVCD',
+        'options' => 'VCD',
         'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
           $musicianId = $recordId['id'] ?? 0;
           return $this->photoImageLink($musicianId, $action, $imageId);
@@ -978,7 +978,7 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['uuid'] = [
       'tab'      => ['id' => 'miscinfo'],
       'name'     => 'UUID',
-      //'options'  => 'AVCPDR',
+      'options'  => 'LFVCDR',
       'input'    => 'R',
       'css'      => ['postfix' => [ 'musician-uuid', $addCSS, ], ],
       'sql'      => 'BIN2UUID($main_table.uuid)',
@@ -993,9 +993,10 @@ make sure that the musicians are also automatically added to the
         $this->defaultFDD['datetime'],
         [
           'tab' => ['id' => 'miscinfo'],
-          "name" => $this->l->t("Last Updated"),
-          "nowrap" => true,
-          "options" => 'LFAVCPDR', // Set by update trigger.
+          'name' => $this->l->t('Last Updated'),
+          'nowrap' => true,
+          'options' => 'LFVCD', // Set by update trigger.
+          'input' => 'R',
           'timeformat' => 'medium',
         ]
       );
@@ -1005,9 +1006,10 @@ make sure that the musicians are also automatically added to the
         $this->defaultFDD['datetime'],
         [
           'tab' => ['id' => 'miscinfo'],
-          "name" => $this->l->t("Created"),
-          "nowrap" => true,
-          "options" => 'LFAVCPDR', // Set by update trigger
+          'name' => $this->l->t('Created'),
+          'nowrap' => true,
+          'options' => 'LFVCD', // Set by update trigger
+          'input' => 'R',
           'timeformat' => 'medium',
         ]
       );
@@ -1070,9 +1072,7 @@ make sure that the musicians are also automatically added to the
     };
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
-
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
-
       if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
@@ -1080,6 +1080,16 @@ make sure that the musicians are also automatically added to the
       } else {
         $pme->options = $opts['options'];
       }
+      return true;
+    };
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) {
+      if ($this->copyOperation()) {
+        $this->logInfo('ROW ' . print_r($row, true));
+      }
+
+      unset($row['qf' . $pme->fdn['uuid']]);
+      unset($row['qf' . $pme->fdn['user_id_slug']]);
+
       return true;
     };
 

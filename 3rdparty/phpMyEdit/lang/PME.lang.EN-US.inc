@@ -12,6 +12,13 @@
 /* $Platon: phpMyEdit/lang/PME.lang.EN-US.inc,v 1.10 2004/12/27 20:14:29 nepto Exp $ */
 
 return Array(
+	'and' => 'and',
+	'or' => 'or',
+	'not' => 'not',
+	'like' => 'like',
+	'find_in_set' => 'find_in_set',
+	'in' => 'in',
+	'not in' => 'not in',
 		'Sort Field'		=>'Sort Field',
 		'Misc'				=>'Misc',
 		'+'					=>'+',

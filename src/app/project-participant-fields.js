@@ -634,6 +634,11 @@ const ready = function(selector, resizeCB) {
           locked: $this.val().trim() !== '',
         });
       }
+      if (!$this.hasClass('finance-mode-only') && !$this.hasClass('not-finance-mode-hidden')) {
+        $this.lockUnlock({
+          locked: $this.val().trim() !== '',
+        });
+      }
     });
   };
 

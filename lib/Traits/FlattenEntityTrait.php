@@ -34,6 +34,9 @@ trait FlattenEntityTrait
     $musicianData = $musician->toArray();
 
     $musicianData['personalPublicName'] = $musician->getPublicName(firstNameFirst: true);
+    if (empty($musicianData['displayName'])) {
+      $musicianData['displayName'] = $musician->getPublicName(firstNameFirst: false);
+    }
 
     $skippedKeys = [
       'userPassphrase',

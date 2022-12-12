@@ -461,6 +461,7 @@ class InstrumentInsuranceService
 
       // end of the insurance year
       $dueDate = $this->dueDate($rate->getDueDate(), $date);
+      $endDate = $dueDate->modify('-1 day'); // last day of insurance year
 
       // start of insurance year
       $lastDueDate = $dueDate->modify('-1 year');
@@ -497,7 +498,7 @@ class InstrumentInsuranceService
         'amount' => (float)$amount,
         'rate' => $rate->getRate(),
         'lastDue' => $lastDueDate,
-        'due' => empty($insuranceEnd) ? $dueDate : $insuranceEnd,
+        'due' => empty($insuranceEnd) ? $endDate : $insuranceEnd,
         'start' => $insuranceStart,
         'fullFee' => $annualFee,
         'fraction' => $fraction,

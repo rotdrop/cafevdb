@@ -121,6 +121,11 @@ const documentReady = function() {
     $('body').addClass('cafevdb-expert-mode');
   }
 
+  if (globalState.financeMode) {
+    console.info('GLOBAL STATE', globalState);
+    $('body').addClass('cafevdb-finance-mode');
+  }
+
   // ???? needed ????
   $.widget('ui.dialog', $.ui.dialog, {
     _allowInteraction(event) {

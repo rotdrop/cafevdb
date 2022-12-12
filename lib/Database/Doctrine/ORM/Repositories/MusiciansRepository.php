@@ -75,7 +75,9 @@ class MusiciansRepository extends EntityRepository
   public function findIdByUserId($userId)
   {
     $query = $this->generateIdQuery([ 'userIdSlug' => $userId ]);
-    return $query->getOneOrNullResult(AbstractQuery::HYDRATE_SCALAR);
+    $result = $query->getOneOrNullResult(AbstractQuery::HYDRATE_SCALAR);
+
+    return $result['id'] ?? null;
   }
 
   /**

@@ -178,6 +178,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected $expertMode;
 
   /** @var bool */
+  protected $financeMode;
+
+  /** @var bool */
   protected $filterVisibility;
 
   /** @var array default PHPMyEdit options */
@@ -267,7 +270,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->pmeBare = false;
     $this->pmeRecordId = $this->pme->getCGIRecordId();
     $this->showDisabled = $this->getUserValue('showdisabled', false) === 'on';
-    $this->expertMode = $this->getUserValue('expertmode', false) === 'on';
+    $this->expertMode = $this->getUserValue('expertMode', false) === 'on';
+    $this->financeMode = $this->getUserValue('financeMode', false) === 'on';
     $this->filterVisibility = $this->getUserValue('filtervisibility', 'off') == 'on';
 
     $this->debugRequests = 0 != ($this->getConfigValue('debugmode', 0) & ConfigService::DEBUG_REQUEST);

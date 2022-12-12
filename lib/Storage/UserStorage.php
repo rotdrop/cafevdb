@@ -216,6 +216,9 @@ class UserStorage
    * @param null|callable $callback The callback receives two arguments, the
    * current file-system node and the recursion depth.
    *
+   * @param int $depth Internal recursion depth parameters. The $callback
+   * receives it as second argument.
+   *
    * @return int The number of plain files found during the walk.
    */
   public function folderWalk(mixed $pathOrFolder, ?callable $callback = null, int $depth = 0):int

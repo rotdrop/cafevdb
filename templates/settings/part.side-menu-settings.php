@@ -34,7 +34,7 @@ if ($pageRows > $maxRows) {
 
 $navBarInfo = $navBarInfo ?? '';
 
-$expertClass = 'expertmode'.($expertMode != 'on' ? ' hidden' : '');
+$expertClass = 'expert-mode'.($expertMode != 'on' ? ' hidden' : '');
 
 $toolTipsPos = 'auto';
 
@@ -126,19 +126,33 @@ $toolTipsPos = 'auto';
         <?php echo $l->t('#Rows/Page in Tables'); ?>
       </label>
     </li>
+    <?php if ($roles->inTreasurerGroup()) { ?>
     <li>
-      <input id="app-settings-expertmode"
+      <input id="app-settings-finance-mode"
              type="checkbox"
-             name="expertmode" <?php echo $expertMode == 'on' ? 'checked="checked"' : ''; ?>
-             class="checkbox expertmode"
+             name="financeMode" <?php echo $financeMode == 'on' ? 'checked="checked"' : ''; ?>
+             class="checkbox finance-mode"
       />
-      <label for="app-settings-expertmode"
+      <label for="app-settings-finance-mode"
+             class="tooltip-<?php echo $toolTipsPos; ?>"
+             title="<?php echo $toolTips['finance-mode']; ?>">
+        <?php echo $l->t('Finance-Mode'); ?>
+      </label>
+    </li>
+    <?php } ?>
+    <li>
+      <input id="app-settings-expert-mode"
+             type="checkbox"
+             name="expertMode" <?php echo $expertMode == 'on' ? 'checked="checked"' : ''; ?>
+             class="checkbox expert-mode"
+      />
+      <label for="app-settings-expert-mode"
              class="tooltip-<?php echo $toolTipsPos; ?>"
              title="<?php echo $toolTips['expert-mode']; ?>">
         <?php echo $l->t('Expert-Mode'); ?>
       </label>
     </li>
-    <li class="<?php echo $expertClass; ?> expertmode-container">
+    <li class="<?php echo $expertClass; ?> expert-mode-container">
       <input id="app-settings-showdisabled"
              type="checkbox"
              name="showdisabled" <?php echo $showdisabled == 'on' ? 'checked="checked"' : ''; ?>
@@ -150,7 +164,7 @@ $toolTipsPos = 'auto';
         <?php echo $l->t('Show Disabled Data-Sets'); ?>
       </label>
     </li>
-    <li class="<?php echo $expertClass; ?> expertmode-container chosen-dropup">
+    <li class="<?php echo $expertClass; ?> expert-mode-container chosen-dropup">
       <?php echo $this->inc('settings/part.debug-mode', [ 'toolTipsPos' => $toolTipsPos ]); ?>
     </li>
     <li>

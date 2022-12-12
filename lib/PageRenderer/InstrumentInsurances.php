@@ -184,7 +184,7 @@ class InstrumentInsurances extends PMETableViewBase
     $opts['key'] = [ 'id' => 'int' /* , 'bill_to_party_id' => 'int' */ ];
 
     // Sorting field(s)
-    $opts['sort_field'] = [ 'broker_id', 'geographical_scope', 'instrument_holder_id', 'accessory', ];
+    $opts['sort_field'] = [ 'broker_id', 'geographical_scope', 'instrument_holder_id', '-start_of_insurance', 'object', 'accessory', ];
 
     if (!$this->showDisabled) {
       $opts['filters']['AND'][] = '$table.deleted IS NULL';

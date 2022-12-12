@@ -38,6 +38,7 @@ use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -90,6 +91,9 @@ class PersonalForm
   /** @var GeoCodingService */
   private $geoCodingService;
 
+  /** @var OrganizationalRolesService */
+  private $roles;
+
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
@@ -104,6 +108,7 @@ class PersonalForm
     UserStorage $userStorage,
     CloudUserConnectorService $cloudUserService,
     GeoCodingService $geoCodingService,
+    OrganizationalRolesService $roles,
   ) {
     $this->configService = $configService;
     $this->assetService = $assetService;
@@ -117,6 +122,7 @@ class PersonalForm
     $this->userStorage = $userStorage;
     $this->cloudUserService = $cloudUserService;
     $this->geoCodingService = $geoCodingService;
+    $this->roles = $roles;
     $this->l = $this->l10N();
   }
 
@@ -152,7 +158,7 @@ class PersonalForm
           'toolTipsEnabled' => $this->getUserValue('tooltips', ''),
           'language' => $this->getUserValue('lang', 'en'),
           'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
-          'expertMode' => $this->getUserValue('expertmode'),
+          'expertMode' => $this->getUserValue('expertMode'),
         ]);
       $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
       $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
@@ -189,6 +195,8 @@ class PersonalForm
         'appName' => $this->appName(),
         'userId' => $this->userId(),
         //
+        'roles' => $this->roles,
+        //
         'locale' => $this->getLocale(),
         'language' => $this->l->getLanguageCode(),
         'locales' => $this->findAvailableLocales(),
@@ -216,7 +224,7 @@ class PersonalForm
         'directchange' => $this->getUserValue('directchange', 'off'),
         'deselectInvisibleMiscRecs' => $this->getUserValue('deselectInvisibleMiscRecs', 'off'),
         'showdisabled' => $this->getUserValue('showdisabled', 'off'),
-        'expertMode' => $this->getUserValue('expertmode', 'off'),
+        'expertMode' => $this->getUserValue('expertMode', 'off'),
         'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
         'wysiwygOptions' => ConfigService::WYSIWYG_EDITORS,
         'webPageCategories' => $webPageCategories,

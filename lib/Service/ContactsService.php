@@ -400,6 +400,13 @@ class ContactsService
       }
     } // ADR
 
+    // use organization as name if provided and move the name to the address supplement
+    if (empty($entity->getAddressSupplement()) && !empty($value = $cardData['ORG'])) {
+      $publicName = $entity->getPublicName(firstNameFirst: true);
+      $entity->setAddressSupplement('c/o ' . $publicName);
+      $entity->setDisplayName($value);
+    }
+
     if (!empty($value = $cardData['CATEGORIES'] ?? null)) {
       $instrumentsRepository = $this->getDatabaseRepository(Entities\Instrument::class);
       $instrumentsInfo = $instrumentsRepository->describeAll(useEntities: true);

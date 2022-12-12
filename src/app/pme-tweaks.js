@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,13 +45,13 @@ const pmeUnTweak = function(container) {
   container.find('input.date').each(function() {
     const $this = $(this);
     if ($this.hasClass('hasDatepicker')) {
-      $this.datepicker('destroy');
+      $this.datepicker('hide').datepicker('destroy');
     }
   });
 
   container.find('input.datetime').each(function() {
     const $this = $(this);
-    $this.datetimepicker('destroy');
+    $this.datetimepicker('hide').datetimepicker('destroy');
   });
 };
 

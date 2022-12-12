@@ -624,22 +624,13 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       $transliterate = fn(string $x) => $x;
     }
 
-    // collect the DatabaseStorageFolder's
-    $balanceDocuments = [ $this->balanceDocumentsFolder ];
-    /** @var ProjectPayment $projectPayment */
-    foreach ($this->projectPayments as $projectPayment) {
-      $balanceDocuments[] = $projectPayment->getBalanceDocumentsFolder();
-    }
-    $balanceSequences =  array_map(
-      fn(DatabaseStorageFolder $document) => substr($document->getName() ?? '000', -3),
-      array_filter($balanceDocuments),
-    );
-    sort($balanceSequences, SORT_NUMERIC);
-
     $projectName = $this->project->getName();
     $projectYear = $this->project->getYear();
     if (substr($projectName, -4) == (string)$projectYear) {
-      $projectName = substr($projectName, 0, -4) . ($projectYear % 100);
+      $projectName = substr($projectName, 0, -4);
+      $yearSeparator = '';
+    } else {
+      $yearSeparator = '-';
     }
 
     $projectName = Util::dashesToCamelCase(
@@ -648,15 +639,55 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
       dashes: ' ',
     );
 
-    // $subjectPrefix = Util::shortenCamelCaseString($projectName, self::SUBJECT_PREFIX_LIMIT, minLen: 2);
-    $subjectPrefix = $projectName;
-
-    if (count($balanceSequences) >= 1) {
-      $sequenceSuffix = sprintf('%03d', array_shift($balanceSequences));
-      foreach ($balanceSequences as $sequence) {
-        $sequenceSuffix .= trim(self::SUBJECT_PREFIX_SEPARATOR) . $sequence; // without padding
+    // collect the DatabaseStorageFolder's
+    $balanceDocuments = [];
+    if (!empty($this->balanceDocumentsFolder)) {
+      $folderName = $this->balanceDocumentsFolder->getName();
+      if (!empty($folderName)) {
+        $balanceDocuments[$folderName] = true;
       }
-      $subjectPrefix .= '-' . $sequenceSuffix;
+    }
+    /** @var ProjectPayment $projectPayment */
+    foreach ($this->projectPayments as $projectPayment) {
+      $documentFolder = $projectPayment->getBalanceDocumentsFolder();
+      $folderName = !empty($documentFolder) ? $documentFolder->getName() : null;
+      if (!empty($folderName)) {
+        $balanceDocuments[$folderName] = true;
+      }
+    }
+
+    $yearSequences = [];
+    foreach (array_keys($balanceDocuments) as $folderName) {
+      $sequence = substr($folderName, -3);
+      $year = substr($folderName, -8, 4);
+      $yearSequences[$year] = $yearSequences[$year] ?? [];
+      $yearSequences[$year][] = $sequence;
+    }
+    ksort($yearSequences);
+
+    $balanceSequences = [];
+    if (count($yearSequences) == 1) {
+      $projectYear = array_keys($yearSequences)[0];
+      $projectName .= $yearSeparator . ($projectYear % 100);
+      $sequences = $yearSequences[$projectYear];
+      sort($sequences, SORT_NUMERIC);
+      $len = (int)log10(end($sequences)) + 1;
+      foreach ($sequences as $sequence) {
+        $balanceSequences[] = sprintf('%0' . $len . 'd', $sequence);
+      }
+    } else {
+      foreach ($yearSequences as $year => $sequences) {
+        sort($sequences, SORT_NUMERIC);
+        $len = (int)log10(end($sequences)) + 1;
+        foreach ($sequences as $sequence) {
+          $balanceSequences[] = ($year % 100) . '-' . sprintf('%0' . $len . 'd', $sequence);
+        }
+      }
+    }
+
+    $subjectPrefix = $projectName;
+    if (count($balanceSequences) >= 1) {
+      $subjectPrefix .= '-' . implode(trim(self::SUBJECT_PREFIX_SEPARATOR), $balanceSequences);
     }
 
     $subjects = $this->projectPayments

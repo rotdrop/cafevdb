@@ -192,6 +192,7 @@ class PersonalSettingsController extends Controller
    */
   public function set(string $parameter, mixed $value):Http\Response
   {
+    $parameter = Util::dashesToCamelCase($parameter);
     switch ($parameter) {
       case 'tooltips':
       case 'restorehistory':
@@ -199,7 +200,8 @@ class PersonalSettingsController extends Controller
       case 'directchange':
       case 'deselectInvisibleMiscRecs':
       case 'showdisabled':
-      case 'expertmode':
+      case 'expertMode':
+      case 'financeMode':
         $realValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
         if ($realValue === null) {
           return self::grumble($this->l->t('Value "%1$s" for set "%2$s" is not convertible to boolean.', [$value, $parameter]));

@@ -1343,10 +1343,21 @@ class Musician implements \ArrayAccess, \JsonSerializable
   {
     $firstName = empty($this->nickName) ? $this->firstName : $this->nickName;
     if ($firstNameFirst) {
-      return $firstName . ' ' . $this->surName;
+      if (!empty($firstName) && !empty($this->surName)) {
+        return $firstName . ' ' . $this->surName;
+      }
+      if (empty($firstName) && empty($this->surName)) {
+        return $this->displayName ?? '';
+      }
+      if (empty($this->surName)) {
+        return $firstName;
+      }
+      if (empty($firstName)) {
+        return $this->surName;
+      }
     }
     if (!empty($this->displayName)) {
-      return $this->displayName;
+      return $this->displayName ?? '';
     }
     if (empty($this->surName)) {
       return $firstName;

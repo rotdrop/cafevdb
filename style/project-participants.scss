@@ -37,6 +37,7 @@
 
   form.pme-form {
 
+    @import 'personal-email-addresses.scss';
     @import 'mailing-lists.scss';
 
     td.pme-value.mailing-list.project {

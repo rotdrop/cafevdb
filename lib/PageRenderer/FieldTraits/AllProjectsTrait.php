@@ -83,7 +83,7 @@ trait AllProjectsTrait
         $fdd, self::$allProjectsTable, 'projects', [
           'tab' => ['id' => $tableTab ],
           'input' => 'VR',
-          'options' => 'LFVC',
+          'options' => 'LFDVC',
           'select' => 'M',
           'name' => $this->l->t('Projects'),
           'sort' => true,
@@ -93,8 +93,9 @@ trait AllProjectsTrait
               'tooltip-top',
             ], $css),
           ],
-          'display|LVF' => ['popup' => 'data'],
+          'display|LDCVF' => ['popup' => 'data'],
           'sql' => $this->joinTables[self::$allProjectsTable] . '.projects',
+          'sql|CDV' => "REPLACE(" . $this->joinTables[self::$allProjectsTable] . '.projects' . ", ',', ', ')",
           'filter' => [
             'having' => false,
             'flags' => PHPMyEdit::OMIT_SQL|PHPMyEdit::OMIT_DESC,
