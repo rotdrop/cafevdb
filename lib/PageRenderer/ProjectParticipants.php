@@ -1058,14 +1058,14 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts['fdd']['project_mailing_list'] = $this->projectListSubscriptionControls(override: [
       'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
-      'tab' => [ 'id' => [ 'musician', 'contactdata', ], ],
+      'tab' => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
       'css' => [ 'postfix' => [ 'project-mailing-list', ], ],
       'name' => $this->l->t('Project Mailing List'),
     ]);
 
     $opts['fdd']['announcements_mailing_list'] = $this->announcementsSubscriptionControls(override: [
       'sql' => $this->joinTables[self::MUSICIANS_TABLE] . '.email',
-      'tab' => [ 'id' => [ 'musician', 'contactdata', ], ],
+      'tab' => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
       'css' => [ 'postfix' => [ 'announcements-mailing-list', ], ],
       'name' => $this->l->t('Announcements List'),
     ]);
@@ -1074,7 +1074,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'mobile_phone',
       [
         'name'     => $this->l->t('Mobile Phone'),
-        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'phone-number', ], ],
         'display'  => [
           'popup' => function($data) {
@@ -1089,7 +1089,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'fixed_line_phone',
       [
         'name'     => $this->l->t('Fixed Line Phone'),
-        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'phone-number', ], ],
         'display'  => [
           'popup' => function($data) {
@@ -1104,7 +1104,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'address_supplement',
       [
         'name'     => $this->l->t('Address Supplement'),
-        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'address-supplement', ], ],
         'maxlen'   => 128,
         'input|LF' => $expertMode ? '' : 'H',
@@ -1115,7 +1115,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'street',
       [
         'name'     => $this->l->t('Street'),
-        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'street', ], ],
         'maxlen'   => 128,
         'sql|FL'   => 'CONCAT(
@@ -1129,7 +1129,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'street_number',
       [
         'name'     => $this->l->t('Street Number'),
-        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'street-number', ], ],
         'maxlen'   => 32,
         'size'     => 11,
@@ -1140,7 +1140,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'postal_code',
       [
         'name'     => $this->l->t('Postal Code'),
-        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'postal-code', ], ],
         'maxlen'   => 11,
       ]);
@@ -1149,7 +1149,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'city',
       [
         'name'     => $this->l->t('City'),
-        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'css'      => [ 'postfix' => [ 'musician-address', 'city', ], ],
         'maxlen'   => 128,
       ]);
@@ -1161,7 +1161,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'country',
       [
         'name'     => $this->l->t('Country'),
-        'tab'      => [ 'id' => [ 'musician', 'contactdata', ], ],
+        'tab'      => [ 'id' => [ /* 'musician', */ 'contactdata', ], ],
         'select'   => 'D',
         'maxlen'   => 128,
         'default'  => $this->getConfigValue('streetAddressCountry'),
