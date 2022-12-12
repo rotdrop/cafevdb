@@ -21,35 +21,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pme-table-container.musicians {
-
-  form.pme-form {
-
-    @import 'mailing-lists.scss';
-    @import 'personal-email-addresses.scss';
-  } /* form.pme-form */
-
-} /* page container */
-
-body {
-  .musician-address-view {
-    @import 'flex.scss';
-    margin: 0.5em 1em;
-    thead {
-      &, * {
-        font-weight: bold;
-      }
-    }
-    tbody {
-      &, * {
-        font-style: italic;
-      }
-    }
-    .value:empty + .separator {
-      display:none;
-    }
-    .tag-label, .separator {
-      margin-right:0.5em;
-    }
+td.pme-value.email.selectize {
+  .selectize-control {
+    width: calc(100% - 3px);
   }
 }
