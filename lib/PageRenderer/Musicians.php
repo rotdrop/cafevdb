@@ -695,7 +695,7 @@ make sure that the musicians are also automatically added to the
      */
     $memberStatusFddIndex = count($opts['fdd']);
     $opts['fdd']['member_status'] = [
-      'name'    => strval($this->l->t('Member Status')),
+      'name'    => strval($this->l->t('Email Status')),
       'tab'     => [ 'id' => [ 'orchestra' ] ],
       'select'  => 'D',
       'maxlen'  => 128,
