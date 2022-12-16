@@ -28,6 +28,8 @@ use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\IUserManager;
 use OCP\AppFramework\IAppContainer;
+use OCP\Files\IRootFolder;
+use OC\Metadata\MetadataManager;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,8 +49,10 @@ class FilesScan extends \OCA\Files\Command\Scan
     IUserManager $userManager,
     IUserSession $userSession,
     IAppContainer $appContainer,
+    IRootFolder $rootFolder,
+    MetadataManager $metadataManager,
   ) {
-    parent::__construct($userManager);
+    parent::__construct($userManager, $rootFolder, $metadataManager);
     $this->appName = $appName;
     $this->l = $l10n;
     $this->userManager = $userManager;
