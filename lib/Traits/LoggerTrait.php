@@ -66,6 +66,9 @@ trait LoggerTrait
   public function log(int $level, string $message, array $context = [], int $shift = 0, bool $showTrace = false):void
   {
     $trace = debug_backtrace();
+    if (count($trace) <= $shift) {
+      $shift = count($trace) - 1;
+    }
     $prefix = '';
     $shift = min($shift, count($trace));
 
@@ -73,9 +76,10 @@ trait LoggerTrait
       $caller = $trace[$shift];
       $file = $caller['file']??'unknown';
       $line = $caller['line']??'unknown';
+
       $caller = $trace[$shift+1]??'unknown';
       $class = $caller['class']??'unknown';
-      $method = $caller['function'];
+      $method = $caller['function']??'unknown';
 
       $prefix .= $file.':'.$line.': '.$class.'::'.$method.'(): ';
     } while ($showTrace && --$shift > 0);
