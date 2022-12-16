@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Settings;
 
+use OCP\App\IAppManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 use OCP\IInitialStateService;
@@ -88,6 +89,9 @@ class PersonalForm
   /** @var IInitialStateService */
   private $initialStateService;
 
+  /** @var IAppManager */
+  private $appManager;
+
   /** @var GeoCodingService */
   private $geoCodingService;
 
@@ -102,6 +106,7 @@ class PersonalForm
     ErrorService $errorService,
     TranslationService $translationService,
     IInitialStateService $initialStateService,
+    IAppManager $appManager,
     WikiRPC $wikiRPC,
     WebPagesRPC $webPagesRPC,
     AddressBookProvider $addressBookProvider,
@@ -116,6 +121,7 @@ class PersonalForm
     $this->errorService = $errorService;
     $this->translationService = $translationService;
     $this->initialStateService = $initialStateService;
+    $this->appManager = $appManager;
     $this->wikiRPC = $wikiRPC;
     $this->webPagesRPC = $webPagesRPC;
     $this->addressBookProvider = $addressBookProvider;
@@ -193,6 +199,7 @@ class PersonalForm
           AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
         'appName' => $this->appName(),
+        'appInfo' => $this->appManager->getAppInfo($this->appName()),
         'userId' => $this->userId(),
         //
         'roles' => $this->roles,
