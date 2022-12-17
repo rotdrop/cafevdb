@@ -42,8 +42,9 @@ body#body-settings {
     @import 'wysiwyg-editors.scss';
   }
 
-  width:100%;
-  height:100%;
+  // Seems to be counter productive with NC 25
+  // width:100%;
+  // height:100%;
 
   #app-content {
     max-width:100vw;
@@ -478,6 +479,17 @@ body.snapjs-left {
     left:47px;
     right:unset;
     z-index:200;
+  }
+
+  #app-navigation {
+    position: absolute;
+  }
+}
+
+body:not(.snapjs-left) {
+  #app-navigation {
+    transform: translateX(-100%);
+    position: absolute;
   }
 }
 
