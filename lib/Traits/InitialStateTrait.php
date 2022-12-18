@@ -66,10 +66,12 @@ trait InitialStateTrait
     $directChg  = $this->getUserValue('directchange', '');
     $deselectInvisible = $this->getUserValue('deselectInvisibleMiscRecs', '');
     $editor     = $this->getUserValue('wysiwygEditor', 'tinymce');
-    $expertMode = $this->getUserValue('expertMode');
-    $financeMode = $this->getUserValue('financeMode');
 
+    $expertMode = $this->getUserValue('expertMode');
     $expertMode = filter_var($expertMode, FILTER_VALIDATE_BOOLEAN);
+
+    $financeMode = $this->getUserValue('financeMode');
+    $financeMode = filter_var($financeMode, FILTER_VALIDATE_BOOLEAN);
 
     $adminContact = \OC::$server->query(OrganizationalRolesService::class)->cloudAdminContact(implode: true);
 
