@@ -1,0 +1,76 @@
+/**Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* Navigation snapper settings, stolen from core/css/mobile.css */
+
+@use '../../../core/css/variables.scss';
+
+/* We want to have that fancy snapjs thing also on large screens. */
+@media only screen and (min-width: #{variables.$breakpoint-mobile + 1px}) {
+
+  #app-navigation:not(.vue) {
+    transform: translateX(-#{variables.$navigation-width}) translateX(- var(--body-container-margin));
+    position: fixed;
+    height: var(--body-height);
+    border-top-left-radius: var(--body-container-radius);
+    border-bottom-left-radius: var(--body-container-radius);
+  }
+  .snapjs-left {
+    #app-navigation {
+      transform: translateX(0);
+    }
+  }
+
+  #app-navigation:not(.hidden) + #app-content {
+    margin-left: 0;
+  }
+
+  .skip-navigation.skip-content {
+    left: 3px;
+    margin-left: 0;
+  }
+
+  #app-navigation-toggle {
+    position: fixed;
+    display: inline-block !important;
+    left: var(--body-container-margin);
+    width: 44px;
+    height: 44px;
+    z-index: 1050; // above app-content
+    cursor: pointer;
+    opacity: 0.6;
+  }
+  .snapjs-left {
+    #app-navigation-toggle {
+      left:0;
+    }
+  }
+  #app-navigation-toggle:hover,
+  #app-navigation-toggle:focus {
+    opacity: 1;
+  }
+
+  /* position controls for apps with app-navigation */
+  #app-navigation + #app-content #controls {
+    padding-left: 44px;
+  }
+}

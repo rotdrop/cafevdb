@@ -266,7 +266,7 @@ const documentReady = function() {
       .attr('title', t(appName, 'Display the application menu and settings side-bar'))
       .cafevTooltip({
         placement: 'auto',
-        container: '#app-content',
+        container: '#content',
       });
     updateHistoryControls();
   });

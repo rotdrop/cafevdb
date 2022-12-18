@@ -480,17 +480,6 @@ body.snapjs-left {
     right:unset;
     z-index:200;
   }
-
-  #app-navigation {
-    position: absolute;
-  }
-}
-
-body:not(.snapjs-left) {
-  #app-navigation {
-    transform: translateX(-100%);
-    position: absolute;
-  }
 }
 
 form#personalsettings {

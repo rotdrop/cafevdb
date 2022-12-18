@@ -46,7 +46,7 @@ import './app/jquery-extensions.js';
 
 require('jquery-ui');
 
-require('navsnapper.css');
+require('navsnapper.scss');
 
 __webpack_public_path__ = webRoot;
 __webpack_nonce__ = nonce;
