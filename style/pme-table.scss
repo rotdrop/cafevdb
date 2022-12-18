@@ -623,6 +623,8 @@ input.register-musician {
     height:28px!important;
     vertical-align:middle;
     /*margin-top: 0px;*/
+    font-size: calc(var(--default-font-size) - 2px);
+    padding: 5px 12px;
   }
 }
 
@@ -1156,14 +1158,49 @@ table.pme-main {
     }
   }
 
-  [class^="chosen"] {
-    /* border-radius: 0.5em !important; */
-    /* background-color: rgb(244, 244, 244) !important; */
-    border-radius: 3px;
-  }
-
   div.pme-filter div.chosen-container {
     box-sizing: border-box;
+
+    .chosen-choices {
+      margin: 3px 3px 3px 0;
+      padding: 0 12px;
+      font-size: var(--default-font-size);
+      background-color: var(--color-main-background);
+      color: var(--color-main-text);
+      border: 2px solid var(--color-border-maxcontrast);
+      height: 36px;
+      outline: none;
+      border-radius: var(--border-radius-large);
+      text-overflow: ellipsis;
+      cursor: pointer;
+      &:hover, &:focus, &:active {
+        &:not(:disabled, .disabled) {
+          border-color: var(--color-primary-element);
+        }
+      }
+      .chosen-search-input {
+        margin: -1px;
+      }
+    }
+    .chosen-drop {
+      border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+      border: 2px solid var(--color-border-maxcontrast);
+      border-top: 0;
+      &:hover, &:focus, &:active {
+        &:not(:disabled, .disabled) {
+          border-color: var(--color-primary-element);
+        }
+      }
+    }
+    &.chosen-with-drop {
+      .chosen-drop {
+        top: calc(100% - 3px);
+      }
+      .chosen-choices {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
   }
 
 } /* table.pme-main */

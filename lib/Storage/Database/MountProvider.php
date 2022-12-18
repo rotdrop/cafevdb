@@ -141,7 +141,7 @@ class MountProvider implements IMountProvider
 
     $node = $userStorage->get($sharedFolder);
     if (empty($node) || $node->getType() !== FileInfo::TYPE_FOLDER) {
-      $this->logException(new Exception('No shared folder for ' . $userId));
+      $this->logException(new Exception('No shared folder "' . $sharedFolder . '" for ' . $userId));
       return [];
     }
     $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
