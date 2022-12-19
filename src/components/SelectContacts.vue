@@ -87,7 +87,7 @@
 
 <script>
 
-import Vue from 'vue'
+import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
@@ -220,7 +220,7 @@ export default {
     resetContacts() {
       this.contacts = {}
       if (this.provideSelectAll) {
-        Vue.set(this.contacts, 0, { key: 0, uid: 0, label: t(appName, '** everybody **') })
+        vueSet(this.contacts, 0, { key: 0, uid: 0, label: t(appName, '** everybody **') })
       }
     },
     getValueObject(noUndefined) {
@@ -322,7 +322,7 @@ export default {
                   contact.addressBookName = this.allAddressBooks[addressBookKey].displayName
                   contact.label += ' [' + contact.addressBookName + ']'
                 }
-                Vue.set(this.contacts, key, contact)
+                vueSet(this.contacts, key, contact)
               }
             }
             return true

@@ -67,7 +67,7 @@
 
 <script>
 
-import Vue from 'vue'
+import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
@@ -205,7 +205,7 @@ export default {
         .then((response) => {
           if (response.data.length > 0) {
             for (const project of response.data) {
-              Vue.set(this.projects, project.id, project)
+              vueSet(this.projects, project.id, project)
             }
             return true
           }

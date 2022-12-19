@@ -24,7 +24,7 @@
 import { defineStore } from 'pinia';
 
 import { appName as appId } from '../app/config.js';
-import Vue from 'vue';
+import { set as vueSet } from 'vue';
 import '@nextcloud/dialogs/styles/toast.scss';
 import { generateUrl } from '@nextcloud/router';
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
@@ -46,7 +46,7 @@ export const useMemberDataStore = defineStore('participant-data', {
         try {
           const response = await axios.get(generateUrl('/apps/' + appId + '/member'));
           for (const [key, value] of Object.entries(response.data)) {
-            Vue.set(this, key, value);
+            vueSet(this, key, value);
           }
           this.initialized.loaded = true;
         } catch (e) {

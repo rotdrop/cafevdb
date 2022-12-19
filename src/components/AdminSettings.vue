@@ -233,7 +233,7 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
+import { set as vueSet, del as vueDelete, nextTick as vueNextTick } from 'vue'
 
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
@@ -403,7 +403,7 @@ export default {
 
       this.disableUnavailableFontOptions()
       this.defaultOfficeFont = this.config.officeFonts[this.config.defaultOfficeFont]
-      await Vue.nextTick()
+      await vueNextTick()
       this.loading.fonts = false
     },
     async loadTooltips() {
@@ -431,8 +431,8 @@ export default {
     },
     async getRecryptionRequests() {
       this.loading.recryption = true
-      Vue.set(this.recryption, 'requests', {})
-      Vue.set(this.recryption, 'allRequestsMarked', '')
+      vueSet(this.recryption, 'requests', {})
+      vueSet(this.recryption, 'allRequestsMarked', '')
       await this.updateRecryptionRequests()
       this.recryptionPollTimer = setTimeout(() => this.pollRecryptionRequests(), this.recryptionPollTimeout)
     },
@@ -454,7 +454,7 @@ export default {
         // remove requests which are no longer there
         for (const userId of Object.keys(this.recryption.requests)) {
           if (!recryptionRequests[userId]) {
-            Vue.delete(this.recryption.requests, userId)
+            vueDelete(this.recryption.requests, userId)
           }
         }
         // update existing requests (time-stamp changed) and add new
@@ -477,7 +477,7 @@ export default {
             const user = response.data.ocs.data
             const isOrganizer = user.groups.indexOf(this.settings.orchestraUserGroup) >= 0
             const isGroupAdmin = this.settings.orchestraUserGroupAdmins.indexOf(userId) >= 0
-            Vue.set(this.recryption.requests, userId, {
+            vueSet(this.recryption.requests, userId, {
               id: userId,
               timeStamp,
               displayName: user.displayname,
@@ -590,7 +590,7 @@ export default {
       try {
         const response = await promise
         showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
-        Vue.delete(this.recryption.requests, userId)
+        vueDelete(this.recryption.requests, userId)
       } catch (e) {
         if (e.response) {
           console.error('RESPONSE', e.response)
@@ -614,7 +614,7 @@ export default {
         })
         const response = await axios.delete(url + '?format=json')
         showInfo(t(appName, 'Successfully deleted recryption request for {userId}.', { userId }))
-        Vue.delete(this.recryption.requests, userId)
+        vueDelete(this.recryption.requests, userId)
       } catch (e) {
         if (e.response) {
           console.error('RESPONSE', e.response)
@@ -825,10 +825,10 @@ export default {
     disableUnavailableFontOptions() {
       for (const [fontName, fontFiles] of Object.entries(this.config.officeFonts)) {
         if (fontFiles['x'] && fontFiles['xb'] && fontFiles['xi'] && fontFiles['xbi']) {
-          Vue.set(this.config.officeFonts[fontName], 'disabled', false)
+          vueSet(this.config.officeFonts[fontName], 'disabled', false)
         } else {
-          Vue.set(this.config.officeFonts[fontName], 'disabled', true)
-          Vue.set(this.config.officeFonts[fontName], '$isDisabled', true)
+          vueSet(this.config.officeFonts[fontName], 'disabled', true)
+          vueSet(this.config.officeFonts[fontName], '$isDisabled', true)
           console.info('DISABLE FONT', fontName, this.config.officeFonts[fontName])
         }
       }

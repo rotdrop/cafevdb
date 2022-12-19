@@ -100,7 +100,7 @@
 
 <script>
 
-import Vue from 'vue'
+import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
@@ -266,7 +266,7 @@ export default {
     resetMusicians() {
       this.musicians = {}
       if (this.provideSelectAll) {
-        Vue.set(this.musicians, 0, { id: 0, formalDisplayName: t(appName, '** everybody **') })
+        vueSet(this.musicians, 0, { id: 0, formalDisplayName: t(appName, '** everybody **') })
       }
     },
     getValueObject(noUndefined) {
@@ -345,7 +345,7 @@ export default {
         .then((response) => {
           if (response.data.length > 0) {
             for (const musician of response.data) {
-              Vue.set(this.musicians, musician.id, musician)
+              vueSet(this.musicians, musician.id, musician)
             }
             return true
           }
