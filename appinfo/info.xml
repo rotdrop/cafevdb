@@ -25,6 +25,11 @@
     <php min-version="7.4" max-version="8.1" />
     <nextcloud min-version="24" max-version="25" />
   </dependencies>
+  <repair-steps>
+    <install>
+      <step>OCA\CAFEVDB\Migration\RegisterMimeTypes</step>
+    </install>
+  </repair-steps>
   <!--
       <navigations>
       <navigation>
