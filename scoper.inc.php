@@ -7,11 +7,11 @@ use Isolated\Symfony\Component\Finder\Finder;
 return [
 
   'prefix' => 'OCA\\CAFEVDB\\Wrapped',
-  'expose-classes' => [
-    '/OC.*/',
-    '/OCP\\.*/',
-    '/OCA\\.*/',
-  ],
+  // 'exclude-namespaces' => [
+  //   'OC',
+  //   'OCA',
+  //   'OCP',
+  // ],
   // By default when running php-scoper add-prefix, it will prefix all relevant code found in the current working
   // directory. You can however define which files should be scoped by defining a collection of Finders in the
   // following configuration key.
