@@ -22,6 +22,7 @@ trap cleanup EXIT
 
 function packageVersions() {
     local LOCK=$1
+    local PREFIX=$2
     # echo '{'
     # PREV=''
     # while read LINE; do
@@ -32,7 +33,7 @@ function packageVersions() {
     # done < <(jq '.packages[]|{(.name): .version}' < $LOCK|sed -e 's/[{}]//g' -e '/^$/d'|sort)
     # echo $PREV
     # echo '}'
-    jq '.packages[]|{(.name): .version}' < $LOCK|sed -e 's/[{}]//g' -e '/^$/d'|sort
+    jq '."packages'"$PREFIX"'"[]|{(.name): .version}' < $LOCK|sed -e 's/[{}]//g' -e '/^$/d'|sort
 }
 
 function packageVersion() {
@@ -44,29 +45,40 @@ function packageVersion() {
 CORE_VERSIONS=$WD/core-versions
 VERSIONS=$WD/versions
 
-packageVersions $CORE_LOCK > $CORE_VERSIONS
-packageVersions $LOCK > $VERSIONS
+for PREFIX in '' '-dev'; do
+    packageVersions $CORE_LOCK $PREFIX >> ${CORE_VERSIONS}
+    packageVersions $LOCK $PREFIX > ${VERSIONS}${PREFIX}
+done
 
 #diff -u $CORE_VERSIONS $VERSIONS
 
-VERSION_TWEAKS='{
-  "require" : {'
-FIRST=true
-while read PKG VERSION; do
-    PKG=$(echo $PKG|sed 's/[":]//g')
-    VERSION=$(echo $VERSION|sed 's/"//g')
-    CORE_VERSION=$(packageVersion $PKG $CORE_VERSIONS)
-    if [ -n "$CORE_VERSION" ] && ! [ "$VERSION" = "$CORE_VERSION" ]; then
-        if ! $FIRST; then
-            VERSION_TWEAKS="$VERSION_TWEAKS,"
-        fi
-        VERSION_TWEAKS="$VERSION_TWEAKS
-    \"$PKG\": \"$CORE_VERSION\""
-        FIRST=false
+OUTER_FIRST=true
+VERSION_TWEAKS='{'
+for PREFIX in '' '-dev'; do
+    if ! $OUTER_FIRST; then
+        VERSION_TWEAKS="$VERSION_TWEAKS,"
     fi
-done < $VERSIONS
+    OUTER_FIRST=false
+    VERSION_TWEAKS="$VERSION_TWEAKS
+  \"require${PREFIX}\" : {"
+    FIRST=true
+    while read PKG VERSION; do
+        PKG=$(echo $PKG|sed 's/[":]//g')
+        VERSION=$(echo $VERSION|sed 's/"//g')
+        CORE_VERSION=$(packageVersion $PKG $CORE_VERSIONS)
+        if [ -n "$CORE_VERSION" ] && ! [ "$VERSION" = "$CORE_VERSION" ]; then
+            if ! $FIRST; then
+                VERSION_TWEAKS="$VERSION_TWEAKS,"
+            fi
+            FIRST=false
+            VERSION_TWEAKS="$VERSION_TWEAKS
+    \"$PKG\": \"$CORE_VERSION\""
+        fi
+    done < ${VERSIONS}${PREFIX}
+    VERSION_TWEAKS="$VERSION_TWEAKS
+  }"
+done
 VERSION_TWEAKS="$VERSION_TWEAKS
-  }
 }"
 
 CONFIG_TWEAK=$WD/core-versions-tweaked.json
