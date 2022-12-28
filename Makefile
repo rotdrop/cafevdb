@@ -28,6 +28,8 @@ APPSTORE_PACKAGE_NAME = $(APPSTORE_BUILD_DIR)/$(APP_NAME)
 BASH=$(shell which bash 2> /dev/null)
 SHELL := $(BASH)
 PHP = $(shell which php 2> /dev/null) # allow override
+PHP_SCOPER_VERSION = 0.18.1
+PHP_SCOPER = $(BUILD_TOOLS_DIR)/php-scoper.phar
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
 COMPOSER_TOOL = $(PHP) $(BUILD_TOOLS_DIR)/composer.phar
@@ -127,7 +129,7 @@ composer.lock: composer.json composer.json.in
  $(COMPOSER_TOOL) install $(COMPOSER_OPTIONS);\
 }
 
-pre-build:
+pre-build: php-scoper-download
 #	git submodule update --init
 	$(OCC) maintenance:mode --on
 .PHONY: pre-build
@@ -149,11 +151,19 @@ build: pre-build composer namespace-wrapper npm-build post-build
 dev: pre-build composer namespace-wrapper npm-dev post-build
 .PHONY: dev
 
-.PHONY: comoser-download
+.PHONY: composer-download
 composer-download:
 	mkdir -p $(BUILD_TOOLS_DIR)
 	curl -sS https://getcomposer.org/installer | $(PHP)
 	mv composer.phar $(BUILD_TOOLS_DIR)
+
+.PHONY: php-scoper-download
+php-scoper-download:
+	mkdir -p $(BUILD_TOOLS_DIR)
+	if ! [ -x $(PHP_SCOPER) ] || ! $(PHP_SCOPER) --version|grep -qsF $(PHP_SCOPER_VERSION); then\
+  curl -L -o $(PHP_SCOPER) -sS https://github.com/humbug/php-scoper/releases/download/$(PHP_SCOPER_VERSION)/php-scoper.phar;\
+  chmod +x $(PHP_SCOPER);\
+fi
 
 # Installs and updates the composer dependencies. If composer is not installed
 # a copy is fetched from the web
@@ -194,10 +204,10 @@ composer-suggest: composer-wrapped-suggest
 	@echo -e "\n*** Regular Composer Suggestions ***\n"
 	$(COMPOSER_TOOL) suggest --all
 
-vendor/bin/php-scoper: composer
+$(PHP_SCOPER): php-scoper-download
 
-vendor-wrapped: Makefile vendor/bin/php-scoper scoper.inc.php $(BUILDDIR)/vendor-wrapped
-	vendor/bin/php-scoper add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
+vendor-wrapped: Makefile $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
+	$(PHP_SCOPER) add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
 # scoper does not handle symlinks
 	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
 # scoper does not preserve executable bits
