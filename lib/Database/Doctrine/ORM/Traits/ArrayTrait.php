@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,13 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use ReflectionClass;
+use ReflectionProperty;
+use Exception;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
+/** Generic \ArrayAccess implementation for entities. */
 trait ArrayTrait
 {
   private $keys;
@@ -34,11 +39,14 @@ trait ArrayTrait
    * Use reflection inspection to export all of the private keys;
    * automatically called on post-load if the entity used lifecycle-callbacks.
    *
+   * @return void
+   *
    * @ORM\PostLoad
    */
-  protected function arrayCTOR() {
-    $this->keys = (new \ReflectionClass(__CLASS__))
-                ->getProperties(\ReflectionProperty::IS_PRIVATE|\ReflectionProperty::IS_PROTECTED);
+  protected function arrayCTOR():void
+  {
+    $this->keys = (new ReflectionClass(__CLASS__))
+      ->getProperties(ReflectionProperty::IS_PRIVATE|ReflectionProperty::IS_PROTECTED);
 
     $this->keys = array_map(function($property) {
       $doc = $property->getDocComment();
@@ -57,12 +65,14 @@ trait ArrayTrait
     $this->keys = array_filter($this->keys);
   }
 
+  /** {@inheritdoc} */
   public function __wakeup()
   {
     $this->arrayCTOR();
   }
 
-  public function toArray()
+  /** @return array */
+  public function toArray():array
   {
     $result = [];
     foreach ($this->keys as $key) {
@@ -71,46 +81,65 @@ trait ArrayTrait
     return $result;
   }
 
-  public function offsetExists($offset):bool {
+  /** {@inheritdoc} */
+  public function offsetExists($offset):bool
+  {
     if (empty($this->keys)) {
       $this->arrayCTOR();
     }
     return is_array($this->keys) && in_array(self::offsetNormalize($offset), $this->keys);
   }
 
-  public function offsetGet($offset) {
+  /** {@inheritdoc} */
+  public function offsetGet($offset)
+  {
     if (!$this->offsetExists($offset)) {
-      throw new \Exception('Offset '.self::offsetNormalize($offset).' does not exist in '.__CLASS__.', keys '.print_r($this->keys, true));
+      throw new Exception('Offset '.self::offsetNormalize($offset).' does not exist in '.__CLASS__.', keys '.print_r($this->keys, true));
     }
     $method = self::methodName('get', $offset);
     if (!method_exists($this, $method)) {
-      throw new \Exception('Method '.$method.' does not exist in '.__CLASS__.', please implement it.');
+      throw new Exception('Method '.$method.' does not exist in '.__CLASS__.', please implement it.');
     }
     return $this->$method();
   }
 
+  /** {@inheritdoc} */
   public function offsetSet($offset, $value):void
   {
     if (!$this->offsetExists($offset)) {
-      throw new \Exception('Offset '.self::offsetNormalize($offset).' does not exist in '.__CLASS__.', keys '.print_r($this->keys, true));
+      throw new Exception('Offset '.self::offsetNormalize($offset).' does not exist in '.__CLASS__.', keys '.print_r($this->keys, true));
     }
     $method = self::methodName('set', $offset);
     if (!method_exists($this, $method)) {
-      throw new \Exception('Method '.$method.' does not exist in '.__CLASS__.', please implement it.');
+      throw new Exception('Method '.$method.' does not exist in '.__CLASS__.', please implement it.');
     }
     $this->$method($value);
   }
 
+  /** {@inheritdoc} */
   public function offsetUnset($offset):void
   {
     $this->offsetSet($offset, null);
   }
 
-  private static function methodName($prefix, $offset) {
+  /**
+   * @param string $prefix
+   *
+   * @param string $offset
+   *
+   * @return string
+   */
+  private static function methodName(string $prefix, string $offset):string
+  {
     return $prefix . ucfirst(self::offsetNormalize($offset));
   }
 
-  private static function offsetNormalize($offset)
+  /**
+   * @param string $offset
+   *
+   * @return string
+   */
+  private static function offsetNormalize(string $offset):string
   {
     $words = explode('_', $offset);
     if ($words[0] == strtoupper($words[0])) {

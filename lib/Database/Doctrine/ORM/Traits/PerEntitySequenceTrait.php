@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,8 +52,10 @@ trait PerEntitySequenceTrait
    * Determine the name of the (single) sequence field.
    *
    * @throws Exceptions\DatabaseInvalidFieldException
+   *
+   * @return void
    */
-  protected function getSequenceField()
+  protected function getSequenceField():void
   {
     /** @var ORM\ClassMetadata $meta */
     $meta = $this->getClassMetaData();
@@ -71,9 +73,13 @@ trait PerEntitySequenceTrait
   }
 
   /**
-   * Get the highest sequence number of the given entity
+   * Get the highest sequence number of the given entity.
+   *
+   * @param string|array $nonSequenceKeys
+   *
+   * @return int
    */
-  public function sequenceMax($nonSequenceKeys)
+  public function sequenceMax(mixed $nonSequenceKeys):int
   {
     if (!is_array($nonSequenceKeys)) {
       $nonSequenceKeys = [ reset($this->nonSequenceNames) => $nonSequenceKeys ];
@@ -99,9 +105,13 @@ trait PerEntitySequenceTrait
    * be set in the entity. If the $entity already has a sequence
    * attached, then it is simply persisted.
    *
+   * @param mixed $entity
+   *
+   * @return mixed Return the persisted entity.
+   *
    * @throws Doctrine\DBAL\Exception\UniqueConstraintViolationException
    */
-  protected function persistEntity($entity)
+  protected function persistEntity(mixed $entity)
   {
     /** @var EntityManager $entityManager */
     $entityManager = $this->getEntityManager();
@@ -146,5 +156,4 @@ trait PerEntitySequenceTrait
 
     return $entity;
   }
-
 }

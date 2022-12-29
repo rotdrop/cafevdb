@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,8 +38,12 @@ trait PerMusicianSequenceTrait
 {
   /**
    * Get the highest sequence number of the given musician
+   *
+   * @param Entities\Musician $musician
+   *
+   * @return int
    */
-  public function sequenceMax($musician)
+  public function sequenceMax(Entities\Musician $musician):int
   {
     return $this->createQueryBuilder('m')
                 ->select('MAX(m.sequence) AS sequence')
@@ -55,9 +59,13 @@ trait PerMusicianSequenceTrait
    * be set in the entity. If the $entity already has a sequence
    * attached, then it is simply persisted.
    *
+   * @param int|Entities\Musician $entity Entity or entit id.
+   *
+   * @return Entities\Musician
+   *
    * @throws Doctrine\DBAL\Exception\UniqueConstraintViolationException
    */
-  protected function persistEntity($entity)
+  protected function persistEntity(mixed $entity):Entities\Musician
   {
     $entityManager = $this->getEntityManager();
 
@@ -88,5 +96,4 @@ trait PerMusicianSequenceTrait
 
     return $entity;
   }
-
 }
