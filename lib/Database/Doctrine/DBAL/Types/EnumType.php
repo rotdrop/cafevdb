@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,22 +31,20 @@ use function call_user_func;
 use function implode;
 use function sprintf;
 
-/*abstract*/ class EnumType extends PhpEnumType
+/** Base enum-type class. */
+class EnumType extends PhpEnumType
 {
+  /** {@inheritdoc} */
   public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform):string
   {
     $values = call_user_func([$this->enumClass, 'toArray']);
-    $values = array_map(function($val) { return "'".$val."'"; }, $values);
+    $values = array_map(fn($val) => "'".$val."'", $values);
     return "enum(".implode(",", $values).")";
   }
 
+  /** {@inheritdoc} */
   public function getValues()
   {
     return call_user_func([$this->enumClass, 'toArray']);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

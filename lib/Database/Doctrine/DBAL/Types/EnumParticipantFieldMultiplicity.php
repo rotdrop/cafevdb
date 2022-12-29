@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-, 20222022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,6 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * @method static EnumParticipantFieldMultiplicity RECURRING()
  * @method static EnumParticipantFieldMultiplicity GROUPOFPEOPLE()
  * @method static EnumParticipantFieldMultiplicity GROUPSOFPEOPLE()
- *
  */
 class EnumParticipantFieldMultiplicity extends EnumType
 {
