@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@
  */
 
 namespace OCA\CAFEVDB\Documents;
+
+use Throwable;
+use RuntimeException;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
@@ -67,8 +70,10 @@ class AnyToPdf
 
   /**
    * @var string
-   * @todo Make it configurable
+   *
    * Paper size for converters which need it.
+   *
+   * @todo Make it configurable
    */
   protected $paperSize = 'a4';
 
@@ -81,12 +86,13 @@ class AnyToPdf
    */
   protected $executables = [];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IMimeTypeDetector $mimeTypeDetector
-    , ITempManager $tempManager
-    , ExecutableFinder $executableFinder
-    , ILogger $logger
-    , IL10N $l
+    IMimeTypeDetector $mimeTypeDetector,
+    ITempManager $tempManager,
+    ExecutableFinder $executableFinder,
+    ILogger $logger,
+    IL10N $l,
   ) {
     $this->mimeTypeDetector = $mimeTypeDetector;
     $this->tempManager = $tempManager;
@@ -94,6 +100,7 @@ class AnyToPdf
     $this->logger = $logger;
     $this->l = $l;
   }
+  // phpcs:enable
 
   /**
    * Try to convert the given data-block $data to PDF using any of the known
@@ -104,6 +111,8 @@ class AnyToPdf
    *
    * @param string|null $mimeType If null or 'application/octet-stream' the
    * cloud's mime-type detector is used to detect the mime-type.
+   *
+   * @return string
    */
   public function convertData(string $data, ?string $mimeType = null):string
   {
@@ -119,17 +128,17 @@ class AnyToPdf
       }
 
       $convertedData = null;
-      foreach  ($converter as $tryConverter) {
+      foreach ($converter as $tryConverter) {
         try {
           $method = $tryConverter . 'Convert';
           $convertedData = $this->$method($data);
           break;
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logException($t, 'Ignoring failed converter ' . $tryConverter);
         }
       }
       if (empty($convertedData)) {
-        throw new \RuntimeException($this->l->t('Converter "%1$s" has failed trying to convert mime-type "%2$s"', [ print_r($converter, true), $mimeType ]));
+        throw new RuntimeException($this->l->t('Converter "%1$s" has failed trying to convert mime-type "%2$s"', [ print_r($converter, true), $mimeType ]));
       }
       $data = $convertedData;
       $convertedData = null;
@@ -138,11 +147,21 @@ class AnyToPdf
     return $data;
   }
 
+  /**
+   * @param string $data
+   *
+   * @return string
+   */
   protected function passthroughConvert(string $data):string
   {
     return $data;
   }
 
+  /**
+   * @param string $data
+   *
+   * @return string
+   */
   protected function unoconvConvert(string $data):string
   {
     $converterName = 'unoconv';
@@ -156,10 +175,10 @@ class AnyToPdf
         '-e', 'ExportNotes=False'
       ]);
       $process->setInput($data);
-      try  {
+      try {
         $process->run();
         $retry = false;
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
         $this->logError('RETRY');
         $retry = true;
@@ -169,6 +188,11 @@ class AnyToPdf
     return $process->getOutput();
   }
 
+  /**
+   * @param string $data
+   *
+   * @return string
+   */
   protected function mhonarcConvert(string $data):string
   {
     $converterName = 'mhonarc';
@@ -181,6 +205,11 @@ class AnyToPdf
     return $process->getOutput();
   }
 
+  /**
+   * @param string $data
+   *
+   * @return string
+   */
   protected function ps2pdfConvert(string $data):string
   {
     $converterName = 'ps2pdf';
@@ -193,6 +222,11 @@ class AnyToPdf
     return $process->getOutput();
   }
 
+  /**
+   * @param string $data
+   *
+   * @return string
+   */
   protected function wkhtmltopdfConvert(string $data):string
   {
     $converterName = 'wkhtmltopdf';
@@ -205,6 +239,11 @@ class AnyToPdf
     return $process->getOutput();
   }
 
+  /**
+   * @param string $data
+   *
+   * @return string
+   */
   protected function tiff2pdfConvert(string $data):string
   {
     $converterName = 'tiff2pdf';
@@ -244,7 +283,7 @@ class AnyToPdf
       $executable = $this->executableFinder->find($program);
       if (empty($executable)) {
         $this->executables[$program] = [
-          'exception' => throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $converterName)),
+          'exception' => throw new Exceptions\EnduserNotificationException($this->l->t('Please install the "%s" program on the server.', $program)),
           'path' => null,
         ];
       } else {

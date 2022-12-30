@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,18 +27,23 @@ namespace OCA\CAFEVDB\Documents;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
+/**
+ * Translate template names/keys to actual files or file-paths.
+ */
 class TemplateService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , UserStorage $userStorage
+    ConfigService $configService,
+    UserStorage $userStorage,
   ) {
     $this->configService = $configService;
     $this->userStorage = $userStorage;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Return the file-system path to the given template file. The
@@ -46,7 +51,7 @@ class TemplateService
    *
    * ConfigService::DOCUMENT_TEMPLATES
    *
-   * @param string Configuration key of the template
+   * @param string $templateName Configuration key of the template.
    *
    * @return null|string
    */
@@ -73,7 +78,7 @@ class TemplateService
    *
    * ConfigService::DOCUMENT_TEMPLATES
    *
-   * @param string Configuration key of the template
+   * @param string $templateName Configuration key of the template.
    *
    * @return null|\OCP\Files\File null on error or the associated
    * file-node.
