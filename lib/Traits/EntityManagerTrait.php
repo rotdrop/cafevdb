@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,8 +35,8 @@ use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 /**
  * Database EntityManager short-cuts.
  */
-trait EntityManagerTrait {
-
+trait EntityManagerTrait
+{
   /** @var EntityManager */
   protected $entityManager;
 
@@ -46,8 +46,12 @@ trait EntityManagerTrait {
   /** @var BaseEntityRepository */
   protected $databaseRepository;
 
-  /** Clear the cache */
-  protected function clearDatabaseRepository()
+  /**
+   * Clear the cache.
+   *
+   * @return void
+   */
+  protected function clearDatabaseRepository():void
   {
     $this->entityClassName = null;
     $this->databaseRepository = null;
@@ -57,6 +61,8 @@ trait EntityManagerTrait {
    * Set the given name as the current database target entity.
    *
    * @param string $entityClassName
+   *
+   * @return void
    */
   protected function setDatabaseRepository(string $entityClassName):void
   {
@@ -92,7 +98,8 @@ trait EntityManagerTrait {
    *
    * @return Query
    */
-  protected function createNamedQuery($name) {
+  protected function createNamedQuery(string $name)
+  {
     return $this->entityManager->createNamedQuery($name);
   }
 
@@ -103,7 +110,8 @@ trait EntityManagerTrait {
    *
    * @return Query
    */
-  protected function createQuery($dql) {
+  protected function createQuery(string $dql)
+  {
     return $this->entityManager->createQuery($dql);
   }
 
@@ -112,7 +120,8 @@ trait EntityManagerTrait {
    *
    * @return QueryBuilder
    */
-  protected function queryBuilder() {
+  protected function queryBuilder()
+  {
     return $this->entityManager->createQueryBuilder();
   }
 
@@ -139,7 +148,7 @@ trait EntityManagerTrait {
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  protected function remove($entity, bool $flush = false, bool $hard = false, bool $soft = false)
+  protected function remove(mixed $entity, bool $flush = false, bool $hard = false, bool $soft = false):void
   {
     if (filter_var($entity, FILTER_VALIDATE_INT, ['min_range' => 1])) {
       $entity = [ 'id' => $entity ];
@@ -167,14 +176,15 @@ trait EntityManagerTrait {
    * Gets a reference to the entity identified by the given type and identifier
    * without actually loading it, if the entity is not yet loaded.
    *
-   * @param string $entityName The name of the entity type.
-   * @param mixed  $id         The entity identifier.
+   * @param string $entityClassName The name of the entity type.
    *
-   * @return object|null The entity reference.
+   * @param mixed $key The entity reference.
+   *
+   * @return mixed
    *
    * @throws ORMException
    */
-  protected function getReference($entityClassName, $key)
+  protected function getReference(string $entityClassName, mixed $key)
   {
     return $this->entityManager->getReference($entityClassName, $key);
   }
@@ -188,14 +198,14 @@ trait EntityManagerTrait {
    * NOTE: The persist operation always considers entities that are not yet known to
    * this EntityManager as NEW. Do not pass detached entities to the persist operation.
    *
-   * @param object $entity The instance to make managed and persistent.
+   * @param mixed $entity The instance to make managed and persistent.
    *
-   * @return void
+   * @return mixed
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  protected function persist($entity)
+  protected function persist(mixed $entity)
   {
     return $this->entityManager->persist($entity);
   }
@@ -216,12 +226,12 @@ trait EntityManagerTrait {
    *         makes use of optimistic locking fails.
    * @throws ORMException
    */
-  protected function flush($entity = null)
+  protected function flush($entity = null):void
   {
     if (!empty($entity)) {
       $this->entityManager->persist($entity);
     }
-    return $this->entityManager->flush($entity);
+    $this->entityManager->flush($entity);
   }
 
   /**
@@ -240,6 +250,7 @@ trait EntityManagerTrait {
    * Finds an entity by its primary key / identifier.
    *
    * @param mixed    $id          The identifier.
+   *
    * @param int|null $lockMode    One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants
    *                              or NULL if no specific lock mode should be used
    *                              during the search.
@@ -247,7 +258,7 @@ trait EntityManagerTrait {
    *
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
-  protected function find($id, $lockMode = null, $lockVersion = null)
+  protected function find(mixed $id, ?int $lockMode = null, ?int $lockVersion = null)
   {
     return $this->getDatabaseRepository()->find($id, $lockMode, $lockVersion);
   }
@@ -256,7 +267,9 @@ trait EntityManagerTrait {
    * Finds an entity by its primary key / identifier.
    *
    * @param string   $entityClassName
+   *
    * @param mixed    $id          The identifier.
+   *
    * @param int|null $lockMode    One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants
    *                              or NULL if no specific lock mode should be used
    *                              during the search.
@@ -264,7 +277,7 @@ trait EntityManagerTrait {
    *
    * @return object|null The entity instance or NULL if the entity can not be found.
    */
-  protected function findEntity(string $entityClassName, $id, $lockMode = null, $lockVersion = null)
+  protected function findEntity(string $entityClassName, mixed $id, ?int $lockMode = null, ?int $lockVersion = null)
   {
     return $this->entityManager->find($entityClassName, $id, $lockMode, $lockVersion);
   }
@@ -297,8 +310,14 @@ trait EntityManagerTrait {
     return $this->getDatabaseRepository()->findOneBy($criteria, $orderBy);
   }
 
-  /** Forward to EntityManager::contains() */
-  protected function containsEntity($entity)
+  /**
+   * Forward to EntityManager::contains().
+   *
+   * @param mixed $entity
+   *
+   * @return bool
+   */
+  protected function containsEntity(mixed $entity):bool
   {
     return $this->entityManager->contains($entity);
   }
@@ -307,11 +326,11 @@ trait EntityManagerTrait {
    * Forward to EntityManager::refresh(), return the refreshed entity in order
    * to allow for "->" chaining.
    *
-   * @param object $entity
+   * @param mixed $entity
    *
-   * @return object $entity
+   * @return mixed $entity
    */
-  protected function refreshEntity($entity)
+  protected function refreshEntity(mixed $entity)
   {
     $this->entityManager->refresh($entity);
     return $entity;
@@ -321,6 +340,8 @@ trait EntityManagerTrait {
    * Enable the given filter.
    *
    * @param string $filterName
+   *
+   * @param bool $state
    *
    * @return \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter The enabled filter.
    */
@@ -365,19 +386,29 @@ trait EntityManagerTrait {
 
   /**
    * Convenience function to generate Collections\Criteria
+   *
+   * @return Collections\Criteria
    */
-  protected static function criteria(): Collections\Criteria {
+  protected static function criteria():Collections\Criteria
+  {
     return DBUtil::criteria();
   }
 
   /**
    * Convenience function to generate Collections\ExpressionBuilder
+   *
+   * @return Collections\ExpressionBuilder
    */
-  protected static function criteriaExpr(): Collections\ExpressionBuilder {
+  protected static function criteriaExpr():Collections\ExpressionBuilder
+  {
     return DBUtil::criteriaExpr();
   }
 
   /**
+   * @param array $arrayCriteria
+   *
+   * @return Collections\Criteria
+   *
    * @see DBUtil::criteriaWhere()
    */
   protected static function criteriaWhere(array $arrayCriteria)
@@ -385,7 +416,9 @@ trait EntityManagerTrait {
     return DBUtil::criteriaWhere($arrayCriteria);
   }
 
-  protected function expr() {
+  /** @return mixed */
+  protected function expr()
+  {
     return $this->queryBuilder()->expr();
   }
 
@@ -408,16 +441,17 @@ trait EntityManagerTrait {
    * of this EntityManager and returns the managed copy of the entity.
    * The entity passed to merge will not become associated/managed with this EntityManager.
    *
-   * @param object $entity The detached entity to merge into the persistence context.
+   * @param mixed $entity The detached entity to merge into the persistence context.
    *
-   * @return object The managed copy of the entity.
+   * @return mixed The managed copy of the entity.
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    *
    * @todo Remove, using merge is deprecated.
    */
-  protected function merge($entity) {
+  protected function merge(mixed $entity)
+  {
     $entity = $this->entityManager->merge($entity);
     $this->flush($entity);
     return $entity;
@@ -430,7 +464,8 @@ trait EntityManagerTrait {
    *
    * @return array The column names.
    */
-  protected function columnNames($entityClassName = null) {
+  protected function columnNames($entityClassName = null)
+  {
     empty($entityClassName) && ($entityClassName = $this->entityClassName);
     if (empty($entityClassName)) {
       return [];
@@ -456,16 +491,14 @@ trait EntityManagerTrait {
   }
 
   /**
+   * @param string $columnName
+   *
+   * @return string
+   *
    * @see \OCA\CAFEVDB\Database\EntityManager::property
    */
-  protected function property($columnName)
+  protected function property(string $columnName):string
   {
     return $this->entityManager->property($columnName);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use OCP\IAddressBook;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+/** Convert address-book data to flat arrays. */
 trait ContactsTrait
 {
   /**
@@ -35,7 +36,7 @@ trait ContactsTrait
    *
    * @return array<int, array> Flattened address-books
    */
-  static protected function flattenAdressBooks(array $addressBooks):array
+  protected static function flattenAdressBooks(array $addressBooks):array
   {
     $result = [];
     /** @var IAddressBook $addressBook */
@@ -51,9 +52,5 @@ trait ContactsTrait
       ];
     }
     return $result;
-  }
-
-  static protected function cardDataToEntity(array $cardData):Entities\Musician
-  {
   }
 }
