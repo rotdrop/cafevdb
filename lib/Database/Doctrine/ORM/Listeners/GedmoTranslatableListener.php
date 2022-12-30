@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,15 +56,17 @@ class GedmoTranslatableListener extends \OCA\CAFEVDB\Wrapped\Gedmo\Translatable\
   /** @var BiDirectionalL10N */
   private $musicL10n;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , BiDirectionalL10N $musicL10n
+    ConfigService $configService,
+    BiDirectionalL10N $musicL10n,
   ) {
     parent::__construct();
     $this->configService = $configService;
     $this->l = $this->l10n();
     $this->musicL10n = $musicL10n;
   }
+  // phpcs:enable
 
   /**
    * {@inheritdoc}

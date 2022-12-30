@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,11 +88,14 @@ class TranslationKey implements \ArrayAccess
    */
   private $locations;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->translations = new ArrayCollection();
     $this->locations = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Get id.
@@ -107,7 +110,7 @@ class TranslationKey implements \ArrayAccess
   /**
    * Set phrase.
    *
-   * @param string $phrase
+   * @param null|string $phrase
    *
    * @return Phrase
    */
@@ -126,6 +129,30 @@ class TranslationKey implements \ArrayAccess
   public function getPhrase()
   {
     return $this->phrase;
+  }
+
+  /**
+   * Set phraseHash.
+   *
+   * @param null|string $phraseHash
+   *
+   * @return PhraseHash
+   */
+  public function setPhraseHash($phraseHash)
+  {
+    $this->phraseHash = $phraseHash;
+
+    return $this;
+  }
+
+  /**
+   * Get phraseHash.
+   *
+   * @return string
+   */
+  public function getPhraseHash()
+  {
+    return $this->phraseHash;
   }
 
   /**

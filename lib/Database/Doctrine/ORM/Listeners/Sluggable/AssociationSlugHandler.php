@@ -1,4 +1,26 @@
 <?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable;
 
@@ -26,45 +48,35 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\UnitOfWork;
 class AssociationSlugHandler implements SlugHandlerInterface
 {
   /**
-   * @var ObjectManager
-   */
-  protected $om;
-
-  /**
    * @var SluggableListener
    */
   protected $sluggable;
 
   /**
+   * {@inheritdoc}
+   *
    * $options = array(
    *     'relationClass' => 'objectclass',
    *     'inverseSlugField' => 'slug',
    *     'mappedBy' => 'relationField'
    * )
-   * {@inheritdoc}
    */
   public function __construct(SluggableListener $sluggable)
   {
     $this->sluggable = $sluggable;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function onChangeDecision(SluggableAdapter $ea, array &$config, $object, &$slug, &$needToChangeSlug, $otherSlugs)
+  /** {@inheritdoc} */
+  public function onChangeDecision(SluggableAdapter $eventAdapter, array &$config, $object, &$slug, &$needToChangeSlug, $otherSlugs)
   {
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function postSlugBuild(SluggableAdapter $ea, array &$config, $object, &$slug)
+  /** {@inheritdoc} */
+  public function postSlugBuild(SluggableAdapter $eventAdapter, array &$config, $object, &$slug)
   {
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public static function validate(array $options, ClassMetadata $meta)
   {
     if (!isset($options['associationSlug']) || !strlen($options['associationSlug'])) {
@@ -72,18 +84,16 @@ class AssociationSlugHandler implements SlugHandlerInterface
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function onSlugCompletion(SluggableAdapter $ea, array &$config, $object, &$slug)
+  /** {@inheritdoc} */
+  public function onSlugCompletion(SluggableAdapter $eventAdapter, array &$config, $object, &$slug)
   {
-    $om = $ea->getObjectManager();
+    $objectManager = $eventAdapter->getObjectManager();
     /** @var ORMMetadata $meta */
-    $meta = $om->getClassMetadata(get_class($object));
+    $meta = $objectManager->getClassMetadata(get_class($object));
 
     $options = $config['handlers'][get_called_class()];
-    $wrapped = AbstractWrapper::wrap($object, $om);
-    $oldSlug = $wrapped->getPropertyValue($config['slug']);
+    // $wrapped = AbstractWrapper::wrap($object, $objectManager);
+    // $oldSlug = $wrapped->getPropertyValue($config['slug']);
 
     list($associationField, $associationSlugField) = explode('.', $options['associationSlug']);
 
@@ -101,9 +111,9 @@ class AssociationSlugHandler implements SlugHandlerInterface
 
     $targetEntity = $meta->associationMappings[$associationField]['targetEntity'];
     /** @var ORMMetadata $targetMeta */
-    $targetMeta = $om->getClassMetadata($targetEntity);
+    $targetMeta = $objectManager->getClassMetadata($targetEntity);
 
-    $uow = $om->getUnitOfWork();
+    $uow = $objectManager->getUnitOfWork();
     $association = $meta->getReflectionProperty($associationField)->getValue($object);
     if ($meta->isCollectionValuedAssociation($associationField)) {
       $collection = $association;
@@ -118,15 +128,13 @@ class AssociationSlugHandler implements SlugHandlerInterface
       $targetMeta->getReflectionProperty($associationSlugField)->setValue($targetObject, $slug);
       $targetState = $uow->getEntityState($targetObject);
       if ($targetState == UnitOfWork::STATE_MANAGED || $targetState == UnitOfWork::STATE_NEW) {
-        $ea->setOriginalObjectProperty($uow, $targetObject, $associationSlugField, $oldTargetSlug);
-        $ea->recomputeSingleObjectChangeSet($uow, $targetMeta, $targetObject);
+        $eventAdapter->setOriginalObjectProperty($uow, $targetObject, $associationSlugField, $oldTargetSlug);
+        $eventAdapter->recomputeSingleObjectChangeSet($uow, $targetMeta, $targetObject);
       }
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public function handlesUrlization()
   {
     return false;

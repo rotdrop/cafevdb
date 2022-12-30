@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -76,15 +77,18 @@ class ProjectInstrumentationNumber implements \ArrayAccess
    */
   private $instruments;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set instrument.
    *
-   * @param int $instrument
+   * @param null|Instrument $instrument
    *
    * @return ProjectInstrumentationNumber
    */
@@ -108,7 +112,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|Project $project
    *
    * @return ProjectInstrumentationNumber
    */
@@ -180,7 +184,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   /**
    * Set instruments
    *
-   * @param int $instruments
+   * @param Collection $instruments
    *
    * @return ProjectInstrumentationNumber
    */
@@ -200,5 +204,4 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   {
     return $this->instruments;
   }
-
 }

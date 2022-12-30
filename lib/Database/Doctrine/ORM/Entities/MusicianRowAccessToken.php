@@ -4,9 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +20,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -78,7 +76,9 @@ class MusicianRowAccessToken implements \ArrayAccess
    */
   private $accessTokenHash;
 
-  public function __construct(?Musician $musician = null, ?string $token = null) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(?Musician $musician = null, ?string $token = null)
+  {
     $this->arrayCTOR();
     $this->musician = $musician;
     $this->userId = empty($musician) ? null : $musician->getUserIdSlug();
@@ -87,6 +87,7 @@ class MusicianRowAccessToken implements \ArrayAccess
       $musician->setRowAccessToken($this);
     }
   }
+  // phpcs:enable
 
   /**
    * Set musician.
@@ -139,7 +140,7 @@ class MusicianRowAccessToken implements \ArrayAccess
   /**
    * Set accessToken.
    *
-   * @param string $accessToken Unhashed binary token, only a sha-hash is stored
+   * @param string $accessToken Unhashed binary token, only a sha-hash is stored.
    *
    * @return MusicianRowAccessToken
    */
@@ -174,6 +175,11 @@ class MusicianRowAccessToken implements \ArrayAccess
     return $this->accessTokenHash;
   }
 
+  /**
+   * @param string $value
+   *
+   * @return string
+   */
   private function computeHash(string $value):string
   {
     return \hash('sha' . self::HASH_LENGTH, $value, binary: false);

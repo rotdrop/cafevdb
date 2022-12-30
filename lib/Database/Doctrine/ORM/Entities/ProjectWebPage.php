@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -75,14 +75,17 @@ class ProjectWebPage implements \ArrayAccess
    */
   private $priority = '-1';
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set project.
    *
-   * @param Project $project
+   * @param null|Project $project
    *
    * @return ProjectWebPage
    */
@@ -154,7 +157,7 @@ class ProjectWebPage implements \ArrayAccess
   /**
    * Set categoryId.
    *
-   * @param int $categoryId
+   * @param null|int $categoryId
    *
    * @return ProjectWebPage
    */
@@ -178,7 +181,7 @@ class ProjectWebPage implements \ArrayAccess
   /**
    * Set priority.
    *
-   * @param int $priority
+   * @param null|int $priority
    *
    * @return ProjectWebPages
    */

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,14 +62,17 @@ class MissingTranslation implements \ArrayAccess
    */
   private $locale;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set translation key entity.
    *
-   * @param TranslationKey $translationKey
+   * @param null|TranslationKey $translationKey
    *
    * @return TanslationLocation
    */
@@ -93,7 +96,7 @@ class MissingTranslation implements \ArrayAccess
   /**
    * Set locale.
    *
-   * @param string $locale
+   * @param null|string $locale
    *
    * @return TranslationLocation
    */
