@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +35,7 @@ use OCA\CAFEVDB\Service\L10N\TranslationService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ConfigService;
 
+/** Recorded  untranslated strings. */
 class TranslationNotFoundListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -43,15 +45,19 @@ class TranslationNotFoundListener implements IEventListener
   /** @var IAppContainer */
   protected $appContainer;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
 
     /** @var HandledEvent $event */
-    if (!($event instanceOf HandledEvent)) {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
 

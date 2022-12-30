@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright , 2021, 2022,  Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright , 2021, 2022,  Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,13 +49,17 @@ class MailingListsRegistrationConfirmationListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
-    if (!($event instanceOf HandledEvent)) {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
     /** @var HandledEvent $event */
@@ -92,11 +96,5 @@ class MailingListsRegistrationConfirmationListener implements IEventListener
     } catch (\Throwable $t) {
       $this->logException($t, 'Unable to change mailing list subscription after changing registration confirmation.');
     }
-
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

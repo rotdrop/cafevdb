@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,11 @@ use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent as HandledEvent;
 
 use OCA\CAFEVDB\Service\EventsService;
 
+/**
+ * Update calendar events if the project has been deleted.
+ *
+ * @todo Make the CTOR less expensive.
+ */
 class ProjectDeletedEventListener implements IEventListener
 {
   const EVENT = HandledEvent::class;
@@ -37,19 +42,19 @@ class ProjectDeletedEventListener implements IEventListener
   /** @var EventsService */
   private $eventsService;
 
-  public function __construct(EventsService $eventsService) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(EventsService $eventsService)
+  {
     $this->eventsService = $eventsService;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
-    if (!($event instanceOf HandledEvent)) {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
     $this->eventsService->onProjectDeleted($event);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

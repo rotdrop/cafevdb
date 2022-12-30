@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Events\PrePersistProjectParticipantField as HandledEvent;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
+/** Generate README.md's if the field referes to a file attachment. */
 class PrePersistProjectParticipantFieldListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -42,15 +43,18 @@ class PrePersistProjectParticipantFieldListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
-  public function __construct(
-    IAppContainer $appContainer
-  ) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(IAppContainer $appContainer)
+  {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
     /** @var HandledEvent $event */
-    if (!($event instanceOf HandledEvent)) {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
 

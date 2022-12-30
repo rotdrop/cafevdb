@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +31,12 @@ use OCP\IGroupManager;
 use OCP\ILogger;
 use OCP\IL10N;
 
+/**
+ * Perform necessary tasks at logout time.
+ *
+ * @todo Make the CTOR less costly.
+ * @todo This currently does nothing. Remove?
+ */
 class UserLoggedOutEventListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -39,29 +46,26 @@ class UserLoggedOutEventListener implements IEventListener
   /** @var ISubAdmin */
   private $groupManager;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IGroupManager $groupManager
-    , ILogger $logger
-    , IL10N $l10n
+    IGroupManager $groupManager,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->groupManager = $groupManager;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
-    if (!($event instanceOf HandledEvent)) {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
 
     // $this->logInfo("Hello Logout-Handler!");
-
-    // @@todo check if we want this.
     return;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

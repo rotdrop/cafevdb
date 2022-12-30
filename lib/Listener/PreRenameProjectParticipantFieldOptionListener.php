@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Events\PreRenameProjectParticipantFieldOption as HandledEvent;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
+/** Rename file-system nodes if the field refers to file-attachments. */
 class PreRenameProjectParticipantFieldOptionListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -42,14 +43,18 @@ class PreRenameProjectParticipantFieldOptionListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
     /** @var HandledEvent $event */
-    if (!($event instanceOf HandledEvent)) {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
 
@@ -63,7 +68,7 @@ class PreRenameProjectParticipantFieldOptionListener implements IEventListener
     $this->logInfo('OLD / NEW: ' . $oldLabel . ' / ' . $newLabel);
 
     if ($oldLabel == $newLabel) {
-      $this->logInfo('Cowardly refusing to handle rename to same label: ' . $oldlabel);
+      $this->logInfo('Cowardly refusing to handle rename to same label: ' . $oldLabel);
       return;
     }
 

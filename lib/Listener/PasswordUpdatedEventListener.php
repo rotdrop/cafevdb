@@ -1,11 +1,11 @@
 <?php
-/*
+/**
  * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,44 +28,33 @@ use OCP\User\Events\PasswordUpdatedEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-use OCP\IUserManager;
-use OCP\IGroupManager;
-use OCP\Group\ISubAdmin;
 use OCP\ILogger;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
 use OCA\CAFEVDB\Service\AuthorizationService;
 
+/** Perform re-recryption action when the user password has been updated. */
 class PasswordUpdatedEventListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 
-  /** @var ISubAdmin */
-  private $subAdmin;
-
-  /** @var IUserManager */
-  private $userManager;
-
-  /** @var IGroupManager */
-  private $groupManager;
-
-  /** @var EncryptionService */
-  private $encryptionService;
-
   /** @var IAppContainer */
   private $appContainer;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
-    if (!($event instanceOf HandledEvent)) {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
 
@@ -80,7 +69,7 @@ class PasswordUpdatedEventListener implements IEventListener
       $keyService = $this->appContainer->get(AsymmetricKeyService::class);
       $keyService->initEncryptionKeyPair($userId, $event->getPassword(), forceNewKeyPair: true);
     } catch (\Throwable $t) {
-      $this->logException($t, $this->l->t('Unable to initialize asymmetric key-pair for user "%s".', $userId ));
+      $this->logException($t, $this->l->t('Unable to initialize asymmetric key-pair for user "%s".', $userId));
     }
   }
 }

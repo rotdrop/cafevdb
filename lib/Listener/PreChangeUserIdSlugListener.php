@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Events\PreChangeUserIdSlug as HandledEvent;
 use OCA\CAFEVDB\Service\ProjectService;
 
+/** Perform renaming action when the user-id slug changes. */
 class PreChangeUserIdSlugListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -42,19 +43,23 @@ class PreChangeUserIdSlugListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IAppContainer $appContainer
-    , ILogger $logger
-    , IL10N $l10n
+    IAppContainer $appContainer,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
     /** @var HandledEvent $event */
-    if (!($event instanceOf HandledEvent)) {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
 

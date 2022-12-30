@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +33,11 @@ use OCA\DAV\Events\CalendarObjectCreatedEvent as HandledEvent;
 
 use OCA\CAFEVDB\Service\EventsService;
 
+/**
+ * Act on newly created events and tasks.
+ *
+ * @todo Make the CTOR less expensive.
+ */
 class CalendarObjectCreatedEventListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -41,25 +47,24 @@ class CalendarObjectCreatedEventListener implements IEventListener
   /** @var EventsService */
   private $eventsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    EventsService $eventsService
-    , ILogger $logger
-    , IL10N $l10n
+    EventsService $eventsService,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->eventsService = $eventsService;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
-    if (!($event instanceOf HandledEvent)) {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
     $this->eventsService->onCalendarObjectCreated($event);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
