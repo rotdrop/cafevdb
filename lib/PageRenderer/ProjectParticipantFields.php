@@ -1407,7 +1407,7 @@ __EOT__;
    * Generate a row given values and index for the "change" view
    * corresponding to the multi-choice fields.
    *
-   * @param array $value One row of the form as returned form
+   * @param mixed $value One row of the form as returned form
    * self::explodeDataOptions().
    *
    * @param integer $index A unique row number.
