@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use DateTimeInterface;
+
 /**
  * Simplistic progress-status interface.
  */
@@ -32,6 +34,8 @@ interface IProgressStatus
   /**
    * Delete the underlying storage object. Afterwards any operation
    * except $this->bind() will exhibit undefined behaviour.
+   *
+   * @return void
    */
   public function delete();
 
@@ -39,8 +43,10 @@ interface IProgressStatus
    * Bind to the given storage object. Create a new object if $id is null.
    *
    * @param mixed $id Opaque data identifying the progress status object.
+   *
+   * @return void
    */
-  public function bind($id);
+  public function bind(mixed $id);
 
   /**
    * Obtain a unique but opaque identifier (e.g. the id column in a
@@ -82,6 +88,8 @@ interface IProgressStatus
   /**
    * Synchronize with the underlying storage, i.e. read the data into
    * this instance.
+   *
+   * @return void
    */
   public function sync();
 
@@ -95,7 +103,9 @@ interface IProgressStatus
   /**
    * Set the current value and sync.
    *
-   * @param int
+   * @param int $current
+   *
+   * @return void
    */
   public function setCurrent(int $current);
 
@@ -109,7 +119,9 @@ interface IProgressStatus
   /**
    * Set the target value and sync.
    *
-   * @param int
+   * @param int $target
+   *
+   * @return void
    */
   public function setTarget(int $target);
 
@@ -124,15 +136,17 @@ interface IProgressStatus
    * Set the data value and sync.
    *
    * @param array $data
+   *
+   * @return void
    */
   public function setData(array $data);
 
   /**
    * Return the cached value of the last modification time.
    *
-   * @return \DateTimeInterface
+   * @return DateTimeInterface
    */
-  public function getLastModified():\DateTimeinterface;
+  public function getLastModified():DateTimeinterface;
 }
 
 // Local Variables: ***

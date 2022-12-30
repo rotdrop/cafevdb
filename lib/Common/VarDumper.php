@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Common;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 
+/** Recursion-safe variable dumper. */
 class VarDumper
 {
   /** @var VarCloner */
@@ -35,16 +36,24 @@ class VarDumper
   /** @var CliDumper */
   private $varDumper;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->varCloner = new VarCloner;
     $this->varDumper = new CliDumper;
   }
+  // phpcs:enable
 
   /**
    * Default dump to a string without colors.
+   *
+   * @param mixed $variable
+   *
+   * @param mixed $stream
+   *
+   * @return mixed
    */
-  public function dump($variable, $stream = true)
+  public function dump(mixed $variable, mixed $stream = true)
   {
     return $this->varDumper->dump($this->varCloner->cloneVar($variable), $stream);
   }

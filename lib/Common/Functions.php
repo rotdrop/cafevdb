@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,16 @@ namespace OCA\CAFEVDB\Common\Functions;
 
 use OCA\CAFEVDB\Common\VarDumper;
 
-/** Symphony var-dumper which does not suffer from inifinite recursions. */
-function dump($variable, $stream = true)
+/**
+ * Symphony var-dumper which does not suffer from inifinite recursions.
+ *
+ * @param mixed $variable
+ *
+ * @param mixed $stream
+ *
+ * @return mixed
+ */
+function dump(mixed $variable, mixed $stream = true)
 {
   static $dumper = null;
   if (empty($dumper)) {
@@ -36,8 +44,16 @@ function dump($variable, $stream = true)
   return $dumper->dump($variable, $stream);
 }
 
-/** Version of strcmp which sorts empty strings last. */
-function strCmpEmptyLast($a, $b)
+/**
+ * Version of strcmp which sorts empty strings last.
+ *
+ * @param string $a
+ *
+ * @param string $b
+ *
+ * @return int
+ */
+function strCmpEmptyLast(string $a, string $b)
 {
   if ($a == $b) {
     return 0;

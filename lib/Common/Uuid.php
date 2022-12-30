@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Common;
 
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Provider\Node\RandomNodeProvider;
 
 /**
  * Customize with some defaults, like a random node.
@@ -59,9 +60,11 @@ class Uuid extends \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid
   /**
    * Convert "anything" to a UuidInterface
    *
+   * @param mixed $data
+   *
    * @return null|UuitInterface
    */
-  public static function asUuid($data):?UuidInterface
+  public static function asUuid(mixed $data):?UuidInterface
   {
     if ($data instanceof UuidInterface) {
       return $data;
@@ -77,6 +80,7 @@ class Uuid extends \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid
     return null;
   }
 
+  /** @return UuidInterface */
   public static function nil():UuidInterface
   {
     return self::fromString(self::NIL);
@@ -85,9 +89,11 @@ class Uuid extends \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid
   /**
    * Convert "anything" to a binary UUID representation.
    *
+   * @param mixed $data
+   *
    * @return null|string Binary string of length 16
    */
-  public static function uuidBytes($data):?string
+  public static function uuidBytes(mixed $data):?string
   {
     $uuid = self::asUuid($data);
     if (empty($uuid)) {
@@ -104,7 +110,7 @@ class Uuid extends \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid
   private static function createNode()
   {
     if (empty(self::$nodeProvider)) {
-      self::$nodeProvider = new \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Provider\Node\RandomNodeProvider;
+      self::$nodeProvider = new RandomNodeProvider;
     }
     return self::$nodeProvider->getNode();
   }

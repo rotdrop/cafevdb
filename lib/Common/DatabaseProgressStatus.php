@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use DateTimeImmutable;
+
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db;
@@ -36,6 +38,7 @@ use OCA\CAFEVDB\Database\Cloud\Entities;
 use OCA\CAFEVDB\Common\IProgressStatus;
 use OCA\CAFEVDB\Exceptions;
 
+/** Progress-status via database table. */
 class DatabaseProgressStatus extends AbstractProgressStatus
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -48,20 +51,19 @@ class DatabaseProgressStatus extends AbstractProgressStatus
   /** @var Entities\ProgressStatus */
   protected $entity;
 
-  /**
-   * Find the given or create a new Entities\ProgressStatus entity.
-   */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , ILogger $logger
-    , IL10N $l10n
-    , IDBConnection $db
+    string $appName,
+    ILogger $logger,
+    IL10N $l10n,
+    IDBConnection $db,
   ) {
 
     $this->logger = $logger;
     $this->l = $l10n;
     $this->mapper = new Mapper\ProgressStatusMapper($db, $appName);
   }
+  // phpcs:enable
 
   /** {@inheritdoc} */
   public function delete()
@@ -73,7 +75,7 @@ class DatabaseProgressStatus extends AbstractProgressStatus
   }
 
   /** {@inheritdoc} */
-  public function bind($id)
+  public function bind(mixed $id)
   {
     if (!empty($this->entity) && $this->entity->getId() == $id) {
       $this->sync();
@@ -97,7 +99,7 @@ class DatabaseProgressStatus extends AbstractProgressStatus
         throw (new Exceptions\ProgressStatusNotFoundException(
           $this->l->t('Unable to find progress status for job id "%s"', $id),
           $t->getCode(),
-          $t))->setId($i);
+          $t))->setId($id);
       }
     } else {
       $this->entity = new Entities\ProgressStatus;
@@ -154,7 +156,7 @@ class DatabaseProgressStatus extends AbstractProgressStatus
   /** {@inheritdoc} */
   public function getLastModified():\DateTimeinterface
   {
-    return (new \DateTimeImmutable)->setTimestamp($this->entity()->getLastModified());
+    return (new DateTimeImmutable)->setTimestamp($this->entity()->getLastModified());
   }
 
   /** {@inheritdoc} */
@@ -163,5 +165,4 @@ class DatabaseProgressStatus extends AbstractProgressStatus
     $dbData = $this->entity->getData();
     return empty($dbData) ? $dbData : json_decode($dbData, true);
   }
-
 }
