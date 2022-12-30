@@ -3339,7 +3339,7 @@ Störung.';
           'email' => $dummy->getEmail(),
           'name' => $dummy->getPublicName(true),
           'dbdata' => $dummy,
-	  'userBase' => 0,
+          'userBase' => 0,
         ],
       ];
     }
@@ -4096,9 +4096,9 @@ Störung.';
     $financeService = $this->di(FinanceService::class);
     $info = $financeService->getIbanInfo($iban->MachineFormat());
     return ($info['bank'] . "<br/>\n"
-	  . $this->getConfigValue('bankAccountOwner') . "<br/>\n"
-	  . "IBAN ".$iban->HumanFormat() . " (" . $iban->MachineFormat() . ")<br/>\n"
-	  . "BIC " . $this->getConfigValue('bankAccountBIC')
+          . $this->getConfigValue('bankAccountOwner') . "<br/>\n"
+          . "IBAN ".$iban->HumanFormat() . " (" . $iban->MachineFormat() . ")<br/>\n"
+          . "BIC " . $this->getConfigValue('bankAccountBIC')
     );
   }
 
@@ -5075,9 +5075,8 @@ Störung.';
     foreach ($links as $item) {
       $thisLinkGood = false;
       $href = $item->getAttribute('href');
-      if (
-        $this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
-        || str_starts_with($href, 'mailto:')
+      if ($this->hasSubstitutionNamespace(self::GLOBAL_NAMESPACE, urldecode($href))
+          || str_starts_with($href, 'mailto:')
       ) {
         $this->logInfo('KEEP HREF UNCHECKED ' . $href);
         continue;
@@ -5479,7 +5478,7 @@ Störung.';
    * A helper function to generate suitable select options for
    * PageNavigation::selectOptions().
    *
-   * @param int $projectId Id of the active project. If <= 0 an empty
+   * @param mixed $projectId Id of the active project. If <= 0 an empty
    * array is returned.
    *
    * @param array $attachedEvents Flat array of attached events.
