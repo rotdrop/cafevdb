@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,16 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use Exception;
+
+use OCP\Image as CloudImage;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
+/** Repository for images. */
 class ImagesRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
@@ -41,7 +46,7 @@ class ImagesRepository extends EntityRepository
    *
    * @param int $ownerId Entity id of the "using" table/entity.
    *
-   * @param int $limit Limit number of results (default: no limit)
+   * @param int $limit Limit number of results (default: no limit).
    *
    * @return Entities\Image[]
    */
@@ -81,11 +86,14 @@ class ImagesRepository extends EntityRepository
   /**
    * Find the first or only image for the given using entity.
    *
-   * @copydoc findForEntity
+   * @param string $entityClass
+   *
+   * @param int $ownerId
    *
    * @return null|Entities\Image
    */
-  public function findOneForEntity(string $entityClass, int $ownerId) {
+  public function findOneForEntity(string $entityClass, int $ownerId)
+  {
     $images = $this->findForEntity($entityClass, $ownerId, 1);
     return empty($images) ? null : $images[0];
   }
@@ -98,9 +106,15 @@ class ImagesRepository extends EntityRepository
    *
    * @param string $joinTableEntityClass Possibly partial join-table entity class.
    *
+   * @param int $ownerId
    *
+   * @param CloudImage $image
+   *
+   * @param null|string $fileName
+   *
+   * @return Entities\Image
    */
-  public function persistForEntity(string $joinTableEntityClass, int $ownerId, \OCP\Image $image, ?string $fileName = null):Entities\Image
+  public function persistForEntity(string $joinTableEntityClass, int $ownerId, CloudImage $image, ?string $fileName = null):Entities\Image
   {
     $entityManager = $this->getEntityManager();
 
@@ -110,7 +124,7 @@ class ImagesRepository extends EntityRepository
     // Get meta-data of owner mapping
     $mapping = $entityManager->getClassMetadata($joinTableEntityClass)->getAssociationMapping('owner');
     if (empty($mapping)) {
-      throw new \Exception("Unable to read owner mapping meta-data");
+      throw new Exception("Unable to read owner mapping meta-data");
     }
 
     $ownerEntityClass = $mapping['targetEntity'];
@@ -147,8 +161,8 @@ class ImagesRepository extends EntityRepository
     $entityManager->flush();
 
     $dbImage = $joinTableEntity->getImage();
-    $imageId = $dbImage->getId();
 
+    // $imageId = $dbImage->getId();
     // self::log("Stored image with id ".$imageId." mime ".$image->mimeType());
 
     return $dbImage;
@@ -167,6 +181,11 @@ class ImagesRepository extends EntityRepository
     return $this->resolveJoinTableEntity($joinTableEntity);
   }
 
+  /**
+   * @param string $joinTableEntity
+   *
+   * @return string
+   */
   private function resolveJoinTableEntity(string $joinTableEntity):string
   {
     // ownername_imagename
@@ -185,10 +204,4 @@ class ImagesRepository extends EntityRepository
     //$this->log("entity: ".$joinTableEntity);
     return $joinTableEntity;
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

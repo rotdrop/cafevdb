@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +29,7 @@ use OCA\CAFEVBD\Common\Util;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 
+/** Repository for project participants. */
 class ProjectParticipantsRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
@@ -38,11 +40,11 @@ class ProjectParticipantsRepository extends EntityRepository
    *
    * @param int $projectId
    *
-   * @param array $orderBy
+   * @param null|array $orderBy
    *
    * @return array
    */
-  public function fetchParticipantNames($projectId, $orderBy = null)
+  public function fetchParticipantNames(int $projectId, ?array $orderBy = null)
   {
     if (empty($orderBy)) {
       $orderBy = [
@@ -77,10 +79,4 @@ AS displayName",
       ->getQuery()
       ->getResult();
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

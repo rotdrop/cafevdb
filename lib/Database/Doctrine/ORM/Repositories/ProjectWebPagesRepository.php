@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +28,7 @@ use Doctrine\Common\Proxy\Proxy;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+/** Repository for the per-project web-pages. */
 class ProjectWebPagesRepository extends EntityRepository
 {
   /**
@@ -35,9 +37,8 @@ class ProjectWebPagesRepository extends EntityRepository
    * @param int|Project $projectOrId Either the project-id or a
    * (reference to the) associated project entity.
    *
-   * @param array|ProjectWebArticel Web article with all remaining data fields
+   * @param array|ProjectWebArticle $webArticle Web article with all remaining data fields
    * except id and ProjectId.
-   *
    * ```
    * [
    *   'ArticleId' => int
@@ -45,7 +46,7 @@ class ProjectWebPagesRepository extends EntityRepository
    *   'CategoryId' => int
    *   'Priority' => int
    * ]
-   * ```
+   * ```.
    *
    * @return ProjectWebPage The updated or created project web page.
    */
@@ -88,7 +89,14 @@ class ProjectWebPagesRepository extends EntityRepository
     return $projectWebPage;
   }
 
-  public function mergeAttributes($selector, $attributes)
+  /**
+   * @param mixed $selector
+   *
+   * @param mixed $attributes
+   *
+   * @return void
+   */
+  public function mergeAttributes(mixed $selector, mixed $attributes)
   {
     $entityManager = $this->getEntityManager();
     $articles = $this->findBy($selector);
@@ -100,10 +108,4 @@ class ProjectWebPagesRepository extends EntityRepository
     }
     $entityManager->flush();
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

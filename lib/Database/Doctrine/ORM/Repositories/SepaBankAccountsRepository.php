@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,6 +40,10 @@ class SepaBankAccountsRepository extends EntityRepository
    * Try to persist the given bank-account by first fetching the
    * current sequence for its musician and then increasing it.
    *
+   * @param Entities\SepaBankAccount $account
+   *
+   * @return Entities\SepaBankAccount
+   *
    * @throws Doctrine\DBAL\Exception\UniqueConstraintViolationException
    */
   public function persist(Entities\SepaBankAccount $account):Entities\SepaBankAccount
@@ -47,8 +51,3 @@ class SepaBankAccountsRepository extends EntityRepository
     return $this->persistEntity($account);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

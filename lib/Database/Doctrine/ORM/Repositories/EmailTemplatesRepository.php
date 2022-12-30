@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class EmailTemplatesRepository extends EntityRepository
 {
+  /** @return array */
   public function list()
   {
     return $this->createQueryBuilder('et')
@@ -49,8 +50,3 @@ class EmailTemplatesRepository extends EntityRepository
       ->execute();
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

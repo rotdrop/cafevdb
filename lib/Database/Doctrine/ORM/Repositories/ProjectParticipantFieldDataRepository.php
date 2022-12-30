@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 
+/** Repository for extra fields data. */
 class ProjectParticipantFieldDataRepository extends EntityRepository
 {
   const ALIAS = 'pexfd';
@@ -36,7 +37,9 @@ class ProjectParticipantFieldDataRepository extends EntityRepository
    * Fetch all values stored for the given participant-field, e.g. in order
    * to recover or generate select boxes.
    *
-   * @param int|Entities\ProjectParticipantField
+   * @param int|Entities\ProjectParticipantField $field
+   *
+   * @return mixed
    */
   public function optionKeys($field)
   {
@@ -46,10 +49,4 @@ class ProjectParticipantFieldDataRepository extends EntityRepository
                ->setParameter('field', $field);
     return $qb->getQuery()->getResult('COLUMN_HYDRATOR');
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

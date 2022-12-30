@@ -107,6 +107,8 @@ class CloudLogger implements SQLLogger
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Logs a SQL statement somewhere.
    *
    * @param string              $sql    The SQL to be executed.
@@ -117,7 +119,7 @@ class CloudLogger implements SQLLogger
    *
    * @return void
    */
-  public function startQuery(string $sql, ?array $params = null, ?array $types = null):void
+  public function startQuery($sql, ?array $params = null, ?array $types = null)
   {
     if (!$this->enabled) {
       return;
@@ -128,6 +130,8 @@ class CloudLogger implements SQLLogger
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Marks the last started query as stopped. This can be used for timing of queries.
    *
    * @return void
