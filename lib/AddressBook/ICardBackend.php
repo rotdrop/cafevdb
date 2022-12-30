@@ -5,8 +5,8 @@ declare(strict_types=1);
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022, 2022 Claus-Justus Heine
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
@@ -25,25 +25,35 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFEVDB\AddressBook;
 
+/** Bizarre single-implementation interface ... */
 interface ICardBackend
 {
-  public function getURI(): string;
+  /** @return string */
+  public function getURI():string;
 
-  public function getDisplayName(): string;
+  /** @return string */
+  public function getDisplayName():string;
 
   /**
+   * @param string $name
+   *
+   * @return MusicianCard
+   *
    * @throws \Sabre\DAV\Exception\NotFound
    */
-  public function getCard($name): MusicianCard;
+  public function getCard(string $name):MusicianCard;
 
   /**
+   * @param string $pattern
+   *
+   * @param array $properties
+   *
    * @return MusicianCard[]
-	 */
+   */
   public function searchCards(string $pattern, array $properties): array;
 
   /**

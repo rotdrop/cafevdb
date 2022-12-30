@@ -3,16 +3,14 @@
  * The is a stripped down version from
  * dav/lib/CardDAV/ImageExportPlugin + PhotoCache.php
  *
- * Original sources copyright to
- *
- * @copyright Copyright (c) 2016, ownCloud, Inc.
- *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Jacob Neplokh <me@jacobneplokh.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- *
- * @license AGPL-3.0
+ * @copyright 2019-2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2016, ownCloud, Inc.
+ * @license AGPL-3.0-or-later
  *
  * This code is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License, version 3,
@@ -25,7 +23,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
  * along with this program. If not, see <http://www.gnu.org/licenses/>
- *
  */
 
 namespace OCA\CAFEVDB\AddressBook;
@@ -38,6 +35,7 @@ use Sabre\HTTP\ResponseInterface;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
+/** Sabre plugin in order to export images attached to cards. */
 class ImageExportPlugin extends ServerPlugin
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -53,26 +51,23 @@ class ImageExportPlugin extends ServerPlugin
   /** @var Server */
   protected $server;
 
-  /** @var PhotoCache */
-  private $cache;
-
-  /**
-   * ImageExportPlugin constructor.
-   */
-  public function __construct(
-    ConfigService $configService
-  ) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(ConfigService $configService)
+  {
     $this->configService = $configService;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Initializes the plugin and registers event handlers
    *
    * @param Server $server
+   *
    * @return void
    */
-  public function initialize(Server $server) {
+  public function initialize(Server $server)
+  {
     $this->server = $server;
     $this->server->on('method:GET', [$this, 'httpGet'], 90);
   }
@@ -81,17 +76,20 @@ class ImageExportPlugin extends ServerPlugin
    * Intercepts GET requests on addressbook urls ending with ?photo.
    *
    * @param RequestInterface $request
+   *
    * @param ResponseInterface $response
+   *
    * @return bool
    */
-  public function httpGet(RequestInterface $request, ResponseInterface $response) {
+  public function httpGet(RequestInterface $request, ResponseInterface $response)
+  {
     $queryParams = $request->getQueryParameters();
     // TODO: in addition to photo we should also add logo some point in time
     if (!array_key_exists('photo', $queryParams)) {
       return true;
     }
 
-    $size = isset($queryParams['size']) ? (int)$queryParams['size'] : -1;
+    // $size = isset($queryParams['size']) ? (int)$queryParams['size'] : -1;
 
     $path = $request->getPath();
     $node = $this->server->tree->getNodeForPath($path);
@@ -104,7 +102,8 @@ class ImageExportPlugin extends ServerPlugin
 
     // Checking ACL, if available.
     /** @var \Sabre\DAVACL\Plugin $aclPlugin */
-    if ($aclPlugin = $this->server->getPlugin('acl')) {
+    $aclPlugin = $this->server->getPlugin('acl');
+    if (!empty($aclPlugin)) {
       $aclPlugin->checkPrivileges($path, '{DAV:}read');
     }
 

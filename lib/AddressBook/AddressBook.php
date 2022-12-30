@@ -5,8 +5,8 @@ declare(strict_types=1);
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@ declare(strict_types=1);
  */
 
 namespace OCA\CAFEVDB\AddressBook;
+
+use Exception;
 
 use Sabre\DAV\PropPatch;
 use OCA\DAV\CardDAV\Integration\ExternalAddressBook;
@@ -44,10 +46,11 @@ class AddressBook extends ExternalAddressBook
   /** @var string */
   private $principalUri;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , ICardBackend $cardBackend
-    , string $principalUri
+    ConfigService $configService,
+    ICardBackend $cardBackend,
+    string $principalUri,
   ) {
     parent::__construct($configService->getAppName(), $cardBackend->getURI());
     $this->cardBackend = $cardBackend;
@@ -55,37 +58,37 @@ class AddressBook extends ExternalAddressBook
     $this->configService = $configService;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
-  /**
-   * @inheritDoc
-   */
-  function createFile($name, $data = null) {
-    throw new \Exception('This addressbook is immutable');
+  /** {@inheritdoc} */
+  public function createFile($name, $data = null)
+  {
+    throw new Exception('This addressbook is immutable');
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
+   *
    * @throws RecordNotFound
    */
-  function getChild($name) {
+  public function getChild($name)
+  {
     // $this->logInfo('name '.$name);
     return $this->cardBackend->getCard($name);
   }
 
-  /**
-   * @inheritDoc
-   */
-  function getChildren() {
+  /** {@inheritdoc} */
+  public function getChildren()
+  {
     $cards = $this->cardBackend->getCards();
 
     //$this->logInfo(print_r($cards, true));
     return $cards;
   }
 
-  /**
-   * @inheritDoc
-   */
-  function childExists($name) {
+  /** {@inheritdoc} */
+  public function childExists($name)
+  {
     // $this->logInfo('name '.$name);
     try {
       $this->getChild($name);
@@ -95,31 +98,27 @@ class AddressBook extends ExternalAddressBook
     }
   }
 
-  /**
-   * @inheritDoc
-   */
-  function delete() {
-    throw new \Exception('This addressbook is immutable');
+  /** {@inheritdoc} */
+  public function delete()
+  {
+    throw new Exception('This addressbook is immutable');
   }
 
-  /**
-   * @inheritDoc
-   */
-  function getLastModified() {
+  /** {@inheritdoc} */
+  public function getLastModified()
+  {
     return $this->cardBackend->getLastModified();
   }
 
-  /**
-   * @inheritDoc
-   */
-  function propPatch(PropPatch $propPatch) {
-    throw new \Exception('This addressbook is immutable');
+  /** {@inheritdoc} */
+  public function propPatch(PropPatch $propPatch)
+  {
+    throw new Exception('This addressbook is immutable');
   }
 
-  /**
-   * @inheritDoc
-   */
-  function getProperties($properties) {
+  /** {@inheritdoc} */
+  public function getProperties($properties)
+  {
     $eTag = md5((string)$this->getLastModified());
     $props = [
       '{' . Plugin::NS_OWNCLOUD . '}principaluri' => $this->principalUri,

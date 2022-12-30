@@ -86,7 +86,7 @@ class MusicianCardBackend implements ICardBackend
    *
    * @throws SabreNotFoundException
    */
-  public function getCard($name): MusicianCard
+  public function getCard(string $name):MusicianCard
   {
     $uuid = $this->getUuidFromUri($name);
     $musician = $this->musiciansRepository->findOneBy([ 'uuid' => $uuid ]);
