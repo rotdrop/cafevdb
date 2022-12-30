@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,33 +30,30 @@ use OCP\IConfig as ICloudConfig;
 
 use OCA\CAFEVDB\Service\GeoCodingService;
 
+/** Gradually sync with remote geo-coding providers. */
 class BulkUpdateGeoCoding extends LazyUpdateGeoCoding
 {
   /** @var GeoCodingService */
   private $geoCodingService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , ITimeFactory $time
-    , ICloudConfig $cloudConfig
-    , GeoCodingService $geoCodingService
+    string $appName,
+    ITimeFactory $time,
+    ICloudConfig $cloudConfig,
+    GeoCodingService $geoCodingService,
   ) {
     parent::__construct($appName, $time, $cloudConfig, $geoCodingService);
     $this->setInterval($cloudConfig->getAppValue($appName, 'geocoding.refresh.bulk', 24*3600));
   }
+  // phpcs:enable
 
-  /**
-   * @param array $arguments
-   */
-  protected function run($arguments = []) {
+  /** {@inheritdoc} */
+  protected function run($arguments = [])
+  {
     foreach ($this->geoCodingService->getLanguages() as $lang) {
       $this->geoCodingService->updateCountriesForLanguage($lang, true);
       $this->geoCodingService->updatePostalCodes($lang, 100);
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

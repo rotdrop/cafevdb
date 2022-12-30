@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\BackgroundJob;
+
+use DateTime;
 
 use OCP\BackgroundJob\IJobList;
 use OCP\BackgroundJob\TimedJob;
@@ -62,13 +64,14 @@ class CleanupExpiredDownloads extends TimedJob
   /** @var bool */
   private $debug = false;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , ITimeFactory $time
-    , IRootFolder $rootFolder
-    , IShareManager $shareManager
-    , ICloudConfig $cloudConfig
-    , ILogger $logger
+    string $appName,
+    ITimeFactory $time,
+    IRootFolder $rootFolder,
+    IShareManager $shareManager,
+    ICloudConfig $cloudConfig,
+    ILogger $logger,
   ) {
     parent::__construct($time);
     $this->rootFolder = $rootFolder;
@@ -77,8 +80,11 @@ class CleanupExpiredDownloads extends TimedJob
     $this->setInterval($cloudConfig->getAppValue($appName, 'backgroundjobs.cleanupexpireddownloads.interval', 120)); //3600));
     $this->oldAge = $cloudConfig->getAppValue($appName, 'backgroundjobs.cleanupexpireddownloads.oldage', 24*60*60);
   }
+  // phpcs:enable
 
   /**
+   * {@inheritdoc}
+   *
    * @param array $arguments
    * ```
    * [
@@ -109,7 +115,6 @@ class CleanupExpiredDownloads extends TimedJob
       return;
     }
 
-    $now = $this->time->getTime();
     foreach ($paths as $directoryName) {
       /** @var OCP\Files\Folder $directory */
       $directory = $userFolder->get($directoryName);
@@ -130,7 +135,7 @@ class CleanupExpiredDownloads extends TimedJob
           $expirationDate = $share->getExpirationDate();
           if (empty($expirationDate)) {
             $this->debug('Expiration date for share is null');
-            $expirationDate = new \DateTime; // never expire?
+            $expirationDate = new DateTime; // never expire?
           } else {
             $this->debug('Expiration date ' . print_r($expirationDate, true));
           }
@@ -159,7 +164,16 @@ class CleanupExpiredDownloads extends TimedJob
     }
   }
 
-  private function recurseDirectory(Folder $folder, $callback, $level = 0)
+  /**
+   * @param Folder $folder
+   *
+   * @param callable $callback
+   *
+   * @param int $level
+   *
+   * @return int
+   */
+  private function recurseDirectory(Folder $folder, callable $callback, int $level = 0):int
   {
     $count = 0;
     /** @var Node $node */
@@ -177,7 +191,17 @@ class CleanupExpiredDownloads extends TimedJob
     return $count;
   }
 
-  private function debug(string $message, array $context = [], $shift = 0) {
+  /**
+   * @param string $message
+   *
+   * @param array $context
+   *
+   * @param int $shift
+   *
+   * @return void
+   */
+  private function debug(string $message, array $context = [], int $shift = 0):void
+  {
     ++$shift;
     if ($this->debug) {
       $this->logInfo($message, $context, $shift);
@@ -186,8 +210,3 @@ class CleanupExpiredDownloads extends TimedJob
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
