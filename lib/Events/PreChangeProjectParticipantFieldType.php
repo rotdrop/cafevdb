@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ use OCP\EventDispatcher\Event;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 
+/** Event forwarder ORM -> cloud. */
 class PreChangeProjectParticipantFieldType extends Event
 {
   /** @var Entities\ProjectParticipantField */
@@ -40,30 +41,31 @@ class PreChangeProjectParticipantFieldType extends Event
   /** @var null|FieldType */
   private $newType;
 
-  public function __construct(Entities\ProjectParticipantField $field, ?FieldType $oldType, ?FieldType $newType) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(Entities\ProjectParticipantField $field, ?FieldType $oldType, ?FieldType $newType)
+  {
     parent::__construct();
     $this->field = $field;
     $this->oldType = $oldType;
     $this->newType = $newType;
   }
+  // phpcs:enable
 
+  /** @return Entities\ProjectParticipantField */
   public function getField():Entities\ProjectParticipantField
   {
     return $this->field;
   }
 
+  /** @return FieldType */
   public function getOldType():FieldType
   {
     return $this->oldType;
   }
 
+  /** @return FieldType */
   public function getNewType():FieldType
   {
     return $this->newType;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

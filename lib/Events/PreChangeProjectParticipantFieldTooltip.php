@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCP\EventDispatcher\Event;
 
+/** Event forwarder ORM -> cloud. */
 class PreChangeProjectParticipantFieldTooltip extends Event
 {
   /** @var Entities\ProjectParticipantField */
@@ -38,30 +39,31 @@ class PreChangeProjectParticipantFieldTooltip extends Event
   /** @var null|string */
   private $newTooltip;
 
-  public function __construct(Entities\ProjectParticipantField $field, ?string $oldTooltip, ?string $newTooltip) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(Entities\ProjectParticipantField $field, ?string $oldTooltip, ?string $newTooltip)
+  {
     parent::__construct();
     $this->field = $field;
     $this->oldTooltip = $oldTooltip;
     $this->newTooltip = $newTooltip;
   }
+  // phpcs:enable
 
+  /** @return Entities\ProjectParticipantField */
   public function getField():Entities\ProjectParticipantField
   {
     return $this->field;
   }
 
+  /** @return null|string */
   public function getOldTooltip():?string
   {
     return $this->oldTooltip;
   }
 
+  /** @return null|string */
   public function getNewTooltip():?string
   {
     return $this->newTooltip;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

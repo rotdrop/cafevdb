@@ -2,8 +2,8 @@
 /**
  * Orchestra member, musician and project management application.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,19 +34,17 @@ class EntityManagerBoundEvent extends Event
   /** @var EntityManager */
   private $entityManager;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(EntityManager $entityManager)
   {
     parent::__construct();
     $this->entityManager = $entityManager;
   }
+  // phpcs:enable
 
+  /** @return EntityManager */
   public function getEntityManager():EntityManager
   {
     return $this->entityManager;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
