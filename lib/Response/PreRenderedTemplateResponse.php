@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,14 +40,21 @@ class PreRenderedTemplateResponse extends TemplateResponse
   /** @var string The renderered HTTP output. */
   protected $contentsCache = null;
 
-  public function __construct($appName, $templateName, array $params=[],
-                              $renderAs = self::RENDER_AS_USER)
-  {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    string $appName,
+    string $templateName,
+    array $params = [],
+    string $renderAs = self::RENDER_AS_USER
+  ) {
     parent::__construct($appName, $templateName, $params, $renderAs);
   }
+  // phpcs:enable
 
   /**
    * Call parent::render() and cache its output.
+   *
+   * @return string
    */
   public function preRender()
   {
@@ -55,6 +62,7 @@ class PreRenderedTemplateResponse extends TemplateResponse
     return $this->contentsCache;
   }
 
+  /** {@inheritdoc} */
   public function render()
   {
     if (!empty($this->contentsCache)) {
@@ -63,5 +71,4 @@ class PreRenderedTemplateResponse extends TemplateResponse
       return parent::render();
     }
   }
-
 }
