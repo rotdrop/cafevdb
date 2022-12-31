@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,10 @@ class Util
 {
   /**
    * Convenience function to generate Collections\Criteria
+   *
+   * @return Collections\Criteria
    */
-  public static function criteria(): Collections\Criteria
+  public static function criteria():Collections\Criteria
   {
     return new Collections\Criteria();
   }
@@ -53,12 +55,6 @@ class Util
    * Convenience function. Convert an array of criteria as accepted by
    * Doctrine\ORM\EntityRepository::findBy() to an instance of Collections\Criteria.
    *
-   * @todo This could be made more elaborate like
-   * OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().
-   * @todo Teach
-   * OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy()
-   * to use grouping with parens.
-   *
    * @param array $arrayCriteria Array of FIELD => VALUE pairs. FIELD support
    * a negation operation '!'. If VALUE is an array it is interpreted as a
    * list of acceptable values. Otherwise equality is tested. Criteria can be
@@ -72,9 +68,15 @@ class Util
    *   'optionValue' => null   // option_value is NULL
    *   ')' => IGNORED_VALUE    // close the OR-group
    * ],
-   * ```
+   * ```.
    *
    * @return Collections\Criteria
+   *
+   * @todo This could be made more elaborate like
+   * OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().
+   * @todo Teach
+   * OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy()
+   * to use grouping with parens.
    */
   public static function criteriaWhere(array $arrayCriteria):Collections\Criteria
   {
@@ -98,14 +100,15 @@ class Util
         if ($key[0] == '|') {
           $expression['composite'] = 'orX';
           $key = substr($key, 1);
-        } else if ($key[0] == '&') {
+        } elseif ($key[0] == '&') {
           $key = substr($key, 1);
         }
         $expression['components'] = [];
         $groupExpression[++$groupLevel] = $expression;
-      } else if ($key[0] == ')') {
+      } elseif ($key[0] == ')') {
         $key = substr($key, 1);
-        $expression = array_pop($groupExpression); $groupLevel--;
+        $expression = array_pop($groupExpression);
+        $groupLevel--;
         $junctor = $expression['junctor'];
         $composite = $expression['composite'];
         $components = $expression['components'];
