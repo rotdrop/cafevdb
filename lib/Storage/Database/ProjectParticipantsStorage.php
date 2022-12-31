@@ -236,6 +236,8 @@ class ProjectParticipantsStorage extends Storage
    *
    * @param bool $flush
    *
+   * @param bool $replace
+   *
    * @return null|Entities\DatabaseStorageFile
    */
   public function replaceDebitMandate(

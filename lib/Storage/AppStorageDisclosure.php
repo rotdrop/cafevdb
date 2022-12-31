@@ -97,7 +97,8 @@ class AppStorageDisclosure
    * @todo This does not use internal APIs, but knowledge about internal
    * details of Nextcloud which might change in the future.
    */
-  private function getAppDataFolderName(): string {
+  private function getAppDataFolderName(): string
+  {
     $instanceId = $this->cloudConfig->getSystemValue('instanceid', null);
     if ($instanceId === null) {
       // can this be at this point?
