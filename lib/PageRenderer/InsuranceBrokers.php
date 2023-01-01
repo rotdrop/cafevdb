@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,22 +49,26 @@ class InsuranceBrokers extends PMETableViewBase
     ],
   ];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     return $this->l->t('Instrument Insurance Brokers');
   }
 
+  /** {@inheritdoc} */
   public function headerText()
   {
     $header = $this->shortTitle();
@@ -72,15 +76,11 @@ class InsuranceBrokers extends PMETableViewBase
     return '<div class="'.$this->cssPrefix().'-header-text">'.$header.'</div>';
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
-    $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
-    $expertMode      = $this->expertMode;
 
     $opts            = [];
 

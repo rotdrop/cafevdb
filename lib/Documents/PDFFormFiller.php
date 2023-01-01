@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,14 @@
 
 namespace OCA\CAFEVDB\Documents;
 
+use RuntimeException;
+
 use mikehaertl\pdftk\Pdf as PdfTk;
 
 use OCP\ILogger;
 use OCP\Files\File;
 
+/** Fill a PDF-form with given data. */
 class PDFFormFiller
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -36,33 +39,35 @@ class PDFFormFiller
   /** @var PdfTk */
   private $pdfTk = null;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(ILogger $logger)
   {
     $this->logger = $logger;
   }
+  // phpcs:enable
 
   /**
    * Fill in the given fields.
    *
-   * @parm mixed $data
+   * @param mixed $data
    *
    * @param array $fields Array of simple KEY => VALUE pairs.
    *
    * @return PDFFormFiller
    */
-  public function fill($data, array $fields):PDFFormFiller
+  public function fill(mixed $data, array $fields):PDFFormFiller
   {
     $this->pdfTk = new PdfTk('-');
     $command = $this->pdfTk->getCommand();
 
     if ($data instanceof File) {
       $data = $data->getContent();
-    } else if (!is_string($data)) {
+    } elseif (!is_string($data)) {
       $data = (string)$data;
     }
 
     if (!is_string($data)) {
-      throw new \RuntimeException('$data argument not convertible to string');
+      throw new RuntimeException('$data argument not convertible to string');
     }
 
     $command->setStdIn($data);
@@ -79,7 +84,12 @@ class PDFFormFiller
     return $this;
   }
 
-  public function getContent()
+  /**
+   * Get the content of the filled PDF as string.
+   *
+   * @return string
+   */
+  public function getContent():string
   {
     if (empty($this->pdfTk)) {
       return null;

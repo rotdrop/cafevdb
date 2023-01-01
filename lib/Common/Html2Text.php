@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -70,7 +70,12 @@ class Html2Text
     ],
   ];
 
-  public static function convert($html)
+  /**
+   * @param string $html
+   *
+   * @return string
+   */
+  public static function convert(string $html):string
   {
     foreach (self::HTML_CONVERTERS as $converter => $arguments) {
       $text = self::callConverter($converter, $arguments, $html);
@@ -78,12 +83,21 @@ class Html2Text
         return $text;
       }
     }
-    // Fallback. Not support for tables.
+    // Fallback. No support for tables.
     $html2Text = new PhpHtml2Text;
     $html2Text->setHtml($html);
     return $html2Text->convert();
   }
 
+  /**
+   * @param string $converter
+   *
+   * @param array $arguments
+   *
+   * @param string $html
+   *
+   * @return null|string
+   */
   private static function callConverter(string $converter, array $arguments, string $html):?string
   {
     $converter = (new ExecutableFinder)->find($converter);

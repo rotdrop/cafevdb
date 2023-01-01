@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright , 2021, 2022,  Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright , 2021, 2022,  Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use OCP\HintException;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Files;
@@ -60,8 +61,6 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\MusicianService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-
-use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\CAFEVDB\Common\UndoableFileReplace;
 use OCA\CAFEVDB\Common\UndoableFileRemove;
@@ -125,9 +124,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
-  /** @var UserStorage */
-  private $userStorage;
-
   /** @var Repositories\ProjectParticipantFieldsRepository */
   private $fieldsRepository;
 
@@ -172,12 +168,16 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    */
   private $ignoreCreatedPaths = [];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
 
     $nodes = [];
     $eventClass = get_class($event);
@@ -185,6 +185,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     switch ($eventClass) {
       case BeforeNodeDeletedEvent::class:
         $checkOnly = true;
+        // fallthrough
       case NodeDeletedEvent::class:
         /** @var NodeDeletedEvent $event */
         /** @var FileSystemNode $node */
@@ -196,6 +197,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         break;
       case BeforeNodeRenamedEvent::class:
         $checkOnly = true;
+        // fallthrough
       case NodeRenamedEvent::class:
         /** @var NodeRenamedEvent $event */
         /** @var FileSystemNode $source */
@@ -214,6 +216,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         break;
       case BeforeNodeCopiedEvent::class:
         $checkOnly = true;
+        // fallthrough
       case NodeCopiedEvent::class:
         /** @var NodeCopiedEvent $event */
         /** @var FileSystemNode $source */
@@ -228,6 +231,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         break;
       case BeforeFolderCreatedEvent::class:
         $checkOnly = true;
+        // fallthrough
       case FolderCreatedEvent::class:
         /** @var NodeTouchedEvent $event */
         $path = $event->getNode()->getPath();
@@ -239,6 +243,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
         break;
       case BeforeNodeCreatedEvent::class:
         $checkOnly = true;
+        // fallthrough
       case NodeCreatedEvent::class:
         /** @var NodeCreatedEvent $event */
         $path = $event->getNode()->getPath();
@@ -300,6 +305,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
     // ok now something remains, get project-name and musician user-id
     $criteria = [];
+    $flatCriteria = [];
     foreach ($nodes as $key => &$nodeInfo) {
       $nodePath = $nodeInfo[self::NODE_PARTIAL_PATH];
       $parts = explode(Constants::PATH_SEP, trim($nodePath, Constants::PATH_SEP));
@@ -357,9 +363,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 ]);
                 $hint = $message; // perhaps we want to change this ...
                 // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
-                throw new \OCP\HintException($message, $hint);
+                throw new HintException($message, $hint);
               }
-            } else if ($baseName !== Constants::README_NAME) { // baseName given
+            } elseif ($baseName !== Constants::README_NAME) { // baseName given
               if ($fieldType == FieldType::CLOUD_FILE && $fieldMultiplicity != FieldMultiplicity::SIMPLE) {
                 // check if the name matches one of the registered options
                 if (null == $this->getOptionFromFileName($baseName, $userIdSlug, $field)) {
@@ -369,7 +375,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                     $node[self::NODE_FULL_PATH],
                   ]);
                   $hint = $message;
-                  throw new \OCP\HintException($message, $hint);
+                  throw new HintException($message, $hint);
                 }
               }
             }
@@ -502,7 +508,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 ]);
                 $hint = $message;
                 // only \OCP\HintException and \OC\ServerNotAvailableException can cancel the operation.
-                throw new \OCP\HintException($message, $hint);
+                throw new HintException($message, $hint);
               }
             }
           }
@@ -561,7 +567,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   }
 
   /**
-   * @param string $path The path to match
+   * @param string $path The path to match.
    *
    * @param string $folderPrefix The folder-prefix to compare the
    * first part of the string to.
@@ -569,7 +575,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    * @return null|string The sub-string after remove the $folderPrefix
    * or null if $folderPrefix is not the first part of the string.
    */
-  private static function matchPrefixDirectory($path, $folderPrefix)
+  private static function matchPrefixDirectory(string $path, string $folderPrefix)
   {
     $prefixLen = strlen($folderPrefix);
     if (substr($path, 0, $prefixLen) == $folderPrefix) {
@@ -578,6 +584,11 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     return null;
   }
 
+  /**
+   * @param array $criterion
+   *
+   * @return null|Entities\Musician
+   */
   private function getMusician(array $criterion):?Entities\Musician
   {
     $userIdSlug = $criterion['musician.userIdSlug'];
@@ -589,26 +600,46 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     return $this->musicians[$userIdSlug];
   }
 
-  static private function flattenCriterion(array $criterion)
+  /**
+   * @param array $criterion
+   *
+   * @return string
+   */
+  private static function flattenCriterion(array $criterion):string
   {
     return implode(':', $criterion);
   }
 
+  /**
+   * @param array $criterion
+   *
+   * @return null|Entities\ProjectParticipantFieldDatum
+   */
   private function getFieldDatum(array $criterion):?Entities\ProjectParticipantFieldDatum
   {
     $flatCriterion = self::flattenCriterion($criterion);
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     if (empty($this->fieldData[$flatCriterion])) {
-      $fieldDatum = $this->fieldData[$flatCriterion] = $this->fieldDataRepository->findOneBy($criterion);
+      $this->fieldData[$flatCriterion] = $this->fieldDataRepository->findOneBy($criterion);
     }
     return $this->fieldData[$flatCriterion];
   }
 
-  private static function isCloudFileField(Entities\ProjectParticipantField $field)
+  /**
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @return bool
+   */
+  private static function isCloudFileField(Entities\ProjectParticipantField $field):bool
   {
     return $field->getDataType() == FieldType::CLOUD_FOLDER || $field->getDataType() == FieldType::CLOUD_FILE;
   }
 
+  /**
+   * @param array $criterion
+   *
+   * @return null|Entities\ProjectParticipantField
+   */
   private function getField(array $criterion):?Entities\ProjectParticipantField
   {
     $fieldCriterion = [
@@ -673,8 +704,12 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     return true;
   }
 
-  /** @see ParticipantFieldCloudFolderListener::initialize() */
-  private function initializeDatabaseAccess()
+  /**
+   * @see ParticipantFieldCloudFolderListener::initialize()
+   *
+   * @return void
+   */
+  private function initializeDatabaseAccess():void
   {
     if (!empty($this->entityManager)) {
       return;
@@ -685,26 +720,24 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
   }
 
-  private function getUserStorage():UserStorage
-  {
-    if (empty($this->userStorage)) {
-      $this->userStorage = $this->appContainer->get(UserStorage::class);
-    }
-    return $this->userStorage;
-  }
-
   /**
    * Reconstruct the field from the label, assuming the file-name has the
-   * forma LABEL-JohnDoe.EXT
+   * format LABEL-JohnDoe.EXT.
    *
+   * @param string $path
+   *
+   * @param string $userIdSlug
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @return null|Entities\ProjectParticipantFieldDataOption
    */
   private function getOptionFromFileName(
-    string $path
-    , string $userIdSlug
-    , Entities\ProjectParticipantField $field
+    string $path,
+    string $userIdSlug,
+    Entities\ProjectParticipantField $field,
   ):?Entities\ProjectParticipantFieldDataOption {
     $pathInfo = pathinfo($path);
-    $extension = $pathInfo['extension'];
     $fileName = $pathInfo['filename'];
     if (empty($this->fieldOptionsByFileName[$field->getId()][$fileName])) {
       $musicianPostfix = MusicianService::slugifyFileName('', $userIdSlug);
@@ -715,8 +748,3 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     return $this->fieldOptionsByFileName[$field->getId()][$fileName];
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright , 2021, 2022,  Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright , 2021, 2022,  Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -82,12 +82,16 @@ class MailingListsAutoResponsesListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
     $nodes = [];
     $eventClass = get_class($event);
     switch ($eventClass) {
@@ -99,7 +103,6 @@ class MailingListsAutoResponsesListener implements IEventListener
         /** @var NodeRenamedEvent $event */
         $nodes[self::DEL_KEY] = $event->getSource();
         $nodes[self::ADD_KEY] = $event->getTarget();
-        $remove = true;
         // rename gets another NodeWrittenEvent
         break;
       case NodeWrittenEvent::class:
@@ -136,7 +139,7 @@ class MailingListsAutoResponsesListener implements IEventListener
         continue;
       }
       $nodePath = $node->getPath();
-      if ($key == self::ADD_KEY)  {
+      if ($key == self::ADD_KEY) {
         // Can ony use plain text files for the autoresponses.
         try {
           $eventMimeType = $node->getMimetype();
@@ -237,7 +240,7 @@ class MailingListsAutoResponsesListener implements IEventListener
   }
 
   /**
-   * @param string $path The path to match
+   * @param string $path The path to match.
    *
    * @param string $folderPrefix The folder-prefix to compare the
    * first part of the string to.
@@ -245,7 +248,7 @@ class MailingListsAutoResponsesListener implements IEventListener
    * @return null|string The sub-string after remove the $folderPrefix
    * or null if $folderPrefix is not the first part of the string.
    */
-  private static function matchPrefixDirectory($path, $folderPrefix)
+  private static function matchPrefixDirectory(string $path, string $folderPrefix)
   {
     if (strpos($path, $folderPrefix) !== 0) {
       return null;

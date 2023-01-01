@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,27 +49,24 @@ class BeforeEncryptionKeyPairChanged extends Event
    * private key cannot be unlocked).
    * ```
    * [ 'privateEncryptionKey' => PRIV_KEY, 'publicEncryptionKey' => PUB_KEY ]
-   * ```
+   * ```.
    */
-  public function __construct($ownerId, ?array $oldKeyPair)
+  public function __construct(string $ownerId, ?array $oldKeyPair)
   {
     parent::__construct();
     $this->ownerId = $ownerId;
     $this->oldKeyPair = $oldKeyPair;
   }
 
+  /** @return string */
   public function getOwnerId():string
   {
     return $this->ownerId;
   }
 
+  /** @return null|array */
   public function getOldKeyPair():?array
   {
     return $this->oldKeyPair;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

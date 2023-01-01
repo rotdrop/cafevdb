@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,14 +58,15 @@ class AuthorizationService
   /** @var string */
   private $userGroup;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IConfig $config
-    , IUserManager $userManager
-    , IGroupManager $groupManager
-    , IGroupSubAdminManager $groupSubAdminManager
-    , ILogger $logger
-    , IL10N $l10n
+    $appName,
+    IConfig $config,
+    IUserManager $userManager,
+    IGroupManager $groupManager,
+    IGroupSubAdminManager $groupSubAdminManager,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->appName = $appName;
     $this->config = $config;
@@ -76,6 +77,7 @@ class AuthorizationService
     $this->l = $l10n;
     $this->userGroup = $this->config->getAppValue($this->appName, 'usergroup');
   }
+  // phpcs:enable
 
   /**
    * Basic check for authorization. Just check if the orchestra group
@@ -85,7 +87,7 @@ class AuthorizationService
    *
    * @return bool Status of the check.
    */
-  public function authorized($userId):bool
+  public function authorized(string $userId):bool
   {
     return !empty($userId) && !empty($this->userGroup) && $this->groupManager->isInGroup($userId, $this->userGroup);
   }
@@ -111,10 +113,4 @@ class AuthorizationService
     }
     return $this->groupSubAdminManager->isSubAdminofGroup($user, $group);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

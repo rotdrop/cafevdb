@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,24 +44,24 @@ class GroupMemberMiddleware extends Middleware
   /** @var IControllerMethodReflector */
   protected $reflector;
 
-  /**
-   * @param ControllerMethodReflector $reflector
-   * @param ConfigService $configService
-   */
-  public function __construct(IControllerMethodReflector $reflector,
-                              ConfigService $configService) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    IControllerMethodReflector $reflector,
+    ConfigService $configService,
+  ) {
     $this->reflector = $reflector;
     $this->configService = $configService;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
-   * Check if the user is a sub-admin of the orchestra group
-   * @param Controller $controller
-   * @param string $methodName
-   * @throws \Exception
+   * {@inheritdoc}
+   *
+   * Check if the user is a sub-admin of the orchestra group.
    */
-  public function beforeController($controller, $methodName) {
+  public function beforeController($controller, $methodName)
+  {
     if (!$this->reflector->hasAnnotation('NoGroupMemberRequired')) {
       if (!$this->configService->inGroup()) {
         throw new NotAdminException($this->l->t('Logged in user must be a member of the orchestra group'));
@@ -69,14 +70,12 @@ class GroupMemberMiddleware extends Middleware
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Return 403 page in case of an exception
-   * @param Controller $controller
-   * @param string $methodName
-   * @param \Exception $exception
-   * @return TemplateResponse
-   * @throws \Exception
    */
-  public function afterException($controller, $methodName, \Exception $exception) {
+  public function afterException($controller, $methodName, \Exception $exception)
+  {
     if ($exception instanceof NotAdminException) {
       $response = new TemplateResponse('core', '403', [], 'guest');
       $response->setStatus(Http::STATUS_FORBIDDEN);
@@ -85,8 +84,3 @@ class GroupMemberMiddleware extends Middleware
     throw $exception;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

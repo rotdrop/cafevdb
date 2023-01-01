@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use RuntimeException;
+
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
@@ -32,6 +34,7 @@ use OCA\CAFEVDB\Common\IProgressStatus;
 use OCA\CAFEVDB\Common\DoNothingProgressStatus;
 use OCA\CAFEVDB\Exceptions;
 
+/** Base class for the specific receivable generators. */
 abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGenerator
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -49,9 +52,10 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   /** @var array */
   protected $progressData;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    EntityManager $entityManager
-    , ProgressStatusService $progressStatusService
+    EntityManager $entityManager,
+    ProgressStatusService $progressStatusService,
   ) {
     $this->entityManager = $entityManager;
     $this->progressStatusService = $progressStatusService;
@@ -62,27 +66,22 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       'receivable' => null,
     ];
   }
+  // phpcs:enable
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public static function uiFlags():int
   {
     return self::UI_PROTECTED_LABEL|self::UI_PROTECTED_VALUE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  static public function updateStrategyChoices():array
+  /** {@inheritdoc} */
+  public static function updateStrategyChoices():array
   {
     return self::UPDATE_STRATEGIES;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  static public function operationLabels(?string $slug = null)
+  /** {@inheritdoc} */
+  public static function operationLabels(?string $slug = null)
   {
     $labels = [
       self::OPERATION_OPTION_REGENERATE => true,
@@ -97,10 +96,8 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     return $slug === null ? $labels : $labels[$slug]??null;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function bind(Entities\ProjectParticipantField $serviceFeeField, $progressToken = null)
+  /** {@inheritdoc} */
+  public function bind(Entities\ProjectParticipantField $serviceFeeField, $progressToken = null):void
   {
     $this->serviceFeeField = $serviceFeeField;
     $this->progressStatus = null;
@@ -114,10 +111,8 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     $this->progressStatus->update(-1, 0, $this->progressData);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
+  /** {@inheritdoc} */
+  public function updateAll(string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
     ignore_user_abort(false);
     $added = $removed = $changed = $skipped = 0;
@@ -159,24 +154,28 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
    * @param Entities\ProjectParticipant $participant
    *   The musician to update the service fee claim for.
    *
+   * @param string $updateStrategy
+   *
    * @return array<string, int>
    * ```
    * [ 'added' => #ADDED, 'removed' => #REMOVED, 'changed' => #CHANGED ]
    * ```
    * where of course each component is either 0 or 1.
    *
-   * @throws \RuntimeException depending on $updateStrategy.
+   * @throws RuntimeException Depending on $updateStrategy.
    */
-  protected abstract function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
+  abstract protected function updateOne(
+    Entities\ProjectParticipantFieldDataOption $receivable,
+    Entities\ProjectParticipant $participant,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array;
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public function updateReceivable(
-    Entities\ProjectParticipantFieldDataOption $receivable
-    , ?Entities\ProjectParticipant $participant = null
-    , $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
-  {
+    Entities\ProjectParticipantFieldDataOption $receivable,
+    ?Entities\ProjectParticipant $participant = null,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array {
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
     $this->progressData['receivable'] = $receivable->getLabel();
@@ -191,7 +190,10 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         'notices' => $notices,
       ) = $this->updateOne($receivable, $participant, $updateStrategy);
       if ($this->progressStatus->increment() === false) {
-        throw new Exceptions\EnduserNotificationException($this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [ $receivable->getLabel(), $participant->getMusician()->getPublicName(true) ]));
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [
+            $receivable->getLabel(), $participant->getMusician()->getPublicName(true),
+          ]));
       }
     } else {
       ignore_user_abort(false);
@@ -211,7 +213,10 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
           'notices' => $n,
         ) = $this->updateOne($receivable, $participant, $updateStrategy);
         if ($this->progressStatus->increment() === false) {
-          throw new Exceptions\EnduserNotificationException($this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [ $receivable->getLabel(), $participant->getMusician()->getPublicName(true) ]));
+          throw new Exceptions\EnduserNotificationException($this->l->t(
+            'Operation has been cancelled by user, last processed data was %s / %s.', [
+              $receivable->getLabel(), $participant->getMusician()->getPublicName(true),
+            ]));
         }
         $added += $a;
         $removed += $r;
@@ -229,11 +234,12 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
-  {
+  /** {@inheritdoc} */
+  public function updateParticipant(
+    Entities\ProjectParticipant $participant,
+    ?Entities\ProjectParticipantFieldDataOption $receivable,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array {
     $this->progressData['musician'] = $participant->getMusician()->getPublicName(true);
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
@@ -246,9 +252,12 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         'changed' => $changed,
         'skipped' => $skipped,
         'notices' => $notices) = $this->updateOne($receivable, $participant, $updateStrategy);
-        if ($this->progressStatus->increment() === false) {
-          throw new Exceptions\EnduserNotificationException($this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [ $receivable->getLabel(), $participant->getMusician()->getPublicName(true) ]));
-        }
+      if ($this->progressStatus->increment() === false) {
+        throw new Exceptions\EnduserNotificationException($this->l->t(
+          'Operation has been cancelled by user, last processed data was %s / %s.', [
+            $receivable->getLabel(), $participant->getMusician()->getPublicName(true),
+          ]));
+      }
     } else {
       ignore_user_abort(false);
       $receivables = $this->serviceFeeField->getSelectableOptions();
@@ -266,7 +275,10 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
           'notices' => $n,
         ) = $this->updateOne($receivable, $participant, $updateStrategy);
         if ($this->progressStatus->increment() === false) {
-          throw new Exceptions\EnduserNotificationException($this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [ $receivable->getLabel(), $participant->getMusician()->getPublicName(true) ]));
+          throw new Exceptions\EnduserNotificationException($this->l->t(
+            'Operation has been cancelled by user, last processed data was %s / %s.', [
+              $receivable->getLabel(), $participant->getMusician()->getPublicName(true),
+            ]));
         }
         $added += $a;
         $removed += $r;
@@ -284,9 +296,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?\DateTimeInterface
   {
     return $this->serviceFeeField->getDueDate();

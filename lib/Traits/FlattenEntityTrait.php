@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,14 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 /** Convert some entities to array representations */
 trait FlattenEntityTrait
 {
-  private function flattenMusician(Entities\Musician $musician, ?array $only = null)
+  /**
+   * @param Entities\Musician $musician
+   *
+   * @param null|array $only
+   *
+   * @return array
+   */
+  private function flattenMusician(Entities\Musician $musician, ?array $only = null):array
   {
     $musicianData = $musician->toArray();
 
@@ -229,33 +236,33 @@ trait FlattenEntityTrait
       }
 
       usort($musicianData['projectParticipation'], function($pp1, $pp2) {
-        $p1 = $pp1['project'];
-        $p2 = $pp2['project'];
-        $t1 = $p1['type'];
-        $t2 = $p2['type'];
-        if ($t1 == $t2) {
-          $y1 = $p1['year'];
-          $y2 = $p2['year'];
-          if ($y1 == $y2) {
-            return strcmp($p1['name'], $p2['name']);
+        $pr1 = $pp1['project'];
+        $pr2 = $pp2['project'];
+        $tp1 = $pr1['type'];
+        $tp2 = $pr2['type'];
+        if ($tp1 == $tp2) {
+          $yr1 = $pr1['year'];
+          $yr2 = $pr2['year'];
+          if ($yr1 == $yr2) {
+            return strcmp($pr1['name'], $pr2['name']);
           } else {
-            return $y2 < $y1 ? -1 : 1;
+            return $yr2 < $yr1 ? -1 : 1;
           }
         } else {
-          if ($t1 == 'template') {
+          if ($tp1 == 'template') {
             return 1;
-          } else if ($t1 == 'permanent') {
+          } elseif ($tp1 == 'permanent') {
             return -1;
           } else {
-            // $t1 == 'temporary'
-            if ($t2 == 'template') {
+            // $tp1 == 'temporary'
+            if ($tp2 == 'template') {
               return -1;
             } else {
-              // $t2 == 'permanent'
+              // $tp2 == 'permanent'
               return 1;
             }
           }
-      }
+        }
       });
     }
 
@@ -287,7 +294,12 @@ trait FlattenEntityTrait
     return array_filter($musicianData, fn($value) => !is_object($value));
   }
 
-  private function flattenProject(Entities\Project $project)
+  /**
+   * @param Entities\Project $project
+   *
+   * @return array
+   */
+  private function flattenProject(Entities\Project $project):array
   {
     $flatProject = $project->toArray();
     $skippedProperties = [
@@ -302,7 +314,7 @@ trait FlattenEntityTrait
       'participantInstruments',
       'sentEmail',
     ];
-    foreach($skippedProperties as $key) {
+    foreach ($skippedProperties as $key) {
       unset($flatProject[$key]);
     }
     return $flatProject;

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,11 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use DateTimeImmutable;
+use Exception;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 
@@ -36,33 +40,24 @@ class SepaDebitMandatesRepository extends EntityRepository
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait;
 
   /**
-   * Fetch the mandate reference for the mandate with the highest
-   * sequence number.
-   */
-  public function fetchReference($project, $musician)
-  {
-    return $this->createQueryBuilder('m')
-                ->select('m.mandateReference')
-                ->orderBy('m.sequence', 'DESC')
-                ->getQuery()
-                ->getSingleScalarResult();
-  }
-
-  /**
    * Find a SEPA-mandate by either its primary key or its mandate
    * reference; no-op if $idOrReference already is a SEPA-mandate
    * entity.
    *
    * @param string|array|Entities\SepaDebitMandate $idOrReference
    * Mandate-reference or primary key or entity instance.
+   *
+   * @param array $orderBy
+   *
+   * @return  mixed
    */
   public function findOneBy($idOrReference, array $orderBy = null)
   {
     if ($idOrReference instanceof Entities\SepaDebitMandate) {
       return $idOrReference;
-    } else if (is_string($idOrRerence)) {
+    } elseif (is_string($idOrReference)) {
       return parent::findOneBy([ 'mandateReference' => $idOrReference ], null);
-    } else if (is_array($idOrReference)) {
+    } elseif (is_array($idOrReference)) {
       return parent::findOneBy($idOrReference, $orderBy);
     } else {
       return null;
@@ -72,6 +67,10 @@ class SepaDebitMandatesRepository extends EntityRepository
   /**
    * Try to persist the given bank-account by first fetching the
    * current sequence for its musician and then increasing it.
+   *
+   * @param Entities\SepaDebitMandate $mandate
+   *
+   * @return Entities\SepaDebitMandate
    *
    * @throws Doctrine\DBAL\Exception\UniqueConstraintViolationException
    */
@@ -94,7 +93,7 @@ class SepaDebitMandatesRepository extends EntityRepository
   {
     $mandate = $this->findOneBy($idOrReference);
     if (!empty($mandate) && !$mandate->isDeleted()) {
-      $this->setDeletedAt(new \DataTime());
+      $this->setDeletedAt(new DateTimeImmutable);
       $this->getEntityManager()->flush($mandate);
     }
     return $mandate;
@@ -103,12 +102,18 @@ class SepaDebitMandatesRepository extends EntityRepository
   /**
    * Delete the given mandate if it is not used.
    *
+   * @param mixed $idOrReference
+   *
    * @return ?Entities\SepaDebitMandate
    */
-  public function remove($idOrReference)
+  public function remove(mixed $idOrReference)
   {
     $entityManager = $this->getEntityManager();
-    $filter = $entityManager->getFilters()->disable('soft-deletable');
+    $filters = $entityManager->getFilters();
+    $softDeleteable = $filters->isEnabled(DecoratedEntityManager::SOFT_DELETEABLE_FILTER);
+    if ($softDeleteable) {
+      $filters->disable(DecoratedEntityManager::SOFT_DELETEABLE_FILTER);
+    }
     $mandate = $this->findOneBy($idOrReference);
     if (!empty($mandate)) {
       $usage = $this->usage($mandate, true);
@@ -119,7 +124,9 @@ class SepaDebitMandatesRepository extends EntityRepository
         $this->getEntityManager()->flush($mandate);
       }
     }
-    $filter = $entityManager->getFilters()->enable('soft-deletable');
+    if ($softDeleteable) {
+      $filters->enable(DecoratedEntityManager::SOFT_DELETEABLE_FILTER);
+    }
     return $mandate;
   }
 
@@ -127,11 +134,15 @@ class SepaDebitMandatesRepository extends EntityRepository
    * Find the sepa-mandate with the highest sequence number, if
    * any. Deactivated mandates are ignored.
    *
-   * @todo Check that soft-delete behavior actually works as filter.
+   * @param mixed $project
    *
-   * @return ?SepaDebitMandate
+   * @param mixed $musician
+   *
+   * @return null|Entities\SepaDebitMandate
+   *
+   * @todo Check that soft-delete behavior actually works as filter.
    */
-  public function findNewest($project, $musician): ?Entities\SepaDebitMandate
+  public function findNewest(mixed $project, mixed $musician):?Entities\SepaDebitMandate
   {
     return $this->findOneBy(
       [ 'project' => $project, 'musician' => $musician ],
@@ -144,9 +155,11 @@ class SepaDebitMandatesRepository extends EntityRepository
    * @param mixed $identifier Primary key(s), or an entity instance or
    * the mandate reference.
    *
-   * @param boolean $brief Omit detailed usage time-stamps
+   * @param boolean $brief Omit detailed usage time-stamps.
+   *
+   * @return null|array
    */
-  public function usage($identifier, $brief = false)
+  public function usage(mixed $identifier, bool $brief = false):?array
   {
     $selects = [
       'm.mandateReference',
@@ -176,7 +189,7 @@ class SepaDebitMandatesRepository extends EntityRepository
     if (is_string($identifier)) { // assume it is the mandate-reference
       $qb->where('m.mandateReference = :reference')
          ->setParameter('reference', $identifier);
-    } else if (is_array($identifier) || ($identifier instanceof Entities\SepaDebitMandate)) {
+    } elseif (is_array($identifier) || ($identifier instanceof Entities\SepaDebitMandate)) {
       $qb->where('m.project = :project')
          ->andWhere('m.musician = :musician')
          ->andWhere('m.sequence = :sequence')
@@ -184,14 +197,8 @@ class SepaDebitMandatesRepository extends EntityRepository
          ->setParameter('musician', $identifier['musician'])
          ->setParameter('sequence', $identifier['sequence']);
     } else {
-      throw new \Exception('Mandate identifier is '.(empty($identifier) ? 'empty' : 'unsupported'));
+      throw new Exception('Mandate identifier is '.(empty($identifier) ? 'empty' : 'unsupported'));
     }
     return $qb->getQuery()->getOneOrNullResult();
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

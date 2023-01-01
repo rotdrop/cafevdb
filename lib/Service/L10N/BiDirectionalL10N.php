@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,8 @@ use OCA\CAFEVDB\Common\Util;
 
 /**
  * Simple bidectional translations fetch from a CSV file.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class BiDirectionalL10N
 {
@@ -51,19 +53,26 @@ class BiDirectionalL10N
   /* @var array */
   protected $translations;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , ILogger $logger
-    , IL10N $l10n
-    , string $keyLang = 'en'
+    string $appName,
+    ILogger $logger,
+    IL10N $l10n,
+    string $keyLang = 'en',
   ) {
     $this->appName = $appName;
     $this->logger = $logger;
     $this->setL10N($l10n);
     $this->keyLang = $keyLang;
   }
+  // phpcs:enable
 
-  public function setL10N(IL10N $l10n)
+  /**
+   * @param IL10N $l10n
+   *
+   * @return void
+   */
+  public function setL10N(IL10N $l10n):void
   {
     $this->l = $l10n;
     $this->targetLang = locale_get_primary_language($l10n->getLanguageCode());
@@ -72,6 +81,8 @@ class BiDirectionalL10N
 
   /**
    * Attempt a translation. If it fails, return the original string.
+   *
+   * @param string $phrase
    *
    * @return string
    */
@@ -94,7 +105,9 @@ class BiDirectionalL10N
   /**
    * Attempt an un-translation. If it fails, return the original string.
    *
-   * @return string
+   * @param string $translation
+   *
+   * @return null|string
    */
   public function backTranslate(string $translation):?string
   {
@@ -115,7 +128,10 @@ class BiDirectionalL10N
     return !empty($backTranslation) ? $backTranslation : $translation;
   }
 
-  protected function loadLanguageData()
+  /**
+   * @return void
+   */
+  protected function loadLanguageData():void
   {
     $dir = realpath(__DIR__);
     $appDir = substr($dir, 0, strrpos($dir, $this->appName)).$this->appName;
@@ -125,18 +141,34 @@ class BiDirectionalL10N
     }
   }
 
-  public function mergeCSV($fileName)
+  /**
+   * @param string $fileName
+   *
+   * @return void
+   */
+  public function mergeCSV(string $fileName):void
   {
     $newTranslations = self::parseCSV($fileName, $this->targetLang, $this->keyLang);
     $this->translations = Util::arrayMergeRecursive($this->translations, $newTranslations);
   }
 
-  static protected function parseCSV($fileName, $targetLang, $keyLang = 'en')
+  /**
+   * @param string $fileName
+   *
+   * @param string $targetLang
+   *
+   * @param string $keyLang
+   *
+   * @return null|array
+   */
+  protected static function parseCSV(string $fileName, string $targetLang, string $keyLang = 'en'):?array
   {
-    if (($file = fopen($fileName, 'r')) === false) {
+    $file = fopen($fileName, 'r');
+    if ($file === false) {
       return null;
     }
-    if (empty($header = fgetcsv($file))) {
+    $header = fgetcsv($file);
+    if (empty($header)) {
       return null;
     }
 
@@ -145,7 +177,7 @@ class BiDirectionalL10N
 
     $targetLookup = [];
     $keyLookup = [];
-    while (!empty(($row = fgetcsv($file)))) {
+    for ($row = fgetcsv($file); !empty($row); $row = fgetcsv($file)) {
       if (empty($row[$targetColumn]) || empty($row[$keyColumn])) {
         continue;
       }
@@ -169,10 +201,4 @@ class BiDirectionalL10N
       self::REVERSE => $keyLookup,
     ];
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

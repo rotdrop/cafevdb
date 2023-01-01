@@ -1,10 +1,27 @@
 <?php
 /**
- * Copyright (c) 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Orchestra member, musician and project management application.
  *
- * Wrapper to provide the hooks needed by the old OC calendar code.
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2023 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 /********************************************************************
  *
  * Compat Layer
@@ -17,6 +34,13 @@ namespace OCA\CAFEVDB\Legacy\Calendar;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
+// phpcs:disable Squiz.Classes.ValidClassName.NotCamelCaps
+
+/**
+ * Wrapper to provide the hooks needed by the old OC calendar code.
+ *
+ * @SuppressWarnings(PHPMD.CamelCaseClassName)
+ */
 class OC_Calendar_App
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -30,15 +54,17 @@ class OC_Calendar_App
   /** @var string[] */
   private $categories;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     \OCP\Calendar\IManager $calendarManager,
-    \OCP\ITagManager $tagManager)
-  {
+    \OCP\ITagManager $tagManager,
+  ) {
     $this->configService = $configService;
     $this->calendarManager = $calendarManager;
     $this->tagManager = $tagManager;
   }
+  // phpcs:enable
 
   /**
    * @brief returns the categories of the vcategories object
@@ -59,7 +85,8 @@ class OC_Calendar_App
    * @brief returns the default categories of ownCloud
    * @return (array) $categories
    */
-  private function getDefaultCategories() {
+  private function getDefaultCategories()
+  {
     return [];
   }
 
@@ -67,7 +94,8 @@ class OC_Calendar_App
    * @brief returns the vcategories object of the user
    * @return (object) $vcategories
    */
-  private function getVCategories() {
+  private function getVCategories()
+  {
     if (is_null($this->categories)) {
       $categories = $this->tagManager->load('event');
       if ($categories->isEmpty('event')) {
@@ -79,10 +107,13 @@ class OC_Calendar_App
   }
 
   /**
-   * scan events for categories.
-   * @param $events VEVENTs to scan. null to check all events for the current user.
+   * Scan events for categories.
+   *
+   * @param mixed $events VEVENTs to scan. null to check all events for the current user.
+   *
+   * @return void
    */
-  private function scanCategories($events = null)
+  private function scanCategories(mixed $events = null):void
   {
     if (is_null($events)) {
       $events = $this->calendarManager->search('');
@@ -94,15 +125,15 @@ class OC_Calendar_App
       };
       $tags = array_map($getName, $vcategories->getTags());
       $vcategories->delete($tags);
-      foreach($events as $event) {
+      foreach ($events as $event) {
         $this->logDebug(__METHOD__.": event loop");
-        foreach($event['objects'] as $object) {
-          foreach($object as $key => $categories) {
+        foreach ($event['objects'] as $object) {
+          foreach ($object as $key => $categories) {
             if ($key != 'CATEGORIES') {
               continue;
             }
             $this->logDebug(__METHOD__.": ".$key . " => " . is_array($categories[0][0]));
-            while(is_array($categories)) {
+            while (is_array($categories)) {
               $this->logDebug(__METHOD__.": ".print_r($categories, true));
               $categories = $categories[0];
             }
@@ -116,8 +147,3 @@ class OC_Calendar_App
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

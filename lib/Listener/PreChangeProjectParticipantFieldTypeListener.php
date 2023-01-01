@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Events\PreChangeProjectParticipantFieldType as HandledEvent;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
+/** Update README.md's when the field-type changes. */
 class PreChangeProjectParticipantFieldTypeListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -42,13 +43,18 @@ class PreChangeProjectParticipantFieldTypeListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
-  public function __construct(IAppContainer $appContainer) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(IAppContainer $appContainer)
+  {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
     /** @var HandledEvent $event */
-    if (!($event instanceOf HandledEvent)) {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
 
@@ -67,8 +73,3 @@ class PreChangeProjectParticipantFieldTypeListener implements IEventListener
     $participantFieldsService->handleChangeFieldType($event->getField(), $oldType, $newType);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,12 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use RuntimeException;
+use RegexIterator;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use FilesystemIterator;
+
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
 use OCP\ILogger;
@@ -34,6 +40,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 
+/** Factory for receivables generators. */
 class ReceivablesGeneratorFactory
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
@@ -51,15 +58,17 @@ class ReceivablesGeneratorFactory
    */
   private $generators;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IAppContainer $appContainer
-    , ILogger $logger
-    , IL10N $l10n
+    IAppContainer $appContainer,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /**
    * Construct the generator for the given entity. The
@@ -75,14 +84,13 @@ class ReceivablesGeneratorFactory
    * @todo This is too complicated.
    */
   public function getGenerator(
-    Entities\ProjectParticipantField $serviceFeeField
-    , $progressToken = null
-  ):IRecurringReceivablesGenerator
-  {
+    Entities\ProjectParticipantField $serviceFeeField,
+    $progressToken = null,
+  ):IRecurringReceivablesGenerator {
     $multiplicity = $serviceFeeField->getMultiplicity();
     $dataType = $serviceFeeField->getDataType();
     if (!ProjectParticipantFieldsService::isSupportedType($multiplicity, $dataType)) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $this->l->t(
           'Auto-generating receivables or options for the combination of multiplicity/data-type = %s/%s is unsupported', [ $multiplicity, $dataType, ])
       );
@@ -92,21 +100,21 @@ class ReceivablesGeneratorFactory
     /** @var Entities\ProjectParticipantFieldDataOption $generatorOption */
     $generatorOption = $serviceFeeField->getManagementOption();
     if (empty($generatorOption)) {
-      throw new \RuntimeException($this->l->t('Unable to find the management option.'));
+      throw new RuntimeException($this->l->t('Unable to find the management option.'));
     }
 
     // try to construct the generator
     $label = $generatorOption->getLabel();
     $class = $generatorOption->getData();
     if ($label !== self::GENERATOR_LABEL) {
-      throw new \RuntimeException($this->l->t('Option label should be "%s", got "%s".',
-                                              [ self::GENERATOR_LABEL, $label, ]));
+      throw new RuntimeException($this->l->t(
+        'Option label should be "%s", got "%s".', [ self::GENERATOR_LABEL, $label, ]));
     }
 
     $generatorInstance = $this->appContainer->get($class);
 
     if (empty($generatorInstance)) {
-      throw new \RuntimeException($this->l->t('Unable to construct generator class "%s".', $class));
+      throw new RuntimeException($this->l->t('Unable to construct generator class "%s".', $class));
     }
 
     $generatorInstance->bind($serviceFeeField, $progressToken);
@@ -114,7 +122,11 @@ class ReceivablesGeneratorFactory
     return $generatorInstance;
   }
 
-
+  /**
+   * @param string $directory
+   *
+   * @return array
+   */
   public function findGenerators(string $directory = self::GENERATORS_FOLDER):array
   {
     $directory = realpath($directory);
@@ -125,20 +137,20 @@ class ReceivablesGeneratorFactory
       return $this->generators[$directory];
     }
 
-    $iterator = new \RegexIterator(
-      new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS),
-        \RecursiveIteratorIterator::LEAVES_ONLY
+    $iterator = new RegexIterator(
+      new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::LEAVES_ONLY
       ),
       '#^.+\\/[^/]+ReceivablesGenerator\\.php$#i',
-      \RegexIterator::GET_MATCH);
+      RegexIterator::GET_MATCH);
 
     $files = array_keys(iterator_to_array($iterator));
 
     $generators = [];
     foreach ($files as $file) {
       try {
-        @include_once $file;
+        include_once $file;
       } catch (\Throwable $t) {
         // ignore
       }

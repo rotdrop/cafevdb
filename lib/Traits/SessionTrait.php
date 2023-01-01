@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,12 +22,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//WIP
 namespace OCA\CAFEVDB\Traits;
 
 use OCP\ISession;
 
-trait SessionTrait {
+/** Session-store abstraction trait. */
+trait SessionTrait
+{
 
   /** @var \OCP\ISession */
   private $session;
@@ -35,10 +37,16 @@ trait SessionTrait {
    * Store something in the session-data. It is completely left open
    * how this is done.
    *
-   * sessionStoreValue() and sessionRetrieveValue() should be the only
+   * The methods sessionStoreValue() and sessionRetrieveValue() should be the only
    * interface points to the PHP session (except for, ahem, tweaks).
+   *
+   * @param string $key
+   *
+   * @param mixed $value
+   *
+   * @return void
    */
-  protected function sessionStoreValue($key, $value)
+  protected function sessionStoreValue(string $key, mixed $value):void
   {
     $this->session->set($key, $value);
   }
@@ -47,15 +55,17 @@ trait SessionTrait {
    * Fetch something from the session-data. It is completely left open
    * how this is done.
    *
-   * @param $key The key tagging the desired data.
+   * The methods sessionStoreValue() and sessionRetrieveValue() should be the only
+   * interface points to the PHP session.
    *
-   * @param $default What to return if the data is not
+   * @param string $key The key tagging the desired data.
+   *
+   * @param mixed $default What to return if the data is not
    * available. Defaults to @c false.
    *
-   * sessionStoreValue() and sessionRetrieveValue() should be the only
-   * interface points to the PHP session (except for, ahem, tweaks).
+   * @return mixed
    */
-  protected function sessionRetrieveValue($key, $default = null)
+  protected function sessionRetrieveValue(string $key, mixed $default = null)
   {
     $value =  $this->session->get($key);
     if (empty($value)) {
@@ -64,8 +74,3 @@ trait SessionTrait {
     return $value;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

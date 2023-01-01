@@ -53,10 +53,6 @@ abstract class AbstractSanitizer implements ISanitizer
    * @param EntityManager $entityManager The entity-manger for the entire mess.
    *
    * @param ILogger $logger A cloud logger instance.
-   *
-   * @param IL10N $l10n NLS.
-   *
-   * @param null|object $entity
    */
   public function __construct(
     EntityManager $entityManager,

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use OCP\ILogger;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\PlainFileProgressStatus;
 
+/** Cleanup left-over temporary files from the app-storage. */
 class CleanupTemporaryFiles extends TimedJob
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -47,12 +48,13 @@ class CleanupTemporaryFiles extends TimedJob
   /** @var int Age in seconds after which temporary files will be removed */
   private $oldAge;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , ITimeFactory $time
-    , ICloudConfig $cloudConfig
-    , ILogger $logger
-    , AppStorage $appStorage
+    string $appName,
+    ITimeFactory $time,
+    ICloudConfig $cloudConfig,
+    ILogger $logger,
+    AppStorage $appStorage,
   ) {
     parent::__construct($time);
     $this->logger = $logger;
@@ -60,11 +62,11 @@ class CleanupTemporaryFiles extends TimedJob
     $this->setInterval($cloudConfig->getAppValue($appName, 'backgroundjobs.cleanuptemporaryfiles.interval', 3600));
     $this->oldAge = $cloudConfig->getAppValue($appName, 'backgroundjobs.cleanuptemporaryfiles.oldage', 24*60*60);
   }
+  // phpcs:enable
 
-  /**
-   * @param array $arguments
-   */
-  public function run($arguments = []) {
+  /** {@inheritdoc} */
+  public function run($arguments = [])
+  {
     $this->logInfo('Run');
     $now = $this->time->getTime();
     foreach (self::DIRECTORIES as $directoryName) {
@@ -79,8 +81,3 @@ class CleanupTemporaryFiles extends TimedJob
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

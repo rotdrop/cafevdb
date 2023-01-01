@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,12 +35,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver;
  */
 class Connection extends \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection
 {
-  public function __construct(array $params, Driver $driver, Configuration $config = null, EventManager $eventManager = null) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    array $params,
+    Driver $driver,
+    Configuration $config = null,
+    EventManager $eventManager = null,
+  ) {
     parent::__construct($params, $driver, $config, $eventManager);
   }
+  // phpcs:enable
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use Throwable;
+use DateTime;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
@@ -111,9 +114,12 @@ class ChangeLog
    */
   private $newval;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Get id.
@@ -135,7 +141,7 @@ class ChangeLog
   public function setUpdated($updated = null)
   {
     if (empty($updated)) {
-      $updated = new \DateTime;
+      $updated = new DateTime;
     }
     $this->updated = $updated;
 
@@ -344,14 +350,19 @@ class ChangeLog
     return $this->newval;
   }
 
-  private function stringize($value)
+  /**
+   * @param mixed $value
+   *
+   * @return string
+   */
+  private function stringize(mixed $value)
   {
     try {
       $value = (string)$value;
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       try {
         $value = serialize($value);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $value = 'Unpresentable Value';
       }
     }

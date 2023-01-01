@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCP\EventDispatcher\Event;
 
+/** ORM -> cloud event forwarding. */
 class PostChangeRegistrationConfirmation extends Event
 {
   /** @var Entities\ProjectParticipant */
@@ -35,11 +36,14 @@ class PostChangeRegistrationConfirmation extends Event
   /** @var bool */
   private $oldRegistration;
 
-  public function __construct(Entities\ProjectParticipant $participant, bool $oldRegistration) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(Entities\ProjectParticipant $participant, bool $oldRegistration)
+  {
     parent::__construct();
     $this->participant = $participant;
     $this->oldRegistration = $oldRegistration;
   }
+  // phpcs:enable
 
   /** @return Entities\ProjectParticipant */
   public function getProjectParticipant():Entities\ProjectParticipant
@@ -47,13 +51,9 @@ class PostChangeRegistrationConfirmation extends Event
     return $this->participant;
   }
 
+  /** @return bool */
   public function getOldRegistration():bool
   {
     return $this->oldRegistration;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

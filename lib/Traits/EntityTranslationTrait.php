@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,14 +44,17 @@ trait EntityTranslationTrait
    * Convenience, forward potential translation attempts to the
    * underlying translation backend. The idea is to hide the underlying backend.
    *
-   * @param object $entity
+   * @param mixed $entity
+   *
    * @param string $field
+   *
    * @param string|null $locale If null the default locale is used.
-   * @param mixed  $value
+   *
+   * @param mixed $value
    *
    * @return EntityRepository $this
    */
-  public function translate($entity, string $field, ?string $locale, $value)
+  public function translate(mixed $entity, string $field, ?string $locale, mixed $value)
   {
     if (empty($this->translationRepository)) {
       $this->translationRepository = $this->entityManager->getRepository(TranslationEntity::class);

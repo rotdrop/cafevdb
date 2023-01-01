@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,26 +48,25 @@ class SubadminMiddleware extends Middleware
   /** @var IL10N */
   private $l;
 
-  /**
-   * @param ControllerMethodReflector $reflector
-   * @param ConfigService $configService
-   * @param IL10N $l
-   */
-  public function __construct(IControllerMethodReflector $reflector,
-                              ConfigService $configService,
-                              IL10N $l) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    IControllerMethodReflector $reflector,
+    ConfigService $configService,
+    IL10N $l
+  ) {
     $this->reflector = $reflector;
     $this->configService = $configService;
     $this->l = $l;
   }
+  // phpcs:enable
 
   /**
-   * Check if the user is a sub-admin of the orchestra group
-   * @param Controller $controller
-   * @param string $methodName
-   * @throws \Exception
+   * {@inheritdoc}
+   *
+   * Check if the user is a sub-admin of the orchestra group.
    */
-  public function beforeController($controller, $methodName) {
+  public function beforeController($controller, $methodName)
+  {
     if ($this->reflector->hasAnnotation('SubadminRequired')) {
       if (!$this->configService->isSubAdminOfGroup()) {
         throw new NotAdminException($this->l->t('Logged in user must be a subadmin of the orchestra group'));
@@ -81,14 +80,12 @@ class SubadminMiddleware extends Middleware
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Return 403 page in case of an exception
-   * @param Controller $controller
-   * @param string $methodName
-   * @param \Exception $exception
-   * @return TemplateResponse
-   * @throws \Exception
    */
-  public function afterException($controller, $methodName, \Exception $exception) {
+  public function afterException($controller, $methodName, \Exception $exception)
+  {
     if ($exception instanceof NotAdminException) {
       $response = new TemplateResponse('core', '403', [], 'guest');
       $response->setStatus(Http::STATUS_FORBIDDEN);
@@ -97,8 +94,3 @@ class SubadminMiddleware extends Middleware
     throw $exception;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

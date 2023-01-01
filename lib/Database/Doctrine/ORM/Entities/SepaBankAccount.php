@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -157,16 +158,19 @@ class SepaBankAccount implements \ArrayAccess
    */
   private $payments;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set iban.
    *
-   * @param string $iban
+   * @param null|string $iban
    *
    * @return SepaBankAccount
    */
@@ -190,7 +194,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set bic.
    *
-   * @param string $bic
+   * @param null|string $bic
    *
    * @return SepaBankAccount
    */
@@ -214,7 +218,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set blz.
    *
-   * @param string $blz
+   * @param null|string $blz
    *
    * @return SepaBankAccount
    */
@@ -238,7 +242,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set bankAccountOwner.
    *
-   * @param string $bankAccountOwner
+   * @param null|string $bankAccountOwner
    *
    * @return SepaBankAccount
    */
@@ -310,7 +314,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set payments.
    *
-   * @param int $payments
+   * @param Collection $payments
    *
    * @return SepaBankAccount
    */
@@ -334,7 +338,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set sepaDebitMandates.
    *
-   * @param int $sepaDebitMandates
+   * @param Collection $sepaDebitMandates
    *
    * @return SepaBankAccount
    */
@@ -407,6 +411,8 @@ class SepaBankAccount implements \ArrayAccess
 
   /**
    * Ensure that the encryptionContext contains the user-id of the owning musician.
+   *
+   * @return void
    */
   private function sanitizeEncryptionContext()
   {
@@ -417,6 +423,8 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
+   * {@inheritdoc}
+   *
    * @ORM\PostLoad
    * @ORM\PrePersist
    * _AT_ORM\PreUpdate

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class PerMusicianSequenceGenerator extends AbstractIdGenerator
 {
   /** {@inheritdoc} */
-  public function generate(EntityManager $em, $entity)
+  public function generate(EntityManager $entityManager, $entity)
   {
     if ($entity->getSequence() === null) {
       $musician = $entity->getMusician();
@@ -45,17 +45,25 @@ class PerMusicianSequenceGenerator extends AbstractIdGenerator
         $musician = $entityManager->getReference(Entities\Musician::class, [ 'id' => $musician ]);
         $entity->setMusician($musician);
       }
-      $nextSequence = 1 + self::sequenceMax($em, $musician);
+      $nextSequence = 1 + self::sequenceMax($entityManager, $musician);
       $entity->setSequence($nextSequence);
     }
   }
 
   /**
-   * Get the highest sequence number of the given musician
+   * Get the highest sequence number of the given musician.
+   *
+   * @param EntityManager $entityManager
+   *
+   * @param Entities\Musician $musician
+   *
+   * @return int
+   *
+   * @todo Probably unused.
    */
-  static private function sequenceMax(EntityManager $em, Entities\Musician $musician)
+  private static function sequenceMax(EntityManager $entityManager, Entities\Musician $musician)
   {
-    $em->createQueryBuilder()
+    return $entityManager->createQueryBuilder()
       ->from(Entities\Musician::class, 'm')
       ->select('MAX(m.sequence) AS sequence')
       ->where('m.musician = :musician')

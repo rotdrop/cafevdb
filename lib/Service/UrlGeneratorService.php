@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,10 @@ use OCP\IURLGenerator;
 use OCP\IL10N;
 use OCP\ILogger;
 
+/**
+ * Helper which injects the name of this app into all methods of the
+ * IURLGenerator which need it.
+ */
 class UrlGeneratorService implements IURLGenerator
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -35,15 +39,17 @@ class UrlGeneratorService implements IURLGenerator
   /** @var IURLGenerator */
   private $urlGenerator;
 
+  // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IURLGenerator $urlGenerator
-    , IL10N $l10n
-    , ILogger $logger
+    IURLGenerator $urlGenerator,
+    IL10N $l10n,
+    ILogger $logger,
   ) {
     $this->urlGenerator = $urlGenerator;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /** {@inheritDoc} */
   public function linkToRoute(string $routeName, array $arguments = []): string
@@ -103,8 +109,3 @@ class UrlGeneratorService implements IURLGenerator
     return $this->urlGenerator->getWebroot();
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

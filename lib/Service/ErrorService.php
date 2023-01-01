@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,11 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Exception;
+
 use OCP\AppFramework\Http\TemplateResponse;
 
+/** Generate frontend HTML page with error information. */
 class ErrorService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -35,17 +38,27 @@ class ErrorService
   /** @var OrganizationalRolesService */
   private $rolesService;
 
+  // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , OrganizationalRolesService $rolesService) {
+    ConfigService $configService,
+    OrganizationalRolesService $rolesService,
+  ) {
     $this->configService = $configService;
     $this->rolesService = $rolesService;
   }
+  // phpcs:enable
 
-  public function exceptionTemplate(\Exception $e, $renderAs = 'blank')
+  /**
+   * @param Exception $e
+   *
+   * @param string $renderAs
+   *
+   * @return TemplateResponse
+   */
+  public function exceptionTemplate(Exception $e, string $renderAs = 'blank'):TemplateResponse
   {
     $admin = implode(',', array_map(
-      function($contact) { return $contact['name'] . ' <' . $contact['email'] . '>'; },
+      fn($contact) => $contact['name'] . ' <' . $contact['email'] . '>',
       $this->rolesService->cloudAdminContact()
     ));
 
@@ -64,8 +77,3 @@ class ErrorService
     );
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

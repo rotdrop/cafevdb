@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,9 +24,12 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use DateTimeInterface;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Wrapped\Gedmo\Loggable;
 
+/** Repository for the entity lifecycle log-table. */
 class LogEntriesRepository extends Loggable\Entity\Repository\LogEntryRepository
 {
   const ACTION_CREATE = Loggable\LoggableListener::ACTION_CREATE;
@@ -37,8 +41,10 @@ class LogEntriesRepository extends Loggable\Entity\Repository\LogEntryRepository
    * coincide with the highest id ...
    *
    * @param null|string $entityClass Restrict the query to the given entity class.
+   *
+   * @return null|DateTimeInterface
    */
-  public function modificationTime(?string $entityClass = null):?\DateTimeInterface
+  public function modificationTime(?string $entityClass = null):?DateTimeInterface
   {
     return $this->getModificationTime($entityClass, null);
   }
@@ -50,8 +56,10 @@ class LogEntriesRepository extends Loggable\Entity\Repository\LogEntryRepository
    * @param null|string $entityClass Restrict the query to the given entity class.
    *
    * @param null|string $action Restrict the query to the given action.
+   *
+   * @return null|DateTimeInterface
    */
-  public function getModificationTime(?string $entityClass = null, ?string $action = null):?\DateTimeInterface
+  public function getModificationTime(?string $entityClass = null, ?string $action = null):?DateTimeInterface
   {
     $qb = $this->createQueryBuilder('l')
       ->select('l.loggedAt as modificationTime')
@@ -67,10 +75,4 @@ class LogEntriesRepository extends Loggable\Entity\Repository\LogEntryRepository
     }
     return $qb->getQuery()->getOneOrNullResult();
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

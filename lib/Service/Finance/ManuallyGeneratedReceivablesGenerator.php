@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,47 +45,41 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
   /** @var ToolTipsService */
   protected $toolTipsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    EntityManager $entityManager
-    , ProgressStatusService $progressStatusService
-    , ToolTipsService $toolTipsService
-    , ILogger $logger
-    , IL10N $l10n
+    EntityManager $entityManager,
+    ProgressStatusService $progressStatusService,
+    ToolTipsService $toolTipsService,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     parent::__construct($entityManager, $progressStatusService);
     $this->toolTipsService = $toolTipsService;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public static function uiFlags():int
   {
     return self::UI_EDITABLE_LABEL|self::UI_EDITABLE_VALUE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  static public function slug():string
+  /** {@inheritdoc} */
+  public static function slug():string
   {
     return self::t('manually');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  static public function updateStrategyChoices():array
+  /** {@inheritdoc} */
+  public static function updateStrategyChoices():array
   {
     return [ self::UPDATE_STRATEGY_SKIP ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  static public function operationLabels(?string $slug = null)
+  /** {@inheritdoc} */
+  public static function operationLabels(?string $slug = null)
   {
     // t('blah')
     $labels = [
@@ -97,9 +91,7 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
     return $slug === null ? $labels : $labels[$slug]??null;
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public function generateReceivables():Collection
   {
     // Strategy: For all participants provide exactly one empty
@@ -289,8 +281,11 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
    *
    * This actually will only cleanup unused (empty) field-values.
    */
-  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
-  {
+  protected function updateOne(
+    Entities\ProjectParticipantFieldDataOption $receivable,
+    Entities\ProjectParticipant $participant,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array {
     return $this->updateParticipant($participant, $receivable, $updateStrategy);
   }
 }

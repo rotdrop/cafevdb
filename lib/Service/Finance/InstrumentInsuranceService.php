@@ -36,7 +36,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
-use OCA\CAFEVDB\Documents\PDFLetter;
 use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Common\Util;

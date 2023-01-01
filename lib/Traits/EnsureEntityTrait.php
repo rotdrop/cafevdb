@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ trait EnsureEntityTrait
   {
     if ($projectOrId instanceof Entities\Project) {
       return $projectOrId;
-    } else if (empty($projectOrId) || (int)$projectOrId < 0) {
+    } elseif (empty($projectOrId) || (int)$projectOrId < 0) {
       return null;
     } else {
       return $this->entityManager->getReference(Entities\Project::class, [ 'id' => $projectOrId, ]);
@@ -62,15 +62,10 @@ trait EnsureEntityTrait
   {
     if ($musicianOrId instanceof Entities\Musician) {
       return $musicianOrId;
-    } else if (empty($musicianOrId) || (int)$musicianOrId < 0) {
+    } elseif (empty($musicianOrId) || (int)$musicianOrId < 0) {
       return null;
     } else {
       return $this->entityManager->getReference(Entities\Musician::class, [ 'id' => $musicianOrId, ]);
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

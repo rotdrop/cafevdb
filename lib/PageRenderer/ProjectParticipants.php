@@ -945,7 +945,7 @@ class ProjectParticipants extends PMETableViewBase
     list($memberStatusFddIndex,) = $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'member_status',
       [
-        'name'    => $this->l->t('Member Status'),
+        'name'    => $this->l->t('Email Status'),
         'select'  => 'D',
         'maxlen'  => 128,
         'css'     => ['postfix' => [ 'memberstatus', 'tooltip-wide', ], ],

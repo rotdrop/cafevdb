@@ -1,6 +1,30 @@
 <?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace OCA\CAFEVDB\Database\Cloud;
+
+use BadFunctionCallException;
 
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
@@ -22,8 +46,14 @@ abstract class Synchronized extends Db\QBMapper
   /** @var Entity */
   protected $entity;
 
-  public function __construct(IDBConnection $db, string $appName, int $id = null, string $entityClass = null, string $tableName = null)
-  {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    IDBConnection $db,
+    string $appName,
+    int $id = null,
+    string $entityClass = null,
+    string $tableName = null,
+  ) {
     if ($entityClass === null) {
       $entityClass = $this->makeEntityClass();
     }
@@ -38,12 +68,15 @@ abstract class Synchronized extends Db\QBMapper
 
     $this->attach();
   }
+  // phpcs:enable
 
-  public function isAttached()
+  /** @return bool */
+  public function isAttached():bool
   {
     return $this->attached;
   }
 
+  /** @return mixed */
   public function entity()
   {
     return $this->entity;
@@ -52,6 +85,8 @@ abstract class Synchronized extends Db\QBMapper
   /**
    * Obtain object from database if it is "clean", if it is dirty or
    * new (no id) then create or update the database entry.
+   *
+   * @return void
    */
   public function attach()
   {
@@ -68,7 +103,11 @@ abstract class Synchronized extends Db\QBMapper
     $this->attached = true;
   }
 
-  /** Remove the wrapped entity from the database. */
+  /**
+   * Remove the wrapped entity from the database.
+   *
+   * @return void
+   */
   public function detach()
   {
     $this->delete($this->entity);
@@ -81,6 +120,10 @@ abstract class Synchronized extends Db\QBMapper
    * Update multiple properties and write them through to the database if we
    * are in $attached state. If called with no arguments read the entity back
    * from the database, possibly attaching it first.
+   *
+   * @param array $params
+   *
+   * @return void
    */
   public function merge(array $params = [])
   {
@@ -98,7 +141,9 @@ abstract class Synchronized extends Db\QBMapper
     }
   }
 
-  public function __call($methodName, $args) {
+  /** {@inheritdoc} */
+  public function __call($methodName, $args)
+  {
     if (strpos($methodName, 'set') === 0) {
       try {
         $this->entity->$methodName($args);
@@ -114,15 +159,20 @@ abstract class Synchronized extends Db\QBMapper
       }
       return $this->entity->$methodName();
     } else {
-      throw new \BadFunctionCallException($methodName . ' does not exist');
+      throw new BadFunctionCallException($methodName . ' does not exist');
     }
   }
 
   /**
-   * @throws \OCP\AppFramework\Db\DoesNotExistException if not found
-   * @throws \OCP\AppFramework\Db\MultipleObjectsReturnedException if more than one result
+   * @param int $id
+   *
+   * @return mixed
+   *
+   * @throws \OCP\AppFramework\Db\DoesNotExistException If not found.
+   * @throws \OCP\AppFramework\Db\MultipleObjectsReturnedException If more than one result.
    */
-  public function find(int $id) {
+  public function find(int $id)
+  {
     $qb = $this->db->getQueryBuilder();
 
     $qb->select('*')
@@ -133,5 +183,4 @@ abstract class Synchronized extends Db\QBMapper
 
     return $this->findEntity($qb);
   }
-
 }

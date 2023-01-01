@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,9 +26,19 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
 use OCP\ILogger;
 
-trait LogTrait {
-
-  public static function log($message, int $level = ILogger::INFO, $shift = 0)
+/** Debugging helper providing access to the cloud logger. */
+trait LogTrait
+{
+  /**
+   * @param string $message
+   *
+   * @param int $level
+   *
+   * @param int $shift
+   *
+   * @return void
+   */
+  public static function log(string $message, int $level = ILogger::INFO, int $shift = 0):void
   {
     $trace = debug_backtrace();
     $caller = $trace[$shift];

@@ -155,7 +155,7 @@ class VCalendarService
   }
 
   /**
-   * @param array $objectData Calendar object description from HTTP request.
+   * @param mixed $objectData Calendar object description from HTTP request.
    *
    * @return null|VCalendar
    */
@@ -179,7 +179,7 @@ class VCalendarService
    *
    * @param VComponent $vComponent A VTodo ar a VEvent.
    *
-   * @param array $objectData
+   * @param mixed $objectData
    * ```
    * [ ...
    *   'participants' => [
@@ -233,7 +233,7 @@ class VCalendarService
    *
    * @param VComponent $vComponent A VTodo ar a VEvent.
    *
-   * @param array $objectData
+   * @param mixed $objectData
    * ```
    * [ ..., 'related' => [ UIDs, ... ], ... ]
    * [ ...,
@@ -281,7 +281,7 @@ class VCalendarService
    *
    * @param VComponent $vComponent A VTodo ar a VEvent.
    *
-   * @param array $objectData Calendar object description from HTTP
+   * @param mixed $objectData Calendar object description from HTTP
    * request. If it has an array element with key 'alarm' then this may be the
    * number of alarm seconds or an array of seconds in which case multiple
    * alarms will be added. Negative values are counted relative to the end of

@@ -46,6 +46,8 @@ class AfterProjectDeletedEvent extends ProjectEvent
    * @param int $projectYear
    *
    * @param ProjectType $projectType
+   *
+   * @param bool $disabled
    */
   public function __construct(
     int $projectId,

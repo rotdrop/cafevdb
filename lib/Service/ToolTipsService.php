@@ -205,7 +205,6 @@ class ToolTipsService implements \ArrayAccess, \Countable
     $this->makeToolTips();
     $toolTipsData = $this->toolTipsData;
 
-    $oldKey = $key;
     $key = $this->preprocessKey($key);
     $keys = explode(self::SUB_KEY_SEP, $key);
     while (\count($keys) > 0) {
@@ -244,8 +243,10 @@ class ToolTipsService implements \ArrayAccess, \Countable
   /**
    * Generate the tooltips-data. This is primarily not static because the
    * translation function is not static.
+   *
+   * @return void
    */
-  private function makeToolTips()
+  private function makeToolTips():void
   {
     if (!empty($this->toolTipsData)) {
       return;
@@ -1394,8 +1395,3 @@ configuration storage if the test can be performed successfully.'),
     ];
   } // method makeToolTips()
 } // class toolTips
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

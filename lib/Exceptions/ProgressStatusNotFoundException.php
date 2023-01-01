@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,17 +24,29 @@
 
 namespace OCA\CAFEVDB\Exceptions;
 
+/**
+ * @see OCA\CAFEVDB\Common\DatabaseProgressStatus
+ * @see OCA\CAFEVDB\Common\PlainFileProgressStatus
+ */
 class ProgressStatusNotFoundException extends Exception
 {
   protected $id = null;
 
-  public function setId($id)
+  /**
+   * @param mixed $id
+   *
+   * @return ProgressStatusNotFoundException
+   */
+  public function setId(mixed $id):ProgressStatusNotFoundException
   {
     $this->id = $id;
     return $this;
   }
 
-  public function getId()
+  /**
+   * @return mixed
+   */
+  public function getId():mixed
   {
     return $this->id;
   }

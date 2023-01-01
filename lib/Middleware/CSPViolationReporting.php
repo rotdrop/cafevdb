@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,15 +39,16 @@ class CSPViolationReporting extends Middleware
   /** @var ConfigService */
   protected $configService;
 
-  /**
-   * @param ConfigService $configService
-   */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(ConfigService $configService)
   {
     $this->configService = $configService;
   }
+  // phpcs:enable
 
   /**
+   * {@inheritdoc}
+   *
    * Add CSP reporting to CSP header.
    */
   public function afterController($controller, $methodName, Response $response)
@@ -70,8 +72,3 @@ class CSPViolationReporting extends Middleware
     return $response;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

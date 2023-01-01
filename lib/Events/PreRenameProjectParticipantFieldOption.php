@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCP\EventDispatcher\Event;
 
+/** Pre-rename event. */
 class PreRenameProjectParticipantFieldOption extends Event
 {
   /** @var Entities\ProjectParticipantFieldDataOption */
@@ -38,30 +39,31 @@ class PreRenameProjectParticipantFieldOption extends Event
   /** @var string */
   private $newLabel;
 
-  public function __construct(Entities\ProjectParticipantFieldDataOption $option, string $oldLabel, string $newLabel) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(Entities\ProjectParticipantFieldDataOption $option, string $oldLabel, string $newLabel)
+  {
     parent::__construct();
     $this->option = $option;
     $this->oldLabel = $oldLabel;
     $this->newLabel = $newLabel;
   }
+  // phpcs:enable
 
+  /** @return Entities\ProjectParticipantFieldDataOption */
   public function getOption():Entities\ProjectParticipantFieldDataOption
   {
     return $this->option;
   }
 
+  /** @return string */
   public function getOldLabel():string
   {
     return $this->oldLabel;
   }
 
+  /** @return string */
   public function getNewLabel():string
   {
     return $this->newLabel;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

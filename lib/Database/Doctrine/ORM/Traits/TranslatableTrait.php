@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
+/** Helper for Gedmo "translatable" entities. */
 trait TranslatableTrait
 {
   /**
@@ -45,7 +46,11 @@ trait TranslatableTrait
   private $translationChangeSet;
 
   /**
-   * Set the "local" per-entity override locale for table field translations.
+   * Set the "locale" per-entity override locale for table field translations.
+   *
+   * @param null|string $locale
+   *
+   * @return self
    */
   public function setLocale(?string $locale):self
   {
@@ -55,6 +60,8 @@ trait TranslatableTrait
 
   /**
    * Get the "locale" per-entity override locale for table field translations.
+   *
+   * @return null|string
    */
   public function getLocale():?string
   {
@@ -65,6 +72,10 @@ trait TranslatableTrait
    * Tweak the set of translatable fields based on the current state of the
    * entity. This can be used to remove fields. Addings fields would at least
    * brake the tree-walker as it has to start with the default set of fields.
+   *
+   * @param array $fields
+   *
+   * @return array
    */
   public function filterTranslatableFields(array $fields):array
   {

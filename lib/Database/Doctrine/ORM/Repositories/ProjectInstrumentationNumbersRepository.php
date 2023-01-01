@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +28,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
 
+/** Repositories for the required numbers of musicians per voice. */
 class ProjectInstrumentationNumbersRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
@@ -71,8 +73,6 @@ class ProjectInstrumentationNumbersRepository extends EntityRepository
    */
   public function fetchInstrumentationBalance(int $projectId):array
   {
-    $em = $this->getEntityManager();
-
     $qb = $this->createQueryBuilder('pin');
     $qb->select([
       'i.name AS instrument',
@@ -80,12 +80,13 @@ class ProjectInstrumentationNumbersRepository extends EntityRepository
       'pin.quantity AS required',
       'count(pi.instrument) AS registered',
       'count(pp.registration) AS confirmed' ])
-       ->leftJoin('pin.instrument', 'i')
-       ->leftJoin('pin.instruments', 'pi')
-       ->leftJoin(Entities\ProjectParticipant::class, 'pp',
-                  Query\Expr\Join::WITH,
-                  'pi.project = pp.project'
-                  .' AND '
+      ->leftJoin('pin.instrument', 'i')
+      ->leftJoin('pin.instruments', 'pi')
+      ->leftJoin(
+        Entities\ProjectParticipant::class, 'pp',
+        Query\Expr\Join::WITH,
+        'pi.project = pp.project'
+        .' AND '
                   .'pi.musician = pp.musician'
                   .' AND '
                   .'pp.registration = 1')

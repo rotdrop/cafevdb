@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,12 +26,15 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+/** Repository for instruments. */
 class InstrumentsRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
 
   /**
    * Find an instrument by its name.
+   *
+   * @param string $name
    *
    * @return Entities\Instrument
    */
@@ -76,7 +79,7 @@ class InstrumentsRepository extends EntityRepository
 
     $all = $this->findAll();
 
-    foreach($all as $entity) {
+    foreach ($all as $entity) {
       $id         = $entity['id'];
       $instrument = $entity['name'];
       $families   = $entity['families']->map(function($entity) {

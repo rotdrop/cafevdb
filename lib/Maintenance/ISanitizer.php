@@ -68,7 +68,11 @@ interface ISanitizer
    */
   public function setEntity(mixed $entity):void;
 
-  /*** @return mixed Get the entity to be validated. */
+  /**
+   * @param mixed $entity
+   *
+   * @return mixed Get the entity to be validated.
+   */
   public function getEntity(mixed $entity):mixed;
 
   /**

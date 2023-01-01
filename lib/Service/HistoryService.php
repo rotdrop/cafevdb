@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2014-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2014-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,10 +24,18 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OutOfBoundsException;
+
 use OCP\ISession;
 use OCP\IL10N;
 use OCP\ILogger;
 
+/**
+ * Page history via PHP session.
+ *
+ * @todo This now should be obsolete as the navigation history is handled by
+ * the Javascript code.
+ */
 class HistoryService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
@@ -46,10 +54,12 @@ class HistoryService
   /**
    * The data-contents. A "cooked" array structure with the
    * following components:
-   *
-   * array('size' => NUMBER_OF_HISTORY_RECORDS,
-   *       'position' => CURRENT_POSITION_INTO_HISTORY_RECORDS,
-   *       'records' => array(# => clone of $_POST));
+   * ```
+   * [ 'size' => NUMBER_OF_HISTORY_RECORDS,
+   *   'position' => CURRENT_POSITION_INTO_HISTORY_RECORDS,
+   *   'records' => array(# => clone of $_POST),
+   * ]
+   * ```
    */
   private $historyRecords;
   private $historyPosition;
@@ -58,23 +68,25 @@ class HistoryService
   /** @var ISession */
   private $session;
 
-  /**
-   * Fetch any existing history from the session or initialize an
-   * empty history if no history record is found.
-   */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ISession $session
-    , IL10N $l10n
-    , ILogger $logger
+    ISession $session,
+    IL10N $l10n,
+    ILogger $logger,
   ) {
     $this->session = $session;
     $this->l = $l10n;
     $this->logger = $logger;
     $this->load();
   }
+  // phpcs:enable
 
-  /** Initialize a sane do-nothing record. */
-  private function default()
+  /**
+   * Initialize a sane do-nothing record.
+   *
+   * @return void
+   */
+  private function default():void
   {
     $this->historySize = 1;
     $this->historyPosition = 0;
@@ -82,8 +94,14 @@ class HistoryService
                                 'data' => [] ] ];
   }
 
-  /** Add a history snapshot. */
-  public function push($data)
+  /**
+   * Add a history snapshot.
+   *
+   * @param array $data
+   *
+   * @return void
+   */
+  public function push(array $data):void
   {
     ksort($data);
     $md5 = md5(serialize($data));
@@ -105,7 +123,12 @@ class HistoryService
     }
   }
 
-  private function printRecords()
+  /**
+   * Debugging utility.
+   *
+   * @return void
+   */
+  private function printRecords():void
   {
     $message = 'Position/Size: ' . $this->historyPosition . ' / ' . $this->historySize;
     $printRecords = [];
@@ -114,7 +137,7 @@ class HistoryService
     $max = $this->historyPosition + 2;
     foreach ($this->historyRecords as $record) {
       $printRecord = [];
-      foreach ($printKeys as $key)  {
+      foreach ($printKeys as $key) {
         $printRecord[$key] = $record['data'][$key] ?? 'undefined';
       }
       $printRecords[] = $printRecord;
@@ -129,14 +152,20 @@ class HistoryService
   /**
    * Fetch the history record at $offset. The function will throw
    * an exception if offset is out of bounds.
+   *
+   * @param int $offset
+   *
+   * @return array
    */
-  public function fetch($offset)
+  public function fetch(int $offset):array
   {
     $newPosition = $this->historyPosition + $offset;
     if ($newPosition >= $this->historySize || $newPosition < 0) {
-      throw new \OutOfBoundsException(
-        $this->l->t('Invalid history position %d requested, history size is %d, current position is %d',
-                    [ $newPosition, $this->historySize, $this->historyPosition ]));
+      throw new OutOfBoundsException(
+        $this->l->t(
+          'Invalid history position %d requested, history size is %d, current position is %d',
+          [ $newPosition, $this->historySize, $this->historyPosition ])
+      );
     }
 
     $this->historyPosition = $newPosition;
@@ -149,20 +178,32 @@ class HistoryService
     return $this->historyRecords[$this->historyPosition]['data'];
   }
 
-  /** Return the current position into the history. */
-  public function position()
+  /**
+   * Return the current position into the history.
+   *
+   * @return int
+   */
+  public function position():int
   {
     return $this->historyPosition;
   }
 
-  /** Return the current position into the history. */
-  public function size()
+  /**
+   * Return the current position into the history.
+   *
+   * @return int
+   */
+  public function size():int
   {
     return $this->historySize;
   }
 
-  /** Return true if the recorded history is essentially empty. */
-  public function empty()
+  /**
+   * Return true if the recorded history is essentially empty.
+   *
+   * @return bool
+   */
+  public function empty():bool
   {
     return $this->historySize <= 1 && count($this->historyRecords[0]['data']) == 0;
   }
@@ -170,8 +211,10 @@ class HistoryService
   /**
    * Store the current state whereever. Currently the PHP session
    * data, but this is not guaranteed.
+   *
+   * @return void
    */
-  public function store()
+  public function store():void
   {
     $storageValue = [ 'size' => $this->historySize,
                       'position' => $this->historyPosition,
@@ -182,8 +225,10 @@ class HistoryService
   /**
    * Load the history state. Initialize to default state in case of
    * errors.
+   *
+   * @return bool
    */
-  private function load()
+  private function load():bool
   {
     $loadValue = $this->sessionRetrieveValue(self::SESSION_HISTORY_KEY);
     if (!$this->validate($loadValue)) {
@@ -198,8 +243,12 @@ class HistoryService
 
   /**
    * Validate the given history records, return false on error.
+   *
+   * @param array $history
+   *
+   * @return bool
    */
-  private function validate($history)
+  private function validate(array $history):bool
   {
     if ($history === false ||
         !isset($history['size']) ||
@@ -211,8 +260,15 @@ class HistoryService
     return true;
   }
 
-  /** Validate one history entry */
-  private function validateRecord($record) {
+  /**
+   * Validate one history entry.
+   *
+   * @param array $record
+   *
+   * @return bool
+   */
+  private function validateRecord(array $record):bool
+  {
     if (!is_array($record)) {
       return false;
     }
@@ -222,9 +278,16 @@ class HistoryService
     return true;
   }
 
-  /** Validate all history records. */
-  private function validateRecords($history) {
-    foreach($history['records'] as $record) {
+  /**
+   * Validate all history records.
+   *
+   * @param array $history
+   *
+   * @return bool
+   */
+  private function validateRecords(array $history):bool
+  {
+    foreach ($history['records'] as $record) {
       if (!$this->validateRecord($record)) {
         return false;
       }
@@ -232,8 +295,3 @@ class HistoryService
     return true;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

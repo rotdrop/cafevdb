@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Common;
+
+use DateTimeImmutable;
 
 use OCP\ILogger;
 use OCP\IL10N;
@@ -48,19 +50,28 @@ class DoNothingProgressStatus extends AbstractProgressStatus
   /** @var \DateTimeImmutable */
   protected $lastModified;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
-    $this->lastModified = new \DateTimeImmutable;
+    $this->lastModified = new DateTimeImmutable;
+  }
+  // phpcs:enable
+
+  /** {@inheritdoc} */
+  public function delete()
+  {
   }
 
   /** {@inheritdoc} */
-  public function delete() {}
+  public function bind(mixed $id = null)
+  {
+  }
 
   /** {@inheritdoc} */
-  public function bind($id = null) {}
-
-  /** {@inheritdoc} */
-  public function getId() { return -1; }
+  public function getId()
+  {
+    return -1;
+  }
 
   /** {@inheritdoc} */
   public function update(int $current, ?int $target = null, ?array $data = null):bool
@@ -72,12 +83,14 @@ class DoNothingProgressStatus extends AbstractProgressStatus
     if ($data !== null) {
       $this->applicationData = $data;
     }
-    $this->lastModified = new \DateTimeImmutable;
+    $this->lastModified = new DateTimeImmutable;
     return true;
   }
 
   /** {@inheritdoc} */
-  public function sync() {}
+  public function sync()
+  {
+  }
 
   /** {@inheritdoc} */
   public function getCurrent():int
@@ -102,5 +115,4 @@ class DoNothingProgressStatus extends AbstractProgressStatus
   {
     return $this->applicationData;
   }
-
 }

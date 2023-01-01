@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Sluggable;
+
+use InvalidArgumentException;
 
 use OCA\CAFEVDB\Wrapped\Gedmo\Sluggable\Handler\SlugHandlerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\Mapping\ClassMetadata;
@@ -49,46 +51,29 @@ class LoginNameSlugHandler implements SlugHandlerInterface
    */
   protected $sluggable;
 
-  /**
-   * Construct the slug handler
-   */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(SluggableListener $sluggable)
   {
     if (!($sluggable instanceof GedmoSluggableListener)) {
-      throw new \InvalidArgumentException('Listener has to be ' . GedmoSluggableListener::class . ', but got a ' . get_class($sluggable));
+      throw new InvalidArgumentException('Listener has to be ' . GedmoSluggableListener::class . ', but got a ' . get_class($sluggable));
     }
     $this->sluggable = $sluggable;
 
     $this->configService = $this->sluggable->getAppContainer()->get(ConfigService::class);
 
     // disable transliteration, done in postSlugBuild()
-    $this->sluggable->setTransliterator(function($slug) { return $slug; });
+    $this->sluggable->setTransliterator(fn($slug) => $slug);
   }
+  // phpcs:enable
 
-  /**
-   * Callback on slug handlers before the decision
-   * is made whether or not the slug needs to be
-   * recalculated
-   *
-   * @param object $object
-   * @param string $slug
-   * @param bool   $needToChangeSlug
-   *
-   * @return void
-   */
-  public function onChangeDecision(SluggableAdapter $ea, array &$config, $object, &$slug, &$needToChangeSlug, $otherSlugs)
+  /** {@inheritdoc} */
+  public function onChangeDecision(SluggableAdapter $eventAdapter, array &$config, $object, &$slug, &$needToChangeSlug, $otherSlugs)
   {
     // nothing
   }
 
-  /**
-   * Callback on slug handlers right after the slug is built
-   *
-   * @param object $object
-   * @param string $slug
-   * @return void
-   */
-  public function postSlugBuild(SluggableAdapter $ea, array &$config, $object, &$slug)
+  /** {@inheritdoc} */
+  public function postSlugBuild(SluggableAdapter $eventAdapter, array &$config, $object, &$slug)
   {
     $options = $config['handlers'][get_called_class()];
     $innerSeparator = $options['separator']?:'-';
@@ -122,30 +107,19 @@ class LoginNameSlugHandler implements SlugHandlerInterface
     $slug = implode($outerSeparator, $slugs);
   }
 
-  /**
-   * Callback for slug handlers on slug completion
-   *
-   * @param object $object
-   * @param string $slug
-   *
-   * @return void
-   */
-  public function onSlugCompletion(SluggableAdapter $ea, array &$config, $object, &$slug)
+  /** {@inheritdoc} */
+  public function onSlugCompletion(SluggableAdapter $eventAdapter, array &$config, $object, &$slug)
   {
     // nothing
   }
 
-  /**
-   * @return bool whether or not this handler has already urlized the slug
-   */
+  /** {@inheritdoc} */
   public function handlesUrlization()
   {
     return true;
   }
 
-  /**
-   * Validate handler options
-   */
+  /** {@inheritdoc} */
   public static function validate(array $options, ClassMetadata $meta)
   {
     // not needed, using defaults for missing options

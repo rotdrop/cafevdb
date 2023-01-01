@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,11 +24,18 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+/** Try to "implode" string arrays to something more or less readable. */
 trait SloppyTrait
 {
   /**
    * Implodes an array assuming it is a list of words. The last word
    * will be joined with the translation of 'and'.
+   *
+   * @param array $values
+   *
+   * @param null|array $separators
+   *
+   * @return string
    */
   protected function implodeSloppy(array $values, ?array $separators = null):string
   {
@@ -42,8 +49,9 @@ trait SloppyTrait
       ];
     }
 
+    $numValues = count($values);
     $result = $values[0];
-    for ($i = 1; $i < count($values)-1; $i++) {
+    for ($i = 1; $i < $numValues - 1; $i++) {
       $result .= $separators['ordinary'] . $values[$i];
     }
     $result .= $separators['last'] . $values[$i];
@@ -53,8 +61,18 @@ trait SloppyTrait
   /**
    * Truncate the first word with an ellipsis '...' such that both
    * words fit into a comma separated string.
+   *
+   * @param string $first
+   *
+   * @param string $second
+   *
+   * @param int $length
+   *
+   * @param string $separator
+   *
+   * @return string
    */
-  protected function ellipsizeFirst($first, $second, $length, $separator = ', '):string
+  protected function ellipsizeFirst(string $first, string $second, int $length, string $separator = ', '):string
   {
     $ellipsis = '...';
     $excess = strlen($first) + strlen($second) + strlen($separator) - $length;

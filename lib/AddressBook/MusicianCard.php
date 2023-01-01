@@ -5,13 +5,12 @@ declare(strict_types=1);
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
- *
- * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,7 +24,6 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFEVDB\AddressBook;
@@ -34,7 +32,9 @@ use Sabre\CardDAV\ICard;
 use Sabre\DAV\Exception\NotImplemented;
 use Sabre\VObject\Component\VCard;
 
-class MusicianCard implements ICard {
+/** ICard implementation linking to the musicians database. */
+class MusicianCard implements ICard
+{
 
   /** @var string $uri */
   private $uri;
@@ -45,79 +45,76 @@ class MusicianCard implements ICard {
   /** @var VCard */
   private $vCard;
 
-  public function __construct(string $uri, ?int $lastModified, VCard $vCard) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(string $uri, ?int $lastModified, VCard $vCard)
+  {
     $this->uri = $uri;
     $this->lastModified = $lastModified;
     $this->vCard = $vCard;
   }
+  // phpcs:enable
 
-  /**
-   * @inheritDoc
-   */
-  public function put($data) {
+  /** {@inheritdoc} */
+  public function put($data)
+  {
     throw new NotImplemented();
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function get() {
+  /** {@inheritdoc} */
+  public function get()
+  {
     return $this->vCard->serialize();
   }
 
   /**
-   * Non-interface method, return the underlying vCard
+   * Non-interface method, return the underlying vCard.
+   *
+   * @return VCard
    */
-  public function getVCard(): VCard {
+  public function getVCard():VCard
+  {
     return $this->vCard;
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function getContentType() {
+  /** {@inheritdoc} */
+  public function getContentType()
+  {
     return 'text/vcard; charset=utf-8';
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function getETag() {
+  /** {@inheritdoc} */
+  public function getETag()
+  {
     return md5((string)$this->getLastModified());
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function getSize() {
+  /** {@inheritdoc} */
+  public function getSize()
+  {
     return \strlen($this->get());
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function delete() {
+  /** {@inheritdoc} */
+  public function delete()
+  {
     throw new NotImplemented();
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function getName() {
+  /** {@inheritdoc} */
+  public function getName()
+  {
     return $this->uri;
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function setName($name) {
+  /** {@inheritdoc} */
+  public function setName($name)
+  {
     throw new NotImplemented();
   }
 
-  /**
-   * @inheritDoc
-   */
-  public function getLastModified() {
+  /** {@inheritdoc} */
+  public function getLastModified()
+  {
     return $this->lastModified;
   }
 }

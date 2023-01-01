@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -107,15 +107,19 @@ class CloudLogger implements SQLLogger
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Logs a SQL statement somewhere.
    *
    * @param string              $sql    The SQL to be executed.
+   *
    * @param mixed[]|null        $params The SQL parameters.
+   *
    * @param int[]|string[]|null $types  The SQL parameter types.
    *
    * @return void
    */
-  public function startQuery($sql, ?array $params = null, ?array $types = null):void
+  public function startQuery($sql, ?array $params = null, ?array $types = null)
   {
     if (!$this->enabled) {
       return;
@@ -126,6 +130,8 @@ class CloudLogger implements SQLLogger
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Marks the last started query as stopped. This can be used for timing of queries.
    *
    * @return void

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,10 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use DateTimeInterface;
+use DateTimeImmutable;
+use DateTimeZone;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query;
@@ -34,7 +38,12 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\UniqueConstraintViolationExcepti
  */
 class SepaBulkTransactionsRepository extends EntityRepository
 {
-  public function sepaTransactionDataModificationTime($year = null):\DateTimeInterface
+  /**
+   * @param null|int $year
+   *
+   * @return DateTimeInterface
+   */
+  public function sepaTransactionDataModificationTime($year = null):DateTimeInterface
   {
     $qb = $this->createQueryBuilder('t')
       ->select('MAX(t.sepaTransactionDataChanged) as modificiationTime');
@@ -45,10 +54,15 @@ class SepaBulkTransactionsRepository extends EntityRepository
     $result = $qb->getQuery()->getSingleScalarResult();
 
     // Because of the aggregate MAX() result is a string
-    return new \DateTimeImmutable($result, new \DateTimeZone('UTC'));
+    return new DateTimeImmutable($result, new DateTimeZone('UTC'));
   }
 
-  public function findByCreationYear($year)
+  /**
+   * @param mixed $year
+   *
+   * @return mixed
+   */
+  public function findByCreationYear(mixed $year)
   {
     return $this->createQueryBuilder('t')
       ->where('YEAR(t.created) = :year')
@@ -57,8 +71,3 @@ class SepaBulkTransactionsRepository extends EntityRepository
       ->getResult();
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

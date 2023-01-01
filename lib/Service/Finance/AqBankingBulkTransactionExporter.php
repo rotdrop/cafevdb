@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,15 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \DateTimeImmutable as DateTime;
+use RuntimeException;
+use DateTimeImmutable as DateTime;
+use PHP_IBAN\IBAN as PHP_IBAN;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 
+/** Generate AqBanking data-sets for submission to the bank. */
 class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -49,6 +52,7 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   /** @var FinanceService */
   private $financeService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     FinanceService $financeService,
@@ -56,16 +60,15 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     $this->configService = $configService;
     $this->financeService = $financeService;
 
-    $iban = new \PHP_IBAN\IBAN($this->getConfigValue('bankAccountIBAN'));
+    $iban = new PHP_IBAN($this->getConfigValue('bankAccountIBAN'));
     $this->iban = $iban->MachineFormat();
     $this->bic = $this->getConfigValue('bankAccountBIC');
     $this->owner = $this->getConfigValue('bankAccountOwner');
     $this->ci = $this->getConfigValue('bankAccountCreditorIdentifier');
   }
+  // phpcs:enable
 
-  /**
-   * @inheritdoc
-   */
+  /** {@inheritdoc} */
   public static function identifier():string
   {
     return self::IDENTIFIER;
@@ -88,15 +91,19 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
   {
     if ($transaction instanceof Entities\SepaDebitNote) {
       return $this->debitNoteFileData($transaction);
-    } else if ($transaction instanceof Entities\SepaBankTransfer) {
+    } elseif ($transaction instanceof Entities\SepaBankTransfer) {
       return $this->bankTransferFileData($transaction);
     } else {
-      throw new \RuntimeException(
-        $this->l->t('Unsupported bulk-transaction class: "%s".',
-                    get_class($transaction)));
+      throw new RuntimeException(
+        $this->l->t('Unsupported bulk-transaction class: "%s".', get_class($transaction)));
     }
   }
 
+  /**
+   * @param Entities\SepaBulkTransaction $transaction
+   *
+   * @return string
+   */
   private function bankTransferFileData(Entities\SepaBulkTransaction $transaction):string
   {
     $transactionTable = [];
@@ -134,6 +141,9 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       $transactionTable));
   }
 
+  /**
+   * @return array
+   */
   private function bankTransferColumnHeadings():array
   {
     return [
@@ -156,6 +166,11 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     ];
   }
 
+  /**
+   * @param Entities\SepaBulkTransaction $transaction
+   *
+   * @return string
+   */
   private function debitNoteFileData(Entities\SepaBulkTransaction $transaction):string
   {
     $transactionTable = [];
@@ -195,6 +210,9 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
       $transactionTable));
   }
 
+  /**
+   * @return array
+   */
   private function debitNoteColumnHeadings():array
   {
     return [
@@ -219,7 +237,12 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     ];
   }
 
-  private function generatePurpose($subject):array
+  /**
+   * @param string $subject
+   *
+   * @return array
+   */
+  private function generatePurpose(string $subject):array
   {
     if (strlen($subject) > FinanceService::SEPA_PURPOSE_LENGTH) {
       $subject = Util::removeSpaces($subject);
@@ -234,10 +257,4 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     }
     return $purpose;
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

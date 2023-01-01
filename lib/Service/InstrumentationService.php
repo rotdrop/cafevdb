@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use DateTimeImmutable;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -44,10 +46,11 @@ class InstrumentationService
   /** @var ToolTipsService */
   protected $toolTipsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , ToolTipsService $toolTipsService
-    , EntityManager $entityManager
+    ConfigService $configService,
+    ToolTipsService $toolTipsService,
+    EntityManager $entityManager,
   ) {
     $this->configService = $configService;
     $this->toolTipsService = $toolTipsService;
@@ -55,6 +58,7 @@ class InstrumentationService
     $this->connection = $this->entityManager->getConnection();
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Generate a dummy musician entity which can be used during
@@ -92,10 +96,10 @@ class InstrumentationService
       ->setCity($this->l->t('Nowhere'))
       ->setCountry('AQ')
       ->setEmail($this->getConfigValue('emailtestaddress', 'john.doe@nowhere.tld'))
-      ->setBirthday(new \DateTimeImmutable)
+      ->setBirthday(new DateTimeImmutable)
       ->setMobilePhone('0815')
       ->setFixedLinePhone('4711')
-      ->setDeleted(new \DateTimeImmutable)
+      ->setDeleted(new DateTimeImmutable)
       ->setUuid(Uuid::NIL);
     if ($persist) {
       $this->persist($dummy);
@@ -109,7 +113,7 @@ class InstrumentationService
                    ->setBlz('70010080')
                    ->setBankAccountOwner($dummy->getPublicName())
                    ->setSequence(1)
-                   ->setDeleted(new \DateTimeImmutable);
+                   ->setDeleted(new DateTimeImmutable);
       $dummy->getSepaBankAccounts()->add($bankAccount);
       if ($persist) {
         $this->persist($bankAccount);
@@ -132,9 +136,13 @@ class InstrumentationService
   }
 
   /**
+   * @param string $idOrName
+   *
+   * @return string
+   *
    * @todo DetailedInstrumentationService? Maybe overkill
    */
-  public function tableTabId($idOrName)
+  public function tableTabId(string $idOrName):string
   {
     $dflt = $this->defaultTableTabs();
     foreach ($dflt as $tab) {
@@ -148,10 +156,14 @@ class InstrumentationService
   /**
    * Export the default tabs family.
    *
+   * @param bool $useFinanceTab
+   *
+   * @return array
+   *
    * @todo This is almost nowhere used, but different to be joined other
    * implementations exist.
    */
-  public function defaultTableTabs($useFinanceTab = false)
+  public function defaultTableTabs(bool $useFinanceTab = false):array
   {
     $pre = [
       [
@@ -197,8 +209,16 @@ class InstrumentationService
     }
   }
 
-  /**Export the description for the table tabs. */
-  public function tableTabs($participantFields = false, $useFinanceTab = false)
+  /**
+   * Export the description for the table tabs.
+   *
+   * @param null|array $participantFields
+   *
+   * @param bool $useFinanceTab
+   *
+   * @return array
+   */
+  public function tableTabs(?array $participantFields = null, bool $useFinanceTab = false)
   {
     $dfltTabs = $this->defaultTableTabs($useFinanceTab);
 
@@ -231,10 +251,4 @@ class InstrumentationService
 
     return array_merge($dfltTabs, $extraTabs);
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

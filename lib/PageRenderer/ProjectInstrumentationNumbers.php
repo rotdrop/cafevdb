@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -80,13 +81,14 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     ],
   ];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-  , RequestParameterService $requestParameters
-  , EntityManager $entityManager
-  , PHPMyEdit $phpMyEdit
-  , ToolTipsService $toolTipsService
-  , PageNavigation $pageNavigation
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 
@@ -94,7 +96,9 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
       $this->pme->overrideLabel('Add', $this->l->t('New Voice'));
     }
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     if ($this->projectName) {
@@ -104,6 +108,7 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     }
   }
 
+  /** {@inheritdoc} */
   public function headerText()
   {
     $header = $this->shortTitle();
@@ -114,15 +119,12 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     return '<div class="'.$this->cssClass().'-header-text">'.$header.'</div>';
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template       = $this->template;
-    $projectName    = $this->projectName;
     $projectId      = $this->projectId;
     $projectMode    = $this->projectId > 0;
-    $instruments    = $this->instruments;
-    $recordsPerPage = $this->recordsPerPage;
 
     $opts            = [];
 

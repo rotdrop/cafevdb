@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,18 +22,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//WIP
 namespace OCA\CAFEVDB\Traits;
+
+use Throwable;
+use ReflectionClass;
 
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 
+/** Helper trait for the construction of HTTP responses. */
 trait ResponseTrait
 {
-
-  private function dataDownloadResponse($data, $fileName, $contentType)
+  /**
+   * @param string $data
+   *
+   * @param string $fileName
+   *
+   * @param string $contentType
+   *
+   * @return Http\DataDownloadResponse
+   */
+  private function dataDownloadResponse(string $data, string $fileName, string $contentType):Http\DataDownloadResponse
   {
     $response = new Http\DataDownloadResponse($data, $fileName, $contentType);
     $response->addHeader(
@@ -44,7 +56,16 @@ trait ResponseTrait
     return $response;
   }
 
-  private function exceptionResponse(\Throwable $throwable, string $renderAs, string $method = null)
+  /**
+   * @param Throwable $throwable
+   *
+   * @param string $renderAs
+   *
+   * @param null|string $method
+   *
+   * @return TemplateResponse
+   */
+  private function exceptionResponse(Throwable $throwable, string $renderAs, ?string $method = null):TemplateResponse
   {
     if (empty($method)) {
       $method = __METHOD__;
@@ -66,10 +87,17 @@ trait ResponseTrait
     return new TemplateResponse($this->appName, 'errorpage', $templateParameters, $renderAs);
   }
 
-  private function exceptionChainData(\Throwable $throwable, bool $top = true)
+  /**
+   * @param Throwable $throwable
+   *
+   * @param bool $top
+   *
+   * @return array
+   */
+  private function exceptionChainData(Throwable $throwable, bool $top = true):array
   {
     $previous = $throwable->getPrevious();
-    $shortException = (new \ReflectionClass($throwable))->getShortName();
+    $shortException = (new ReflectionClass($throwable))->getShortName();
     return [
       'message' => ($top
                     ? $this->l->t('Error, caught an exception.')
@@ -81,7 +109,14 @@ trait ResponseTrait
     ];
   }
 
-  static private function dataResponse($data, $status = Http::STATUS_OK)
+  /**
+   * @param array $data
+   *
+   * @param int $status
+   *
+   * @return DataResponse
+   */
+  private static function dataResponse(array $data, int $status = Http::STATUS_OK):DataResponse
   {
     $response = new DataResponse($data, $status);
     $policy = $response->getContentSecurityPolicy();
@@ -89,17 +124,42 @@ trait ResponseTrait
     return $response;
   }
 
-  static private function valueResponse($value, $message = '', $status = Http::STATUS_OK)
+  /**
+   * @param mixed $value
+   *
+   * @param string $message
+   *
+   * @param int $status
+   *
+   * @return DataResponse
+   */
+  private static function valueResponse(mixed $value, string $message = '', int $status = Http::STATUS_OK):DataResponse
   {
     return self::dataResponse(['message' => $message, 'value' => $value], $status);
   }
 
-  static private function response($message, $status = Http::STATUS_OK)
+  /**
+   * @param string $message
+   *
+   * @param int $status
+   *
+   * @return DataResponse
+   */
+  private static function response(string $message, int $status = Http::STATUS_OK):DataResponse
   {
     return self::dataResponse(['message' => $message], $status);
   }
 
-  static private function grumble($message, $value = null, $status = Http::STATUS_BAD_REQUEST)
+  /**
+   * @param string $message
+   *
+   * @param mixed $value
+   *
+   * @param int $status
+   *
+   * @return DataResponse
+   */
+  private static function grumble(string $message, mixed $value = null, int $status = Http::STATUS_BAD_REQUEST):DataResponse
   {
     $trace = debug_backtrace();
     $caller = array_shift($trace);
@@ -117,7 +177,12 @@ trait ResponseTrait
     return self::dataResponse($data, $status);
   }
 
-  static private function getResponseMessages(DataResponse $response)
+  /**
+   * @param DataResponse $response
+   *
+   * @return array
+   */
+  private static function getResponseMessages(DataResponse $response):array
   {
     $messages = [];
     $data = $response->getData();
@@ -130,10 +195,4 @@ trait ResponseTrait
     }
     return $messages;
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

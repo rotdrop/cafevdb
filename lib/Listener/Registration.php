@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,9 +27,19 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
+/** Helper class for listener registration.
+ *
+ * @see OCA\CAFEVDB\AppInfo\Application
+ */
 class Registration
 {
-  public static function register(IRegistrationContext $context) {
+  /**
+   * @param IRegistrationContext $context
+   *
+   * @return void
+   */
+  public static function register(IRegistrationContext $context):void
+  {
     self::registerListener($context, CalendarDeletedEventListener::class);
     self::registerListener($context, CalendarObjectCreatedEventListener::class);
     self::registerListener($context, CalendarObjectDeletedEventListener::class);
@@ -64,7 +74,15 @@ class Registration
     self::registerListener($context, SepaBulkTransactionAnnouncedListener::class);
   }
 
-  private static function registerListener(IRegistrationContext $context, $class) {
+  /**
+   * @param IRegistrationContext $context
+   *
+   * @param string $class
+   *
+   * @return void
+   */
+  private static function registerListener(IRegistrationContext $context, string $class)
+  {
     $events = $class::EVENT;
     if (!is_array($events)) {
       $events = [ $events ];
@@ -74,8 +92,3 @@ class Registration
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

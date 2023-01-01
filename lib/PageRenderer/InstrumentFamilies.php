@@ -1,11 +1,11 @@
 <?php
-/*
+/**
  * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 
 use OCA\CAFEVDB\Common\Util;
 
-/**Table generator for Instruments table. */
+/** Table generator for Instruments table. */
 class InstrumentFamilies extends PMETableViewBase
 {
   const TEMPLATE = 'instrument-families';
@@ -83,36 +83,40 @@ class InstrumentFamilies extends PMETableViewBase
     ],
   ];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
     $this->getDatabaseRepository(Entities\InstrumentFamily::class)->findAll();
     $this->flush();
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Delete Instrument-Family');
-    } else if ($this->viewOperation()) {
+    } elseif ($this->viewOperation()) {
       return $this->l->t('View Instrument-Family');
-    } else if ($this->changeOperation()) {
+    } elseif ($this->changeOperation()) {
       return $this->l->t('Change Instrument-Family');
-    } else if ($this->addOperation()) {
+    } elseif ($this->addOperation()) {
       return $this->l->t('Add Instrument-Family');
-    } else if ($this->copyOperation()) {
+    } elseif ($this->copyOperation()) {
       return $this->l->t('Copy Instrument-Family');
     }
     return $this->l->t("Instrument-Families");
   }
 
+  /** {@inheritdoc} */
   public function headerText()
   {
     $header = $this->shortTitle();
@@ -120,13 +124,10 @@ class InstrumentFamilies extends PMETableViewBase
     return '<div class="'.$this->cssPrefix().'-header-text">'.$header.'</div>';
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
-    $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -195,14 +196,14 @@ class InstrumentFamilies extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       $joinInfo['table'] = $table;
       switch ($table) {
-      case self::FIELD_TRANSLATIONS_TABLE:
-        $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLocaleCode();
-        break;
-      case self::INSTRUMENTS_TABLE:
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
-        break;
-      default:
-        break;
+        case self::FIELD_TRANSLATIONS_TABLE:
+          $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLocaleCode();
+          break;
+        case self::INSTRUMENTS_TABLE:
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'name');
+          break;
+        default:
+          break;
       }
     });
 
@@ -262,7 +263,7 @@ class InstrumentFamilies extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
-      function(&$pme, $op, $step, &$row) use ($expertMode)  {
+      function(&$pme, $op, $step, &$row) use ($expertMode) {
         if (!$expertMode && !empty($row[$this->joinQueryField(self::INSTRUMENTS_TABLE, 'id', $pme->fdd)])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
@@ -277,5 +278,4 @@ class InstrumentFamilies extends PMETableViewBase
       $this->pme->setOptions($opts);
     }
   }
-
 }

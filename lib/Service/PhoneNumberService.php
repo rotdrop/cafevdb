@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2015, 2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2015, 2020, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +24,10 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \libphonenumber\PhoneNumberUtil;
+use ReflectionClass;
+use libphonenumber\PhoneNumberUtil;
+use libphonenumber\PhoneNumberType;
+use libphonenumber\PhoneNumberFormat;
 
 /**
  * Telephone number validation
@@ -42,14 +46,16 @@ class PhoneNumberService
   private $defaultRegion = false;
   private $numberTypes = false;
 
-  public function __construct(
-    ConfigService $configService
-  ) {
+  // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
+  public function __construct(ConfigService $configService)
+  {
     $this->configService = $configService;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
-  private function initializeDefaults()
+  /** @return void */
+  private function initializeDefaults():void
   {
     $this->backend = PhoneNumberUtil::getInstance();
 
@@ -81,7 +87,8 @@ class PhoneNumberService
     }
   }
 
-  private function getBackend():\libphonenumber\PhoneNumberUtil
+  /** @return PhoneNumberUtil */
+  private function getBackend():PhoneNumberUtil
   {
     if ($this->backend === false) {
       $this->initializeDefaults();
@@ -89,6 +96,7 @@ class PhoneNumberService
     return $this->backend;
   }
 
+  /** @return string */
   private function getDefaultRegion()
   {
     if ($this->defaultRegion === false) {
@@ -97,6 +105,7 @@ class PhoneNumberService
     return $this->defaultRegion;
   }
 
+  /** @return string */
   private function getDefaultPrefix()
   {
     if ($this->defaultPrefix === false) {
@@ -105,11 +114,17 @@ class PhoneNumberService
     return $this->defaultPrefix;
   }
 
-  // lazy initializer for the number-type-to-locale conversion
+  /**
+   * Lazy initializer for the number-type-to-locale conversion.
+   *
+   * @param int $type
+   *
+   * @return string
+   */
   private function translateNumberType(int $type)
   {
     if ($this->numberTypes === false) {
-      $r = new \ReflectionClass('\libphonenumber\PhoneNumberType');
+      $r = new ReflectionClass(PhoneNumberType::class);
       $this->numberTypes = array_flip($r->getConstants());
       foreach ($this->numberTypes as $id => $name) {
         if ($name != 'UAN' && $name != 'VOIP') {
@@ -120,9 +135,13 @@ class PhoneNumberService
     return $this->numberTypes[$type];
   }
 
-  // Inject some translations with a never called fake-function. This has to
-  // be kept in sync with the constants of \libphonenumber\PhoneNumberType
-  static private function translationHack()
+  /**
+   * Inject some translations with a never called fake-function. This has to
+   * be kept in sync with the constants of \libphonenumber\PhoneNumberType.
+   *
+   * @return void
+   */
+  protected static function translationHack():void
   {
     self::t('fixed line');
     self::t('mobile');
@@ -143,8 +162,12 @@ class PhoneNumberService
   /**
    * Add the default area code if the number does not start with +
    * or 0, and do some other normalization, strip spaces etc
+   *
+   * @param string $number
+   *
+   * @return string
    */
-  public function normalize($number)
+  public function normalize(string $number):string
   {
 
     // convert html entities back to their character expressions
@@ -176,7 +199,14 @@ class PhoneNumberService
     return $number;
   }
 
-  public function validate($number, $region = null)
+  /**
+   * @param string $number
+   *
+   * @param null|string $region
+   *
+   * @return bool
+   */
+  public function validate(string $number, ?string $region = null):bool
   {
     // add local area code and remove some of the usual human fuzzy
     // input ...
@@ -207,17 +237,30 @@ class PhoneNumberService
     return $result;
   }
 
-  public function format($number = null, $region = null)
+  /**
+   * @param null|string $number
+   *
+   * @param null|string $region
+   *
+   * @return string
+   */
+  public function format(?string $number = null, ?string $region = null):string
   {
     if ($number !== null && !$this->validate($number, $region)) {
       return '';
     }
 
-    return $this->getBackend()->format($this->currentObject,
-                                  \libphonenumber\PhoneNumberFormat::INTERNATIONAL);
+    return $this->getBackend()->format($this->currentObject, PhoneNumberFormat::INTERNATIONAL);
   }
 
-  public function isMobile($number = null, $region = null)
+  /**
+   * @param null|string $number
+   *
+   * @param null|string $region
+   *
+   * @return bool
+   */
+  public function isMobile(?string $number = null, ?string $region = null):bool
   {
     if ($number !== null && !$this->validate($number, $region)) {
       return false;
@@ -234,12 +277,12 @@ class PhoneNumberService
    *
    * @param string|null $region The region code if not included in the number.
    *
-   * @param string $nl The new-line delimiter.
+   * @param string $newline The new-line delimiter.
    *
    * @return string Empty string if the number cannot be validated,
    * newline separated meta-data else.
    */
-  public function metaData($number = null, $region = null, string $nl = "\n")
+  public function metaData($number = null, $region = null, string $newline = "\n")
   {
     if ($number !== null) {
       try {
@@ -273,7 +316,6 @@ class PhoneNumberService
       $meta [] = $this->l->t('Provider: %s', [ $provider ]);
     }
 
-    return implode($nl, $meta);
+    return implode($newline, $meta);
   }
-
-};
+}

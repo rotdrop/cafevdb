@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,11 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
+use DateTimeImmutable;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
+/** Helper for Gedmo soft-deleteable entities. */
 trait SoftDeleteableEntity
 {
   use UnusedTrait;
@@ -41,11 +44,11 @@ trait SoftDeleteableEntity
   /**
    * Set or clear the deleted at timestamp.
    *
-   * @param string|int|\DateTimeInterface $mandateDate
+   * @param string|int|\DateTimeInterface $deleted
    *
    * @return self
    */
-  public function setDeleted($deleted = null)
+  public function setDeleted(mixed $deleted = null):self
   {
     $this->deleted = self::convertToDateTime($deleted);
     return $this;
@@ -67,7 +70,7 @@ trait SoftDeleteableEntity
    *
    * @return bool
    */
-  public function isDeleted()
+  public function isDeleted():bool
   {
     return null !== $this->deleted;
   }
@@ -75,9 +78,11 @@ trait SoftDeleteableEntity
   /**
    * Return whether this object is expired and is about to be deleted on the
    * next call to delete.
+   *
+   * @return bool
    */
-  public function isExpired()
+  public function isExpired():bool
   {
-    return $this->isDeleted() && $this->deleted <= (new \DateTime) && $this->unused();
+    return $this->isDeleted() && $this->deleted <= (new DateTimeImmutable) && $this->unused();
   }
 }

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -96,14 +96,15 @@ class Instruments extends PMETableViewBase
     ],
   ];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , RequestParameterService $requestParameters
-    , EntityManager $entityManager
-    , PHPMyEdit $phpMyEdit
-    , ToolTipsService $toolTipsService
-    , PageNavigation $pageNavigation
-    , BiDirectionalL10N $musicL10n
+    ConfigService $configService,
+    RequestParameterService $requestParameters,
+    EntityManager $entityManager,
+    PHPMyEdit $phpMyEdit,
+    ToolTipsService $toolTipsService,
+    PageNavigation $pageNavigation,
+    BiDirectionalL10N $musicL10n,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
@@ -111,23 +112,26 @@ class Instruments extends PMETableViewBase
     $this->getDatabaseRepository(Entities\Instrument::class)->findAll();
     $this->flush();
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function shortTitle()
   {
     if ($this->deleteOperation()) {
       return $this->l->t('Delete Instrument');
-    } else if ($this->viewOperation()) {
+    } elseif ($this->viewOperation()) {
       return $this->l->t('View Instrument');
-    } else if ($this->changeOperation()) {
+    } elseif ($this->changeOperation()) {
       return $this->l->t('Change Instrument');
-    } else if ($this->addOperation()) {
+    } elseif ($this->addOperation()) {
       return $this->l->t('Add Instrument');
-    } else if ($this->copyOperation()) {
+    } elseif ($this->copyOperation()) {
       return $this->l->t('Copy Instrument');
     }
     return $this->l->t("Instruments and Instrument Sort-Order");
   }
 
+  /** {@inheritdoc} */
   public function headerText()
   {
     $header = $this->shortTitle();
@@ -135,13 +139,10 @@ class Instruments extends PMETableViewBase
     return '<div class="'.$this->cssPrefix().'-header-text">'.$header.'</div>';
   }
 
-  /** Show the underlying table. */
+  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
-    $projectName     = $this->projectName;
-    $projectId       = $this->projectId;
-    $instruments     = $this->instruments;
     $recordsPerPage  = $this->recordsPerPage;
     $expertMode      = $this->expertMode;
 
@@ -212,14 +213,14 @@ class Instruments extends PMETableViewBase
     // set the locale into the joinstructure
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       switch ($table) {
-      case self::TRANSLATIONS_TABLE:
-        $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLocaleCode();
-        break;
-      case self::INSTRUMENT_FAMILIES_TABLE:
-        $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'family');
-        break;
-      default:
-        break;
+        case self::TRANSLATIONS_TABLE:
+          $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLocaleCode();
+          break;
+        case self::INSTRUMENT_FAMILIES_TABLE:
+          $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'family');
+          break;
+        default:
+          break;
       };
     });
 
@@ -352,7 +353,7 @@ GROUP BY $columns[1]",
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
-      function(&$pme, $op, $step, &$row) use ($usageIdx, $expertMode)  {
+      function(&$pme, $op, $step, &$row) use ($usageIdx, $expertMode) {
         if (!$expertMode && !empty($row['qf'.$usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
@@ -368,15 +369,20 @@ GROUP BY $columns[1]",
     }
   }
 
-  /**Convert an array of ids to an array of names.*/
-  public function instrumentNames($instrumentIds)
+  /**
+   * Convert an array of ids to an array of names.
+   *
+   * @param array $instrumentIds
+   *
+   * @return array
+   */
+  public function instrumentNames(array $instrumentIds)
   {
     $byId = $this->instrumentInfo['byId'];
-    $result = array();
-    foreach($instrumentIds as $id) {
+    $result = [];
+    foreach ($instrumentIds as $id) {
       $result[$id] = empty($byId[$id]) ? $this->l->t('unknown') : $byId[$id];
     }
     return $result;
   }
-
 }

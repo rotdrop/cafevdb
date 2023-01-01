@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +28,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\AbstractQuery;
 
+/** Repository for musicians. */
 class MusiciansRepository extends EntityRepository
 {
   use \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\LogTrait;
@@ -46,6 +48,11 @@ class MusiciansRepository extends EntityRepository
     );
   }
 
+  /**
+   * @param array $criteria
+   *
+   * @return mixed
+   */
   private function generateIdQuery(array $criteria = [])
   {
     $queryParts = $this->prepareFindBy($criteria, [
@@ -59,6 +66,11 @@ class MusiciansRepository extends EntityRepository
     return $qb->getQuery();
   }
 
+  /**
+   * @param array $criteria
+   *
+   * @return array
+   */
   public function fetchIds(array $criteria = [])
   {
     $query = $this->generateIdQuery($criteria);
@@ -66,13 +78,23 @@ class MusiciansRepository extends EntityRepository
     return $query->getResult('COLUMN_HYDRATOR');
   }
 
-  public function findIdByUUID($uuid)
+  /**
+   * @param mixed $uuid
+   *
+   * @return Entities\Musician
+   */
+  public function findIdByUUID(mixed $uuid)
   {
     $query = $this->generateIdQuery([ 'uuid' => $uuid ]);
     return $query->getSingleScalarResult();
   }
 
-  public function findIdByUserId($userId)
+  /**
+   * @param string $userId
+   *
+   * @return null|Entities\Musician
+   */
+  public function findIdByUserId(string $userId)
   {
     $query = $this->generateIdQuery([ 'userIdSlug' => $userId ]);
     $result = $query->getOneOrNullResult(AbstractQuery::HYDRATE_SCALAR);
@@ -81,11 +103,11 @@ class MusiciansRepository extends EntityRepository
   }
 
   /**
-   * @param string $uuid
+   * @param mixed $uuid
    *
-   * @return \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician
+   * @return Entities\Musician
    */
-  public function findByUUID($uuid)
+  public function findByUUID(mixed $uuid)
   {
     return $this->findOneBy([ 'uuid' => $uuid ]);
   }
@@ -93,25 +115,30 @@ class MusiciansRepository extends EntityRepository
   /**
    * @param string $userId
    *
-   * @return \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician
+   * @return Entities\Musician
    */
-  public function findByUserId($userId)
+  public function findByUserId(string $userId)
   {
     return $this->findOneBy([ 'userIdSlug' => $userId ]);
   }
 
-  /**Fetch the street address of the respected musician. Needed in
+  /**
+   * Fetch the street address of the respected musician. Needed in
    * order to generate automated snail-mails.
    *
-   * Return value is a flat array:
+   * @param int $musicianId
    *
+   * @return array
+   * Return value is a flat array:
+   * ```
    * array('firstName' => ...,
    *       'surName' => ...,
    *       'street' => ...,
    *       'city' => ...,
    *       'ZIP' => ...);
+   * ```.
    */
-  public function findStreetAddress($musicianId)
+  public function findStreetAddress(int $musicianId)
   {
     $qb = $this->createQueryBuilder('m');
     $address = $qb->select(['m.surName AS surName',
@@ -127,15 +154,19 @@ class MusiciansRepository extends EntityRepository
     return $address;
   }
 
-  /**Fetch the name and email of the respective musician.
+  /**
+   * Fetch the name and email of the respective musician.
    *
-   * Return value is a flat array:
+   * @param int $musicianId
    *
+   * @return array Return value is a flat array:
+   * ```
    * array('firstName' => ...,
    *       'surName' => ...,
    *       'email' => ...);
+   * ```.
    */
-  public function findName($musicianId)
+  public function findName(int $musicianId)
   {
     $qb = $this->createQueryBuilder('m');
     $name = $qb->select(['m.surName AS surName',
@@ -153,6 +184,8 @@ class MusiciansRepository extends EntityRepository
    * @param array $criteria Criteria as for findBy(). However,
    * wild-cards like '*' and '%' are allowed and internally converted
    * to '%' in a LIKE comparison.
+   *
+   * @param string $indexBy
    *
    * @return null|array
    */
@@ -206,32 +239,33 @@ class MusiciansRepository extends EntityRepository
    *
    * @param array<int, int> $instrumentIds
    *
-   * @param array|null $orderBy ```[ KEY => ORDERING ]```
+   * @param array|null $orderBy ```[ KEY => ORDERING ]```.
    *
-   * @param int|null $limit Result-set limit
+   * @param int|null $limit Result-set limit.
    *
-   * @param int|null $offset Result-set offset
+   * @param int|null $offset Result-set offset.
    *
    * @param string $indexBy Result by default are indexed by id.
    *
    * @return array<int, Entities\Musician>
    */
   public function findByInstruments(
-    array $instrumentIds
-    , ?array $orderBy = null
-    , ?int $limit = null
-    , ?int $offset = null
-    , string $indexBy = 'id'
+    array $instrumentIds,
+    ?array $orderBy = null,
+    ?int $limit = null,
+    ?int $offset = null,
+    string $indexBy = 'id',
   ): array {
-    return $this->findBy([ 'instruments.indtrument' => $instrumentIds ],
-                         [ 'id' => 'INDEX' ]);
+    return $this->findBy(
+      [ 'instruments.indtrument' => $instrumentIds ],
+      [ 'id' => 'INDEX' ]);
   }
 
   /**
    * Create search criteria by instrument ids. The search field is
    * "instrument" and generally is a collection of Entities\Instrument.
    *
-   * @param array<int, int> $instrumenIds
+   * @param array<int, int> $instrumentIds
    *
    * @param string|null $alias Optional alias to add to the field.
    *

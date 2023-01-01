@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,13 +42,17 @@ interface IBulkTransactionExporter
 {
   /**
    * Return a name to construct slugs etc.
+   *
+   * @return string
    */
-  static public function identifier():string;
+  public static function identifier():string;
 
   /**
    * Generate the mime-type for the given bulk-transaction.
    *
    * @param Entities\SepaBulkTransaction $transaction
+   *
+   * @return string
    */
   public function mimeType(Entities\SepaBulkTransaction $transaction):string;
 
@@ -56,6 +60,8 @@ interface IBulkTransactionExporter
    * Generate the file-extension for the given bulk-transaction, with out the dot.
    *
    * @param Entities\SepaBulkTransaction $transaction
+   *
+   * @return string
    */
   public function fileExtension(Entities\SepaBulkTransaction $transaction):string;
 
@@ -63,11 +69,8 @@ interface IBulkTransactionExporter
    * Generate the actual file-data for the given bulk-transaction.
    *
    * @param Entities\SepaBulkTransaction $transaction
+   *
+   * @return string
    */
   public function fileData(Entities\SepaBulkTransaction $transaction):string;
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

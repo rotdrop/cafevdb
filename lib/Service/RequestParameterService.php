@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,34 +50,54 @@ class RequestParameterService implements \ArrayAccess, \Countable
   /** @var array */
   private $parameters;
 
-  public function __construct(IRequest $request) {
+  // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
+  public function __construct(IRequest $request)
+  {
     $this->request = $request;
-    $this->parameters = array_merge([ 'renderAs' => 'user',
-                                      'projectName' => '',
-                                      'projectId' => null,
-                                      'musicianId' => null ],
-                                    $this->request->getParams());
+    $this->parameters = array_merge(
+      [
+        'renderAs' => 'user',
+        'projectName' => '',
+        'projectId' => null,
+        'musicianId' => null,
+      ],
+      $this->request->getParams());
   }
+  // phpcs:enable
 
-  public function getRequest() {
+  /** @return IRequest */
+  public function getRequest():IRequest
+  {
     return $this->request;
   }
 
-  public function reset() {
+  /** @return void */
+  public function reset():void
+  {
     $this->parameters = $this->request->getParams();
   }
 
-  public function getRemoteAddress()
+  /** @return string */
+  public function getRemoteAddress():string
   {
     return $this->request->getRemoteAddress();
   }
 
+  /** @return string */
   public function getRequestUri()
   {
     return $this->request->getRequestUri();
   }
 
-  public function getParam($key, $default = null) {
+  /**
+   * @param string $key
+   *
+   * @param mixed $default
+   *
+   * @return mixed
+   */
+  public function getParam(string $key, mixed $default = null)
+  {
     if (array_key_exists($key, $this->parameters)) {
       return $this->parameters[$key];
     } else {
@@ -85,16 +105,31 @@ class RequestParameterService implements \ArrayAccess, \Countable
     }
   }
 
-  public function setParam($key, $value) {
+  /**
+   * @param string $key
+   *
+   * @param mixed $value
+   *
+   * @return void
+   */
+  public function setParam(string $key, mixed $value):void
+  {
     $this->parameters[$key] = $value;
   }
 
-  public function getParams(): array
+  /** @return array */
+  public function getParams():array
   {
     return $this->parameters;
   }
 
-  public function setParams($parameters): array {
+  /**
+   * @param array $parameters
+   *
+   * @return array
+   */
+  public function setParams(array $parameters):array
+  {
     $old = $this->parameters;
 
     $this->parameters = Util::arrayMergeRecursive(
@@ -119,100 +154,84 @@ class RequestParameterService implements \ArrayAccess, \Countable
   public function getPrefixParams(string $prefix):array
   {
     $result = [];
-    foreach ($this->parameters as $key => $value)
+    foreach ($this->parameters as $key => $value) {
       if (strpos($key, $prefix) === 0) {
         $outKey = substr($key, strlen($prefix));
         $result[$outKey] = $value;
       }
+    }
+
     return $result;
   }
 
-  /**
-   * Countable method
-   * @return int
-   */
-  public function count(): int {
+  /** {@inheritdoc} */
+  public function count():int
+  {
     return \count($this->parameters);
   }
 
-  /**
-   * ArrayAccess methods
-   *
-   * @param string $offset The key to lookup
-   * @return boolean
-   */
-  public function offsetExists($offset): bool {
+  /** {@inheritdoc} */
+  public function offsetExists($offset):bool
+  {
     return isset($this->parameters[$offset]);
   }
 
-  /**
-   * @see offsetExists
-   * @param string $offset
-   * @return mixed
-   */
-  public function offsetGet($offset) {
+  /** {@inheritdoc} */
+  public function offsetGet($offset)
+  {
     return isset($this->parameters[$offset])
       ? $this->parameters[$offset]
       : null;
   }
 
-  /**
-   * @see offsetExists
-   * @param string $offset
-   * @param mixed $value
-   */
-  public function offsetSet($offset, $value) {
+  /** {@inheritdoc} */
+  public function offsetSet($offset, $value)
+  {
     $this->parameters[$offset] = $value;
   }
 
-  /**
-   * @see offsetExists
-   * @param string $offset
-   */
-  public function offsetUnset($offset) {
+  /** {@inheritdoc} */
+  public function offsetUnset($offset)
+  {
     unset($this->parameters[$offset]);
   }
 
-  /**
-   * Magic property accessors
-   * @param string $name
-   * @param mixed $value
-   */
-  public function __set($name, $value) {
+  /** {@inheritdoc} */
+  public function __set($name, $value)
+  {
     $this->parameters[$name] = $value;
   }
 
-  public function __get($name) {
+  /** {@inheritdoc} */
+  public function __get($name)
+  {
     if (isset($this[$name])) {
       return $this[$name];
     }
     return $this->request->__get($name);
   }
 
-  /**
-   * @param string $name
-   * @return bool
-   */
-  public function __isset($name) {
+  /** {@inheritdoc} */
+  public function __isset($name)
+  {
     return isset($this[$name]) || $this->request->__isset($name);
   }
 
-  /**
-   * @param string $id
-   */
-  public function __unset($id) {
-    if (isset($this->parameters[$name])) {
-      unset($this->parameters[$name]);
+  /** {@inheritdoc} */
+  public function __unset($id)
+  {
+    if (isset($this->parameters[$id])) {
+      unset($this->parameters[$id]);
     }
   }
 
-  public function getUpload($name)
+  /**
+   * @param string $name
+   *
+   * @return array
+   */
+  public function getUpload(string $name):array
   {
     return $this->request->getUploadedFile($name);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

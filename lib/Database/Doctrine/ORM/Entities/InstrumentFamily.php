@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,10 +77,13 @@ class InstrumentFamily implements \ArrayAccess
    */
   private $instruments;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Get id.
@@ -129,11 +132,11 @@ class InstrumentFamily implements \ArrayAccess
   /**
    * Set instruments.
    *
-   * @param bool $instruments
+   * @param Collection $instruments
    *
    * @return InstrumentFamily
    */
-  public function setInstruments($instruments):InstrumentFamily
+  public function setInstruments(Collection $instruments):InstrumentFamily
   {
     $this->instruments = $instruments;
 
@@ -153,10 +156,11 @@ class InstrumentFamily implements \ArrayAccess
   /**
    * Get the usage count, i.e. the number of instruments which belong
    * to this family.
+   *
+   * @return int
    */
   public function usage():int
   {
     return $this->instruments->count();
   }
-
 }

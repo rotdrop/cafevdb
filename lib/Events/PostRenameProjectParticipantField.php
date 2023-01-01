@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,24 +27,23 @@ namespace OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCP\EventDispatcher\Event;
 
+/** ORM -> cloud event forwarding. */
 class PostRenameProjectParticipantField extends Event
 {
   /** @var Entities\ProjectParticipantField */
   private $field;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(Entities\ProjectParticipantField $field)
   {
     parent::__construct();
     $this->field = $field;
   }
+  // phpcs:enable
 
+  /** @return Entities\ProjectParticipantField */
   public function getField():Entities\ProjectParticipantField
   {
     return $this->field;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

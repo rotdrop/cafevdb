@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,6 +43,8 @@ trait UnusedTrait
 
   /**
    * Return a boolean to indicate that this entity is no longer used.
+   *
+   * @return bool
    */
   public function unused():bool
   {
@@ -50,6 +53,8 @@ trait UnusedTrait
 
   /**
    * Return a boolean to indicate that this field is used.
+   *
+   * @return bool
    */
   public function inUse():bool
   {

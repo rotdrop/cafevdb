@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,18 +66,23 @@ class OrganizationalRolesService
     self::TREASURER_ROLE,
   ];
 
-  public function __construct(
-    ConfigService $configService
-  ) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(ConfigService $configService)
+  {
     $this->configService = $configService;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Return email and display name of one of the principal organizators for error
    * feedback messages and substitutions.
+   *
+   * @param string $role
+   *
+   * @return null|array
    */
-  public function dedicatedBoardMemberContact(string $role)
+  public function dedicatedBoardMemberContact(string $role):?array
   {
     $participant = $this->dedicatedBoardMemberParticipant($role);
     if (empty($participant)) {
@@ -102,7 +107,7 @@ class OrganizationalRolesService
       $data['email'] = $roleEmail;
     }
 
-    $missingFields = array_keys(array_filter($data, function($value) { empty($value); }));
+    $missingFields = array_keys(array_filter($data, fn($value) => !empty($value)));
 
     // if some field are missing try to fill in from the cloud data
     if (!empty($missingFields)) {
@@ -117,14 +122,23 @@ class OrganizationalRolesService
 
         foreach ($missingFields as $key) {
           switch ($key) {
-          case 'email': $item = $user->getEMailAddress(); break;
-          case 'name': $item =  $name = $user->getDisplayName(); break;
-          case 'streetAndNumber': $item = $account->getProperty(IAccountManager::PROPERTY_ADDRESS); break;
-          case 'phone': $item = $account->getProperty(IAccountManager::PROPERTY_PHONE); break;
-          case 'postalCode':
-          case 'city':
-          case 'mobile':
-            $item = null;
+            case 'email':
+              $item = $user->getEMailAddress();
+              break;
+            case 'name':
+              $item = $user->getDisplayName();
+              break;
+            case 'streetAndNumber':
+              $item = $account->getProperty(IAccountManager::PROPERTY_ADDRESS);
+              break;
+            case 'phone':
+              $item = $account->getProperty(IAccountManager::PROPERTY_PHONE);
+              break;
+            case 'postalCode':
+            case 'city':
+            case 'mobile':
+              $item = null;
+              break;
           }
           if (!empty($item)) {
             $data[$key] = $item;
@@ -136,6 +150,7 @@ class OrganizationalRolesService
     return $data;
   }
 
+  /** @return null|Entities\Project */
   private function executiveBoardProject():?Entities\Project
   {
     /** @var ProjectService $projectService */
@@ -143,7 +158,14 @@ class OrganizationalRolesService
     return $projectService->findById($this->getExecutiveBoardProjectId());
   }
 
-  public function dedicatedBoardMemberParticipant(string $role, int $musicianId= 0):?Entities\ProjectParticipant
+  /**
+   * @param string $role
+   *
+   * @param int $musicianId
+   *
+   * @return null|Entities\ProjectParticipant
+   */
+  public function dedicatedBoardMemberParticipant(string $role, int $musicianId = 0):?Entities\ProjectParticipant
   {
     if ($role != self::BOARD_MEMBER_ROLE) {
       $musicianId = $this->getConfigValue($role.'Id', null);
@@ -161,7 +183,11 @@ class OrganizationalRolesService
    * Fetch the signature image for the given musician from the
    * executive-board table.
    *
-   * @param in
+   * @param string $role
+   *
+   * @param  int $musicianId
+   *
+   * @return null
    */
   public function dedicatedBoardMemberSignature(string $role, int $musicianId = 0)
   {
@@ -188,37 +214,43 @@ class OrganizationalRolesService
     if (!$signatureFile instanceof Entities\DatabaseStorageFile) {
       return null;
     }
-    $image = new \OCP\Image();
+    $image = new Image;
     $image->loadFromData($signatureFile->getFileData()->getData());
 
     return $image;
   }
 
+  /** @return null|Image */
   public function treasurerSignature():?Image
   {
     return $this->dedicatedBoardMemberSignature(self::TREASURER_ROLE);
   }
 
+  /** @return null|Image */
   public function secretarySignature():?Image
   {
     return $this->dedicatedBoardMemberSignature(self::SECRETARY_ROLE);
   }
 
+  /** @return null|Image */
   public function presidentSignature():?Image
   {
     return $this->dedicatedBoardMemberSignature(self::PRESIDENT_ROLE);
   }
 
+  /** @return null|Entities\ProjectParticipant */
   public function getTreasurer():?Entities\ProjectParticipant
   {
     return $this->dedicatedBoardMemberParticipant(self::TREASURER_ROLE);
   }
 
+  /** @return null|Entities\ProjectParticipant */
   public function getSecretary():?Entities\ProjectParticipant
   {
     return $this->dedicatedBoardMemberParticipant(self::SECRETARY_ROLE);
   }
 
+  /** @return null|Entities\ProjectParticipant */
   public function getPresident():?Entities\ProjectParticipant
   {
     return $this->dedicatedBoardMemberParticipant(self::PRESIDENT_ROLE);
@@ -227,8 +259,16 @@ class OrganizationalRolesService
   /**
    * Return true if the logged in or given user has a dedicated
    * administrative role for the orchestra.
+   *
+   * @param string $role
+   *
+   * @param null|string $uid
+   *
+   * @param bool $allowGroupAccess
+   *
+   * @return bool
    */
-  public function isDedicatedBoardMember(string $role, $uid = null, bool $allowGroupAccess = false)
+  public function isDedicatedBoardMember(string $role, ?string $uid = null, bool $allowGroupAccess = false):bool
   {
     empty($uid) && $uid = $this->userId();
     $musicianId = $this->getConfigValue($role.'Id', null);
@@ -249,48 +289,78 @@ class OrganizationalRolesService
 
   /**
    * Return true if the logged in user is the treasurer.
+   *
+   * @param null|string $uid
+   *
+   * @param bool $allowGroupAccess
+   *
+   * @return bool
    */
-  public function isTreasurer($uid = null, $allowGroupAccess = false)
+  public function isTreasurer(?string $uid = null, bool $allowGroupAccess = false):bool
   {
     return $this->isDedicatedBoardMember(self::TREASURER_ROLE, $uid, $allowGroupAccess);
   }
 
   /**
    * Return true if the logged in user is the secretary.
+   *
+   * @param null|string $uid
+   *
+   * @param bool $allowGroupAccess
+   *
+   * @return bool
    */
-  public function isSecretary($uid = null, $allowGroupAccess = false)
+  public function isSecretary(?string $uid = null, bool $allowGroupAccess = false):bool
   {
     return isDedicatedBoardMember(self::SECRETARY_ROLE, $uid, $allowGroupAccess);
   }
 
   /**
    * Return true if the logged in user is the president.
+   *
+   * @param null|string $uid
+   *
+   * @param bool $allowGroupAccess
+   *
+   * @return bool
    */
-  public function isPresident($uid = null, $allowGroupAccess = false)
+  public function isPresident(?string $uid = null, bool $allowGroupAccess = false):bool
   {
     return isDedicatedBoardMember(self::PRESIDENT_ROLE, $uid, $allowGroupAccess);
   }
 
   /**
    * Return true if the logged in user is in the treasurer group.
+   *
+   * @param null|string $uid
+   *
+   * @return bool
    */
-  public function inTreasurerGroup($uid = null)
+  public function inTreasurerGroup(?string $uid = null):bool
   {
     return $this->isTreasurer($uid, true);
   }
 
   /**
    * Return true if the logged in user is in the secretary group.
+   *
+   * @param null|string $uid
+   *
+   * @return bool
    */
-  public function inSecretaryGroup($uid = null)
+  public function inSecretaryGroup(?string $uid = null):bool
   {
     return $this->isSecretary($uid, true);
   }
 
   /**
    * Return true if the logged in user is in the president group.
+   *
+   * @param null|string $uid
+   *
+   * @return bool
    */
-  public function inPresidentGroup($uid = null)
+  public function inPresidentGroup(?string $uid = null):bool
   {
     return $this->isPresident($uid, true);
   }
@@ -327,8 +397,12 @@ class OrganizationalRolesService
 
   /**
    * Check for overall-adminess
+   *
+   * @param null|string $uid
+   *
+   * @return bool
    */
-  public function isCloudAdmin($uid = null)
+  public function isCloudAdmin(?string $uid = null):bool
   {
     empty($uid) && $uid = $this->userId();
     return $this->groupManager()->isAdmin($uid);
@@ -336,12 +410,21 @@ class OrganizationalRolesService
 
   /**
    * Contact information for the overall admins.
+   *
+   * @param bool $implode
+   *
+   * @return string|array
    */
   public function cloudAdminContact(bool $implode = false)
   {
     return $this->getCloudAdminContacts($this->groupManager(), $implode);
   }
 
+  /**
+   * @param bool $implode
+   *
+   * @return array
+   */
   public function adminContact(bool $implode = false)
   {
     return $this->cloudAdminContact($implode);
@@ -349,23 +432,29 @@ class OrganizationalRolesService
 
   /**
    * Check for overall-adminess
+   *
+   * @param null|string $uid
+   *
+   * @return bool
    */
-  public function isGroupAdmin($uid = null)
+  public function isGroupAdmin(?string $uid = null):bool
   {
     return $this->isSubAdminOfGroup($uid);
   }
 
   /**
    * Contact information for the group admins.
+   *
+   * @return array
    */
-  public function groupAdminContact()
+  public function groupAdminContact():array
   {
     $group = $this->group();
     $users = $group->getUsers();
     $contacts = [];
     foreach ($users as $user) {
       if ($this->groupManager()->isSubAdminofGroup($user, $group)) {
-        $contacts[] = [ $adminUser->getDisplayName(), $adminUser->getEmail() ];
+        $contacts[] = [ $user->getDisplayName(), $user->getEmail() ];
       }
     }
     return $contacts;
@@ -383,6 +472,10 @@ class OrganizationalRolesService
 
   /**
    * Check whether the given user is a club-member
+   *
+   * @param string $userId
+   *
+   * @return bool
    */
   public function isClubMember(string $userId):bool
   {

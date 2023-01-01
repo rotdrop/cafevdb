@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Documents;
 
+use RuntimeException;
+use DateTimeImmutable;
+
 use clsTinyButStrong as OpenDocumentFillerBackend;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
@@ -37,6 +40,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Exceptions;
 
+/** Autofill for Libre-/Openoffice documents. */
 class OpenDocumentFiller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -60,12 +64,13 @@ class OpenDocumentFiller
    */
   private $cache = [];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , UserStorage $userStorage
-    , TemplateService $templateService
-    , OpenDocumentFillerBackend $backend
-    , AnyToPdf $anyToPdf
+    ConfigService $configService,
+    UserStorage $userStorage,
+    TemplateService $templateService,
+    OpenDocumentFillerBackend $backend,
+    AnyToPdf $anyToPdf,
   ) {
     $this->configService = $configService;
     $this->userStorage = $userStorage;
@@ -83,12 +88,13 @@ class OpenDocumentFiller
     }
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Fill the given template file which must exist in the cloud
    * file-system with the given template-data.
    *
-   * @param string $templateFileName Name of the template file in the
+   * @param File $templateFile Name of the template file in the
    * user-storage of the current user.
    *
    * @param array $templateData The template-data to substitute.
@@ -96,8 +102,15 @@ class OpenDocumentFiller
    * @param array $blocks Block definitions where NAME => 'A.B.C'
    * defines a pointer into $templateData['A']['B']['C'] available
    * under the name NAME.
+   *
+   * @param bool $asPdf
+   *
+   * @return array
+   * ```
+   * [ FILE_DATA, MIME_TYPE, FILE_NAME ]
+   * ```.
    */
-  public function ffill(File $templateFile, array $templateData = [], array $blocks = [], bool $asPdf = false)
+  public function ffill(File $templateFile, array $templateData = [], array $blocks = [], bool $asPdf = false):array
   {
     $templateFileName =  $this->userStorage->getUserPath($templateFile);
 
@@ -116,16 +129,43 @@ class OpenDocumentFiller
    * @param array $blocks Block definitions where NAME => 'A.B.C'
    * defines a pointer into $templateData['A']['B']['C'] available
    * under the name NAME.
+   *
+   * @param bool $asPdf
+   *
+   * @return array
+   * ```
+   * [ FILE_DATA, MIME_TYPE, FILE_NAME ]
+   * ```.
    */
   public function fill(string $templateFileName, array $templateData = [], array $blocks = [], bool $asPdf = false)
   {
     $templateFile = $this->userStorage->getFile($templateFileName);
     if (empty($templateFile)) {
-      throw new \RuntimeException($this->l->t('Unable to obtain file-handle for path "%s"', $templateFileName));
+      throw new RuntimeException($this->l->t('Unable to obtain file-handle for path "%s"', $templateFileName));
     }
     return $this->fillInternal($templateFile, $templateFileName, $templateData, $blocks, $asPdf);
   }
 
+
+  /**
+   * @param File $templateFile Name of the template file in the
+   * user-storage of the current user.
+   *
+   * @param string $templateFileName
+   *
+   * @param array $templateData The template-data to substitute.
+   *
+   * @param array $blocks Block definitions where NAME => 'A.B.C'
+   * defines a pointer into $templateData['A']['B']['C'] available
+   * under the name NAME.
+   *
+   * @param bool $asPdf
+   *
+   * @return array
+   * ```
+   * [ FILE_DATA, MIME_TYPE, FILE_NAME ]
+   * ```.
+   */
   private function fillInternal(File $templateFile, string $templateFileName, array $templateData, array $blocks, bool $asPdf)
   {
     ob_start();
@@ -183,7 +223,7 @@ class OpenDocumentFiller
           $value = $value[$index]??null;
         }
         if (empty($value)) {
-          throw new \RuntimeException($this->l->t('Data for block "%s" using the path "%s" could not be found in the substitution data.', [ $key, $reference ]));
+          throw new RuntimeException($this->l->t('Data for block "%s" using the path "%s" could not be found in the substitution data.', [ $key, $reference ]));
         }
         $keys = array_keys($value);
         if ($keys != array_filter($keys, 'is_int')) {
@@ -244,12 +284,12 @@ class OpenDocumentFiller
    * @return array A merge of $templateData with global information
    * like orchestra address, logs etc.
    */
-  public function fillData($templateData)
+  public function fillData(array $templateData):array
   {
     $fillData = array_merge(
       $this->getOrchestraSubstitutions(),
       $templateData);
-    $fillData['now'] = (new \DateTimeImmutable())->setTimezone($this->getDateTimeZone());
+    $fillData['now'] = (new DateTimeImmutable)->setTimezone($this->getDateTimeZone());
     $fillData['date'] = $fillData['now'];
 
 
@@ -261,8 +301,10 @@ class OpenDocumentFiller
   /**
    * Generate a set of substitutions variables, taking some values
    * from the config-space, like logo, addresses, bank account etc.
+   *
+   * @return array
    */
-  public function getOrchestraSubstitutions()
+  public function getOrchestraSubstitutions():array
   {
     $substitutions = [];
 
@@ -340,5 +382,4 @@ class OpenDocumentFiller
 
     return $substitutions;
   }
-
 }

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,8 @@
 
 namespace OCA\CAFEVDB\Notifications;
 
+use InvalidArgumentException;
+
 use OCP\Notification\INotification;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory as IL10NFactory;
@@ -34,6 +36,7 @@ use OCP\AppFramework\IAppContainer;
 use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 
+/** Notification support class. */
 class Notifier implements \OCP\Notification\INotifier
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -57,12 +60,13 @@ class Notifier implements \OCP\Notification\INotifier
   /** @var  IURLGenerator */
   protected $urlGenerator;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , IAppContainer $appContainer
-    , IL10NFactory $factory
-    , IURLGenerator $urlGenerator
-    , ILogger $logger
+    string $appName,
+    IAppContainer $appContainer,
+    IL10NFactory $factory,
+    IURLGenerator $urlGenerator,
+    ILogger $logger,
   ) {
     $this->appName = $appName;
     $this->appContainer = $appContainer;
@@ -70,33 +74,26 @@ class Notifier implements \OCP\Notification\INotifier
     $this->urlGenerator = $urlGenerator;
     $this->logger = $logger;
   }
+  // phpcs:enable
 
-  /**
-   * Identifier of the notifier, only use [a-z0-9_]
-   * @return string
-   */
-  public function getID(): string
+  /** {@inheritdoc} */
+  public function getID():string
   {
     return $this->appName;
   }
 
-  /**
-   * Human readable name describing the notifier
-   * @return string
-   */
-  public function getName(): string {
+  /** {@inheritdoc} */
+  public function getName():string
+  {
     return $this->l10nFactory->get($this->appName)->t('Orchestra Management');
   }
 
-  /**
-   * @param INotification $notification
-   * @param string $languageCode The code of the language that should be used to prepare the notification
-   */
+  /** {@inheritdoc} */
   public function prepare(INotification $notification, string $languageCode): INotification
   {
     if ($notification->getApp() !== $this->appName) {
       // Not my app => throw
-      throw new \InvalidArgumentException();
+      throw new InvalidArgumentException();
     }
 
     // Read the language from the notification
@@ -211,7 +208,7 @@ class Notifier implements \OCP\Notification\INotifier
 
       default:
         // Unknown subject => Unknown notification => throw
-        throw new \InvalidArgumentException();
+        throw new InvalidArgumentException();
     }
 
     // Set the plain text subject automatically
@@ -220,9 +217,15 @@ class Notifier implements \OCP\Notification\INotifier
     return $notification;
   }
 
-  // This is a little helper function which automatically sets the simple parsed subject
-  // based on the rich subject you set.
-  protected function setParsedSubjectFromRichSubject(INotification $notification)
+  /**
+   * This is a little helper function which automatically sets the simple parsed subject
+   * based on the rich subject you set.
+   *
+   * @param INotification $notification
+   *
+   * @return void
+   */
+  protected function setParsedSubjectFromRichSubject(INotification $notification):void
   {
     $placeholders = $replacements = [];
     foreach ($notification->getRichSubjectParameters() as $placeholder => $parameter) {
@@ -231,5 +234,4 @@ class Notifier implements \OCP\Notification\INotifier
     }
     $notification->setParsedSubject(str_replace($placeholders, $replacements, $notification->getRichSubject()));
   }
-
 }

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use InvalidArgumentException;
+use RuntimeException;
+
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\ISession;
@@ -32,6 +35,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Exceptions;
 
+/** Place server-to-server AJAX calls. */
 class RequestService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
@@ -60,13 +64,14 @@ class RequestService
    */
   private $closeSession;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IRequest $request
-    , IURLGenerator $urlGenerator
-    , ISession $session
-    , ILogger $logger
-    , IL10N $l10n
-    , bool $closeSession = true
+    IRequest $request,
+    IURLGenerator $urlGenerator,
+    ISession $session,
+    ILogger $logger,
+    IL10N $l10n,
+    bool $closeSession = true,
   ) {
     $this->request = $request;
     $this->urlGenerator = $urlGenerator;
@@ -75,25 +80,28 @@ class RequestService
     $this->l = $l10n;
     $this->closeSession = $closeSession;
   }
+  // phpcs:enable
 
   /**
    * Post to a Cloud route.
    *
-   * @param string $route Route name (i.e.: not the URL)
+   * @param string $route Route name (i.e.: not the URL).
    *
    * @param array $routeParams Parameters built in to the URL (despite
-   * the fact that we use POST)
+   * the fact that we use POST).
    *
    * @param array $postData Stuff passed by the POST method.
    *
    * @param string $type How $postData is encoded. Can be 'json' or
    * 'urlencoded'. Default is 'json'.
+   *
+   * @return array
    */
   public function postToRoute(
-    string $route
-    , array $routeParams = []
-    , array $postData = []
-    , string $type = self::JSON
+    string $route,
+    array $routeParams = [],
+    array $postData = [],
+    string $type = self::JSON,
   ) {
     $url = $this->urlGenerator->linkToRouteAbsolute($route, $routeParams);
 
@@ -103,17 +111,19 @@ class RequestService
   /**
    * Post to a Cloud url
    *
-   * @param string $url Just the URL
+   * @param string $url Just the URL.
    *
    * @param array $postData Stuff passed by the POST method.
    *
    * @param string $type How $postData is encoded. Can be 'json' or
    * 'urlencoded'. Default is 'json'.
+   *
+   * @return array
    */
   public function postToInternalUrl(
-    string $url
-    , array $postData = []
-    , string $type = self::JSON
+    string $url,
+    array $postData = [],
+    string $type = self::JSON,
   ) {
     if (!$this->session->isClosed()) {
       if ($this->closeSession) {
@@ -141,16 +151,16 @@ class RequestService
           $postData = http_build_query($postData, '', '&');
         }
         break;
-    default:
-      throw new \InvalidArgumentException(
-        $this->l->t('Supported data formats are "%1$s" and "%2$s".', [
-          self::JSON, self::URL_ENCODED,
-        ]));
-      break;
+      default:
+        throw new InvalidArgumentException(
+          $this->l->t('Supported data formats are "%1$s" and "%2$s".', [
+            self::JSON, self::URL_ENCODED,
+          ]));
+        break;
     }
 
     $cookies = array();
-    foreach($this->request->cookies as $name => $value) {
+    foreach ($this->request->cookies as $name => $value) {
       $cookies[] = "$name=" . urlencode($value);
     }
 
@@ -172,16 +182,16 @@ class RequestService
 
     $data = json_decode($result, true);
     if (!is_array($data) || (count($data) > 0 && !isset($data['data']))) {
-      throw new \RunTimeException(
+      throw new RunTimeException(
         $this->l->t('Invalid response from API call: "%s"', print_r($result, true)));
     }
 
     // Some apps still return HTTP_STATUS_OK and code errors and success in
     // the old way ...
     if (($data['status']??null) != 'success' && isset($data['data'])) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $this->l->t('Error response from call to internal route "%1$s": %2$s', [
-          $route, $data['data']['message']??print_r($data, true)
+          $url, $data['data']['message']??print_r($data, true)
         ]));
     }
 
@@ -195,17 +205,14 @@ class RequestService
   /**
    * Post to a Cloud url
    *
-   * @param string $url Just the URL
+   * @param string $url Just the URL.
    *
    * @param array $requestData Stuff passed by the GET method.
    *
-   * @param string $type How $postData is encoded. Can be 'json' or
-   * 'urlencoded'. Default is 'json'.
+   * @return array
    */
-  public function getFromInternalUrl(
-    string $url
-    , array $requestData = []
-  ) {
+  public function getFromInternalUrl(string $url, array $requestData = [],)
+  {
     if (!$this->session->isClosed()) {
       if ($this->closeSession) {
         $this->session->close();
@@ -220,14 +227,13 @@ class RequestService
     $appendSep = strrchr($url, '?') === false ? '?' : '&';
 
     $requestToken = \OCP\Util::callRegister();
-    $postData['requesttoken'] = $requestToken;
     $url .= $appendSep . 'requesttoken='.urlencode($requestToken);
 
     $requestData = http_build_query($requestData, '', '&');
     $url .= '&' . $requestData;
 
     $cookies = array();
-    foreach($this->request->cookies as $name => $value) {
+    foreach ($this->request->cookies as $name => $value) {
       $cookies[] = "$name=" . urlencode($value);
     }
 

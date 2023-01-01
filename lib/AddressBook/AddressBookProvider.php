@@ -5,13 +5,12 @@ declare(strict_types=1);
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
- *
- * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -25,7 +24,6 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFEVDB\AddressBook;
@@ -36,6 +34,7 @@ use OCA\DAV\CardDAV\Integration\IAddressBookProvider;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 
+/** Kind of factory for our musicians address book. */
 class AddressBookProvider implements IAddressBookProvider
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -52,16 +51,18 @@ class AddressBookProvider implements IAddressBookProvider
   /** @var ContactsService */
   private $contactsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , ContactsService $contactsService
-    , MusicianCardBackend $cardBackend
+    ConfigService $configService,
+    ContactsService $contactsService,
+    MusicianCardBackend $cardBackend,
   ) {
     $this->configService = $configService;
     $this->contactsService = $contactsService;
     $this->l = $this->l10n();
     $this->cardBackend = $cardBackend;
   }
+  // phpcs:enable
 
   /**
    * Provides the appId of the plugin
@@ -76,7 +77,8 @@ class AddressBookProvider implements IAddressBookProvider
   /**
    * Fetches all address books for a given principal uri
    *
-   * @param string $principalUri E.g. principals/users/user1
+   * @param string $principalUri E.g. principals/users/user1.
+   *
    * @return ExternalAddressBook[] Array of all address books
    */
   public function fetchAllForAddressBookHome(string $principalUri): array
@@ -90,10 +92,11 @@ class AddressBookProvider implements IAddressBookProvider
    *
    * This returns true if the current user belongs to the orchestra group.
    *
-   * @since 19.0.0
-   * @param string $principalUri E.g. principals/users/user1
-   * @param string $uri E.g. personal
-   * @return bool True if address book for principalUri and URI exists, false otherwise
+   * @param string $principalUri E.g. principals/users/user1.
+   *
+   * @param string $uri E.g. personal.
+   *
+   * @return bool True if address book for principalUri and URI exists, false otherwise.
    */
   public function hasAddressBookInAddressBookHome(string $principalUri, string $uri): bool
   {
@@ -105,10 +108,11 @@ class AddressBookProvider implements IAddressBookProvider
    * Fetches an address book for a given principalUri and URI
    * Returns null if address book does not exist
    *
-   * @param string $principalUri E.g. principals/users/user1
-   * @param string $uri E.g. personal
+   * @param string $principalUri E.g. principals/users/user1.
    *
-   * @return ExternalAddressBook|null address book if it exists, null otherwise
+   * @param string $uri E.g. personal.
+   *
+   * @return ExternalAddressBook|null address book if it exists, null otherwise.
    */
   public function getAddressBookInAddressBookHome(string $principalUri, string $uri): ?ExternalAddressBook
   {
@@ -124,6 +128,7 @@ class AddressBookProvider implements IAddressBookProvider
     return self::$addressBook;
   }
 
+  /** @return string */
   private function addressBookUri():string
   {
     return $this->cardBackend->getURI();
@@ -131,7 +136,9 @@ class AddressBookProvider implements IAddressBookProvider
 
   /**
    * Return a cloud-address-book suitable for registration with the
-  * \OCP\IContactsManager.
+   * \OCP\IContactsManager.
+   *
+   * @return null|ContactsAddressBook
    */
   public function getContactsAddressBook():?ContactsAddressBook
   {
