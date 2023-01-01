@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Service\Finance;
+
+use DateTimeInterface;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -136,14 +138,14 @@ interface IRecurringReceivablesGenerator
    *
    * @return string
    */
-  static public function slug():string;
+  public static function slug():string;
 
   /**
    * An array of possible conflict resolutions for conflicting data-items.
    *
    * @return array
    */
-  static public function updateStrategyChoices():array;
+  public static function updateStrategyChoices():array;
 
   /**
    * Return an array of button-labels (or just one label), indexed by
@@ -158,7 +160,7 @@ interface IRecurringReceivablesGenerator
    *
    * @return null|string|arra
    */
-  static public function operationLabels(?string $slug = null);
+  public static function operationLabels(?string $slug = null);
 
   /**
    * Bind this instance to the given entity. The idea is to have a
@@ -171,8 +173,10 @@ interface IRecurringReceivablesGenerator
    * @param mixed $progressToken Optional token which identifies an
    * instance of \OCA\CAFEVDB\Common\IProgressStatus in order to give
    * feedback during long running updates.
+   *
+   * @return void
    */
-  public function bind(Entities\ProjectParticipantField $serviceFeeField, $progressToken = null);
+  public function bind(Entities\ProjectParticipantField $serviceFeeField, mixed $progressToken = null):void;
 
   /**
    * Update the list of receivables for the bound service-fee field,
@@ -197,6 +201,8 @@ interface IRecurringReceivablesGenerator
    *   The musician to update the service claim for. If null, the
    *   values for all affected musicians have to be recomputed.
    *
+   * @param string $updateStrategy
+   *
    * @return array<string, int>
    * ```
    * [
@@ -210,7 +216,11 @@ interface IRecurringReceivablesGenerator
    * where the numbers reflect the respective actions performed on the
    * field-data for the given option.
    */
-  public function updateReceivable(Entities\ProjectParticipantFieldDataOption $receivable, ?Entities\ProjectParticipant $participant = null, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
+  public function updateReceivable(
+    Entities\ProjectParticipantFieldDataOption $receivable,
+    ?Entities\ProjectParticipant $participant = null,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array;
 
   /**
    * Update the amount to invoice for the bound service-fee field.
@@ -220,6 +230,8 @@ interface IRecurringReceivablesGenerator
    *
    * @param null|Entities\ProjectParticipantFieldDataOption $receivable
    *   The option to update/recompute. If null all options have to be updated.
+   *
+   * @param string $updateStrategy
    *
    * @return array<string, int>
    * ```
@@ -234,11 +246,17 @@ interface IRecurringReceivablesGenerator
    * where the numbers reflect the respective actions performed on the
    * field-data for the participant.
    */
-  public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
+  public function updateParticipant(
+    Entities\ProjectParticipant $participant,
+    ?Entities\ProjectParticipantFieldDataOption $receivable,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array;
 
   /**
    * Compute the amounts to invoice for all relevant musicians and
    * existing receivables. New receivables are not added.
+   *
+   * @param string $updateStrategy
    *
    * @return array<string, int>
    * ```
@@ -253,13 +271,14 @@ interface IRecurringReceivablesGenerator
    * where the number reflect the respective actions performed on the
    * field-data for all participants.
    */
-  public function updateAll($updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
+  public function updateAll(string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array;
 
   /**
    * Fetch the due-date for the given receivable or the maximum of all due-dates.
    *
    * @param null|Entities\ProjectParticipantFieldDataOption $receivable
+   *
+   * @return DateTimeInterface
    */
-  public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?\DateTimeInterface;
-
+  public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?DateTimeInterface;
 }

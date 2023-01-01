@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,35 +35,34 @@ use OCA\CAFEVDB\Service\ProgressStatusService;
  */
 class DoNothingReceivablesGenerator extends AbstractReceivablesGenerator
 {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    EntityManager $entityManager
-    , ProgressStatusService $progressStatusService
+    EntityManager $entityManager,
+    ProgressStatusService $progressStatusService,
   ) {
     parent::__construct($entityManager, $progressStatusService);
   }
+  // phpcs:enable
 
-  /**
-   * {@inheritdoc}
-   */
-  static public function slug():string
+  /** {@inheritdoc} */
+  public static function slug():string
   {
     return self::t('nothing');
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public function generateReceivables():Collection
   {
     // This is the dummy implementation, just do nothing.
     return $this->serviceFeeField->getSelectableOptions();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
-  {
+  /** {@inheritdoc} */
+  protected function updateOne(
+    Entities\ProjectParticipantFieldDataOption $receivable,
+    Entities\ProjectParticipant $participant,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array {
     // Do nothing
     return [ 'added' => 0, 'removed' => 0, 'changed' => 0 ];
   }

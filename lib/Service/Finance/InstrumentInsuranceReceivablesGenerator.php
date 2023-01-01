@@ -89,17 +89,13 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     $this->timeZone = $this->getDateTimeZone();
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public static function slug():string
   {
     return self::t('insurance');
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public function generateReceivables():Collection
   {
     $receivableOptions = $this->serviceFeeField->getDataOptions();
@@ -172,11 +168,12 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     return $this->serviceFeeField->getSelectableOptions();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
-  {
+  /** {@inheritdoc} */
+  protected function updateOne(
+    Entities\ProjectParticipantFieldDataOption $receivable,
+    Entities\ProjectParticipant $participant,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array {
     // cook-book:
     // * find list of insurance years
     // * walk years from start until now
@@ -306,7 +303,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
             $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
             $datum->setSupportingDocument($supportingDocument);
           } elseif (true || $fee != $datum->getOptionValue()) {
-            // @todo FIXME: only update letter if fee changes?
+            // @todo only update letter if fee changes?
             $supportingDocument
               ->setName($overviewFilename)
               ->getFile()
@@ -336,9 +333,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
     ];
   }
 
-    /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public function dueDate(?Entities\ProjectParticipantFieldDataOption $receivable = null):?\DateTimeInterface
   {
     $timeZone = $this->getDateTimeZone();

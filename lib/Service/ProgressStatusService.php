@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,12 +34,13 @@ use OCA\CAFEVDB\Common\IProgressStatus;
 use OCA\CAFEVDB\Common\DatabaseProgressStatus;
 use OCA\CAFEVDB\Common\PlainFileProgressStatus;
 
+/** Factory for progress status implementation. */
 class ProgressStatusService
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
 
   //static private $progressStatusImplementation = DatabaseProgressStatus::class;
-  static private $progressStatusImplementation = PlainFileProgressStatus::class;
+  private static $progressStatusImplementation = PlainFileProgressStatus::class;
 
   /** @var string */
   private $appName;
@@ -47,22 +48,32 @@ class ProgressStatusService
   /** @var IAppContainer */
   private $appContainer;
 
+  // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , IAppContainer $appContainer
-    , ILogger $logger
-    , IL10N $l10n
+    $appName,
+    IAppContainer $appContainer,
+    ILogger $logger,
+    IL10N $l10n,
   ) {
     $this->appName = $appName;
     $this->appContainer = $appContainer;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /**
+   * @param mixed $start
+   *
+   * @param mixed $stop
+   *
+   * @param mixed $data
+   *
+   * @param mixed $id
+   *
    * @return IProgressStatus
    */
-  public function create($start, $stop, $data = null, $id = null):IProgressStatus
+  public function create(mixed $start, mixed $stop, mixed $data = null, mixed $id = null):IProgressStatus
   {
     $progressStatus = $this->appContainer->get(self::$progressStatusImplementation);
     $progressStatus->bind($id);
@@ -72,20 +83,14 @@ class ProgressStatusService
   }
 
   /**
-   * @param mixed id
+   * @param mixed $id
    *
    * @return IProgressStatus
    */
-  public function get($id):IProgressStatus
+  public function get(mixed $id):IProgressStatus
   {
     $progressStatus = $this->appContainer->get(self::$progressStatusImplementation);
     $progressStatus->bind($id);
     return $progressStatus;
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

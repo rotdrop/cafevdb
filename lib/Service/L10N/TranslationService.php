@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Service\L10N;
+
+use Exception;
 
 use OCP\ILogger;
 use OCP\L10N\IFactory as IL10NFactory;
@@ -48,23 +50,36 @@ class TranslationService
   /** @var array */
   private $availableLanguages;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , EntityManager $entityManager
-    , IL10NFactory $l10nFactory
-    , ILogger $logger
+    string $appName,
+    EntityManager $entityManager,
+    IL10NFactory $l10nFactory,
+    ILogger $logger,
   ) {
     $this->entityManager = $entityManager;
     $this->logger = $logger;
     $this->availableLanguages = array_values(
       array_filter(
         $l10nFactory->findAvailableLanguages($appName),
-        function($lang) { return !str_starts_with($lang, 'en'); }
+        fn($lang) => !str_starts_with($lang, 'en'),
       )
     );
   }
+  // phpcs:enable
 
-  public function recordUntranslated($phrase, $locale, $file, $line)
+  /**
+   * @param string $phrase
+   *
+   * @param string $locale
+   *
+   * @param string $file
+   *
+   * @param int $line
+   *
+   * @return void
+   */
+  public function recordUntranslated(string $phrase, string $locale, string $file, int $line):void
   {
     if (array_search($locale, $this->availableLanguages) === false) {
       return;
@@ -129,20 +144,20 @@ class TranslationService
   }
 
   /**
-   * Record a translation for a phrase
+   * Record a translation for a phrase.
    *
-   * @param string $phrase The phrase to translate
+   * @param string $phrase The phrase to translate.
    *
-   * @param string $translation The translation for $phrase
+   * @param string $translatedPhrase The translation for $phrase.
    *
-   * @parma string $locale The locale for the translation
+   * @param string $locale The locale for the translation.
    *
-   * @return boolean
+   * @return bool
    */
-  public function recordTranslation(string $phrase, string $translatedPhrase, string $locale)
+  public function recordTranslation(string $phrase, string $translatedPhrase, string $locale):bool
   {
     if (empty(Util::normalizeSpaces($translatedPhrase))) {
-      throw new \Exception('Translation for %s is empty.', $phrase);
+      throw new Exception('Translation for %s is empty.', $phrase);
     }
     $this->setDataBaseRepository(TranslationKey::class);
     $translationKey = $this->findOneBy([ 'phrase' => $phrase ]);
@@ -168,7 +183,7 @@ class TranslationService
                    ->setTranslation($translatedPhrase)
                    ->setLocale($locale);
       $changed = true;
-    } else if ($translation->getTranslation() != $translatedPhrase) {
+    } elseif ($translation->getTranslation() != $translatedPhrase) {
       $translation->setTranslation($translatedPhrase);
       $changed = true;
     }
@@ -195,6 +210,8 @@ class TranslationService
   /**
    * Return an associative array with all translation informations.
    *
+   * @return array
+   * ```
    * [
    *   ID => [
    *     'key' => KEY,
@@ -202,6 +219,7 @@ class TranslationService
    *        LOCALE => 'translation'
    *     ]
    *   ];
+   * ```
    */
   public function getTranslations()
   {
@@ -214,14 +232,17 @@ class TranslationService
         'key' => $key->getPhrase(),
         'translations' => [],
       ];
-      foreach ($key->getTranslations()->getIterator() as $i => $translation) {
+      foreach ($key->getTranslations()->getIterator() as $translation) {
         $translations[$keyId]['translations'][$translation->getLocale()] = $translation->getTranslation();
       }
     }
     return $translations;
   }
 
-  public function generateCatalogueTemplates()
+  /**
+   * @return string
+   */
+  public function generateCatalogueTemplates():string
   {
     $this->setDataBaseRepository(TranslationKey::class);
     $translationKeys = $this->findAll();
@@ -242,7 +263,12 @@ class TranslationService
     return $contents;
   }
 
-  public function eraseTranslationKeys(string $phrase)
+  /**
+   * @param string $phrase
+   *
+   * @return bool
+   */
+  public function eraseTranslationKeys(string $phrase):bool
   {
     $repository = $this->getDatabaseRepository(TranslationKey::class);
     $translationKeys = $repository->findLike([ 'phrase' => $phrase ]);
@@ -257,11 +283,4 @@ class TranslationService
     $this->flush();
     return true;
   }
-
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

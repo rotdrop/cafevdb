@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@
  */
 
 namespace OCA\CAFEVDB\Service;
+
+use Exception;
+use DateTimeImmutable;
 
 use Sabre\VObject\Component\VCard;
 use Sabre\VObject\Property;
@@ -56,19 +59,22 @@ class ContactsService
   /** @var IContactsManager */
   private $contactsManager;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , IContactsManager $contactsManager
-    , IAppContainer $appContainer
-    , EntityManager $entityManager
+    ConfigService $configService,
+    IContactsManager $contactsManager,
+    IAppContainer $appContainer,
+    EntityManager $entityManager,
   ) {
     $this->configService = $configService;
     $this->contactsManager = $contactsManager;
     $this->appContainer = $appContainer;
     $this->entityManager = $entityManager;
   }
+  // phpcs:enable
 
-  private function geoCodingService()
+  /** @return GeoCodingService */
+  private function geoCodingService():GeoCodingService
   {
     return $this->di(GeoCodingService::class);
   }
@@ -76,13 +82,13 @@ class ContactsService
   /**
    * Find a matching addressbook by its displayname.
    *
-   * @param $displayName The display name.
+   * @param string $displayName The display name.
    *
-   * @param $includeShared Include also shared addressbooks.
+   * @param bool $includeShared Include also shared addressbooks.
    *
-   * @return The address-book object (row of the database, i.e. an array).
+   * @return null|IAddressBook The address-book object (row of the database, i.e. an array).
    */
-  public function addressBookByName($displayName, $includeShared = false)
+  public function addressBookByName(string $displayName, bool $includeShared = false):?IAddressBook
   {
     $addressBooks = $this->contactsManager->getUserAddressBooks();
 
@@ -119,8 +125,10 @@ class ContactsService
    * so we simply group the entries by addressbook-name.
    *
    * The static musicians address-book of the orchestra app is excluded.
+   *
+   * @return array
    */
-  public function emailContacts()
+  public function emailContacts():array
   {
     /** @var MusicianCardBackend $musicianCardBackend */
     $musicianCardBackend = $this->di(MusicianCardBackend::class);
@@ -137,7 +145,7 @@ class ContactsService
       foreach ($contacts as $contact) {
         // $this->logInfo('CONTACT: ' . print_r($contact, true));
         $uid = $contact['UID'];
-        $fn = $contact['FN']??'';
+        $fullName = $contact['FN']??'';
         $emails = $contact['EMAIL']??null;
         if (empty($emails)) {
           continue;
@@ -153,7 +161,7 @@ class ContactsService
           $theseContacts[] = [
             'uid'   => $uid,
             'email' => $email,
-            'name'  => $fn,
+            'name'  => $fullName,
             'addressBook' => $bookName,
           ];
         }
@@ -171,13 +179,15 @@ class ContactsService
   /**
    * Add the given email address as possibly new entry to the address book.
    *
-   * @param array $emailContact Contact to be added `[ 'name' => FN, 'email' => EMAIL ]`
+   * @param array $emailContact Contact to be added `[ 'name' => FN, 'email' => EMAIL ]`.
    *
    * @param string $addressBookKey If set, the id of the address-book to add
    * entries to. Otherwise the @c addressbookid config-value will be
-   * used. If none is set, return @c false.
+   * used. If none is set, return null.
+   *
+   * @return null|array
    */
-  public function addEmailContact($emailContact, $addressBookKey = null)
+  public function addEmailContact(array $emailContact, string $addressBookKey = null):?array
   {
     if (empty($addressBookKey)) {
       $addressBookKey = $this->getConfigValue('generaladdressbookid', false);
@@ -195,7 +205,16 @@ class ContactsService
     return $newContact;
   }
 
-  public function flattenVCard(string $cardUri, VCard $vCard, bool $withTypes = true)
+  /**
+   * @param string $cardUri
+   *
+   * @param VCard $vCard
+   *
+   * @param bool $withTypes
+   *
+   * @return array
+   */
+  public function flattenVCard(string $cardUri, VCard $vCard, bool $withTypes = true):array
   {
     $result = [
       'URI' => $cardUri,
@@ -205,7 +224,7 @@ class ContactsService
         if ($property->getValueType() === 'BINARY' && $this->getTypeFromProperty($property)) {
           $uri = 'data:image/'.strtolower($property['TYPE']).';base64,'.$property->getRawMimeDirValue();
           $result[$property->name] = 'VALUE=uri:' . $uri;
-        } else if ($property->getValueType() === 'URI') {
+        } elseif ($property->getValueType() === 'URI') {
           $result[$property->name] = 'VALUE=uri:' . $property->getValue();
         } else {
           $result[$property->name] = $property->getValue();
@@ -235,9 +254,11 @@ class ContactsService
    * Get the type of the current property
    *
    * @param Property $property
+   *
    * @return null|string
    */
-  private function getTypeFromProperty(Property $property) {
+  private function getTypeFromProperty(Property $property):?string
+  {
     $parameters = $property->parameters();
     // Type is the social network, when it's empty we don't need this.
     if (isset($parameters['TYPE'])) {
@@ -251,7 +272,7 @@ class ContactsService
 
   /**
    * Import the given vCard into the musician data-base. This is
-   * somewhat problematic: the CAFeV DB data-base does not support
+   * somewhat problematic: the CAFeV DB database does not support
    * fancy fields. Other things: being a layman-orchestra, we prefer
    * private entries for everything and just choose the first stuff
    * available if no personal data is found.
@@ -262,25 +283,28 @@ class ContactsService
    *
    * CATEGORIES are used to code instruments and project membership.
    *
-   * @param string $vCard Serialized vCard data.
+   * @param VCard $vCard Serialized vCard data.
    *
-   * @param boolean $preferWork Set to @c true in order to
-   * favour work over home data.
-   *
-   * @return Musiker entity.
+   * @return null|Entities\Musician entity.
    *
    * @bug Looks complicated like hell. Simplify?
    */
-  public function importVCard(VCard $vCard)
+  public function importVCard(VCard $vCard):?Entities\Musician
   {
     $cardData = $this->flattenVCard($vCard->URI ?? null, $vCard, withType: true);
     return $this->importCardData($cardData);
   }
 
-  public function importCardData(array $cardData, bool $preferWork = true)
+  /**
+   * @param array $cardData
+   *
+   * @param bool $preferWork
+   *
+   * @return null|Entities\Musician
+   */
+  public function importCardData(array $cardData, bool $preferWork = true):?Entities\Musician
   {
-    $version = $cardData['VERSION'];
-
+    // $version = $cardData['VERSION'];
     $entity = new Musician();
     if (!empty($cardData['N'])) {
         // we honour only surname and prename, and give a damn in
@@ -292,7 +316,8 @@ class ContactsService
     }
 
     // in principle FN would be the displayName
-    if (!empty($value = $cardData['FN'])) {
+    $value = $cardData['FN'];
+    if (!empty($value)) {
       $entity->setDisplayName($value);
     }
 
@@ -329,20 +354,24 @@ class ContactsService
       }
     }
 
-    if (!empty($value = $cardData['UID'] ?? null)) {
+    $value = $cardData['UID'] ?? null;
+    if (!empty($value)) {
       $entity['UUID'] = $value;
     }
 
-    if (!empty($value = $cardData['LANG'] ?? null)) {
+    $value = $cardData['LANG'] ?? null;
+    if (!empty($value)) {
       $entity['language'] = $value;
     }
 
-    if (!empty($value = $cardData['BDAY'] ?? null)) {
-      $entity['birthday'] = new \DateTimeImmutable($value);
+    $value = $cardData['BDAY'] ?? null;
+    if (!empty($value)) {
+      $entity['birthday'] = new DateTimeImmutable($value);
     }
 
-    if (!empty($value = $cardData['REV'] ?? null)) {
-      $entity['updated'] = new \DateTimeImmutable($value);
+    $value = $cardData['REV'] ?? null;
+    if (!empty($value)) {
+      $entity['updated'] = new DateTimeImmutable($value);
     }
 
     // [ADR] => Array ( [0] => Array ( [type] => home [value] => ;;Seestraße 70;Leonberg;;71229;Germany ) )
@@ -374,7 +403,7 @@ class ContactsService
         if (ctype_digit($lastWord[0])) {
           $streetNumber = $lastWord;
           $street = substr($street, 0, -strlen($lastWord)-1);
-        } else if (ctype_digit($firstWord[0])) {
+        } elseif (ctype_digit($firstWord[0])) {
           $streetNumber = $firstWord;
           $street = substr($street, strlen($firstWord) + 1);
         } else {
@@ -390,7 +419,7 @@ class ContactsService
 
         $geoCodingService = $this->geoCodingService();
         $languages = $geoCodingService->getLanguages(true);
-        foreach($languages as $language) {
+        foreach ($languages as $language) {
           $countries = $geoCodingService->countryNames($language);
           $iso = array_search($entity['country'], $countries);
           if ($iso !== false) {
@@ -401,37 +430,40 @@ class ContactsService
     } // ADR
 
     // use organization as name if provided and move the name to the address supplement
-    if (empty($entity->getAddressSupplement()) && !empty($value = $cardData['ORG'])) {
+    $value = $cardData['ORG'] ?? null;
+    if (empty($entity->getAddressSupplement()) && !empty($value)) {
       $publicName = $entity->getPublicName(firstNameFirst: true);
       $entity->setAddressSupplement('c/o ' . $publicName);
       $entity->setDisplayName($value);
     }
 
-    if (!empty($value = $cardData['CATEGORIES'] ?? null)) {
+    $value = $cardData['CATEGORIES'] ?? null;
+    if (!empty($value)) {
       $instrumentsRepository = $this->getDatabaseRepository(Entities\Instrument::class);
       $instrumentsInfo = $instrumentsRepository->describeAll(useEntities: true);
       $instruments = $instrumentsInfo['byId'];
       $categories = explode(',', $value);
       $musicianInstruments = [];
       /** @var Entities\Instrument $instrument */
-      foreach($instruments as $instrument) {
-        $instrumentName = $instrument->getName();
+      foreach ($instruments as $instrument) {
         if (array_search($instrument, $categories)) {
             $musicianInstruments[] = $instrument;
         }
       }
       // now we need to convert to "MusicianInstrument"
-      $musicianInstruments = array_map(function($instrument) use ($entity) {
-        $musicianInstrument = (new Entities\MusicianInstrument())
-          ->setMusician($entity)
-          ->setInstrument($instrument);
-      }, $musicianInstruments);
+      $musicianInstruments = array_map(
+        fn($instrument) => (new Entities\MusicianInstrument)
+        ->setMusician($entity)
+        ->setInstrument($instrument),
+        $musicianInstruments);
 
       $entity['instruments'] = new ArrayCollection($musicianInstruments);
     }
 
-    // [PHOTO] => VALUE=uri:http://localhost/nextcloud-git/remote.php/dav/addressbooks/users/claus/z-app-generated--cafevdb--cafevdb-musicians/musician-32653235-3461-6335-2d34-3064362d3461.vcf?photo
-    if (!empty($value = $cardData['PHOTO'] ?? null)) {
+    // [PHOTO] => VALUE=uri:http://localhost/nextcloud-git/remote.php/dav/addressbooks/users/claus/
+    //   z-app-generated--cafevdb--cafevdb-musicians/musician-32653235-3461-6335-2d34-3064362d3461.vcf?photo
+    $value = $cardData['PHOTO'] ?? null;
+    if (!empty($value)) {
       // complicated:
       //
       // - extract the image datas or URI
@@ -442,10 +474,10 @@ class ContactsService
 
       // fetch the image data, we only support data-uri ATM
       if (preg_match('|^(VALUE=uri:)?data:(image/[^;]+);base64\\\?,|', $value, $matches)) {
-        $mimeType = $matches[1];
+        // $mimeType = $matches[1];
         $imageData = base64_decode(substr($entity['photo'], strlen($matches[0])));
         $havePhoto = true;
-      } else if (str_starts_with($value, 'VALUE=uri:')) {
+      } elseif (str_starts_with($value, 'VALUE=uri:')) {
         $url = substr($value, strlen('VALUE=uri:'));
         /** @var RequestService $requestService */
         $requestService = $this->di(RequestService::class);
@@ -453,7 +485,7 @@ class ContactsService
         $havePhoto = true;
       }
 
-      if ($havePhoto)  {
+      if ($havePhoto) {
         $image = new Image;
         $image->loadFromData($imageData);
 
@@ -461,6 +493,7 @@ class ContactsService
         $musicianPhoto = (new Entities\MusicianPhoto())
           ->setOwner($entity)
           ->setImage($imageEntity);
+        $entity->setPhoto($musicianPhoto);
       }
     }
 
@@ -472,12 +505,14 @@ class ContactsService
    *
    * @param Musician $musician One row from the musician table.
    *
-   * @param $version vCard version -- which must be one
+   * @param string $version vCard version -- which must be one
    * supported by \\Sabre\\VObject. Defaults to 3.0 for compatibility
    * reasons. Note that many (mobile) devices still only use the
    * stone-age v2.1 format.
+   *
+   * @return VCard
    */
-  public function export(Musician $musician, $version = self::VCARD_VERSION)
+  public function export(Musician $musician, string $version = self::VCARD_VERSION):?VCard
   {
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
     $uuid = (string)(isset($musician['uuid']) ? $musician['uuid'] : $this->generateUUID());
@@ -528,16 +563,17 @@ class ContactsService
       $country = $countryNames[$musician['country']];
     }
 
-    $vcard->add('ADR',
-                [ '', // PO box
-                  $musician['addressSupplement'], // address extension (appartment nr. and such)
-                  $musician['street'] . ' ' . $musician['streetNumber'], // street
-                  $musician['city'], // city
-                  '', // province
-                  $musician['postalCode'], //zip code
-                  $country
-                ],
-                [ 'TYPE' => 'home' ]);
+    $vcard->add(
+      'ADR', [
+        '', // PO box
+        $musician['addressSupplement'], // address extension (appartment nr. and such)
+        $musician['street'] . ' ' . $musician['streetNumber'], // street
+        $musician['city'], // city
+      '', // province
+        $musician['postalCode'], //zip code
+        $country
+      ],
+      [ 'TYPE' => 'home' ]);
 
     $photo = null;
     if (!empty($musician['photo'])) {
@@ -548,7 +584,7 @@ class ContactsService
           'mimeType' => $image->getMimeType(), //['mimeType'],
         ];
 
-      } else if (is_string($musician['photo'])
+      } elseif (is_string($musician['photo'])
                  && preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['photo'], $matches)) {
         // data uri
         $mimeType = $matches[1];
@@ -558,7 +594,7 @@ class ContactsService
           'data' => $imageData,
         ];
       } else {
-        throw new \Exception('Strange photo value');
+        throw new Exception('Strange photo value');
       }
 
       if (!empty($photo['data'])) {
@@ -576,7 +612,7 @@ class ContactsService
     }
 
     if ($version != '4.0') {
-      foreach($textProperties as $property) {
+      foreach ($textProperties as $property) {
         if (isset($vcard->{$property})) {
           $vcard->{$property}['CHARSET'] = 'UTF-8';
         }
@@ -585,10 +621,4 @@ class ContactsService
 
     return $vcard;
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

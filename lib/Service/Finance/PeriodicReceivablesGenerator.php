@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,10 @@
  */
 
 namespace OCA\CAFEVDB\Service\Finance;
+
+use DateInterval;
+use RuntimeException;
+use DateTimeImmutable;
 
 use OCP\ILogger;
 use OCP\IL10N;
@@ -59,12 +63,13 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
   /** @var int */
   private $intervalSeconds;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , EntityManager $entityManager
-    , ToolTipsService $toolTipsService
-    , ProgressStatusService $progressStatusService
-    , ?\DateInterval $interval = null
+    ConfigService $configService,
+    EntityManager $entityManager,
+    ToolTipsService $toolTipsService,
+    ProgressStatusService $progressStatusService,
+    ?\DateInterval $interval = null,
   ) {
     parent::__construct($entityManager, $progressStatusService);
     $this->configService = $configService;
@@ -73,7 +78,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     $this->amount = 1.0;
 
     if (empty($interval)) {
-      $interval = new \DateInterval('P1D');
+      $interval = new DateInterval('P1D');
     }
 
     // Horner's scheme, leap years not taken into account
@@ -81,18 +86,15 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
 
     $this->timeZone = $this->getDateTimeZone();
   }
+  // phpcs:enable
 
-  /**
-   * {@inheritdoc}
-   */
-  static public function slug():string
+  /** {@inheritdoc} */
+  public static function slug():string
   {
     return self::t('periodic');
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  /** {@inheritdoc} */
   public function generateReceivables():Collection
   {
     $receivableOptions = $this->serviceFeeField->getDataOptions();
@@ -100,7 +102,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     /** @var Entities\ProjectParticipantFieldDataOption $managementOption */
     $managementOption = $this->serviceFeeField->getManagementOption();
     if (empty($managementOption)) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $this->l->t(
           'Unable to find management option for participant field "%s".',
           $this->serviceFeeField->getName()
@@ -108,7 +110,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     }
     $managementDate = Util::convertToDateTime($managementOption->getLimit());
     if (empty($managementDate)) {
-      $startingDate = new \DateTimeImmutable;
+      $startingDate = new DateTimeImmutable;
     } else {
       $startingDate = $managementDate;
     }
@@ -119,7 +121,7 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
              / $this->intervalSeconds * $this->intervalSeconds;
     $startingDate = $startingDate->setTimestamp($seconds);
     $managementOption->setLimit($startingDate->getTimestamp());
-    $endingSeconds = (new \DateTimeImmutable)->getTimestamp();
+    $endingSeconds = (new DateTimeImmutable)->getTimestamp();
 
     for (; $seconds <= $endingSeconds; $seconds += $this->intervalSeconds) {
       $timeStamp = $this->formatTimeStamp($seconds);
@@ -151,11 +153,12 @@ class PeriodicReceivablesGenerator extends AbstractReceivablesGenerator
     return $this->serviceFeeField->getSelectableOptions();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function updateOne(Entities\ProjectParticipantFieldDataOption $receivable, Entities\ProjectParticipant $participant, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
-  {
+  /** {@inheritdoc} */
+  protected function updateOne(
+    Entities\ProjectParticipantFieldDataOption $receivable,
+    Entities\ProjectParticipant $participant,
+    string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
+  ):array {
     $participantFieldsData = $participant->getParticipantFieldsData();
     $existingReceivableData = $participantFieldsData->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
     $added = $removed = $changed = $skipped = false;

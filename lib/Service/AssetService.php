@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,6 +49,7 @@ class AssetService
   /** @var array */
   private $assets = [];
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(IL10N $l10n, ILogger $logger)
   {
     $this->logger = $logger;
@@ -72,22 +73,43 @@ class AssetService
       }
     }
   }
+  // phpcs:enable
 
-  public function getAsset($type, $baseName)
+  /**
+   * @param string $type
+   *
+   * @param string $baseName
+   *
+   * @return string
+   */
+  public function getAsset(string $type, string $baseName):string
   {
     if (empty($this->assets[$type][$baseName])) {
-      throw new Exceptions\EnduserNotificationException($this->l->t('Installation problem; the required %s-resource "%s" is not installed on the server, please contact the system administrator!', [ $type, $baseName ]));
+      throw new Exceptions\EnduserNotificationException($this->l->t(
+        'Installation problem; the required %s-resource "%s" is not installed on the server, please contact the system administrator!', [
+          $type, $baseName,
+        ]));
     }
     return $this->assets[$type][$baseName];
   }
 
-  public function getJSAsset($baseName)
+  /**
+   * @param string $baseName
+   *
+   * @return string
+   */
+  public function getJSAsset(string $baseName):string
   {
     return $this->getAsset(self::JS, $baseName);
   }
 
-  public function getCSSAsset($baseName)
+  /**
+   * @param string $baseName
+   *
+   * @return string
+   */
+  public function getCSSAsset(string $baseName):string
   {
     return $this->getAsset(self::CSS, $baseName);
   }
-};
+}

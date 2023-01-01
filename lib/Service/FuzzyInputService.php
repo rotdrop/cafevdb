@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,12 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use InvalidArgumentException;
+use NumberFormatter;
+
 use Carbon\CarbonInterval as DateInterval;
+use tidy;
+use HTMLPurifier;
 
 use OCA\CAFEVDB\Common\Util;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
@@ -41,20 +46,27 @@ class FuzzyInputService
   const HTML_PURIFY = 2;
   const HTML_ALL = ~0;
 
-  public function __construct(
-    ConfigService $config
-  ) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(ConfigService $config)
+  {
     $this->configService = $config;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Check $input for "transposition error". Interchange each
    * consecutive pair of letters, try to validate by $callback, return
    * an array of transposed input strings, for which $callback
    * returned true.
+   *
+   * @param string $input
+   *
+   * @param null|callable $callback
+   *
+   * @return array
    */
-  public static function transposition($input, $callback)
+  public static function transposition(string $input, ?callable $callback):array
   {
     if (!is_callable($callback)) {
       return [];
@@ -75,63 +87,67 @@ class FuzzyInputService
   /**
    * Take a locale-formatted string and parse it into a float.
    *
+   * @param string $value
+   *
+   * @param bool $noThrow
+   *
+   * @return mixed
+   *
    * @todo Merge with self::currencyValue().
    */
-  public function parseCurrency($value, $noThrow = false)
+  public function parseCurrency(string $value, bool $noThrow = false)
   {
     $value = Util::normalizeSpaces($value, ' ', true);
     if (strstr($value, '€') !== false) {
       $currencyCode = '€';
-    } else if (strstr($value, '$') !== false) {
+    } elseif (strstr($value, '$') !== false) {
       $currencyCode = '$';
-    } else if (is_numeric($value)) {
+    } elseif (is_numeric($value)) {
       // just return e.g. if C-locale is active
       $currencyCode = '';
-    } else if ($noThrow) {
+    } elseif ($noThrow) {
       return false;
     } else {
-      throw new \InvalidArgumentException(
-        $this->l->t("Cannot parse `%s' Only plain number, € and \$ currencies are supported.",
-                    (string)$value));
+      throw new InvalidArgumentException($this->l->t(
+        "Cannot parse `%s' Only plain number, € and \$ currencies are supported.",
+        (string)$value));
     }
 
     switch ($currencyCode) {
-    case '€':
-      // Allow either comma or decimal point as separator
-      if (preg_match('/^(€)?\h*([+-]?)\h*(\d{1,3}(\.\d{3})*|(\d+))(\,(\d{2}))?\h*(€)?$/',
-                     $value, $matches)
-          ||
-          preg_match('/^(€)?\h*([+-]?)\h*(\d{1,3}(\,\d{3})*|(\d+))(\.(\d{2}))?\h*(€)?$/',
-                     $value, $matches)) {
-        //print_r($matches);
-        // Convert value to number
-        //
-        // $matches[2] optional sign
-        // $matches[3] integral part
-        // $matches[7] fractional part
-        $fraction = isset($matches[7]) ? $matches[7] : '00';
-        $value = (float)($matches[2].str_replace([',', '.', ], '', $matches[3]).'.'.$fraction);
-      } else if ($noThrow) {
-        return false;
-      } else {
-        throw new \InvalidArgumentException($this->l->t('Cannot parse %s-currency string "%s".', [ $currencyCode, (string)$value, ]));
-      }
-      break;
-    case '$':
-      if (preg_match('/^\$? *([+-])? *(\d{1,3}(\,\d{3})*|(\d+))(\.(\d{2}))? *\$?$/', $value, $matches)) {
-        // Convert value to number
-        //
-        // $matches[1] optional sign
-        // $matches[2] integral part
-        // $matches[6] fractional part
-        $fraction = isset($matches[6]) ? $matches[6] : '00';
-        $value = (float)($matches[1].str_replace([ ',', '.', ], '', $matches[2]).'.'.$fraction);
-      } else if ($noThrow) {
-        return false;
-      } else {
-        throw new \InvalidArgumentException($this->l->t('Cannot parse %s-currency string "%s".', [ $currencyCode, (string)$value, ]));
-      }
-      break;
+      case '€':
+        // Allow either comma or decimal point as separator
+        if (preg_match('/^(€)?\h*([+-]?)\h*(\d{1,3}(\.\d{3})*|(\d+))(\,(\d{2}))?\h*(€)?$/', $value, $matches)
+            ||
+            preg_match('/^(€)?\h*([+-]?)\h*(\d{1,3}(\,\d{3})*|(\d+))(\.(\d{2}))?\h*(€)?$/', $value, $matches)) {
+          //print_r($matches);
+          // Convert value to number
+          //
+          // $matches[2] optional sign
+          // $matches[3] integral part
+          // $matches[7] fractional part
+          $fraction = isset($matches[7]) ? $matches[7] : '00';
+          $value = (float)($matches[2].str_replace([',', '.', ], '', $matches[3]).'.'.$fraction);
+        } elseif ($noThrow) {
+          return false;
+        } else {
+          throw new InvalidArgumentException($this->l->t('Cannot parse %s-currency string "%s".', [ $currencyCode, (string)$value, ]));
+        }
+        break;
+      case '$':
+        if (preg_match('/^\$? *([+-])? *(\d{1,3}(\,\d{3})*|(\d+))(\.(\d{2}))? *\$?$/', $value, $matches)) {
+          // Convert value to number
+          //
+          // $matches[1] optional sign
+          // $matches[2] integral part
+          // $matches[6] fractional part
+          $fraction = isset($matches[6]) ? $matches[6] : '00';
+          $value = (float)($matches[1].str_replace([ ',', '.', ], '', $matches[2]).'.'.$fraction);
+        } elseif ($noThrow) {
+          return false;
+        } else {
+          throw new InvalidArgumentException($this->l->t('Cannot parse %s-currency string "%s".', [ $currencyCode, (string)$value, ]));
+        }
+        break;
     }
     return [
       'amount' => $value,
@@ -154,15 +170,15 @@ class FuzzyInputService
   {
     $locale = $this->getLocale();
     $amount = preg_replace('/\s+/u', '', $value);
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+    $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
     $cur = $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
     $amount = str_replace($cur, '', $amount);
     $cur = $fmt->getSymbol(\NumberFormatter::INTL_CURRENCY_SYMBOL);
     $amount = str_replace($cur, '', $amount);
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+    $fmt = new NumberFormatter($locale, NumberFormatter::DECIMAL);
     $parsed = $fmt->parse($amount);
     if ($parsed === false) {
-      $fmt = new \NumberFormatter('en_US_POSIX', \NumberFormatter::DECIMAL);
+      $fmt = new NumberFormatter('en_US_POSIX', NumberFormatter::DECIMAL);
       $parsed = $fmt->parse($amount);
     }
     return $parsed !== false ? sprintf('%.02f', $parsed) : $parsed;
@@ -178,6 +194,10 @@ class FuzzyInputService
    *  letters a the start of each word to lower case, then camelcalize
    *  it.
    *
+   * @param string $slug
+   *
+   * @param bool $capitalizeFirst
+   *
    * @return The resuling camel-case string.
    */
   public function ensureCamelCase(string $slug, bool $capitalizeFirst = true):string
@@ -188,7 +208,7 @@ class FuzzyInputService
       foreach ($words as &$word) {
         $word = preg_replace_callback(
           '/\b([A-Z][A-Z]+)/',
-          function($arg) { return strtolower($arg[1]); },
+          fn($arg) => strtolower($arg[1]),
           $word);
       }
     }
@@ -213,7 +233,7 @@ class FuzzyInputService
     $locales = [ $this->getLocale(), 'en_US_POSIX' ];
     $parsed = false;
     foreach ($locales as $locale) {
-      $fmt = new \NumberFormatter($locale, \NumberFormatter::DECIMAL);
+      $fmt = new NumberFormatter($locale, \NumberFormatter::DECIMAL);
 
       $decimalSeparator = $fmt->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
       $groupingSeparator = $fmt->getSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL);
@@ -224,7 +244,7 @@ class FuzzyInputService
       if ($grpPos !== false && $decPos === false) {
         // unlikely: 1,000, we assume 1,000.00 would be used
         continue;
-      } else if ($decPos < $grpPos) {
+      } elseif ($decPos < $grpPos) {
         // unlikely: 1.000,00 in en_US
         continue;
       }
@@ -233,7 +253,7 @@ class FuzzyInputService
       if ($parsed !== false) {
         $percent = $fmt->getSymbol(\NumberFormatter::PERCENT_SYMBOL);
         if (preg_match('/'.$percent.'/u', $amount)) {
-            $parsed /= 100.0;
+          $parsed /= 100.0;
         }
         break;
       }
@@ -248,8 +268,7 @@ class FuzzyInputService
    *
    * @param null|string $locale Locale or null for the user's default locale.
    *
-   * @return int
-   *
+   * @return null|int|float
    */
   public function storageValue(string $value, ?string $locale = null)
   {
@@ -299,7 +318,7 @@ class FuzzyInputService
   {
     $locale = $locale ?? $this->getLocale();
     $value = Util::normalizeSpaces($value);
-    $fmt = new \NumberFormatter($locale, \NumberFormatter::SPELLOUT);
+    $fmt = new NumberFormatter($locale, \NumberFormatter::SPELLOUT);
     $value = implode(
       ' ',
       array_map(
@@ -317,9 +336,15 @@ class FuzzyInputService
   }
 
   /**
-   *  Try to correct HTML code.
+   * Try to correct HTML code.
+   *
+   * @param string $dirtyHTML
+   *
+   * @param int $method
+   *
+   * @return string
    */
-  public function purifyHTML($dirtyHTML, $method = self::HTML_PURIFY)
+  public function purifyHTML(string $dirtyHTML, int $method = self::HTML_PURIFY)
   {
     $purifier = null;
     $cacheDir = null;
@@ -331,7 +356,7 @@ class FuzzyInputService
       $config->set('Cache.SerializerPath', $cacheDir->path());
       $config->set('HTML.TargetBlank', true);
       // TODO: maybe add further options
-      $purifier = new \HTMLPurifier($config);
+      $purifier = new HTMLPurifier($config);
     }
 
     $tidy = null;
@@ -343,7 +368,7 @@ class FuzzyInputService
         'show-body-only' => true,
         'wrap'           => 200
       ];
-      $tidy = new \tidy;
+      $tidy = new tidy;
     }
 
     if (!empty($tidy)) {
@@ -362,10 +387,4 @@ class FuzzyInputService
 
     return $dirtyHTML;
   }
-
-};
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+}

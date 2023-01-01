@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,16 +24,22 @@
 
 namespace OCA\CAFEVDB\Service;
 
-// @@todo: replace the stuff below by more persistent APIs. As it
-// shows (Sep. 2020) the only option would be http calls to the dav
-// service. Even the perhaps-forthcoming writable addressBook API does
-// not allow the creation of addressBooks or altering shring options.
+use Exception;
 
-// missing: move/delete addressBook
+use \Sabre\DAV\PropPatch as SabrePropPatch;
+
+use OCP\IAddressBook;
 
 use OCA\DAV\CardDAV\CardDavBackend;
 use OCA\DAV\CardDAV\AddressBook;
 
+/**
+ * @todo: replace the stuff below by more persistent APIs. As it
+ * shows (Sep. 2020) the only option would be http calls to the dav
+ * service. Even the perhaps-forthcoming writable addressBook API does
+ * not allow the creation of addressBooks or altering shring options.
+ * missing: move/delete addressBook
+ */
 class CardDavService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
@@ -46,35 +53,38 @@ class CardDavService
   /** @var int */
   private $contactsUserId;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     \OCP\Contacts\IManager $addressBookManager,
-    CardDavBackend $cardDavBackend
-  )
-  {
+    CardDavBackend $cardDavBackend,
+  ) {
     $this->configService = $configService;
     $this->addressBookManager = $addressBookManager;
     $this->cardDavBackend = $cardDavBackend;
     $this->contactsUserId = $this->userId();
   }
+  // phpcs:enable
 
-  /**Get or create a addressBook.
+  /**
+   * Get or create a addressBook.
    *
-   * @param $uri Relative URI
+   * @param string $uri Relative URI.
    *
-   * @param $userId part of the principal name.
+   * @param null|string $displayName Display-name of the addressBook.
    *
-   * @param $displayName Display-name of the addressBook.
+   * @param null|string $userId part of the principal name.
    *
    * @return int AddressBook id.
    */
-  public function createAddressBook($uri, $displayName = null, $userId = null) {
+  public function createAddressBook(string $uri, ?string $displayName = null, ?string $userId = null)
+  {
     empty($userId) && ($userId = $this->userId());
     empty($displayName) && ($displayName = $uri);
     $principal = "principals/users/$userId";
 
     $addressBook = $this->cardDavBackend->getAddressBooksByUri($principal, $uri);
-    if (!empty($addressBook))  {
+    if (!empty($addressBook)) {
       $this->logError("Got addressbook " . print_r($addressBook, true));
       return $addressBook['id'];
     } else {
@@ -85,20 +95,37 @@ class CardDavService
         $this->logError("Created addressbook with id " . $addressBookId);
         $this->refreshAddressBookManager();
         return $addressBookId;
-      } catch(\Exception $e) {
+      } catch (\Exception $e) {
         $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       }
     }
     return -1;
   }
 
-  /**Delete the addressBook with the given id */
-  public function deleteAddressBook($id) {
+  /**
+   * Delete the addressBook with the given id.
+   *
+   * @param int $id
+   *
+   * @return void
+   */
+  public function deleteAddressBook(int $id):void
+  {
     $this->cardDavBackend->deleteAddressBook($id);
     $this->refreshAddressBookManager();
   }
 
-  public function groupShareAddressBook($addressBookId, $groupId, $readOnly = false) {
+  /**
+   * @param int $addressBookId
+   *
+   * @param string $groupId
+   *
+   * @param bool $readOnly
+   *
+   * @return bool
+   */
+  public function groupShareAddressBook(int $addressBookId, string $groupId, bool $readOnly = false):bool
+  {
     $share = [
       'href' => 'principal:principals/groups/'.$groupId,
       'commonName' => '',
@@ -115,7 +142,7 @@ class CardDavService
     $addressBook = new AddressBook($this->cardDavBackend, $addressBookInfo, $this->l10n(), $this->appConfig());
     $this->cardDavBackend->updateShares($addressBook, [$share], []);
     $shares = $this->cardDavBackend->getShares($addressBookId);
-    foreach($shares as $share) {
+    foreach ($shares as $share) {
       if ($share['href'] === $share['href'] && $share['readOnly'] == $readOnly) {
         return true;
       }
@@ -123,26 +150,39 @@ class CardDavService
     return false;
   }
 
-  public function displayName($addressBookId, $displayName)
+  /**
+   * @param int $addressBookId
+   *
+   * @param string $displayName
+   *
+   * @return bool
+   */
+  public function displayName(int $addressBookId, string $displayName):bool
   {
     try {
-      $propPatch = new \Sabre\DAV\PropPatch(['{DAV:}displayname' => $displayName]);
+      $propPatch = new SabrePropPatch(['{DAV:}displayname' => $displayName]);
       $this->cardDavBackend->updateAddressBook($addressBookId, $propPatch);
       $propPatch->commit();
-    } catch(\Exception $e) {
+    } catch (Exception $e) {
       $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       return false;
     }
     return true;
   }
 
-  /** Get a addressBook with the given display name. */
-  public function addressBookByName($displayName)
+  /**
+   * Get a addressBook with the given display name.
+   *
+   * @param string $displayName
+   *
+   * @return null|IAddressBook
+   */
+  public function addressBookByName(string $displayName):?IAddressBook
   {
     if ($this->contactsUserId != $this->userId()) {
       $this->refreshAddressBookManager();
     }
-    foreach($this->addressBookManager->getUserAddressBooks() as $addressBook) {
+    foreach ($this->addressBookManager->getUserAddressBooks() as $addressBook) {
       if ($displayName === $addressBook->getDisplayName()) {
         return $addressBook;
       }
@@ -150,13 +190,19 @@ class CardDavService
     return null;
   }
 
-  /** Get a addressBook with the given its id. */
-  public function addressBookById($id)
+  /**
+   * Get a addressBook with the given its id.
+   *
+   * @param int $id
+   *
+   * @return null|IAddressBook
+   */
+  public function addressBookById(int $id):?IAddressBook
   {
     if ($this->contactsUserId != $this->userId()) {
       $this->refreshAddressBookManager();
     }
-    foreach($this->addressBookManager->getUserAddressBooks() as $addressBook) {
+    foreach ($this->addressBookManager->getUserAddressBooks() as $addressBook) {
       if ((int)$id === (int)$addressBook->getKey()) {
         return $addressBook;
       }
@@ -168,8 +214,10 @@ class CardDavService
    * Force OCP\Contacts\IManager to be refreshed.
    *
    * @bug This function uses internal APIs.
+   *
+   * @return void
    */
-  private function refreshAddressBookManager()
+  private function refreshAddressBookManager():void
   {
     $this->addressBookManager->clear();
     $urlGenerator = \OC::$server->getURLGenerator();
@@ -177,10 +225,4 @@ class CardDavService
       $this->addressBookManager, $this->userId(), $urlGenerator);
     $this->contactsUserId = $this->userId();
   }
-
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

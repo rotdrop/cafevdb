@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,20 +50,24 @@ class MusicianService
   /** @var MailingListsService */
   private $listsService;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService
-    , EntityManager $entityManager
-    , MailingListsService $listsService
+    ConfigService $configService,
+    EntityManager $entityManager,
+    MailingListsService $listsService,
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->listsService = $listsService;
     $this->l = $this->l10n();
   }
+  // phpcs:enable
 
   /**
    * Ensure that the musicain indeed has a user-id-slug. In principle
    * this should never happen when the app runs in production mode ...
+   *
+   * @param Entities\Musician $musician
    *
    * @return string The user-id slug.
    */
@@ -80,17 +84,35 @@ class MusicianService
   /**
    * Convert a user-id to a file-name-part avoiding "duplicate" extensions,
    * i.e. use ClausJustusHeine.pdf instead of claus-justus.heine.pdf
+   *
+   * @param string $userIdSlug
+   *
+   * @return string
    */
   public static function userIdSlugToFileName(string $userIdSlug):string
   {
     return Util::dashesToCamelCase($userIdSlug, true, '_-.');
   }
 
+  /**
+   * @param string $userIdSlug
+   *
+   * @return string
+   */
   public static function getSlugPostfix(string $userIdSlug):string
   {
     return '-' . self::userIdSlugToFileName($userIdSlug);
   }
 
+  /**
+   * @param string $base
+   *
+   * @param string $userIdSlug
+   *
+   * @param bool $ignoreExtension
+   *
+   * @return string
+   */
   public static function slugifyFileName(string $base, string $userIdSlug, bool $ignoreExtension = false):string
   {
     if ($ignoreExtension) {
@@ -105,12 +127,28 @@ class MusicianService
     return $fileName . self::getSlugPostfix($userIdSlug) . $extension;
   }
 
+  /**
+   * @param string $path
+   *
+   * @param string $userIdSlug
+   *
+   * @return bool
+   */
   public static function isSlugifiedFileName(string $path, string $userIdSlug):bool
   {
     $fileName = pathinfo($path, PATHINFO_FILENAME);
     return str_ends_with($fileName, self::getSlugPostfix($userIdSlug));
   }
 
+  /**
+   * @param string $path
+   *
+   * @param string $userIdSlug
+   *
+   * @param bool $keepExtension
+   *
+   * @return string
+   */
   public static function unSlugifyFileName(string $path, string $userIdSlug, bool $keepExtension = true):string
   {
     $pathInfo = pathinfo($path);
@@ -155,6 +193,8 @@ class MusicianService
    *
    * @param Entities\Musician $musician
    *
+   * @return void
+   *
    * @todo Musicians without OPEN payments can safely be remove, worst case
    * after a couple of years. ATM we just block.
    */
@@ -164,7 +204,8 @@ class MusicianService
     if ($financialArtifacts['sum'] !== $financialArtifacts['received']) {
       throw new Exceptions\EnduserNotificationException(
         $this->l->t(
-          'Musician "%1$s" cannot be removed because there are unbalanced financial obligations totals/payed/remaining = %$2d/%3d/%3d. A negative remaining amount means the musician still needs to be refund by the orchestra.', [
+          'Musician "%1$s" cannot be removed because there are unbalanced financial obligations totals/payed/remaining = %$2d/%3d/%3d.'
+          . ' A negative remaining amount means the musician still needs to be refund by the orchestra.', [
             $musician->getPublicName(),
             $financialArtifacts['sum'],
             $financialArtifacts['received'],
@@ -275,7 +316,12 @@ class MusicianService
     $this->flush();
   }
 
-  public function deleteMusician(Entities\Musician $musician)
+  /**
+   * @param Entities\Musician $musician
+   *
+   * @return void
+   */
+  public function deleteMusician(Entities\Musician $musician):void
   {
     // Unsubscribe the musician from the mailing-list
     $list = $this->getConfigValue('announcementsMailingList');
@@ -315,8 +361,3 @@ class MusicianService
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
