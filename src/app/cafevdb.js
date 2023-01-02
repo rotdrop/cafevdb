@@ -149,7 +149,7 @@ const formSubmit = function(url, values, method) {
       .attr('value', urlDecode(nameValue[1]))
       .appendTo(form);
   }
-  form.appendTo($('div#content')); // needed?
+  form.appendTo($('#content'));
   form.submit();
 };
 
