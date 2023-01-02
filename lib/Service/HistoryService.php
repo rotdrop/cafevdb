@@ -244,13 +244,13 @@ class HistoryService
   /**
    * Validate the given history records, return false on error.
    *
-   * @param array $history
+   * @param null|array $history
    *
    * @return bool
    */
-  private function validate(array $history):bool
+  private function validate(?array $history):bool
   {
-    if ($history === false ||
+    if (!is_array($history) ||
         !isset($history['size']) ||
         !isset($history['position']) ||
         !isset($history['records']) ||

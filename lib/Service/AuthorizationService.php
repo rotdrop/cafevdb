@@ -83,11 +83,11 @@ class AuthorizationService
    * Basic check for authorization. Just check if the orchestra group
    * is configured and the given user id is a member of it.
    *
-   * @param string $userId Id of the user to check.
+   * @param null|string $userId Id of the user to check.
    *
    * @return bool Status of the check.
    */
-  public function authorized(string $userId):bool
+  public function authorized(?string $userId):bool
   {
     return !empty($userId) && !empty($this->userGroup) && $this->groupManager->isInGroup($userId, $this->userGroup);
   }

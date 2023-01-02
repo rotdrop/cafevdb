@@ -80,9 +80,9 @@ class AssetService
    *
    * @param string $baseName
    *
-   * @return string
+   * @return array
    */
-  public function getAsset(string $type, string $baseName):string
+  public function getAsset(string $type, string $baseName):array
   {
     if (empty($this->assets[$type][$baseName])) {
       throw new Exceptions\EnduserNotificationException($this->l->t(
@@ -96,9 +96,9 @@ class AssetService
   /**
    * @param string $baseName
    *
-   * @return string
+   * @return array
    */
-  public function getJSAsset(string $baseName):string
+  public function getJSAsset(string $baseName):array
   {
     return $this->getAsset(self::JS, $baseName);
   }
@@ -106,9 +106,9 @@ class AssetService
   /**
    * @param string $baseName
    *
-   * @return string
+   * @return array
    */
-  public function getCSSAsset(string $baseName):string
+  public function getCSSAsset(string $baseName):array
   {
     return $this->getAsset(self::CSS, $baseName);
   }
