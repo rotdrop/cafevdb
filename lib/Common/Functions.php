@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,13 +47,13 @@ function dump(mixed $variable, mixed $stream = true)
 /**
  * Version of strcmp which sorts empty strings last.
  *
- * @param string $a
+ * @param null|string $a
  *
- * @param string $b
+ * @param null|string $b
  *
  * @return int
  */
-function strCmpEmptyLast(string $a, string $b)
+function strCmpEmptyLast(?string $a, ?string $b)
 {
   if ($a == $b) {
     return 0;
@@ -66,8 +66,3 @@ function strCmpEmptyLast(string $a, string $b)
   }
   return strcmp($a, $b);
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

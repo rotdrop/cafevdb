@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -477,7 +477,7 @@ class UserStorage
       $newNode = $this->userFolder->get($oldPath)->move($newFullPath);
       unset($this->nodeCache[$oldPath]);
       $this->nodeCache[$newPath] = $newNode;
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new Exception($this->l->t('Rename of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
     }
   }
@@ -500,7 +500,7 @@ class UserStorage
       $newPath = $this->userFolder->getFullPath($newPath);
       $newNode = $this->userFolder->get($oldPath)->copy($newPath);
       $this->nodeCache[$newPath] = $newNode;
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new Exception($this->l->t('Copy of "%s" to "%s" failed.', [ $oldPath, $newPath ]), $t->getCode(), $t);
     }
   }
@@ -592,7 +592,7 @@ class UserStorage
         $this->ensureFolder(dirname($path));
         $file = $this->userFolder->newFile($path, $content);
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       throw new RuntimeException($this->l->t('Unable to set content of file "%s".', $path), $t->getCode(), $t);
     }
     return $file;
@@ -770,8 +770,3 @@ class UserStorage
     return $dataUri;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
