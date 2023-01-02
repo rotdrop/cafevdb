@@ -43,6 +43,7 @@ use OCP\IDateTimeFormatter;
 use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\Group\ISubAdmin;
+use OCP\App\IAppManager;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -132,7 +133,7 @@ trait ConfigTrait
   /** @return string */
   protected function appVersion():string
   {
-    return \OCP\App::getAppVersion($this->appName());
+    return $this->di(IAppManager::class)->getAppVersion($this->appName());
   }
 
   /** @return IConfig */
