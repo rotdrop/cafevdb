@@ -567,7 +567,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   }
 
   /**
-   * @param string $path The path to match.
+   * @param null|string $path The path to match.
    *
    * @param string $folderPrefix The folder-prefix to compare the
    * first part of the string to.
@@ -575,7 +575,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    * @return null|string The sub-string after remove the $folderPrefix
    * or null if $folderPrefix is not the first part of the string.
    */
-  private static function matchPrefixDirectory(string $path, string $folderPrefix)
+  private static function matchPrefixDirectory(?string $path, string $folderPrefix)
   {
     $prefixLen = strlen($folderPrefix);
     if (substr($path, 0, $prefixLen) == $folderPrefix) {
