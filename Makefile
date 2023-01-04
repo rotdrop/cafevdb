@@ -370,6 +370,12 @@ phpdoc: $(PHPDOC)
 #--setting guides.enabled=true \
 #
 
+$(SRCDIR)/vendor/bin/phpcs: composer
+
+.PHONY: phpcs
+phpcs: $(SRCDIR)/vendor/bin/phpcs
+	$(SRCDIR)/vendor/bin/phpcs -v  --standard=.phpcs.xml lib/ templates/
+
 .PHONY: doxygen
 doxygen: doc/doxygen/Doxyfile
 	rm -rf $(DOC_BUILD_DIR)/doxygen/*
