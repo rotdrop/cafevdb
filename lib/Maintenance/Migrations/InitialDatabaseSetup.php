@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,45 +32,45 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
- * Generate some needed procedures and functions. MySQL specific.
+ * The initial data-base structure. This just generates the table
+ * structure. We assume that the data-base is empty.
+ *
+ * @todo Should probably use a custom schema-provider and generate a
+ * DBAL schema from PHP statements. Unfortunately, there does not seem
+ * to be an automated tool for such code-generation.
  */
-class RemoveGenerateNumbers implements IMigration
+class InitialDatabaseSetup implements IMigration
 {
   use \OCA\CAFEVDB\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  public function description():string
-  {
-    return $this->l->t('Remove obsolete generateNumbers() stored procedure.');
-  }
+  private const INITIAL_SQL = __DIR__ . '/../../../appinfo/database/doctrine-orm-initial.sql';
 
-  private const SQL = [
-    "DROP PROCEDURE IF EXISTS `generateNumbers`",
-  ];
-
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ILogger $logger
-    , IL10N $l10n
-    , EntityManager $entityManager
+    ILogger $logger,
+    IL10N $l10n,
+    EntityManager $entityManager,
   ) {
     $this->logger = $logger;
     $this->l = $l10n;
     $this->entityManager = $entityManager;
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
+  public function description():string
+  {
+    return $this->l->t('Initial database setup.');
+  }
+
+  /** {@inheritdoc} */
   public function execute():bool
   {
     $connection = $this->entityManager->getConnection();
-
-    foreach (self::SQL as $sql) {
-      $statement = $connection->prepare($sql);
-      $statement->execute();
-    }
+    $schemaSql = file_get_contents(self::INITIAL_SQL);
+    $schemaStatement = $connection->prepare($schemaSql);
+    $schemaStatement->execute();
     return true;
   }
-};
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+}

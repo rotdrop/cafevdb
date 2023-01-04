@@ -1,4 +1,0 @@
-[mariadb]
-#plugin_dir = /usr/lib64/mariadb/plugin
-plugin_load_add = auth_pam
-#plugin_maturity = experimental
