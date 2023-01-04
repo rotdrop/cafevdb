@@ -1,4 +1,26 @@
 <?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2023 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 declare(strict_types=1);
 
@@ -13,23 +35,16 @@ use OCP\Migration\SimpleMigrationStep;
 /**
  * Auto-generated migration step: Please modify to your needs!
  */
-class Version060000Date20201001210735 extends SimpleMigrationStep {
-
-  /**
-   * @param IOutput $output
-   * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-   * @param array $options
-   */
-  public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+class Version060000Date20201001210735 extends SimpleMigrationStep
+{
+  /** {@inheritdoc} */
+  public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options)
+  {
   }
 
-  /**
-   * @param IOutput $output
-   * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-   * @param array $options
-   * @return null|ISchemaWrapper
-   */
-  public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
+  /** {@inheritdoc} */
+  public function changeSchema(IOutput $output, Closure $schemaClosure, array $options)
+  {
     /** @var ISchemaWrapper $schema */
     $schema = $schemaClosure();
 
@@ -125,11 +140,8 @@ class Version060000Date20201001210735 extends SimpleMigrationStep {
     return $schema;
   }
 
-  /**
-   * @param IOutput $output
-   * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-   * @param array $options
-   */
-  public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+  /** {@inheritdoc} */
+  public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options)
+  {
   }
 }
