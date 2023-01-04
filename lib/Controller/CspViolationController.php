@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\IConfig;
 
@@ -35,7 +35,7 @@ use OCP\IConfig;
 class CspViolationController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var \OCP\IConfig */
   private $config;

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var ToolTipsService */
   protected $toolTipsService;

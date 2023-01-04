@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IUser;
 use OCP\IDBConnection;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 
@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Common\PlainFileProgressStatus;
 /** Factory for progress status implementation. */
 class ProgressStatusService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   //static private $progressStatusImplementation = DatabaseProgressStatus::class;
   private static $progressStatusImplementation = PlainFileProgressStatus::class;

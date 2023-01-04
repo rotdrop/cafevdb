@@ -27,14 +27,14 @@ namespace OCA\CAFEVDB\Common;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Base for file-system related IUndoable implementations. */
 abstract class AbstractFileSystemUndoable extends AbstractUndoable
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IL10N */
   protected $l;

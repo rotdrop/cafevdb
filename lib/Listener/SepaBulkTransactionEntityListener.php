@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
  */
 class SepaBulkTransactionEntityListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var IL10N */

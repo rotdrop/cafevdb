@@ -29,7 +29,7 @@ use Doctrine\DBAL\Types\Types;
 
 use OCP\AppFramework\Db\Entity;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 /** Cloud progress status entity. */
 class ProgressStatus extends Entity

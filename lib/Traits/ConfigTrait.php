@@ -35,7 +35,7 @@ use OCP\IUser;
 use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IUserSession;
 use OCP\AppFramework\IAppContainer;
 use OCP\IURLGenerator;

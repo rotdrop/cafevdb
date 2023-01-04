@@ -46,7 +46,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IUserSession;
 use OCP\IRequest;
 use OCP\ISession;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\ITempManager;
 

@@ -28,7 +28,7 @@ use ZipStream\ZipStream;
 use ZipStream\Option\Archive as ArchiveOptions;
 
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 /** Support functions for the database storage backend. */
 class DatabaseStorageUtil
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const PATH_SEP = '/';

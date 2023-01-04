@@ -30,7 +30,7 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 /**
  * A synchronized is a tuple of an entity and a mapper which writes

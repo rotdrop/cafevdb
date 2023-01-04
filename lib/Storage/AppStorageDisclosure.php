@@ -28,7 +28,7 @@ use RuntimeException;
 use InvalidArgumentException;
 
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IConfig as CloudConfig;
 use OCP\Files\IAppData;
 use OCP\Files\Mount\IMountManager;
@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Constants;
  */
 class AppStorageDisclosure
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const PATH_SEP = Constants::PATH_SEP;
 

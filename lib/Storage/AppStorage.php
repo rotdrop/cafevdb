@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Storage;
 use InvalidArgumentException;
 
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class AppStorage
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const PATH_SEP = '/';
   public const UPLOAD_FOLDER = 'uploads';

@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Events;
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class SepaBulkTransactionSubmittedListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = Events\PostChangeSepaBulkTransactionSubmitDate::class;
 

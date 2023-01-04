@@ -29,7 +29,7 @@ use Exception;
 
 use OCP\IDBConnection;
 use OCP\DB\QueryBuilder\IQueryBuilder;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\Cloud\Entities\Blog as BlogEntry;
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\PageRenderer\Renderer as PageRenderer;
 /** Mapper for the blog entities. */
 class BlogMapper extends Mapper
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait; // required IL10N, ILogger
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait; // required IL10N, ILogger
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

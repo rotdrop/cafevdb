@@ -33,7 +33,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IUserSession;
 use OCP\IRequest;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\IDateTimeZone;
 use OCP\IURLGenerator;
@@ -51,7 +51,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 class BlogController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var \OCP\IDateTimeZone */
   private $timeZone;

@@ -30,7 +30,7 @@ use RuntimeException;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\ISession;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Exceptions;
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Exceptions;
 /** Place server-to-server AJAX calls. */
 class RequestService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const JSON = 'json';
   const URL_ENCODED = 'urlencoded';

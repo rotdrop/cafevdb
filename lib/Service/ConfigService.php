@@ -45,7 +45,7 @@ use OCP\Security\ISecureRandom;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IDateTimeFormatter;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Exceptions;
 
@@ -59,7 +59,7 @@ use OCA\CAFEVDB\Exceptions;
 class ConfigService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
 
   /*-**************************************************************************

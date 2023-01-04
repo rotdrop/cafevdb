@@ -25,7 +25,7 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 /** Recorded  untranslated strings. */
 class TranslationNotFoundListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

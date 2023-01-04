@@ -29,7 +29,7 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\Files\Events\Node\NodeDeletedEvent;
 use OCP\Files\Events\Node\NodeRenamedEvent;
 use OCP\IUser;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IUserSession;
 use OCP\Files\IRootFolder;
 use OCP\AppFramework\IAppContainer;
@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class FileNodeListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [ NodeDeletedEvent::class, NodeRenamedEvent::class ];
 

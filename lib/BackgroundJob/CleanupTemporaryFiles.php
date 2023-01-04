@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\BackgroundJob;
 use OCP\BackgroundJob\TimedJob;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig as ICloudConfig;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Common\PlainFileProgressStatus;
@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Common\PlainFileProgressStatus;
 /** Cleanup left-over temporary files from the app-storage. */
 class CleanupTemporaryFiles extends TimedJob
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const DIRECTORIES = [
     AppStorage::UPLOAD_FOLDER,

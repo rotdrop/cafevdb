@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 use \Exception;
 use \RuntimeException;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\ConversionException;
@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 /** Counter part to the decorated entity manager. */
 class ClassMetadataDecorator implements ClassMetadataInterface
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var array */
   private $columnAssociationsCache = [];

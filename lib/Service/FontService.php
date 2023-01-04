@@ -32,7 +32,7 @@ use FilesystemIterator;
 
 use PhpOffice\PhpSpreadsheet;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IConfig as CloudConfig;
 use OCP\Files\Folder;
 
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Constants;
 /** Office font-file locator, in particular for PhpOffice. */
 class FontService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   public const OFFICE_FONTS_FOLDER_CONFIG = 'officeFontsFolder';
 

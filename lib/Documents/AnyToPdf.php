@@ -30,7 +30,7 @@ use RuntimeException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ExecutableFinder;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\Files\IMimeTypeDetector;
 use OCP\ITempManager;
@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 class AnyToPdf
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /**
    * @var string Array of available converters per mime-type. These form a

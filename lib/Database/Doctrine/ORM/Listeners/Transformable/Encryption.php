@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\Transformable;
 use RuntimeException;
 use Throwable;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Wrapped\MediaMonks\Doctrine\Transformable;
 
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Util;
 /** Handle transparent multi-user encryption/decryption */
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var Crypto\AsymmetricKeyService */
   private $keyService;

@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Crypto;
 
 use DateTime;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\EventDispatcher\Event;
@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Notifications\Notifier;
  */
 class AsymmetricKeyService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const PUBLIC_ENCRYPTION_KEY_CONFIG = AsymmetricKeyStorageInterface::PUBLIC_ENCRYPTION_KEY;
   const PRIVATE_ENCRYPTION_KEY_CONFIG = AsymmetricKeyStorageInterface::PRIVATE_ENCRYPTION_KEY;

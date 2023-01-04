@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 use OCP\IUserSession;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
 
@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
  */
 class Personal implements ISettings
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 

@@ -27,7 +27,7 @@ use Html2Text\Html2Text;
 use PhpOffice\PhpSpreadsheet;
 
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Service\FuzzyInputService;
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder implements PhpSpreadSheet\Cell\IValueBinder
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IL10N */
   private $l;

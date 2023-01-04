@@ -31,7 +31,7 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
 use OCP\IGroupManager;
 use OCP\IConfig;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Service\ConfigService;
  */
 class SubAdminEventListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [ AddedEvent::class, RemoteEvent::class ];
 

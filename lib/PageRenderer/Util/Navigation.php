@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\PageRenderer\Util;
 
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Database\Legacy\PME\IOptions as PMEOptions;
@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class Navigation
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const DISABLED = 1;
   const SELECTED = 2;

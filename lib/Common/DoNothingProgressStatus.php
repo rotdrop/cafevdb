@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Common;
 
 use DateTimeImmutable;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;

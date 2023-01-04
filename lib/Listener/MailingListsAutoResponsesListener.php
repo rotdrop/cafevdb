@@ -33,7 +33,7 @@ use OCP\Files\Events\Node\NodeDeletedEvent;
 use OCP\Files\Events\Node\NodeTouchedEvent;
 use OCP\Files\Events\Node\NodeCreatedEvent;
 use OCP\IUser;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\Files\IRootFolder;
@@ -53,7 +53,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class MailingListsAutoResponsesListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [
     NodeRenamedEvent::class,

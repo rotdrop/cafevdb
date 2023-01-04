@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Sanitizers;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Database\EntityManager;

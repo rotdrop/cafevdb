@@ -28,7 +28,7 @@ use \RuntimeException;
 use \InvalidArgumentException;
 
 use OCP\IRequest;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\IEventDispatcher;
@@ -97,7 +97,7 @@ use OCA\CAFEVDB\Events;
  */
 class EntityManager extends EntityManagerDecorator
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const ENTITY_PATHS = [
     __DIR__ . "/Doctrine/ORM/Entities",

@@ -28,7 +28,7 @@ use OCP\User\Events\PasswordUpdatedEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 /** Perform re-recryption action when the user password has been updated. */
 class PasswordUpdatedEventListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

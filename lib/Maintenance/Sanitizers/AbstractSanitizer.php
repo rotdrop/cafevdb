@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Maintenance\Sanitizers;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use Symfony\Component\Console\Output\Output;
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 abstract class AbstractSanitizer implements ISanitizer
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var object */

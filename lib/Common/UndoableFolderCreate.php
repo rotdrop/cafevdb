@@ -30,7 +30,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IDateTimeFormatter;
 use OCP\Files\AlreadyExistsException as FileAlreadyExistsException;
 
@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableFolderCreate extends AbstractFileSystemUndoable
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IDateTimeFormatter */
   protected $dateTimeFormatter;

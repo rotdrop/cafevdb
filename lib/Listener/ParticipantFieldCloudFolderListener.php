@@ -45,7 +45,7 @@ use OCP\Files\Events\Node\BeforeNodeTouchedEvent;
 use OCP\Files\Events\Node\BeforeNodeCreatedEvent;
 use OCP\Files\Events\Node\BeforeFolderCreatedEvent;
 use OCP\IUser;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\IUserSession;
 use OCP\Files\IRootFolder;
@@ -85,7 +85,7 @@ use OCA\CAFEVDB\Constants;
 class ParticipantFieldCloudFolderListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  // use \OCA\CAFEVDB\Traits\LoggerTrait;
+  // use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = [

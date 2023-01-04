@@ -28,7 +28,7 @@ use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\Group\ISubAdmin as IGroupSubAdminManager;
 use OCP\IConfig;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 /**
@@ -38,7 +38,7 @@ use OCP\IL10N;
  */
 class AuthorizationService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var string */
   private $appName;

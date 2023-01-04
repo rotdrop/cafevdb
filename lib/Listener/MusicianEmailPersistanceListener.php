@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Maintenance\SanitizerRegistration;
 /** Make sure that known sanitizations are performed. */
 class MusicianEmailPersistanceListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = [

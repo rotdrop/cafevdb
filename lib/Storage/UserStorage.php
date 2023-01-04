@@ -35,7 +35,7 @@ use OC\Files\Storage\Wrapper\Wrapper as WrapperStorage;
 use OCP\IUser;
 use OCP\IUserSession;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IURLGenerator;
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\IRootFolder;
@@ -58,7 +58,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class UserStorage
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const PATH_SEP = Constants::PATH_SEP;
   const CACHE_DIRECTORY = self::PATH_SEP.'cache';

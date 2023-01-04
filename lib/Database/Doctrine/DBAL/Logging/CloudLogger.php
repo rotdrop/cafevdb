@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Logging;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
 
 use OCP\EventDispatcher\IEventDispatcher;
-use OCP\ILogger as LoggerInterface;
+use Psr\Log\LoggerInterface as ILogger as LoggerInterface;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Events;
@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 /** DBAL logger implementation which logs to the cloud log. */
 class CloudLogger implements SQLLogger
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IEventDispatcher */
   private $eventDispatcher;

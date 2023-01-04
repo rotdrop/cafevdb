@@ -30,7 +30,7 @@ use InvalidArgumentException;
 use OCP\Notification\INotification;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory as IL10NFactory;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 /** Notification support class. */
 class Notifier implements \OCP\Notification\INotifier
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const RECRYPT_USER_SUBJECT = 'recrypt_user';
   const RECRYPT_USER_DENIED_SUBJECT = 'recrypt_user_denied';

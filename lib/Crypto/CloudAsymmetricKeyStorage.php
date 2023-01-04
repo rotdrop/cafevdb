@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Crypto;
 use Throwable;
 use InvalidArgumentException;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\IConfig;
 
@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Exceptions;
 /** Key-storage base-class. */
 abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const NAME_SEPARATOR = ';';
 

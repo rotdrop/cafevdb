@@ -29,7 +29,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
 use OCP\Notification\IManager as NotificationManager;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Events\AfterEncryptionKeyPairChanged as HandledEvent;
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Notifications\Notifier;
 /** Perform re-encryption tasks after encryption keys have been changed. */
 class AfterEncryptionKeyPairChangedListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

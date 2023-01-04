@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\BackgroundJob;
 use OCP\BackgroundJob\TimedJob;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig as ICloudConfig;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\GeoCodingService;
 
@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
  */
 class LazyUpdateGeoCoding extends TimedJob
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var GeoCodignService */
   private $geoCodingService;

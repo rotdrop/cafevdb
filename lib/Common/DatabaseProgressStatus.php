@@ -29,7 +29,7 @@ use DateTimeImmutable;
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\Entity;
 use OCP\AppFramework\Db;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\Db\DoesNotExistException;
 
@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Exceptions;
 /** Progress-status via database table. */
 class DatabaseProgressStatus extends AbstractProgressStatus
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const ENTITY_NAME = Entities\ProgressStatus::class;
 

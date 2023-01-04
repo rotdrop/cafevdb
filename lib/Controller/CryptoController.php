@@ -28,7 +28,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 use OCP\AppFramework\IAppContainer;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 class CryptoController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const META_DATA_IBAN = 'iban';
 

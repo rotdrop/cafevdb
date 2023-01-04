@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\L10N;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Common\Util;
@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class BiDirectionalL10N
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private const FORWARD = 'forward';
   private const REVERSE = 'reverse';

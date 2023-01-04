@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Migration;
 
 use OCP\Migration\IOutput;
 use OCP\Migration\IRepairStep;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Storage\Database\MountProvider;
 
@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Storage\Database\MountProvider;
  */
 class RegisterMimeTypes implements IRepairStep
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const MIMETYPE_MAPPING_FILE = 'mimetypemapping.json';
   const MIMETYPE_ALIASES_FILE = 'mimetypealiases.json';

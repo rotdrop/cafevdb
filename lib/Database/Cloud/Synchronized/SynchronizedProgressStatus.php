@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Database\Cloud\Synchronized;
 
 use OCP\IDBConnection;
 use OCP\AppFramework\Db\Entity;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Database\Cloud\Synchronized;
 

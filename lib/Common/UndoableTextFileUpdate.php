@@ -31,7 +31,7 @@ use OCP\AppFramework\IAppContainer;
 use OCP\Files\Node as FileSystemNode;
 use OCP\Files\FileInfo;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IDateTimeFormatter;
 
 use OCA\CAFEVDB\Constants;
@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableTextFileUpdate extends AbstractFileSystemUndoable
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IDateTimeFormatter */
   protected $dateTimeFormatter;

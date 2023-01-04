@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service;
 
 use OCP\IURLGenerator;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 /**
  * Helper which injects the name of this app into all methods of the
@@ -34,7 +34,7 @@ use OCP\ILogger;
  */
 class UrlGeneratorService implements IURLGenerator
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IURLGenerator */
   private $urlGenerator;

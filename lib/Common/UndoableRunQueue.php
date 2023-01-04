@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Common;
 
 use \InvalidArgumentException;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 
@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Exceptions\UndoableRunQueueException;
  */
 class UndoableRunQueue
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IAppContainer */
   protected $appContainer;

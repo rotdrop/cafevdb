@@ -32,7 +32,7 @@ use FilesystemIterator;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Fie
 class ReceivablesGeneratorFactory
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const GENERATORS_FOLDER = __DIR__ . '/../../';
   const GENERATOR_LABEL = IRecurringReceivablesGenerator::GENERATOR_LABEL;

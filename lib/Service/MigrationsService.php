@@ -31,7 +31,7 @@ use RecursiveDirectoryIterator;
 use FilesystemIterator;
 
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Database\EntityManager;
@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
 /** Manage database migrations. */
 class MigrationsService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const MIGRATIONS_FOLDER = __DIR__ . '/../Maintenance/Migrations/';

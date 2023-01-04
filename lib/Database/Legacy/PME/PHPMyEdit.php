@@ -32,7 +32,7 @@ use RuntimeException;
 use phpMyEdit as LegacyPHPMyEdit;
 
 use OCP\IRequest;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\IDateTimeZone;
 use OCP\IDateTimeFormatter;
@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Common\Util;
 class PHPMyEdit extends LegacyPHPMyEdit
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var Connection */
   private $connection;

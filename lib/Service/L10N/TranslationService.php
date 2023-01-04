@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service\L10N;
 
 use Exception;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\L10N\IFactory as IL10NFactory;
 
 use \Doctrine\ORM\Query\Expr\Join;
@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class TranslationService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var array */

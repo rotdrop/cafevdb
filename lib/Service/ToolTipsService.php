@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Service;
 
 use \RuntimeException;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\AppFramework\IAppContainer;
 
@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 /** Tool-tips management with translations. */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const SUBKEY_PREFIXES = [ 'pme' ];
   const SUB_KEY_SEP = ':';

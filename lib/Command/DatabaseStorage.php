@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Command;
 use \RuntimeException;
 
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IUserSession;
 use OCP\IUserManager;
 use OCP\AppFramework\IAppContainer;

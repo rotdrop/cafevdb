@@ -28,13 +28,13 @@ use RuntimeException;
 
 use mikehaertl\pdftk\Pdf as PdfTk;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\Files\File;
 
 /** Fill a PDF-form with given data. */
 class PDFFormFiller
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var PdfTk */
   private $pdfTk = null;

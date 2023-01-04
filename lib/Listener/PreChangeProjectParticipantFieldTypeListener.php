@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Events\PreChangeProjectParticipantFieldType as HandledEvent;
@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 /** Update README.md's when the field-type changes. */
 class PreChangeProjectParticipantFieldTypeListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

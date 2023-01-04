@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 /** Debugging helper providing access to the cloud logger. */
 trait LogTrait

@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use OCP\IConfig;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\App\IAppManager;
 use OCP\AppFramework\IAppContainer;
@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class CloudUserConnectorService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const REQUIREMENTS_OK = true;
   const REQUIREMENTS_MISSING = false;

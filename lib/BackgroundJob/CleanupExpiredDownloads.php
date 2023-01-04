@@ -34,7 +34,7 @@ use OCP\Files\Node;
 use OCP\Files\Folder;
 use OCP\Files\File;
 use OCP\IConfig as ICloudConfig;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
 
@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Common\PlainFileProgressStatus;
  */
 class CleanupExpiredDownloads extends TimedJob
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IRootFolder*/
   private $rootFolder;

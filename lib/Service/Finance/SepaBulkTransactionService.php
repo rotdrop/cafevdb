@@ -33,7 +33,7 @@ use UnexpectedValueException;
 use OCP\AppFramework\IAppContainer;
 use OCP\IDateTimeFormatter;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
@@ -61,7 +61,7 @@ use OCA\CAFEVDB\Service;
  */
 class SepaBulkTransactionService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
 

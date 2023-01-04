@@ -28,7 +28,7 @@ use OutOfBoundsException;
 
 use OCP\ISession;
 use OCP\IL10N;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 /**
  * Page history via PHP session.
@@ -39,7 +39,7 @@ use OCP\ILogger;
 class HistoryService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const MAX_HISTORY_SIZE = 1;
   const SESSION_HISTORY_KEY = 'PageHistory';

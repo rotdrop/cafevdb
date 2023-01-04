@@ -24,12 +24,12 @@
 
 namespace OCA\CAFEVDB\Crypto;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 
 /** Utility routines for the SealCryptor. */
 class SealService
 {
-  use \OCA\CAFEVDB\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var SymmetricCryptorInterface */
   private $dataCryptor;
