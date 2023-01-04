@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2014-2022 Claus-Justus Heine
+ * @copyright 2014-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -104,9 +104,14 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCP\Files\Config\IMountProviderCollection;
 use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 
+// phpcs:disable PSR1.Files.SideEffects
+include_once __DIR__ . '/../../vendor/autoload.php';
+
 /** {@inheritdoc} */
 class Application extends App implements IBootstrap
 {
+  use \OCA\RotDrop\Toolkit\Traits\AppNameTrait;
+
   /** @var IAppContainer */
   protected static $appContainer;
 
@@ -116,8 +121,7 @@ class Application extends App implements IBootstrap
   /** {@inheritdoc} */
   public function __construct(array $urlParams = [])
   {
-    $infoXml = new SimpleXMLElement(file_get_contents(__DIR__ . '/../../appinfo/info.xml'));
-    $this->appName = (string)$infoXml->id;
+    $this->appName = $this->getAppInfoAppName(__DIR__);
     parent::__construct($this->appName, $urlParams);
   }
 
