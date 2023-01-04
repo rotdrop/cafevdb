@@ -9,3 +9,5 @@ js/
 css/
 statistics/
 dev-scripts/
+lib/Toolkit/Traits/UtilTrait.php
+lib/Toolkit/Service/ArchiveService.php
