@@ -36,7 +36,11 @@ use OCA\CAFEVDB\Constants;
  */
 class AssetService
 {
-  use \OCA\RotDrop\Toolkit\Traits\AssetTrait;
+  use \OCA\RotDrop\Toolkit\Traits\AssetTrait {
+    getAsset as public;
+    getJSAsset as public;
+    getCSSAsset as public;
+  }
 
   const JS = Constants::JS;
   const CSS = Constants::CSS;

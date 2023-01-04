@@ -34,13 +34,17 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\FontService;
 
+use OCA\CAFEVDB\Traits\ConfigTrait;
+use OCA\RotDrop\Toolkit\Traits\AssetTrait;
+
 use OCA\CAFEVDB\Constants;
 
 /** Admin settings class. */
 class Admin implements IDelegatedSettings
 {
-  use \OCA\RotDrop\Toolkit\Traits\AssetTrait;
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use AssetTrait, ConfigTrait {
+    ConfigTrait::logger insteadof AssetTrait;
+  }
 
   const TEMPLATE = "admin-settings";
 

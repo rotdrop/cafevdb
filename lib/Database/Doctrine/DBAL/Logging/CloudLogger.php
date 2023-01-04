@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Logging;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Logging\SQLLogger;
 
 use OCP\EventDispatcher\IEventDispatcher;
-use Psr\Log\LoggerInterface as ILogger as LoggerInterface;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Events;
@@ -58,7 +58,7 @@ class CloudLogger implements SQLLogger
   public function __construct(
     EncryptionService $encryptionService,
     IEventDispatcher $eventDispatcher,
-    LoggerInterface $logger,
+    ILogger $logger,
     IL10N $l10n,
   ) {
     $this->encryptionService = $encryptionService;

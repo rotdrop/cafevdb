@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,7 +35,7 @@ use OCP\IUser;
 use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IL10N;
-use Psr\Log\LoggerInterface as ILogger;
+use Psr\Log\LoggerInterface;
 use OCP\IUserSession;
 use OCP\AppFramework\IAppContainer;
 use OCP\IURLGenerator;
@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 trait ConfigTrait
 {
-  use LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var ConfigService */
   protected $configService;
@@ -100,8 +100,8 @@ trait ConfigTrait
     return $this->configService->getAppL10n();
   }
 
-  /** @return ILogger */
-  public function logger():ILogger
+  /** @return LoggerInterface */
+  public function logger():LoggerInterface
   {
     return $this->configService ? $this->configService->logger() : $this->logger;
   }
