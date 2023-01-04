@@ -35,11 +35,12 @@
   <rule ref="rulesets/naming.xml">
     <exclude name="ShortVariable"/>
     <exclude name="LongVariable"/>
+    <exclude name="LongClassName"/>
     <exclude name="BooleanGetMethodName"/>
   </rule>
   <rule ref="rulesets/naming.xml/ShortVariable">
     <properties>
-      <property name="exceptions" value="a,b,c,d,e,f,g,kd,km,l,fp,i,id,j,k,l,op,qb,tz,x"/>
+      <property name="exceptions" value="a,b,c,cc,d,db,e,f,fp,g,kd,km,i,id,j,k,l,n,op,qb,r,s,tz,x"/>
     </properties>
   </rule>
   <rule ref="rulesets/naming.xml/ShortMethodName">
@@ -49,8 +50,14 @@
   </rule>
   <rule ref="rulesets/naming.xml/LongVariable">
     <properties>
-      <property name="subtract-suffixes" value="Disabled,Enalbed"/>
+      <property name="subtract-suffixes" value="Disabled,Enabled"/>
       <property name="maximum" value="32"/>
+    </properties>
+  </rule>
+  <rule ref="rulesets/naming.xml/LongClassName">
+    <properties>
+      <property name="subtract-suffixes" value="Disabled,Enabled"/>
+      <property name="maximum" value="64"/>
     </properties>
   </rule>
 
