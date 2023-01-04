@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -78,7 +79,7 @@ foreach ($webPageTemplates as $template) {
         $id = $class.$ucSlug;
         $name = $id;
         $title = $class.'-'.$categorySlug;
-      ?>
+        ?>
         <div class="<?php p($class); ?> textfield <?php p($hideOnline); ?>">
           <input type="text"
                  class="<?php p($class); ?>"
@@ -108,7 +109,7 @@ foreach ($webPageTemplates as $template) {
         $id = $class.$ucSlug.'Template';
         $name = $id;
         $title = $class.'-'.$templateSlug;
-      ?>
+        ?>
         <div class="<?php p($class); ?> textfield <?php p($hideOnline); ?>">
           <input type="text"
                  class="<?php p($class); ?>"
@@ -138,7 +139,7 @@ foreach ($webPageTemplates as $template) {
         $id = $class.$ucSlug.'Module';
         $name = $id;
         $title = $class.'-'.$moduleSlug;
-      ?>
+        ?>
         <div class="<?php p($class); ?> textfield <?php p($hideOnline); ?>">
           <input type="text"
                  class="<?php p($class); ?>"

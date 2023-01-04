@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+// phpcs:disable PSR1.Files.SideEffects
 
 /* The form expects the following data in $_[key] for key equal to:
  *
@@ -72,17 +74,34 @@ $projectMailingListTitle = !empty($projectMailingList)
  ? $toolTips['emailform:recipients:filter:basic-set:project-mailing-list']
  : htmlspecialchars($l->t('The project mailing list is not configured or the mailing-list server is unreachable.'));
 
-function cgiName(string $key, ?string $subKey = null)
+/**
+ * @param string $key
+ *
+ * @param null|string $subKey
+ *
+ * @return string
+ */
+function cgiName(string $key, ?string $subKey = null):string
 {
   return RecipientsFilter::POST_TAG . '[' . $key . ']' . ($subKey ? '[' . $subKey . ']' : '');
 }
 
-function basicSetName(string $key)
+/**
+ * @param string $key
+ *
+ * @return string
+ */
+function basicSetName(string $key):string
 {
   return cgiName(RecipientsFilter::BASIC_RECIPIENTS_SET_KEY) . '[]';
 }
 
-function basicSetValue(string $key)
+/**
+ * @param string $key
+ *
+ * @return string
+ */
+function basicSetValue(string $key):string
 {
   return $key;
 }
@@ -117,7 +136,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
           <button class="menu-title action-menu-toggle basic-recipients-set">...</button>
           <nav class="dropdown-content dropdown-align-left">
             <ul class="dropdown-time-list">
-<?php if ($projectId > 0) { ?>
+    <?php if ($projectId > 0) { ?>
               <li class="dropdown-item tooltip-auto">
                 <span class="basic-recipients-set from-project confirmed inner vmiddle <?php p($containerClass); ?>">
                   <input type="checkbox"
@@ -183,7 +202,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                   </label>
                 </span>
               </li>
-<?php } else { ?>
+    <?php } else { ?>
               <li class="dropdown-item tooltip-auto">
                 <span class="basic-recipients-set mailing-list announcements-mailing-list inner vmiddle <?php p($containerClass); ?>">
                   <input type="radio"
@@ -201,7 +220,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
                 </span>
               </li>
                 <!-- <span class="fill-word conjunction"><?php p($l->t('CONJUNCTION: or')); ?></span>  -->
-<?php } ?>
+    <?php } ?>
               <li class="dropdown-item tooltip-auto">
                 <span class="basic-recipients-set mailing-list announcements-mailing-list inner vmiddle <?php p($containerClass); ?>">
                   <input type="<?php p($projectId > 0 ? 'checkbox' : 'radio'); ?>"
@@ -226,7 +245,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
         foreach ($recipientSetDescriptions as $description) {
           $text = $description['text'];
           $conditions = implode(' ', $description['conditions']);
-        ?>
+          ?>
           <span class="basic-recipients-set brief-description <?php p($conditions); ?>"><?php p($text); ?></span>
         <?php } ?>
       </span>

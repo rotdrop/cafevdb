@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -89,7 +90,14 @@ foreach ($locales as $locale) {
     </fieldset>
     <!-- DISTRIBUTE ENCRYPTION-KEY -->
     <fieldset class="keydistribute" <?php echo $off; ?> >
-      <input id="keydistributebutton" type="button" name="keydistribute" value="<?php echo $l->t('Distribute Encryption Key');?>" title="<?php echo $l->t('Insert the data-base encryption key into the user preferences of all users belonging to the user group. The data-base key will be encrypted by the respective user\'s public key.') ?>" />
+      <input id="keydistributebutton"
+             type="button"
+             name="keydistribute"
+             value="<?php echo $l->t('Distribute Encryption Key');?>"
+             title="<?php echo $l->t(
+                    'Insert the data-base encryption key into the user preferences of all users belonging to the user group.'
+                    . ' The data-base key will be encrypted by the respective user\'s public key.') ?>"
+      />
       <span class="statusmessage"></span>
     </fieldset>
   </form>

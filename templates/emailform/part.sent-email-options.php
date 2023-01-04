@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,9 +45,9 @@ if (!empty($first) && !empty($last)) {
 if ($groupByYear) {
   $currentYear = $firstYear;
   $lastYear = $currentYear;
-?>
+  ?>
   <optgroup label="<?php p($currentYear); ?>">
-<?php
+  <?php
 }
 
 /** @var Entities\SentEmail $sentEmail */
@@ -67,9 +67,11 @@ foreach ($sentEmails as $sentEmail) {
   $name = $createdAt->isoFormat('L LT').': '.$sentEmail->getSubject();
   if ($currentYear != $lastYear) {
     $lastYear = $currentYear;
-?>
+    ?>
 </optgroup><optgroup label="<?php p($currentYear); ?>">
-<?php } ?>
+    <?php
+  }
+  ?>
   <option value="<?php p($sentEmail->getMessageId()); ?>"
           title="<?php echo Util::htmlEscape($title); ?>"
   >

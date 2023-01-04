@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,19 +28,19 @@ use \OCA\CAFEVDB\PageRenderer\Util\Navigation;
 
 $phraseOptions = [];
 foreach ($translations as $keyId => $data) {
-    $translatedLocales = [];
-    foreach ($data['translations'] as $locale => $translation) {
-	$translatedLocales[] = $locale;
-    }
-    $translatedLocales = implode(',', $translatedLocales);
-    $phraseOptions[] = [
-	'value' => $keyId,
-	'name'  => $data['key'],
-	'title' => $translatedLocales,
-        'data'  => [
-            'translations' => $data['translations'],
-        ],
-    ];
+  $translatedLocales = [];
+  foreach ($data['translations'] as $locale => $translation) {
+    $translatedLocales[] = $locale;
+  }
+  $translatedLocales = implode(',', $translatedLocales);
+  $phraseOptions[] = [
+    'value' => $keyId,
+    'name'  => $data['key'],
+    'title' => $translatedLocales,
+    'data'  => [
+      'translations' => $data['translations'],
+    ],
+  ];
 }
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin devel">
@@ -48,9 +49,9 @@ foreach ($translations as $keyId => $data) {
     <select
         id="<?php echo $appName; ?>-translation-phrases"
         data-placeholder="<?php echo $l->t("Select a phrase to translate"); ?>"
-	class="translation-phrases"
+        class="translation-phrases"
         name="translation-phrases"
-	title="<?php $toolTips['translation-phrases']; ?>" >
+        title="<?php $toolTips['translation-phrases']; ?>" >
       <option data-translations="dummy"></option>
       <?php echo Navigation::selectOptions($phraseOptions); ?>
     </select>

@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -64,11 +64,11 @@ use OCA\CAFEVDB\Common\Util;
   </select>'.$upproto.' '.$l->t('security').'</label>'."\n";
         echo '
 </fieldset>';
-          if ($proto == 'smtp') {
-            echo '&nbsp;&nbsp;&nbsp;&nbsp;'."\n";
-          }
+        if ($proto == 'smtp') {
+          echo '&nbsp;&nbsp;&nbsp;&nbsp;'."\n";
         }
-        ?>
+      }
+      ?>
       <!-- div class="statusmessage"></div -->
     </form><!-- server settings -->
     <!-- GENERAL EMAIL STUFF -->
@@ -230,7 +230,10 @@ use OCA\CAFEVDB\Common\Util;
     <h4><?php echo $l->t('Bulk Email Privacy Notice'); ?></h4>
     <form class="bulk-email-privacy-notice">
       <fieldset class="bulk-email-privacy-notice">
-        <legend><?php p($l->t('This is the notice attached to all bulk-emails which are not directed to a mailing list or project-participants. The idea is to give the recipients information why they receive the message and how they can prevent further messages if they consider such messages as spam.')); ?></legend>
+        <legend><?php p($l->t(
+                'This is the notice attached to all bulk-emails which are not directed to a mailing list or project-participants.'
+                . ' The idea is to give the recipients information why they receive the message'
+                . ' and how they can prevent further messages if they consider such messages as spam.')); ?></legend>
         <div class="bulk-email-privacy-notice container">
           <textarea class="bulk-email-privacy-notice wysiwyg"
                     name="bulkEmailPrivacyNotice"

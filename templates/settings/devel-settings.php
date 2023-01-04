@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
-$linkToolTip = function(string $tag, ?string $value) use ($toolTips)
-{
+$linkToolTip = function(string $tag, ?string $value) use ($toolTips) {
   return empty($value) ? $toolTips[$tag] : $value;
 };
 

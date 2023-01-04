@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2020, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -108,9 +109,11 @@ while (!empty($blog)) {
     array_push($savedblog, $blog);
     $blog = $entry['children'];
     $level ++;
-  } else while (empty($blog) && $level > 0) {
+  } else {
+    while (empty($blog) && $level > 0) {
       $blog = array_pop($savedblog);
       $level --;
     }
+  }
 }
 echo "</ul>\n";

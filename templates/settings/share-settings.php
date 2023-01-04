@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,11 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
     <form id="shareownerform">
       <fieldset id="shareowner" <?php echo $alloff; ?> >
         <input type="hidden" id="user-saved" name="shareowner-saved" value="<?php echo $_['shareowner']; ?>" />
-        <input <?php echo $_['shareowner'] != '' ? 'disabled' : ''; ?> type="text" id="user" name="shareowner" placeholder="<?php echo $l->t('shareowner');?>" value="<?php echo $_['shareowner']; ?>" />
+        <inputtype="text" id="user" name="shareowner"
+                          placeholder="<?php echo $l->t('shareowner');?>"
+                          value="<?php echo $_['shareowner']; ?>"
+                          <?php echo $_['shareowner'] != '' ? 'disabled' : ''; ?>
+        />
         <input type="checkbox" id="shareowner-force" name="shareowner-force" class="checkbox"/>
            <label for="shareowner-force" title="<?php echo $toolTips['shareowner-force']; ?>"  class="tooltip-auto">
              <?php echo $l->t('force');?>
@@ -48,7 +52,13 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
       </fieldset>
 <!-- CHANGE ITS PASSWORD -->
       <fieldset class="shareownerpassword" <?php echo $off; ?> >
-        <input type="password" id="shareownerpassword" class="randompassword" name="shareownerpassword" placeholder="<?php echo $l->t('Share-Password');?>" data-typetoggle="#shareownerpassword-show" />
+        <input type="password"
+               id="shareownerpassword"
+               class="randompassword"
+               name="shareownerpassword"
+               placeholder="<?php echo $l->t('Share-Password');?>"
+               data-typetoggle="#shareownerpassword-show"
+        />
         <input class="cafevdb-password-show" type="checkbox" id="shareownerpassword-show" name="shareownerpassword-show" />
         <label class="cafevdb-password-show" for="shareownerpassword-show"><?php echo $l->t('show');?></label>
         <input name="passwordgenerate" id="generate" type="button" value="<?php echo $l->t('Generate');?>" />
@@ -403,7 +413,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           />
           <label for="user-sql-recreate-views-button"
                  title="<?php p($toolTips['settings:personal:sharing:user-sql:recreate-views']); ?>">
-            <?php p($l->t('Recreate the database-views for the "%1$s"-user-backend.',  $cloudUserBackend)); ?>
+            <?php p($l->t('Recreate the database-views for the "%1$s"-user-backend.', $cloudUserBackend)); ?>
           </label>
         </div>
       </fieldset>
@@ -442,9 +452,14 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
           <?php p($l->t('Hints')); ?>
         </legend>
         <div class="cloud-user hints">
-          <?php if (!empty($importClubMembersAsCloudUsers)) foreach (($cloudUserRequirements['hints']??[]) as $hint) { ?>
-            <div class="cloud-user hint"><?php p($hint); ?></div>
-          <?php } ?>
+          <?php if (!empty($importClubMembersAsCloudUsers)) {
+            foreach (($cloudUserRequirements['hints']??[]) as $hint) {
+              ?>
+          <div class="cloud-user hint"><?php p($hint); ?></div>
+              <?php
+            }
+          }
+          ?>
         </div>
       </fieldset>
     </form>

@@ -372,9 +372,15 @@ phpdoc: $(PHPDOC)
 
 $(SRCDIR)/vendor/bin/phpcs: composer
 
+PHPCS_IGNORE=lib/Database/Doctrine/ORM/Proxies/,templates/legacy/
+
 .PHONY: phpcs
 phpcs: $(SRCDIR)/vendor/bin/phpcs
-	$(SRCDIR)/vendor/bin/phpcs -v  --standard=.phpcs.xml lib/ templates/
+	$(SRCDIR)/vendor/bin/phpcs --ignore=$(PHPCS_IGNORE) -v  --standard=.phpcs.xml lib/ templates/
+
+.PHONY: phpcs-errors
+phpcs-errors: $(SRCDIR)/vendor/bin/phpcs
+	$(SRCDIR)/vendor/bin/phpcs --ignore=$(PHPCS_IGNORE) -n --standard=.phpcs.xml lib/ templates/|grep FILE:|awk '{ print $$2; }'
 
 .PHONY: doxygen
 doxygen: doc/doxygen/Doxyfile

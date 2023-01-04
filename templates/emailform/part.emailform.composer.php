@@ -4,9 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license GNU AGPL version 3 or any later version
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -211,7 +210,15 @@ foreach ($eventAttachmentOptions as $option) {
     </tr>
     <tr>
       <td class="body caption"><?php echo $l->t('Message-Body'); ?></td>
-      <td colspan="2" class="messagetext"><textarea name="emailComposer[messageText]" class="wysiwyg-editor external-documents" cols="60" rows="20" id="message-text"><?php echo htmlspecialchars($message); ?></textarea></td>
+      <td colspan="2" class="messagetext">
+        <textarea name="emailComposer[messageText]"
+                  class="wysiwyg-editor external-documents"
+                  cols="60"
+                  rows="20"
+                  id="message-text">
+          <?php echo htmlspecialchars($message); ?>
+        </textarea>
+      </td>
     </tr>
     <tr>
       <td class="caption"><?php echo $l->t('Sender-Name'); ?></td>

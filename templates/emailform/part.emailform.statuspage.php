@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -92,14 +92,14 @@ $output = false; // set to true if anything has been printed
           p($l->n(
             'The message was propably sent out successfully.',
             '%n messages were propably sent out successfully.',
-            $numTotal)
-          );
+            $numTotal,
+          ));
         } else {
           p($l->n(
             'The preview message was generated successfully.',
             '%n preview messages successfully generated.',
-            $numTotal)
-          );
+            $numTotal,
+          ));
         }
       } elseif ($numFailed > 0) {
         $output = true;
@@ -141,7 +141,7 @@ $output = false; // set to true if anything has been printed
       ?>
     </span>
   </div>
-  <?php
+<?php
 
   /*-****************************************************************************
    *
@@ -364,17 +364,17 @@ if (!$diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Status']) {
 </div>';
 }
 
-  /*-****************************************************************************
-   *
-   * Public downloads folder which is somehow broken
-   *
-   */
-  if (!$diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['status']) {
+/*-****************************************************************************
+ *
+ * Public downloads folder which is somehow broken
+ *
+ */
+if (!$diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['status']) {
 
-    $output = true;
-    $folder = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['folder'];
-    $appLink = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['appLink'];
-    $httpCode = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['httpCode'];
+  $output = true;
+  $folder = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['folder'];
+  $appLink = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['appLink'];
+  $httpCode = $diagnostics[Composer::DIAGNOSTICS_SHARE_LINK_VALIDATION]['httpCode'];
   ?>
   <div class="emailform error group broken-public-download">
     <div class="error contents broken-public-download">
@@ -399,15 +399,15 @@ if (!$diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Status']) {
     </div>
   </div>
   <?php
-  }
+}
 
-  /*-****************************************************************************
-   *
-   * Obsolete privacy notice.
-   *
-   */
-  if (!$diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['status']) {
-    $forbidden = $diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['forbiddenAddress'];
+/*-****************************************************************************
+ *
+ * Obsolete privacy notice.
+ *
+ */
+if (!$diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['status']) {
+  $forbidden = $diagnostics[Composer::DIAGNOSTICS_PRIVACY_NOTICE_VALIDATION]['forbiddenAddress'];
   ?>
   <div class="emailform error group broken-privacy-notice">
     <div class="error contents broken-privacy-notice">
@@ -426,7 +426,7 @@ if (!$diagnostics[Composer::DIAGNOSTICS_EXTERNAL_LINK_VALIDATION]['Status']) {
     </div>
   </div>
   <?php
-  }
+}
 
 /*-****************************************************************************
  *

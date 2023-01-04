@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2021, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,14 +36,15 @@ $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $
 $nav .= $pageNavigation->pageControlElement('instruments', $renderer->getProjectName(), $renderer->getProjectId());
 //$nav .= $pageNavigation->pageControlElement('detailed', $renderer->getProjectName(), $renderer->getProjectId());
 
-echo $this->inc('part.common.header',
-                [
-                  'css-prefix' => $css_pfx,
-                  'css-class' => $css_class,
-                  'navigationcontrols' => $nav,
-                  'header' => $renderer->headerText(),
-                  //'navBarInfo' => $missing,
-                ]);
+echo $this->inc(
+  'part.common.header',
+  [
+    'css-prefix' => $css_pfx,
+    'css-class' => $css_class,
+    'navigationcontrols' => $nav,
+    'header' => $renderer->headerText(),
+    //'navBarInfo' => $missing,
+  ]);
 
 // Issue the main part. The method will echo itself
 echo $this->inc('pme-table', []);

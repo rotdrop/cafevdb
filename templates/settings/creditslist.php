@@ -1,10 +1,11 @@
 <?php
-/* Orchestra member, musician and project management application.
+/**
+ * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,38 +26,38 @@ namespace OCA\CAFEVDB;
 
 $items = [];
 foreach ($credits as $creditItem) {
-    $items[] = [
-        'data' => $creditItem,
-        'visible' => false,
-    ];
+  $items[] = [
+    'data' => $creditItem,
+    'visible' => false,
+  ];
 }
 
 $numItems = 5;
 for ($cnt = 0; $cnt < $numItems; ++$cnt) {
-    $idx = mt_rand(0, count($credits)-1);
-    if (!$items[$idx]['visible']) {
-        $items[$idx]['visible'] = true;
-    } else {
-        // work around "random" values occurring twice
-        foreach ($items as &$item) {
-            if (!$item['visible']) {
-                $item['visible'] = true;
-                break;
-            }
-        }
+  $idx = mt_rand(0, count($credits)-1);
+  if (!$items[$idx]['visible']) {
+    $items[$idx]['visible'] = true;
+  } else {
+    // work around "random" values occurring twice
+    foreach ($items as &$item) {
+      if (!$item['visible']) {
+        $item['visible'] = true;
+        break;
+      }
     }
+  }
 }
 
 echo '<ul>
 ';
 foreach ($items as $item) {
-?>
+  ?>
   <li<?php p($item['visible'] ? '' : ' class=hidden'); ?>>
     <a target="_creditlink" href="<?php echo $item['data']['link']; ?>">
       <?php p($item['data']['title']); ?>
     </a>
   </li>
-<?php
-  } // foreach
-  echo '</ul>
+  <?php
+} // foreach
+echo '</ul>
 ';

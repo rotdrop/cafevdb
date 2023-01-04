@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -55,10 +55,12 @@ if (!empty($projectId)) {
   $nav .= $pageNavigation->pageControlElement('instrument-families');
 }
 
-echo $this->inc('part.common.header',
-                [ 'css-prefix' => $css_pfx,
-                  'navigationcontrols' => $nav,
-                  'header' => $renderer->headerText() ]);
+echo $this->inc(
+  'part.common.header',
+  [ 'css-prefix' => $css_pfx,
+    'navigationcontrols' => $nav,
+    'header' => $renderer->headerText()
+  ]);
 
 // Issue the main part. The method will echo itself
 echo $this->inc('pme-table', []);

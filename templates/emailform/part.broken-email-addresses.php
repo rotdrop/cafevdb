@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -22,20 +22,19 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-  /**
- * @file PHP snippet to render the list of broken emails.
- *
+/**
  * @param array $missingEmailAddresses
+ *
+ * @file PHP snippet to render the list of broken emails.
  */
 
 $following = false;
 foreach ($missingEmailAddresses as $id => $missingInfo) {
   $isParticipant = $missingInfo['participant'];
   $label = $missingInfo['label'];
-?>
-<?php if ($following) { ?>
+  if ($following) { ?>
   <span class="separator">, </span>
-<?php } ?>
+  <?php } ?>
   <a href="#"
      class="missing-email-addresses personal-record"
      data-musician-id="<?php p($id); ?>"
@@ -43,7 +42,7 @@ foreach ($missingEmailAddresses as $id => $missingInfo) {
   >
     <?php echo $label; ?>
   </a>
-<?php
+  <?php
   $following = true;
 }
 ?>

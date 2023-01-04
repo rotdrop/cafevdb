@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -23,12 +23,13 @@
  */
 
 /**
- * @file PHP snippet to render the list of broken emails.
- *
  * @param array $instrumentsFilter
+ *
+ * @file PHP snippet to render the list of broken emails.
  */
 
 namespace OCA\CAFEVDB;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 echo PageNavigation::selectOptions($instrumentsFilter);

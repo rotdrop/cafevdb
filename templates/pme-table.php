@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ if ($outputBufferWorkAround??false) {
   // This is here because otherwise PHP leaks content to stdout (and
   // thus to the client) on fatal errors.
   try {
-    ob_start(function() { return''; });
+    ob_start(fn() => '');
     $renderer->render();
     $pmeTable = ob_get_contents();
     ob_end_clean();
@@ -64,7 +64,13 @@ if ($outputBufferWorkAround??false) {
 ?>
 
 <div id="pme-table-container" class="pme-table-container <?php p($css); ?>">
-  <?php if (empty($pmeTable)) { $renderer->render(); } else { echo $pmeTable; } ?>
+<?php
+if (empty($pmeTable)) {
+  $renderer->render();
+} else {
+  echo $pmeTable;
+}
+?>
 </div>
 
 <?php

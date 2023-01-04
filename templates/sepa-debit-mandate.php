@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2016, 2020-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -299,7 +299,10 @@ $formCss = implode(' ', array_filter([
               />
             </div>
             <div class="file-data inline-block">
-              <a class="download-link hidden-no-written-mandate" title="<?php echo $toolTips['sepa-bank-data-form:debit-mandate:download']; ?>" href="<?php echo $writtenMandateDownloadLink; ?>"><?php p($writtenMandateFileName); ?></a>
+              <a class="download-link hidden-no-written-mandate"
+                 title="<?php echo $toolTips['sepa-bank-data-form:debit-mandate:download']; ?>"
+                 href="<?php echo $writtenMandateDownloadLink; ?>"><?php p($writtenMandateFileName); ?>
+              </a>
               <input class="upload-placeholder no-validation hidden-have-written-mandate"
                      title="<?php echo $toolTips['sepa-bank-data-form:upload:from-client']; ?>"
                      placeholder="<?php echo $l->t('Upload filled SEPA debit mandate');  ?>"

@@ -1,11 +1,11 @@
 <?php
-/*
+/**
  * Orchestra member, musician and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,12 @@ use OCA\CAFEVDB\Controller\DownloadsController;
           <li>
             <span class="attachment-item">
               <span class="filename">
-                <a href="<?php echo $urlGenerator->linkToRoute($appName . '.downloads.get', [ 'section' => DownloadsController::SECTION_FILECACHE, 'object' => $attachment['data'], ])  . '?' . 'requesttoken' . '=' . urlencode($requesttoken); ?>"
+                <a href="<?php echo $urlGenerator->linkToRoute(
+                         $appName . '.downloads.get',
+                         [
+                           'section' => DownloadsController::SECTION_FILECACHE,
+                           'object' => $attachment['data'],
+                         ])  . '?' . 'requesttoken' . '=' . urlencode($requesttoken); ?>"
                    class="download-link ajax-download"
                    data-section="<?php p(DownloadsController::SECTION_FILECACHE); ?>"
                    data-object="<?php p($attachment['data']); ?>"

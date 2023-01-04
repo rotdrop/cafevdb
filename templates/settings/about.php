@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ $wikiLicence = str_replace(' ', '_', ucfirst(strtolower($licence)));
 $licenceLink = '<a target="_wikipedia" href="http://www.wikipedia.org/w/index.php?title='.$wikiLicence.'">'.$licence.'</a>';
 
 ?>
-<div id="tabs-<?php echo $_['tabNr']; ?>" class="cafevdb about personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
+<div id="tabs-<?php echo $_['tabNr']; ?>" class="cafevdb about personalblock <?php $_['adminsettings'] && p('admin'); ?>">
 
   <div class="product name">
   <?php echo $appInfo['name'].' v'.$appInfo['version'].' AKA "'.$codeLink.'"'; ?>

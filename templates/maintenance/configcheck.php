@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2014, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
-$css_pfx = 'cafevdb-page'; //@@TODO ???
+$css_pfx = 'cafevdb-page';
 $css_class = 'config-check';
 
 //style($appName, 'config-check');
@@ -84,7 +84,8 @@ the settings-window. You need to be a group-admin, otherwise the
 application settings are not visible for you.',
                           [$_['usergroup']]),
   'sharedaddressbooks' => $l->t('Shared addressbooks do not exist or are inaccessible.'),
-  'database' => $l->t('You need to configure the database access. You can do so through the
+  'database' => $l->t(
+    'You need to configure the database access. You can do so through the
 respective web-form in the application settings windows accessible
 through the settings-menu in the upper right corner. You need to be a
 group-admin, otherwise the application settings are not visible for
@@ -172,11 +173,12 @@ foreach ($diagnosticItems as $key) {
               ? $l->t('You are a group administrator.')
               : $l->t('You are not a group administrator.'));
       $text = (!$_['groupadmin']
-             ? $l->t('Ask a user with group-administrator rights to perform the required
+        ? $l->t(
+                 'Ask a user with group-administrator rights to perform the required
 settings or ask the Owncloud-administror to assign to you the rol of a
 group-administrator for the group `%s\'.',
                      array($_['usergroup']))
-             : '');
+        : '');
 
       echo '    <li class="'.$css_pfx.'-config-check '.$ok.'">
       <span class="'.$css_pfx.'-config-check key"> '.$key.'</span>
@@ -195,7 +197,7 @@ group-administrator for the group `%s\'.',
         $tok   = $l->t('is set');
         $value = 'XXXXXXXX'; // $encrkey;
         $text  = '';
-      } else if (!empty($encrkeyhash)) {
+      } elseif (!empty($encrkeyhash)) {
         $ok    = 'missing';
         $tok   = $l->t('is set, but inaccessible');
         $value = '';

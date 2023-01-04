@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB;
 
 ?>
 
-<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock <?php if ($_['adminsettings']) echo 'admin'; ?>">
+<div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock <?php $_['adminsettings'] && p('admin'); ?>">
   <form id="cafevdb" class="personal-settings">
     <input id="tooltips"
            type="checkbox"
@@ -87,7 +87,7 @@ namespace OCA\CAFEVDB;
               class="table-pagerows pagerows <?php p($toolTipClass); ?>"
               id="table-pagerows"
         <?php
-        foreach($pageRowsOptions as $value => $text) {
+        foreach ($pageRowsOptions as $value => $text) {
           $selected = $value == $pageRows ? ' selected="selected"' : '';
           echo '<option value="'.$value.'"'.$selected.'>'.$text.'</option>'."\n";
         }

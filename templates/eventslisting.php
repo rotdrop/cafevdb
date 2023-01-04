@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -54,7 +54,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
   $events  = $eventGroup['events'];
   if (!empty($events)) {
     // nothing
-  } else if ($key >= 0) {
+  } elseif ($key >= 0) {
     $dpyName .= ' (' . $l->t('no events') . ')';
     $class[] = 'empty';
   } else {

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,21 +39,26 @@ if ($expertMode) {
 }
 
 $header = ''
-        .'<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">
-'.$l->t('Camerata DB start page - the data-base operations can be accessed
+  . '<div class="'.$css_pfx.'-blog" id="'.$css_pfx.'-blog-header">
+'
+  . $l->t(
+    'Camerata DB start page - the data-base operations can be accessed
 through the menu-button %s (left top). Please click on the login-name
 (top right) for logout and configuration options. Click right of the
 cloud-icon (top left) to reach the app-menu.',
-       array('<div class="icon-menu inline"></div>')
-)
-        .'</div>
+    [ '<div class="icon-menu inline"></div>'  ]
+  )
+        . '</div>
 ';
 
-echo $this->inc('part.common.header',
-                ['css-prefix' => $css_pfx,
-                 'css-class' => $css_class,
-                 'navigationcontrols' => $nav,
-                 'header' => $header]);
+echo $this->inc(
+  'part.common.header',
+  [
+    'css-prefix' => $css_pfx,
+    'css-class' => $css_class,
+    'navigationcontrols' => $nav,
+    'header' => $header
+  ]);
 ?>
 
 <div id="blogframe">
