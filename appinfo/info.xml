@@ -5,8 +5,8 @@
   <namespace>CAFEVDB</namespace>
   <name>CAFeV DB</name>
   <description>Orchestra Management Application.</description>
-  <codename>Excessive Endurance</codename>
-  <version>7.0.0 RC5</version>
+  <codename>Keep Going</codename>
+  <version>8.0.0</version>
   <licence>AGPL</licence>
   <author mail="himself@claus-justus-heine.de" homepage="https://github.com/rotdrop/cafevdb.git">Claus-Justus Heine</author>
   <types>
@@ -22,8 +22,8 @@
     </plugins>
   </sabre>
   <dependencies>
-    <php min-version="7.4" max-version="8.1" />
-    <nextcloud min-version="24" max-version="25" />
+    <php min-version="8.1" max-version="8.1" />
+    <nextcloud min-version="25" max-version="25" />
   </dependencies>
   <repair-steps>
     <install>
