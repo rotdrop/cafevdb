@@ -2,7 +2,7 @@
 # later. See the COPYING file.
 #
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
-# @copyright Claus-Justus Heine 2020,2021,2022
+# @copyright Claus-Justus Heine 2020,2021,2022,2023
 #
 SRCDIR = .
 ABSSRCDIR = $(CURDIR)
@@ -39,6 +39,7 @@ endif
 COMPOSER_OPTIONS=--prefer-dist
 #
 OCC=$(ABSSRCDIR)/../../occ
+ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 
 ###############################################################################
 #
@@ -369,6 +370,12 @@ phpdoc: $(PHPDOC)
 #--setting guides.enabled=true \
 #
 
+$(SRCDIR)/vendor/bin/phpcs: composer
+
+.PHONY: phpcs
+phpcs: $(SRCDIR)/vendor/bin/phpcs
+	$(SRCDIR)/vendor/bin/phpcs -v  --standard=.phpcs.xml lib/ templates/
+
 .PHONY: doxygen
 doxygen: doc/doxygen/Doxyfile
 	rm -rf $(DOC_BUILD_DIR)/doxygen/*
@@ -429,12 +436,12 @@ appstore: $(BUILDDIR)/core-exclude
 	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 
 .PHONY: verifydb
-verifydb: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
-	$< orm:validate-schema || $< orm:schema-tool:update --dump-sql
+verifydb: $(ABSSRCDIR)/vendor-wrapped
+	$(ORM_CLI) orm:validate-schema || $(ORM_CLI) orm:schema-tool:update --dump-sql
 
 .PHONY: updatesql
-updatesql: $(ABSSRCDIR)/vendor-wrapped/bin/doctrine
-	$< orm:schema-tool:update --dump-sql
+updatesql: $(ABSSRCDIR)/vendor-wrapped
+	$(ORM_CLI) orm:schema-tool:update --dump-sql
 
 .PHONY: test
 test: composer

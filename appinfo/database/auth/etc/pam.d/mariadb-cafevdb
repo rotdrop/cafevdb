@@ -1,4 +1,0 @@
-#%PAM-1.0
-auth required pam_mysql.so config_file=/etc/pam_cafevdb_mysql.conf
-auth required /usr/share/pam_user_map.so debug
-account required pam_permit.so
