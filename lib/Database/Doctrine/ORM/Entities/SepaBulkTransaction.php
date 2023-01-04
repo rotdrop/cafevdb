@@ -58,7 +58,7 @@ class SepaBulkTransaction implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
 
   /**

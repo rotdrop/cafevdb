@@ -48,7 +48,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 class BankTransactionsStorage extends Storage
 {
-  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
   private $transactionsRepository;

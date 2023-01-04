@@ -36,7 +36,7 @@ use OCP\IL10N;
 /** General static utility routines. */
 class Util
 {
-  use \OCA\CAFEVDB\Traits\DateTimeTrait {
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait {
     convertToDateTime as public;
   }
 

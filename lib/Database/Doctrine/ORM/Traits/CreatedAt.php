@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
 /** Field $created and setter/getter. */
 trait CreatedAt
 {
-  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var \DateTimeImmutable

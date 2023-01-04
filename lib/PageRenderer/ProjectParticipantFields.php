@@ -55,7 +55,7 @@ use OCA\CAFEVDB\Constants;
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   const TEMPLATE = 'project-participant-fields';
   const TABLE = self::PROJECT_PARTICIPANT_FIELDS_TABLE;

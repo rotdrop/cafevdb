@@ -29,7 +29,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 /** Repository for instrument insurances. */
 class InstrumentInsurancesRepository extends EntityRepository
 {
-  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * Get the very first start date over all insurances.

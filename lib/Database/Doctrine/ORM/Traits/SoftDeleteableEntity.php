@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 trait SoftDeleteableEntity
 {
   use UnusedTrait;
-  use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @ORM\Column(type="datetime_immutable", nullable=true)
