@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,13 +31,15 @@ use OCP\AppFramework\Services\IInitialState;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\FontService;
+
+use OCA\CAFEVDB\Constants;
 
 /** Admin settings class. */
 class Admin implements IDelegatedSettings
 {
+  use \OCA\RotDrop\Toolkit\Traits\AssetTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const TEMPLATE = "admin-settings";
@@ -62,9 +64,6 @@ class Admin implements IDelegatedSettings
     self::CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
   ];
 
-  /** @var AssetService */
-  private $assetService;
-
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
   private $wikiRPC;
 
@@ -84,7 +83,6 @@ class Admin implements IDelegatedSettings
   public function __construct(
     ConfigService $configService,
     IInitialState $initialState,
-    AssetService $assetService,
     WikiRPC $wikiRPC,
     IAppManager $appManager,
     CloudUserConnectorService $cloudUserConnector,
@@ -92,11 +90,11 @@ class Admin implements IDelegatedSettings
   ) {
     $this->configService = $configService;
     $this->initialState = $initialState;
-    $this->assetService = $assetService;
     $this->wikiRPC = $wikiRPC;
     $this->appManager = $appManager;
     $this->cloudUserConnector = $cloudUserConnector;
     $this->fontService = $fontService;
+    $this->initializeAssets(__DIR__);
   }
   // phpcs:enable
 
@@ -136,8 +134,8 @@ class Admin implements IDelegatedSettings
       self::TEMPLATE, [
         'appName' => $this->appName(),
         'assets' => [
-          AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
-          AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
+          Constants::JS => $this->getJSAsset(self::TEMPLATE),
+          Constants::CSS => $this->getCSSAsset(self::TEMPLATE),
         ],
       ]);
   }

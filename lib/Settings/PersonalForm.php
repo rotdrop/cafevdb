@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,6 @@ use OCP\Settings\ISettings;
 use OCP\IInitialStateService;
 
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\DatabaseService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -45,6 +44,7 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Constants;
 
 /**
  * Simple helper class in order to avoid instantiation of a bunch of
@@ -53,14 +53,12 @@ use OCA\CAFEVDB\Common\Util;
  */
 class PersonalForm
 {
+  use \OCA\RotDrop\Toolkit\Traits\AssetTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const ERROR_TEMPLATE = "errorpage";
   const TEMPLATE = "settings";
   const DEFAULT_EDITOR = 'tinymce';
-
-  /** @var AssetService */
-  private $assetService;
 
   /** @var ProjectService */
   private $projectService;
@@ -101,7 +99,6 @@ class PersonalForm
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
-    AssetService $assetService,
     ProjectService $projectService,
     ErrorService $errorService,
     TranslationService $translationService,
@@ -116,7 +113,6 @@ class PersonalForm
     OrganizationalRolesService $roles,
   ) {
     $this->configService = $configService;
-    $this->assetService = $assetService;
     $this->projectService = $projectService;
     $this->errorService = $errorService;
     $this->translationService = $translationService;
@@ -130,6 +126,7 @@ class PersonalForm
     $this->geoCodingService = $geoCodingService;
     $this->roles = $roles;
     $this->l = $this->l10N();
+    $this->initializeAssets(__DIR__);
   }
 
   /**
@@ -147,8 +144,8 @@ class PersonalForm
         self::ERROR_TEMPLATE,
         [
           'assets' => [
-            AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
-            AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
+            Constants::JS => $this->getJSAsset(self::TEMPLATE),
+            Constants::CSS => $this->getCSSAsset(self::TEMPLATE),
           ],
           'error' => 'notamember',
           'userId' => $this->userId(),
@@ -195,8 +192,8 @@ class PersonalForm
 
       $templateParameters = [
         'assets' => [
-          AssetService::JS => $this->assetService->getJSAsset(self::TEMPLATE),
-          AssetService::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
+          Constants::JS => $this->getJSAsset(self::TEMPLATE),
+          Constants::CSS => $this->getCSSAsset(self::TEMPLATE),
         ],
         'appName' => $this->appName(),
         'appInfo' => $this->appManager->getAppInfo($this->appName()),
