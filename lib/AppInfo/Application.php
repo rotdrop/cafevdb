@@ -105,7 +105,9 @@ use OCP\Files\Config\IMountProviderCollection;
 use OCA\CAFEVDB\Storage\Database\MountProvider as DatabaseMountProvider;
 
 // phpcs:disable PSR1.Files.SideEffects
-include_once __DIR__ . '/../../vendor/autoload.php';
+if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
+  include_once __DIR__ . '/../Toolkit/Traits/AppNameTrait.php';
+}
 
 /** {@inheritdoc} */
 class Application extends App implements IBootstrap
