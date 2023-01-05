@@ -11,3 +11,4 @@ statistics/
 dev-scripts/
 lib/Toolkit/Traits/UtilTrait.php
 lib/Toolkit/Service/ArchiveService.php
+lib/Toolkit/Service/GroupFoldersService.php
