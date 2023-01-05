@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\IProgressStatus;
 /** AJAX end-point for progress status. */
 class ProgressStatusController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   /** @var ProgressStatusService */
   private $progressStatusService;

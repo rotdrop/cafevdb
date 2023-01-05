@@ -57,7 +57,7 @@ use OCA\CAFEVDB\Common\UndoableFolderRename;
 /** AJAX backend for managing bank bulk transactions. */
 class SepaBulkTransactionsController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 

@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Service\MigrationsService;
 class MigrationsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   const ALL_MIGRATIONS = 'all';
   const UNAPPLIED_MIGRATIONS = 'unapplied';

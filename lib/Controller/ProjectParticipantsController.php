@@ -57,7 +57,7 @@ use OCA\CAFEVDB\Constants;
 class ProjectParticipantsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
   use \OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;

@@ -41,7 +41,7 @@ use OCA\CAFEVDB\BackgroundJob\ScanFiles;
 class BackgroundJobController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   /**
    * @var int

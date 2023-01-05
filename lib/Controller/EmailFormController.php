@@ -55,7 +55,7 @@ use OCA\CAFEVDB\Common\Util;
 /** Controller class for the mass-email form */
 class EmailFormController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   public const UPLOAD_KEY = 'files';

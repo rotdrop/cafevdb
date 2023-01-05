@@ -34,7 +34,7 @@ use OCP\IConfig;
 /** AJAX endpoints for reporting CSP violation errors. */
 class CspViolationController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var \OCP\IConfig */

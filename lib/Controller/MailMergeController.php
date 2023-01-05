@@ -69,7 +69,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class MailMergeController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;

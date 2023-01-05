@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 /** AJAX end-points to manage events linked to projects */
 class ProjectEventsController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /** @var \OCA\CAFEVDB\Service\ParameterService */

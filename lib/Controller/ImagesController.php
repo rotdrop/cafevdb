@@ -46,7 +46,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 class ImagesController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   const UPLOAD_NAME = 'imagefile';
 

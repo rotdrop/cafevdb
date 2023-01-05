@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
  */
 class BlogController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var \OCP\IDateTimeZone */

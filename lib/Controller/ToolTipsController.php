@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Util;
 /** Fetch one or multiple tooltip via AJAX. */
 class ToolTipsController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IL10N */

@@ -46,7 +46,7 @@ use OCP\IAddressBook;
 class ContactsController extends Controller
 {
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ContactsTrait;
 
   /** @var IContactsManager */

@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 /** AJAX end-points to manage the web-pages via the CMS. */
 class ProjectWebPagesController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /** @var \OCA\CAFEVDB\Service\ParameterService */

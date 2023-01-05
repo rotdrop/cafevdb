@@ -57,7 +57,7 @@ use OCA\CAFEVDB\Common\Util;
 /** AJAX endpoints for debit mandates */
 class SepaDebitMandatesController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;

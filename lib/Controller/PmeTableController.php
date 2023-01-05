@@ -65,7 +65,7 @@ use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 class PmeTableController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   /** @var ISession */
   private $session;

@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Common\Util;
 /** AJAX end-points for instrument insurances */
 class InstrumentInsuranceController extends Controller
 {
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /** @var ParameterService */

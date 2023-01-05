@@ -59,7 +59,7 @@ use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 class PageController extends Controller
 {
   use \OCA\CAFEVDB\Traits\InitialStateTrait;
-  use \OCA\CAFEVDB\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   const DEFAULT_TEMPLATE = 'projects';
   const HOME_TEMPLATE = 'home';
