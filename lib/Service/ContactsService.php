@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -481,7 +481,7 @@ class ContactsService
         $url = substr($value, strlen('VALUE=uri:'));
         /** @var RequestService $requestService */
         $requestService = $this->di(RequestService::class);
-        $imageData = $requestService->getFromInternalUrl($url);
+        $imageData = $requestService->getFromURL($url);
         $havePhoto = true;
       }
 
