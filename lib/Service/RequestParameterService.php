@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -171,13 +171,13 @@ class RequestParameterService implements \ArrayAccess, \Countable
   }
 
   /** {@inheritdoc} */
-  public function offsetExists($offset):bool
+  public function offsetExists(mixed $offset):bool
   {
     return isset($this->parameters[$offset]);
   }
 
   /** {@inheritdoc} */
-  public function offsetGet($offset)
+  public function offsetGet(mixed $offset):mixed
   {
     return isset($this->parameters[$offset])
       ? $this->parameters[$offset]
@@ -185,25 +185,25 @@ class RequestParameterService implements \ArrayAccess, \Countable
   }
 
   /** {@inheritdoc} */
-  public function offsetSet($offset, $value)
+  public function offsetSet(mixed $offset, mixed $value):void
   {
     $this->parameters[$offset] = $value;
   }
 
   /** {@inheritdoc} */
-  public function offsetUnset($offset)
+  public function offsetUnset(mixed $offset):void
   {
     unset($this->parameters[$offset]);
   }
 
   /** {@inheritdoc} */
-  public function __set($name, $value)
+  public function __set(string $name, mixed $value):void
   {
     $this->parameters[$name] = $value;
   }
 
   /** {@inheritdoc} */
-  public function __get($name)
+  public function __get(string $name):mixed
   {
     if (isset($this[$name])) {
       return $this[$name];
@@ -212,13 +212,13 @@ class RequestParameterService implements \ArrayAccess, \Countable
   }
 
   /** {@inheritdoc} */
-  public function __isset($name)
+  public function __isset(string $name):bool
   {
     return isset($this[$name]) || $this->request->__isset($name);
   }
 
   /** {@inheritdoc} */
-  public function __unset($id)
+  public function __unset(string $id):void
   {
     if (isset($this->parameters[$id])) {
       unset($this->parameters[$id]);

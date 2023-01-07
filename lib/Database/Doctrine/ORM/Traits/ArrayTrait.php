@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -82,7 +82,7 @@ trait ArrayTrait
   }
 
   /** {@inheritdoc} */
-  public function offsetExists($offset):bool
+  public function offsetExists(mixed $offset):bool
   {
     if (empty($this->keys)) {
       $this->arrayCTOR();
@@ -91,7 +91,7 @@ trait ArrayTrait
   }
 
   /** {@inheritdoc} */
-  public function offsetGet($offset)
+  public function offsetGet(mixed $offset):mixed
   {
     if (!$this->offsetExists($offset)) {
       throw new Exception('Offset '.self::offsetNormalize($offset).' does not exist in '.__CLASS__.', keys '.print_r($this->keys, true));
@@ -104,7 +104,7 @@ trait ArrayTrait
   }
 
   /** {@inheritdoc} */
-  public function offsetSet($offset, $value):void
+  public function offsetSet(mixed $offset, mixed $value):void
   {
     if (!$this->offsetExists($offset)) {
       throw new Exception('Offset '.self::offsetNormalize($offset).' does not exist in '.__CLASS__.', keys '.print_r($this->keys, true));
@@ -117,7 +117,7 @@ trait ArrayTrait
   }
 
   /** {@inheritdoc} */
-  public function offsetUnset($offset):void
+  public function offsetUnset(mixed $offset):void
   {
     $this->offsetSet($offset, null);
   }
