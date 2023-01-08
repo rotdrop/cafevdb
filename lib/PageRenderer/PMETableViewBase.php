@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -490,7 +490,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     } catch (\Throwable $t) {
       $this->logException($t, 'Rolling back SQL transaction ...');
       $this->pme->rollBack();
-      throw new Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), $t->getCode(), $t);
+      throw new Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), (int)$t->getCode(), $t);
     }
   }
 
