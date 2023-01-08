@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Database\Legacy\PME;
 
+use PDO;
 use DateTime;
 use Exception;
 use ReflectionClass;
@@ -412,6 +413,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
     if (!$this->resultValid($stmt)) {
       return false;
     }
+    $this->dbh->getWrappedConnection()->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
     $type = $type === 'n' ? FetchMode::NUMERIC : FetchMode::ASSOCIATIVE;
     $result = $stmt->fetch($type);
     // Work around bug https://jira.mariadb.org/browse/MDEV-27323
@@ -435,6 +437,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
         }
       }
     }
+    $this->dbh->getWrappedConnection()->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
 
     return $result;
   }
