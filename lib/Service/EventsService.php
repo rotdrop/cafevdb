@@ -929,14 +929,13 @@ class EventsService
         ->setCalendarId($calendarId)
         ->setCalendarUri($calendarURI)
         ->setType($type);
-      $this->persist($entity);
       $added = true;
     } else {
       $entity->setCalendarId($calendarId)
              ->setType($type);
-      $this->merge($entity);
       $added = false;
     }
+    $this->persist($entity);
     $this->flush();
 
     return $added;

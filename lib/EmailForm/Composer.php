@@ -4231,7 +4231,7 @@ Störung.';
     $template->setTag($templateName)
       ->setSubject($subject)
       ->setContents($contents);
-    $this->merge($template);
+    $this->persist($template); // could probably moved into the empty() if clause above.
     $this->flush();
   }
 

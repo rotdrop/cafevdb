@@ -437,27 +437,6 @@ trait EntityManagerTrait
   }
 
   /**
-   * Merges the state of a detached entity into the persistence context
-   * of this EntityManager and returns the managed copy of the entity.
-   * The entity passed to merge will not become associated/managed with this EntityManager.
-   *
-   * @param mixed $entity The detached entity to merge into the persistence context.
-   *
-   * @return mixed The managed copy of the entity.
-   *
-   * @throws ORMInvalidArgumentException
-   * @throws ORMException
-   *
-   * @todo Remove, using merge is deprecated.
-   */
-  protected function merge(mixed $entity)
-  {
-    $entity = $this->entityManager->merge($entity);
-    $this->flush($entity);
-    return $entity;
-  }
-
-  /**
    * Obtain the column names of the currently used database entity.
    *
    * @param string|null $entityClassName The database entity to use.

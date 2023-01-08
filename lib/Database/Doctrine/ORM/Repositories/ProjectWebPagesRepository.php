@@ -104,7 +104,7 @@ class ProjectWebPagesRepository extends EntityRepository
       foreach ($attributes as $key => $value) {
         $webArticle[$key] = $value;
       }
-      $entityManager->merge($webArticle);
+      $entityManager->persist($webArticle); // probably not neccessary ...
     }
     $entityManager->flush();
   }
