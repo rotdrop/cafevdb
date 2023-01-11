@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -600,11 +600,8 @@ class GeoCodingService
       $result = [
         'name' => $translation['geonames'][0]['name'],
       ];
-      if (isset($translation['geonames'][0]['adminName1'])
-          && isset($translation['geonames'][0]['adminCodes1']['ISO3166_2'])) {
-        $result['adminName1'] = $translation['geonames'][0]['adminName1'];
-        $result['adminCode1'] = $translation['geonames'][0]['adminCodes1']['ISO3166_2'];
-      }
+      $result['adminName1'] = $translation['geonames'][0]['adminName1'] ?? null;
+      $result['adminCode1'] = $translation['geonames'][0]['adminCodes1']['ISO3166_2'] ?? null;
       return $result;
     } else {
       return null;
