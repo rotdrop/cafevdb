@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class OrganizationalRolesService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\CAFEVDB\Traits\CloudAdminTrait;
+  use \OCA\RotDrop\Toolkit\Traits\CloudAdminTrait;
 
   const CLOUD_ADMIN_ROLE = 'cloudAdmin';
   const GROUP_ADMIN_ROLE = 'groupAdmin';
@@ -70,6 +70,7 @@ class OrganizationalRolesService
   public function __construct(ConfigService $configService)
   {
     $this->configService = $configService;
+    $this->groupManager = $this->groupManager(); // for CloudAdminTrait
     $this->l = $this->l10n();
   }
   // phpcs:enable
@@ -417,7 +418,7 @@ class OrganizationalRolesService
    */
   public function cloudAdminContact(bool $implode = false)
   {
-    return $this->getCloudAdminContacts($this->groupManager(), $implode);
+    return $this->getCloudAdminContacts($implode);
   }
 
   /**

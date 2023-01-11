@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,9 +46,9 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class FilesHooksListener implements IEventListener
 {
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\CloudAdminTrait;
   use \OCA\CAFEVDB\Traits\ContactsTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
-  use \OCA\CAFEVDB\Traits\CloudAdminTrait;
 
   const EVENT = HandledEvent::class;
 
@@ -162,9 +162,9 @@ class FilesHooksListener implements IEventListener
 
     // just admin contact and stuff to make the ajax error handlers work.
     // @todo Replace by more lightweight stuff
-    $groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
+    $this->groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
     $initialState->provideInitialState('CAFEVDB', [
-      'adminContact' => $this->getCloudAdminContacts($groupManager, implode: true),
+      'adminContact' => $this->getCloudAdminContacts(implode: true),
       'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get in javescript from request
     ]);
 
