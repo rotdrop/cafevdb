@@ -33,18 +33,14 @@ use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\FontService;
-
-use OCA\CAFEVDB\Traits\ConfigTrait;
-use OCA\RotDrop\Toolkit\Traits\AssetTrait;
+use OCA\CAFEVDB\Service\AssetService;
 
 use OCA\CAFEVDB\Constants;
 
 /** Admin settings class. */
 class Admin implements IDelegatedSettings
 {
-  use AssetTrait, ConfigTrait {
-    ConfigTrait::logger insteadof AssetTrait;
-  }
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const TEMPLATE = "admin-settings";
 
@@ -68,6 +64,9 @@ class Admin implements IDelegatedSettings
     self::CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
   ];
 
+  /** @var AssetService */
+  private $assetService;
+
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
   private $wikiRPC;
 
@@ -86,6 +85,7 @@ class Admin implements IDelegatedSettings
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
+    AssetService $assetService,
     IInitialState $initialState,
     WikiRPC $wikiRPC,
     IAppManager $appManager,
@@ -93,12 +93,12 @@ class Admin implements IDelegatedSettings
     FontService $fontService,
   ) {
     $this->configService = $configService;
+    $this->assetService = $assetService;
     $this->initialState = $initialState;
     $this->wikiRPC = $wikiRPC;
     $this->appManager = $appManager;
     $this->cloudUserConnector = $cloudUserConnector;
     $this->fontService = $fontService;
-    $this->initializeAssets(__DIR__);
   }
   // phpcs:enable
 
@@ -138,8 +138,8 @@ class Admin implements IDelegatedSettings
       self::TEMPLATE, [
         'appName' => $this->appName(),
         'assets' => [
-          Constants::JS => $this->getJSAsset(self::TEMPLATE),
-          Constants::CSS => $this->getCSSAsset(self::TEMPLATE),
+          Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
+          Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
       ]);
   }
