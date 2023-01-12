@@ -6,7 +6,7 @@
   <name>CAFeV DB</name>
   <description>Orchestra Management Application.</description>
   <codename>Keep Going</codename>
-  <version>8.0.0</version>
+  <version>8.0.1</version>
   <licence>AGPL</licence>
   <author mail="himself@claus-justus-heine.de" homepage="https://github.com/rotdrop/cafevdb.git">Claus-Justus Heine</author>
   <types>
