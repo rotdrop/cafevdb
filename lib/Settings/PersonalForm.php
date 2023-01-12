@@ -39,6 +39,7 @@ use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\AssetService;
 
 use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
@@ -53,12 +54,14 @@ use OCA\CAFEVDB\Constants;
  */
 class PersonalForm
 {
-  use \OCA\RotDrop\Toolkit\Traits\AssetTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const ERROR_TEMPLATE = "errorpage";
   const TEMPLATE = "settings";
   const DEFAULT_EDITOR = 'tinymce';
+
+  /** @var AssetService */
+  private $assetService;
 
   /** @var ProjectService */
   private $projectService;
@@ -99,6 +102,7 @@ class PersonalForm
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
+    AssetService $assetService,
     ProjectService $projectService,
     ErrorService $errorService,
     TranslationService $translationService,
@@ -113,6 +117,7 @@ class PersonalForm
     OrganizationalRolesService $roles,
   ) {
     $this->configService = $configService;
+    $this->assetService = $assetService;
     $this->projectService = $projectService;
     $this->errorService = $errorService;
     $this->translationService = $translationService;
@@ -126,7 +131,6 @@ class PersonalForm
     $this->geoCodingService = $geoCodingService;
     $this->roles = $roles;
     $this->l = $this->l10N();
-    $this->initializeAssets(__DIR__);
   }
 
   /**
@@ -144,8 +148,8 @@ class PersonalForm
         self::ERROR_TEMPLATE,
         [
           'assets' => [
-            Constants::JS => $this->getJSAsset(self::TEMPLATE),
-            Constants::CSS => $this->getCSSAsset(self::TEMPLATE),
+            Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
+            Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
           ],
           'error' => 'notamember',
           'userId' => $this->userId(),
@@ -192,8 +196,8 @@ class PersonalForm
 
       $templateParameters = [
         'assets' => [
-          Constants::JS => $this->getJSAsset(self::TEMPLATE),
-          Constants::CSS => $this->getCSSAsset(self::TEMPLATE),
+          Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
+          Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
         'appName' => $this->appName(),
         'appInfo' => $this->appManager->getAppInfo($this->appName()),
