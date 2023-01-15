@@ -3936,6 +3936,9 @@ Störung.';
     $organizationalRoleContact = function(array $arg) {
       $role = strtolower($arg[0]);
       $contact = $this->organizationalRolesService->dedicatedBoardMemberContact($role);
+      if (empty($contact)) {
+	return $this->l->t('Nothing known about "%s"', $role);
+      }
       $subField = Util::dashesToCamelCase(strtolower($arg[1]));
       if (empty($subField)) {
         throw new Exceptions\SubstitutionException($this->l->t('Contact subfield for "%1$s" is missing, should be one of %2$s.', [

@@ -110,6 +110,8 @@ class OrganizationalRolesService
 
     $missingFields = array_keys(array_filter($data, fn($value) => !empty($value)));
 
+    $this->logInfo('Missing fields for ' . $role . ' ' . print_r($missingFields, true) . ' ' . print_r($data, true));
+
     // if some field are missing try to fill in from the cloud data
     if (!empty($missingFields)) {
 
@@ -130,10 +132,10 @@ class OrganizationalRolesService
               $item = $user->getDisplayName();
               break;
             case 'streetAndNumber':
-              $item = $account->getProperty(IAccountManager::PROPERTY_ADDRESS);
+              $item = $account->getProperty(IAccountManager::PROPERTY_ADDRESS)->getValue();
               break;
             case 'phone':
-              $item = $account->getProperty(IAccountManager::PROPERTY_PHONE);
+              $item = $account->getProperty(IAccountManager::PROPERTY_PHONE)->getValue();
               break;
             case 'postalCode':
             case 'city':
