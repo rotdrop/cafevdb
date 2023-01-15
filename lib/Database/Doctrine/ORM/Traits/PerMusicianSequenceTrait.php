@@ -41,9 +41,9 @@ trait PerMusicianSequenceTrait
    *
    * @param Entities\Musician $musician
    *
-   * @return int
+   * @return null|int
    */
-  public function sequenceMax(Entities\Musician $musician):int
+  public function sequenceMax(Entities\Musician $musician):?int
   {
     return $this->createQueryBuilder('m')
                 ->select('MAX(m.sequence) AS sequence')
@@ -61,11 +61,11 @@ trait PerMusicianSequenceTrait
    *
    * @param int|Entities\Musician $entity Entity or entit id.
    *
-   * @return Entities\Musician
+   * @return mixed
    *
    * @throws Doctrine\DBAL\Exception\UniqueConstraintViolationException
    */
-  protected function persistEntity(mixed $entity):Entities\Musician
+  protected function persistEntity(mixed $entity):mixed
   {
     $entityManager = $this->getEntityManager();
 
