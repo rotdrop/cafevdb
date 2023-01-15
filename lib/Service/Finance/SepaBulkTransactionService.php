@@ -508,6 +508,7 @@ class SepaBulkTransactionService
             } else {
               // too early, just don't charge anything
               $payableAmount = 0.0;
+              $this->logInfo('NOT YET DUE; DOING NOTHING');
             }
           } else {
             // bank transfer
