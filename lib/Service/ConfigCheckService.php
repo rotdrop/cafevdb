@@ -476,7 +476,7 @@ class ConfigCheckService
   public function checkShareOwner(string $shareOwnerId, ?string $shareOwnerPassword = null):bool
   {
     $shareGroupId = $this->getAppValue('usergroup', false);
-    if (!empty($shareGroupId)) {
+    if (empty($shareGroupId)) {
       return false; // need at least this group!
     }
 
