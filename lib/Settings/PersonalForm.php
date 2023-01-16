@@ -166,6 +166,7 @@ class PersonalForm
           'language' => $this->getUserValue('lang', 'en'),
           'wysiwygEditor' =>$this->getUserValue('wysiwygEditor', 'tinymce'),
           'expertMode' => $this->getUserValue('expertMode'),
+          'financeMode' => $this->getUserValue('financeMode'),
         ]);
       $this->initialStateService->provideInitialState($this->appName(), 'PHPMyEdit', []);
       $this->initialStateService->provideInitialState($this->appName(), 'Calendar', []);
@@ -233,6 +234,7 @@ class PersonalForm
         'deselectInvisibleMiscRecs' => $this->getUserValue('deselectInvisibleMiscRecs', 'off'),
         'showdisabled' => $this->getUserValue('showdisabled', 'off'),
         'expertMode' => $this->getUserValue('expertMode', 'off'),
+        'financeMode' => $this->getUserValue('financeMode', 'off'),
         'wysiwygEditor' => $this->getUserValue('wysiwygEditor', self::DEFAULT_EDITOR),
         'wysiwygOptions' => ConfigService::WYSIWYG_EDITORS,
         'webPageCategories' => $webPageCategories,
