@@ -35,6 +35,7 @@ $showdistitle   = $toolTips['show-disabled'];
 $pagerowstitle  = $toolTips['table-rows-per-page'];
 $wysiwygtitle   = $toolTips['settings-wysiwyg-editor'];
 $experttitle    = $toolTips['expert-operations'];
+$financetitle   = $toolTips['finance-operations'];
 $debugtitle     = $toolTips['debug-mode'];
 
 $pageRows = floor($_['pagerows'] / 10) * 10;
@@ -84,6 +85,7 @@ $toolTipClass = "tooltip-" . $toolTipsPos;
       'pagerowstitle' => $pagerowstitle,
       'wysiwygtitle' => $wysiwygtitle,
       'experttitle' => $experttitle,
+      'financetitle' => $financetitle,
       'debugtitle' => $debugtitle,
       'pageRowsOptions' => $pageRowsOptions,
       'pageRows' => $pageRows,
