@@ -476,7 +476,7 @@ class ConfigCheckService
   public function checkShareOwner(string $shareOwnerId, ?string $shareOwnerPassword = null):bool
   {
     $shareGroupId = $this->getAppValue('usergroup', false);
-    if (!empty($shareGroupId)) {
+    if (empty($shareGroupId)) {
       return false; // need at least this group!
     }
 
@@ -592,10 +592,81 @@ class ConfigCheckService
    *
    * @param string $sharedFolder The name of the folder.
    *
+   * @return bool \true on success.
+   */
+  public function checkGroupSharedFolder(string $sharedFolder)
+  {
+    $sharedFolder .= '-testing'; // @todo remove after it has proven useful
+
+    $this->logInfo('TRY CREATE ' . $sharedFolder);
+
+    $shareGroupId = $this->groupId();
+    if (empty($shareGroupId)) {
+      $this->logInfo('NO SHARE GROUP');
+      return false; // need at least this group!
+    }
+
+    $adminGroupId = $this->subAdminGroupId();
+    if (empty($adminGroupId)) {
+      $this->logInfo('NO ADMIN GROUP');
+      return false; // need at least this group!
+    }
+
+    $this->logInfo('HELLO');
+
+    /** @var \OCA\RotDrop\Toolkit\Service\GroupFoldersService $groupFoldersService */
+    $groupFoldersService = $this->appContainer()->get(GroupFoldersService::class);
+
+    $folderInfo = $groupFoldersService->getFolder($sharedFolder);
+
+    try {
+      if (empty($folderInfo)) {
+        $folderInfo = $groupFoldersService->createFolder(
+          $sharedFolder, [
+            $shareGroupId => GroupFoldersService::PERMISSION_ALL,
+          ], [
+            $adminGroupId => GroupFoldersService::MANAGER_TYPE_GROUP,
+          ]);
+        $this->logInfo('TRIED TO CREATE ' . $sharedFolder);
+      } else {
+        $groupFoldersService->addGroupToFolder(
+          $sharedFolder,
+          $shareGroupId,
+          GroupFoldersService::PERMISSION_ALL,
+        );
+        $groupFoldersService->addManagerToFolder(
+          $sharedFolder,
+          $adminGroupId,
+          GroupFoldersService::MANAGER_TYPE_GROUP,
+        );
+        $this->logInfo('TRIED TO MODIFY ' . $sharedFolder);
+      }
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to create or modify group shared folder ' . $sharedFolder);
+      return false;
+    }
+
+    $this->logInfo('HELLO');
+
+    return true;
+  }
+
+  /**
+   * Check for the existence of the shared folder and create it when
+   * not found.
+   *
+   * @param string $sharedFolder The name of the folder.
+   *
    * @return bool @c true on success.
    */
   public function checkSharedFolder(string $sharedFolder):bool
   {
+    try {
+      $this->checkGroupSharedFolder($sharedFolder);
+    } catch (Throwable $t) {
+      $this->logException($t, 'CANNOT CREATE GROUP SHARED FOLDER');
+    }
+
     if ($sharedFolder == '') {
       return false;
     }

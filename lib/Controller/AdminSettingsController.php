@@ -44,6 +44,8 @@ class AdminSettingsController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
+  public const ADMIN_GROUP_SUFFIX = '-admin';
+
   public const POST_REQUEST_FONT_CACHE = 'font-cache';
   public const DELEGATABLE_POST_REQUESTS = [
     self::POST_REQUEST_FONT_CACHE,
@@ -188,6 +190,7 @@ class AdminSettingsController extends Controller
           $this->setAppValue('usergroup', $orchestraUserGroup);
           $result = [
             'orchestraUserGroup' => $orchestraUserGroup,
+            'orchestraAdminGroup' => $orchestraUserGroup . self::ADMIN_GROUP_SUFFIX,
           ];
           if (empty($wikiNameSpace)) {
             $wikiNameSpace = $orchestraUserGroup;
