@@ -286,7 +286,7 @@ class OrganizationalRolesService
       return false;
     }
     // check for group-membership
-    $groupId = $this->getConfigValue($role.'UserGroupId', null);
+    $groupId = $this->getConfigValue($role.'GroupId', null);
     return !empty($groupId) && $this->inGroup($uid, $groupId);
   }
 
