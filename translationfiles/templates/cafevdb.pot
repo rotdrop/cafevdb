@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-01-04 23:05+0100\n"
+"POT-Creation-Date: 2023-01-21 23:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -205,79 +205,79 @@ msgstr ""
 msgid "Unknown upload error"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:165
+#: lib/Controller/AdminSettingsController.php:164
 #, php-format
 msgid "Settings is reserved to cloud-administrators: \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:202
+#: lib/Controller/AdminSettingsController.php:201
 #, php-format
 msgid ""
 "Setting orchestra group to \"%s\". Please login as group administrator and "
 "configure the Camerata DB application."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:210
+#: lib/Controller/AdminSettingsController.php:209
 msgid "Expecting a list of user-ids."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:214
+#: lib/Controller/AdminSettingsController.php:213
 msgid "Orchestra management group is unset or non-existent"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:223
+#: lib/Controller/AdminSettingsController.php:222
 #, php-format
 msgid "Already as sub-admin of \"%1$s\" configured: %2$s."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:229
+#: lib/Controller/AdminSettingsController.php:228
 #, php-format
 msgid "Added \"%1$s\" as sub-admin of \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:232
+#: lib/Controller/AdminSettingsController.php:231
 #, php-format
 msgid "Failed to add \"%1$s\" as sub-admin to \"%2$s\": %3$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:239
+#: lib/Controller/AdminSettingsController.php:238
 #, php-format
 msgid "Deleted \"%1$s\" as sub-admin from \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:242
+#: lib/Controller/AdminSettingsController.php:241
 #, php-format
 msgid "Failed to delete \"%1$s\" as sub-admin from \"%2$s\": %3$s"
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:269
+#: lib/Controller/AdminSettingsController.php:268
 #, php-format
 msgid "Setting wiki name-space to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:288
+#: lib/Controller/AdminSettingsController.php:287
 #, php-format
 msgid "\"%1$s\" controller answered with \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:297
+#: lib/Controller/AdminSettingsController.php:296
 #, php-format
 msgid ""
 "Please head over to the %1$s settings and check the generated \"%2$s\"-"
 "configuration."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:314
+#: lib/Controller/AdminSettingsController.php:313
 #, php-format
 msgid "Default office font reset to default \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:317
+#: lib/Controller/AdminSettingsController.php:316
 #, php-format
 msgid "Default office font set to \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:333
+#: lib/Controller/AdminSettingsController.php:332
 #: lib/Controller/PersonalSettingsController.php:1891
 #: lib/Controller/PersonalSettingsController.php:1946
 #: lib/Controller/ProjectParticipantsController.php:929
@@ -285,22 +285,22 @@ msgstr ""
 msgid "Unknown Request: \"%s\""
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:391
+#: lib/Controller/AdminSettingsController.php:390
 #, php-format
 msgid "Unknown font cache operation: \"%s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:395
+#: lib/Controller/AdminSettingsController.php:394
 #, php-format
 msgid "Font operation \"%1$s\" failed with exception \"%2$s\"."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:401
+#: lib/Controller/AdminSettingsController.php:400
 #, php-format
 msgid "Font operation \"%s\" successful."
 msgstr ""
 
-#: lib/Controller/AdminSettingsController.php:406
+#: lib/Controller/AdminSettingsController.php:405
 #, php-format
 msgid "Unknown internal error during font-cache operation: \"%s\"."
 msgstr ""
@@ -1636,7 +1636,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:1759
-#: lib/Settings/PersonalForm.php:443
+#: lib/Settings/PersonalForm.php:446
 #, php-format
 msgid "%d days"
 msgstr ""
@@ -3156,14 +3156,14 @@ msgstr ""
 msgid "EntityManager is not connected to database."
 msgstr ""
 
-#: lib/Database/Legacy/PME/PHPMyEdit.php:845
+#: lib/Database/Legacy/PME/PHPMyEdit.php:848
 #, php-format
 msgid ""
 "Unknown Tooltip for css-classes \"%1$s\" and name \"%2$s\" requested, failed "
 "keys in detail: %3$s."
 msgstr ""
 
-#: lib/Database/Legacy/PME/PHPMyEdit.php:847
+#: lib/Database/Legacy/PME/PHPMyEdit.php:850
 #, php-format
 msgid "ToolTip-Key \"%1$s\", failed keys %2$s"
 msgstr ""
@@ -3338,104 +3338,111 @@ msgid "Unknown substitution \"%s\"."
 msgstr ""
 
 #: lib/EmailForm/Composer.php:3920
-#: lib/EmailForm/Composer.php:4045
-#: lib/EmailForm/Composer.php:4055
+#: lib/EmailForm/Composer.php:4050
+#: lib/EmailForm/Composer.php:4060
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3941
+#. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
+#. TRANSLATORS: team, like e.g. "treasurer".
+#: lib/EmailForm/Composer.php:3942
+#, php-format
+msgid "Nothing known about \"%s\""
+msgstr ""
+
+#: lib/EmailForm/Composer.php:3946
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3947
+#: lib/EmailForm/Composer.php:3952
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3974
+#: lib/EmailForm/Composer.php:3979
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3977
+#: lib/EmailForm/Composer.php:3982
 msgid "PROJECT_PUBLIC_SHARE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3987
+#: lib/EmailForm/Composer.php:3992
 msgid "PROJECT_PUBLIC_SHARE_EXPIRATION"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3999
+#: lib/EmailForm/Composer.php:4004
 msgid "phrase"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4016
+#: lib/EmailForm/Composer.php:4021
 #, php-format
 msgid "(expires at %s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4156
+#: lib/EmailForm/Composer.php:4161
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4491
+#: lib/EmailForm/Composer.php:4496
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4503
+#: lib/EmailForm/Composer.php:4508
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4527
+#: lib/EmailForm/Composer.php:4532
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4558
+#: lib/EmailForm/Composer.php:4563
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4618
-#: lib/EmailForm/Composer.php:4745
+#: lib/EmailForm/Composer.php:4623
+#: lib/EmailForm/Composer.php:4750
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4654
+#: lib/EmailForm/Composer.php:4659
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4679
+#: lib/EmailForm/Composer.php:4684
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5413
+#: lib/EmailForm/Composer.php:5418
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5414
+#: lib/EmailForm/Composer.php:5419
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5417
+#: lib/EmailForm/Composer.php:5422
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5420
+#: lib/EmailForm/Composer.php:5425
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5423
+#: lib/EmailForm/Composer.php:5428
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5549
+#: lib/EmailForm/Composer.php:5554
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -5622,7 +5629,7 @@ msgid "announce"
 msgstr ""
 
 #: lib/PageRenderer/SepaBulkTransactions.php:766
-#: lib/Service/Finance/SepaBulkTransactionService.php:687
+#: lib/Service/Finance/SepaBulkTransactionService.php:688
 #, php-format
 msgid ""
 "The bulk-transaction with id \"%1$d\" has already been submitted to the "
@@ -5833,13 +5840,6 @@ msgstr ""
 
 #: lib/PageRenderer/Util/Navigation.php:724
 msgid "Display a table with the insurance brokers."
-msgstr ""
-
-#: lib/Service/AssetService.php:89
-#, php-format
-msgid ""
-"Installation problem; the required %s-resource \"%s\" is not installed on "
-"the server, please contact the system administrator!"
 msgstr ""
 
 #: lib/Service/CalDavService.php:447
@@ -6191,26 +6191,26 @@ msgid ""
 "signs."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:720
+#: lib/Service/Finance/SepaBulkTransactionService.php:721
 #, php-format
 msgid "Failed to remove bulk-transaction with id %d"
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:755
+#: lib/Service/Finance/SepaBulkTransactionService.php:756
 msgid "Unable to update payment subject while generating bank export data."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:803
+#: lib/Service/Finance/SepaBulkTransactionService.php:804
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:820
+#: lib/Service/Finance/SepaBulkTransactionService.php:821
 #, php-format
 msgid "Conflicting projects \"%1$s\" vs. \"%2$s\"."
 msgstr ""
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:864
+#: lib/Service/Finance/SepaBulkTransactionService.php:865
 #, php-format
 msgid ""
 "Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."
@@ -6533,7 +6533,7 @@ msgstr ""
 #: lib/Service/ProjectService.php:1700
 #: lib/Service/ProjectService.php:1744
 #: lib/Service/ProjectService.php:1804
-#: lib/Settings/PersonalForm.php:349
+#: lib/Settings/PersonalForm.php:352
 msgid "Rehearsals"
 msgstr ""
 
@@ -6666,26 +6666,6 @@ msgstr ""
 #: lib/Service/ProjectService.php:3003
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
-msgstr ""
-
-#: lib/Service/RequestService.php:133
-#: lib/Service/RequestService.php:221
-msgid "Cannot call internal route while the session is open."
-msgstr ""
-
-#: lib/Service/RequestService.php:156
-#, php-format
-msgid "Supported data formats are \"%1$s\" and \"%2$s\"."
-msgstr ""
-
-#: lib/Service/RequestService.php:186
-#, php-format
-msgid "Invalid response from API call: \"%s\""
-msgstr ""
-
-#: lib/Service/RequestService.php:193
-#, php-format
-msgid "Error response from call to internal route \"%1$s\": %2$s"
 msgstr ""
 
 #: lib/Service/ToolTipsService.php:152
@@ -9130,31 +9110,31 @@ msgstr ""
 msgid "Default Event Notification"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:243
+#: lib/Settings/PersonalForm.php:246
 msgid "ClubMembers"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:245
+#: lib/Settings/PersonalForm.php:248
 msgid "ExecutiveBoardMembers"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:348
+#: lib/Settings/PersonalForm.php:351
 msgid "Concerts"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:350
+#: lib/Settings/PersonalForm.php:353
 msgid "Other"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:351
+#: lib/Settings/PersonalForm.php:354
 msgid "Management"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:352
+#: lib/Settings/PersonalForm.php:355
 msgid "Finance"
 msgstr ""
 
-#: lib/Settings/PersonalForm.php:355
+#: lib/Settings/PersonalForm.php:358
 msgid "Miscellaneous"
 msgstr ""
 
@@ -9345,20 +9325,48 @@ msgstr ""
 msgid "Cannot find directory entry \"%s\"."
 msgstr ""
 
-#: lib/Toolkit/Traits/AssetTrait.php:104
+#: lib/Toolkit/Service/RequestService.php:244
+msgid "Cannot call internal route while the session is open."
+msgstr ""
+
+#: lib/Toolkit/Service/RequestService.php:280
+#, php-format
+msgid ""
+"Supported data formats are \"%1$s\" and \"%2$s\", specified was \"%3$s\"."
+msgstr ""
+
+#: lib/Toolkit/Service/RequestService.php:343
+#, php-format
+msgid "Invalid response from API call: \"%s\""
+msgstr ""
+
+#: lib/Toolkit/Service/RequestService.php:352
+#, php-format
+msgid "Error response from call to internal route \"%1$s\": %2$s"
+msgstr ""
+
+#: lib/Toolkit/Service/RequestService.php:363
+#, php-format
+msgid "Invalid OCS response from call to internal route \"%1$s\": %2$s"
+msgstr ""
+
+#: lib/Toolkit/Service/RequestService.php:369
+#, php-format
+msgid "Error response from call to internal route \"%1$s\": %2$s --  %3$s"
+msgstr ""
+
+#: lib/Toolkit/Traits/AssetTrait.php:103
 #, php-format
 msgid ""
 "Installation problem; the required resource \"%1$s\" of type \"%2$s\" is not "
 "installed on the server, please contact the system administrator!"
 msgstr ""
 
-#: lib/Toolkit/Traits/ResponseTrait.php:118
-#: lib/Traits/ResponseTrait.php:103
+#: lib/Toolkit/Traits/ResponseTrait.php:121
 msgid "Error, caught an exception."
 msgstr ""
 
-#: lib/Toolkit/Traits/ResponseTrait.php:119
-#: lib/Traits/ResponseTrait.php:104
+#: lib/Toolkit/Traits/ResponseTrait.php:122
 msgid "Caused by previous exception"
 msgstr ""
 
@@ -10173,7 +10181,7 @@ msgstr ""
 #: src/app/app-settings.js:59
 #: templates/settings/email-settings.php:41
 #: templates/settings/part.side-menu-settings.php:46
-#: templates/settings.php:57
+#: templates/settings.php:58
 msgid "Settings"
 msgstr ""
 
@@ -12502,7 +12510,7 @@ msgid "link"
 msgstr ""
 
 #: templates/part.common.footer.php:172
-#: templates/settings.php:66
+#: templates/settings.php:67
 msgid "Email"
 msgstr ""
 
@@ -13736,35 +13744,35 @@ msgstr ""
 msgid "Delete Recorded Untranslated"
 msgstr ""
 
-#: templates/settings.php:61
+#: templates/settings.php:62
 msgid "Personal"
 msgstr ""
 
-#: templates/settings.php:63
+#: templates/settings.php:64
 msgid "General"
 msgstr ""
 
-#: templates/settings.php:64
+#: templates/settings.php:65
 msgid "Orchestra"
 msgstr ""
 
-#: templates/settings.php:65
+#: templates/settings.php:66
 msgid "Sharing"
 msgstr ""
 
-#: templates/settings.php:67
+#: templates/settings.php:68
 msgid "CMS"
 msgstr ""
 
-#: templates/settings.php:68
+#: templates/settings.php:69
 msgid "Translations"
 msgstr ""
 
-#: templates/settings.php:69
+#: templates/settings.php:70
 msgid "Development"
 msgstr ""
 
-#: templates/settings.php:71
+#: templates/settings.php:72
 msgid "?"
 msgstr ""
 
