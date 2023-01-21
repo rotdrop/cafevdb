@@ -79,7 +79,7 @@ trait AllProjectsTrait
 
     $generator = function(&$fdd) use ($musicianIdField, $tableTab, $css) {
 
-      $this->makeJoinTableField(
+      list(, $fieldName) = $this->makeJoinTableField(
         $fdd, self::$allProjectsTable, 'projects', [
           'tab' => ['id' => $tableTab ],
           'input' => 'VR',
@@ -106,8 +106,11 @@ trait AllProjectsTrait
             'orderby' => '$table.year ASC, $table.name ASC',
             'groups' => 'year',
             'join' => false,
-            'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
           ],
+        ]);
+      $fdd[$fieldName]['values|LF'] = array_merge(
+        $fdd[$fieldName]['values'], [
+          'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
         ]);
     };
 
