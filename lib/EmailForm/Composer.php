@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -3937,7 +3937,9 @@ Störung.';
       $role = strtolower($arg[0]);
       $contact = $this->organizationalRolesService->dedicatedBoardMemberContact($role);
       if (empty($contact)) {
-	return $this->l->t('Nothing known about "%s"', $role);
+        // TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
+        // TRANSLATORS: team, like e.g. "treasurer".
+        return $this->l->t('Nothing known about "%s"', $role);
       }
       $subField = Util::dashesToCamelCase(strtolower($arg[1]));
       if (empty($subField)) {
