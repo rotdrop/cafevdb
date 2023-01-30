@@ -104,23 +104,27 @@ class MusicianCardBackend implements ICardBackend
    */
   public function searchCards(string $pattern, array $properties): array
   {
-    // $this->logInfo('PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
+    $this->logInfo('PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
 
     if (empty($pattern)) {
       $musicians = $this->musiciansRepository->findAll();
     } else {
+      $empty = true;
       $likePattern = '%' . $pattern . '%';
       $criteria = [ [ '(|' => true ] ];
       if (array_search('FN', $properties) !== false) {
+        $empty = false;
         $criteria[] = [ 'displayName' => $likePattern ];
         $criteria[] = [ 'nickName' => $likePattern ];
         $criteria[] = [ 'firstName' => $likePattern ];
         $criteria[] = [ 'surName' => $likePattern ];
       }
       if (array_search('EMAIL', $properties) !== false) {
+        $empty = false;
         $criteria[] = [ 'email#CONVERT(%s USING utf8mb4)' => $likePattern ];
       }
       if (array_search('UID', $properties) !== false) {
+        $empty = false;
         if (strpos($pattern, '%') !== false) {
           // Probably expensive. We only do a pattern match if $pattern contains
           // wildcards.
@@ -128,10 +132,23 @@ class MusicianCardBackend implements ICardBackend
         } elseif (Uuid::asUuid($pattern) !== null) {
           // only pass exact search term if it is a UUID.
           $criteria[] = [ 'uuid' => $pattern ];
+        } else {
+          $empty = true;
         }
       }
-      $musicians = $this->musiciansRepository->findBy($criteria);
-      // $this->logInfo('FOUND ' . count($musicians) . ' FOR ' . 'PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
+      if (array_search('CATEGORIES', $properties) !== false) {
+        // this could search through instruments and projects
+      }
+      if (array_search('ORG', $properties) !== false) {
+        // this could return all if the pattern matches the orchestra name
+      }
+      if ($empty) {
+        $musicians = [];
+      } else {
+        $this->logInfo('SEARCH CRITS ' . print_r($criteria, true) . ' ' . $pattern);
+        $musicians = $this->musiciansRepository->findBy($criteria);
+        $this->logInfo('FOUND ' . count($musicians) . ' FOR ' . 'PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
+      }
     }
     $vCards = [];
     foreach ($musicians as $musician) {
