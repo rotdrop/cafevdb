@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -128,6 +128,14 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var Collection
    *
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldAttribute", mappedBy="field", cascade={"persist"}, orphanRemoval=true)
+   * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
+   */
+  private $attributes;
+
+  /**
+   * @var Collection
+   *
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDataOption", mappedBy="field", indexBy="key", cascade={"persist"}, orphanRemoval=true)
    * @ORM\OrderBy({"label" = "ASC", "key" = "ASC"})
    * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
@@ -235,6 +243,7 @@ class ProjectParticipantField implements \ArrayAccess
     $this->defaultValue = null;
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
+    $this->attributes = new ArrayCollection();
   }
   // phpcs:enable
 
@@ -309,6 +318,56 @@ class ProjectParticipantField implements \ArrayAccess
   public function getProject():Project
   {
     return $this->project;
+  }
+
+  /**
+   * Set dataOption.
+   *
+   * @param Collection $attributes
+   *
+   * @return ProjectParticipantField
+   */
+  public function setAttributes(Collection $attributes):ProjectParticipantField
+  {
+    $this->attributes = $attributes;
+
+    return $this;
+  }
+
+  /**
+   * Return the value of the given attribute or null if there is no such
+   * attribute.
+   *
+   * @param string|Types\EnumParticipantFieldAttribute $attributeName
+   *
+   * @return mixed
+   */
+  public function getAttribute(mixed $attributeName):mixed
+  {
+  }
+
+  /**
+   * Set the value of the given attribute or null if there is no such
+   * attribute.
+   *
+   * @param string|Types\EnumParticipantFieldAttribute $attributeName
+   *
+   * @param mixed $attributeValue
+   *
+   * @return void
+   */
+  public function setAttribute(mixed $attributeName, mixed $attributeValue)
+  {
+  }
+
+  /**
+   * Get dataOption.
+   *
+   * @return Collection
+   */
+  public function getAttributes():Collection
+  {
+    return $this->attributes;
   }
 
   /**
