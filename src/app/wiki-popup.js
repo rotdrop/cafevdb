@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 
 import $ from './jquery.js';
 import { appName } from './app-info.js';
-import { wikiPopup as dokuWikiPopup } from 'dokuwikiembedded/src/doku-wiki-popup';
+import { wikiPopup as dokuWikiPopup } from '@rotdrop/nextcloud-app-dokuwiki/src/doku-wiki-popup.js';
 import { toBackButton as dialogToBackButton } from './dialog-utils.js';
 import modalizer from './modalizer.js';
 

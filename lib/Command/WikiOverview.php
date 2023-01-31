@@ -35,7 +35,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 
-use OCA\DokuWikiEmbedded\Service\AuthDokuWiki;
+use OCA\DokuWiki\Service\AuthDokuWiki;
 
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ProjectService;

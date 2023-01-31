@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
-use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
+use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;

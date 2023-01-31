@@ -32,7 +32,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IL10N;
 
-use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
+use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\FontService;

@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\AssetService;
 
-use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
+use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;

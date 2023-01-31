@@ -29,7 +29,7 @@ use OCP\Settings\IDelegatedSettings;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Services\IInitialState;
 
-use OCA\DokuWikiEmbedded\Service\AuthDokuWiki as WikiRPC;
+use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\FontService;

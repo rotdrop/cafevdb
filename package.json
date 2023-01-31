@@ -58,7 +58,7 @@
     "csso-webpack-plugin": "^2.0.0-beta.3",
     "dependency-cruiser": "^9.22.0",
     "docdash": "^1.2.0",
-    "dokuwikiembedded": "github:rotdrop/ocapp-dokuwikiembed",
+    "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
     "escape-html": "^1.0.3",
     "eslint": "^8.16.0",
     "eslint-import-resolver-alias": "^1.1.2",
