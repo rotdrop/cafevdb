@@ -332,6 +332,8 @@ realclean: distclean
 	rm -f package-lock.json
 	rm -f *.html
 	rm -f stats.json
+	rm -rf js/*
+	rm -rf css/*
 .PHONY: realclean
 
 # Builds the source and appstore package
