@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Uuid;
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\Doctrine\UuidBinaryType;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
@@ -35,7 +36,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 class UuidType extends UuidBinaryType
 {
   /** {@inheritdoc} */
-  public function convertToPHPValue($value, AbstractPlatform $platform)
+  public function convertToPHPValue($value, AbstractPlatform $platform):?UuidInterface
   {
     if (is_string($value) && strlen($value) == 36) {
       try {
@@ -49,7 +50,7 @@ class UuidType extends UuidBinaryType
   }
 
   /** {@inheritdoc} */
-  public function convertToDatabaseValue($value, AbstractPlatform $platform)
+  public function convertToDatabaseValue($value, AbstractPlatform $platform):?string
   {
     if (is_string($value) && strlen($value) == 16) {
       try {
