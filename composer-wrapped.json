@@ -17,13 +17,13 @@
     "beberlei/doctrineextensions": "^1.2.0",
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/dbal": "^2.13.0",
-    "doctrine/orm": "dev-production/2.13.x/cafevdb",
+    "doctrine/orm": "dev-production/2.14.x/cafevdb",
     "symfony/cache": "^6",
-    "gedmo/doctrine-extensions": "3.9.x-dev",
+    "gedmo/doctrine-extensions": "3.12.x-dev",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
     "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
-    "ramsey/uuid-doctrine": "^1.6",
+    "ramsey/uuid-doctrine": "^2.0",
     "ramsey/uuid": "^4"
   },
   "repositories": [
