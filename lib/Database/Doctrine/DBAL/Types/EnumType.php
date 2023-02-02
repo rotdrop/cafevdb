@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,8 @@
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
-use OCA\CAFEVDB\Wrapped\Acelaya\Doctrine\Type\PhpEnumType;
+use OCA\CAFEVDB\Wrapped\BenTools\Doctrine\NativeEnums\Type\NativeEnum as PhpEnumType;
+use OCA\CAFEVDB\Wrapped\BenTools\Doctrine\NativeEnums\Type\BackedEnumType;
 
 use function call_user_func;
 use function implode;
@@ -37,14 +38,24 @@ class EnumType extends PhpEnumType
   /** {@inheritdoc} */
   public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform):string
   {
-    $values = call_user_func([$this->enumClass, 'toArray']);
-    $values = array_map(fn($val) => "'".$val."'", $values);
+    if ($this->type === BackedEnumType::INT) {
+      return parent::getSQLDeclaration($fieldDeclaration, $platform);
+    }
+
+    $values = array_map(fn($val) => "'".$val."'", $this->getValues());
     return "enum(".implode(",", $values).")";
   }
 
-  /** {@inheritdoc} */
-  public function getValues()
+  /**
+   * Return the enumeration values as array.
+   *
+   * @return array
+   */
+  public function getValues():array
   {
-    return call_user_func([$this->enumClass, 'toArray']);
+    /** @var BackedEnum $class */
+    $class = $this->class;
+
+    return array_map(fn($enum) => $enum->value, $class::cases());
   }
 }

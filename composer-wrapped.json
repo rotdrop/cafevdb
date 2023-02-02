@@ -12,8 +12,6 @@
     "vendor-dir": "vendor-wrapped"
   },
   "require": {
-    "acelaya/doctrine-enum-type": "^2.5",
-    "myclabs/php-enum": "^1.8",
     "beberlei/doctrineextensions": "^1.2.0",
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/dbal": "^2.13.0",
@@ -24,7 +22,8 @@
     "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
     "ramsey/uuid-doctrine": "^2.0",
-    "ramsey/uuid": "^4"
+    "ramsey/uuid": "^4",
+    "bentools/doctrine-native-enums": "dev-feature/allow-child-classes"
   },
   "repositories": [
     {
@@ -51,6 +50,13 @@
     {
       "type": "path",
       "url": "3rdparty/gedmo-doctrine-extensions",
+      "options": {
+        "symlink": false
+      }
+    },
+    {
+      "type": "path",
+      "url": "3rdparty/doctrine-native-enums",
       "options": {
         "symlink": false
       }
