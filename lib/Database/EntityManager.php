@@ -70,7 +70,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Enums;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
@@ -452,16 +452,16 @@ class EntityManager extends EntityManagerDecorator
       return;
     }
     $types = [
-      Types\EnumFileType::class => 'enum',
-      Types\EnumDataTransformation::class => 'enum',
-      Types\EnumSepaTransaction::class => 'enum',
-      Types\EnumParticipantFieldDataType::class => 'enum',
-      Types\EnumParticipantFieldMultiplicity::class => 'enum',
-      Types\EnumGeographicalScope::class => 'enum',
-      Types\EnumMemberStatus::class => 'enum',
-      Types\EnumProjectTemporalType::class => 'enum',
-      Types\EnumVCalendarType::class => 'enum',
-      Types\EnumDirEntryType::class => 'enum',
+      Enums\EnumFileType::class => 'enum',
+      Enums\EnumDataTransformation::class => 'enum',
+      Enums\EnumSepaTransaction::class => 'enum',
+      Enums\EnumParticipantFieldDataType::class => 'enum',
+      Enums\EnumParticipantFieldMultiplicity::class => 'enum',
+      Enums\EnumGeographicalScope::class => 'enum',
+      Enums\EnumMemberStatus::class => 'enum',
+      Enums\EnumProjectTemporalType::class => 'enum',
+      Enums\EnumVCalendarType::class => 'enum',
+      Enums\EnumDirEntryType::class => 'enum',
       // Ramsey\UuidType::class => null,
       // Ramsey\UuidBinaryType::class => 'binary',
       // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
