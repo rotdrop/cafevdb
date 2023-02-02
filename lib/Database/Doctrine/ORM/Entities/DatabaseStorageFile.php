@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
-use OCA\CAFEVDB\Enums\EnumDirEntryType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Constants;
@@ -48,7 +48,7 @@ use OCA\CAFEVDB\Constants;
 class DatabaseStorageFile extends DatabaseStorageDirEntry
 {
   /** @var string */
-  protected static $type = EnumDirEntryType::FILE;
+  protected static $type = DirEntryType::FILE;
 
   /**
    * @var array<int, EncryptedFile>

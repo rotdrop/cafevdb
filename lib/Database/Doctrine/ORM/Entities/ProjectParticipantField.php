@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,9 +34,9 @@ use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
-use OCA\CAFEVDB\Enums;
-use OCA\CAFEVDB\Enums\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Enums\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -112,31 +112,16 @@ class ProjectParticipantField implements \ArrayAccess
   private $untranslatedName;
 
   /**
-   * @var FieldMultiplicity
+   * @var Types\EnumParticipantFieldMultiplicity
    *
-   * @ORM\Column(
-   *   type="string",
-   *   enumType="OCA\CAFEVDB\Enums\EnumParticipantFieldMultiplicity",
-   *   length=32,
-   *   nullable=false,
-   *   options={"collation"="ascii_general_ci"}
-   * )
+   * @ORM\Column(type="EnumParticipantFieldMultiplicity", nullable=false)
    */
   private $multiplicity;
 
   /**
    * @var EnumParticipantFieldDataType
    *
-   * @ORM\Column(
-   *   type="string",
-   *   enumType="OCA\CAFEVDB\Enums\EnumParticipantFieldDataType",
-   *   nullable=false,
-   *   length=32,
-   *   options={
-   *     "default"="text",
-   *     "collation"="ascii_general_ci"
-   *   }
-   * )
+   * @ORM\Column(type="EnumParticipantFieldDataType", nullable=false, options={"default"="text"})
    */
   private $dataType = 'text';
 
