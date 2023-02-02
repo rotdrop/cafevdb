@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Enums;
 /** Enum for file systrem nodes. */
 enum EnumDirEntryType: string
 {
-  public const GENERIC = 'generic';
-  public const FOLDER = 'folder';
-  public const FILE = 'file';
+  case GENERIC = 'generic';
+  case FOLDER = 'folder';
+  case FILE = 'file';
 }

@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Enums;
 /** Enum for file types. */
 enum EnumFileType: string
 {
-  public const GENERIC = 'generic';
-  public const IMAGE = 'image';
-  public const ENCRYPTED = 'encrypted';
+  case GENERIC = 'generic';
+  case IMAGE = 'image';
+  case ENCRYPTED = 'encrypted';
 }

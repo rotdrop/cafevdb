@@ -27,8 +27,8 @@ namespace OCA\CAFEVDB\Enums;
 /** Member status enum for musicians. */
 enum EnumAttachmentOrigin: string
 {
-  public const UPLOAD = 'upload';
-  public const CLOUD = 'cloud';
-  public const PARTICIPANT_FIELD = 'participant-field';
-  public const TEMPLATE = 'template';
+  case UPLOAD = 'upload';
+  case CLOUD = 'cloud';
+  case PARTICIPANT_FIELD = 'participant-field';
+  case TEMPLATE = 'template';
 }

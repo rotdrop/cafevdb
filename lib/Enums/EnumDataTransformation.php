@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Enums;
 /** Enum for data transformations. */
 enum EnumDataTransformation: string
 {
-  public const IDENTITY = 'identity';
-  public const ENCRYPTED = 'encrypted';
-  public const BASE64 = 'base64';
+  case IDENTITY = 'identity';
+  case ENCRYPTED = 'encrypted';
+  case BASE64 = 'base64';
 }
