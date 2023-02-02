@@ -232,9 +232,9 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Get geographicalScope.
    *
-   * @return Types\EnumGeographicalScope
+   * @return Enums\EnumGeographicalScope
    */
-  public function getGeographicalScope():Types\EnumGeographicalScope
+  public function getGeographicalScope():Enums\EnumGeographicalScope
   {
     return $this->insuranceRate->getGeographicalScope();
   }

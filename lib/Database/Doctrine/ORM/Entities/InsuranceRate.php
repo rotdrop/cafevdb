@@ -56,7 +56,7 @@ class InsuranceRate implements \ArrayAccess
   private $broker;
 
   /**
-   * @var Types\EnumGeographicalScope
+   * @var Enums\EnumGeographicalScope
    *
    * @ORM\Column(type="EnumGeographicalScope", nullable=false, options={"default"="Germany"})
    * @ORM\Id
@@ -126,13 +126,13 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Set geographicalScope.
    *
-   * @param string|Types\EnumGeographicalScope $geographicalScope
+   * @param string|Enums\EnumGeographicalScope $geographicalScope
    *
    * @return InsuranceRate
    */
   public function setGeographicalScope($geographicalScope):InsuranceRate
   {
-    $this->geographicalScope = new Types\EnumGeographicalScope($geographicalScope);
+    $this->geographicalScope = new Enums\EnumGeographicalScope($geographicalScope);
 
     return $this;
   }
@@ -142,7 +142,7 @@ class InsuranceRate implements \ArrayAccess
    *
    * @return array
    */
-  public function getGeographicalScope():Types\EnumGeographicalScope
+  public function getGeographicalScope():Enums\EnumGeographicalScope
   {
     return $this->geographicalScope;
   }

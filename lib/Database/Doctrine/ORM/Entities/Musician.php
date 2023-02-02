@@ -236,7 +236,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $emailAddresses;
 
   /**
-   * @var Types\EnumMemberStatus|null
+   * @var Enums\EnumMemberStatus|null
    *
    * @ORM\Column(
    *   type="EnumMemberStatus",
@@ -374,7 +374,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->payments = new ArrayCollection();
     $this->encryptedFiles = new ArrayCollection();
 
-    $this->memberStatus = Types\EnumMemberStatus::REGULAR();
+    $this->memberStatus = Enums\EnumMemberStatus::REGULAR();
   }
 
   /** {@inheritdoc} */
@@ -865,7 +865,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function setMemberStatus($memberStatus):Musician
   {
-    $this->memberStatus = new Types\EnumMemberStatus($memberStatus);
+    $this->memberStatus = new Enums\EnumMemberStatus($memberStatus);
 
     return $this;
   }
@@ -875,7 +875,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return EnumMemberStatus
    */
-  public function getMemberStatus():Types\EnumMemberStatus
+  public function getMemberStatus():Enums\EnumMemberStatus
   {
     return $this->memberStatus;
   }

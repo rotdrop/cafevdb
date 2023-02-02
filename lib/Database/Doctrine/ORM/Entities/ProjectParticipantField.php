@@ -35,8 +35,8 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\GedmoTranslatableListener as TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -112,7 +112,7 @@ class ProjectParticipantField implements \ArrayAccess
   private $untranslatedName;
 
   /**
-   * @var Types\EnumParticipantFieldMultiplicity
+   * @var Enums\EnumParticipantFieldMultiplicity
    *
    * @ORM\Column(type="EnumParticipantFieldMultiplicity", nullable=false)
    */
@@ -535,7 +535,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function setMultiplicity($multiplicity):ProjectParticipantField
   {
-    $this->multiplicity = new Types\EnumParticipantFieldMultiplicity($multiplicity);
+    $this->multiplicity = new Enums\EnumParticipantFieldMultiplicity($multiplicity);
 
     return $this;
   }
@@ -545,7 +545,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return EnumParticipantFieldMultiplicity
    */
-  public function getMultiplicity():Types\EnumParticipantFieldMultiplicity
+  public function getMultiplicity():Enums\EnumParticipantFieldMultiplicity
   {
     return $this->multiplicity;
   }
@@ -559,7 +559,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function setDataType($dataType):ProjectParticipantField
   {
-    $this->dataType = new Types\EnumParticipantFieldDataType($dataType);
+    $this->dataType = new Enums\EnumParticipantFieldDataType($dataType);
     return $this;
   }
 
@@ -568,7 +568,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return EnumParticipantFieldDataType
    */
-  public function getDataType():Types\EnumParticipantFieldDataType
+  public function getDataType():Enums\EnumParticipantFieldDataType
   {
     return $this->dataType;
   }

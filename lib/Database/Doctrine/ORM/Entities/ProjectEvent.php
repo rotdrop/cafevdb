@@ -76,7 +76,7 @@ class ProjectEvent implements \ArrayAccess
   private $calendarUri;
 
   /**
-   * @var null|Types\EnumVCalendarType
+   * @var null|Enums\EnumVCalendarType
    *
    * @ORM\Column(type="EnumVCalendarType", nullable=true)
    */
@@ -212,7 +212,7 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Set type.
    *
-   * @param Types\EnumVCalendarType|null|string $type
+   * @param Enums\EnumVCalendarType|null|string $type
    *
    * @return ProjectEvents
    */
@@ -221,7 +221,7 @@ class ProjectEvent implements \ArrayAccess
     if ($type === null) {
       $this->type = $type;
     } else {
-      $this->type = new Types\EnumVCalendarType($type);
+      $this->type = new Enums\EnumVCalendarType($type);
     }
 
     return $this;
@@ -230,9 +230,9 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Get type.
    *
-   * @return Types\EnumVCalendarType|null
+   * @return Enums\EnumVCalendarType|null
    */
-  public function getType(): ?Types\EnumVCalendarType
+  public function getType(): ?Enums\EnumVCalendarType
   {
     return $this->type;
   }

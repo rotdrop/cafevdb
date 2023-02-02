@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
+use OCA\CAFEVDB\Enums\EnumDirEntryType as DirEntryType;
 
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Constants;
