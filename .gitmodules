@@ -55,3 +55,6 @@
 [submodule "3rdparty/nextcloud-files"]
 	path = 3rdparty/nextcloud-files
 	url = git@github.com:rotdrop/nextcloud-files.git
+[submodule "3rdparty/doctrine-native-enums"]
+	path = 3rdparty/doctrine-native-enums
+	url = git@github.com:rotdrop/doctrine-native-enums.git
