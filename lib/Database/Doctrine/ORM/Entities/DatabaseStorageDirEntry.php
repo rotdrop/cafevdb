@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
+use OCA\CAFEVDB\Enums\EnumDirEntryType;
 use OCA\CAFEVDB\Constants;
 
 /**
@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Constants;
  *   },
  * )
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="EnumDirEntryType")
+ * @ORM\DiscriminatorColumn(name="type", enumType="EnumDirEntryType", length=32)
  * @ORM\DiscriminatorMap({"generic"="DatabaseStorageDirEntry", "file"="DatabaseStorageFile", "folder"="DatabaseStorageFolder"})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageDirEntriesRepository")
  */
@@ -54,7 +54,7 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   use CAFEVDB\Traits\CreatedAtEntity;
 
   /** @var string */
-  protected static $type = DirEntryType::GENERIC;
+  protected static $type = EnumDirEntryType::GENERIC;
 
   /**
    * @var int
