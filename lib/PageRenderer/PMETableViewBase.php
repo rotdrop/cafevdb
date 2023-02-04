@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
+use OCA\CAFEVDB\Enums;
 
 use OCA\CAFEVDB\Exceptions;
 
@@ -386,14 +386,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
 
     // @todo think about how to generate translations
-    $this->memberStatus = DBTypes\EnumMemberStatus::toArray();
+    $this->memberStatus = Enums\EnumMemberStatus::toArray();
     foreach ($this->memberStatus as $key => $tag) {
       if (!isset($this->memberStatusNames[$tag])) {
         $this->memberStatusNames[$tag] = $this->l->t('member status '.$tag);
       }
     }
 
-    $this->projectType = DBTypes\EnumProjectTemporalType::toArray();
+    $this->projectType = Enums\EnumProjectTemporalType::toArray();
     foreach ($this->projectType as $key => $tag) {
       if (!isset($this->projectTypeNames[$tag])) {
         $this->projectTypeNames[$tag] = $this->l->t($tag);
@@ -404,11 +404,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /**
    * @return array The translated field-multiplicity names.
    *
-   * @see DBTypes\EnumParticipantFieldMultiplicity
+   * @see Enums\EnumParticipantFieldMultiplicity
    */
   protected function participantFieldMultiplicityNames():array
   {
-    $multiplicities = array_values(DBTypes\EnumParticipantFieldMultiplicity::toArray());
+    $multiplicities = array_values(Enums\EnumParticipantFieldMultiplicity::toArray());
     $result = [];
     foreach ($multiplicities as $tag) {
       $slug = 'extra field '.$tag;
@@ -420,11 +420,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /**
    * @return array The translated field-data-type names.
    *
-   * @see DBTypes\EnumParticipantFieldDataType
+   * @see Enums\EnumParticipantFieldDataType
    */
   protected function participantFieldDataTypeNames():array
   {
-    $dataTypes = array_values(DBTypes\EnumParticipantFieldDataType::toArray());
+    $dataTypes = array_map(fn($case) => $case->value, Enums\EnumParticipantFieldDataType::cases());
     $result = [];
     foreach ($dataTypes as $tag) {
       $slug = 'extra field type '.$tag;

@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\Enums;
 /** Member status enum for musicians. */
 enum EnumAttachmentOrigin: string
 {
+  use \OCA\RotDrop\Toolkit\Traits\EnumValuesTrait;
+
   case UPLOAD = 'upload';
   case CLOUD = 'cloud';
   case PARTICIPANT_FIELD = 'participant-field';

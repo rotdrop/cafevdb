@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\Enums;
 /** Enum for data transformations. */
 enum EnumDataTransformation: string
 {
+  use \OCA\RotDrop\Toolkit\Traits\EnumValuesTrait;
+
   case IDENTITY = 'identity';
   case ENCRYPTED = 'encrypted';
   case BASE64 = 'base64';

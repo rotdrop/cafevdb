@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,13 +35,13 @@ use OCP\Share\Exceptions\ShareNotFound;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Enums;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Enums\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Enums\EnumMemberStatus as MemberStatus;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
@@ -2389,7 +2389,7 @@ Whatever.',
    *
    * @param int|null $year Optional year for "temporary" projects.
    *
-   * @param string|Types\EnumProjectTemporalType $type Type of the project.
+   * @param string|Enums\EnumProjectTemporalType $type Type of the project.
    *
    * @return null|Entities\Project
    */

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
+
+use BackedEnum;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Expr;
@@ -597,11 +599,12 @@ trait FindLikeTrait
               $criterion['literal'] = true;
               // unfortunately, a literal 0 just cannot be modelled with the query builder
               $expr = $qb->expr()->eq(1, 0);
+            } elseif ($value instanceof \BackedEnum) {
+              $expr = $qb->expr()->in($field, ':' . $param);
             } else {
               // array values could contain wildcards
-              $value = str_replace('*', '%', $value);
-              if (!empty(array_filter($value, fn($x) => strpos($x, '%') !== false))) {
-                $value = implode('|', array_map(fn($x) => str_replace('%', '.*', preg_quote($x)), $value));
+              if (!empty(array_filter($value, fn($x) => !($x instanceof BackedEnum) && (str_contains($x, '%') || str_contains($x, '*'))))) {
+                $value = implode('|', array_map(fn($x) => str_replace(['%', '*'], ['.*', '.*'], preg_quote($x)), $value));
                 $value = '^' . $value . '$';
                 $expr = $qb->expr()->eq(new Expr\Func('REGEXP', [ $field, ':' . $param ]), 1);
                 $criterion['value'] = $value;

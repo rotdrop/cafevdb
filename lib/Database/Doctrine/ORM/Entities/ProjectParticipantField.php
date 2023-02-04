@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -344,7 +344,10 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function getSelectableOptions(bool $includeDeleted = false):Collection
   {
-    // this unfortunately just does not work.
+    // This unfortunately just does not work, probably because === on objects
+    // needs identical instances which here is not the case as "key" refers
+    // always to another UUID object instance after it has been loaded from
+    // the DB.
     // return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
     return $this->dataOptions->filter(function($option) use ($includeDeleted) {
       /** @var ProjectParticipantFieldDataOption $option */

@@ -27,6 +27,8 @@ namespace OCA\CAFEVDB\Enums;
 /** Type of projects. */
 enum EnumProjectTemporalType: string
 {
+  use \OCA\RotDrop\Toolkit\Traits\EnumValuesTrait;
+
   case TEMPORARY = 'temporary';
   case PERMANENT = 'permanent';
   case TEMPLATE = 'template';

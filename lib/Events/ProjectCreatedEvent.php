@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,6 @@
 namespace OCA\CAFEVDB\Events;
 
 use OCP\EventDispatcher\Event;
-
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 
 /** Event fired after project creation. */
 class ProjectCreatedEvent extends ProjectEvent

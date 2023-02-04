@@ -37,8 +37,8 @@ use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldDataType as FieldType;
 
 use OCA\CAFEVDB\Common\Util;
 

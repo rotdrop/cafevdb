@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,8 +46,8 @@ use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\Database\Factory as StorageFactory;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldDataType as FieldDataType;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Common\Util;

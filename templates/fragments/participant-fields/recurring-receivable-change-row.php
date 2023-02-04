@@ -25,7 +25,7 @@
 namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Enums\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
 
 /**

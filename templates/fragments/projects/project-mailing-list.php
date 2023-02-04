@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFEVDB\Enums\EnumProjectTemporalType as ProjectType;
 
 /**
  * @param string $projectType The type of the project, temporary, permanent, template.
