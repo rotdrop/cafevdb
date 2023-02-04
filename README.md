@@ -1,6 +1,20 @@
 CAFEVDB -- Orchestra Management App
 ===================================
 
+# BRANCH COMMENTS
+
+PHP native enums are ill-disigned and not yet feature-full enough. It
+is not even possible to use the enum values as constants
+conveniently. Therefore this branch is abandoned until -- perhaps --
+PHP 9.
+
+Until then my judgement is: PHP native enums are not yet mature and
+not yet in a state that they are ready for production use.
+
+This branch is freezed until this changes. If it ever changes ...
+
+# Rest
+
 The goal of the project is a group-ware application which aids
 the management of a project-oriented orchestra. This stuff arose out
 of the frustation about collections of unwieldy "Excel"-sheets and
