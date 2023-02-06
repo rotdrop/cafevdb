@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -898,51 +898,17 @@ __EOT__;
       'css' => [ 'postfix' => [ 'participant-access', 'access' ], ],
       'select' => 'O',
       'values2' => [
-        Entities\ProjectParticipantField::ACCESS_NONE => $this->l->t('no access'),
-        Entities\ProjectParticipantField::ACCESS_READ => $this->l->t('read'),
-        Entities\ProjectParticipantField::ACCESS_WRITE => $this->l->t('read / write'),
+        Types\EnumAccessPermission::NONE => $this->l->t('no access'),
+        Types\EnumAccessPermission::READ => $this->l->t('read'),
+        Types\EnumAccessPermission::READ_WRITE => $this->l->t('read / write'),
       ],
-      'default' => Entities\ProjectParticipantField::ACCESS_NONE,
+      'default' => Types\EnumAccessPermission::NONE,
       'sort' => true,
       'align' => 'center',
       'tooltip' => $this->toolTipsService['page-renderer:participant-fields:participant-access'],
     ];
 
     if ($expertMode) {
-
-      // @todo wildcards?
-      $cloudGroups = [];
-      /** @var \OCP\IGROUP $group */
-      foreach ($this->groupManager()->search('') as $group) {
-        $cloudGroups[$group->getGID()] = $group->getDisplayName();
-      }
-
-      $opts['fdd']['readers'] = [
-        'name' => $this->l->t('Readers'),
-        'tab' => [ 'id' => 'access' ],
-        'css' => [ 'postfix' => [ 'readers', 'user-groups', ], ],
-        'select' => 'M',
-        'values' => $cloudGroups,
-        'maxlen' => 10,
-        'sort' => true,
-        'display' => [ 'popup' => 'data' ],
-        'align' => 'center',
-        'tooltip' => $this->toolTipsService['page-renderer:participant-fields:readers'],
-      ];
-
-      $opts['fdd']['writers'] = [
-        'name' => $this->l->t('Writers'),
-        'tab' => [ 'id' => 'access' ],
-        'css' => [ 'postfix' => [ 'writers', 'chosen-dropup', 'user-groups', ], ],
-        'select' => 'M',
-        'values' => $cloudGroups,
-        'maxlen' => 10,
-        'sort' => true,
-        'display' => [ 'popup' => 'data' ],
-        'align' => 'center',
-        'tooltip' => $this->toolTipsService['page-renderer:participant-fields:writers'],
-      ];
-
       $opts['fdd']['encrypted'] = [
         'name' => $this->l->t('Encrypted'),
         'tab' => [ 'id' => 'access' ],
