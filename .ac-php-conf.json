@@ -10,7 +10,7 @@
       "../../3rdparty",
       "../../lib",
       "../dav/lib",
-      "../dokuwikiembedded/lib",
+      "../dokuwiki/lib",
       "../redaxo4embedded/lib",
       "../files_trashbin/lib",
       "../files/lib",
