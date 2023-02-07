@@ -724,11 +724,11 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set participantAccess.
    *
-   * @param int $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
+   * @param null|string|Types\EnumAccessPermission $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
    *
    * @return ProjectParticipantField
    */
-  public function setParticipantAccess(int $participantAccess):ProjectParticipantField
+  public function setParticipantAccess(mixed $participantAccess):ProjectParticipantField
   {
     $this->participantAccess = $participantAccess;
 
@@ -738,9 +738,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get participantAccess.
    *
-   * @return int
+   * @return null|string|Types\EnumAccessPermission
    */
-  public function getParticipantAccess():int
+  public function getParticipantAccess():mixed
   {
     return $this->participantAccess;
   }
