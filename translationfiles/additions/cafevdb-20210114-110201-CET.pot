@@ -65,6 +65,16 @@ msgstr ""
 
 #: lib/PageRenderer/PMETableViewBase.php:174
 #, php-format
+msgid "extra field type receivables"
+msgstr ""
+
+#: lib/PageRenderer/PMETableViewBase.php:174
+#, php-format
+msgid "extra field type liabilities"
+msgstr ""
+
+#: lib/PageRenderer/PMETableViewBase.php:174
+#, php-format
 msgid "extra field type text"
 msgstr ""
 
