@@ -108,7 +108,7 @@ class OrganizationalRolesService
       $data['email'] = $roleEmail;
     }
 
-    $missingFields = array_keys(array_filter($data, fn($value) => !empty($value)));
+    $missingFields = array_keys(array_filter($data, fn($value) => empty($value)));
 
     $this->logInfo('Missing fields for ' . $role . ' ' . print_r($missingFields, true) . ' ' . print_r($data, true));
 
