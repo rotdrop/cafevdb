@@ -1062,15 +1062,6 @@ __EOT__;
           Constants::README_NAME));
     }
 
-    // make sure writer-acls are a subset of reader-acls
-    $writers = preg_split('/\s*,\s*/', $newValues['writers'], -1, PREG_SPLIT_NO_EMPTY);
-    $readers = preg_split('/\s*,\s*/', $newValues['readers'], -1, PREG_SPLIT_NO_EMPTY);
-    $missing = array_diff($writers, $readers);
-    if (!empty($missing)) {
-      $readers = array_merge($readers, $missing);
-      $newValues['Readers'] = implode(',', $readers);
-    }
-
     /*-**********************************************************************
      *
      * Add the data from NewTab to Tab
@@ -2219,7 +2210,7 @@ __EOT__;
     return
       '<span class="service-fee-alternatives">
   <span class="general">'.$value.'</span>
-  <span class="service-fee currency-amount">'.$this->moneyValue($value).'</span>
+  <span class="service-fee receivables liabilities currency-amount">' . $this->moneyValue($value) . '</span>
 </span>';
   }
 
@@ -2238,7 +2229,7 @@ __EOT__;
     return
       '<span class="service-fee-alternatives">
   <span class="general">'.$prefix.$label.'</span>
-  <span class="service-fee currency-label">'.$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'.'</span>
+  <span class="service-fee receivables liabilities currency-label">'.$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'.'</span>
 </span>';
   }
 

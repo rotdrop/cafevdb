@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -253,7 +253,9 @@ const ready = function(selector, resizeCB) {
     });
     $(dateTimePickerSelector).remove();
     switch (dataType) {
-    case 'service-fee':
+    case 'service-fee': // @todo REMOVE
+    case 'receivables':
+    case 'liabilities':
       $dataInputs
         .attr('type', 'number')
         .attr('step', '0.01');
@@ -288,6 +290,12 @@ const ready = function(selector, resizeCB) {
     }
   };
 
+  const isMonetaryType = dataType => (
+    dataType === 'service-fee' // @todo REMOVE
+      || dataType === 'receivables'
+      || dataType === 'liabilities'
+  );
+
   const fieldTypeData = function() {
     const multiplicity = $container.find('select.multiplicity');
     const dataType = $container.find('select.data-type');
@@ -296,7 +304,7 @@ const ready = function(selector, resizeCB) {
       const data = {
         multiplicity: multiplicity.val(),
         dataType: dataType.val(),
-        depositDueDate: (dataType === 'service-fee' && depositDueDate.val() !== '') ? 'set' : 'unset',
+        depositDueDate: (isMonetaryType(dataType) && depositDueDate.val() !== '') ? 'set' : 'unset',
       };
       return data;
     }
@@ -360,7 +368,7 @@ const ready = function(selector, resizeCB) {
         }
       }
       dataTypeSelect.trigger('chosen:updated');
-      const depositDueDate = (dataType === 'service-fee' && depositDueDateInput.val() !== '') ? 'set' : 'unset';
+      const depositDueDate = (isMonetaryType(dataType) && depositDueDateInput.val() !== '') ? 'set' : 'unset';
       setFieldTypeCssClass({ multiplicity, dataType, depositDueDate });
       allowedHeaderVisibility();
       console.debug('RESIZECB');
@@ -587,8 +595,12 @@ const ready = function(selector, resizeCB) {
   $container.on(
     'blur',
     [
-      'tr.multiplicity.data-type-service-fee ~ tr.data-options-single input' + textInputSelector,
-      'tr.multiplicity.data-type-service-fee:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data' + textInputSelector,
+      'tr.multiplicity.data-type-service-fee ~ tr.data-options-single input' + textInputSelector, // @todo REMOVE
+      'tr.multiplicity.data-type-service-fee:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data' + textInputSelector, // @todo REMOVE
+      'tr.multiplicity.data-type-receivables ~ tr.data-options-single input' + textInputSelector,
+      'tr.multiplicity.data-type-receivables:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data' + textInputSelector,
+      'tr.multiplicity.data-type-liabilities ~ tr.data-options-single input' + textInputSelector,
+      'tr.multiplicity.data-type-liabilities:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data' + textInputSelector,
     ].join(),
     function(event) {
       const self = $(this);

@@ -155,10 +155,10 @@
     &#{$prefixSelector} {
       #{$middle} {
         #{$postfix}:not(#{$selector}) {
-          display: none;
+          display: none !important;
         }
         #{$postfix}#{$selector} {
-          display:#{$display};
+          display:#{$display} !important;
         }
       }
     }

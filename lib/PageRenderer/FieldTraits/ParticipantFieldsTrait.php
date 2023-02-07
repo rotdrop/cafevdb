@@ -187,6 +187,7 @@ trait ParticipantFieldsTrait
         $multiplicity = $field->getMultiplicity();
         $dataType = (string)$field->getDataType();
         $deleted = !empty($field->getDeleted());
+        $subTotalsSign = $dataType == FieldType::LIABILITIES ? '-1 * ' : '';
 
         if (!$this->participantFieldsService->isSupportedType($multiplicity, $dataType)) {
           throw new Exception(
@@ -392,7 +393,7 @@ trait ParticipantFieldsTrait
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                       'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'N',
-                      'sql' => 'CAST(
+                      'sql' => $subTotalsSign . 'CAST(
   COALESCE(
     GROUP_CONCAT(
       DISTINCT
@@ -910,9 +911,6 @@ trait ParticipantFieldsTrait
                   return $this->moneyValue($value);
                 };
 
-                if ($dataType == FieldType::LIABILITIES) {
-                  $dataValue = -$dataValue;
-                }
                 // yet another field to support summing up totals
                 list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
                   $fieldDescData, $tableName, 'sub_totals_invoiced',
@@ -922,7 +920,7 @@ trait ParticipantFieldsTrait
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                       'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'T',
-                      'sql' => 'CAST(
+                      'sql' => $subTotalsSign . 'CAST(
   COALESCE(
     IF(
       GROUP_CONCAT(
@@ -1207,7 +1205,7 @@ trait ParticipantFieldsTrait
                       'select' => 'T',
                       'align' => 'right',
                       'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
-                      'sql' => $sql,
+                      'sql' => $subTotalsSign . $sql,
                       'values' => [
                         'column' => 'option_key',
                         'encode' => 'BIN2UUID(%s)',
@@ -1314,7 +1312,7 @@ trait ParticipantFieldsTrait
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
-                    'sql' => 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
+                    'sql' => $subTotalsSign . 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -1814,7 +1812,7 @@ WHERE pp.project_id = $this->projectId",
                     'tab' => [ 'id' => 'tab-none' ], // move it away
                     'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                     'select' => 'T',
-                    'sql' => 'CAST(
+                    'sql' => $subTotalsSign . 'CAST(
   COALESCE(
     IF(
       GROUP_CONCAT(
@@ -2070,7 +2068,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                     'select' => 'T',
                     'align' => 'right',
                     'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
-                    'sql' => 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
+                    'sql' => $subTotalsSign . 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
