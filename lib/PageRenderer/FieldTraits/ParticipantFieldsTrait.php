@@ -121,8 +121,8 @@ trait ParticipantFieldsTrait
    * given field-description-data with columns for all participant fields. The
    * $subTotals array is filled with SQL-fragments which collect the
    * service-fee amounts of the respective monetary fields with data-type
-   * field-type FieldType::SERVICE_FEE, is is indexed by field-name. Steps to
-   * perform:
+   * field-type FieldType::SERVICE_FEE, FieldType::RECEIVABLES,
+   * FieldType::LIABILITIES, it is indexed by field-name. Steps to perform:
    *
    * - merge the returned join-structure into $this->joinStructure
    * - call PMETableViewBase::defineJoinStructure()
@@ -318,7 +318,9 @@ trait ParticipantFieldsTrait
               break;
               // case FieldType::DATE:
               // case FieldType::DATETIME:
-            case FieldType::SERVICE_FEE:
+            case FieldType::SERVICE_FEE: // @todo REMOVE
+            case FieldType::RECEIVABLES:
+            case FieldType::LIABILITIES:
               $style = $this->defaultFDD[$dataType];
               if (empty($style)) {
                 throw new Exception($this->l->t('Not default style for "%s" available.', $dataType));
@@ -362,7 +364,9 @@ trait ParticipantFieldsTrait
 />';
 
             switch ($dataType) {
-              case FieldType::SERVICE_FEE:
+              case FieldType::SERVICE_FEE: // @todo REMOVE
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
                 unset($valueFdd['mask']);
 
                 // yet another field for the supporting documents
@@ -889,7 +893,9 @@ trait ParticipantFieldsTrait
             switch ($dataType) {
               case FieldType::BOOLEAN:
                 break;
-              case FieldType::SERVICE_FEE:
+              case FieldType::SERVICE_FEE: // @todo REMOVE
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
                 $money = $this->moneyValue($dataValue);
                 $noMoney = $this->moneyValue(0);
                 // just use the amount to pay as label
@@ -904,6 +910,9 @@ trait ParticipantFieldsTrait
                   return $this->moneyValue($value);
                 };
 
+                if ($dataType == FieldType::LIABILITIES) {
+                  $dataValue = -$dataValue;
+                }
                 // yet another field to support summing up totals
                 list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
                   $fieldDescData, $tableName, 'sub_totals_invoiced',
@@ -1146,7 +1155,9 @@ trait ParticipantFieldsTrait
                 break;
               case FieldType::DATE:
               case FieldType::DATETIME:
-              case FieldType::SERVICE_FEE:
+              case FieldType::SERVICE_FEE: // @todo REMOVE
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
                 foreach ($dataOptions as $dataOption) {
                   $key = (string)$dataOption['key'];
                   $label = $dataOption['label'];
@@ -1167,7 +1178,7 @@ trait ParticipantFieldsTrait
 )';
                   $sql = 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))';
                 } else {
-                  // comparatively difficult because of the many multi-valued joins.x
+                  // comparatively difficult because of the many multi-valued joins.
 
                   $optionValueSql = 'IF(
   $join_table.field_id = ' . $fieldId . '

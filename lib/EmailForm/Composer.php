@@ -831,11 +831,28 @@ Störung.';
         $fieldsByType = [
           'monetary' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
-            return $field->getDataType() == FieldType::SERVICE_FEE;
+            switch ($field->getDataType()) {
+              case FieldType::SERVICE_FEE: /** @todo REMOVE */
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
+                return true;
+              default:
+                return false;
+            }
           }),
           'deposit' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
-            return $field->getDataType() == FieldType::SERVICE_FEE && !empty($field->getDepositDueDate());
+            if (empty($field->getDepositDueDate())) {
+              return false;
+            }
+            switch ($field->getDataType()) {
+              case FieldType::SERVICE_FEE: /** @todo REMOVE */
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
+                return true;
+              default:
+                return false;
+            }
           }),
           'files' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
@@ -845,7 +862,9 @@ Störung.';
           }),
           'other' => $participantFields->filter(function($field) {
             /** @var Entities\ProjectParticipantField $field */
-            return ($field->getDataType() != FieldType::SERVICE_FEE
+            return ($field->getDataType() != FieldType::SERVICE_FEE /** @todo REMOVE */
+                    && $field->getDataType() != FieldType::RECEIVABLES
+                    && $field->getDataType() != FieldType::LIABILITIES
                     && $field->getDataType() != FieldType::CLOUD_FILE
                     && $field->getDataType() != FieldType::DB_FILE
                     && $field->getDataType() != FieldType::CLOUD_FOLDER);
@@ -867,7 +886,9 @@ Störung.';
             $doSpecificField = true;
             $found = true;
             switch ($specificField->first()->getDataType()) {
-              case FieldType::SERVICE_FEE:
+              case FieldType::SERVICE_FEE: /** @todo REMOVE */
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
                 $fieldsByType = ['monetary' => $specificField ];
                 if (!empty($specificField->first()->getDepositDueDate())) {
                   $fieldsByType['deposit'] = $specificField;
@@ -903,7 +924,9 @@ Störung.';
           // add implicit file attachments
           foreach ($fields as $field) {
             switch ($field->getDataType()) {
-              case FieldType::SERVICE_FEE:
+              case FieldType::SERVICE_FEE: /** @todo REMOVE */
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
               case FieldType::CLOUD_FILE:
               case FieldType::DB_FILE:
               case FieldType::CLOUD_FOLDER:
@@ -2097,7 +2120,9 @@ Störung.';
         case FieldType::CLOUD_FILE:
         case FieldType::CLOUD_FOLDER:
         case FieldType::DB_FILE:
-        case FieldType::SERVICE_FEE:
+        case FieldType::SERVICE_FEE: /** @todo REMOVE */
+        case FieldType::RECEIVABLES:
+        case FieldType::LIABILITIES:
           break;
         default:
           $this->logError(sprintf('Cannot attach field "%s" of type "%s".', $fieldName, $fieldType));
@@ -2121,7 +2146,9 @@ Störung.';
       }
 
       switch ($fieldType) {
-        case FieldType::SERVICE_FEE:
+        case FieldType::SERVICE_FEE: /** @todo REMOVE */
+        case FieldType::RECEIVABLES:
+        case FieldType::LIABILITIES:
           // ATM we support sub-selection item only for FieldMultiplicity::RECURRING
           if ($attachment['status'] != 'selected') {
             $selectedKeys = [];
@@ -5221,7 +5248,10 @@ Störung.';
       if ($fieldType != FieldType::CLOUD_FILE
           && $fieldType != FieldType::CLOUD_FOLDER
           && $fieldType != FieldType::DB_FILE
-          && $fieldType != FieldType::SERVICE_FEE) {
+          && $fieldType != FieldType::SERVICE_FEE /** @todo REMOVE */
+          && $fieldType != FieldType::RECEIVABLES
+          && $fieldType != FieldType::LIABILITIES
+      ) {
         continue;
       }
       $fieldId = $participantField->getId();
@@ -5239,7 +5269,11 @@ Störung.';
       } else {
         $attachment['status'] = 'inactive';
       }
-      if ($fieldType == FieldType::SERVICE_FEE) {
+      if (
+        $fieldType == FieldType::SERVICE_FEE /** @todo REMOVE */
+        || $fieldType == FieldType::RECEIVABLES
+        || $fieldType == FieldType::LIABILITIES
+      ) {
         $attachment['sub_topic'] = 'bills and receipts';
         // split only the recurring receivables as there may be so many of them ...
         if ($participantField->getMultiplicity() == FieldMultiplicity::RECURRING) {

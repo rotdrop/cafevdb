@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -247,7 +247,9 @@ class MusicianService
           $this->remove($dbFile, true);
           $removeEntity = true;
           break;
-        case FieldDataType::SERVICE_FEE:
+        case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
           $dbFile = $participantDatum->getSupportingDocument();
           $this->remove($dbFile, true);
           $participantDatum->setSupportingDocument(null);

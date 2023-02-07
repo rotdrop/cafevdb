@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,8 +47,19 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  *   A date with time information.
  *
  * @method static EnumParticipantFieldDataType SERVICE_FEE()
+ * @deprecated Use RECEIVABLES or LIABILITIES
  * A service-fee value with the convention that positive values denote
  * receivables and negative values denote liabilities (from the view
+ * of the orchestra.
+ *
+ * @method static EnumParticipantFieldDataType RECEIVABLES()
+ * A monetary value with the convention that positive values denote
+ * receivables and negative values denote liabilities (from the view
+ * of the orchestra.
+ *
+ * @method static EnumParticipantFieldDataType LIABILITIES()
+ * A monetary value with the convention that positive values denote
+ * liabilities and negative values denote receivables (from the view
  * of the orchestra.
  *
  * @method static EnumParticipantFieldDataType CLOUD_FILE()
@@ -66,15 +77,17 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  */
 class EnumParticipantFieldDataType extends EnumType
 {
-  public const TEXT = 'text';
-  public const HTML = 'html';
+  public const DB_FILE = 'db-file';
   public const BOOLEAN = 'boolean';
-  public const INTEGER = 'integer';
-  public const FLOAT = 'float';
-  public const DATE = 'date';
-  public const DATETIME = 'datetime';
-  public const SERVICE_FEE = 'service-fee';
   public const CLOUD_FILE = 'cloud-file';
   public const CLOUD_FOLDER = 'cloud-folder';
-  public const DB_FILE = 'db-file';
+  public const DATE = 'date';
+  public const DATETIME = 'datetime';
+  public const FLOAT = 'float';
+  public const HTML = 'html';
+  public const INTEGER = 'integer';
+  public const SERVICE_FEE = 'service-fee'; /** @todo REMOVE */
+  public const LIABILITIES = 'liabilities';
+  public const RECEIVABLES = 'receivables';
+  public const TEXT  = 'text';
 }

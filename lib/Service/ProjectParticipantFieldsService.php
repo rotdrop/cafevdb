@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -169,21 +169,18 @@ class ProjectParticipantFieldsService
    */
   public function monetaryFields(Entities\Project $project):iterable
   {
-    // $participantFields = $project['participantFields'];
-
-    // $monetary = [];
-    // foreach ($participantFields as $field) {
-    //   switch ($field['dataType']) {
-    //   case DataType::SERVICE_FEE:
-    //     $monetary[$field['id']] = $field;
-    //     break;
-    //   }
-    // }
-    // return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
-    //   'dataType' => (string)DataType::SERVICE_FEE,
-    // ]));
+    // "matching" cannot work as our quasi-enums are objects which are not
+    // singletons. "matching" uses === which only yields true for objects if
+    // their refer to the same instance.
     return $project->getParticipantFields()->filter(function($field) {
-      return $field->getDataType() == DataType::SERVICE_FEE;
+      switch ($field->getDataType()) {
+        case DataType::SERVICE_FEE: /** @todo remove */
+        case DataType::RECEIVABLES:
+        case DataType::LIABILITIES:
+          return true;
+        default:
+          return false;
+      }
     });
   }
 
@@ -322,11 +319,14 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
       $fieldDataType = $fieldDatum->getField()->getDataType();
-      if ($fieldDataType != DataType::SERVICE_FEE) {
-        continue;
+      switch ($fieldDataType) {
+        case DataType::SERVICE_FEE: /** @todo REMOVE */
+        case DataType::RECEIVABLES:
+        case DataType::LIABILITIES:
+          $obligations['sum'] += $fieldDatum->amountPayable();
+          $obligations['received'] += $fieldDatum->amountPaid();
+          break;
       }
-      $obligations['sum'] += $fieldDatum->amountPayable();
-      $obligations['received'] += $fieldDatum->amountPaid();
     }
 
     return $obligations;
@@ -446,7 +446,9 @@ class ProjectParticipantFieldsService
   public static function defaultTabId(string $multiplicity, string $dataType):string
   {
     switch ($dataType) {
-      case DataType::SERVICE_FEE:
+      case DataType::SERVICE_FEE: /** @todo REMOVE */
+      case DataType::RECEIVABLES:
+      case DataType::LIABILITIES:
         return  'finance';
       case DataType::CLOUD_FILE:
       case DataType::CLOUD_FOLDER:
@@ -582,8 +584,11 @@ class ProjectParticipantFieldsService
       case DataType::DATETIME:
         return Util::convertToDateTime($value);
       case DataType::FLOAT:
-      case DataType::SERVICE_FEE:
+      case DataType::SERVICE_FEE: /** @todo REMOVE */
+      case DataType::RECEIVABLES:
         return floatval($value);
+      case DataType::LIABILITIES:
+        return -floatval($value);
       case DataType::INTEGER:
         return intval($value);
       case DataType::CLOUD_FILE:
@@ -643,7 +648,9 @@ class ProjectParticipantFieldsService
         return $this->formatDateTime($fieldValue, $dateFormat);
       case DataType::FLOAT:
         return $this->floatValue($fieldValue, $floatPrecision);
-      case DataType::SERVICE_FEE:
+      case DataType::SERVICE_FEE: /** @todo REMOVE */
+      case DataType::RECEIVABLES:
+      case DataType::LIABILITIES:
         return $this->moneyValue($fieldValue);
       case DataType::INTEGER:
         return (string)(int)$fieldValue;

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -936,12 +936,16 @@ class ProjectService
       $dirName = $this->participantFieldsService->getFileSystemFieldName($field);
     }
 
-    if ($field->getDataType() == FieldDataType::SERVICE_FEE) {
-      $subDirPrefix =
-        $this->getSupportingDocumentsFolderName()
-        . Constants::PATH_SEP
-        . $this->getReceivablesFolderName();
-      $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . Constants::PATH_SEP . $dirName;
+    switch ($field->getDataType()) {
+      case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
+      case FieldDataType::RECEIVABLES:
+      case FieldDataType::LIABILITIES:
+        $subDirPrefix =
+          $this->getSupportingDocumentsFolderName()
+          . Constants::PATH_SEP
+          . $this->getReceivablesFolderName();
+        $dirName = empty($dirName) ? $subDirPrefix : $subDirPrefix . Constants::PATH_SEP . $dirName;
+        break;
     }
 
     return $dirName;
@@ -1004,7 +1008,9 @@ class ProjectService
           $fileId = (int)$fieldDatum->getOptionValue();
           $dirEntry = $this->findEntity(Entities\DatabaseStorageFile::class, $fileId);
           break;
-        case FieldDataType::SERVICE_FEE:
+        case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
+        case FieldDataType::RECEIVABLES:
+        case FieldDataType::LIABILITIES:
           $dirEntry = $fieldDatum->getSupportingDocument();
           break;
         default:

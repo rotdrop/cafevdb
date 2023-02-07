@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -75,15 +75,25 @@ form.pme-form.project-participant-fields-display {
       }
     }
 
-    td.groupofpeople:not(.pme-key),
-    td.groupofpeople-id:not(.pme-key),
-    td.service-fee.set:not(.pme-key),
-    td.service-fee.enum:not(.pme-key) {
-      min-width:12em;
+    td:not(.pme-key) {
+      &.groupofpeople,
+      &.groupofpeople-id,
+      &.service-fee.set, // @todo REMOVE
+      &.service-fee.enum, // @todo REMOVE
+      &.receivables.set,
+      &.receivables.enum,
+      &.liabilities.set,
+      &.liabilities.enum {
+        min-width:12em;
+      }
     }
 
-    td.service-fee.enum {
-      font-family:inherit;
+    td.enum {
+      &.service-fee, // @todo REMOVE
+      &.receivables,
+      &.liabilities {
+        font-family:inherit;
+      }
     }
 
     span.allowed-option-name {
@@ -119,11 +129,17 @@ form.pme-form.project-participant-fields-display {
   }
 
   &:not(.pme-change, .pme-list) {
-    td.groupofpeople:not(.pme-key),
-    td.groupofpeople-id:not(.pme-key),
-    td.service-fee.set:not(.pme-key),
-    td.service-fee.enum:not(.pme-key) {
-      width:32em;
+    td:not(.pme-keys)  {
+      &.groupofpeople,
+      &.groupofpeople-id,
+      &.service-fee.set, // @todo REMOVE
+      &.service-fee.enum, // @todo REMOVE
+      &.receivables.set,
+      &.receivables.enum,
+      &.liabilities.set,
+      &.liabilities.enum {
+        width:32em;
+      }
     }
   }
 
@@ -179,26 +195,37 @@ form.pme-form.project-participant-fields-display {
     span.allowed-option-name, span.allowed-option-value.money {
       /* float:unset; */
     }
-    td.service-fee span.allowed-option-name:after {
-      content: ": ";
+    td.service-fee, // @todo REMOVE
+    td.receivables,
+    td.liabilities {
+      span.allowed-option-name:after {
+        content: ": ";
+      }
     }
 
-    td.service-fee.set span.allowed-option-value.money {
-      font-family:monospace;
-      /* font-size:120%; */
-      /* position:absolute; */
-      /* left:12em; */
-      float:right;
-    }
-
-    td.service-fee.set {
-      position:relative;
+    td.set {
+      &.service-fee, // @todo REMOVE
+      &.receivables,
+      &.liabilities {
+        span.allowed-option-value.money {
+          font-family:monospace;
+          /* font-size:120%; */
+          /* position:absolute; */
+          /* left:12em; */
+          float:right;
+        }
+        position:relative;
+      }
     }
   }
 
   &.pme-add, &.pme-change, &.pme-copy {
-    td.pme-key.service-fee.single-valued {
-      position:relative;
+    td.pme-key.single-valued {
+      &.service-fee, // @todo REMOVE
+      &.receivables,
+      &.liabilities {
+        position:relative;
+      }
     }
     width:100%;
     .file-upload-wrapper td.input {
@@ -208,15 +235,27 @@ form.pme-form.project-participant-fields-display {
 
   /* The following can be used to style the money labels. */
   &.pme-change, &.pme-add, &.pme-delete {
-    td.pme-key.service-fee.single-valued span.allowed-option-name.money {
-      /* margin-right:6em; */ /* leave room for absolute positioned money value */
+    td.pme-key.single-valued {
+      &.service-fee, // @todo REMOVE
+      &.receivables,
+      &.liabilities {
+        span.allowed-option-name.money {
+          /* margin-right:6em; */ /* leave room for absolute positioned money value */
+        }
+      }
     }
 
-    td.pme-key.service-fee.single-valued span.allowed-option-value.money {
-      font-family:monospace;
-      float:right;
-      /* position:absolute; */
-      /* right:1em; */
+    td.pme-key.single-valued {
+      &.service-fee, // @todo REMOVE
+      &.receivables,
+      &.liabilities {
+        span.allowed-option-value.money {
+          font-family:monospace;
+          float:right;
+          /* position:absolute; */
+          /* right:1em; */
+        }
+      }
     }
   }
 
@@ -274,7 +313,12 @@ form.pme-form.project-participant-fields-display {
    */
   &.pme-list, &.pme-view, &.pme-delete {
     td.pme-value, td.pme-cell {
-      &.data-type-db-file, &.data-type-cloud-file, &.data-type-cloud-folder, &.data-type-service-fee {
+      &.data-type-db-file,
+      &.data-type-cloud-file,
+      &.data-type-cloud-folder,
+      &.data-type-service-fee, // @todo REMOVE
+      &.data-type-receivables,
+      &.data-type-liabilities {
         padding:1px 3px;
         .operation {
           display:inline-block;
@@ -299,38 +343,42 @@ form.pme-form.project-participant-fields-display {
     }
   }
 
-  tr.participant-field.data-type-service-fee {
-    td.pme-value {
-      .documents {
-        .action-menu-toggle {
-          min-height:0;
-          width:34px;
-          height:34px;
-        }
-        .dropdown-content {
-          .menu-item {
-            .delete-undelete .menu-icon {
-              background-image:url('../img/cafevdb-delete.svg');
-            }
-            .upload-replace .menu-icon {
-              background-image:url('../../../core/img/actions/upload.svg');
-            }
-            .upload-from-cloud .menu-icon {
-              background-image:url('../img/cloud-icon.svg');
-            }
-            .open-parent .menu-icon {
-              background-image:url('../../../core/img/filetypes/folder-external.svg');
-            }
-            .download-link .menu-icon {
-              background-image:url('../../../core/img/actions/download.svg');
+  tr.participant-field {
+    &.data-type-service-fee, // @todo REMOVE
+    &.data-type-receivables,
+    &.data-type-liabilities {
+      td.pme-value {
+        .documents {
+          .action-menu-toggle {
+            min-height:0;
+            width:34px;
+            height:34px;
+          }
+          .dropdown-content {
+            .menu-item {
+              .delete-undelete .menu-icon {
+                background-image:url('../img/cafevdb-delete.svg');
+              }
+              .upload-replace .menu-icon {
+                background-image:url('../../../core/img/actions/upload.svg');
+              }
+              .upload-from-cloud .menu-icon {
+                background-image:url('../img/cloud-icon.svg');
+              }
+              .open-parent .menu-icon {
+                background-image:url('../../../core/img/filetypes/folder-external.svg');
+              }
+              .download-link .menu-icon {
+                background-image:url('../../../core/img/actions/download.svg');
+              }
             }
           }
-        }
-        .download-link.button {
-          background-image:url('../../../core/img/actions/download.svg');
-          background-repeat: no-repeat;
-          background-position: center;
-          font-size: 0;
+          .download-link.button {
+            background-image:url('../../../core/img/actions/download.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+            font-size: 0;
+          }
         }
       }
     }

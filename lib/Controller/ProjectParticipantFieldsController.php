@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -310,7 +310,7 @@ class ProjectParticipantFieldsController extends Controller
             $inputRows = [];
             foreach ($receivables as $receivable) {
               $inputRows[] = $this->renderer->dataOptionInputRowHtml(
-                $receivable, $index++, $receivable->usage() > 0, FieldDataType::SERVICE_FEE
+                $receivable, $index++, $receivable->usage() > 0, $field->getDataType(),
               );
             }
 
@@ -514,7 +514,9 @@ class ProjectParticipantFieldsController extends Controller
             $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
 
             switch ($data['dataType']??null) {
-              case FieldDataType::SERVICE_FEE:
+              case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 // see that it is a valid decimal number ...
                 if (!empty($item['data'])) {
                   $parsed = $this->fuzzyInput->currencyValue($item['data']);

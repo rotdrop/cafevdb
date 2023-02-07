@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -787,7 +787,11 @@ WHERE dsf.id IS NOT NULL',
   $table.field_name)',
           'orderby' => '$table.sort_field ASC, $table.display_label ASC',
           'filters' => ('$table.deleted IS NULL'
-                        . ' AND $table.data_type = \''.FieldType::SERVICE_FEE."'"
+                        . ' AND $table.data_type IN ('
+                        . "   '" . FieldType::SERVICE_FEE . "'," /** @todo REMOVE */
+                        . "   '" . FieldType::RECEIVABLES . "',"
+                        . "   '" . FieldType::LIABILITIES . "'"
+                        . " )"
                         . ' AND NOT $table.key = CAST(\'\0\' AS BINARY(16))'
                         . ($projectMode ? ' AND $table.project_id = '.$this->projectId : '')),
         ],

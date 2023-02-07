@@ -76,7 +76,9 @@ class ProjectParticipantFields extends PMETableViewBase
     ],
     'deposit' => [
       'default-hidden',
-      'not-data-type-service-fee-hidden',
+      'not-data-type-service-fee-hidden', // @todo REMOVE
+      'not-data-type-receivables-hidden',
+      'not-data-type-liabilities-hidden',
       'multiplicity-recurring-hidden',
       'not-show-data-hidden',
     ],
@@ -92,7 +94,9 @@ class ProjectParticipantFields extends PMETableViewBase
 
   const OPTION_DATA_INPUT_SIZE = [
     'default' => 9,
-    DataType::SERVICE_FEE => 9,
+    DataType::SERVICE_FEE => 9, /** @todo REMOVE */
+    DataType::RECEIVABLES => 9,
+    DataType::LIABILITIES => 9,
     DataType::DATE => 7,
     DataType::DATETIME => 12,
   ];
@@ -425,8 +429,12 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'due-date',
             'default-hidden',
-            'not-data-type-service-fee-hidden',
-            'service-fee-data-type-required',
+            'not-data-type-service-fee-hidden', // @todo REMOVE
+            'not-data-type-receivables-hidden',
+            'not-data-type-liabilities-hidden',
+            'service-fee-data-type-required', // @todo REMOVE
+            'receivables-data-type-required',
+            'liabilities-data-type-required',
           ],
         ],
       ]);
@@ -439,7 +447,9 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'deposit-due-date',
             'default-hidden',
-            'not-data-type-service-fee-hidden',
+            'not-data-type-service-fee-hidden', // @todo REMOVE
+            'not-data-type-receivables-hidden',
+            'not-data-type-liabilities-hidden',
             'multiplicity-recurring-hidden',
           ],
         ],
@@ -573,7 +583,9 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'deposit-' . $multiplicityVariant,
             'default-hidden',
-            'not-multiplicity-' . $multiplicityVariant . '-data-type-service-fee-hidden',
+            'not-multiplicity-' . $multiplicityVariant . '-data-type-service-fee-hidden', // @todo REMOVE
+            'not-multiplicity-' . $multiplicityVariant . '-data-type-receivables-hidden',
+            'not-multiplicity-' . $multiplicityVariant . '-data-type-liabilities-hidden',
             'multiplicity-' . $multiplicityVariant . '-set-deposit-due-date-' . ($multiplicityVariant == 'simple' ? 'not-' : '') . 'required',
           ],
         ],
@@ -709,7 +721,9 @@ __EOT__;
               case DataType::BOOLEAN:
                 $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
                 break;
-              case DataType::SERVICE_FEE:
+              case DataType::SERVICE_FEE: /** @todo REMOVE */
+              case DataType::RECEIVABLES:
+              case DataType::LIABILITIES:
                 $value = $this->moneyValue($value);
                 break;
               case DataType::DATE:
@@ -956,7 +970,16 @@ __EOT__;
         } else {
           $pme->fdd[$km]['css']['postfix'][] = 'deposit-due-date-unset';
         }
-        $pme->fdd[$pme->fdn['default_value']]['select'] = $dataType == DataType::SERVICE_FEE ? 'N' : 'T';
+        switch ($dataType) {
+          case DataType::SERVICE_FEE: /** @todo REMOVE */
+          case DataType::RECEIVABLES:
+          case DataType::LIABILITIES:
+            $selectValue = 'N';
+          default:
+            $selectValue = 'T';
+            break;
+        }
+        $pme->fdd[$pme->fdn['default_value']]['select'] = $selectValue;
         return true;
       };
 
@@ -974,7 +997,9 @@ __EOT__;
         if (empty($row[$this->queryField('tab', $pme->fdd)])) {
           $tab = null;
           switch ($dataType) {
-            case DataType::SERVICE_FEE:
+            case DataType::SERVICE_FEE: /** @todo REMOVE */
+            case DataType::RECEIVABLES:
+            case DataType::LIABILITIES:
               $tab = 'finance';
               break;
             case DataType::CLOUD_FILE:
@@ -1492,7 +1517,9 @@ __EOT__;
           'not-multiplicity-single-set-deposit-due-date-required',
           'not-multiplicity-groupofpeople-set-deposit-due-date-required',
           'set-deposit-due-date-required',
-          'not-data-type-service-fee-hidden',
+          'not-data-type-service-fee-hidden', // @todo REMOVE
+          'not-data-type-receivables-hidden',
+          'not-data-type-liabilities-hidden',
         ])
     );
     $html .= '<td class="'.$cssClass.'"><input'
@@ -1763,9 +1790,11 @@ __EOT__;
           $singleOption = reset($allowed);
           switch ($dataType) {
             case DataType::BOOLEAN:
-              return $this->l->t('true').' / '.$this->l->t('false');
-            case DataType::SERVICE_FEE:
-              return $this->moneyValue(0).' / '.$this->moneyValue($singleOption['data']);
+              return $this->l->t('true') . ' / ' . $this->l->t('false');
+            case DataType::SERVICE_FEE: /** @todo REMOVE */
+            case DataType::RECEIVABLES:
+            case DataType::LIABILITIES:
+              return $this->moneyValue(0) . ' / ' . $this->moneyValue($singleOption['data']);
             case DataType::DATE:
               $fieldValue = $singleOption['data'];
               if (!empty($fieldValue)) {
@@ -1932,7 +1961,9 @@ __EOT__;
               }
             } else {
               switch ($dataType) {
-                case DataType::SERVICE_FEE:
+                case DataType::SERVICE_FEE: /** @todo REMOVE */
+                case DataType::RECEIVABLES:
+                case DataType::LIABILITIES:
                   $fieldValue = $this->currencyValue($fieldValue);
                   break;
                 case DataType::DATE:
@@ -2101,7 +2132,9 @@ __EOT__;
         'field-'.$field,
         'data-type-html-hidden',
         'data-type-html-disabled',
-        $simple ? null : 'service-fee-data-type-required',
+        $simple ? null : 'service-fee-data-type-required', // @todo REMOVE
+        $simple ? null : 'receivables-data-type-required',
+        $simple ? null : 'liabilities-data-type-required',
         $simple ? null : 'only-multiplicity-' . $multiplicityVariant . '-multiplicity-required',
       ]));
     $html  .=<<<__EOT__
