@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -398,7 +398,7 @@ trait ParticipantFieldsTrait
   )
   AS DECIMAL(7, 2)
 )',
-                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                      'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                       'align' => 'right',
                       'values' => [
                         'column' => 'option_value',
@@ -926,7 +926,7 @@ trait ParticipantFieldsTrait
     ),
     0
   ) AS DECIMAL(7,2))',
-                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                      'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                       'align' => 'right',
                       'values' => [
                         'column' => 'option_key',
@@ -1195,7 +1195,7 @@ trait ParticipantFieldsTrait
                       'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'T',
                       'align' => 'right',
-                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                      'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                       'sql' => $sql,
                       'values' => [
                         'column' => 'option_key',
@@ -1302,7 +1302,7 @@ trait ParticipantFieldsTrait
                     'tab' => [ 'id' => 'tab-none' ], // move it away
                     'select' => 'T',
                     'align' => 'right',
-                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                    'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                     'sql' => 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
@@ -1816,7 +1816,7 @@ WHERE pp.project_id = $this->projectId",
     ),
     0
   ) AS DECIMAL(7,2))',
-                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                    'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                     'align' => 'right',
                     'values' => [
                       'column' => 'option_key',
@@ -2058,7 +2058,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                     'tab' => [ 'id' => 'tab-none' ], // move it away
                     'select' => 'T',
                     'align' => 'right',
-                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                    'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                     'sql' => 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
