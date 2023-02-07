@@ -1032,7 +1032,7 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Generate all use-folders with an optional README.md if the field has type
+   * Generate all user-folders with an optional README.md if the field has type
    * CLOUD_FOLDER.
    *
    * @param Entities\ProjectParticipantField $field
@@ -1140,71 +1140,128 @@ class ProjectParticipantFieldsService
     ?DataType $oldType,
     ?DataType $newType,
   ):void {
+
     if ($newType == $oldType) {
       return;
     }
-    if ($newType != DataType::CLOUD_FOLDER && $oldType != DataType::CLOUD_FOLDER && $newType != DataType::CLOUD_FILE) {
-      return;
-    }
-
-    $readMe = Util::htmlToMarkDown($field->getTooltip());
 
     $needsFlush = false;
 
     switch ($newType) {
       case DataType::CLOUD_FOLDER:
-        // try to create any missing folder
-        /** @var Entities\ProjectParticipant $participant */
-        foreach ($field->getProject()->getParticipants() as $participant) {
-          $musician = $participant->getMusician();
-
-          $this->entityManager->registerPreCommitAction(
-            new Common\UndoableFolderCreate(
-              fn() => $this->doGetFieldFolderPath($field, $musician),
-              gracefully: true,
-            )
-          )->register(
-            new Common\UndoableTextFileUpdate(
-              fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
-              gracefully: true,
-              content: $readMe,
-            )
-          )->register(
-            new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
-              $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
-            }));
-        }
-        break;
-      case DataType::CLOUD_FILE:
-        foreach ($field->getProject()->getParticipants() as $participant) {
-          $musician = $participant->getMusician();
-          $this->entityManager->registerPreCommitAction(
-            new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
-              $needsFlush = $this->populateCloudFileField($field, $musician, flush: false) || $needsFlush;
-            })
-          );
-        }
-        break;
-    }
-    switch ($oldType) {
       case DataType::CLOUD_FOLDER:
-        // try to remove essentially empty folders
-        /** @var Entities\ProjectParticipant $participant */
-        foreach ($field->getProject()->getParticipants() as $participant) {
-          $musician = $participant->getMusician();
+      case DataType::CLOUD_FILE:
+        $readMe = Util::htmlToMarkDown($field->getTooltip());
 
-          // currently we only remove empty (READMEs are ignored) folders, also in
-          // order to mitigate user-errors: if deleting the field in error it can
-          // be added again and the files are still there.
+        switch ($newType) {
+          case DataType::CLOUD_FOLDER:
+            // try to create any missing folder
+            /** @var Entities\ProjectParticipant $participant */
+            foreach ($field->getProject()->getParticipants() as $participant) {
+              $musician = $participant->getMusician();
 
-          // this has to be precomputed, as this belongs to the old field type.
-          $field->setDataType($oldType);
-          $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
-          $field->setDataType($newType);
+              $this->entityManager->registerPreCommitAction(
+                new Common\UndoableFolderCreate(
+                  fn() => $this->doGetFieldFolderPath($field, $musician),
+                  gracefully: true,
+                )
+              )->register(
+                new Common\UndoableTextFileUpdate(
+                  fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
+                  gracefully: true,
+                  content: $readMe,
+                )
+              )->register(
+                new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+                  $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
+                }));
+            }
+            break;
+          case DataType::CLOUD_FILE:
+            foreach ($field->getProject()->getParticipants() as $participant) {
+              $musician = $participant->getMusician();
+              $this->entityManager->registerPreCommitAction(
+                new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+                  $needsFlush = $this->populateCloudFileField($field, $musician, flush: false) || $needsFlush;
+                })
+              );
+            }
+            break;
+        }
+        switch ($oldType) {
+          case DataType::CLOUD_FOLDER:
+            // try to remove essentially empty folders
+            /** @var Entities\ProjectParticipant $participant */
+            foreach ($field->getProject()->getParticipants() as $participant) {
+              $musician = $participant->getMusician();
 
-          $this->entityManager->registerPreCommitAction(
-            new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
-          );
+              // currently we only remove empty (READMEs are ignored) folders, also in
+              // order to mitigate user-errors: if deleting the field in error it can
+              // be added again and the files are still there.
+
+              // this has to be precomputed, as this belongs to the old field type.
+              $field->setDataType($oldType);
+              $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
+              $field->setDataType($newType);
+
+              $this->entityManager->registerPreCommitAction(
+                new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
+              );
+            }
+            break;
+        }
+        break; // FS stuff
+      case DataType::SERVICE_FEE:
+      case DataType::RECEIVABLES:
+      case DataType::LIABILITIES:
+        if (($oldType == DataType::SERVICE_FEE && $newType == DataType::RECEIVABLES)
+            ||
+            ($oldType == DataType::RECEIVABLES && $newType == DataType::SERVICE_FEE)) {
+          break;
+        }
+        // otherwise change the sign of all values in the entire hierarchy.
+
+        /** @var Entities\ProjectParticipantFieldDataOption $option */
+        /** @var Entities\ProjectParticipantFieldDatum $datum */
+
+        $needsFlush = $field->getDataOptions()->count() > 0
+          || $field->getFieldData()->count() > 0;
+
+        switch ($field->getMultiplicity()) {
+          case Multiplicity::SINGLE:
+          case Multiplicity::MULTIPLE:
+          case Multiplicity::PARALLEL:
+          case Multiplicity::GROUPSOFPEOPLE:
+            // value is stored in the option, negate it
+            foreach ($field->getDataOptions() as $option) {
+              $option->setData(-$option->getData());
+              $option->setDeposit(-$option->getDeposit());
+            }
+            break;
+          case Multiplicity::GROUPOFPEOPLE:
+            // value in management option of $field
+            $option = $field->getManagementOption();
+            $option->setData(-$option->getData());
+            $option->setDeposit(-$option->getDeposit());
+            break;
+          case Multiplicity::SIMPLE:
+            /** @var Entities\ProjectParticipantFieldDatum $datum */
+            foreach ($field->getFieldData() as $datum) {
+              $datum->setOptionValue(-$datum->getOptionValue());
+              $datum->setDeposit(-$datum->getDeposit());
+            }
+            $option = $field->getDefaultValue();
+            if (!empty($option)) {
+              $option->setData(-$option->getData());
+              $option->setDeposit(-$option->getDeposit());
+            }
+            break;
+          case Multiplicity::RECURRING:
+            // value in data-entities, no deposit in this case
+            foreach ($field->getFieldData() as $datum) {
+              $datum->setOptionValue(-$datum->getOptionValue());
+            }
+            break;
         }
         break;
     }
