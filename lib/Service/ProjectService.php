@@ -937,7 +937,6 @@ class ProjectService
     }
 
     switch ($field->getDataType()) {
-      case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
       case FieldDataType::RECEIVABLES:
       case FieldDataType::LIABILITIES:
         $subDirPrefix =
@@ -1008,7 +1007,6 @@ class ProjectService
           $fileId = (int)$fieldDatum->getOptionValue();
           $dirEntry = $this->findEntity(Entities\DatabaseStorageFile::class, $fileId);
           break;
-        case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
         case FieldDataType::RECEIVABLES:
         case FieldDataType::LIABILITIES:
           $dirEntry = $fieldDatum->getSupportingDocument();

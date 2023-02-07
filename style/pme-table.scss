@@ -863,7 +863,6 @@ form.pme-form:not(.pme-change,.pme-add,.pme-copyadd) td.pme-value.money {
 form.pme-form {
   td.pme-value {
     input.pme-input {
-      &.service-fee, // @todo REMOVE
       &.receivables,
       &.liabilities,
       &.money {

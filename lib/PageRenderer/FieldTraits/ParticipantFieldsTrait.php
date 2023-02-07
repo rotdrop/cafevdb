@@ -121,7 +121,7 @@ trait ParticipantFieldsTrait
    * given field-description-data with columns for all participant fields. The
    * $subTotals array is filled with SQL-fragments which collect the
    * service-fee amounts of the respective monetary fields with data-type
-   * field-type FieldType::SERVICE_FEE, FieldType::RECEIVABLES,
+   * field-type FieldType::RECEIVABLES,
    * FieldType::LIABILITIES, it is indexed by field-name. Steps to perform:
    *
    * - merge the returned join-structure into $this->joinStructure
@@ -319,7 +319,6 @@ trait ParticipantFieldsTrait
               break;
               // case FieldType::DATE:
               // case FieldType::DATETIME:
-            case FieldType::SERVICE_FEE: // @todo REMOVE
             case FieldType::RECEIVABLES:
             case FieldType::LIABILITIES:
               $style = $this->defaultFDD[$dataType];
@@ -365,7 +364,6 @@ trait ParticipantFieldsTrait
 />';
 
             switch ($dataType) {
-              case FieldType::SERVICE_FEE: // @todo REMOVE
               case FieldType::RECEIVABLES:
               case FieldType::LIABILITIES:
                 unset($valueFdd['mask']);
@@ -591,8 +589,9 @@ trait ParticipantFieldsTrait
 
                 // We need one additional input field for the
                 // service-fee-deposit. This is only needed for
-                // FieldMultiplicity::SIMPLE and
-                // FieldType::SERVICE_FEE and IFF the deposit-due-date field in the option is non-zero.
+                // FieldMultiplicity::SIMPLE and FieldType::RECEIVABLES or
+                // FieldType::LIABILITIES and IFF the deposit-due-date field
+                // in the option is non-zero.
                 //
                 // In all other cases the deposit is either not needed or fixed by the field options.
                 $depositDueDate = $field->getDepositDueDate();
@@ -894,7 +893,6 @@ trait ParticipantFieldsTrait
             switch ($dataType) {
               case FieldType::BOOLEAN:
                 break;
-              case FieldType::SERVICE_FEE: // @todo REMOVE
               case FieldType::RECEIVABLES:
               case FieldType::LIABILITIES:
                 $money = $this->moneyValue($dataValue);
@@ -1153,7 +1151,6 @@ trait ParticipantFieldsTrait
                 break;
               case FieldType::DATE:
               case FieldType::DATETIME:
-              case FieldType::SERVICE_FEE: // @todo REMOVE
               case FieldType::RECEIVABLES:
               case FieldType::LIABILITIES:
                 foreach ($dataOptions as $dataOption) {
@@ -1277,7 +1274,7 @@ trait ParticipantFieldsTrait
                 ]);
             }
 
-            if ($dataType == FieldType::SERVICE_FEE) {
+            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
 
               // yet another field to support summing up totals
               $optionValueSql = 'IF(
@@ -1575,7 +1572,8 @@ trait ParticipantFieldsTrait
               $valueLabel = $this->l->t('Value');
               $invoiceLabel = $this->l->t('Documents');
               switch ($dataType) {
-                case FieldType::SERVICE_FEE:
+                case FieldType::RECEIVABLES:
+                case FieldType::LIABILITIES:
                   $valueLabel = $this->l->t('Value [%s]', $this->currencySymbol());
                   $invoiceLabel = $this->l->t('Invoice');
                   break;
@@ -1773,7 +1771,7 @@ WHERE pp.project_id = $this->projectId",
 
             $groupMemberFdd['css']['postfix'] = array_merge($groupMemberFdd['css']['postfix'], $css);
 
-            if ($dataType == FieldType::SERVICE_FEE) {
+            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
               $groupMemberFdd['css']['postfix'][] = 'money';
               $groupMemberFdd['css']['postfix'][] = $dataType;
               $fieldData = $generatorOption['data'];
@@ -1869,7 +1867,7 @@ WHERE pp.project_id = $this->projectId",
             foreach ($dataOptions as $dataOption) {
               $valueGroups[--$idx] = $dataOption['label'];
               $data = $dataOption['data'];
-              if ($dataType == FieldType::SERVICE_FEE) {
+              if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
                 $data = $this->moneyValue($data);
               }
               if (!empty($data)) {
@@ -1884,7 +1882,7 @@ WHERE pp.project_id = $this->projectId",
 
             $css[] = FieldMultiplicity::GROUPOFPEOPLE;
             $css[] = 'predefined';
-            if ($dataType === FieldType::SERVICE_FEE) {
+            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
               $css[] = ' money '.$dataType;
               foreach ($groupValues2 as $key => $value) {
                 $groupValues2[$key] = $this->allowedOptionLabel(
@@ -2049,7 +2047,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                 ],
               ]);
 
-            if ($dataType === FieldType::SERVICE_FEE) {
+            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
               // yet another field to support summing up totals
               $optionValueSql = 'IF(
   $join_table.field_id = ' . $fieldId . '
@@ -2080,7 +2078,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             break;
         }
 
-        if ($dataType == FieldType::SERVICE_FEE) {
+        if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
           $sql = $fieldDescData[$subTotalsName]['sql'];
           $sql = $this->substituteSQLFragment($fieldDescData, $subTotalsName, $sql, $subTotalsIndex);
           $subTotals[$subTotalsName] = $sql;
@@ -2122,7 +2120,8 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $htmlData = ' '.$htmlData;
     }
     switch ($dataType) {
-      case FieldType::SERVICE_FEE:
+      case FieldType::RECEIVABLES:
+      case FieldType::LIABILITIES:
         $value = $this->moneyValue($value);
         $innerCss .= ' money';
         $css .= ' money';
@@ -2191,7 +2190,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     $lockCssClass = implode(' ', $lockCssClass);
 
     $lockRightCssClass = $lockCssClass . ' position-right';
-    if ($dataType != FieldType::SERVICE_FEE) {
+    if ($dataType != FieldType::RECEIVABLES && $dataType != FieldType::LIABILITIES) {
       $lockCssClass = $lockRightCssClass;
     }
 

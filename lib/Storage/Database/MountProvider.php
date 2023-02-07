@@ -194,7 +194,7 @@ class MountProvider implements IMountProvider
     try {
       $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
       $projects = $projectsRepo->findBy([
-        // '(|participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+        // '(|participantFields.dataType' => [ FieldType::DB_FILE, FieldType::RECEIVABLES, FieldType::LIALBILITIES ],
         // '>financialBalanceSupportingDocuments.sequence' => 0,
         // [ ')' => true ],
         'type' => [ ProjectType::PERMANENT, ProjectType::TEMPORARY ],
@@ -252,7 +252,6 @@ class MountProvider implements IMountProvider
     $fileCriteria = DBUtil::criteriaWhere([
       'dataType' => [
         FieldType::DB_FILE,
-        FieldType::SERVICE_FEE, /** @todo REMOVE */
         FieldType::RECEIVABLES,
         FieldType::LIABILITIES,
       ],

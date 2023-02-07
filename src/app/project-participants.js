@@ -898,9 +898,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
   pmeForm
     .find(
-      'tr.participant-field.simple-valued.service-fee' // @todo REMOVE
-        + ', '
-        + 'tr.participant-field.simple-valued.receivables'
+      'tr.participant-field.simple-valued.receivables'
         + ', '
         + 'tr.participant-field.simple-valued.liabilities'
     )

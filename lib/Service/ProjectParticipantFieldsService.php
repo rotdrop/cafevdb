@@ -174,7 +174,6 @@ class ProjectParticipantFieldsService
     // their refer to the same instance.
     return $project->getParticipantFields()->filter(function($field) {
       switch ($field->getDataType()) {
-        case DataType::SERVICE_FEE: /** @todo remove */
         case DataType::RECEIVABLES:
         case DataType::LIABILITIES:
           return true;
@@ -320,7 +319,6 @@ class ProjectParticipantFieldsService
     foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
       $fieldDataType = $fieldDatum->getField()->getDataType();
       switch ($fieldDataType) {
-        case DataType::SERVICE_FEE: /** @todo REMOVE */
         case DataType::RECEIVABLES:
         case DataType::LIABILITIES:
           $obligations['sum'] += $fieldDatum->amountPayable();
@@ -446,7 +444,6 @@ class ProjectParticipantFieldsService
   public static function defaultTabId(string $multiplicity, string $dataType):string
   {
     switch ($dataType) {
-      case DataType::SERVICE_FEE: /** @todo REMOVE */
       case DataType::RECEIVABLES:
       case DataType::LIABILITIES:
         return  'finance';
@@ -584,7 +581,6 @@ class ProjectParticipantFieldsService
       case DataType::DATETIME:
         return Util::convertToDateTime($value);
       case DataType::FLOAT:
-      case DataType::SERVICE_FEE: /** @todo REMOVE */
       case DataType::RECEIVABLES:
         return floatval($value);
       case DataType::LIABILITIES:
@@ -648,7 +644,6 @@ class ProjectParticipantFieldsService
         return $this->formatDateTime($fieldValue, $dateFormat);
       case DataType::FLOAT:
         return $this->floatValue($fieldValue, $floatPrecision);
-      case DataType::SERVICE_FEE: /** @todo REMOVE */
       case DataType::RECEIVABLES:
       case DataType::LIABILITIES:
         return $this->moneyValue($fieldValue);
@@ -1211,15 +1206,9 @@ class ProjectParticipantFieldsService
             break;
         }
         break; // FS stuff
-      case DataType::SERVICE_FEE:
       case DataType::RECEIVABLES:
       case DataType::LIABILITIES:
-        if (($oldType == DataType::SERVICE_FEE && $newType == DataType::RECEIVABLES)
-            ||
-            ($oldType == DataType::RECEIVABLES && $newType == DataType::SERVICE_FEE)) {
-          break;
-        }
-        // otherwise change the sign of all values in the entire hierarchy.
+        // change the sign of all values in the entire hierarchy.
 
         /** @var Entities\ProjectParticipantFieldDataOption $option */
         /** @var Entities\ProjectParticipantFieldDatum $datum */

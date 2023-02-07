@@ -56,7 +56,8 @@ $optionLabelLocked = ($uiFlags & Generator::UI_PROTECTED_LABEL)
 $optionValueLocked = ($uiFlags & Generator::UI_PROTECTED_VALUE)
                   || !(empty($optionValue) && ($uiFlags & Generator::UI_EDITABLE_VALUE));
 
-$valueInputType = $dataType == FieldType::SERVICE_FEE ? 'type="number" step="0.01"' : 'type="text"';
+$valueInputType = ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES)
+  ? 'type="number" step="0.01"' : 'type="text"';
 $filesAppTarget = md5($filesAppPath ?? '');
 
 $labelled = $optionLabel !== null;
@@ -69,7 +70,7 @@ $lockCssClass = [
 $lockCssClass = implode(' ', $lockCssClass);
 
 $lockRightCssClass = $lockCssClass . ' position-right';
-if ($dataType != FieldType::SERVICE_FEE) {
+if ($dataType != FieldType::RECEIVABLES && $dataType != FieldType::LIABILITIES) {
   $lockCssClass = $lockRightCssClass;
 }
 

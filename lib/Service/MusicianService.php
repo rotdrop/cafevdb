@@ -247,7 +247,6 @@ class MusicianService
           $this->remove($dbFile, true);
           $removeEntity = true;
           break;
-        case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
         case FieldDataType::RECEIVABLES:
         case FieldDataType::LIABILITIES:
           $dbFile = $participantDatum->getSupportingDocument();

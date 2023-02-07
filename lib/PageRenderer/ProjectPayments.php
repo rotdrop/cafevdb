@@ -788,7 +788,6 @@ WHERE dsf.id IS NOT NULL',
           'orderby' => '$table.sort_field ASC, $table.display_label ASC',
           'filters' => ('$table.deleted IS NULL'
                         . ' AND $table.data_type IN ('
-                        . "   '" . FieldType::SERVICE_FEE . "'," /** @todo REMOVE */
                         . "   '" . FieldType::RECEIVABLES . "',"
                         . "   '" . FieldType::LIABILITIES . "'"
                         . " )"

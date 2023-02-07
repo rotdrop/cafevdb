@@ -451,7 +451,6 @@ class ProjectParticipantsController extends Controller
             $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
             break;
 
-          case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
           case FieldDataType::RECEIVABLES:
           case FieldDataType::LIABILITIES:
             /** @var Entities\DatabaseStorageFile $dbDocument */
@@ -502,7 +501,6 @@ class ProjectParticipantsController extends Controller
               $this->remove($dbDocument);
               $fieldDatum->setOptionValue(null);
               break;
-            case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
             case FieldDataType::RECEIVABLES:
             case FieldDataType::LIABILITIES:
               $fieldDatum->setSupportingDocument(null);
@@ -557,7 +555,6 @@ class ProjectParticipantsController extends Controller
             $filePath = implode(UserStorage::PATH_SEP, $pathChain);
             break;
           case FieldDataType::DB_FILE:
-          case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
           case FieldDataType::RECEIVABLES:
           case FieldDataType::LIABILITIES:
             if (!empty($subDir)) {
@@ -612,7 +609,6 @@ class ProjectParticipantsController extends Controller
               }
               break;
             case FieldDataType::DB_FILE:
-            case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
             case FieldDataType::RECEIVABLES:
             case FieldDataType::LIABILITIES:
               if (empty($filePath)) {
@@ -639,7 +635,6 @@ class ProjectParticipantsController extends Controller
               break;
             case UploadsController::UPLOAD_MODE_LINK:
               if ($dataType != FieldDataType::DB_FILE
-                  && $dataType != FieldDataType::SERVICE_FEE /** @todo REMOVE */
                   && $dataType != FieldDataType::RECEIVABLES
                   && $dataType != FieldDataType::LIABILITIES
               ) {
@@ -730,7 +725,6 @@ class ProjectParticipantsController extends Controller
                 $dbFile = $dbDocument->getFile();
                 $conflict = 'replaced';
                 break;
-              case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
                 $dbDocument = $fieldData->getSupportingDocument();
@@ -806,7 +800,6 @@ class ProjectParticipantsController extends Controller
                   $file['meta']['download'] = $downloadLink;
                 });
                 break;
-              case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
               case FieldDataType::DB_FILE:
@@ -929,7 +922,6 @@ class ProjectParticipantsController extends Controller
                   // $userStorage->delete($filePath);
                   break;
                 case FieldDataType::DB_FILE:
-                case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
                 case FieldDataType::RECEIVABLES:
                 case FieldDataType::LIABILITIES:
                   // should be handled by roll-back automatically

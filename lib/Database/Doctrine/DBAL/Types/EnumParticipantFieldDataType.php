@@ -77,16 +77,15 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  */
 class EnumParticipantFieldDataType extends EnumType
 {
-  public const DB_FILE = 'db-file';
   public const BOOLEAN = 'boolean';
   public const CLOUD_FILE = 'cloud-file';
   public const CLOUD_FOLDER = 'cloud-folder';
   public const DATE = 'date';
   public const DATETIME = 'datetime';
+  public const DB_FILE = 'db-file';
   public const FLOAT = 'float';
   public const HTML = 'html';
   public const INTEGER = 'integer';
-  public const SERVICE_FEE = 'service-fee'; /** @todo REMOVE */
   public const LIABILITIES = 'liabilities';
   public const RECEIVABLES = 'receivables';
   public const TEXT  = 'text';

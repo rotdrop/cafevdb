@@ -197,7 +197,7 @@
 
     @include defaultHiddenColumn();
     @include defaultHiddenRow("&", "");
-    @each $dataType in service-fee, receivables, liabilities, date-time, date { // @todo REMOVE service-fee
+    @each $dataType in receivables, liabilities, date-time, date {
       @include columnShownIfDataType($dataType);
     }
     @each $multiplicity in groupofpeople, groupsofpeople {
@@ -212,7 +212,6 @@
       @include rowShownIfMultiplicity($multiplicity, $relation: "");
     }
     @each $cell in th, td {
-      @include showAlternateDataType("service-fee", $middle: "#{$cell}.field-data .service-fee-alternatives", $postfix: span); // @todo REMOVE
       @include showAlternateDataType("receivables", $middle: "#{$cell}.field-data .service-fee-alternatives", $postfix: span);
       @include showAlternateDataType("liabilities", $middle: "#{$cell}.field-data .service-fee-alternatives", $postfix: span);
     }
@@ -238,10 +237,12 @@
             display:none;
           }
         }
-        span.service-fee.currency-amount { // service-fee OK
-          text-align:right;
-          display:inline-block;
-          width:100%;
+        span.currency-amount {
+          &.receivables, &.liabilities {
+            text-align:right;
+            display:inline-block;
+            width:100%;
+          }
         }
         th, td {
           border:1px solid #004D9C;
@@ -262,7 +263,6 @@
             text-align:center;
           }
         }
-        &.data-type-service-fee, // @todo REMOVE
         &.data-type-receivables,
         &.data-type-liabilities {
           td.field-data {
@@ -327,7 +327,7 @@
       /* tr.multiplicity contains the data-type and multiplicity tags */
       tr.multiplicity {
         @include defaultHiddenRow();
-        @each $dataType in service-fee, receivables, liabilities, cloud-file, db-file { // @todo REMOVE service-fee
+        @each $dataType in receivables, liabilities, cloud-file, db-file {
           @include rowShownIfDataType($dataType);
         }
         @each $multiplicity in groupofpeople, groupsofpeople, single, simple, multiple, parallel, recurring {
@@ -340,7 +340,7 @@
           @include rowHiddenIfDataType($dataType);
         }
         /* Some compound combinations */
-        @each $dataType in service-fee, receivables, liabilities { // @todo REMOVE service-fee
+        @each $dataType in receivables, liabilities {
           @each $multiplicity in groupofpeople, single, simple {
             @include rowShownIf(("multiplicity-#{$multiplicity}" "data-type-#{$dataType}"));
           }
@@ -378,7 +378,6 @@
               );
             }
           }
-          @include showAlternateDataType("service-fee", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span); // @todo REMOVE
           @include showAlternateDataType("receivables", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
           @include showAlternateDataType("liabilities", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
         }

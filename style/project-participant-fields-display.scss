@@ -78,8 +78,6 @@ form.pme-form.project-participant-fields-display {
     td:not(.pme-key) {
       &.groupofpeople,
       &.groupofpeople-id,
-      &.service-fee.set, // @todo REMOVE
-      &.service-fee.enum, // @todo REMOVE
       &.receivables.set,
       &.receivables.enum,
       &.liabilities.set,
@@ -89,7 +87,6 @@ form.pme-form.project-participant-fields-display {
     }
 
     td.enum {
-      &.service-fee, // @todo REMOVE
       &.receivables,
       &.liabilities {
         font-family:inherit;
@@ -132,8 +129,6 @@ form.pme-form.project-participant-fields-display {
     td:not(.pme-keys)  {
       &.groupofpeople,
       &.groupofpeople-id,
-      &.service-fee.set, // @todo REMOVE
-      &.service-fee.enum, // @todo REMOVE
       &.receivables.set,
       &.receivables.enum,
       &.liabilities.set,
@@ -195,7 +190,6 @@ form.pme-form.project-participant-fields-display {
     span.allowed-option-name, span.allowed-option-value.money {
       /* float:unset; */
     }
-    td.service-fee, // @todo REMOVE
     td.receivables,
     td.liabilities {
       span.allowed-option-name:after {
@@ -204,7 +198,6 @@ form.pme-form.project-participant-fields-display {
     }
 
     td.set {
-      &.service-fee, // @todo REMOVE
       &.receivables,
       &.liabilities {
         span.allowed-option-value.money {
@@ -221,7 +214,6 @@ form.pme-form.project-participant-fields-display {
 
   &.pme-add, &.pme-change, &.pme-copy {
     td.pme-key.single-valued {
-      &.service-fee, // @todo REMOVE
       &.receivables,
       &.liabilities {
         position:relative;
@@ -236,7 +228,6 @@ form.pme-form.project-participant-fields-display {
   /* The following can be used to style the money labels. */
   &.pme-change, &.pme-add, &.pme-delete {
     td.pme-key.single-valued {
-      &.service-fee, // @todo REMOVE
       &.receivables,
       &.liabilities {
         span.allowed-option-name.money {
@@ -246,7 +237,6 @@ form.pme-form.project-participant-fields-display {
     }
 
     td.pme-key.single-valued {
-      &.service-fee, // @todo REMOVE
       &.receivables,
       &.liabilities {
         span.allowed-option-value.money {
@@ -316,7 +306,6 @@ form.pme-form.project-participant-fields-display {
       &.data-type-db-file,
       &.data-type-cloud-file,
       &.data-type-cloud-folder,
-      &.data-type-service-fee, // @todo REMOVE
       &.data-type-receivables,
       &.data-type-liabilities {
         padding:1px 3px;
@@ -344,7 +333,6 @@ form.pme-form.project-participant-fields-display {
   }
 
   tr.participant-field {
-    &.data-type-service-fee, // @todo REMOVE
     &.data-type-receivables,
     &.data-type-liabilities {
       td.pme-value {

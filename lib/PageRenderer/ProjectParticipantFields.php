@@ -76,7 +76,6 @@ class ProjectParticipantFields extends PMETableViewBase
     ],
     'deposit' => [
       'default-hidden',
-      'not-data-type-service-fee-hidden', // @todo REMOVE
       'not-data-type-receivables-hidden',
       'not-data-type-liabilities-hidden',
       'multiplicity-recurring-hidden',
@@ -94,7 +93,6 @@ class ProjectParticipantFields extends PMETableViewBase
 
   const OPTION_DATA_INPUT_SIZE = [
     'default' => 9,
-    DataType::SERVICE_FEE => 9, /** @todo REMOVE */
     DataType::RECEIVABLES => 9,
     DataType::LIABILITIES => 9,
     DataType::DATE => 7,
@@ -429,10 +427,8 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'due-date',
             'default-hidden',
-            'not-data-type-service-fee-hidden', // @todo REMOVE
             'not-data-type-receivables-hidden',
             'not-data-type-liabilities-hidden',
-            'service-fee-data-type-required', // @todo REMOVE
             'receivables-data-type-required',
             'liabilities-data-type-required',
           ],
@@ -447,7 +443,6 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'deposit-due-date',
             'default-hidden',
-            'not-data-type-service-fee-hidden', // @todo REMOVE
             'not-data-type-receivables-hidden',
             'not-data-type-liabilities-hidden',
             'multiplicity-recurring-hidden',
@@ -583,7 +578,6 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'deposit-' . $multiplicityVariant,
             'default-hidden',
-            'not-multiplicity-' . $multiplicityVariant . '-data-type-service-fee-hidden', // @todo REMOVE
             'not-multiplicity-' . $multiplicityVariant . '-data-type-receivables-hidden',
             'not-multiplicity-' . $multiplicityVariant . '-data-type-liabilities-hidden',
             'multiplicity-' . $multiplicityVariant . '-set-deposit-due-date-' . ($multiplicityVariant == 'simple' ? 'not-' : '') . 'required',
@@ -721,7 +715,6 @@ __EOT__;
               case DataType::BOOLEAN:
                 $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
                 break;
-              case DataType::SERVICE_FEE: /** @todo REMOVE */
               case DataType::RECEIVABLES:
               case DataType::LIABILITIES:
                 $value = $this->moneyValue($value);
@@ -971,7 +964,6 @@ __EOT__;
           $pme->fdd[$km]['css']['postfix'][] = 'deposit-due-date-unset';
         }
         switch ($dataType) {
-          case DataType::SERVICE_FEE: /** @todo REMOVE */
           case DataType::RECEIVABLES:
           case DataType::LIABILITIES:
             $selectValue = 'N';
@@ -997,7 +989,6 @@ __EOT__;
         if (empty($row[$this->queryField('tab', $pme->fdd)])) {
           $tab = null;
           switch ($dataType) {
-            case DataType::SERVICE_FEE: /** @todo REMOVE */
             case DataType::RECEIVABLES:
             case DataType::LIABILITIES:
               $tab = 'finance';
@@ -1508,7 +1499,6 @@ __EOT__;
           'not-multiplicity-single-set-deposit-due-date-required',
           'not-multiplicity-groupofpeople-set-deposit-due-date-required',
           'set-deposit-due-date-required',
-          'not-data-type-service-fee-hidden', // @todo REMOVE
           'not-data-type-receivables-hidden',
           'not-data-type-liabilities-hidden',
         ])
@@ -1744,8 +1734,8 @@ __EOT__;
    *
    *      |  key        | label | data | limit          | deposit     |  tooltip
    * ==================================================================================
-   * show | expert-mode |       |      | groupofpeople  | service-fee |
-   *      |             |       |      | groupsofpeople |             |
+   * show | expert-mode |       |      | groupofpeople  | receivables |
+   *      |             |       |      | groupsofpeople | liabilities |
    *      |             |       |      | date/time (?)  |             |
    *
    * @param mixed $value
@@ -1782,7 +1772,6 @@ __EOT__;
           switch ($dataType) {
             case DataType::BOOLEAN:
               return $this->l->t('true') . ' / ' . $this->l->t('false');
-            case DataType::SERVICE_FEE: /** @todo REMOVE */
             case DataType::RECEIVABLES:
             case DataType::LIABILITIES:
               return $this->moneyValue(0) . ' / ' . $this->moneyValue($singleOption['data']);
@@ -1952,7 +1941,6 @@ __EOT__;
               }
             } else {
               switch ($dataType) {
-                case DataType::SERVICE_FEE: /** @todo REMOVE */
                 case DataType::RECEIVABLES:
                 case DataType::LIABILITIES:
                   $fieldValue = $this->currencyValue($fieldValue);
@@ -2123,7 +2111,6 @@ __EOT__;
         'field-'.$field,
         'data-type-html-hidden',
         'data-type-html-disabled',
-        $simple ? null : 'service-fee-data-type-required', // @todo REMOVE
         $simple ? null : 'receivables-data-type-required',
         $simple ? null : 'liabilities-data-type-required',
         $simple ? null : 'only-multiplicity-' . $multiplicityVariant . '-multiplicity-required',
@@ -2210,7 +2197,7 @@ __EOT__;
     return
       '<span class="service-fee-alternatives">
   <span class="general">'.$value.'</span>
-  <span class="service-fee receivables liabilities currency-amount">' . $this->moneyValue($value) . '</span>
+  <span class="receivables liabilities currency-amount">' . $this->moneyValue($value) . '</span>
 </span>';
   }
 
@@ -2229,7 +2216,7 @@ __EOT__;
     return
       '<span class="service-fee-alternatives">
   <span class="general">'.$prefix.$label.'</span>
-  <span class="service-fee receivables liabilities currency-label">'.$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'.'</span>
+  <span class="receivables liabilities currency-label">'.$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'.'</span>
 </span>';
   }
 

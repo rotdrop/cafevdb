@@ -299,7 +299,6 @@ trait ParticipantFileFieldsTrait
       $project = $project ?? $field->getProject();
       $dataType = $field->getDataType();
       switch ($dataType) {
-        case FieldType::SERVICE_FEE: // @todo REMOVE
         case FieldType::RECEIVABLES:
         case FieldType::LIABILITIES:
         case FieldType::DB_FILE:

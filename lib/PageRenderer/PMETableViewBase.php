@@ -729,7 +729,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $fdd['birthday'] = $fdd['date'];
     $fdd['birthday']['name'] = $this->l->t('birthday');
     $fdd['birthday']['css']['postfix'][] = 'birthday';
-    $fdd['service-fee'] = $fdd['money']; // @todo REMOVE
     $fdd['receivables'] = $fdd['money'];
     $fdd['liabilities'] = $fdd['money'];
     $fdd['deposit'] = $fdd['money'];

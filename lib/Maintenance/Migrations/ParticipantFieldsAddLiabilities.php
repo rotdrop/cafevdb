@@ -37,11 +37,13 @@ class ParticipantFieldsAddLiabilities extends AbstractMigration
   protected static $sql = [
     self::STRUCTURAL => [
       "ALTER TABLE ProjectParticipantFields
-  CHANGE data_type data_type enum('db-file','boolean','cloud-file','cloud-folder','date','datetime','float','html','integer','service-fee','liabilities','receivables','text')
+  CHANGE data_type data_type enum('boolean','cloud-file','cloud-folder','date','datetime','db-file','float','html','integer','service-fee','liabilities','receivables','text')
   DEFAULT 'text' NOT NULL
-  COMMENT 'enum(db-file,boolean,cloud-file,cloud-folder,date,datetime,float,html,integer,service-fee,liabilities,receivables,text)(DC2Type:EnumParticipantFieldDataType)'",
+  COMMENT 'enum(boolean,cloud-file,cloud-folder,date,datetime,db-file,float,html,integer,service-fee,liabilities,receivables,text)(DC2Type:EnumParticipantFieldDataType)'",
     ],
-    self::TRANSACTIONAL => [],
+    self::TRANSACTIONAL => [
+      "UPDATE ProjectParticipantFields SET data_type = 'receivables' WHERE data_type = 'service-fee'",
+    ],
   ];
 
   /** {@inheritdoc} */
@@ -49,4 +51,22 @@ class ParticipantFieldsAddLiabilities extends AbstractMigration
   {
     return $this->l->t('Add "liabilities" as new field-type in order to avoid negative numbers in the UI.');
   }
-};
+
+  /** {@inheritdoc} */
+  public function execute():bool
+  {
+    if (!parent::execute()) {
+      return false;
+    }
+    static::$sql[self::TRANSACTIONAL] = [];
+    static::$sql[self::STRUCTURAL] = [
+      "ALTER TABLE ProjectParticipantFields
+  CHANGE data_type data_type enum('boolean','cloud-file','cloud-folder','date','datetime','db-file','float','html','integer','liabilities','receivables','text')
+  DEFAULT 'text' NOT NULL
+  COMMENT 'enum(boolean,cloud-file,cloud-folder,date,datetime,db-file,float,html,integer,liabilities,receivables,text)(DC2Type:EnumParticipantFieldDataType)'",
+    ];
+
+    return parent::execute();
+  }
+
+}

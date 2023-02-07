@@ -87,7 +87,6 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       self::OPERATION_OPTION_REGENERATE => true,
       self::OPERATION_OPTION_REGENERATE_ALL => function(string $dataType) {
         switch ($dataType) {
-          case FieldType::SERVICE_FEE: /** @todo REMOVE */
           case FieldType::RECEIVABLES:
             return self::t('Recompute all Receivables');
           case FieldType::LIABILITIES:

@@ -803,7 +803,7 @@ GROUP BY b.short_name',
     $insuranceField = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->findOneBy([
       'project' => $this->projectId,
       'multiplicity' => Types\EnumParticipantFieldMultiplicity::RECURRING,
-      'dataType' => Types\EnumParticipantFieldDataType::SERVICE_FEE, /** @todo CHANGE TO RECEIVABLES */
+      'dataType' => Types\EnumParticipantFieldDataType::RECEIVABLES, /** @todo CHANGE TO RECEIVABLES */
       'dataOptions.key:uuid_binary' => Uuid::NIL,
       'dataOptions.data' => InstrumentInsuranceReceivablesGenerator::class,
     ]);

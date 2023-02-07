@@ -253,7 +253,6 @@ const ready = function(selector, resizeCB) {
     });
     $(dateTimePickerSelector).remove();
     switch (dataType) {
-    case 'service-fee': // @todo REMOVE
     case 'receivables':
     case 'liabilities':
       $dataInputs
@@ -290,11 +289,7 @@ const ready = function(selector, resizeCB) {
     }
   };
 
-  const isMonetaryType = dataType => (
-    dataType === 'service-fee' // @todo REMOVE
-      || dataType === 'receivables'
-      || dataType === 'liabilities'
-  );
+  const isMonetaryType = dataType => dataType === 'receivables' || dataType === 'liabilities';
 
   const fieldTypeData = function() {
     const multiplicity = $container.find('select.multiplicity');
@@ -595,8 +590,6 @@ const ready = function(selector, resizeCB) {
   $container.on(
     'blur',
     [
-      'tr.multiplicity.data-type-service-fee ~ tr.data-options-single input' + textInputSelector, // @todo REMOVE
-      'tr.multiplicity.data-type-service-fee:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data' + textInputSelector, // @todo REMOVE
       'tr.multiplicity.data-type-receivables ~ tr.data-options-single input' + textInputSelector,
       'tr.multiplicity.data-type-receivables:not(.multiplicity-recurring) ~ tr.data-options tr.data-options:not(.generator) input.field-data' + textInputSelector,
       'tr.multiplicity.data-type-liabilities ~ tr.data-options-single input' + textInputSelector,

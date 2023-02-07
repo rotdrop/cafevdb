@@ -514,7 +514,6 @@ class ProjectParticipantFieldsController extends Controller
             $item['tooltip'] = $this->fuzzyInput->purifyHTML($item['tooltip']);
 
             switch ($data['dataType']??null) {
-              case FieldDataType::SERVICE_FEE: /** @todo REMOVE */
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
                 // see that it is a valid decimal number ...

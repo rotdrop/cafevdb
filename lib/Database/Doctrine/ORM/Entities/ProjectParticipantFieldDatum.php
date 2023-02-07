@@ -416,7 +416,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Only meaningful if
    * ProjectParticipantFieldDatum::getField()::getDataType() equals
-   * DataType::SERVICE_FEE, DataType::RECEIVABLES, DataType::LIABILITIES.
+   * DataType::RECEIVABLES, DataType::LIABILITIES.
    *
    * For DataType::LIABILITIES the amount is negated.
    *
@@ -469,7 +469,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Only meaningful if
    * ProjectParticipantFieldDatum::getField()::getDataType() equals
-   * DataType::SERVICE_FEE, DataType::RECEIVABLES, DataType::LIABILITIES.
+   * DataType::RECEIVABLES, DataType::LIABILITIES.
    *
    * For DataType::LIABILITIES the amount is negated.
    *
