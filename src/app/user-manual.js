@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,7 +61,7 @@ const userManualMenuHandler = function(event) {
       }
       wikiPopup({ wikiPage, popupTitle: t(appName, 'User Manual: {section}', { section: dialogTitle }, 0, { escape: false }) });
     } else {
-      const wikiUrl = ncRouter.generateUrl('/apps/dokuwikiembedded/page/index')
+      const wikiUrl = ncRouter.generateUrl('/apps/dokuwiki/page/index')
             + '?wikiPage=' + wikiPage;
       window.open(wikiUrl, appName + ':user-manual');
     }
@@ -82,8 +82,3 @@ export {
   userManualMenuHandler as menuHandler,
   handleUserManualMenu as handleMenu,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

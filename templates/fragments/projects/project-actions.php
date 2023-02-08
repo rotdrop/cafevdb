@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license GNU AGPL version 3 or any later version
  *
  * This library is free software; you can redistribute it and/or
@@ -62,7 +62,7 @@ $routes = [
     'projectId' => $projectId,
     'projectName' => $projectName,
   ]),
-  'wiki' => $urlGenerator->linkToRoute('dokuwikiembedded.page.index', [
+  'wiki' => $urlGenerator->linkToRoute('dokuwiki.page.index', [
     'wikiPage' => $wikiPage,
   ]),
   'sepa-bank-accounts' => $urlGenerator->linkToRoute($appName . '.page.index', [
