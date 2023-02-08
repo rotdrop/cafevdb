@@ -42,9 +42,11 @@ class ProjectParticipantsRepository extends EntityRepository
    *
    * @param null|array $orderBy
    *
+   * @param bool $includeDeleted
+   *
    * @return array
    */
-  public function fetchParticipantNames(int $projectId, ?array $orderBy = null)
+  public function fetchParticipantNames(int $projectId, ?array $orderBy = null, bool $includeDeleted = false)
   {
     if (empty($orderBy)) {
       $orderBy = [
@@ -72,9 +74,13 @@ AS displayName",
         "CASE WHEN m.nickName IS NULL OR m.nickName = '' THEN m.firstName ELSE m.nickName END AS nickName",
       );
     foreach ($orderBy as $field => $dir) {
-      $qb->addOrderBy('m.'.$field, $dir);
+      $qb->addOrderBy($field, $dir);
     }
-    return $qb->where($qb->expr()->eq('p.id', ':projectId'))
+    $qb->where($qb->expr()->eq('p.id', ':projectId'));
+    if (!$includeDeleted) {
+      $qb->andWhere($qb->expr()->isNull('pp.deleted'));
+    }
+    return $qb
       ->setParameter('projectId', $projectId)
       ->getQuery()
       ->getResult();

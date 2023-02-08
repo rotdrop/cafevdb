@@ -359,6 +359,9 @@ class MusicianService
         // cleaned up.
         $this->impersonateMusician($musician);
       }
+    } else {
+      $this->logInfo($musician->getPublicName() . ' has recorded payments, just marking the person as deleted.');
+      $this->flush();
     }
   }
 }

@@ -338,7 +338,7 @@ class OpenDocumentFiller
       $substitutions['org'][$boardMember] = [];
 
       $contact = $rolesService->{$boardMember . 'Contact'}();
-      foreach ($contact as $tag => $value) {
+      foreach (($contact ?? []) as $tag => $value) {
         $substitutions['org'][$boardMember][$tag] = $value ?? $this->l->t('unknown');
       }
 
