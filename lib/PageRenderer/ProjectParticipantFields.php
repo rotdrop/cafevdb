@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,8 @@ class ProjectParticipantFields extends PMETableViewBase
     ],
     'deposit' => [
       'default-hidden',
-      'not-data-type-service-fee-hidden',
+      'not-data-type-receivables-hidden',
+      'not-data-type-liabilities-hidden',
       'multiplicity-recurring-hidden',
       'not-show-data-hidden',
     ],
@@ -92,7 +93,8 @@ class ProjectParticipantFields extends PMETableViewBase
 
   const OPTION_DATA_INPUT_SIZE = [
     'default' => 9,
-    DataType::SERVICE_FEE => 9,
+    DataType::RECEIVABLES => 9,
+    DataType::LIABILITIES => 9,
     DataType::DATE => 7,
     DataType::DATETIME => 12,
   ];
@@ -425,8 +427,10 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'due-date',
             'default-hidden',
-            'not-data-type-service-fee-hidden',
-            'service-fee-data-type-required',
+            'not-data-type-receivables-hidden',
+            'not-data-type-liabilities-hidden',
+            'receivables-data-type-required',
+            'liabilities-data-type-required',
           ],
         ],
       ]);
@@ -439,7 +443,8 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'deposit-due-date',
             'default-hidden',
-            'not-data-type-service-fee-hidden',
+            'not-data-type-receivables-hidden',
+            'not-data-type-liabilities-hidden',
             'multiplicity-recurring-hidden',
           ],
         ],
@@ -573,7 +578,8 @@ class ProjectParticipantFields extends PMETableViewBase
           'postfix' => [
             'deposit-' . $multiplicityVariant,
             'default-hidden',
-            'not-multiplicity-' . $multiplicityVariant . '-data-type-service-fee-hidden',
+            'not-multiplicity-' . $multiplicityVariant . '-data-type-receivables-hidden',
+            'not-multiplicity-' . $multiplicityVariant . '-data-type-liabilities-hidden',
             'multiplicity-' . $multiplicityVariant . '-set-deposit-due-date-' . ($multiplicityVariant == 'simple' ? 'not-' : '') . 'required',
           ],
         ],
@@ -709,7 +715,8 @@ __EOT__;
               case DataType::BOOLEAN:
                 $value = !empty($value) ? $this->l->t('true') : $this->l->t('false');
                 break;
-              case DataType::SERVICE_FEE:
+              case DataType::RECEIVABLES:
+              case DataType::LIABILITIES:
                 $value = $this->moneyValue($value);
                 break;
               case DataType::DATE:
@@ -898,51 +905,17 @@ __EOT__;
       'css' => [ 'postfix' => [ 'participant-access', 'access' ], ],
       'select' => 'O',
       'values2' => [
-        Entities\ProjectParticipantField::ACCESS_NONE => $this->l->t('no access'),
-        Entities\ProjectParticipantField::ACCESS_READ => $this->l->t('read'),
-        Entities\ProjectParticipantField::ACCESS_WRITE => $this->l->t('read / write'),
+        Types\EnumAccessPermission::NONE => $this->l->t('no access'),
+        Types\EnumAccessPermission::READ => $this->l->t('read'),
+        Types\EnumAccessPermission::READ_WRITE => $this->l->t('read / write'),
       ],
-      'default' => Entities\ProjectParticipantField::ACCESS_NONE,
+      'default' => Types\EnumAccessPermission::NONE,
       'sort' => true,
       'align' => 'center',
       'tooltip' => $this->toolTipsService['page-renderer:participant-fields:participant-access'],
     ];
 
     if ($expertMode) {
-
-      // @todo wildcards?
-      $cloudGroups = [];
-      /** @var \OCP\IGROUP $group */
-      foreach ($this->groupManager()->search('') as $group) {
-        $cloudGroups[$group->getGID()] = $group->getDisplayName();
-      }
-
-      $opts['fdd']['readers'] = [
-        'name' => $this->l->t('Readers'),
-        'tab' => [ 'id' => 'access' ],
-        'css' => [ 'postfix' => [ 'readers', 'user-groups', ], ],
-        'select' => 'M',
-        'values' => $cloudGroups,
-        'maxlen' => 10,
-        'sort' => true,
-        'display' => [ 'popup' => 'data' ],
-        'align' => 'center',
-        'tooltip' => $this->toolTipsService['page-renderer:participant-fields:readers'],
-      ];
-
-      $opts['fdd']['writers'] = [
-        'name' => $this->l->t('Writers'),
-        'tab' => [ 'id' => 'access' ],
-        'css' => [ 'postfix' => [ 'writers', 'chosen-dropup', 'user-groups', ], ],
-        'select' => 'M',
-        'values' => $cloudGroups,
-        'maxlen' => 10,
-        'sort' => true,
-        'display' => [ 'popup' => 'data' ],
-        'align' => 'center',
-        'tooltip' => $this->toolTipsService['page-renderer:participant-fields:writers'],
-      ];
-
       $opts['fdd']['encrypted'] = [
         'name' => $this->l->t('Encrypted'),
         'tab' => [ 'id' => 'access' ],
@@ -990,7 +963,15 @@ __EOT__;
         } else {
           $pme->fdd[$km]['css']['postfix'][] = 'deposit-due-date-unset';
         }
-        $pme->fdd[$pme->fdn['default_value']]['select'] = $dataType == DataType::SERVICE_FEE ? 'N' : 'T';
+        switch ($dataType) {
+          case DataType::RECEIVABLES:
+          case DataType::LIABILITIES:
+            $selectValue = 'N';
+          default:
+            $selectValue = 'T';
+            break;
+        }
+        $pme->fdd[$pme->fdn['default_value']]['select'] = $selectValue;
         return true;
       };
 
@@ -1008,7 +989,8 @@ __EOT__;
         if (empty($row[$this->queryField('tab', $pme->fdd)])) {
           $tab = null;
           switch ($dataType) {
-            case DataType::SERVICE_FEE:
+            case DataType::RECEIVABLES:
+            case DataType::LIABILITIES:
               $tab = 'finance';
               break;
             case DataType::CLOUD_FILE:
@@ -1069,15 +1051,6 @@ __EOT__;
           'The name "%1$s" is reserved by the app in order to provide general help texts in the file-system'
           . ' and may not be used as a field-name.',
           Constants::README_NAME));
-    }
-
-    // make sure writer-acls are a subset of reader-acls
-    $writers = preg_split('/\s*,\s*/', $newValues['writers'], -1, PREG_SPLIT_NO_EMPTY);
-    $readers = preg_split('/\s*,\s*/', $newValues['readers'], -1, PREG_SPLIT_NO_EMPTY);
-    $missing = array_diff($writers, $readers);
-    if (!empty($missing)) {
-      $readers = array_merge($readers, $missing);
-      $newValues['Readers'] = implode(',', $readers);
     }
 
     /*-**********************************************************************
@@ -1526,7 +1499,8 @@ __EOT__;
           'not-multiplicity-single-set-deposit-due-date-required',
           'not-multiplicity-groupofpeople-set-deposit-due-date-required',
           'set-deposit-due-date-required',
-          'not-data-type-service-fee-hidden',
+          'not-data-type-receivables-hidden',
+          'not-data-type-liabilities-hidden',
         ])
     );
     $html .= '<td class="'.$cssClass.'"><input'
@@ -1760,8 +1734,8 @@ __EOT__;
    *
    *      |  key        | label | data | limit          | deposit     |  tooltip
    * ==================================================================================
-   * show | expert-mode |       |      | groupofpeople  | service-fee |
-   *      |             |       |      | groupsofpeople |             |
+   * show | expert-mode |       |      | groupofpeople  | receivables |
+   *      |             |       |      | groupsofpeople | liabilities |
    *      |             |       |      | date/time (?)  |             |
    *
    * @param mixed $value
@@ -1797,9 +1771,10 @@ __EOT__;
           $singleOption = reset($allowed);
           switch ($dataType) {
             case DataType::BOOLEAN:
-              return $this->l->t('true').' / '.$this->l->t('false');
-            case DataType::SERVICE_FEE:
-              return $this->moneyValue(0).' / '.$this->moneyValue($singleOption['data']);
+              return $this->l->t('true') . ' / ' . $this->l->t('false');
+            case DataType::RECEIVABLES:
+            case DataType::LIABILITIES:
+              return $this->moneyValue(0) . ' / ' . $this->moneyValue($singleOption['data']);
             case DataType::DATE:
               $fieldValue = $singleOption['data'];
               if (!empty($fieldValue)) {
@@ -1966,7 +1941,8 @@ __EOT__;
               }
             } else {
               switch ($dataType) {
-                case DataType::SERVICE_FEE:
+                case DataType::RECEIVABLES:
+                case DataType::LIABILITIES:
                   $fieldValue = $this->currencyValue($fieldValue);
                   break;
                 case DataType::DATE:
@@ -2135,7 +2111,8 @@ __EOT__;
         'field-'.$field,
         'data-type-html-hidden',
         'data-type-html-disabled',
-        $simple ? null : 'service-fee-data-type-required',
+        $simple ? null : 'receivables-data-type-required',
+        $simple ? null : 'liabilities-data-type-required',
         $simple ? null : 'only-multiplicity-' . $multiplicityVariant . '-multiplicity-required',
       ]));
     $html  .=<<<__EOT__
@@ -2220,7 +2197,7 @@ __EOT__;
     return
       '<span class="service-fee-alternatives">
   <span class="general">'.$value.'</span>
-  <span class="service-fee currency-amount">'.$this->moneyValue($value).'</span>
+  <span class="receivables liabilities currency-amount">' . $this->moneyValue($value) . '</span>
 </span>';
   }
 
@@ -2239,7 +2216,7 @@ __EOT__;
     return
       '<span class="service-fee-alternatives">
   <span class="general">'.$prefix.$label.'</span>
-  <span class="service-fee currency-label">'.$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'.'</span>
+  <span class="receivables liabilities currency-label">'.$prefix.$this->l->t('Amount').' ['.$this->currencySymbol().']'.'</span>
 </span>';
   }
 

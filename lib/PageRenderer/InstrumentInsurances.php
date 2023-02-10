@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -803,7 +803,7 @@ GROUP BY b.short_name',
     $insuranceField = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->findOneBy([
       'project' => $this->projectId,
       'multiplicity' => Types\EnumParticipantFieldMultiplicity::RECURRING,
-      'dataType' => Types\EnumParticipantFieldDataType::SERVICE_FEE,
+      'dataType' => Types\EnumParticipantFieldDataType::RECEIVABLES, /** @todo CHANGE TO RECEIVABLES */
       'dataOptions.key:uuid_binary' => Uuid::NIL,
       'dataOptions.data' => InstrumentInsuranceReceivablesGenerator::class,
     ]);

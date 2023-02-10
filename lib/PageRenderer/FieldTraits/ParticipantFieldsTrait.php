@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -121,8 +121,8 @@ trait ParticipantFieldsTrait
    * given field-description-data with columns for all participant fields. The
    * $subTotals array is filled with SQL-fragments which collect the
    * service-fee amounts of the respective monetary fields with data-type
-   * field-type FieldType::SERVICE_FEE, is is indexed by field-name. Steps to
-   * perform:
+   * field-type FieldType::RECEIVABLES,
+   * FieldType::LIABILITIES, it is indexed by field-name. Steps to perform:
    *
    * - merge the returned join-structure into $this->joinStructure
    * - call PMETableViewBase::defineJoinStructure()
@@ -187,6 +187,7 @@ trait ParticipantFieldsTrait
         $multiplicity = $field->getMultiplicity();
         $dataType = (string)$field->getDataType();
         $deleted = !empty($field->getDeleted());
+        $subTotalsSign = $dataType == FieldType::LIABILITIES ? '-1 * ' : '';
 
         if (!$this->participantFieldsService->isSupportedType($multiplicity, $dataType)) {
           throw new Exception(
@@ -318,7 +319,8 @@ trait ParticipantFieldsTrait
               break;
               // case FieldType::DATE:
               // case FieldType::DATETIME:
-            case FieldType::SERVICE_FEE:
+            case FieldType::RECEIVABLES:
+            case FieldType::LIABILITIES:
               $style = $this->defaultFDD[$dataType];
               if (empty($style)) {
                 throw new Exception($this->l->t('Not default style for "%s" available.', $dataType));
@@ -362,7 +364,8 @@ trait ParticipantFieldsTrait
 />';
 
             switch ($dataType) {
-              case FieldType::SERVICE_FEE:
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
                 unset($valueFdd['mask']);
 
                 // yet another field for the supporting documents
@@ -388,7 +391,7 @@ trait ParticipantFieldsTrait
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                       'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'N',
-                      'sql' => 'CAST(
+                      'sql' => $subTotalsSign . 'CAST(
   COALESCE(
     GROUP_CONCAT(
       DISTINCT
@@ -398,7 +401,7 @@ trait ParticipantFieldsTrait
   )
   AS DECIMAL(7, 2)
 )',
-                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                      'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                       'align' => 'right',
                       'values' => [
                         'column' => 'option_value',
@@ -586,8 +589,9 @@ trait ParticipantFieldsTrait
 
                 // We need one additional input field for the
                 // service-fee-deposit. This is only needed for
-                // FieldMultiplicity::SIMPLE and
-                // FieldType::SERVICE_FEE and IFF the deposit-due-date field in the option is non-zero.
+                // FieldMultiplicity::SIMPLE and FieldType::RECEIVABLES or
+                // FieldType::LIABILITIES and IFF the deposit-due-date field
+                // in the option is non-zero.
                 //
                 // In all other cases the deposit is either not needed or fixed by the field options.
                 $depositDueDate = $field->getDepositDueDate();
@@ -889,7 +893,8 @@ trait ParticipantFieldsTrait
             switch ($dataType) {
               case FieldType::BOOLEAN:
                 break;
-              case FieldType::SERVICE_FEE:
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
                 $money = $this->moneyValue($dataValue);
                 $noMoney = $this->moneyValue(0);
                 // just use the amount to pay as label
@@ -913,7 +918,7 @@ trait ParticipantFieldsTrait
                       'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                       'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'T',
-                      'sql' => 'CAST(
+                      'sql' => $subTotalsSign . 'CAST(
   COALESCE(
     IF(
       GROUP_CONCAT(
@@ -926,7 +931,7 @@ trait ParticipantFieldsTrait
     ),
     0
   ) AS DECIMAL(7,2))',
-                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                      'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                       'align' => 'right',
                       'values' => [
                         'column' => 'option_key',
@@ -1146,7 +1151,8 @@ trait ParticipantFieldsTrait
                 break;
               case FieldType::DATE:
               case FieldType::DATETIME:
-              case FieldType::SERVICE_FEE:
+              case FieldType::RECEIVABLES:
+              case FieldType::LIABILITIES:
                 foreach ($dataOptions as $dataOption) {
                   $key = (string)$dataOption['key'];
                   $label = $dataOption['label'];
@@ -1167,7 +1173,7 @@ trait ParticipantFieldsTrait
 )';
                   $sql = 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))';
                 } else {
-                  // comparatively difficult because of the many multi-valued joins.x
+                  // comparatively difficult because of the many multi-valued joins.
 
                   $optionValueSql = 'IF(
   $join_table.field_id = ' . $fieldId . '
@@ -1195,8 +1201,8 @@ trait ParticipantFieldsTrait
                       'tab' => [ 'id' => 'tab-none' ], // move it away
                       'select' => 'T',
                       'align' => 'right',
-                      'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
-                      'sql' => $sql,
+                      'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
+                      'sql' => $subTotalsSign . $sql,
                       'values' => [
                         'column' => 'option_key',
                         'encode' => 'BIN2UUID(%s)',
@@ -1268,7 +1274,7 @@ trait ParticipantFieldsTrait
                 ]);
             }
 
-            if ($dataType == FieldType::SERVICE_FEE) {
+            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
 
               // yet another field to support summing up totals
               $optionValueSql = 'IF(
@@ -1302,8 +1308,8 @@ trait ParticipantFieldsTrait
                     'tab' => [ 'id' => 'tab-none' ], // move it away
                     'select' => 'T',
                     'align' => 'right',
-                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
-                    'sql' => 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
+                    'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
+                    'sql' => $subTotalsSign . 'CAST(COALESCE(SUM(' . $optionValueSql . ') * COUNT(DISTINCT '. $optionKeySql . ') / COUNT(' . $optionKeySql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -1566,7 +1572,8 @@ trait ParticipantFieldsTrait
               $valueLabel = $this->l->t('Value');
               $invoiceLabel = $this->l->t('Documents');
               switch ($dataType) {
-                case FieldType::SERVICE_FEE:
+                case FieldType::RECEIVABLES:
+                case FieldType::LIABILITIES:
                   $valueLabel = $this->l->t('Value [%s]', $this->currencySymbol());
                   $invoiceLabel = $this->l->t('Invoice');
                   break;
@@ -1764,7 +1771,7 @@ WHERE pp.project_id = $this->projectId",
 
             $groupMemberFdd['css']['postfix'] = array_merge($groupMemberFdd['css']['postfix'], $css);
 
-            if ($dataType == FieldType::SERVICE_FEE) {
+            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
               $groupMemberFdd['css']['postfix'][] = 'money';
               $groupMemberFdd['css']['postfix'][] = $dataType;
               $fieldData = $generatorOption['data'];
@@ -1803,7 +1810,7 @@ WHERE pp.project_id = $this->projectId",
                     'tab' => [ 'id' => 'tab-none' ], // move it away
                     'input' => 'VSR' . (!$this->expertMode ? 'H' : ''),
                     'select' => 'T',
-                    'sql' => 'CAST(
+                    'sql' => $subTotalsSign . 'CAST(
   COALESCE(
     IF(
       GROUP_CONCAT(
@@ -1816,7 +1823,7 @@ WHERE pp.project_id = $this->projectId",
     ),
     0
   ) AS DECIMAL(7,2))',
-                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
+                    'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
                     'align' => 'right',
                     'values' => [
                       'column' => 'option_key',
@@ -1860,7 +1867,7 @@ WHERE pp.project_id = $this->projectId",
             foreach ($dataOptions as $dataOption) {
               $valueGroups[--$idx] = $dataOption['label'];
               $data = $dataOption['data'];
-              if ($dataType == FieldType::SERVICE_FEE) {
+              if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
                 $data = $this->moneyValue($data);
               }
               if (!empty($data)) {
@@ -1875,7 +1882,7 @@ WHERE pp.project_id = $this->projectId",
 
             $css[] = FieldMultiplicity::GROUPOFPEOPLE;
             $css[] = 'predefined';
-            if ($dataType === FieldType::SERVICE_FEE) {
+            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
               $css[] = ' money '.$dataType;
               foreach ($groupValues2 as $key => $value) {
                 $groupValues2[$key] = $this->allowedOptionLabel(
@@ -2040,7 +2047,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                 ],
               ]);
 
-            if ($dataType === FieldType::SERVICE_FEE) {
+            if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
               // yet another field to support summing up totals
               $optionValueSql = 'IF(
   $join_table.field_id = ' . $fieldId . '
@@ -2058,8 +2065,8 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
                     'tab' => [ 'id' => 'tab-none' ], // move it away
                     'select' => 'T',
                     'align' => 'right',
-                    'php' => fn($value) => $this->expertMode && $this->moneyValue($value),
-                    'sql' => 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
+                    'php' => fn($value) => $this->expertMode ? $this->moneyValue($value) : null,
+                    'sql' => $subTotalsSign . 'CAST(COALESCE(GROUP_CONCAT(DISTINCT ' . $optionValueSql . '), 0) AS DECIMAL(7, 2))',
                     'values' => [
                       'column' => 'option_key',
                       'encode' => 'BIN2UUID(%s)',
@@ -2071,7 +2078,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             break;
         }
 
-        if ($dataType == FieldType::SERVICE_FEE) {
+        if ($dataType == FieldType::RECEIVABLES || $dataType == FieldType::LIABILITIES) {
           $sql = $fieldDescData[$subTotalsName]['sql'];
           $sql = $this->substituteSQLFragment($fieldDescData, $subTotalsName, $sql, $subTotalsIndex);
           $subTotals[$subTotalsName] = $sql;
@@ -2113,7 +2120,8 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       $htmlData = ' '.$htmlData;
     }
     switch ($dataType) {
-      case FieldType::SERVICE_FEE:
+      case FieldType::RECEIVABLES:
+      case FieldType::LIABILITIES:
         $value = $this->moneyValue($value);
         $innerCss .= ' money';
         $css .= ' money';
@@ -2182,7 +2190,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     $lockCssClass = implode(' ', $lockCssClass);
 
     $lockRightCssClass = $lockCssClass . ' position-right';
-    if ($dataType != FieldType::SERVICE_FEE) {
+    if ($dataType != FieldType::RECEIVABLES && $dataType != FieldType::LIABILITIES) {
       $lockCssClass = $lockRightCssClass;
     }
 

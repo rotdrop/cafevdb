@@ -674,6 +674,8 @@ class ConfigCheckService
    * @param string $sharedFolder The name of the folder.
    *
    * @return bool @c true on success.
+   *
+   * @todo The sudo() stuff should no longer be neccessary.
    */
   public function checkLinkSharedFolder(string $sharedFolder):bool
   {

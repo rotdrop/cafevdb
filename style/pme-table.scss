@@ -860,9 +860,16 @@ form.pme-form:not(.pme-change,.pme-add,.pme-copyadd) td.pme-value.money {
   text-align:right;
 }
 
-form.pme-form td.pme-value input.pme-input.service-fee,
-form.pme-form td.pme-value input.pme-input.money {
-  text-align:right;
+form.pme-form {
+  td.pme-value {
+    input.pme-input {
+      &.receivables,
+      &.liabilities,
+      &.money {
+        text-align:right;
+      }
+    }
+  }
 }
 
 .align-center, td.align-center, td.pme-cell.align-center {

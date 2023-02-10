@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -169,21 +169,17 @@ class ProjectParticipantFieldsService
    */
   public function monetaryFields(Entities\Project $project):iterable
   {
-    // $participantFields = $project['participantFields'];
-
-    // $monetary = [];
-    // foreach ($participantFields as $field) {
-    //   switch ($field['dataType']) {
-    //   case DataType::SERVICE_FEE:
-    //     $monetary[$field['id']] = $field;
-    //     break;
-    //   }
-    // }
-    // return $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
-    //   'dataType' => (string)DataType::SERVICE_FEE,
-    // ]));
+    // "matching" cannot work as our quasi-enums are objects which are not
+    // singletons. "matching" uses === which only yields true for objects if
+    // their refer to the same instance.
     return $project->getParticipantFields()->filter(function($field) {
-      return $field->getDataType() == DataType::SERVICE_FEE;
+      switch ($field->getDataType()) {
+        case DataType::RECEIVABLES:
+        case DataType::LIABILITIES:
+          return true;
+        default:
+          return false;
+      }
     });
   }
 
@@ -322,11 +318,13 @@ class ProjectParticipantFieldsService
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     foreach ($projectParticipant->getParticipantFieldsData() as $fieldDatum) {
       $fieldDataType = $fieldDatum->getField()->getDataType();
-      if ($fieldDataType != DataType::SERVICE_FEE) {
-        continue;
+      switch ($fieldDataType) {
+        case DataType::RECEIVABLES:
+        case DataType::LIABILITIES:
+          $obligations['sum'] += $fieldDatum->amountPayable();
+          $obligations['received'] += $fieldDatum->amountPaid();
+          break;
       }
-      $obligations['sum'] += $fieldDatum->amountPayable();
-      $obligations['received'] += $fieldDatum->amountPaid();
     }
 
     return $obligations;
@@ -446,7 +444,8 @@ class ProjectParticipantFieldsService
   public static function defaultTabId(string $multiplicity, string $dataType):string
   {
     switch ($dataType) {
-      case DataType::SERVICE_FEE:
+      case DataType::RECEIVABLES:
+      case DataType::LIABILITIES:
         return  'finance';
       case DataType::CLOUD_FILE:
       case DataType::CLOUD_FOLDER:
@@ -582,8 +581,10 @@ class ProjectParticipantFieldsService
       case DataType::DATETIME:
         return Util::convertToDateTime($value);
       case DataType::FLOAT:
-      case DataType::SERVICE_FEE:
+      case DataType::RECEIVABLES:
         return floatval($value);
+      case DataType::LIABILITIES:
+        return -floatval($value);
       case DataType::INTEGER:
         return intval($value);
       case DataType::CLOUD_FILE:
@@ -643,7 +644,8 @@ class ProjectParticipantFieldsService
         return $this->formatDateTime($fieldValue, $dateFormat);
       case DataType::FLOAT:
         return $this->floatValue($fieldValue, $floatPrecision);
-      case DataType::SERVICE_FEE:
+      case DataType::RECEIVABLES:
+      case DataType::LIABILITIES:
         return $this->moneyValue($fieldValue);
       case DataType::INTEGER:
         return (string)(int)$fieldValue;
@@ -1025,7 +1027,7 @@ class ProjectParticipantFieldsService
   }
 
   /**
-   * Generate all use-folders with an optional README.md if the field has type
+   * Generate all user-folders with an optional README.md if the field has type
    * CLOUD_FOLDER.
    *
    * @param Entities\ProjectParticipantField $field
@@ -1133,71 +1135,122 @@ class ProjectParticipantFieldsService
     ?DataType $oldType,
     ?DataType $newType,
   ):void {
+
     if ($newType == $oldType) {
       return;
     }
-    if ($newType != DataType::CLOUD_FOLDER && $oldType != DataType::CLOUD_FOLDER && $newType != DataType::CLOUD_FILE) {
-      return;
-    }
-
-    $readMe = Util::htmlToMarkDown($field->getTooltip());
 
     $needsFlush = false;
 
     switch ($newType) {
       case DataType::CLOUD_FOLDER:
-        // try to create any missing folder
-        /** @var Entities\ProjectParticipant $participant */
-        foreach ($field->getProject()->getParticipants() as $participant) {
-          $musician = $participant->getMusician();
-
-          $this->entityManager->registerPreCommitAction(
-            new Common\UndoableFolderCreate(
-              fn() => $this->doGetFieldFolderPath($field, $musician),
-              gracefully: true,
-            )
-          )->register(
-            new Common\UndoableTextFileUpdate(
-              fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
-              gracefully: true,
-              content: $readMe,
-            )
-          )->register(
-            new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
-              $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
-            }));
-        }
-        break;
-      case DataType::CLOUD_FILE:
-        foreach ($field->getProject()->getParticipants() as $participant) {
-          $musician = $participant->getMusician();
-          $this->entityManager->registerPreCommitAction(
-            new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
-              $needsFlush = $this->populateCloudFileField($field, $musician, flush: false) || $needsFlush;
-            })
-          );
-        }
-        break;
-    }
-    switch ($oldType) {
       case DataType::CLOUD_FOLDER:
-        // try to remove essentially empty folders
-        /** @var Entities\ProjectParticipant $participant */
-        foreach ($field->getProject()->getParticipants() as $participant) {
-          $musician = $participant->getMusician();
+      case DataType::CLOUD_FILE:
+        $readMe = Util::htmlToMarkDown($field->getTooltip());
 
-          // currently we only remove empty (READMEs are ignored) folders, also in
-          // order to mitigate user-errors: if deleting the field in error it can
-          // be added again and the files are still there.
+        switch ($newType) {
+          case DataType::CLOUD_FOLDER:
+            // try to create any missing folder
+            /** @var Entities\ProjectParticipant $participant */
+            foreach ($field->getProject()->getParticipants() as $participant) {
+              $musician = $participant->getMusician();
 
-          // this has to be precomputed, as this belongs to the old field type.
-          $field->setDataType($oldType);
-          $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
-          $field->setDataType($newType);
+              $this->entityManager->registerPreCommitAction(
+                new Common\UndoableFolderCreate(
+                  fn() => $this->doGetFieldFolderPath($field, $musician),
+                  gracefully: true,
+                )
+              )->register(
+                new Common\UndoableTextFileUpdate(
+                  fn() => $this->doGetFieldFolderPath($field, $musician) . Constants::PATH_SEP . Constants::README_NAME,
+                  gracefully: true,
+                  content: $readMe,
+                )
+              )->register(
+                new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+                  $needsFlush = $this->populateCloudFolderField($field, $musician, flush: false) || $needsFlush;
+                }));
+            }
+            break;
+          case DataType::CLOUD_FILE:
+            foreach ($field->getProject()->getParticipants() as $participant) {
+              $musician = $participant->getMusician();
+              $this->entityManager->registerPreCommitAction(
+                new Common\GenericUndoable(function() use ($field, $musician, &$needsFlush) {
+                  $needsFlush = $this->populateCloudFileField($field, $musician, flush: false) || $needsFlush;
+                })
+              );
+            }
+            break;
+        }
+        switch ($oldType) {
+          case DataType::CLOUD_FOLDER:
+            // try to remove essentially empty folders
+            /** @var Entities\ProjectParticipant $participant */
+            foreach ($field->getProject()->getParticipants() as $participant) {
+              $musician = $participant->getMusician();
 
-          $this->entityManager->registerPreCommitAction(
-            new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
-          );
+              // currently we only remove empty (READMEs are ignored) folders, also in
+              // order to mitigate user-errors: if deleting the field in error it can
+              // be added again and the files are still there.
+
+              // this has to be precomputed, as this belongs to the old field type.
+              $field->setDataType($oldType);
+              $fieldFolderPath = $this->doGetFieldFolderPath($field, $musician);
+              $field->setDataType($newType);
+
+              $this->entityManager->registerPreCommitAction(
+                new Common\UndoableFolderRemove($fieldFolderPath, gracefully: true, recursively: false)
+              );
+            }
+            break;
+        }
+        break; // FS stuff
+      case DataType::RECEIVABLES:
+      case DataType::LIABILITIES:
+        // change the sign of all values in the entire hierarchy.
+
+        /** @var Entities\ProjectParticipantFieldDataOption $option */
+        /** @var Entities\ProjectParticipantFieldDatum $datum */
+
+        $needsFlush = $field->getDataOptions()->count() > 0
+          || $field->getFieldData()->count() > 0;
+
+        switch ($field->getMultiplicity()) {
+          case Multiplicity::SINGLE:
+          case Multiplicity::MULTIPLE:
+          case Multiplicity::PARALLEL:
+          case Multiplicity::GROUPSOFPEOPLE:
+            // value is stored in the option, negate it
+            foreach ($field->getDataOptions() as $option) {
+              $option->setData(-$option->getData());
+              $option->setDeposit(-$option->getDeposit());
+            }
+            break;
+          case Multiplicity::GROUPOFPEOPLE:
+            // value in management option of $field
+            $option = $field->getManagementOption();
+            $option->setData(-$option->getData());
+            $option->setDeposit(-$option->getDeposit());
+            break;
+          case Multiplicity::SIMPLE:
+            /** @var Entities\ProjectParticipantFieldDatum $datum */
+            foreach ($field->getFieldData() as $datum) {
+              $datum->setOptionValue(-$datum->getOptionValue());
+              $datum->setDeposit(-$datum->getDeposit());
+            }
+            $option = $field->getDefaultValue();
+            if (!empty($option)) {
+              $option->setData(-$option->getData());
+              $option->setDeposit(-$option->getDeposit());
+            }
+            break;
+          case Multiplicity::RECURRING:
+            // value in data-entities, no deposit in this case
+            foreach ($field->getFieldData() as $datum) {
+              $datum->setOptionValue(-$datum->getOptionValue());
+            }
+            break;
         }
         break;
     }

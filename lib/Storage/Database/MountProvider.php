@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -194,7 +194,7 @@ class MountProvider implements IMountProvider
     try {
       $projectsRepo = $this->getDatabaseRepository(Entities\Project::class);
       $projects = $projectsRepo->findBy([
-        // '(|participantFields.dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE ],
+        // '(|participantFields.dataType' => [ FieldType::DB_FILE, FieldType::RECEIVABLES, FieldType::LIALBILITIES ],
         // '>financialBalanceSupportingDocuments.sequence' => 0,
         // [ ')' => true ],
         'type' => [ ProjectType::PERMANENT, ProjectType::TEMPORARY ],
@@ -250,7 +250,11 @@ class MountProvider implements IMountProvider
     $projectService = $this->di(ProjectService::class);
 
     $fileCriteria = DBUtil::criteriaWhere([
-      'dataType' => [ FieldType::DB_FILE, FieldType::SERVICE_FEE, ],
+      'dataType' => [
+        FieldType::DB_FILE,
+        FieldType::RECEIVABLES,
+        FieldType::LIABILITIES,
+      ],
       'deleted' => null,
     ]);
 

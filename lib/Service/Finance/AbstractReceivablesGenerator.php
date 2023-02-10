@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,9 +86,14 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     $labels = [
       self::OPERATION_OPTION_REGENERATE => true,
       self::OPERATION_OPTION_REGENERATE_ALL => function(string $dataType) {
-        return $dataType == FieldType::SERVICE_FEE
-          ? self::t('Recompute all Receivables')
-          : self::t('Update all Input-Options');
+        switch ($dataType) {
+          case FieldType::RECEIVABLES:
+            return self::t('Recompute all Receivables');
+          case FieldType::LIABILITIES:
+            return self::t('Recompute all Liabilities');
+          default:
+            return self::t('Update all Input-Options');
+        }
       },
       self::OPERATION_GENERATOR_RUN => true,
       self::OPERATION_GENERATOR_REGENERATE => true,

@@ -297,11 +297,13 @@ trait ParticipantFileFieldsTrait
     $project = $project ?? $this->project;
     if (!empty($field)) {
       $project = $project ?? $field->getProject();
-      switch ($field->getDataType()) {
-        case FieldType::SERVICE_FEE:
+      $dataType = $field->getDataType();
+      switch ($dataType) {
+        case FieldType::RECEIVABLES:
+        case FieldType::LIABILITIES:
         case FieldType::DB_FILE:
           $pathChain[] = $this->getDocumentsFolderName();
-          if ($field->getDataType() == FieldType::SERVICE_FEE) {
+          if ($dataType != FieldType::DB_FILE) {
             $pathChain[] = $this->getSupportingDocumentsFolderName();
           }
           if ($field->getMultiplicity() != FieldMultiplicity::SIMPLE) {

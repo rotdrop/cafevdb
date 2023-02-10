@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -155,10 +155,10 @@
     &#{$prefixSelector} {
       #{$middle} {
         #{$postfix}:not(#{$selector}) {
-          display: none;
+          display: none !important;
         }
         #{$postfix}#{$selector} {
-          display:#{$display};
+          display:#{$display} !important;
         }
       }
     }
@@ -197,7 +197,7 @@
 
     @include defaultHiddenColumn();
     @include defaultHiddenRow("&", "");
-    @each $dataType in service-fee, date-time, date {
+    @each $dataType in receivables, liabilities, date-time, date {
       @include columnShownIfDataType($dataType);
     }
     @each $multiplicity in groupofpeople, groupsofpeople {
@@ -212,7 +212,8 @@
       @include rowShownIfMultiplicity($multiplicity, $relation: "");
     }
     @each $cell in th, td {
-      @include showAlternateDataType("service-fee", $middle: "#{$cell}.field-data .service-fee-alternatives", $postfix: span);
+      @include showAlternateDataType("receivables", $middle: "#{$cell}.field-data .service-fee-alternatives", $postfix: span);
+      @include showAlternateDataType("liabilities", $middle: "#{$cell}.field-data .service-fee-alternatives", $postfix: span);
     }
     &.operation-#{$operation} {
       @if $operation == "change" {
@@ -236,10 +237,12 @@
             display:none;
           }
         }
-        span.service-fee.currency-amount {
-          text-align:right;
-          display:inline-block;
-          width:100%;
+        span.currency-amount {
+          &.receivables, &.liabilities {
+            text-align:right;
+            display:inline-block;
+            width:100%;
+          }
         }
         th, td {
           border:1px solid #004D9C;
@@ -260,8 +263,11 @@
             text-align:center;
           }
         }
-        &.data-type-service-fee td.field-data {
-          text-align:right;
+        &.data-type-receivables,
+        &.data-type-liabilities {
+          td.field-data {
+            text-align:right;
+          }
         }
         &.data-type-datetime {
           td, th {
@@ -321,7 +327,7 @@
       /* tr.multiplicity contains the data-type and multiplicity tags */
       tr.multiplicity {
         @include defaultHiddenRow();
-        @each $dataType in service-fee, cloud-file, db-file {
+        @each $dataType in receivables, liabilities, cloud-file, db-file {
           @include rowShownIfDataType($dataType);
         }
         @each $multiplicity in groupofpeople, groupsofpeople, single, simple, multiple, parallel, recurring {
@@ -334,7 +340,7 @@
           @include rowHiddenIfDataType($dataType);
         }
         /* Some compound combinations */
-        @each $dataType in service-fee {
+        @each $dataType in receivables, liabilities {
           @each $multiplicity in groupofpeople, single, simple {
             @include rowShownIf(("multiplicity-#{$multiplicity}" "data-type-#{$dataType}"));
           }
@@ -372,7 +378,8 @@
               );
             }
           }
-          @include showAlternateDataType("service-fee", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
+          @include showAlternateDataType("receivables", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
+          @include showAlternateDataType("liabilities", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
         }
         td.pme-value {
           .chosen-container {

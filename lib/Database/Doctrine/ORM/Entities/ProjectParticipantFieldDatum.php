@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -415,13 +415,16 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * The amount to pay for this service-fee option.
    *
    * Only meaningful if
-   * ProjectParticipantFieldDatum::getField()::getDataType() is
-   * 'service-fee'.
+   * ProjectParticipantFieldDatum::getField()::getDataType() equals
+   * DataType::RECEIVABLES, DataType::LIABILITIES.
+   *
+   * For DataType::LIABILITIES the amount is negated.
    *
    * @return float
    */
   public function amountPayable():float
   {
+    $value = 0.0;
     switch ($this->field->getMultiplicity()) {
       case Multiplicity::SINGLE():
       case Multiplicity::MULTIPLE():
@@ -431,7 +434,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
         if ($value === false) {
           throw new RuntimeException('Stored value cannot be converted to float.');
         }
-        return $value;
+        break;
       case Multiplicity::GROUPOFPEOPLE():
         // value in management option of $field
         $managementOption = $this->field->getManagementOption();
@@ -442,52 +445,64 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
         if ($value === false) {
           throw new RuntimeException('Stored value cannot be converted to float.');
         }
-        return $value;
+        break;
       case Multiplicity::SIMPLE():
       case Multiplicity::RECURRING():
-        if (empty($this->optionValue)) {
-          return 0.0;
+        if (!empty($this->optionValue)) {
+          $value = filter_var($this->optionValue, FILTER_VALIDATE_FLOAT);
+          if ($value === false) {
+            throw new RuntimeException('Stored value cannot be converted to float: ' . (string)$this->optionValue);
+          }
         }
-        $value = filter_var($this->optionValue, FILTER_VALIDATE_FLOAT);
-        if ($value === false) {
-          throw new RuntimeException('Stored value cannot be converted to float: ' . (string)$this->optionValue);
-        }
-        return $value;
+        break;
       default:
         throw new RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
     }
+    if ($this->field->getDataType() == DataType::LIABILITIES) {
+      $value = -$value;
+    }
+    return $value;
   }
 
   /**
    * The height of the deposit to pay, if any.
    *
    * Only meaningful if
-   * ProjectParticipantFieldDatum::getField()::getDataType() is
-   * 'service-fee'.
+   * ProjectParticipantFieldDatum::getField()::getDataType() equals
+   * DataType::RECEIVABLES, DataType::LIABILITIES.
+   *
+   * For DataType::LIABILITIES the amount is negated.
    *
    * @return null|float
    */
   public function depositAmount():?float
   {
+    $value = null;
     switch ($this->field->getMultiplicity()) {
       case Multiplicity::SINGLE():
       case Multiplicity::MULTIPLE():
       case Multiplicity::PARALLEL():
       case Multiplicity::GROUPSOFPEOPLE():
-        return $this->dataOption->getDeposit();
+        $value = $this->dataOption->getDeposit();
+        break;
       case Multiplicity::GROUPOFPEOPLE():
         // value in management option of $field
         $managementOption = $this->field->getManagementOption();
         if (empty($managementOption)) {
           throw new RuntimeException('Unable to access management option for obtaining the field value.');
         }
-        return $managementOption->getDeposit();
+        $value = $managementOption->getDeposit();
+        break;
       case Multiplicity::SIMPLE():
-        return $this->getDeposit();
+        $value = $this->getDeposit();
+        break;
       case Multiplicity::RECURRING():
-        return null;
+        break;
       default:
         throw new RuntimeException('Unhandled multiplicity tag: '.(string)$this->field->getMultiplicity());
+    }
+    if ($value !== null && $this->field->getDataType() == DataType::LIABILITIES) {
+      $value = -$value;
     }
   }
 
@@ -576,33 +591,6 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     }
     // perhaps this should throw ...
     return null;
-  }
-
-  /**
-   * Return the effective deposit value depending on the
-   * field-multiplicity.
-   *
-   * @return null|float
-   */
-  public function getEffectiveDeposit():?float
-  {
-    if ($this->field->getDataType() != DataType::SERVICE_FEE) {
-      return null;
-    }
-    switch ($this->field->getMultiplicity()) {
-      case Multiplicity::RECURRING():
-        return null; // regardless of data-base storage
-      case Multiplicity::SIMPLE():
-        return $this->deposit;
-      case Multiplicity::GROUPOFPEOPLE():
-      case Multiplicity::GROUPSOFPEOPLE():
-      case Multiplicity::MULTIPLE():
-      case Multiplicity::SINGLE():
-      case Multiplicity::PARALLEL():
-        return $this->dataOption->getDeposit();
-      default:
-        return null;
-    }
   }
 
   /** {@inheritdoc} */

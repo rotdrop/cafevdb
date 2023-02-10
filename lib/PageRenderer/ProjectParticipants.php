@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -344,7 +344,8 @@ class ProjectParticipants extends PMETableViewBase
     // count number of finance fields
     $extraFinancial = 0;
     foreach ($participantFields as $field) {
-      $extraFinancial += (int)($field['dataType'] == FieldType::SERVICE_FEE);
+      $extraFinancial += (int)($field['dataType'] == FieldType::RECEIVABLES);
+      $extraFinancial += (int)($field['dataType'] == FieldType::LIABILITIES);
     }
     if ($extraFinancial > 0) {
       $useFinanceTab = true;

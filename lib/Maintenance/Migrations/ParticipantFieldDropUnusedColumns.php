@@ -1,11 +1,11 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,33 +22,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCP\ILogger;
+use OCP\IL10N;
+
+use OCA\CAFEVDB\Database\EntityManager;
 
 /**
- * Numbers
- *
- * @ORM\Table()
- * @ORM\Entity
+ * Change participantAccess field to enum.
  */
-class Numbers
+class ParticipantFieldDropUnusedColumns extends AbstractMigration
 {
-  /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   */
-  private $n;
+  protected static $sql = [
+    self::STRUCTURAL => [
+      "ALTER TABLE ProjectParticipantFields DROP COLUMN IF EXISTS readers",
+      "ALTER TABLE ProjectParticipantFields DROP COLUMN IF EXISTS writers",
+    ],
+    self::TRANSACTIONAL => [],
+  ];
 
-  /**
-   * Get n.
-   *
-   * @return int
-   */
-  public function getN()
+  /** {@inheritdoc} */
+  public function description():string
   {
-    return $this->n;
+    return $this->l->t('Drop some unused columns in the participant fields table');
   }
-}
+};

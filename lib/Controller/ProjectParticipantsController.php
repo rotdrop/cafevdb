@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -451,7 +451,8 @@ class ProjectParticipantsController extends Controller
             $filePath = $prefixPath . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
             break;
 
-          case FieldDataType::SERVICE_FEE:
+          case FieldDataType::RECEIVABLES:
+          case FieldDataType::LIABILITIES:
             /** @var Entities\DatabaseStorageFile $dbDocument */
             $dbDocument = $fieldDatum->getSupportingDocument();
             if (empty($dbDocument)) {
@@ -500,7 +501,8 @@ class ProjectParticipantsController extends Controller
               $this->remove($dbDocument);
               $fieldDatum->setOptionValue(null);
               break;
-            case FieldDataType::SERVICE_FEE:
+            case FieldDataType::RECEIVABLES:
+            case FieldDataType::LIABILITIES:
               $fieldDatum->setSupportingDocument(null);
               $this->remove($dbDocument);
               $doDeleteFieldDatum = false;
@@ -553,7 +555,8 @@ class ProjectParticipantsController extends Controller
             $filePath = implode(UserStorage::PATH_SEP, $pathChain);
             break;
           case FieldDataType::DB_FILE:
-          case FieldDataType::SERVICE_FEE:
+          case FieldDataType::RECEIVABLES:
+          case FieldDataType::LIABILITIES:
             if (!empty($subDir)) {
               return self::grumble($this->l->t('Sub-directory "%s" requested, but not supported by db-storage.', $subDir));
             }
@@ -606,7 +609,8 @@ class ProjectParticipantsController extends Controller
               }
               break;
             case FieldDataType::DB_FILE:
-            case FieldDataType::SERVICE_FEE:
+            case FieldDataType::RECEIVABLES:
+            case FieldDataType::LIABILITIES:
               if (empty($filePath)) {
                 $filePath = pathinfo($file['name'], PATHINFO_FILENAME);
               }
@@ -630,7 +634,10 @@ class ProjectParticipantsController extends Controller
               }
               break;
             case UploadsController::UPLOAD_MODE_LINK:
-              if ($dataType != FieldDataType::DB_FILE && $dataType != FieldDataType::SERVICE_FEE) {
+              if ($dataType != FieldDataType::DB_FILE
+                  && $dataType != FieldDataType::RECEIVABLES
+                  && $dataType != FieldDataType::LIABILITIES
+              ) {
                 return self::grumble($this->l->t('Link operation requested, but the link target does not reside in the database storage.'));
               }
               $originalFileId = $file['original_name'];
@@ -718,7 +725,8 @@ class ProjectParticipantsController extends Controller
                 $dbFile = $dbDocument->getFile();
                 $conflict = 'replaced';
                 break;
-              case FieldDataType::SERVICE_FEE:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
                 $dbDocument = $fieldData->getSupportingDocument();
                 if (!empty($dbDocument)) {
                   $conflict = 'replaced';
@@ -792,7 +800,8 @@ class ProjectParticipantsController extends Controller
                   $file['meta']['download'] = $downloadLink;
                 });
                 break;
-              case FieldDataType::SERVICE_FEE:
+              case FieldDataType::RECEIVABLES:
+              case FieldDataType::LIABILITIES:
               case FieldDataType::DB_FILE:
 
                 $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
@@ -913,7 +922,8 @@ class ProjectParticipantsController extends Controller
                   // $userStorage->delete($filePath);
                   break;
                 case FieldDataType::DB_FILE:
-                case FieldDataType::SERVICE_FEE:
+                case FieldDataType::RECEIVABLES:
+                case FieldDataType::LIABILITIES:
                   // should be handled by roll-back automatically
                   break;
               }

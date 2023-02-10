@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -73,10 +73,6 @@ class ProjectParticipantField implements \ArrayAccess
   use CAFEVDB\Traits\UnusedTrait;
   use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
-
-  const ACCESS_NONE = 0;
-  const ACCESS_READ = 1;
-  const ACCESS_WRITE = 2;
 
   /**
    * @var int
@@ -198,28 +194,14 @@ class ProjectParticipantField implements \ArrayAccess
   private $encrypted = false;
 
   /**
-   * @var int
+   * @var Types\EnumAccessPermission
    *
    * A bit-field which determines whether this field is exported to the
    * corresponding participant for use in the cafevdbmembers-app.
    *
-   * @ORM\Column(type="integer", nullable="false", options={"default"="0"})
+   * @ORM\Column(type="EnumAccessPermission", nullable="false", options={"default"="none"})
    */
-  private $participantAccess = self::ACCESS_NONE;
-
-  /**
-   * @var string|null
-   *
-   * @ORM\Column(type="string", length=1024, nullable=true, options={"comment"="If non-empty restrict the visbility to this comma separated list of user-groups."})
-   */
-  private $readers = null;
-
-  /**
-   * @var string|null
-   *
-   * @ORM\Column(type="string", length=1024, nullable=true, options={"comment"="Empty or comma separated list of groups allowed to change the field."})
-   */
-  private $writers = null;
+  private $participantAccess;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
@@ -235,6 +217,7 @@ class ProjectParticipantField implements \ArrayAccess
     $this->defaultValue = null;
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
+    $this->participantAccess = Types\EnumAccessPermission::NONE();
   }
   // phpcs:enable
 
@@ -741,11 +724,11 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set participantAccess.
    *
-   * @param int $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
+   * @param null|string|Types\EnumAccessPermission $participantAccess On of self::ACCESS_NONE, self::ACCESS_READ, self::ACCESS_WRITE.
    *
    * @return ProjectParticipantField
    */
-  public function setParticipantAccess(int $participantAccess):ProjectParticipantField
+  public function setParticipantAccess(mixed $participantAccess):ProjectParticipantField
   {
     $this->participantAccess = $participantAccess;
 
@@ -755,9 +738,9 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Get participantAccess.
    *
-   * @return int
+   * @return null|string|Types\EnumAccessPermission
    */
-  public function getParticipantAccess():int
+  public function getParticipantAccess():mixed
   {
     return $this->participantAccess;
   }
