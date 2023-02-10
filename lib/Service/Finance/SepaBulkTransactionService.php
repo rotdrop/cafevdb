@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -277,21 +277,22 @@ class SepaBulkTransactionService
     Entities\CompositePayment $payment,
   ):void {
 
+    $notifiedCount = $debitNote->getPayments()->filter(
+      fn(Entities\CompositePayment $payment) => !empty($payment->getNotificationMessageId())
+    )->count();
+    $totalCount = $debitNote->getPayments()->count();
+
+    if ($notifiedCount == $totalCount) {
+      $percentage = 100;
+    } else {
+      $percentage = (int)round((float)$notifiedCount * 100.0 / (float)$totalCount);
+    }
+
     try {
       $this->logInfo('TWEAK PRE NOTIFICATION TASK');
       $preNotificationTaskUri = $debitNote->getPreNotificationTaskUri();
       $preNotificationTask = $this->financeService->findFinanceCalendarEntry($preNotificationTaskUri);
       if (!empty($preNotificationTask)) {
-        $notifiedCount = $debitNote->getPayments()->filter(
-          fn(Entities\CompositePayment $payment) => !empty($payment->getNotificationMessageId())
-        )->count();
-        $totalCount = $debitNote->getPayments()->count();
-
-        if ($notifiedCount == $totalCount) {
-          $percentage = 100;
-        } else {
-          $percentage = (int)round((float)$notifiedCount * 100.0 / (float)$totalCount);
-        }
         $this->eventsService->setCalendarTaskStatus($preNotificationTask, percentComplete: $percentage);
       }
     } catch (Throwable $t) {
@@ -316,9 +317,13 @@ class SepaBulkTransactionService
           . $this->l->t('Date: %s', $configService->dateTimeFormatter()->formatDateTime(new DateTimeImmutable))
           . "\n"
           . $this->l->t('MessageId: %s', $payment->getNotificationMessageId());
-        $this->eventsService->updateCalendarEntry($preNotificationEvent, [
+        $updateData = [
           'description' => $description,
-        ]);
+        ];
+        if ($percentage == 100) {
+          $updateData['alarm'] = 0;
+        }
+        $this->eventsService->updateCalendarEntry($preNotificationEvent, $updateData);
       }
     } catch (Throwable $t) {
       $this->logException($t, 'Unable to tweak pre-notification event ' . $preNotificationEventUri);
