@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-02-10 23:49+0100\n"
-"PO-Revision-Date: 2023-02-07 19:08+0100\n"
+"POT-Creation-Date: 2023-02-15 11:21+0100\n"
+"PO-Revision-Date: 2023-02-15 11:23+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2855,25 +2855,25 @@ msgid "Bulk-transaction-id: %d"
 msgstr "Datenbank-Id des Sammelauftrags: %s"
 
 #: lib/Controller/SepaBulkTransactionsController.php:669
-#: lib/Service/Finance/SepaBulkTransactionService.php:221
+#: lib/Service/Finance/SepaBulkTransactionService.php:224
 #, php-format
 msgid "Total amount to receive: %s."
 msgstr "Erwartete Gesamteinnahmen: %s."
 
 #: lib/Controller/SepaBulkTransactionsController.php:674
-#: lib/Service/Finance/SepaBulkTransactionService.php:225
+#: lib/Service/Finance/SepaBulkTransactionService.php:228
 #, php-format
 msgid "%s pays %s."
 msgstr "%1$s zahlt %2$s"
 
 #: lib/Controller/SepaBulkTransactionsController.php:681
-#: lib/Service/Finance/SepaBulkTransactionService.php:235
+#: lib/Service/Finance/SepaBulkTransactionService.php:238
 #, php-format
 msgid "Total amount to pay: %s."
 msgstr "Überweisungssumme: %s."
 
 #: lib/Controller/SepaBulkTransactionsController.php:686
-#: lib/Service/Finance/SepaBulkTransactionService.php:239
+#: lib/Service/Finance/SepaBulkTransactionService.php:242
 #, php-format
 msgid "%s receives %s."
 msgstr "%1$s erhält %2$s."
@@ -6039,7 +6039,7 @@ msgid "announce"
 msgstr "ankündigen"
 
 #: lib/PageRenderer/SepaBulkTransactions.php:766
-#: lib/Service/Finance/SepaBulkTransactionService.php:693
+#: lib/Service/Finance/SepaBulkTransactionService.php:696
 #, php-format
 msgid ""
 "The bulk-transaction with id \"%1$d\" has already been submitted to the "
@@ -6631,39 +6631,39 @@ msgstr "Lastschriften eingereicht für %s"
 
 #: lib/Service/Finance/SepaBulkTransactionService.php:219
 #, php-format
-msgid "Debit-notes have been submitted, due-date is %s."
-msgstr "Die Lastschriften wurden am %s an die Bank übermittelt."
+msgid "Debit-notes have been submitted on %s, due-date is %s."
+msgstr "Die Lastschriften wurden am %s an die Bank übermittelt, sie sind fällig am %s."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:231
+#: lib/Service/Finance/SepaBulkTransactionService.php:234
 #, php-format
 msgid "Bank-transfers submitted for %s"
 msgstr "Überweisungen eingereicht für %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:233
+#: lib/Service/Finance/SepaBulkTransactionService.php:236
 #, php-format
 msgid "Bank-transfers have been submitted, due-date is %s."
 msgstr "Überweisungen wurden eingereicht, Fälligkeitsdatum ist %s."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:313
+#: lib/Service/Finance/SepaBulkTransactionService.php:316
 msgid "PRENOTIFICATION HAS BEEN SENT:"
 msgstr "VORANKÜNDIGUNG WURDE VERSENDET:"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:315
+#: lib/Service/Finance/SepaBulkTransactionService.php:318
 #, php-format
 msgid "Person: %s"
 msgstr "Person: %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:317
+#: lib/Service/Finance/SepaBulkTransactionService.php:320
 #, php-format
 msgid "Date: %s"
 msgstr "Datum: %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:319
+#: lib/Service/Finance/SepaBulkTransactionService.php:322
 #, php-format
 msgid "MessageId: %s"
 msgstr "MessageId: %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:490
+#: lib/Service/Finance/SepaBulkTransactionService.php:493
 #, php-format
 msgid ""
 "Refusing to generate payments for mismatching projects, current is \"%s\", "
@@ -6673,7 +6673,7 @@ msgstr ""
 "Aktuelles Projekt is \"%s\", die Forderung ist aber an das Projekt \"%s\" "
 "gebunden."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:503
+#: lib/Service/Finance/SepaBulkTransactionService.php:506
 #, php-format
 msgid ""
 "Payable amount \"%f\" and deposit amount \"%f\" should have the compatible "
@@ -6682,28 +6682,28 @@ msgstr ""
 "Der Endbetrag \"%f\" und die Anzahlung \"%f\" sollten das gleiche Vorzeichen "
 "haben."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:726
+#: lib/Service/Finance/SepaBulkTransactionService.php:729
 #, php-format
 msgid "Failed to remove bulk-transaction with id %d"
 msgstr "Kann den Sammelauftrag mit Id %d nicht löschen."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:761
+#: lib/Service/Finance/SepaBulkTransactionService.php:764
 msgid "Unable to update payment subject while generating bank export data."
 msgstr ""
 "Der Zahlungsbetreff konnte nicht aktualisiert werden als versucht wurde, die "
 "Bankdaten für den Sammelauftrag zu exportieren."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:809
+#: lib/Service/Finance/SepaBulkTransactionService.php:812
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr "Export in das Format \"%s\" ist nicht implementiert."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:826
+#: lib/Service/Finance/SepaBulkTransactionService.php:829
 #, php-format
 msgid "Conflicting projects \"%1$s\" vs. \"%2$s\"."
 msgstr "Wiedersprüchliche Projekt-Angaben, \"%1$s\" versus \"%2$s\".<\n"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:870
+#: lib/Service/Finance/SepaBulkTransactionService.php:873
 #, php-format
 msgid ""
 "Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."

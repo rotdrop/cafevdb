@@ -1203,7 +1203,7 @@
     "Option label should be \"%s\", got \"%s\"." : "Options-Markierung sollte \"%s\" sein, gefunden wurde \"%s\".",
     "Unable to construct generator class \"%s\"." : "Kann den Generatorklasse \"%s\" nicht erzeugen.",
     "Debit-notes submitted for %s" : "Lastschriften eingereicht für %s",
-    "Debit-notes have been submitted, due-date is %s." : "Die Lastschriften wurden am %s an die Bank übermittelt.",
+    "Debit-notes have been submitted on %s, due-date is %s." : "Die Lastschriften wurden am %s an die Bank übermittelt, sie sind fällig am %s.",
     "Bank-transfers submitted for %s" : "Überweisungen eingereicht für %s",
     "Bank-transfers have been submitted, due-date is %s." : "Überweisungen wurden eingereicht, Fälligkeitsdatum ist %s.",
     "PRENOTIFICATION HAS BEEN SENT:" : "VORANKÜNDIGUNG WURDE VERSENDET:",
