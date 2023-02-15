@@ -216,7 +216,10 @@ class SepaBulkTransactionService
             if ($bulkTransaction instanceof Entities\SepaDebitNote) {
               $summary = $this->l->t('Debit-notes submitted for %s', $project->getName());
               $description = $this->l->t(
-                'Debit-notes have been submitted, due-date is %s.', $configService->dateTimeFormatter()->formatDate($bulkTransaction->getDueDate(), 'long'))
+                'Debit-notes have been submitted on %s, due-date is %s.', [
+                  $configService->dateTimeFormatter()->formatDate($bulkTransaction->getSubmitDate(), 'long'),
+                  $configService->dateTimeFormatter()->formatDate($bulkTransaction->getDueDate(), 'long'),
+                ])
                 . "\n"
                 . $this->l->t('Total amount to receive: %s.', $configService->moneyValue($bulkTransaction->totals()));
               /** @var Entities\CompositePayment $payment */
