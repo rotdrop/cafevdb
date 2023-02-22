@@ -38,6 +38,7 @@ use OCP\Contacts\IManager as IContactsManager;
 use OCP\IAddressBook;
 use OCP\Constants;
 use OCP\Image;
+use OCP\IL10N;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -70,6 +71,7 @@ class ContactsService
     $this->contactsManager = $contactsManager;
     $this->appContainer = $appContainer;
     $this->entityManager = $entityManager;
+    $this->l = $this->configService->getAppL10n();
   }
   // phpcs:enable
 
@@ -391,6 +393,8 @@ class ContactsService
         $address = Util::normalizeSpaces($address); // unicode
         $address = explode(';', $address);
 
+        $poBox = $address[0]; // or so it seems ...
+        $this->logInfo('POBOX ' . $poBox);
         $entity['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
         // if the first word or the last word of the street start with a
@@ -409,6 +413,15 @@ class ContactsService
         } else {
           $streetNumber = '';
         }
+
+        // Special hack for po-box only addresses. The musican's entity does
+        // not support po-box addresses (and this is left for later ...) so we
+        // tweak the po-box case into the steet-adress.
+        if (empty($street) && !empty($poBox)) {
+          $street = $this->l->t('PO Box');
+          $streetNumber = $poBox;
+        }
+
         $entity['street'] = $street;
         $entity['streetNumber'] = $streetNumber;
         $entity['city'] = $address[3];
