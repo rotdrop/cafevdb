@@ -2891,7 +2891,7 @@ Whatever.',
       return false;
     }
 
-    if ($projectName ==  strtoupper($projectName)) {
+    if ($projectName ==  strtoupper($projectName) && strlen($projectName) < 4) {
       $projectName = strtolower($projectName);
     }
     $projectName = ucwords($projectName);
