@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -561,7 +561,7 @@ WITH CHECK OPTION';
       'settings',
       'saveProperties',
     ]);
-    $result = $requestService->postToRoute($route, postData: $cloudUserBackendParams, type: RequestService::URL_ENCODED);
+    $result = $requestService->postToRoute($route, requestData: $cloudUserBackendParams, postType: RequestService::URL_ENCODED);
     $messages[] = $result['message']??$this->l->t('"%s" configuration may have succeeded.', self::CLOUD_USER_BACKEND);
 
     // try also to clear the cache after and before changing the configuration
