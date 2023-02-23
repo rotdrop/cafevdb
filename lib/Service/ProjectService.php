@@ -2891,10 +2891,12 @@ Whatever.',
       return false;
     }
 
-    if ($projectName ==  strtoupper($projectName) && strlen($projectName) < 4) {
+    if ($projectName == strtoupper($projectName) && strlen($projectName) > 4) {
       $projectName = strtolower($projectName);
     }
-    $projectName = ucwords($projectName);
+    if ($projectName != strtoupper($projectName)) {
+      $projectName = ucwords($projectName);
+    }
     $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
 
     if ($projectYear) {

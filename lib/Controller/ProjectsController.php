@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -121,12 +121,10 @@ class ProjectsController extends Controller
           case "name":
             // No whitespace, s.v.p., and CamelCase
             $origName = $projectName;
-            if (strtoupper($projectName) == $projectName) {
-              $projectName = strtolower($projectName);
-            }
-            $projectName = ucwords($projectName);
-            $projectName = preg_replace("/[^[:alnum:]]?[[:space:]]?/u", '', $projectName);
-            //$projectName = preg_replace('/\s+/', '', $projectName);
+
+            /** @var ProjectService $projectService */
+            $projectService = $this->di(ProjectService::class);
+            $projectName = $projectService->sanitizeName($projectName);
             if ($origName != $projectName) {
               $infoMessage .= $this->l->t(
                 'The project name has been simplified from "%s" to "%s".',
