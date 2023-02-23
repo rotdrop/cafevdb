@@ -1159,6 +1159,7 @@ OC.L10N.register(
     "Unable to delete personalized view: %s." : "Kann die personalisierten Datenbank-Ansichten nicht löschen: %s.",
     "Folder \\`%s' could not be created" : "Der Ordner `%s' konnte nicht erzeugt werden.",
     "Unapplied migrations: %s." : "Ausstehende Datenmigrationen: %s.",
+    "PO Box" : "Postfach",
     "Cannot initialize global encryption key without bound user credentials." : "Kann den globalen Verschlüsselungs-Schlüssel der App nicht ohne Benutzer-Daten initialisieren.",
     "Failed to validate user encryption key." : "Fehler bei der Validierung des Verschlüsselungs-Passworts.",
     "Cannot encrypt private values without bound user credentials" : "Kann private Konfigurationseinstellungen nicht ohne Benutzer-Daten entschlüsseln",
