@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,7 +58,7 @@ class DatabaseStorage implements \ArrayAccess
   protected $id;
 
   /**
-   * @var string The storage id as string, with the common prefix
+   * @var string The storage id as string, without the common prefix
    * OCA\CAFEVDB\Storage\Database\Storage::STORAGE_ID_TAG. This uses the
    * string-id. The cloud table oc_storages uses md5 when the storage-id is
    * larger than 64 bytes.
