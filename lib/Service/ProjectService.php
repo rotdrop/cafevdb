@@ -1157,6 +1157,19 @@ class ProjectService
       );
     }
 
+    // Adjust the mount-points of the database storage. Undo is not necessary
+    // as it is handled by a roll-back.
+    $this->entityManager->registerPreFlushAction(
+      new Common\GenericUndoable(function() {
+        $storages = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findBy([
+          'storageId' => '%' . $oldUserIdSlug . '%'
+        ]);
+        /** @var Entities\DatabaseStorage $storage */
+        foreach ($storages as $storage) {
+          $storage->setStorageId(str_replace($oldUserIdSlug, $newUserIdSlug, $storage->getStorageId()));
+        }
+      }));
+
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
   }
 
