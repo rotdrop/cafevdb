@@ -149,9 +149,12 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
       $this->undoAction = self::UNDO_DELETE;
     }
 
+    $oldReporting = error_reporting();
+    error_reporting($oldReporting & ~E_WARNING);
     if ($startTime + 1 < $this->timeFactory->getTime()) {
-      time_sleep_until($startTime+1);
+      time_sleep_until($startTime + 1);
     }
+    error_reporting($oldReporting);
     $endTime = $this->timeFactory->getTime();
     $this->doneInterval = [ $startTime, $endTime ];
   }
