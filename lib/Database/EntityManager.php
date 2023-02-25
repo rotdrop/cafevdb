@@ -1219,6 +1219,7 @@ class EntityManager extends EntityManagerDecorator
   {
     $this->executePreFlushActions();
     parent::flush($entity);
+    $this->executePreFlushActions(); // in case the pre-flush handlers added to the list ...
   }
 
   /**
