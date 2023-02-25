@@ -55,6 +55,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\EntityManager;
 
 use OCA\CAFEVDB\Service\AuthorizationService;
@@ -178,7 +179,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   /** {@inheritdoc} */
   public function handle(Event $event):void
   {
-
     $nodes = [];
     $eventClass = get_class($event);
     $checkOnly = false;
@@ -307,10 +307,18 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     $criteria = [];
     $flatCriteria = [];
     foreach ($nodes as $key => &$nodeInfo) {
-      $nodePath = $nodeInfo[self::NODE_PARTIAL_PATH];
-      $parts = explode(Constants::PATH_SEP, trim($nodePath, Constants::PATH_SEP));
+      $nodePath = trim($nodeInfo[self::NODE_PARTIAL_PATH], Constants::PATH_SEP);
+      $parts = explode(Constants::PATH_SEP, $nodePath);
+      $projectYear = (int)$parts[self::PROJECT_YEAR_PART];
+      if ($projectYear < 1000 || $projectYear > 9999) {
+        // not a valid year, assume non-temporary project
+        array_unshift($parts, ProjectType::PERMANENT);
+        $projectYear = null;
+        $projectType = ProjectType::PERMANENT;
+      } else {
+        $projectType = [ ProjectType::TEMPORARY, ProjectType::TEMPLATE ];
+      }
       $baseName = $parts[self::BASE_NAME_PART] ?? null;
-
       $userIdSlug = $parts[self::USER_ID_PART];
       $fieldName = $parts[self::FIELD_NAME_PART] ?? null;
       if (empty($baseName) && !empty($fieldName) && MusicianService::isSlugifiedFileName($fieldName, $userIdSlug)) {
@@ -322,15 +330,19 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
       $criteria[$key] = [
         'field.name' => $fieldName,
-        'project.year' => $parts[self::PROJECT_YEAR_PART],
+        'project.year' => $projectYear,
+        'project.type' => $projectType,
         'project.name' => $parts[self::PROJECT_NAME_PART],
         'musician.userIdSlug' => $userIdSlug,
       ];
-      $flatCriteria[$key] = implode(':', $criteria[$key]);
+      $flatCriteria[$key] = $this->flattenCriterion($criteria[$key]);
     }
     unset($nodeInfo); // break reference
 
     $this->initializeDatabaseAccess();
+    if ($this->entityManager->isOwnTransactionActive()) {
+      return; // perhaps move this more to the top ...
+    }
 
     $throw = null;
     $rollBack = false;
@@ -607,7 +619,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    */
   private static function flattenCriterion(array $criterion):string
   {
-    return implode(':', $criterion);
+    return json_encode($criterion);
   }
 
   /**
@@ -620,6 +632,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     $flatCriterion = self::flattenCriterion($criterion);
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
     if (empty($this->fieldData[$flatCriterion])) {
+      $criterion = array_filter($criterion, fn($x) => $x !== null);
       $this->fieldData[$flatCriterion] = $this->fieldDataRepository->findOneBy($criterion);
     }
     return $this->fieldData[$flatCriterion];
@@ -644,9 +657,12 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   {
     $fieldCriterion = [
       'name' => $criterion['field.name'],
-      'project.year' => $criterion['project.year'],
+      'project.type' => $criterion['project.type'],
       'project.name' => $criterion['project.name'],
     ];
+    if ($criterion['project.year'] !== null) {
+      $fieldCriterion['project.year'] = $criterion['project.year'];
+    }
     $flatFieldCriterion = self::flattenCriterion($fieldCriterion);
     if (!isset($this->fields[$flatFieldCriterion])) { // isset() as the actual value may be null
       $fieldDatum = $this->getFieldDatum($criterion);
