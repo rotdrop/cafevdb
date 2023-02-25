@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,6 +53,9 @@ class UndoableRunQueue
 
   /** @var array<int,\Throwable> */
   protected $undoExceptions = [];
+
+  /** @var bool */
+  protected $executing = false;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -118,6 +121,10 @@ class UndoableRunQueue
    */
   public function executeActions(bool $gracefully = false):bool
   {
+    if ($this->executing) {
+      return true;
+    }
+    $this->executing = true;
     $this->runQueueExceptions = [];
     $this->undoExceptions = [];
     $this->undoStack = [];
@@ -140,6 +147,7 @@ class UndoableRunQueue
         }
       }
     }
+    $this->executing = false;
     return empty($this->runQueueExceptions) ? true : false;
   }
 
@@ -152,6 +160,10 @@ class UndoableRunQueue
    */
   public function executeUndo():void
   {
+    if ($this->executing) {
+      return;
+    }
+    $this->executing = true;
     while (!empty($this->undoStack)) {
       $action = array_shift($this->undoStack);
       try {
@@ -163,6 +175,7 @@ class UndoableRunQueue
         $this->logException($t);
       }
     }
+    $this->executing = false;
   }
 
   /**
