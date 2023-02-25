@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -715,7 +715,7 @@ class Projects extends PMETableViewBase
       'title' => $this->toolTipsService['projectpublicdownloadsfolder'],
       'css'     => [ 'postfix' => [ 'download-share', 'tooltip-auto', 'restrict-height', ], ],
       'input' => 'RV',
-      'options'  => 'LFCPVD', // not in add mode
+      'options'  => 'LFCVD', // not in add mode
       'sql' => '$main_table.id', // sql is needed if is to be displayed.
       'select' => 'T',
       'display' => [ 'popup' => 'tooltip', ],
