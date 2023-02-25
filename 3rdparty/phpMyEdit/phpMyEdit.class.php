@@ -5,7 +5,7 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
- * Copyright (c) 2011-2016, 2020-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2011-2016, 2020-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * C opyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
  * C opyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
@@ -421,7 +421,7 @@ class phpMyEdit
 		foreach ($keyRecord as $key => $rec) {
 			$delim = isset($this->key_delim[$key]) ? $this->key_delim[$key] : "'";
 			$comp = $this->fqn($key, self::VANILLA).' = '.$delim.$rec.$delim;
-			if (empty($rec)) {
+			if ($rec !== 0 && empty($rec)) {
 				if (empty($delim)) {
 					$comp = $this->fqn($key, self::VANILLA) . ' IS NULL';
 				} else {
