@@ -1160,13 +1160,15 @@ class ProjectService
     // Adjust the mount-points of the database storage. Undo is not necessary
     // as it is handled by a roll-back.
     $this->entityManager->registerPreFlushAction(
-      new Common\GenericUndoable(function() {
+      new Common\GenericUndoable(function() use ($oldUserIdSlug, $newUserIdSlug) {
         $storages = $this->getDatabaseRepository(Entities\DatabaseStorage::class)->findBy([
           'storageId' => '%' . $oldUserIdSlug . '%'
         ]);
         /** @var Entities\DatabaseStorage $storage */
         foreach ($storages as $storage) {
-          $storage->setStorageId(str_replace($oldUserIdSlug, $newUserIdSlug, $storage->getStorageId()));
+          $oldStorageId = $storage->getStorageId();
+          $newStorageId = str_replace($oldUserIdSlug, $newUserIdSlug, $oldStorageId);
+          $storage->setStorageId($newStorageId);
         }
       }));
 
