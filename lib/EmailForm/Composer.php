@@ -5261,7 +5261,7 @@ Störung.';
       } else {
         $attachment['status'] = 'inactive';
       }
-      if ($fieldType == FieldType::RECEIVABLES || $fieldType == FieldType::LIABILITIESx) {
+      if ($fieldType == FieldType::RECEIVABLES || $fieldType == FieldType::LIABILITIES) {
         $attachment['sub_topic'] = 'bills and receipts';
         // split only the recurring receivables as there may be so many of them ...
         if ($participantField->getMultiplicity() == FieldMultiplicity::RECURRING) {
