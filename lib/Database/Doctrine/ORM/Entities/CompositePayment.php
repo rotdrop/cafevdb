@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -121,6 +121,10 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   private $sepaTransaction = null;
 
   /**
+   * @var SepaBankAccount
+   *
+   * The bank account used for this payment.
+   *
    * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="payments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false),
@@ -131,6 +135,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var SepaDebitMandate
+   *
+   * The debit-mandate used for this payment, if any.
    *
    * @ORM\ManyToOne(targetEntity="SepaDebitMandate",
    *                inversedBy="payments",
