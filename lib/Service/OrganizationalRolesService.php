@@ -110,7 +110,9 @@ class OrganizationalRolesService
 
     $missingFields = array_keys(array_filter($data, fn($value) => empty($value)));
 
-    $this->logInfo('Missing fields for ' . $role . ' ' . print_r($missingFields, true) . ' ' . print_r($data, true));
+    if (!empty($missingFields)) {
+      $this->logInfo('Missing fields for ' . $role . ' ' . print_r($missingFields, true) . ' ' . print_r($data, true));
+    }
 
     // if some field are missing try to fill in from the cloud data
     if (!empty($missingFields)) {
