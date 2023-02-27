@@ -1968,17 +1968,9 @@ Störung.';
             if (empty($membersProject)) {
               continue 2;
             }
-            /**@var Entities\ProjectParticipant $participant */
-            $participant = $this->entityManager->find(Entities\ProjectParticipant::class, [
-              'musician' => $musician,
-              'project' => $membersProject,
-            ]);
-            if (!empty($participant)) {
-              $bankAccount = $participant->getSepaBankAccount();
-            }
-            if (empty($bankAccount)) {
-              $bankAccount = $musician->getSepaBankAccounts()->first();
-            }
+            /** @var FinanceService $financeService */
+            $financeService = $this->di(FinanceService::class);
+            $bankAccount = $financeService->getActiveBankAccount($musician, $membersProject);
 
             $personalAttachments[] = function() use ($financeService, $bankAccount, $membersProject, $musician, $templateId) {
               list($fileData, $mimeType, $fileName) =
@@ -2004,17 +1996,9 @@ Störung.';
             if (empty($membersProject)) {
               continue 2;
             }
-            /**@var Entities\ProjectParticipant $participant */
-            $participant = $this->entityManager->find(Entities\ProjectParticipant::class, [
-              'musician' => $musician,
-              'project' => $membersProject,
-            ]);
-            if (!empty($participant)) {
-              $bankAccount = $participant->getSepaBankAccount();
-            }
-            if (empty($bankAccount)) {
-              $bankAccount = $musician->getSepaBankAccounts()->first();
-            }
+            /** @var FinanceService $financeService */
+            $financeService = $this->di(FinanceService::class);
+            $bankAccount = $financeService->getActiveBankAccount($musician, $membersProject);
 
             $personalAttachments[] = function() use ($financeService, $bankAccount, $membersProject, $musician, $templateId) {
               list($fileData, $mimeType, $fileName) =

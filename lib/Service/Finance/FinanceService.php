@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\BankAccountValidator;
 
@@ -46,6 +47,7 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Documents\PDFFormFiller;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+
 
 /** Finance and bank related stuff. */
 class FinanceService
@@ -201,6 +203,75 @@ class FinanceService
       return false;
     }
     return $musician->isMemberOf($this->getClubMembersProjectId());
+  }
+
+  /**
+   * Return a usable bank-account for the given context.
+   *
+   * - never return a deleted bank account entity
+   *
+   * - if a debit-mandate for the given project can be determined, use its
+   *   associated bank-account.
+   *
+   * - otherwise return the bank-account with the highest sequence number (and
+   *   which is not marked as deleted).
+   *
+   * - if no bank account could be found, return null
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param null|Entities\Project $project
+   *
+   * @return null|Entities\SepaDebitMandate
+   */
+  public function getActiveBankAccount(Entities\Musician $musician, ?Entities\Project $project):?Entities\SepaBankAccount
+  {
+    $debitMandate = $this->getActiveDebitMandate($musician, $project);
+    if (!empty($debitMandate)) {
+      return $debitMandate->getSepaBankAccount();
+    }
+    $bankAccounts = $musician->getSepaBankAccounts()->matching(DBUtil::criteriaWhere([ 'deleted' => null ]));
+    /** @var Entities\SepaBankAccount $result */
+    $result = null;
+    /** @var Entities\SepaBankAccount $bankAccount */
+    foreach ($bankAccounts as $bankAccount) {
+      if ($result === null || $result->getSequence() < $bankAccount->getSequence()) {
+        $result = $bankAccount;
+      }
+    }
+    return $bankAccount;
+  }
+
+  /**
+   * Return a usable debit-mandate for the given context.
+   *
+   * - never return a deleted mandate entity
+   *
+   * - always prefer general mandates over project specific mandates
+   *
+   * - if no mandate could be found, return null
+   *
+   * @param Entities\Musician $musician
+   *
+   * @param null|Entities\Project $project
+   *
+   * @return null|Entities\SepaDebitMandate
+   */
+  public function getActiveDebitMandate(Entities\Musician $musician, ?Entities\Project $project):?Entities\SepaDebitMandate
+  {
+    $debitMandates = $musician->getSepaDebitMandates()->matching(DBUtil::criteriaWhere([ 'deleted' => null ]));
+    $result = null;
+    /** @var Entities\SepaDebitMandate $debitMandate */
+    foreach ($debitMandates as $debitMandate) {
+      if ($this->isClubMembersProject($debitMandate->getProject())) {
+        $result = $debitMandate; // general for-all mandate has absolute precedence
+        break;
+      }
+      if ($debitMandate->getProject() == $project) {
+        $result = $debitMandate;
+      }
+    }
+    return $result;
   }
 
   /**

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,12 +61,16 @@ class ProjectParticipant implements \ArrayAccess
   use CAFEVDB\Traits\GetByUuidTrait;
 
   /**
+   * @var Project
+   *
    * @ORM\ManyToOne(targetEntity="Project", inversedBy="participants", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
   private $project;
 
   /**
+   * @var Musician
+   *
    * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipation", fetch="EXTRA_LAZY")
    * @ORM\Id
    */
@@ -80,6 +84,8 @@ class ProjectParticipant implements \ArrayAccess
   private $registration = '0';
 
   /**
+   * @var Collection
+   *
    * Link to payments
    *
    * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectParticipant")
@@ -87,6 +93,8 @@ class ProjectParticipant implements \ArrayAccess
   private $payments;
 
   /**
+   * @var Collection
+   *
    * Link to extra fields data
    *
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", indexBy="option_key", mappedBy="projectParticipant", cascade={"persist"}, fetch="EXTRA_LAZY")
@@ -94,41 +102,13 @@ class ProjectParticipant implements \ArrayAccess
   private $participantFieldsData;
 
   /**
+   * @var Collection
+   *
    * Link in the project instruments, may be more than one per participant.
    *
    * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="projectParticipant", cascade={"all"})
    */
   private $projectInstruments;
-
-  /**
-   * @var SepaBankAccount
-   *
-   * Optional link to a bank account for this project. The account can
-   * but need not belong to a debit-mandate. This is the account used
-   * for this project.
-   * @todo Either remove or use this information.
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBankAccount")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id"),
-   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=true)
-   * )
-   */
-  private $sepaBankAccount = null;
-
-  /**
-   * @var SepaDebitMandate
-   *
-   * Optional link to a SEPA debit-mandate used for this project.
-   * @todo Remove, this is a relict from pre-ORM times. Is it really a relict?
-   *
-   * @ORM\ManyToOne(targetEntity="SepaDebitMandate")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id"),
-   *   @ORM\JoinColumn(name="debit_mandate_sequence", referencedColumnName="sequence", nullable=true)
-   * )
-   */
-  private $sepaDebitMandate = null;
 
   /**
    * @var DatabaseStorage
@@ -306,54 +286,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getPayments():Collection
   {
     return $this->payments;
-  }
-
-  /**
-   * Set sepaBankAccount.
-   *
-   * @param null|SepaBankAccount $sepaBankAccount
-   *
-   * @return ProjectParticipant
-   */
-  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):ProjectParticipant
-  {
-    $this->sepaBankAccount = $sepaBankAccount;
-
-    return $this;
-  }
-
-  /**
-   * Get sepaBankAccount.
-   *
-   * @return SepaBankAccount|null
-   */
-  public function getSepaBankAccount():?SepaBankAccount
-  {
-    return $this->sepaBankAccount;
-  }
-
-  /**
-   * Set sepaDebitMandate.
-   *
-   * @param null|SepaDebitMandate $sepaDebitMandate
-   *
-   * @return ProjectParticipant
-   */
-  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):ProjectParticipant
-  {
-    $this->sepaDebitMandate = $sepaDebitMandate;
-
-    return $this;
-  }
-
-  /**
-   * Get sepaDebitMandate.
-   *
-   * @return SepaDebitMandate|null
-   */
-  public function getSepaDebitMandate():?SepaDebitMandate
-  {
-    return $this->sepaDebitMandate;
   }
 
   /**
