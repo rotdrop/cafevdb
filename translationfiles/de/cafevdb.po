@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-02-22 23:05+0100\n"
-"PO-Revision-Date: 2023-02-23 08:14+0100\n"
+"POT-Creation-Date: 2023-02-28 10:53+0100\n"
+"PO-Revision-Date: 2023-02-28 10:58+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -154,14 +154,14 @@ msgstr "Der Ordner \"%s\" existiert bereits und ist nicht leer."
 msgid "The folder or file \"%s\" exists already."
 msgstr "Der Ordner oder die Datei \"%s\" existiert bereits."
 
-#: lib/Common/UndoableRunQueue.php:87 lib/Database/EntityManager.php:973
+#: lib/Common/UndoableRunQueue.php:90 lib/Database/EntityManager.php:973
 #: lib/Database/EntityManager.php:1024 lib/Database/EntityManager.php:1197
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 "$action muss ein PHP-Callable sein oder eine Klasseninstanz von \"%s\"."
 
-#: lib/Common/UndoableRunQueue.php:131
+#: lib/Common/UndoableRunQueue.php:138
 #, php-format
 msgid ""
 "Exception during execution of run-queue: %1$s. Number of successful actions: "
@@ -394,8 +394,8 @@ msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 #: lib/Controller/ProjectEventsController.php:157
 #: lib/Controller/ProjectParticipantsController.php:210
 #: lib/Controller/ProjectWebPagesController.php:186
-#: lib/Controller/ProjectsController.php:179
-#: lib/Controller/ProjectsController.php:198
+#: lib/Controller/ProjectsController.php:177
+#: lib/Controller/ProjectsController.php:196
 #: lib/Controller/ValidationController.php:94
 msgid "Unknown Request"
 msgstr "Unbekannte Anfrage."
@@ -1385,7 +1385,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:967
-#: lib/Service/ProjectService.php:2602
+#: lib/Service/ProjectService.php:2617
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -1402,7 +1402,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:1001
-#: lib/Service/ProjectService.php:2844
+#: lib/Service/ProjectService.php:2859
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -1882,7 +1882,7 @@ msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:2173
 #: lib/Controller/PmeTableController.php:151
-#: lib/Controller/ProjectsController.php:390
+#: lib/Controller/ProjectsController.php:388
 #: lib/Controller/SepaBulkTransactionsController.php:165
 #, php-format
 msgid "Unknown Request: \"%s\"."
@@ -2502,20 +2502,20 @@ msgstr "Projekt-Art"
 msgid "The %s must not be empty."
 msgstr "%s darf nicht leer sein."
 
-#: lib/Controller/ProjectsController.php:132
+#: lib/Controller/ProjectsController.php:130
 #, php-format
 msgid "The project name has been simplified from \"%s\" to \"%s\"."
 msgstr "Der Projekt-Name wurde von \"%s\" zu \"%s\" vereinfacht."
 
-#: lib/Controller/ProjectsController.php:145
+#: lib/Controller/ProjectsController.php:143
 msgid "The project-name must not only consist of the year-number."
 msgstr "Der Projekt-Name darf nicht nur aus der Jahreszahl bestehen."
 
-#: lib/Controller/ProjectsController.php:148
+#: lib/Controller/ProjectsController.php:146
 msgid "No project-name given."
 msgstr "Kein Projekt-Name angegeben."
 
-#: lib/Controller/ProjectsController.php:152
+#: lib/Controller/ProjectsController.php:150
 #, php-format
 msgid ""
 "The project-name is too long, please use something less than %d characters "
@@ -2524,20 +2524,20 @@ msgstr ""
 "Der Projekt-Name ist zu lang. Bitte höchstens %d Buchstaben verwenden\n"
 "(ausschließlich der angehängten Jahreszahl)."
 
-#: lib/Controller/ProjectsController.php:161
+#: lib/Controller/ProjectsController.php:159
 msgid "No project-year given."
 msgstr "Kein Projekt-Jahr angegeben."
 
-#: lib/Controller/ProjectsController.php:164
+#: lib/Controller/ProjectsController.php:162
 msgid "The project-year has to consist of four digits, e.g. ``1984''."
 msgstr "Das Projekt-Jahr muss aus vier Ziffern bestehen."
 
-#: lib/Controller/ProjectsController.php:173
+#: lib/Controller/ProjectsController.php:171
 #, php-format
 msgid "The year %s has been appended to the project-slug %s."
 msgstr "Das Jahr %s wurde an den Projekt-\"Slug\" %s angehängt."
 
-#: lib/Controller/ProjectsController.php:187
+#: lib/Controller/ProjectsController.php:185
 #, php-format
 msgid ""
 "A project with the name \"%1$s\" already exists in the year %2$s with the id "
@@ -2546,52 +2546,52 @@ msgstr ""
 "Ein Projekt mit dem Namen \"%s\" gibt es bereits für das Jahr %s. Bitte "
 "wählen Sie einen anderen Namen oder ein anderes Jahr."
 
-#: lib/Controller/ProjectsController.php:272
-#: lib/Controller/ProjectsController.php:293 lib/PageRenderer/Projects.php:667
+#: lib/Controller/ProjectsController.php:270
+#: lib/Controller/ProjectsController.php:291 lib/PageRenderer/Projects.php:667
 msgid "closed"
 msgstr "geschlossen"
 
-#: lib/Controller/ProjectsController.php:274
-#: lib/Controller/ProjectsController.php:296 lib/PageRenderer/Projects.php:665
+#: lib/Controller/ProjectsController.php:272
+#: lib/Controller/ProjectsController.php:294 lib/PageRenderer/Projects.php:665
 msgid "active"
 msgstr "aktiv"
 
-#: lib/Controller/ProjectsController.php:276
+#: lib/Controller/ProjectsController.php:274
 #, php-format
 msgid "Mailing-list \"%s\" successfully created."
 msgstr "Email-Verteiler \"%s\" wurde erfolgreich angelegt."
 
-#: lib/Controller/ProjectsController.php:294
+#: lib/Controller/ProjectsController.php:292
 #, php-format
 msgid "Successfully closed \"%s\"."
 msgstr "Email-Verteiler \"%s\" deaktiviert."
 
-#: lib/Controller/ProjectsController.php:297
+#: lib/Controller/ProjectsController.php:295
 #, php-format
 msgid "Successfully re-opened \"%s\"."
 msgstr "Email-Verteiler \"%s\" reaktiviert."
 
-#: lib/Controller/ProjectsController.php:312
+#: lib/Controller/ProjectsController.php:310
 #, php-format
 msgid "Really delete the mailing list \"%1$s\" for the project \"%2$s\"?"
 msgstr ""
 "Den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" wirklich löschen?"
 
-#: lib/Controller/ProjectsController.php:317
+#: lib/Controller/ProjectsController.php:315
 #, php-format
 msgid "Successfully deleted \"%s\"."
 msgstr "\"%s\" erfolgreich gelöscht."
 
-#: lib/Controller/ProjectsController.php:321 lib/PageRenderer/Projects.php:656
+#: lib/Controller/ProjectsController.php:319 lib/PageRenderer/Projects.php:656
 msgid "unset"
 msgstr "nicht konfiguriert"
 
-#: lib/Controller/ProjectsController.php:364
+#: lib/Controller/ProjectsController.php:362
 #, php-format
 msgid "%1$d new subscriptions, %2$d existing subscriptions have been kept."
 msgstr "%1$d neue Abos, %2$d Abos wurden beibehalten."
 
-#: lib/Controller/ProjectsController.php:368
+#: lib/Controller/ProjectsController.php:366
 msgid "%n person has not been subscribed because of unconfirmed participation."
 msgid_plural ""
 "%n persons have not been subscribed because their participation is not "
@@ -2603,7 +2603,7 @@ msgstr[1] ""
 "Für %n Personen wurde die Liste nicht abonniert, weil deren Teilnahme "
 "fraglich zu sein scheint."
 
-#: lib/Controller/ProjectsController.php:374
+#: lib/Controller/ProjectsController.php:372
 #, php-format
 msgid ""
 "%d persons have not been subscribed because we do not have their email-"
@@ -2612,58 +2612,58 @@ msgstr ""
 "Für %d Personen wurde die Liste nicht abonniert, weil deren Email-Adresse "
 "nicht vorliegt."
 
-#: lib/Controller/ProjectsController.php:377
+#: lib/Controller/ProjectsController.php:375
 #, php-format
 msgid "%d subscription requests have failed."
 msgstr "%d Abo-Versuche sind fehlgeschlagen."
 
-#: lib/Controller/ProjectsController.php:380
+#: lib/Controller/ProjectsController.php:378
 #, php-format
 msgid "Error for \"%1$s <%2$s>\": %3$s"
 msgstr "Fehler für \"%1$s <%2$s>\": %3$s"
 
-#: lib/Controller/ProjectsController.php:424
-#: lib/Controller/ProjectsController.php:479
-#: lib/Controller/ProjectsController.php:521
-#: lib/Controller/ProjectsController.php:572
+#: lib/Controller/ProjectsController.php:422
+#: lib/Controller/ProjectsController.php:477
+#: lib/Controller/ProjectsController.php:519
+#: lib/Controller/ProjectsController.php:570
 #, php-format
 msgid "Unable to find project with id \"%d\"."
 msgstr "Konnte kein Projekt mit der Id \"%d\" finden."
 
-#: lib/Controller/ProjectsController.php:437
-#: lib/Controller/ProjectsController.php:493
-#: lib/Controller/ProjectsController.php:544
-#: lib/Controller/ProjectsController.php:599
+#: lib/Controller/ProjectsController.php:435
+#: lib/Controller/ProjectsController.php:491
+#: lib/Controller/ProjectsController.php:542
+#: lib/Controller/ProjectsController.php:597
 #, php-format
 msgid "Unknown share type \"%s\"."
 msgstr "Unbekannter Freigabe-Typ \"%s\"."
 
-#: lib/Controller/ProjectsController.php:455
+#: lib/Controller/ProjectsController.php:453
 #, php-format
 msgid "Unknown folder type \"%s\"."
 msgstr "Unbekannter Ordner-Type \"%s\"."
 
-#: lib/Controller/ProjectsController.php:459
-#: lib/Controller/ProjectsController.php:499
-#: lib/Controller/ProjectsController.php:550
-#: lib/Controller/ProjectsController.php:605
+#: lib/Controller/ProjectsController.php:457
+#: lib/Controller/ProjectsController.php:497
+#: lib/Controller/ProjectsController.php:548
+#: lib/Controller/ProjectsController.php:603
 #, php-format
 msgid "Unknown request: \"%1$s / %2$s\"."
 msgstr "Unbekannte Anfrage: \"%1$s / %2$s\""
 
-#: lib/Controller/ProjectsController.php:487
+#: lib/Controller/ProjectsController.php:485
 #, php-format
 msgid "Participant download share for project \"%1$s\" created as \"%2$s\""
 msgstr ""
 "Die Download-Freigabe für Teilnehmende für das Projekt \"%1$s\" ist \"%2$s\"."
 
-#: lib/Controller/ProjectsController.php:530
-#: lib/Controller/ProjectsController.php:581
+#: lib/Controller/ProjectsController.php:528
+#: lib/Controller/ProjectsController.php:579
 #, php-format
 msgid "Project \"%s\" does not have a participants download share."
 msgstr "Das Projekt \"%s\" hat keine Teilnehmenden-Download-Freigabe."
 
-#: lib/Controller/ProjectsController.php:538
+#: lib/Controller/ProjectsController.php:536
 #, php-format
 msgid ""
 "Participant download share \"%1$s\" for project \"%2$s\" has been deleted."
@@ -2671,7 +2671,7 @@ msgstr ""
 "Die Teilnehmenden-Download-Freigabe \"%1$s\" für das Projekt \"%2$s\" wurde "
 "gelöscht."
 
-#: lib/Controller/ProjectsController.php:591
+#: lib/Controller/ProjectsController.php:589
 #, php-format
 msgid ""
 "Expiration date of the participant download share \"%1$s\" for project "
@@ -3452,7 +3452,7 @@ msgstr ""
 "Es ist keine Datenbank-Transaktion aktiv, Prä-Commit-Aktionen können nicht "
 "ausgeführt werden."
 
-#: lib/Database/EntityManager.php:1417
+#: lib/Database/EntityManager.php:1418
 msgid ""
 "Recrypting encrypted data base entries failed, transaction has been rolled "
 "back."
@@ -3460,7 +3460,7 @@ msgstr ""
 "Die Neuverschlüsselung der Datenbankeinträge ist fehlgeschlagen, mache\n"
 "die Datenbanktransaktion rückgängig."
 
-#: lib/Database/EntityManager.php:1443
+#: lib/Database/EntityManager.php:1444
 msgid "EntityManager is not connected to database."
 msgstr "Der Entitätenmanager ist nicht mit der Datenbank verbunden."
 
@@ -3574,7 +3574,7 @@ msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr "Kann keine Buchung für die Person \"%s\" finden (Banktransaktion %d)"
 
-#: lib/EmailForm/Composer.php:2426
+#: lib/EmailForm/Composer.php:2410
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -3622,23 +3622,23 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2667 lib/EmailForm/Composer.php:3137
+#: lib/EmailForm/Composer.php:2651 lib/EmailForm/Composer.php:3121
 msgid "DO NOT REPLY"
 msgstr "NICHT ANTWORTEN"
 
-#: lib/EmailForm/Composer.php:3320
+#: lib/EmailForm/Composer.php:3304
 msgid "*** empty content ***"
 msgstr "*** leeres Dokument ***"
 
-#: lib/EmailForm/Composer.php:3374
+#: lib/EmailForm/Composer.php:3358
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:3376
+#: lib/EmailForm/Composer.php:3360
 msgid "Prewiew generation detected errors!"
 msgstr "Bei der Erzeugung der Vorschauen gab es Fehler!"
 
-#: lib/EmailForm/Composer.php:3425
+#: lib/EmailForm/Composer.php:3409
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
@@ -3647,47 +3647,47 @@ msgstr ""
 "einfügen. Personalisierte Emails müssen einzeln an jeden Empfänger\n"
 "versendet werden."
 
-#: lib/EmailForm/Composer.php:3428
+#: lib/EmailForm/Composer.php:3412
 msgid "The email text contains personalized substitutions."
 msgstr "Der Email-Text enthält personalisierte Ersetzungen."
 
-#: lib/EmailForm/Composer.php:3431
+#: lib/EmailForm/Composer.php:3415
 msgid "The email contains personalized attachments."
 msgstr "Die Email enhält personalisierte Anhänge."
 
-#: lib/EmailForm/Composer.php:3675
+#: lib/EmailForm/Composer.php:3659
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3710
+#: lib/EmailForm/Composer.php:3694
 msgid "ALL_PERSONS: musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3811 lib/EmailForm/Composer.php:3827
+#: lib/EmailForm/Composer.php:3795 lib/EmailForm/Composer.php:3811
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3940 lib/EmailForm/Composer.php:4070
-#: lib/EmailForm/Composer.php:4080
+#: lib/EmailForm/Composer.php:3924 lib/EmailForm/Composer.php:4054
+#: lib/EmailForm/Composer.php:4064
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:3962
+#: lib/EmailForm/Composer.php:3946
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr "Die Rolle \"%s\" scheint nicht besetzt zu sein."
 
-#: lib/EmailForm/Composer.php:3966
+#: lib/EmailForm/Composer.php:3950
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:3972
+#: lib/EmailForm/Composer.php:3956
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
@@ -3695,88 +3695,88 @@ msgstr ""
 "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
 "sind %2$s."
 
-#: lib/EmailForm/Composer.php:3999
+#: lib/EmailForm/Composer.php:3983
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:4002
+#: lib/EmailForm/Composer.php:3986
 msgid "PROJECT_PUBLIC_SHARE"
 msgstr "PROJEKT_OEFFENTLICHE_FREIGABE"
 
-#: lib/EmailForm/Composer.php:4012
+#: lib/EmailForm/Composer.php:3996
 msgid "PROJECT_PUBLIC_SHARE_EXPIRATION"
 msgstr "PROJEKT_OEFFENTLICHE_FREIGABE_ABLAUF"
 
-#: lib/EmailForm/Composer.php:4024
+#: lib/EmailForm/Composer.php:4008
 msgid "phrase"
 msgstr "Phrase"
 
-#: lib/EmailForm/Composer.php:4041
+#: lib/EmailForm/Composer.php:4025
 #, php-format
 msgid "(expires at %s)"
 msgstr "(läuft ab am %s)"
 
-#: lib/EmailForm/Composer.php:4181
+#: lib/EmailForm/Composer.php:4165
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr "Am %1$s um %2$s schrieb %3$s:"
 
-#: lib/EmailForm/Composer.php:4516
+#: lib/EmailForm/Composer.php:4500
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:4528
+#: lib/EmailForm/Composer.php:4512
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:4552
+#: lib/EmailForm/Composer.php:4536
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:4583
+#: lib/EmailForm/Composer.php:4567
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4643 lib/EmailForm/Composer.php:4770
+#: lib/EmailForm/Composer.php:4627 lib/EmailForm/Composer.php:4754
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4679
+#: lib/EmailForm/Composer.php:4663
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:4704
+#: lib/EmailForm/Composer.php:4688
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:5440
+#: lib/EmailForm/Composer.php:5424
 msgid "Blank Template"
 msgstr "Blanko-Vorlage"
 
-#: lib/EmailForm/Composer.php:5441
+#: lib/EmailForm/Composer.php:5425
 msgid "blank"
 msgstr "blanko"
 
-#: lib/EmailForm/Composer.php:5444
+#: lib/EmailForm/Composer.php:5428
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:5447
+#: lib/EmailForm/Composer.php:5431
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:5450
+#: lib/EmailForm/Composer.php:5434
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:5576
+#: lib/EmailForm/Composer.php:5560
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
@@ -4024,7 +4024,7 @@ msgstr "nach Wochennummer(n)"
 msgid "by day and month"
 msgstr "nach Tag im Monat"
 
-#: lib/Listener/ParticipantFieldCloudFolderListener.php:359
+#: lib/Listener/ParticipantFieldCloudFolderListener.php:371
 #, php-format
 msgid ""
 "\"%1$s\" belongs to the participant-field \"%2$s\" and must be a folder, "
@@ -4033,7 +4033,7 @@ msgstr ""
 "Der Name \"%1$s\" gehört zum Personendaten-Feld \"%2$s\" und sollte eine "
 "Dateiordner sein, Sie aber versuchen, eine DAte zu erzeugen (%3$s)."
 
-#: lib/Listener/ParticipantFieldCloudFolderListener.php:372
+#: lib/Listener/ParticipantFieldCloudFolderListener.php:384
 #, php-format
 msgid ""
 "The current folder \"%1$s\" belongs to the participant-field \"%2$s\", but "
@@ -4042,7 +4042,7 @@ msgstr ""
 "Der Name \"%1$s\" gehört zum Personendaten-Feld \"%2$s\", aber \"%3$s\" ist "
 "keiner der registrierten zulässigen Dateinamen."
 
-#: lib/Listener/ParticipantFieldCloudFolderListener.php:504
+#: lib/Listener/ParticipantFieldCloudFolderListener.php:516
 #, php-format
 msgid ""
 "The folder \"%1$s\" belongs to the participant-field \"%2$s\" and must not "
@@ -4081,6 +4081,10 @@ msgstr "Der inhaltliche Teil der Datenmigration \"%s\" ist fehlgeschlagen."
 #: lib/Maintenance/Migrations/InitialDatabaseSetup.php:64
 msgid "Initial database setup."
 msgstr "Datenbank-Initialisierung."
+
+#: lib/Maintenance/Migrations/ParticipantDropBankAccountColumns.php:52
+msgid "Drop some unused obsololete columns in the project_participants table"
+msgstr "Entferne einige unnötige Spalten aus der Project-Teilnehmer*innen Tabelle."
 
 #: lib/Maintenance/Migrations/ParticipantFieldAccessEnum.php:53
 msgid "Use an enum for the participant access control"
@@ -6465,7 +6469,7 @@ msgstr "Nicht unterstützte Sammelauftrags-Klasse: \"%s\"."
 msgid "nothing"
 msgstr "nichts"
 
-#: lib/Service/Finance/FinanceService.php:154
+#: lib/Service/Finance/FinanceService.php:156
 #, php-format
 msgid ""
 "The business-day and calendar-day offset must have the same sign (%d / %d)"
@@ -6473,7 +6477,7 @@ msgstr ""
 "Die Fristen für Werktage und Kalendertage müssen das gleiche Vorzeichen "
 "haben (%d / %d)"
 
-#: lib/Service/Finance/FinanceService.php:234
+#: lib/Service/Finance/FinanceService.php:305
 #, php-format
 msgid ""
 "Bankaccount belongs to musician \"%s\", but specified musician is \"%s\"."
@@ -6481,12 +6485,12 @@ msgstr ""
 "Die Bankverbindung gehört zur Person \"%s\", übermittelt wurde aber "
 "zusätzlich die Person \"%s\"."
 
-#: lib/Service/Finance/FinanceService.php:439
-#: lib/Service/Finance/FinanceService.php:511
+#: lib/Service/Finance/FinanceService.php:510
+#: lib/Service/Finance/FinanceService.php:582
 msgid "finance"
 msgstr "Kasse"
 
-#: lib/Service/Finance/FinanceService.php:560
+#: lib/Service/Finance/FinanceService.php:631
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%2$s\" in calendar with id "
@@ -6495,44 +6499,44 @@ msgstr ""
 "Kann den Kalender-Eintrag \"%2$s\" im Kalender mit der Id \"%1$s\" nicht "
 "finden."
 
-#: lib/Service/Finance/FinanceService.php:677
+#: lib/Service/Finance/FinanceService.php:748
 msgid "The given mandate does not contain a valid project-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Projekt-Id."
 
-#: lib/Service/Finance/FinanceService.php:693
+#: lib/Service/Finance/FinanceService.php:764
 msgid "The given mandate does not contain a valid musician-id."
 msgstr "Das Lastschriftmandat enthält keine gültige Musizierenden-Id."
 
-#: lib/Service/Finance/FinanceService.php:719
+#: lib/Service/Finance/FinanceService.php:790
 #, php-format
 msgid "SEPA mandate-reference \"%s\" is too long (%d > %d)."
 msgstr "Die SEPA-Mandatsreferenz \"%s\" ist zu lang (%d > %d)."
 
-#: lib/Service/Finance/FinanceService.php:1038
+#: lib/Service/Finance/FinanceService.php:1109
 msgid "Illegal characters in bank account owner field."
 msgstr "Ungültige Buchstaben im Kontoinhaber:innen:feld."
 
-#: lib/Service/Finance/FinanceService.php:1049
+#: lib/Service/Finance/FinanceService.php:1120
 #, php-format
 msgid "Invalid IBAN: %s"
 msgstr "Ungültige IBAN: %s."
 
-#: lib/Service/Finance/FinanceService.php:1058
+#: lib/Service/Finance/FinanceService.php:1129
 #, php-format
 msgid "BLZ and IBAN do not match: %s != %s"
 msgstr "BLZ und IBAN passen nicht zusammen: %s != %s."
 
-#: lib/Service/Finance/FinanceService.php:1064
+#: lib/Service/Finance/FinanceService.php:1135
 #, php-format
 msgid "Invalid German BLZ: %s."
 msgstr "Ungültige Deutsche(?) Bankleitzahl %s."
 
-#: lib/Service/Finance/FinanceService.php:1068
+#: lib/Service/Finance/FinanceService.php:1139
 #, php-format
 msgid "Invalid German bank account: %s @ %s."
 msgstr "Ungültige Deutsche(?) Kontonummer %s @ %s."
 
-#: lib/Service/Finance/FinanceService.php:1073
+#: lib/Service/Finance/FinanceService.php:1144
 #, php-format
 msgid "Probably invalid BIC: %s. Computed: %s. "
 msgstr "Vermutlich falsche BIC: %s. Automatisch ermittelt: %s."
@@ -7003,12 +7007,12 @@ msgstr ""
 "Konnte den Freigabe-Link für den Teilnehmenden-Download-Ordner für das "
 "Projekt \"%s\" nicht erstellen."
 
-#: lib/Service/ProjectService.php:1222
+#: lib/Service/ProjectService.php:1237
 #, php-format
 msgid "Projects of %s"
 msgstr "Projekte von %s"
 
-#: lib/Service/ProjectService.php:1286
+#: lib/Service/ProjectService.php:1301
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -7067,80 +7071,80 @@ msgstr ""
 "===== Location =====\n"
 "Was auch immer."
 
-#: lib/Service/ProjectService.php:1395
+#: lib/Service/ProjectService.php:1410
 #, php-format
 msgid "%1$s has been renamed to %2$s."
 msgstr "%1$s wurd zu %2$s umbenannt."
 
-#: lib/Service/ProjectService.php:1482
+#: lib/Service/ProjectService.php:1497
 msgid "Preview"
 msgstr "Vorschau"
 
-#: lib/Service/ProjectService.php:1484 lib/Service/ProjectService.php:1539
-#: lib/Service/ProjectService.php:1704 lib/Service/ProjectService.php:1748
-#: lib/Service/ProjectService.php:1808 lib/Settings/PersonalForm.php:352
+#: lib/Service/ProjectService.php:1499 lib/Service/ProjectService.php:1554
+#: lib/Service/ProjectService.php:1719 lib/Service/ProjectService.php:1763
+#: lib/Service/ProjectService.php:1823 lib/Settings/PersonalForm.php:352
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: lib/Service/ProjectService.php:1486
+#: lib/Service/ProjectService.php:1501
 msgid "Archive"
 msgstr "Archiv"
 
-#: lib/Service/ProjectService.php:1488
+#: lib/Service/ProjectService.php:1503
 msgid "Trashbin"
 msgstr "Mülltonne"
 
-#: lib/Service/ProjectService.php:1533
+#: lib/Service/ProjectService.php:1548
 msgid "Empty project."
 msgstr "Fehlendes Projekt."
 
-#: lib/Service/ProjectService.php:1560
+#: lib/Service/ProjectService.php:1575
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr "Kann die Web-Seiten für \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:1583
+#: lib/Service/ProjectService.php:1598
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr "Kann Web-Page %s nicht anlegen."
 
-#: lib/Service/ProjectService.php:1604
+#: lib/Service/ProjectService.php:1619
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr "Kann den Artikel \"%s\" nicht verknüpfen."
 
-#: lib/Service/ProjectService.php:1643
+#: lib/Service/ProjectService.php:1658
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 "Konnte die Web-Seite %d vom Projekt mit der Id %d leider nicht entfernen."
 
-#: lib/Service/ProjectService.php:1686
+#: lib/Service/ProjectService.php:1701
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr "Konnte die Web-Seite %d nicht vom Projekt %d entkoppeln\""
 
-#: lib/Service/ProjectService.php:1850
+#: lib/Service/ProjectService.php:1865
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr "Konnte das Projekt mit der Id %d nicht laden"
 
-#: lib/Service/ProjectService.php:1894
+#: lib/Service/ProjectService.php:1909
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr "Kann die Daten für die Musiker:Innen-Id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:1910
+#: lib/Service/ProjectService.php:1925
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr "Die Person %s ist bereits für das Projekt %s registriert."
 
-#: lib/Service/ProjectService.php:1932
+#: lib/Service/ProjectService.php:1947
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr "DiePerson %s scheint kein einziges Instrument zu spielen."
 
-#: lib/Service/ProjectService.php:1984
+#: lib/Service/ProjectService.php:1999
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
@@ -7149,61 +7153,61 @@ msgstr ""
 "Die Person \"%s\" spielt kein einziges Instrument, das in der\n"
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
-#: lib/Service/ProjectService.php:2038
+#: lib/Service/ProjectService.php:2053
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr "Person mit id \"%d\" konnte nicht hinzugefügt werden, Fehler \"%s\""
 
-#: lib/Service/ProjectService.php:2047
+#: lib/Service/ProjectService.php:2062
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr "Die Person %s wurde zum Projekt %s hinzugefügt."
 
-#: lib/Service/ProjectService.php:2103
+#: lib/Service/ProjectService.php:2118
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 "Konnte den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2169
+#: lib/Service/ProjectService.php:2184
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr "Konnte den Email-Verteiler \"%s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2307
+#: lib/Service/ProjectService.php:2322
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr "Kann die Person \"%s\" nicht vom Projekt-Email-Verteiler abmelden."
 
-#: lib/Service/ProjectService.php:2332
+#: lib/Service/ProjectService.php:2347
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr "Kann das Projekt zur id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2385
+#: lib/Service/ProjectService.php:2400
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
 "Projekt mit der Id \"%d\" nicht erzeugen."
 
-#: lib/Service/ProjectService.php:2426
+#: lib/Service/ProjectService.php:2441
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: lib/Service/ProjectService.php:2456
+#: lib/Service/ProjectService.php:2471
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:2922
+#: lib/Service/ProjectService.php:2939
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:2955
+#: lib/Service/ProjectService.php:2972
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -7213,11 +7217,11 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:2961
+#: lib/Service/ProjectService.php:2978
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/ProjectService.php:3007
+#: lib/Service/ProjectService.php:3024
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr "Kann \"%1$s\" nicht vom Projekt austragen."
@@ -10809,61 +10813,6 @@ msgstr "Unbekannter Datei-Typ \"%s\" für Download-Datei \"%s\"."
 msgid "Cannot find directory entry \"%s\"."
 msgstr "Kann den Datei-Ornder \"%s\" nicht finden."
 
-#: lib/Toolkit/Service/RequestService.php:244
-msgid "Cannot call internal route while the session is open."
-msgstr ""
-"Kann keine Anfrage an interne Adressen richten, wenn die PHP-Session noch "
-"offen ist."
-
-#: lib/Toolkit/Service/RequestService.php:280
-#, php-format
-msgid ""
-"Supported data formats are \"%1$s\" and \"%2$s\", specified was \"%3$s\"."
-msgstr ""
-"Nur die Datenformate \"%1$s\" und \"%2$s\" werden unterstützt, angegeben "
-"wurde \"%3$s\"."
-
-#: lib/Toolkit/Service/RequestService.php:343
-#, php-format
-msgid "Invalid response from API call: \"%s\""
-msgstr "Ungültige Antwort auf eine API Anfrage: \"%s\""
-
-#: lib/Toolkit/Service/RequestService.php:352
-#, php-format
-msgid "Error response from call to internal route \"%1$s\": %2$s"
-msgstr ""
-"Bei der internen Anfrage \"%1$s\" wurde ein Fehler diagnostiziert: %2$s"
-
-#: lib/Toolkit/Service/RequestService.php:363
-#, php-format
-msgid "Invalid OCS response from call to internal route \"%1$s\": %2$s"
-msgstr ""
-"Ungültige OCS Anwort auf die interne Anfrage an den Endpunkt \"%1$s\": %2$s"
-
-#: lib/Toolkit/Service/RequestService.php:369
-#, php-format
-msgid "Error response from call to internal route \"%1$s\": %2$s --  %3$s"
-msgstr ""
-"Bei der internen Anfrage \"%1$s\" wurde ein Fehler diagnostiziert: %2$s -- "
-"%3$s"
-
-#: lib/Toolkit/Traits/AssetTrait.php:103
-#, php-format
-msgid ""
-"Installation problem; the required resource \"%1$s\" of type \"%2$s\" is not "
-"installed on the server, please contact the system administrator!"
-msgstr ""
-"Installationsproblem; die %1$s-Ressource \"%2$s\" ist nicht auf dem Server "
-"installiert, bitte kontaktieren Sie den Systemadministrator!"
-
-#: lib/Toolkit/Traits/ResponseTrait.php:121
-msgid "Error, caught an exception."
-msgstr "Interner Fehler, Ausnahme \"aufgefangen\"."
-
-#: lib/Toolkit/Traits/ResponseTrait.php:122
-msgid "Caused by previous exception"
-msgstr "Verursacht durch vorheriger Ausnahme"
-
 #: lib/Traits/InitialStateTrait.php:113
 msgid "Select a filter option."
 msgstr "Wähle einen Filter."
@@ -10887,6 +10836,61 @@ msgstr ""
 #: lib/Traits/SloppyTrait.php:48
 msgid "and"
 msgstr "und"
+
+#: php-toolkit/Service/RequestService.php:244
+msgid "Cannot call internal route while the session is open."
+msgstr ""
+"Kann keine Anfrage an interne Adressen richten, wenn die PHP-Session noch "
+"offen ist."
+
+#: php-toolkit/Service/RequestService.php:280
+#, php-format
+msgid ""
+"Supported data formats are \"%1$s\" and \"%2$s\", specified was \"%3$s\"."
+msgstr ""
+"Nur die Datenformate \"%1$s\" und \"%2$s\" werden unterstützt, angegeben "
+"wurde \"%3$s\"."
+
+#: php-toolkit/Service/RequestService.php:343
+#, php-format
+msgid "Invalid response from API call: \"%s\""
+msgstr "Ungültige Antwort auf eine API Anfrage: \"%s\""
+
+#: php-toolkit/Service/RequestService.php:352
+#, php-format
+msgid "Error response from call to internal route \"%1$s\": %2$s"
+msgstr ""
+"Bei der internen Anfrage \"%1$s\" wurde ein Fehler diagnostiziert: %2$s"
+
+#: php-toolkit/Service/RequestService.php:363
+#, php-format
+msgid "Invalid OCS response from call to internal route \"%1$s\": %2$s"
+msgstr ""
+"Ungültige OCS Anwort auf die interne Anfrage an den Endpunkt \"%1$s\": %2$s"
+
+#: php-toolkit/Service/RequestService.php:369
+#, php-format
+msgid "Error response from call to internal route \"%1$s\": %2$s --  %3$s"
+msgstr ""
+"Bei der internen Anfrage \"%1$s\" wurde ein Fehler diagnostiziert: %2$s -- "
+"%3$s"
+
+#: php-toolkit/Traits/AssetTrait.php:103
+#, php-format
+msgid ""
+"Installation problem; the required resource \"%1$s\" of type \"%2$s\" is not "
+"installed on the server, please contact the system administrator!"
+msgstr ""
+"Installationsproblem; die %1$s-Ressource \"%2$s\" ist nicht auf dem Server "
+"installiert, bitte kontaktieren Sie den Systemadministrator!"
+
+#: php-toolkit/Traits/ResponseTrait.php:121
+msgid "Error, caught an exception."
+msgstr "Interner Fehler, Ausnahme \"aufgefangen\"."
+
+#: php-toolkit/Traits/ResponseTrait.php:122
+msgid "Caused by previous exception"
+msgstr "Verursacht durch vorheriger Ausnahme"
 
 #: specialAppInfoFakeDummyForL10nScript.php:2
 msgid "CAFeV DB"
@@ -16200,6 +16204,21 @@ msgstr "NACHNAME"
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
 
+#, fuzzy, php-format
+#~| msgid "Unable to find the file \"%s\"."
+#~ msgid "Unable to open archive file %s (%s)"
+#~ msgstr "Kann die Datei \"%s\" nicht finden."
+
+#, fuzzy
+#~| msgid "There is no error, the file uploaded with success"
+#~ msgid "There is no archive file associated with this archiver instance."
+#~ msgstr "Datei erfolgreich hochgeladen."
+
+#, fuzzy, php-format
+#~| msgid "Unknown share type \"%s\"."
+#~ msgid "Unknown search topic \"%1$s\""
+#~ msgstr "Unbekannter Freigabe-Typ \"%s\"."
+
 #~ msgid "Readers"
 #~ msgstr "Nur-Lesen"
 
@@ -16213,16 +16232,6 @@ msgstr "ZUSATZKOSTEN"
 #~ msgstr ""
 #~ "Installationsproblem; die %s-Ressource \"%s\" ist nicht auf dem Server "
 #~ "installiert, bitte kontaktieren Sie den Systemadministrator!"
-
-#, fuzzy, php-format
-#~| msgid "Unable to find the file \"%s\"."
-#~ msgid "Unable to open archive file %s (%s)"
-#~ msgstr "Kann die Datei \"%s\" nicht finden."
-
-#, fuzzy
-#~| msgid "There is no error, the file uploaded with success"
-#~ msgid "There is no archive file associated with this archiver instance."
-#~ msgstr "Datei erfolgreich hochgeladen."
 
 #~ msgid "Add auto-generation flag to email-drafts."
 #~ msgstr "\"automatisch generiert\"-Markierung zu Email-Entwürfen hinzufügen."
