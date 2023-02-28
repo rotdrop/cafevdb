@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
  */
 class SepaBulkTransactionEntityListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var IL10N */

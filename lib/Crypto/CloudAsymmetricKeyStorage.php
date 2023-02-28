@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Exceptions;
 /** Key-storage base-class. */
 abstract class CloudAsymmetricKeyStorage extends AbstractAsymmetricKeyStorage
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const NAME_SEPARATOR = ';';
 

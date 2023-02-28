@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Common\Util;
 /** Handle transparent multi-user encryption/decryption */
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var Crypto\AsymmetricKeyService */
   private $keyService;

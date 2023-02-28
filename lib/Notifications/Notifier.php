@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 /** Notification support class. */
 class Notifier implements \OCP\Notification\INotifier
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const RECRYPT_USER_SUBJECT = 'recrypt_user';
   const RECRYPT_USER_DENIED_SUBJECT = 'recrypt_user_denied';

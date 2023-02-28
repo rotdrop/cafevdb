@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
  */
 class Personal implements ISettings
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 

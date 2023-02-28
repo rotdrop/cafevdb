@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class InitialDatabaseSetup implements IMigration
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   private const INITIAL_SQL = __DIR__ . '/../../../appinfo/database/doctrine-orm-initial.sql';

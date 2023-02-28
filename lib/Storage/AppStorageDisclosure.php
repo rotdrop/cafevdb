@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Constants;
  */
 class AppStorageDisclosure
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   public const PATH_SEP = Constants::PATH_SEP;
 

@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Exceptions;
 /** Progress-status via database table. */
 class DatabaseProgressStatus extends AbstractProgressStatus
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const ENTITY_NAME = Entities\ProgressStatus::class;
 

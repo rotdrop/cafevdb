@@ -60,7 +60,7 @@ use OCA\CAFEVDB\Constants;
 class ProjectParticipantFieldsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const REQUEST_TOPIC_GENERATOR = 'generator';

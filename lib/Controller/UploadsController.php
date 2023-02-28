@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Common\Util;
 class UploadsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const UPLOAD_KEY = 'files';

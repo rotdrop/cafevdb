@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 class MailingListsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   const ROLE = 'role';
 

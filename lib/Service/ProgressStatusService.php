@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Common\PlainFileProgressStatus;
 /** Factory for progress status implementation. */
 class ProgressStatusService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   //static private $progressStatusImplementation = DatabaseProgressStatus::class;
   private static $progressStatusImplementation = PlainFileProgressStatus::class;

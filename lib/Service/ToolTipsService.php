@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 /** Tool-tips management with translations. */
 class ToolTipsService implements \ArrayAccess, \Countable
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const SUBKEY_PREFIXES = [ 'pme' ];
   const SUB_KEY_SEP = ':';

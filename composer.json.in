@@ -45,10 +45,7 @@
     "zebra-north/phpcs-short-types": "^1.0"
   },
   "autoload": {
-    "classmap": ["3rdparty/phpMyEdit/."],
-    "psr-4": {
-      "OCA\\RotDrop\\Toolkit\\": "lib/Toolkit/"
-    }
+    "classmap": ["3rdparty/phpMyEdit/."]
   },
   "repositories": [
     {

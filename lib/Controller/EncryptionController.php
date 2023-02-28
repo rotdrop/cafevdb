@@ -50,8 +50,8 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 /** AJAX end-points in order to support encryption. */
 class EncryptionController extends OCSController
 {
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 

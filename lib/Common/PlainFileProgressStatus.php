@@ -41,7 +41,7 @@ class PlainFileProgressStatus extends AbstractProgressStatus
 {
   private const READ_RETRY_LIMIT = 10;
 
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const DATA_DIR = 'progress-status';
 

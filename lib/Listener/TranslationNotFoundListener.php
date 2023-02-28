@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 /** Recorded  untranslated strings. */
 class TranslationNotFoundListener implements IEventListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

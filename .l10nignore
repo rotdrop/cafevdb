@@ -9,6 +9,7 @@ js/
 css/
 statistics/
 dev-scripts/
-lib/Toolkit/Traits/UtilTrait.php
-lib/Toolkit/Service/ArchiveService.php
-lib/Toolkit/Service/GroupFoldersService.php
+lib/Toolkit/
+php-toolkit/Traits/UtilTrait.php
+php-toolkit/Service/ArchiveService.php
+php-toolkit/Service/GroupFoldersService.php

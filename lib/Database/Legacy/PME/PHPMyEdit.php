@@ -53,7 +53,7 @@ use OCA\CAFEVDB\Common\Util;
 class PHPMyEdit extends LegacyPHPMyEdit
 {
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var Connection */
   private $connection;

@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 abstract class AbstractMigration implements IMigration
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   protected const STRUCTURAL = 'structural';

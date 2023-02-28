@@ -51,7 +51,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class MusiciansController extends Controller
 {
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;

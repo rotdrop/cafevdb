@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception as DBALException;
 /** Manage database migrations. */
 class MigrationsService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const MIGRATIONS_FOLDER = __DIR__ . '/../Maintenance/Migrations/';

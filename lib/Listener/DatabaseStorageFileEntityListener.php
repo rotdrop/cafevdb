@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Common\GenericUndoable;
  */
 class DatabaseStorageFileEntityListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var IL10N */

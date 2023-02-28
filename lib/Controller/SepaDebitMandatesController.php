@@ -57,10 +57,10 @@ use OCA\CAFEVDB\Common\Util;
 /** AJAX endpoints for debit mandates */
 class SepaDebitMandatesController extends Controller
 {
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
-  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait; // cloud-paths
 

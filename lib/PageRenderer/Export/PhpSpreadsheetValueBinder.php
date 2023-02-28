@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder implements PhpSpreadSheet\Cell\IValueBinder
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var IL10N */
   private $l;

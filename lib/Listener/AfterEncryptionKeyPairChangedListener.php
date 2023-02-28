@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Notifications\Notifier;
 /** Perform re-encryption tasks after encryption keys have been changed. */
 class AfterEncryptionKeyPairChangedListener implements IEventListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Exceptions\UndoableRunQueueException;
  */
 class UndoableRunQueue
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var IAppContainer */
   protected $appContainer;

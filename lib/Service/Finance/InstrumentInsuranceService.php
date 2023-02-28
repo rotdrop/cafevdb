@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Common\Functions;
 class InstrumentInsuranceService
 {
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
-  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;

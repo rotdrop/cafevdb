@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 /** Counter part to the decorated entity manager. */
 class ClassMetadataDecorator implements ClassMetadataInterface
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var array */
   private $columnAssociationsCache = [];

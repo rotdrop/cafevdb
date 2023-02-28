@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Common\Util;
 trait FileUploadRowTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   /** @var IRequest */
   protected $request;

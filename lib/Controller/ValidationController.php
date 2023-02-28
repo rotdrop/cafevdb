@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class ValidationController extends Controller
 {
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   /** @var \OCA\CAFEVDB\Service\ParametereService */

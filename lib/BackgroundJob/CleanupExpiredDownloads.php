@@ -47,7 +47,7 @@ use OCA\CAFEVDB\Common\PlainFileProgressStatus;
  */
 class CleanupExpiredDownloads extends TimedJob
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var IRootFolder*/
   private $rootFolder;

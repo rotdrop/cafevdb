@@ -37,7 +37,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 /** DBAL logger implementation which logs to the cloud log. */
 class CloudLogger implements SQLLogger
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var IEventDispatcher */
   private $eventDispatcher;

@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Service\GeoCodingService;
  */
 class LazyUpdateGeoCoding extends TimedJob
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var GeoCodignService */
   private $geoCodingService;

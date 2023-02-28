@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class SepaBulkTransactionSubmittedListener implements IEventListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = Events\PostChangeSepaBulkTransactionSubmitDate::class;
 
