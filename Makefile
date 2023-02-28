@@ -130,7 +130,7 @@ composer.lock: composer.json composer.json.in
  $(COMPOSER_TOOL) install $(COMPOSER_OPTIONS);\
 }
 
-pre-build: php-scoper-download
+pre-build: php-scoper-download app-toolkit
 #	git submodule update --init
 	$(OCC) maintenance:mode --on
 .PHONY: pre-build
@@ -152,7 +152,7 @@ build: dev-setup npm-build post-build
 dev: dev-setup npm-dev post-build
 .PHONY: dev
 
-dev-setup: pre-build composer namespace-wrapper app-toolkit
+dev-setup: pre-build composer namespace-wrapper
 .PHONY: dev-setup
 
 
