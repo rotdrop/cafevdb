@@ -143,14 +143,18 @@ post-build:
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-build: pre-build composer namespace-wrapper npm-build post-build
+build: dev-setup npm-build post-build
 .PHONY: build
 
 #@@ Fetches the PHP and JS dependencies and compiles the JS.
 #@ If no composer.json is present, the composer step is skipped, if no
 #@ package.json or js/package.json is present, the npm step is skipped
-dev: pre-build composer namespace-wrapper npm-dev post-build
+dev: dev-setup npm-dev post-build
 .PHONY: dev
+
+dev-setup: pre-build composer namespace-wrapper app-toolkit
+.PHONY: dev-setup
+
 
 .PHONY: composer-download
 composer-download:
@@ -233,6 +237,17 @@ namespace-wrapper-unpatch: $(NAMESPACE_WRAPPER_VICTIMS)
  -e 's/([( ])\\$(WRAPPER_NAMESPACE)\\$(NS)/\1\\$(NS)/g'\
 }\
  $(NAMESPACE_WRAPPER_VICTIMS)
+
+#
+# Another namespace wrapper, but less complicated, in order to
+# decouple our shared Nextcloud traits collection from other apps.
+#
+
+APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit
+APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
+APP_TOOLKIT_NS = CAFEVDB
+
+include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 
 .PHONY: selectize
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)

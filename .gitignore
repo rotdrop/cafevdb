@@ -4,6 +4,7 @@ statistics/**
 package-lock.json
 /
 *~
+lib/Toolkit/[A-Z]*
 lib/tooltips.php.new
 \#*\#
 .#*
@@ -31,6 +32,6 @@ dependencygraph.svg
 stats.json
 dev-scripts/composer.phar
 secrets.csv
-wrapper-build-hash
+*-build-hash
 build-flavour
 .phpunit.result.cache
