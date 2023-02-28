@@ -36,8 +36,8 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 /** Encryption/Decryption AJAX end-points. */
 class CryptoController extends Controller
 {
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const META_DATA_IBAN = 'iban';
 

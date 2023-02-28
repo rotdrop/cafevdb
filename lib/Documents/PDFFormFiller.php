@@ -34,7 +34,7 @@ use OCP\Files\File;
 /** Fill a PDF-form with given data. */
 class PDFFormFiller
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var PdfTk */
   private $pdfTk = null;

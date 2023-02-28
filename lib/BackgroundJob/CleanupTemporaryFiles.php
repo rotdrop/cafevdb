@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Common\PlainFileProgressStatus;
 /** Cleanup left-over temporary files from the app-storage. */
 class CleanupTemporaryFiles extends TimedJob
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const DIRECTORIES = [
     AppStorage::UPLOAD_FOLDER,

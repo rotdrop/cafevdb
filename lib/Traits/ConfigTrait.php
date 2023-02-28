@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 trait ConfigTrait
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var ConfigService */
   protected $configService;

@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Constants;
  */
 class ProjectBalanceSupportingDocumentsStorage extends Storage
 {
-  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /** @var ProjectService */
   private $projectService;

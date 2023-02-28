@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class AppStorage
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const PATH_SEP = '/';
   public const UPLOAD_FOLDER = 'uploads';

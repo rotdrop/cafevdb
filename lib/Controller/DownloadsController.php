@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Common\Util;
 class DownloadsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   public const SECTION_DATABASE = 'database';

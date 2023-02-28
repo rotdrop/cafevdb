@@ -57,10 +57,10 @@ use OCA\CAFEVDB\Constants;
 class ProjectParticipantsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;
-  use \OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   const LIST_ACTION_SUBSCRIBE = 'subscribe';
   const LIST_ACTION_UNSUBSCRIBE = 'unsubscribe';

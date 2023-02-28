@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class OrganizationalRolesService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\CloudAdminTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\CloudAdminTrait;
 
   const CLOUD_ADMIN_ROLE = 'cloudAdmin';
   const GROUP_ADMIN_ROLE = 'groupAdmin';

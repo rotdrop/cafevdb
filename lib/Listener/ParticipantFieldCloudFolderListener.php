@@ -86,7 +86,7 @@ use OCA\CAFEVDB\Constants;
 class ParticipantFieldCloudFolderListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  // use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  // use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = [

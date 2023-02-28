@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 /** Rename associated folders etc. if the field is renamed. */
 class PreRenameProjectParticipantFieldListener implements IEventListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

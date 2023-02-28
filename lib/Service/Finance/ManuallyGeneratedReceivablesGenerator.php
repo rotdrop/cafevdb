@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Uuid;
  */
 class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var ToolTipsService */
   protected $toolTipsService;

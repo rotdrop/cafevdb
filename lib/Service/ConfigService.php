@@ -59,7 +59,7 @@ use OCA\CAFEVDB\Exceptions;
 class ConfigService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
 
   /*-**************************************************************************

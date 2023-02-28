@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Constants;
  */
 class AssetService
 {
-  use \OCA\RotDrop\Toolkit\Traits\AssetTrait {
+  use \OCA\CAFEVDB\Toolkit\Traits\AssetTrait {
     getAsset as public;
     getJSAsset as public;
     getCSSAsset as public;

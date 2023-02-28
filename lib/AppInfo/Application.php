@@ -112,7 +112,7 @@ if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
 /** {@inheritdoc} */
 class Application extends App implements IBootstrap
 {
-  use \OCA\RotDrop\Toolkit\Traits\AppNameTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\AppNameTrait;
 
   /** @var IAppContainer */
   protected static $appContainer;

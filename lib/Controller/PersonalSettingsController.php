@@ -75,7 +75,7 @@ use OCA\RoundCube\Service\Config as RoundCubeConfig;
 class PersonalSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   public const EMAIL_PROTO = [ 'smtp', 'imap' ];
   public const EMAIL_SECURITY = [ 'insecure', 'starttls', 'ssl' ];

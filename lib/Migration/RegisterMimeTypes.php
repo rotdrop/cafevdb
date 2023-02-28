@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Storage\Database\MountProvider;
  */
 class RegisterMimeTypes implements IRepairStep
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const MIMETYPE_MAPPING_FILE = 'mimetypemapping.json';
   const MIMETYPE_ALIASES_FILE = 'mimetypealiases.json';

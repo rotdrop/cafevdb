@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 /** Trait in order to handle authentication with the cloud */
 trait AuthenticatedCommandTrait
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var IL10N */

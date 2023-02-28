@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableTextFileUpdate extends AbstractFileSystemUndoable
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var IDateTimeFormatter */
   protected $dateTimeFormatter;

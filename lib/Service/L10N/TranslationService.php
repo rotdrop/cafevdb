@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class TranslationService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var array */

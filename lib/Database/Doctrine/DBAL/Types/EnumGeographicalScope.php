@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  */
 class EnumGeographicalScope extends EnumType
 {
-  use \OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   public const DOMESTIC = 'Domestic';
   public const CONTINENT = 'Continent';

@@ -33,7 +33,7 @@ use OCP\ISession;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
-use OCA\RotDrop\Toolkit\Service\RequestService as ToolkitService;
+use OCA\CAFEVDB\Toolkit\Service\RequestService as ToolkitService;
 
 /** Place server-to-server AJAX calls. */
 class RequestService extends ToolkitService

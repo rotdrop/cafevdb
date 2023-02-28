@@ -38,7 +38,7 @@ use OCA\CAFEVDB\PageRenderer\Renderer as PageRenderer;
 /** Mapper for the blog entities. */
 class BlogMapper extends Mapper
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait; // required IL10N, ILogger
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait; // required IL10N, ILogger
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

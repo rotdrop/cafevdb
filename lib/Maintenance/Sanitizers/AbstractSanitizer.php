@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 abstract class AbstractSanitizer implements ISanitizer
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var object */

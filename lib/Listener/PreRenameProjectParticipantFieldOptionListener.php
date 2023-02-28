@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 /** Rename file-system nodes if the field refers to file-attachments. */
 class PreRenameProjectParticipantFieldOptionListener implements IEventListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 

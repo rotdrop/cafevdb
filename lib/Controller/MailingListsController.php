@@ -45,7 +45,7 @@ use OCA\CAFEVDB\Common\Util;
 /** Handle subscription management callbacks */
 class MailingListsController extends Controller
 {
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   const OPERATION_INVITE = 'invite';

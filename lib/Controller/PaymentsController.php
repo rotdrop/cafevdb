@@ -48,7 +48,7 @@ use OCA\CAFEVDB\Common\Util;
 /** AJAX endpoint to support maintenance of payments. */
 class PaymentsController extends Controller
 {
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Controller\FileUploadRowTrait;

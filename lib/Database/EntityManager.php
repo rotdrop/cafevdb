@@ -97,7 +97,7 @@ use OCA\CAFEVDB\Events;
  */
 class EntityManager extends EntityManagerDecorator
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const ENTITY_PATHS = [
     __DIR__ . "/Doctrine/ORM/Entities",

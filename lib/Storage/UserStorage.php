@@ -58,7 +58,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class UserStorage
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const PATH_SEP = Constants::PATH_SEP;
   const CACHE_DIRECTORY = self::PATH_SEP.'cache';

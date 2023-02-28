@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Exceptions;
  */
 class AnyToPdf
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /**
    * @var string Array of available converters per mime-type. These form a

@@ -34,7 +34,7 @@ use Psr\Log\LoggerInterface as ILogger;
  */
 class UrlGeneratorService implements IURLGenerator
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var IURLGenerator */
   private $urlGenerator;

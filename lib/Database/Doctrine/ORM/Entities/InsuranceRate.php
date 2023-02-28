@@ -45,7 +45,7 @@ class InsuranceRate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
-  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", cascade={"persist", "merge"}, fetch="EXTRA_LAZY")

@@ -50,7 +50,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
 class LegacyEventsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 

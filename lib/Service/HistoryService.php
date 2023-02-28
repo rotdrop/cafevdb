@@ -39,7 +39,7 @@ use Psr\Log\LoggerInterface as ILogger;
 class HistoryService
 {
   use \OCA\CAFEVDB\Traits\SessionTrait;
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const MAX_HISTORY_SIZE = 1;
   const SESSION_HISTORY_KEY = 'PageHistory';

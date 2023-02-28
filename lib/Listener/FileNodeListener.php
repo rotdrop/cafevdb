@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class FileNodeListener implements IEventListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = [ NodeDeletedEvent::class, NodeRenamedEvent::class ];
 

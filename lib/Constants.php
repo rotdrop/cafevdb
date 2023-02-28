@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
-use OCA\RotDrop\Toolkit\Traits\Constants as TraitsConstants;
+use OCA\CAFEVDB\Toolkit\Traits\Constants as TraitsConstants;
 
 /** General constants for the app. */
 class Constants extends TraitsConstants

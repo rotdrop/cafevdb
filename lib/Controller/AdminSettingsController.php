@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Settings\Admin as AdminSettings;
 class AdminSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   public const POST_REQUEST_FONT_CACHE = 'font-cache';
   public const DELEGATABLE_POST_REQUESTS = [

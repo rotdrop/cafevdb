@@ -38,7 +38,7 @@ use OCP\IL10N;
  */
 class AuthorizationService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var string */
   private $appName;

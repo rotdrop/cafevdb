@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class BiDirectionalL10N
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   private const FORWARD = 'forward';
   private const REVERSE = 'reverse';

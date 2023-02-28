@@ -29,7 +29,7 @@ use Psr\Log\LoggerInterface as ILogger;
 /** Utility routines for the SealCryptor. */
 class SealService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var SymmetricCryptorInterface */
   private $dataCryptor;

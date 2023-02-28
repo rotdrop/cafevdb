@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Common\Util;
  */
 class CloudUserConnectorService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const REQUIREMENTS_OK = true;
   const REQUIREMENTS_MISSING = false;

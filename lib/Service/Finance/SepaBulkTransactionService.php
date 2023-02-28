@@ -61,7 +61,7 @@ use OCA\CAFEVDB\Service;
  */
 class SepaBulkTransactionService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\TimeStampTrait;
 

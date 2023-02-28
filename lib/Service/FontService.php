@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Constants;
 /** Office font-file locator, in particular for PhpOffice. */
 class FontService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   public const OFFICE_FONTS_FOLDER_CONFIG = 'officeFontsFolder';
 

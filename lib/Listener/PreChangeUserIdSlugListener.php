@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 /** Perform renaming action when the user-id slug changes. */
 class PreChangeUserIdSlugListener implements IEventListener
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 
