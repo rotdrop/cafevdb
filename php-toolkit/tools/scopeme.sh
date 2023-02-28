@@ -17,6 +17,6 @@ EOF
     exit 1
 fi
 
-cp -a $SRC_DIR/[A-Z]* $DST_DIR/.
+rsync -a --delete $SRC_DIR/[A-Z]* $DST_DIR/.
 find $DST_DIR -name '*.php' -exec sed -i 's/OCA\\RotDrop\\Toolkit/OCA\\'$NS_PREFIX'\\Toolkit/g'  {} \;
 find $DST_DIR -exec touch {} \;
