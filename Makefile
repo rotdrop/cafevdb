@@ -337,6 +337,7 @@ clean: ## Tidy up local environment
 distclean: clean ## Clean even more, calls clean
 	rm -rf vendor*
 	rm -rf node_modules
+	rm -rf lib/Toolkit/*
 .PHONY: distclean
 
 #@@ Really delete everything but the bare source files
