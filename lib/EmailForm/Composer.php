@@ -2024,17 +2024,10 @@ Störung.';
               // switch to the member-data update which also inludes a mandate form
               $templateId = ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE;
             }
-            /**@var Entities\ProjectParticipant $participant */
-            $participant = $this->entityManager->find(Entities\ProjectParticipant::class, [
-              'musician' => $musician,
-              'project' => $this->project,
-            ]);
-            if (!empty($participant)) {
-              $bankAccount = $participant->getSepaBankAccount();
-            }
-            if (empty($bankAccount)) {
-              $bankAccount = $musician->getSepaBankAccounts()->first();
-            }
+            /** @var FinanceService $financeService */
+            $financeService = $this->di(FinanceService::class);
+            $bankAccount = $financeService->getActiveBankAccount($musician, $this->project);
+
             $personalAttachments[] = function() use ($financeService, $bankAccount, $musician, $templateId) {
               list($fileData, $mimeType, $fileName) =
                 $financeService->preFilledDebitMandateForm(
