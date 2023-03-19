@@ -1,0 +1,320 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+
+/**
+ * Instrumente
+ *
+ * @ORM\Table(name="Instruments")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\InstrumentsRepository")
+ * @Gedmo\TranslationEntity(class="TableFieldTranslation")
+ * @Gedmo\SoftDeleteable(
+ *   fieldName="deleted",
+ *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
+ * )
+ */
+class Instrument implements \ArrayAccess
+{
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\TranslatableTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\UnusedTrait;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+  private ?int $id = null;
+
+  /**
+   * @var string
+   *
+   * @Gedmo\Translatable(untranslated="untranslatedName")
+   * @ORM\Column(type="string", length=128, nullable=false)
+   */
+  private string $name;
+
+  /**
+   * @var string
+   */
+  private string $untranslatedName;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false, options={"comment"="Orchestral Ordering"})
+   */
+  private int $sortOrder;
+
+  /**
+   * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments", fetch="EXTRA_LAZY")
+   * @ORM\JoinTable(
+   *   joinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")},
+   *   inverseJoinColumns={@ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")}
+   * )
+   */
+  private $families;
+
+  /**
+   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="instrument", fetch="EXTRA_LAZY")
+   */
+  private $musicianInstruments;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="instrument", fetch="EXTRA_LAZY")
+   */
+  private $projectInstruments;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="instrument", fetch="EXTRA_LAZY")
+   */
+  private $projectInstrumentationNumbers;
+
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->arrayCTOR();
+    $this->families = new ArrayCollection();
+    $this->musicianInstruments = new ArrayCollection();
+    $this->projectInstruments = new ArrayCollection();
+    $this->projectInstrumentationNumbers = new ArrayCollection();
+  }
+
+  /**
+   * Set id.
+   *
+   * @param int $id
+   *
+   * @return Instrument
+   */
+  public function setId(int $id):Instrument
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
+  /**
+   * Get id.
+   *
+   * @return null|int
+   */
+  public function getId():?int
+  {
+    return $this->id;
+  }
+
+  /**
+   * Set name.
+   *
+   * @param string $name
+   *
+   * @return Instrument
+   */
+  public function setName(string $name):Instrument
+  {
+    $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * Get name.
+   *
+   * @return string
+   */
+  public function getName():string
+  {
+    return $this->name;
+  }
+
+  /**
+   * Get the untranslated name.
+   *
+   * @return string
+   */
+  public function getUntranslatedName():string
+  {
+    return $this->untranslatedName;
+  }
+
+  /**
+   * Set familie.
+   *
+   * @param Collection $families
+   *
+   * @return Instrument
+   */
+  public function setFamilies(Collection $families):Instrument
+  {
+    $this->families = $families;
+
+    return $this;
+  }
+
+  /**
+   * Get families.
+   *
+   * @return Collection
+   */
+  public function getFamilies():Collection
+  {
+    return $this->families;
+  }
+
+  /**
+   * Set sortOrder.
+   *
+   * @param int $sortOrder
+   *
+   * @return Instrument
+   */
+  public function setSortOrder(int $sortOrder):Instrument
+  {
+    $this->sortOrder = $sortOrder;
+
+    return $this;
+  }
+
+  /**
+   * Get sortOrder.
+   *
+   * @return int
+   */
+  public function getSortOrder():int
+  {
+    return $this->sortOrder;
+  }
+
+  /**
+   * Set musicianInstruments.
+   *
+   * @param Collection $musicianInstruments
+   *
+   * @return Instrument
+   */
+  public function setMusicianInstruments(Collection $musicianInstruments):Instrument
+  {
+    $this->musicianInstruments = $musicianInstruments;
+
+    return $this;
+  }
+
+  /**
+   * Get musicianInstruments.
+   *
+   * @return Collection
+   */
+  public function getMusicianInstruments():Collection
+  {
+    return $this->musicianInstruments;
+  }
+
+  /**
+   * Set projectInstruments.
+   *
+   * @param Collection $projectInstruments
+   *
+   * @return Instrument
+   */
+  public function setProjectInstruments(Collection $projectInstruments):Instrument
+  {
+    $this->projectInstruments = $projectInstruments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return Collection
+   */
+  public function getProjectInstruments():Collection
+  {
+    return $this->projectInstruments;
+  }
+
+  /**
+   * Set projectInstrumentationNumbers.
+   *
+   * @param Collection $projectInstrumentationNumbers
+   *
+   * @return Instrumente
+   */
+  public function setProjectInstrumentationNumbers(Collection $projectInstrumentationNumbers):Instrument
+  {
+    $this->projectInstrumentationNumbers = $projectInstrumentationNumbers;
+
+    return $this;
+  }
+
+  /**
+   * Get projectInstrumentationNumbers.
+   *
+   * @return Collection
+   */
+  public function getProjectInstrumentationNumbers():Collection
+  {
+    return $this->projectInstrumentationNumbers;
+  }
+
+  /**
+   * Get the usage count, i.e. the number of entity instances which  use this instrument.
+   *
+   * @return int
+   */
+  public function usage():int
+  {
+    return $this->musicianInstruments->count()
+      + $this->projectInstruments->count()
+      + $this->projectInstrumentationNumbers->count();
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    $families = [];
+    /** @var InstrumentFamily $family */
+    foreach ($this->families as $family) {
+      $families[] = $family->getFamily();
+    }
+    $name = $this->name;
+    if (!empty($families)) {
+      $name .= ' (' . implode(', ', $families) . ')';
+    }
+    return $name;
+  }
+}

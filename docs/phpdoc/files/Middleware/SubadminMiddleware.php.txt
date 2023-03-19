@@ -1,0 +1,96 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Middleware;
+
+use OCP\AppFramework\Middleware;
+use OCP\AppFramework\Utility\IControllerMethodReflector;
+use OCP\IL10N;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\TemplateResponse;
+use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
+
+use OCA\CAFEVDB\Service\ConfigService;
+
+/**
+ * Verifies whether an user has at least subadmin rights.
+ * To enforce use the `@SubadminRequired` annotation
+ */
+class SubadminMiddleware extends Middleware
+{
+  /** @var ConfigService */
+  protected $configService;
+
+  /** @var IControllerMethodReflector */
+  protected $reflector;
+
+  /** @var IL10N */
+  private $l;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    IControllerMethodReflector $reflector,
+    ConfigService $configService,
+    IL10N $l
+  ) {
+    $this->reflector = $reflector;
+    $this->configService = $configService;
+    $this->l = $l;
+  }
+  // phpcs:enable
+
+  /**
+   * {@inheritdoc}
+   *
+   * Check if the user is a sub-admin of the orchestra group.
+   */
+  public function beforeController($controller, $methodName)
+  {
+    if ($this->reflector->hasAnnotation('SubadminRequired')) {
+      if (!$this->configService->isSubAdminOfGroup()) {
+        throw new NotAdminException($this->l->t('Logged in user must be a subadmin of the orchestra group'));
+      }
+    }
+    if ($this->reflector->hasAnnotation('ServiceAccountRequired')) {
+      if ($this->configService->getUserId() != $this->configService->getConfigValue('shareowner')) {
+        throw new NotAdminException($this->l->t('Logged in user account must be the service-account of the orchester app'));
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Return 403 page in case of an exception
+   */
+  public function afterException($controller, $methodName, \Exception $exception)
+  {
+    if ($exception instanceof NotAdminException) {
+      $response = new TemplateResponse('core', '403', [], 'guest');
+      $response->setStatus(Http::STATUS_FORBIDDEN);
+      return $response;
+    }
+    throw $exception;
+  }
+}

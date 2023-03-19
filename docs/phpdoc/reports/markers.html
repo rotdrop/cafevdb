@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+            <title>    Documentation &raquo; Markers
+</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="../">
+    <link rel="icon" href="images/favicon.ico"/>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/base.css">
+            <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/template.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" integrity="sha256-ybRkN9dBjhcS2qrW1z+hfCxq+1aBdwyQM5wlQoQVt/0=" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/themes/prism-okaidia.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-numbers/prism-line-numbers.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.css">
+                <script src="https://cdn.jsdelivr.net/npm/fuse.js@3.4.6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+        <script src="js/template.js"></script>
+        <script src="js/search.js"></script>
+        <script defer src="js/searchIndex.js"></script>
+    </head>
+<body id="top">
+    <header class="phpdocumentor-header phpdocumentor-section">
+    <h1 class="phpdocumentor-title"><a href="" class="phpdocumentor-title__link">Documentation</a></h1>
+    <input class="phpdocumentor-header__menu-button" type="checkbox" id="menu-button" name="menu-button" />
+    <label class="phpdocumentor-header__menu-icon" for="menu-button">
+        <i class="fas fa-bars"></i>
+    </label>
+    <section data-search-form class="phpdocumentor-search">
+    <label>
+        <span class="visually-hidden">Search for</span>
+        <svg class="phpdocumentor-search__icon" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="2"/>
+            <line x1="12.4892" y1="12.2727" x2="19.1559" y2="18.9393" stroke="currentColor" stroke-width="3"/>
+        </svg>
+        <input type="search" class="phpdocumentor-field phpdocumentor-search__field" placeholder="Loading .." disabled />
+    </label>
+</section>
+
+    <nav class="phpdocumentor-topnav">
+    <ul class="phpdocumentor-topnav__menu">
+        </ul>
+</nav>
+</header>
+
+    <main class="phpdocumentor">
+        <div class="phpdocumentor-section">
+            <input class="phpdocumentor-sidebar__menu-button" type="checkbox" id="sidebar-button" name="sidebar-button" />
+<label class="phpdocumentor-sidebar__menu-icon" for="sidebar-button">
+    Menu
+</label>
+<aside class="phpdocumentor-column -three phpdocumentor-sidebar">
+                    <section class="phpdocumentor-sidebar__category">
+            <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="namespaces/oca.html" class="">OCA</a>
+</h4>
+    <ul class="phpdocumentor-list">
+                    <li>
+                <a href="namespaces/oca-cafevdb.html" class="">CAFEVDB</a>
+                
+            </li>
+            </ul>
+
+                        </section>
+                <section class="phpdocumentor-sidebar__category">
+            <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="packages/cafevdb.html" class="">cafevdb</a>
+</h4>
+
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="packages/Entities.html" class="">Entities</a>
+</h4>
+    <ul class="phpdocumentor-list">
+                    <li>
+                <a href="packages/Entities-meta.html" class="">meta</a>
+                
+            </li>
+            </ul>
+
+                        </section>
+            
+    <section class="phpdocumentor-sidebar__category">
+        <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
+                <h3 class="phpdocumentor-sidebar__root-package"><a href="graphs/classes.html">Class Diagram</a></h3>
+                <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
+    </section>
+
+    <section class="phpdocumentor-sidebar__category">
+        <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
+        <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
+    </section>
+</aside>
+
+            <div class="phpdocumentor-column -nine phpdocumentor-content">
+                                        <section>
+        <ul class="phpdocumentor-breadcrumbs">
+            <li><a href="">Home</a></li>
+        </ul>
+
+        <div class="phpdocumentor-row">
+            <h2 class="phpdocumentor-content__title">Markers</h2>
+
+                            <h3>Table of Contents</h3>
+                <table class="phpdocumentor-table_of_contents">
+                                                                        <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#AddressBook/ImageExportPlugin.php">AddressBook/ImageExportPlugin.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#AddressBook/MusicianCardBackend.php">AddressBook/MusicianCardBackend.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#BackgroundJob/LazyUpdateGeoCoding.php">BackgroundJob/LazyUpdateGeoCoding.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Controller/BlogController.php">Controller/BlogController.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Controller/EmailFormController.php">Controller/EmailFormController.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Controller/MailMergeController.php">Controller/MailMergeController.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Controller/PersonalSettingsController.php">Controller/PersonalSettingsController.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Controller/PmeTableController.php">Controller/PmeTableController.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Controller/ValidationController.php">Controller/ValidationController.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Crypto/AsymmetricKeyService.php">Crypto/AsymmetricKeyService.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Cloud/Mapper/BlogMapper.php">Database/Cloud/Mapper/BlogMapper.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Cloud/Mapper/Mapper.php">Database/Cloud/Mapper/Mapper.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/DBAL/Types/EnumDataTransformation.php">Database/Doctrine/DBAL/Types/EnumDataTransformation.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/DBAL/Types/EnumFileType.php">Database/Doctrine/DBAL/Types/EnumFileType.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/DBAL/Types/EnumGeographicalScope.php">Database/Doctrine/DBAL/Types/EnumGeographicalScope.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/DBAL/Types/EnumMemberStatus.php">Database/Doctrine/DBAL/Types/EnumMemberStatus.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Entities/CompositePayment.php">Database/Doctrine/ORM/Entities/CompositePayment.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Entities/Project.php">Database/Doctrine/ORM/Entities/Project.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Entities/ProjectParticipantFieldDataOption.php">Database/Doctrine/ORM/Entities/ProjectParticipantFieldDataOption.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Entities/ProjectWebPage.php">Database/Doctrine/ORM/Entities/ProjectWebPage.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Entities/SepaDebitMandate.php">Database/Doctrine/ORM/Entities/SepaDebitMandate.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Listeners/GedmoLoggableListener.php">Database/Doctrine/ORM/Listeners/GedmoLoggableListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php">Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Mapping/PerMusicianSequenceGenerator.php">Database/Doctrine/ORM/Mapping/PerMusicianSequenceGenerator.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Repositories/EmailDraftsRepository.php">Database/Doctrine/ORM/Repositories/EmailDraftsRepository.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Repositories/EmailTemplatesRepository.php">Database/Doctrine/ORM/Repositories/EmailTemplatesRepository.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Repositories/InstrumentsRepository.php">Database/Doctrine/ORM/Repositories/InstrumentsRepository.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Repositories/ProjectsRepository.php">Database/Doctrine/ORM/Repositories/ProjectsRepository.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Repositories/SepaDebitMandatesRepository.php">Database/Doctrine/ORM/Repositories/SepaDebitMandatesRepository.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Traits/FactoryTrait.php">Database/Doctrine/ORM/Traits/FactoryTrait.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Traits/FindLikeTrait.php">Database/Doctrine/ORM/Traits/FindLikeTrait.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/Util.php">Database/Doctrine/Util.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/EntityManager.php">Database/EntityManager.php</a></td>
+                                <td class="phpdocumentor-cell">5</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Documents/AnyToPdf.php">Documents/AnyToPdf.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#EmailForm/Composer.php">EmailForm/Composer.php</a></td>
+                                <td class="phpdocumentor-cell">5</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/BeforeEncryptionKeyPairChangedListener.php">Listener/BeforeEncryptionKeyPairChangedListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/CalendarDeletedEventListener.php">Listener/CalendarDeletedEventListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/CalendarObjectCreatedEventListener.php">Listener/CalendarObjectCreatedEventListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/CalendarObjectDeletedEventListener.php">Listener/CalendarObjectDeletedEventListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/CalendarObjectUpdatedEventListener.php">Listener/CalendarObjectUpdatedEventListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/CalendarUpdatedEventListener.php">Listener/CalendarUpdatedEventListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/MailingListsEmailChangedListener.php">Listener/MailingListsEmailChangedListener.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/ParticipantFieldCloudFolderListener.php">Listener/ParticipantFieldCloudFolderListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/ProjectDeletedEventListener.php">Listener/ProjectDeletedEventListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/UserLoggedOutEventListener.php">Listener/UserLoggedOutEventListener.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Maintenance/Migrations/AbstractMigration.php">Maintenance/Migrations/AbstractMigration.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Maintenance/Migrations/InitialDatabaseSetup.php">Maintenance/Migrations/InitialDatabaseSetup.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#PageRenderer/Export/InsuranceSpreadsheetExporter.php">PageRenderer/Export/InsuranceSpreadsheetExporter.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#PageRenderer/Export/PMETableSpreadsheetExporter.php">PageRenderer/Export/PMETableSpreadsheetExporter.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#PageRenderer/PMETableViewBase.php">PageRenderer/PMETableViewBase.php</a></td>
+                                <td class="phpdocumentor-cell">3</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#PageRenderer/ProjectParticipantFields.php">PageRenderer/ProjectParticipantFields.php</a></td>
+                                <td class="phpdocumentor-cell">3</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#PageRenderer/Projects.php">PageRenderer/Projects.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/ConfigCheckService.php">Service/ConfigCheckService.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/ConfigService.php">Service/ConfigService.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/EncryptionService.php">Service/EncryptionService.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/EventsService.php">Service/EventsService.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/Finance/FinanceService.php">Service/Finance/FinanceService.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/Finance/InstrumentInsuranceService.php">Service/Finance/InstrumentInsuranceService.php</a></td>
+                                <td class="phpdocumentor-cell">4</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/Finance/ReceivablesGeneratorFactory.php">Service/Finance/ReceivablesGeneratorFactory.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/Finance/SepaBulkTransactionService.php">Service/Finance/SepaBulkTransactionService.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/FuzzyInputService.php">Service/FuzzyInputService.php</a></td>
+                                <td class="phpdocumentor-cell">3</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/HistoryService.php">Service/HistoryService.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/InstrumentationService.php">Service/InstrumentationService.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/MusicianService.php">Service/MusicianService.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/ProjectParticipantFieldsService.php">Service/ProjectParticipantFieldsService.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/ProjectService.php">Service/ProjectService.php</a></td>
+                                <td class="phpdocumentor-cell">5</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/Registration.php">Service/Registration.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/VCalendarService.php">Service/VCalendarService.php</a></td>
+                                <td class="phpdocumentor-cell">5</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Settings/Personal.php">Settings/Personal.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Storage/AppStorage.php">Storage/AppStorage.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Storage/AppStorageDisclosure.php">Storage/AppStorageDisclosure.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Storage/Database/MountProvider.php">Storage/Database/MountProvider.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Toolkit/Service/ArchiveService.php">Toolkit/Service/ArchiveService.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Toolkit/Traits/DateTimeTrait.php">Toolkit/Traits/DateTimeTrait.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Toolkit/Traits/LoggerTrait.php">Toolkit/Traits/LoggerTrait.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Toolkit/Traits/ResponseTrait.php">Toolkit/Traits/ResponseTrait.php</a></td>
+                                <td class="phpdocumentor-cell">3</td>
+                            </tr>
+                                                            </table>
+            
+                            <a id="AddressBook/ImageExportPlugin.php"></a>
+                <h3><abbr title="AddressBook/ImageExportPlugin.php">ImageExportPlugin.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">87</td>
+                            <td class="phpdocumentor-cell">in addition to photo we should also add logo some point in time</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">87</td>
+                            <td class="phpdocumentor-cell">in addition to photo we should also add logo some point in time</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="AddressBook/MusicianCardBackend.php"></a>
+                <h3><abbr title="AddressBook/MusicianCardBackend.php">MusicianCardBackend.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">105</td>
+                            <td class="phpdocumentor-cell">To support $searchProperties we would need the mapping from
+VCard properties to data-base properties.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="BackgroundJob/LazyUpdateGeoCoding.php"></a>
+                <h3><abbr title="BackgroundJob/LazyUpdateGeoCoding.php">LazyUpdateGeoCoding.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">39</td>
+                            <td class="phpdocumentor-cell">Add a service-worker data-base account with access to non-sensitive data.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Controller/BlogController.php"></a>
+                <h3><abbr title="Controller/BlogController.php">BlogController.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">51</td>
+                            <td class="phpdocumentor-cell">Check whether the blog is still needed at all. Perhaps replace by
+context sensisitive one-time popup messages.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Controller/EmailFormController.php"></a>
+                <h3><abbr title="Controller/EmailFormController.php">EmailFormController.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">311</td>
+                            <td class="phpdocumentor-cell">Close the PHP session if no longer needed.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">835</td>
+                            <td class="phpdocumentor-cell">Close the PHP session if no longer needed.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Controller/MailMergeController.php"></a>
+                <h3><abbr title="Controller/MailMergeController.php">MailMergeController.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">82</td>
+                            <td class="phpdocumentor-cell">maybe add another download-option to the mail-merge menu</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Controller/PersonalSettingsController.php"></a>
+                <h3><abbr title="Controller/PersonalSettingsController.php">PersonalSettingsController.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">319</td>
+                            <td class="phpdocumentor-cell">decrease usage of session. Where is it needed?</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Controller/PmeTableController.php"></a>
+                <h3><abbr title="Controller/PmeTableController.php">PmeTableController.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">238</td>
+                            <td class="phpdocumentor-cell">Most of this stuff should be moved somewhere else, e.g. to
+PageRenderer.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Controller/ValidationController.php"></a>
+                <h3><abbr title="Controller/ValidationController.php">ValidationController.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">43</td>
+                            <td class="phpdocumentor-cell">This controller almost has no code in it, check whether it is needed
+or move more validation code here.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Crypto/AsymmetricKeyService.php"></a>
+                <h3><abbr title="Crypto/AsymmetricKeyService.php">AsymmetricKeyService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">100</td>
+                            <td class="phpdocumentor-cell">We might want to use the \OCP\IAppContainer instead and only fetch
+the needed service-classes on demand.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Cloud/Mapper/BlogMapper.php"></a>
+                <h3><abbr title="Database/Cloud/Mapper/BlogMapper.php">BlogMapper.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">331</td>
+                            <td class="phpdocumentor-cell">This does not seem to be used ...</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Cloud/Mapper/Mapper.php"></a>
+                <h3><abbr title="Database/Cloud/Mapper/Mapper.php">Mapper.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">79</td>
+                            <td class="phpdocumentor-cell">Maybe unused.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/DBAL/Types/EnumDataTransformation.php"></a>
+                <h3><abbr title="Database/Doctrine/DBAL/Types/EnumDataTransformation.php">EnumDataTransformation.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">This should rather be specified per project.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/DBAL/Types/EnumFileType.php"></a>
+                <h3><abbr title="Database/Doctrine/DBAL/Types/EnumFileType.php">EnumFileType.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">This should rather be specified per project.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/DBAL/Types/EnumGeographicalScope.php"></a>
+                <h3><abbr title="Database/Doctrine/DBAL/Types/EnumGeographicalScope.php">EnumGeographicalScope.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">40</td>
+                            <td class="phpdocumentor-cell">Perhaps should be renamed to &quot;COUNTRY/CONTINENT/WORLD&quot;</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/DBAL/Types/EnumMemberStatus.php"></a>
+                <h3><abbr title="Database/Doctrine/DBAL/Types/EnumMemberStatus.php">EnumMemberStatus.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">40</td>
+                            <td class="phpdocumentor-cell">This should rather be specified per project.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Entities/CompositePayment.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Entities/CompositePayment.php">CompositePayment.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">89</td>
+                            <td class="phpdocumentor-cell">If this is always the sum and thus can be computed, why then this
+field?</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">195</td>
+                            <td class="phpdocumentor-cell">Support more than one supporting document.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Entities/Project.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">105</td>
+                            <td class="phpdocumentor-cell">this should cascade deletes</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Entities/ProjectParticipantFieldDataOption.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Entities/ProjectParticipantFieldDataOption.php">ProjectParticipantFieldDataOption.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">448</td>
+                            <td class="phpdocumentor-cell">Why does this return a collection? There should be zero or one data
+item.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Entities/ProjectWebPage.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Entities/ProjectWebPage.php">ProjectWebPage.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">48</td>
+                            <td class="phpdocumentor-cell">this should cascade deletes</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Entities/SepaDebitMandate.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Entities/SepaDebitMandate.php">SepaDebitMandate.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">202</td>
+                            <td class="phpdocumentor-cell">Detangle mandate reference generation from setting
+sequences here. Perhaps a slug-handler ...</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">506</td>
+                            <td class="phpdocumentor-cell">The DB structure probably should be cleaned up s.t. this is not
+necessary.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Listeners/GedmoLoggableListener.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Listeners/GedmoLoggableListener.php">GedmoLoggableListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">40</td>
+                            <td class="phpdocumentor-cell">ATM all properties of all entities are logged with the
+exception of the LogEntry-class, of course. Perhaps make this configurable.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Mapping/ClassMetadataDecorator.php">ClassMetadataDecorator.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">375</td>
+                            <td class="phpdocumentor-cell">$columnValues sometimes contains raw data-base values as it
+is passed down here from code using the legacy phpMyEdit
+stuff. ATM we hack around by converting string values to their
+proper PHP values, but this is an ugly hack.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Mapping/PerMusicianSequenceGenerator.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Mapping/PerMusicianSequenceGenerator.php">PerMusicianSequenceGenerator.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">64</td>
+                            <td class="phpdocumentor-cell">Probably unused.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Mapping/ReservedWordQuoteStrategy.php">ReservedWordQuoteStrategy.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">73</td>
+                            <td class="phpdocumentor-cell">Table names should be computed in DBAL depending on the platform</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Repositories/EmailDraftsRepository.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Repositories/EmailDraftsRepository.php">EmailDraftsRepository.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">33</td>
+                            <td class="phpdocumentor-cell">The sole purpose of this repository is to map subject -&gt;
+name. Otherwise we just could use the stock &quot;findAll()&quot;.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Repositories/EmailTemplatesRepository.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Repositories/EmailTemplatesRepository.php">EmailTemplatesRepository.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">33</td>
+                            <td class="phpdocumentor-cell">The sole purpose of this repository is to map tag -&gt;
+name. Otherwise we just could use the stock &quot;findAll()&quot;.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Repositories/InstrumentsRepository.php">InstrumentsRepository.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">76</td>
+                            <td class="phpdocumentor-cell">Does such a function belong into the entity repository? OTOH ...</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Repositories/ProjectsRepository.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Repositories/ProjectsRepository.php">ProjectsRepository.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">107</td>
+                            <td class="phpdocumentor-cell">Could make this a custom hydrator.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Repositories/SepaDebitMandatesRepository.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Repositories/SepaDebitMandatesRepository.php">SepaDebitMandatesRepository.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">145</td>
+                            <td class="phpdocumentor-cell">Check that soft-delete behavior actually works as filter.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Traits/FactoryTrait.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Traits/FactoryTrait.php">FactoryTrait.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">32</td>
+                            <td class="phpdocumentor-cell">This should be obsolete. Remove?</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/ORM/Traits/FindLikeTrait.php"></a>
+                <h3><abbr title="Database/Doctrine/ORM/Traits/FindLikeTrait.php">FindLikeTrait.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">523</td>
+                            <td class="phpdocumentor-cell">Field-type deduction for set-parameter only works for the
+main-table ATM. This could probably be cured by reading the
+meta-data for all join tables.
+
+PHPMD cannot handle dynamic variable names</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/Doctrine/Util.php"></a>
+                <h3><abbr title="Database/Doctrine/Util.php">Util.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">81</td>
+                            <td class="phpdocumentor-cell">This could be made more elaborate like
+OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">81</td>
+                            <td class="phpdocumentor-cell">Teach
+OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy()
+to use grouping with parens.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Database/EntityManager.php"></a>
+                <h3><abbr title="Database/EntityManager.php">EntityManager.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">98</td>
+                            <td class="phpdocumentor-cell">Some of the methods should rather go to a meta-data
+decorator.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">807</td>
+                            <td class="phpdocumentor-cell">See that this is not necessary.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">878</td>
+                            <td class="phpdocumentor-cell">This unfortunately does not hack similar problems with
+cascade=&quot;persist&quot;. There the &quot;stock&quot; persist operation seemingly
+still causes problems.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1231</td>
+                            <td class="phpdocumentor-cell">Get rid of this function, the meta-data class is rather an
+internal data structure of Doctrine\ORM.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1441</td>
+                            <td class="phpdocumentor-cell">Find out where this function belongs to ...</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Documents/AnyToPdf.php"></a>
+                <h3><abbr title="Documents/AnyToPdf.php">AnyToPdf.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">78</td>
+                            <td class="phpdocumentor-cell">Make it configurable</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="EmailForm/Composer.php"></a>
+                <h3><abbr title="EmailForm/Composer.php">Composer.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">3075</td>
+                            <td class="phpdocumentor-cell">Fold into composeAndSend</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">3371</td>
+                            <td class="phpdocumentor-cell">This really should be folded in to sendMessages()</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">3928</td>
+                            <td class="phpdocumentor-cell">unify timezone and date and time formatting.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">4612</td>
+                            <td class="phpdocumentor-cell">use cloud storage</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">198</td>
+                            <td class="phpdocumentor-cell">Make this configurable</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/BeforeEncryptionKeyPairChangedListener.php"></a>
+                <h3><abbr title="Listener/BeforeEncryptionKeyPairChangedListener.php">BeforeEncryptionKeyPairChangedListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">41</td>
+                            <td class="phpdocumentor-cell">Seems to be unused. Remove?</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/CalendarDeletedEventListener.php"></a>
+                <h3><abbr title="Listener/CalendarDeletedEventListener.php">CalendarDeletedEventListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/CalendarObjectCreatedEventListener.php"></a>
+                <h3><abbr title="Listener/CalendarObjectCreatedEventListener.php">CalendarObjectCreatedEventListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">41</td>
+                            <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/CalendarObjectDeletedEventListener.php"></a>
+                <h3><abbr title="Listener/CalendarObjectDeletedEventListener.php">CalendarObjectDeletedEventListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/CalendarObjectUpdatedEventListener.php"></a>
+                <h3><abbr title="Listener/CalendarObjectUpdatedEventListener.php">CalendarObjectUpdatedEventListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/CalendarUpdatedEventListener.php"></a>
+                <h3><abbr title="Listener/CalendarUpdatedEventListener.php">CalendarUpdatedEventListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/MailingListsEmailChangedListener.php"></a>
+                <h3><abbr title="Listener/MailingListsEmailChangedListener.php">MailingListsEmailChangedListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">79</td>
+                            <td class="phpdocumentor-cell">Multiple email addresses not yet supported.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">79</td>
+                            <td class="phpdocumentor-cell">Perhaps this should be a post-commit hook</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/ParticipantFieldCloudFolderListener.php"></a>
+                <h3><abbr title="Listener/ParticipantFieldCloudFolderListener.php">ParticipantFieldCloudFolderListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">86</td>
+                            <td class="phpdocumentor-cell">To make this work BeforeFolderCreatedEvents are needed, and the
+trashbin restore must emit a BeforeNodeRenamedEvent.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/ProjectDeletedEventListener.php"></a>
+                <h3><abbr title="Listener/ProjectDeletedEventListener.php">ProjectDeletedEventListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/UserLoggedOutEventListener.php"></a>
+                <h3><abbr title="Listener/UserLoggedOutEventListener.php">UserLoggedOutEventListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">40</td>
+                            <td class="phpdocumentor-cell">Make the CTOR less costly.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">40</td>
+                            <td class="phpdocumentor-cell">This currently does nothing. Remove?</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Maintenance/Migrations/AbstractMigration.php"></a>
+                <h3><abbr title="Maintenance/Migrations/AbstractMigration.php">AbstractMigration.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">57</td>
+                            <td class="phpdocumentor-cell">&quot;structural&quot; recover from failed &quot;structural&quot; commands.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Maintenance/Migrations/InitialDatabaseSetup.php"></a>
+                <h3><abbr title="Maintenance/Migrations/InitialDatabaseSetup.php">InitialDatabaseSetup.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">42</td>
+                            <td class="phpdocumentor-cell">Should probably use a custom schema-provider and generate a
+DBAL schema from PHP statements. Unfortunately, there does not seem
+to be an automated tool for such code-generation.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="PageRenderer/Export/InsuranceSpreadsheetExporter.php"></a>
+                <h3><abbr title="PageRenderer/Export/InsuranceSpreadsheetExporter.php">InsuranceSpreadsheetExporter.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">165</td>
+                            <td class="phpdocumentor-cell">Still quite messy.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="PageRenderer/Export/PMETableSpreadsheetExporter.php"></a>
+                <h3><abbr title="PageRenderer/Export/PMETableSpreadsheetExporter.php">PMETableSpreadsheetExporter.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">94</td>
+                            <td class="phpdocumentor-cell">Still quite messy.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="PageRenderer/PMETableViewBase.php"></a>
+                <h3><abbr title="PageRenderer/PMETableViewBase.php">PMETableViewBase.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">543</td>
+                            <td class="phpdocumentor-cell">Display in popup in order not to bloat the small header space.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">981</td>
+                            <td class="phpdocumentor-cell">Cleanup. In particular, quite a bit of code is shared with
+$this-&gt;beforeInsertDoInsertAll().</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">2738</td>
+                            <td class="phpdocumentor-cell">This would rather belong to some service class.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="PageRenderer/ProjectParticipantFields.php"></a>
+                <h3><abbr title="PageRenderer/ProjectParticipantFields.php">ProjectParticipantFields.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1360</td>
+                            <td class="phpdocumentor-cell">Check whether something needs to be done with the ORM-cascade
+stuff.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1325</td>
+                            <td class="phpdocumentor-cell">eliminate empty field-data</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1325</td>
+                            <td class="phpdocumentor-cell">eliminate empty field-data</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="PageRenderer/Projects.php"></a>
+                <h3><abbr title="PageRenderer/Projects.php">Projects.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1110</td>
+                            <td class="phpdocumentor-cell">Do something more useful in the case of an error (database
+or CMS unavailable)</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1326</td>
+                            <td class="phpdocumentor-cell">This should be moved to the ORM event system.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/ConfigCheckService.php"></a>
+                <h3><abbr title="Service/ConfigCheckService.php">ConfigCheckService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">680</td>
+                            <td class="phpdocumentor-cell">The sudo() stuff should no longer be neccessary.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/ConfigService.php"></a>
+                <h3><abbr title="Service/ConfigService.php">ConfigService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">59</td>
+                            <td class="phpdocumentor-cell">This is called on boot without user, determine why.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1176</td>
+                            <td class="phpdocumentor-cell">We should define a user-independent locale based on the
+location of the orchestra.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/EncryptionService.php"></a>
+                <h3><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">75</td>
+                            <td class="phpdocumentor-cell">One could cache the decrypted configuration values given that
+encryption may be costly.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/EventsService.php"></a>
+                <h3><abbr title="Service/EventsService.php">EventsService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">52</td>
+                            <td class="phpdocumentor-cell">- cleanup-jobs for orphan events</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">712</td>
+                            <td class="phpdocumentor-cell">Include local timezone.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/Finance/FinanceService.php"></a>
+                <h3><abbr title="Service/Finance/FinanceService.php">FinanceService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">860</td>
+                            <td class="phpdocumentor-cell">Switch to \OCA\CAFEVDB\Wrapped\Doctrine\ORM entities, i.e. $mandate should at
+least optionally be an Entities\SepaDebitMandate.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/Finance/InstrumentInsuranceService.php"></a>
+                <h3><abbr title="Service/Finance/InstrumentInsuranceService.php">InstrumentInsuranceService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">102</td>
+                            <td class="phpdocumentor-cell">Perhaps use the timezone at the location of the orchestra
+or insurance agency.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">202</td>
+                            <td class="phpdocumentor-cell">What happens if the rates change? The rates should have a
+validity time-range.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">202</td>
+                            <td class="phpdocumentor-cell">This function appears to be unused.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">606</td>
+                            <td class="phpdocumentor-cell">This should be move alongside
+InstrumentationService::getDummyMusisican() to some extra
+fake-provider class.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/Finance/ReceivablesGeneratorFactory.php"></a>
+                <h3><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">86</td>
+                            <td class="phpdocumentor-cell">This is too complicated.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/Finance/SepaBulkTransactionService.php"></a>
+                <h3><abbr title="Service/Finance/SepaBulkTransactionService.php">SepaBulkTransactionService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">471</td>
+                            <td class="phpdocumentor-cell">Check
+Entities\ProjectParticipantFieldDataOption::getMusicianFieldData(), it
+should only return more than one item if there are also deleted items.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/FuzzyInputService.php"></a>
+                <h3><abbr title="Service/FuzzyInputService.php">FuzzyInputService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">98</td>
+                            <td class="phpdocumentor-cell">Merge with self::currencyValue().</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">358</td>
+                            <td class="phpdocumentor-cell">maybe add further options</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">358</td>
+                            <td class="phpdocumentor-cell">maybe add further options</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/HistoryService.php"></a>
+                <h3><abbr title="Service/HistoryService.php">HistoryService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">39</td>
+                            <td class="phpdocumentor-cell">This now should be obsolete as the navigation history is handled by
+the Javascript code.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/InstrumentationService.php"></a>
+                <h3><abbr title="Service/InstrumentationService.php">InstrumentationService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">145</td>
+                            <td class="phpdocumentor-cell">DetailedInstrumentationService? Maybe overkill</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">166</td>
+                            <td class="phpdocumentor-cell">This is almost nowhere used, but different to be joined other
+implementations exist.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/MusicianService.php"></a>
+                <h3><abbr title="Service/MusicianService.php">MusicianService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">201</td>
+                            <td class="phpdocumentor-cell">Musicians without OPEN payments can safely be remove, worst case
+after a couple of years. ATM we just block.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/ProjectParticipantFieldsService.php"></a>
+                <h3><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">985</td>
+                            <td class="phpdocumentor-cell">We might want to remove &quot;side-effects&quot;, i.e. data-base files and
+cloud files and cloud folders.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1528</td>
+                            <td class="phpdocumentor-cell">- perhaps we should do a read-dir instead or additionally
+- handle &quot;soft-deleted&quot; entities</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/ProjectService.php"></a>
+                <h3><abbr title="Service/ProjectService.php">ProjectService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">576</td>
+                            <td class="phpdocumentor-cell">It is probably not necessary to remove the sub-folders separately</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1087</td>
+                            <td class="phpdocumentor-cell">This alone does not suffice. Wie also have to rename a bunch of
+per-project files.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1861</td>
+                            <td class="phpdocumentor-cell">Perhaps allow project-entities, i.e. &quot;mixed $project&quot;
+instead of &quot;int $projectId&quot;.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">2466</td>
+                            <td class="phpdocumentor-cell">Check for proper cascading.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">2935</td>
+                            <td class="phpdocumentor-cell">This is not really implemented yet.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/Registration.php"></a>
+                <h3><abbr title="Service/Registration.php">Registration.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">70</td>
+                            <td class="phpdocumentor-cell">use class-const from somewhere</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">70</td>
+                            <td class="phpdocumentor-cell">use class-const from somewhere</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Service/VCalendarService.php"></a>
+                <h3><abbr title="Service/VCalendarService.php">VCalendarService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">361</td>
+                            <td class="phpdocumentor-cell">Get rid of it.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">462</td>
+                            <td class="phpdocumentor-cell">Check whether we really need a reference here.xy</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">492</td>
+                            <td class="phpdocumentor-cell">Check whether we really need a reference here.xy</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">523</td>
+                            <td class="phpdocumentor-cell">Check whether we really need a reference here.xy</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">554</td>
+                            <td class="phpdocumentor-cell">Check whether we really need a reference here.xy</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Settings/Personal.php"></a>
+                <h3><abbr title="Settings/Personal.php">Personal.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">40</td>
+                            <td class="phpdocumentor-cell">These contain tons of group-sub-admin settings. Perhaps rework with
+admin settings delegation.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Storage/AppStorage.php"></a>
+                <h3><abbr title="Storage/AppStorage.php">AppStorage.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">46</td>
+                            <td class="phpdocumentor-cell">Maybe this class should not exists. Check whether its methods are used.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Storage/AppStorageDisclosure.php"></a>
+                <h3><abbr title="Storage/AppStorageDisclosure.php">AppStorageDisclosure.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">100</td>
+                            <td class="phpdocumentor-cell">This does not use internal APIs, but knowledge about internal
+details of Nextcloud which might change in the future.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Storage/Database/MountProvider.php"></a>
+                <h3><abbr title="Storage/Database/MountProvider.php">MountProvider.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">56</td>
+                            <td class="phpdocumentor-cell">This is just a dummy for now in order to test the integration
+with the surrounding cloud.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Toolkit/Service/ArchiveService.php"></a>
+                <h3><abbr title="Toolkit/Service/ArchiveService.php">ArchiveService.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">167</td>
+                            <td class="phpdocumentor-cell">Maybe generate a dummy support app instead.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Toolkit/Traits/DateTimeTrait.php"></a>
+                <h3><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">90</td>
+                            <td class="phpdocumentor-cell">Rework time-zone stuff.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Toolkit/Traits/LoggerTrait.php"></a>
+                <h3><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">132</td>
+                            <td class="phpdocumentor-cell">Remove the unused $shift and $showTrace parameters.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Toolkit/Traits/ResponseTrait.php"></a>
+                <h3><abbr title="Toolkit/Traits/ResponseTrait.php">ResponseTrait.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">158</td>
+                            <td class="phpdocumentor-cell">Remove message/messages duplication.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">215</td>
+                            <td class="phpdocumentor-cell">Remove message/messages duplication.</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">244</td>
+                            <td class="phpdocumentor-cell">Remove message/messages duplication.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                    </div>
+    </section>
+                            </div>
+            <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
+    <section class="phpdocumentor-search-results__dialog">
+        <header class="phpdocumentor-search-results__header">
+            <h2 class="phpdocumentor-search-results__title">Search results</h2>
+            <button class="phpdocumentor-search-results__close"><i class="fas fa-times"></i></button>
+        </header>
+        <section class="phpdocumentor-search-results__body">
+            <ul class="phpdocumentor-search-results__entries"></ul>
+        </section>
+    </section>
+</section>
+        </div>
+        <a href="reports/markers.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
+
+    </main>
+
+    <script>
+        cssVars({});
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.min.js"></script>
+</body>
+</html>

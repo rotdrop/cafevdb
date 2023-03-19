@@ -1,0 +1,98 @@
+<?php
+/**
+ * Orchestra member, musician and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Command;
+
+use OCP\IL10N;
+use OCP\IUserSession;
+use OCP\IUserManager;
+use OCP\AppFramework\IAppContainer;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Question\Question;
+
+use OCA\CAFEVDB\Service\EncryptionService;
+
+/** Test-command in order to see if the abstract framework is functional. */
+class HelloWorld extends Command
+{
+  use AuthenticatedCommandTrait;
+
+  /** {@inheritdoc} */
+  public function __construct(
+    string $appName,
+    IL10N $l10n,
+    IUserManager $userManager,
+    IUserSession $userSession,
+    IAppContainer $appContainer,
+  ) {
+    parent::__construct();
+    $this->l = $l10n;
+    $this->userManager = $userManager;
+    $this->userSession = $userSession;
+    $this->appName = $appName;
+    $this->appContainer = $appContainer;
+  }
+
+  /** {@inheritdoc} */
+  protected function configure()
+  {
+    $this
+      ->setName('cafevdb:hello-world')
+      ->setDescription('Say "Hello!" to the world!')
+      ->addOption(
+        'only-hello',
+        'o',
+        InputOption::VALUE_NONE,
+        'outputs hello, not world',
+      )
+      ->addOption(
+        'authenticated',
+        'a',
+        InputOption::VALUE_NONE,
+        'authenticate with the database',
+      )
+      ;
+  }
+
+  /** {@inheritdoc} */
+  protected function execute(InputInterface $input, OutputInterface $output): int
+  {
+    if ($input->getOption('authenticated')) {
+      $result = $this->authenticate($input, $output);
+      if ($result != 0) {
+        return $result;
+      }
+    }
+    if ($input->getOption('only-hello')) {
+      $output->writeln($this->l->t('Hello!'));
+    } else {
+      $output->writeln($this->l->t('Hello World!'));
+    }
+    return 0;
+  }
+}
