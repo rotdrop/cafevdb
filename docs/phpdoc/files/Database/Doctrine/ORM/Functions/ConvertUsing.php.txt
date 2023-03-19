@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,11 +31,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Lexer;
 
 /**
  * "CONVERT" "(" ArithmeticPrimary AliasResultVariable AliasResultVariable ")".
+ *
+ * Taken from @link https://gist.github.com/liverbool/6345800.
+ *
  * More info:
  * http://dev.mysql.com/doc/refman/5.0/en/cast-functions.html#function_convert
  *
- * @category    Entities
- * @package     Entities\meta\Functions
+ * _@_category    Entities
+ * _@_package     Entities\meta\Functions
  * @author      ツ Liverbool <nukboon@gmail.com>
  * @license     MIT License
  */
