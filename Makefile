@@ -370,6 +370,11 @@ cleanup: $(BUILDDIR)/core-exclude
 .PHONY: doc
 doc: phpdoc doxygen jsdoc
 
+gh-pages: doc
+	cd doc/gh-pages/; \
+ git commit -a -m "Update API docs"; \
+ git push
+
 .PHONY: phpdoc
 phpdoc: $(PHPDOC)
 	rm -rf $(DOC_BUILD_DIR)/phpdoc/*
@@ -384,6 +389,9 @@ phpdoc: $(PHPDOC)
  --setting graphs.enabled=true \
  --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
  -t $(DOC_BUILD_DIR)/phpdoc/
+	mkdir -p doc/gh-pages/docs/$@
+	cd doc/gh-pages/docs/$@; \
+ cp -a $(DOC_BUILD_DIR)/$@/. .
 
 #--setting guides.enabled=true \
 #
@@ -405,12 +413,18 @@ doxygen: doc/doxygen/Doxyfile
 	rm -rf $(DOC_BUILD_DIR)/doxygen/*
 	mkdir -p $(DOC_BUILD_DIR)/doxygen
 	cd doc/doxygen && doxygen
+	mkdir -p doc/gh-pages/docs/$@
+	cd doc/gh-pages/docs/$@; \
+ cp -a $(DOC_BUILD_DIR)/$@/html/. .
 
 .PHONY: jsdoc
 jsdoc: doc/jsdoc/jsdoc.json
 	rm -rf $(DOC_BUILD_DIR)/jsdoc/*
 	mkdir -p $(DOC_BUILD_DIR)/jsdoc
 	npm run generate-docs
+	mkdir -p doc/gh-pages/docs/$@
+	cd doc/gh-pages/docs/$@; \
+ cp -a $(DOC_BUILD_DIR)/$@/. .
 
 # Builds the source package
 .PHONY: source
