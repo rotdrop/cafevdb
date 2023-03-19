@@ -1,0 +1,5 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_log_entries_repository =
+[
+    [ "getModificationTime", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_log_entries_repository.html#a0562cd15ccfce451db550909b2e14598", null ],
+    [ "modificationTime", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_log_entries_repository.html#a585d2a3b1a972ec1bce1221217c7d508", null ]
+];

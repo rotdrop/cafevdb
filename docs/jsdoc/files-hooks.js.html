@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>files-hooks.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#actionHandler">actionHandler</a></li><li><a href="global.html#addEditor">addEditor</a></li><li><a href="global.html#addMusicians">addMusicians</a></li><li><a href="global.html#addReadyCallback">addReadyCallback</a></li><li><a href="global.html#afterLoad">afterLoad</a></li><li><a href="global.html#ajaxFailData">ajaxFailData</a></li><li><a href="global.html#ajaxFailMessage">ajaxFailMessage</a></li><li><a href="global.html#ajaxHandleError">ajaxHandleError</a></li><li><a href="global.html#ajaxValidateResponse">ajaxValidateResponse</a></li><li><a href="global.html#appInfo">appInfo</a></li><li><a href="global.html#applyToolTips">applyToolTips</a></li><li><a href="global.html#appPrefix">appPrefix</a></li><li><a href="global.html#appSettings">appSettings</a></li><li><a href="global.html#attachHandlers">attachHandlers</a></li><li><a href="global.html#checkInvalidInputs">checkInvalidInputs</a></li><li><a href="global.html#chosenActive">chosenActive</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#closeActionMenu">closeActionMenu</a></li><li><a href="global.html#contactValidation">contactValidation</a></li><li><a href="global.html#containerSelector">containerSelector</a></li><li><a href="global.html#createProgressStatus">createProgressStatus</a></li><li><a href="global.html#debugPopup">debugPopup</a></li><li><a href="global.html#dialogCustomCloseButton">dialogCustomCloseButton</a></li><li><a href="global.html#dialogFullScreenButton">dialogFullScreenButton</a></li><li><a href="global.html#dialogToBackButton">dialogToBackButton</a></li><li><a href="global.html#documentReady">documentReady</a></li><li><a href="global.html#download">download</a></li><li><a href="global.html#emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li><a href="global.html#emailFormPopup">emailFormPopup</a></li><li><a href="global.html#emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li><a href="global.html#emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li><a href="global.html#emailPopup">emailPopup</a></li><li><a href="global.html#eventsPopup">eventsPopup</a></li><li><a href="global.html#findOptionByValue">findOptionByValue</a></li><li><a href="global.html#FindRanges">FindRanges</a></li><li><a href="global.html#formSubmit">formSubmit</a></li><li><a href="global.html#generateSettingsUrl">generateSettingsUrl</a></li><li><a href="global.html#generateUrl">generateUrl</a></li><li><a href="global.html#getAppUrl">getAppUrl</a></li><li><a href="global.html#getChildren">getChildren</a></li><li><a href="global.html#getControlObject">getControlObject</a></li><li><a href="global.html#getOptions">getOptions</a></li><li><a href="global.html#getOptionValues">getOptionValues</a></li><li><a href="global.html#getPersonalUrl">getPersonalUrl</a></li><li><a href="global.html#getSelectize">getSelectize</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUrl">getUrl</a></li><li><a href="global.html#getWidget">getWidget</a></li><li><a href="global.html#handleProjectActions">handleProjectActions</a></li><li><a href="global.html#handleQueryLogMenu">handleQueryLogMenu</a></li><li><a href="global.html#handleTableExportMenu">handleTableExportMenu</a></li><li><a href="global.html#htmlDecode">htmlDecode</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#installInputSelectize">installInputSelectize</a></li><li><a href="global.html#instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li><a href="global.html#invalidInputDowncount">invalidInputDowncount</a></li><li><a href="global.html#isVanilla">isVanilla</a></li><li><a href="global.html#jQuery">jQuery</a></li><li><a href="global.html#lazyBatchDecryptValues">lazyBatchDecryptValues</a></li><li><a href="global.html#loadPage">loadPage</a></li><li><a href="global.html#loadPMETable">loadPMETable</a></li><li><a href="global.html#loadPMETableFiltered">loadPMETableFiltered</a></li><li><a href="global.html#mandatesInit">mandatesInit</a></li><li><a href="global.html#mandateValidate">mandateValidate</a></li><li><a href="global.html#mandateValidatePME">mandateValidatePME</a></li><li><a href="global.html#mandateValidatePMEPromise">mandateValidatePMEPromise</a></li><li><a href="global.html#mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li><a href="global.html#maybeTranspose">maybeTranspose</a></li><li><a href="global.html#messages">messages</a></li><li><a href="global.html#modalizer">modalizer</a></li><li><a href="global.html#modalWaitNotification">modalWaitNotification</a></li><li><a href="global.html#myLoadAddMusicians">myLoadAddMusicians</a></li><li><a href="global.html#myLoadMusicians">myLoadMusicians</a></li><li><a href="global.html#myLoadProjectParticipants">myLoadProjectParticipants</a></li><li><a href="global.html#myPersonalRecordDialog">myPersonalRecordDialog</a></li><li><a href="global.html#nonTextInputTypes">nonTextInputTypes</a></li><li><a href="global.html#participantFieldsPopup">participantFieldsPopup</a></li><li><a href="global.html#photoEditCurrent">photoEditCurrent</a></li><li><a href="global.html#photoLoad">photoLoad</a></li><li><a href="global.html#photoLoadHandlers">photoLoadHandlers</a></li><li><a href="global.html#photoReady">photoReady</a></li><li><a href="global.html#photoUploadDragDrop">photoUploadDragDrop</a></li><li><a href="global.html#pmeCellSelector">pmeCellSelector</a></li><li><a href="global.html#pmeClassSelector">pmeClassSelector</a></li><li><a href="global.html#pmeClassSelectors">pmeClassSelectors</a></li><li><a href="global.html#pmeContainer">pmeContainer</a></li><li><a href="global.html#pmeContextMenu">pmeContextMenu</a></li><li><a href="global.html#pmeData">pmeData</a></li><li><a href="global.html#pmeDeferReload">pmeDeferReload</a></li><li><a href="global.html#pmeFilterSelector">pmeFilterSelector</a></li><li><a href="global.html#pmeFormSelector">pmeFormSelector</a></li><li><a href="global.html#pmeIdSelector">pmeIdSelector</a></li><li><a href="global.html#pmeInit">pmeInit</a></li><li><a href="global.html#pmeInner">pmeInner</a></li><li><a href="global.html#pmeInputSelector">pmeInputSelector</a></li><li><a href="global.html#pmeKeySelector">pmeKeySelector</a></li><li><a href="global.html#pmeNavigationSelector">pmeNavigationSelector</a></li><li><a href="global.html#pmeOpenRowDialog">pmeOpenRowDialog</a></li><li><a href="global.html#pmeQueryInfoSelector">pmeQueryInfoSelector</a></li><li><a href="global.html#pmeRec">pmeRec</a></li><li><a href="global.html#pmeRecordValue">pmeRecordValue</a></li><li><a href="global.html#pmeSelector">pmeSelector</a></li><li><a href="global.html#pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li><a href="global.html#pmeSys">pmeSys</a></li><li><a href="global.html#pmeSysNameSelector">pmeSysNameSelector</a></li><li><a href="global.html#pmeSysNameSelectors">pmeSysNameSelectors</a></li><li><a href="global.html#pmeTableDialogOpen">pmeTableDialogOpen</a></li><li><a href="global.html#pmeTableSelector">pmeTableSelector</a></li><li><a href="global.html#pmeToken">pmeToken</a></li><li><a href="global.html#pmeTriggerSubmit">pmeTriggerSubmit</a></li><li><a href="global.html#pmeTweaks">pmeTweaks</a></li><li><a href="global.html#pmeUnTweak">pmeUnTweak</a></li><li><a href="global.html#pmeValueSelector">pmeValueSelector</a></li><li><a href="global.html#pollProgressStatus">pollProgressStatus</a></li><li><a href="global.html#print_r">print_r</a></li><li><a href="global.html#projectPaymentPopup">projectPaymentPopup</a></li><li><a href="global.html#projectViewPopup">projectViewPopup</a></li><li><a href="global.html#projectWebPageRequest">projectWebPageRequest</a></li><li><a href="global.html#projectWebPageTabHandler">projectWebPageTabHandler</a></li><li><a href="global.html#pseudoSubmit">pseudoSubmit</a></li><li><a href="global.html#pseudoSubmitPost">pseudoSubmitPost</a></li><li><a href="global.html#queryData">queryData</a></li><li><a href="global.html#refreshSelectWidget">refreshSelectWidget</a></li><li><a href="global.html#refreshWidgetProperties">refreshWidgetProperties</a></li><li><a href="global.html#removeEditor">removeEditor</a></li><li><a href="global.html#renderTag">renderTag</a></li><li><a href="global.html#replaceSelectOptions">replaceSelectOptions</a></li><li><a href="global.html#runReadyCallbacks">runReadyCallbacks</a></li><li><a href="global.html#selectedOptions">selectedOptions</a></li><li><a href="global.html#selectedValues">selectedValues</a></li><li><a href="global.html#selectizeActive">selectizeActive</a></li><li><a href="global.html#setAppUrl">setAppUrl</a></li><li><a href="global.html#setPersonalUrl">setPersonalUrl</a></li><li><a href="global.html#setToken">setToken</a></li><li><a href="global.html#simpleSetHandler">simpleSetHandler</a></li><li><a href="global.html#simpleSetValueHandler">simpleSetValueHandler</a></li><li><a href="global.html#snapshotEditor">snapshotEditor</a></li><li><a href="global.html#stopEnterSubmit">stopEnterSubmit</a></li><li><a href="global.html#tableDialog">tableDialog</a></li><li><a href="global.html#tableDialogHandlers">tableDialogHandlers</a></li><li><a href="global.html#tableDialogReload">tableDialogReload</a></li><li><a href="global.html#tableDialogReplace">tableDialogReplace</a></li><li><a href="global.html#Template">Template</a></li><li><a href="global.html#textareaResize">textareaResize</a></li><li><a href="global.html#toolTipsEnabled">toolTipsEnabled</a></li><li><a href="global.html#toolTipsInit">toolTipsInit</a></li><li><a href="global.html#transposeMainTable">transposeMainTable</a></li><li><a href="global.html#transposeReady">transposeReady</a></li><li><a href="global.html#unfocus">unfocus</a></li><li><a href="global.html#updateEditor">updateEditor</a></li><li><a href="global.html#urlDecode">urlDecode</a></li><li><a href="global.html#urlEncode">urlEncode</a></li><li><a href="global.html#validateInstrumentChoices">validateInstrumentChoices</a></li><li><a href="global.html#wikiPopup">wikiPopup</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">files-hooks.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2022 Claus-Justus Heine &lt;himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+
+import Vue from 'vue';
+import { appName } from './app/app-info.js';
+import { getInitialState } from './services/initial-state-service.js';
+import { generateFilePath, imagePath } from '@nextcloud/router';
+import { showError, showInfo } from '@nextcloud/dialogs';
+import { translate as t, translatePlural as n } from '@nextcloud/l10n';
+import FilesTab from './views/FilesTab.vue';
+import { createPinia, PiniaVuePlugin } from 'pinia';
+import { Tooltip } from '@nextcloud/vue';
+
+Vue.directive('tooltip', Tooltip);
+
+Vue.use(PiniaVuePlugin);
+const pinia = createPinia();
+
+// eslint-disable-next-line
+__webpack_public_path__ = generateFilePath(appName, '', 'js');
+Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
+
+const View = Vue.extend(FilesTab);
+let TabInstance = null;
+
+if (!window.OCA.CAFEVDB) {
+  window.OCA.CAFEVDB = {};
+}
+
+const initialState = getInitialState();
+
+const projectBalancesFolder = initialState.sharing.files.folders.projectBalances;
+const supportingDocumentsFolder = initialState.sharing.files.subFolders.supportingDocuments;
+
+// @todo: we can of course support much more ...
+const supportedMimeTypes = [
+  'application/vnd.oasis.opendocument.text',
+];
+
+const acceptableMimeType = function(mimeType) {
+  return supportedMimeTypes.indexOf(mimeType) >= 0;
+};
+
+const validTemplatePath = function(path) {
+  return path.startsWith(initialState.sharing.files.folders.templates);
+};
+
+const getProjectNameFromProjectBalancesFolders = function(dirInfo) {
+  let dirName = dirInfo.path;
+  if (!dirName.startsWith(initialState.sharing.files.folders.projectBalances)) {
+    return null;
+  }
+  dirName = dirName.substring(initialState.sharing.files.folders.projectBalances.length);
+  dirName = dirName.replace(/^\/?(\d{4}|)\/?/, '');
+  const slashPos = dirName.indexOf('/');
+  const projectName = slashPos >= 0 ? dirName.substring(0, dirName.indexOf('/')) : dirName;
+  return projectName;
+};
+
+const getProjectYearFromProjectName = function(projectName) {
+  if (!projectName) {
+    return null;
+  }
+  const yearMatch = projectName.match(/\d{4}$/);
+  if (Array.isArray(yearMatch) &amp;&amp; yearMatch.length === 1) {
+    return yearMatch[0];
+  }
+  return null;
+};
+
+const isProjectBalanceSupportingDocumentsTopFolder = function(dirInfo, projectName) {
+  projectName = projectName || getProjectNameFromProjectBalancesFolders(dirInfo);
+  if (!projectName) {
+    return false;
+  }
+  const dirName = dirInfo.path;
+  const baseName = dirInfo.name;
+  return dirName.startsWith(projectBalancesFolder)
+    &amp;&amp; baseName === supportingDocumentsFolder;
+};
+
+const isProjectBalanceSupportingDocumentsFolder = function(dirInfo, projectName, projectYear) {
+  projectName = projectName || getProjectNameFromProjectBalancesFolders(dirInfo);
+  if (!projectName) {
+    return false;
+  }
+  projectYear = projectYear || getProjectYearFromProjectName(projectName);
+  const dirName = dirInfo.path;
+  const baseName = dirInfo.name;
+  if (projectYear) {
+    return isProjectBalanceSupportingDocumentsTopFolder(dirInfo, projectName);
+  } else {
+    const result = dirName.startsWith(projectBalancesFolder + '/' + projectName + '/' + supportingDocumentsFolder)
+      &amp;&amp; baseName.match(/\d{4}$/);
+    return result;
+  }
+};
+
+const enableTemplateActions = function(fileInfo) {
+
+  if (fileInfo &amp;&amp; fileInfo.isDirectory()) {
+    return false;
+  }
+
+  if (!acceptableMimeType(fileInfo.mimetype)) {
+    return false;
+  }
+
+  if (!validTemplatePath(fileInfo.path)) {
+    return false;
+  }
+
+  window.OCA.CAFEVDB.fileInfo = fileInfo;
+
+  return true; // TODO depend on subdir etc.
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+
+  // menu file-actions can only depend on the literal local file-name,
+  // the type and the mime-type.
+  //
+  // inline file-actions are probably a relict from earlier days and
+  // can conditionally be enabled via the "shouldRender()" hook. The
+  // provided context give access to several interesting data like the
+  // directory and owner etc.
+
+  if (OCA.Files &amp;&amp; OCA.Files.fileActions) {
+    const fileActions = OCA.Files.fileActions;
+
+    // an extra button which just will open the side-bar
+    fileActions.registerAction({
+      name: appName,
+      displayName: false,
+      altText: t(appName, 'MailMerge'),
+      mime: 'all',
+      type: OCA.Files.FileActions.TYPE_INLINE,
+      // mime: 'application/pdf',
+      permissions: OC.PERMISSION_READ,
+      shouldRender(context) {
+        // context.$file is a jQuery object
+        const $file = context.$file[0];
+
+        // 0: &lt;tr class="" data-id="17874" data-type="file" data-size="40187" data-file="AdressAktualisierung-GeneralLastschrift.odt" data-mime="application/vnd.oasis.opendocument.text" data-mtime="1653855228000" data-etag="8c41b9a493acf47033cc070e137a8a88" data-quota="-1" data-permissions="27" data-has-preview="true" data-e2eencrypted="false" data-mounttype="shared" data-path="/camerata/templates/finance" data-share-permissions="19" data-share-owner="cameratashareholder" data-share-owner-id="cameratashareholder">
+
+        // mock a file-info object
+        const fileInfo = {
+          isDirectory() {
+            return $file.dataset.type !== 'file';
+          },
+          mimetype: $file.dataset.mime,
+          path: $file.dataset.path,
+        };
+
+        return enableTemplateActions(fileInfo);
+      },
+      iconClass() {
+        return 'cafevdb-template';
+      },
+      render(actionSpec, isDefault, context) {
+        const size = 32;
+        const $html = fileActions._defaultRenderAction(actionSpec, isDefault, context);
+        const $icon = $html.find('.icon');
+        $icon.append('&lt;img alt="' + actionSpec.altText + '" width="' + size + '" height="' + size + '" src="' + imagePath(appName, appName) + '">');
+        $icon.css({ width: size + 'px', height: size + 'px' });
+        $icon.attr('title', t(appName, 'Fill the template with substitutions. Opens the "Details" view for further options.'));
+        $icon.tooltip({ placement: 'top' });
+        return $html;
+      },
+      /**
+       * @param {string} fileName TBD.
+       *
+       * @param {object} context TBD.
+       * @param {jQuery} context.$file jQuery row corresponding to selected file.
+       * @param {object} context.fileActions OCA.Files.fileActions instance.
+       * @param {object} context.fileInfoModel Don't know.
+       * @param {object} context.fileList File-list instance we are attached to.
+       */
+      actionHandler(fileName, context) {
+        context.fileList.showDetailsView(fileName, 'cafevdb');
+      },
+    });
+  }
+
+  /**
+   * Register a new tab in the sidebar
+   */
+  if (OCA.Files &amp;&amp; OCA.Files.Sidebar) {
+    OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab({
+      id: appName,
+      name: t(appName, 'MailMerge'),
+      icon: 'icon-rename',
+      enabled: enableTemplateActions,
+
+      async mount(el, fileInfo, context) {
+
+        if (TabInstance) {
+          TabInstance.$destroy();
+        }
+
+        TabInstance = new View({
+          // Better integration with vue parent component
+          parent: context,
+          pinia,
+        });
+
+        // Only mount after we hahve all theh info we need
+        await TabInstance.update(fileInfo);
+
+        TabInstance.$mount(el);
+        const $tabHeader = context.$el.closest('.app-sidebar-tabs');
+        const $iconSpan = $tabHeader.querySelector('#cafevdb .app-sidebar-tabs__tab-icon span');
+        $iconSpan.style.backgroundImage = 'url(' + imagePath(appName, appName) + ')';
+        $iconSpan.style.backgroundSize = '16px';
+      },
+      update(fileInfo) {
+        TabInstance.update(fileInfo);
+      },
+      destroy() {
+        TabInstance.$destroy();
+        TabInstance = null;
+      },
+    }));
+  }
+
+  if (OC.Plugins) {
+    OC.Plugins.register('OCA.Files.NewFileMenu', {
+      menuData: {
+        id: 'project-supporting-document',
+        displayName: t(appName, 'New Supporting Document'),
+        templateName: t(appName, 'PROJECTNAME-XXX'),
+        folderPrefix: 'PROJECTNAME',
+        projectYear: 'PROJECTYEAR',
+        isTopFolder: true,
+        fileList: null,
+        iconClass: 'icon-folder',
+        fileType: 'httpd/unix-directory',
+        async supportingDocumentHandler(name) {
+          const nameRegExp = new RegExp('^(?:' + this.folderPrefix + '-?)?' + '(\\d{3}|XXX)$');
+          const sequenceMatch = name.match(nameRegExp);
+          if (!sequenceMatch) {
+            showError(t(appName, 'The name of the new document in support must match the format "{projectName}-XXX" where "XXX" is a placeholder for 3 decimal digits or a literal "XXX" in which case the next available sequence number is chosen automatically.', this));
+          }
+          let sequence = sequenceMatch[1];
+          if (sequence === 'XXX') {
+            const sequences = [];
+            for (const file of this.fileList.files) {
+              if (file.mimetype !== 'httpd/unix-directory') {
+                continue;
+              }
+              if (!file.name.match(nameRegExp)) {
+                continue;
+              }
+              sequences.push(+file.name.substr(file.name.length - 3));
+            }
+            sequences.sort((a, b) => a - b);
+            let previous = 0;
+            for (const current of sequences) {
+              if (current - previous !== 1) {
+                break;
+              }
+              previous = current;
+            }
+            sequence = previous + 1;
+          }
+          sequence = String(sequence).padStart(3, '0');
+          showInfo(t(appName, 'Document sequence determined as {sequence}.', { sequence }));
+          const dirName = this.folderPrefix + '-' + sequence;
+          await this.fileList.createDirectory(dirName);
+        },
+        async yearFolderHandler(name) {
+          const nameRegExp = /^(\d{4}|YYYY)$/;
+          const yearMatch = name.match(nameRegExp);
+          if (!yearMatch) {
+            showError(t(appName, 'The name of the new folder must match the format "YYYY" where "YYYY" is a placeholder for 4 decimal digits or a literal "YYYY" in which case a folder for the current year is created if it does not exist already.'));
+          }
+          let year = yearMatch[1];
+          if (year === 'YYYY') {
+            year = new Date().getFullYear();
+          }
+          showInfo(t(appName, 'Year determined as {year}.', { year }));
+          const dirName = '' + year;
+          const existing = this.fileList.files.find(file => file.name === dirName);
+          if (existing) {
+            showError(t(appName, 'There is already a directory or file with the name "{dirName}".', { dirName }));
+            return false;
+          }
+          await this.fileList.createDirectory(dirName);
+        },
+        async actionHandler(name) {
+          if (!this.projectYear &amp;&amp; this.isTopFolder) {
+            await this.yearFolderHandler(name);
+          } else {
+            await this.supportingDocumentHandler(name);
+          }
+        },
+        checkFilename() {
+          // this seems to be unused
+          console.trace('CHECK FILENAME', arguments);
+        },
+      },
+      savedMenuItems: null,
+      installMenuNew(menu) {
+        const fileList = menu.fileList;
+        const dirInfo = fileList.dirInfo;
+        const projectName = getProjectNameFromProjectBalancesFolders(dirInfo);
+        const projectYear = getProjectYearFromProjectName(projectName);
+
+        const isTopFolder = projectName &amp;&amp; isProjectBalanceSupportingDocumentsTopFolder(dirInfo, projectName);
+        const isDocumentsFolder = projectName &amp;&amp; isProjectBalanceSupportingDocumentsFolder(dirInfo, projectName, projectYear);
+
+        if (!isTopFolder &amp;&amp; !isDocumentsFolder) {
+          if (this.savedMenuItems) {
+            // the WOPI requests sent to the richdocuments do not
+            // contain enough authentication to access our data-base.
+            const menuItems = dirInfo.mountType === 'cafevdb-database'
+              ? this.savedMenuItems.filter((item) => /* !item.id.match('richdocuments') &amp;&amp; */ (!projectYear || item.id !== 'folder'))
+              : this.savedMenuItems;
+            menu._menuItems = menuItems;
+          }
+          return;
+        }
+
+        console.info('DIRINFO', dirInfo);
+
+        this.menuData.folderPrefix = projectName;
+        this.menuData.projectYear = projectYear;
+        this.menuData.isTopFolder = isTopFolder;
+
+        if (!projectYear &amp;&amp; isTopFolder) {
+          this.menuData.templateName = 'YYYY';
+          this.menuData.displayName = t(appName, 'New Year Folder');
+        } else {
+          if (!projectYear) {
+            this.menuData.folderPrefix = projectName + '-' + dirInfo.name;
+          }
+          this.menuData.templateName = this.menuData.folderPrefix + '-XXX';
+          this.menuData.displayName = t(appName, 'New Supporting Document');
+        }
+        this.menuData.actionHandler = this.menuData.actionHandler.bind(this.menuData);
+        this.menuData.fileList = menu.fileList;
+
+        const menuItems = this.savedMenuItems
+          ? this.savedMenuItems.filter((item) => /* !item.id.match('richdocuments') &amp;&amp; */ item.id !== 'folder')
+          : [];
+        menu._menuItems = menuItems;
+
+        menu.addMenuEntry(this.menuData);
+      },
+      attach(menu) {
+        if (!this.savedMenuItems) {
+
+          this.savedMenuItems = menu._menuItems;
+
+          const menuRender = menu.render;
+          menu.render = function() {
+            menuRender.apply(this);
+            if (isProjectBalanceSupportingDocumentsFolder(this.fileList.dirInfo)) {
+              // this.$el.find('ul li:first').remove();
+            }
+          }.bind(menu);
+
+          menu.fileList.$el.on('afterChangeDirectory', (params) => {
+            this.installMenuNew(menu);
+          });
+        }
+
+        this.installMenuNew(menu);
+      },
+    });
+  }
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Mar 19 2023 16:22:02 GMT+0100 (Mitteleuropäische Normalzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

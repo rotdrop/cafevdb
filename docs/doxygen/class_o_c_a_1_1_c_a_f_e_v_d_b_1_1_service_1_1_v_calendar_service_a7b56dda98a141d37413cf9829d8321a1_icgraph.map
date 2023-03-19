@@ -1,0 +1,9 @@
+<map id="getCategories" name="getCategories">
+<area shape="rect" id="node1" title="Return the category list for the given object." alt="" coords="539,99,641,124"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a65acaff5b7ab74125bbfabf6cc45c3cc" title=" " alt="" coords="272,19,491,59"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9c5b6c8d51d88794475b33331e1afa98" title="Parse the respective event data and make sure the ProjectEvents table is uptodate." alt="" coords="284,84,479,139"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aea891e648fce8ad16b530a23c9eda30c" title="Unconditionally unregister the given event with the given project, and remove the project&#45;name from t..." alt="" coords="298,163,465,203"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3b6658ae82665c492cf28af4e6277831" title=" " alt="" coords="5,5,224,60"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad0dad4413ad713821f2a1be6a76fd888" title=" " alt="" coords="5,84,224,139"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aa0ac3177e93f6493517061766988cb27" title=" " alt="" coords="7,163,222,203"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="SanitizerFailedException" name="SanitizerFailedException">
+<area shape="rect" id="node1" title="Exception thrown if the respective sanitizer operation is not implemented." alt="" coords="5,225,172,251"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_exception.html" title="Exceptions thrown by the database sanitizers." alt="" coords="23,152,154,177"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="49,79,129,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="35,5,143,31"/>
+</map>

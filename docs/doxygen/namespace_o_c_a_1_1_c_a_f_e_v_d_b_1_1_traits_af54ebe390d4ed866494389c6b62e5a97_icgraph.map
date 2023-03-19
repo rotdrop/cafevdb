@@ -1,0 +1,7 @@
+<map id="cloudConfig" name="cloudConfig">
+<area shape="rect" id="node1" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="204,80,295,105"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a25a74afdce1f7e361189f292edbf93b5" title="Forward to OCP\IConfig::getSystemValue()." alt="" coords="22,5,139,31"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ada47887359e4856f8fd326910e46ae23" title="Forward to OCP\IConfig::getSystemValueBool()." alt="" coords="9,55,152,80"/>
+<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a64e2c5b9c16ef933acca9a4fec10dd94" title="Forward to OCP\IConfig::getSystemValueInt()" alt="" coords="15,104,147,129"/>
+<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a78dd1ec9874962249563b04c19c37d94" title="Forward to OCP\IConfig::getSystemValueString()." alt="" coords="5,153,156,179"/>
+</map>

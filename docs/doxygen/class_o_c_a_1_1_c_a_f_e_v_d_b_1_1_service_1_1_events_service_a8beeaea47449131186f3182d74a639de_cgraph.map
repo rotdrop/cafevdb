@@ -1,0 +1,13 @@
+<map id="projectEventData" name="projectEventData">
+<area shape="rect" id="node1" title="Return event data for given project id and calendar id." alt="" coords="5,59,128,85"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a8dbd777ef286c3c4b57fa2b6a6a4c205" title=" " alt="" coords="176,10,296,35"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ac575a2bdf3198bf0d0af5d4c13c3b90f" title="Form an array with the most relevant event data." alt="" coords="195,59,277,85"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a2167926c53943f936dd0d8cfb9794449" title="Fetch the list of events associated with $projectId." alt="" coords="205,109,267,134"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a1ea272c980bff9ed87a7d69a7e5402c0" title="Form start and end date and time in given timezone and locale." alt="" coords="350,59,441,85"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#adb10e26ac6192b69880597d9384f9685" title="Augment the database entity by calendar data." alt="" coords="351,109,439,134"/>
+<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad13d1d67b2cf64476789ff3e3bf2a802" title=" " alt="" coords="344,158,447,183"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a20bce1060035becc1a931e3cd65aeecc" title=" " alt="" coords="505,5,699,45"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="495,69,709,109"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a2dad03f32dc06c2aa1711b0f2243c18d" title="Return a reference to the object contained in a Sabre VCALENDAR object." alt="" coords="502,133,702,173"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a8aa4a7a29d5680924f966b2fbc64a901" title="Unconditionally unregister the given event with the given project." alt="" coords="563,198,641,223"/>
+</map>

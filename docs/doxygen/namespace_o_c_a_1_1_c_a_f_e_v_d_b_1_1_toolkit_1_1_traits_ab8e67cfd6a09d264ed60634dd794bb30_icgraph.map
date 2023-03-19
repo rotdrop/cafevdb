@@ -1,0 +1,7 @@
+<map id="logInfo" name="logInfo">
+<area shape="rect" id="node1" title="Log an informational message." alt="" coords="465,85,527,111"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1b1d06b8849380605b6a83ff72dd8689" title=" " alt="" coords="239,71,417,125"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a5b62df0076a109c14c456e0664583bbe" title=" " alt="" coords="9,5,187,60"/>
+<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53e661a445d92119cf8033c6a394de7f" title="Parse a storage user input value and return its value in bytes." alt="" coords="279,149,377,175"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#ab63abc381405369b014b433dded6a20c" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,84,191,139"/>
+</map>

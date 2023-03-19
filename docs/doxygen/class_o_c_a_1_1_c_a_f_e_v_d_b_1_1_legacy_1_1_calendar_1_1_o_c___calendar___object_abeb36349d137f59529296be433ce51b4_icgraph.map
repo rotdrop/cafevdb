@@ -1,0 +1,6 @@
+<map id="getByMonthOptions" name="getByMonthOptions">
+<area shape="rect" id="node1" title="Returns the options for an yearly repeating event which occurs on specific month of the year." alt="" coords="501,31,639,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#aedd8ff06659737d2643f2e072371f134" title="Updates an VCalendar Object from the request data." alt="" coords="252,5,453,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#ad6398ce11e1031b0c411850f0d6e0405" title="Validates a request." alt="" coords="295,55,411,80"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#ae644fdd9856b947a1a62bb900c0ce889" title="Creates an VCalendar Object from the request data." alt="" coords="5,5,204,31"/>
+</map>

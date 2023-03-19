@@ -1,0 +1,8 @@
+<map id="syncCalendarObject" name="syncCalendarObject">
+<area shape="rect" id="node1" title="Parse the respective event data and make sure the ProjectEvents table is uptodate." alt="" coords="5,141,145,166"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7b56dda98a141d37413cf9829d8321a1" title="Return the category list for the given object." alt="" coords="199,5,415,45"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aec5da185922e02ddaa7d9eb7e851fcb0" title=" " alt="" coords="221,69,394,109"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="200,133,415,173"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a2dad03f32dc06c2aa1711b0f2243c18d" title="Return a reference to the object contained in a Sabre VCALENDAR object." alt="" coords="207,197,407,237"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a74115b9298d21b9cbf1ef88796d1b1b7" title="Return the type of the respective calendar object." alt="" coords="193,261,421,301"/>
+</map>

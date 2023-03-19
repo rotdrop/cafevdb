@@ -1,0 +1,5 @@
+<map id="fetchInstrumentsFilter" name="fetchInstrumentsFilter">
+<area shape="rect" id="node1" title="Fetch the instruments filter from the CGI parameters." alt="" coords="5,5,155,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="369,5,440,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="203,31,321,56"/>
+</map>

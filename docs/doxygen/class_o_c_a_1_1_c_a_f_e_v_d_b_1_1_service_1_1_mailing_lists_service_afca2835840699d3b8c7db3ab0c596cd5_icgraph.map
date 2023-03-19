@@ -1,0 +1,11 @@
+<map id="getSubscription" name="getSubscription">
+<area shape="rect" id="node1" title="Find the basic information about a subscription for the given email." alt="" coords="624,111,736,136"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b" title="Configure the given list as an announcements&#45;only list." alt="" coords="5,136,196,162"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae62eae7d1bae43dae28edc191f40da81" title="Fetch the subscription preferences." alt="" coords="393,36,576,62"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a80b3751e479bc6620f7007cdd019869b" title="Return a brief status for the requested list and email address." alt="" coords="409,86,560,111"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a56dd65a95afc760129f3e87827317339" title="Patch the membership config for the given email address." alt="" coords="244,136,345,162"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="393,187,576,212"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adb5ee6484051ff49357847bc6b203409" title="Unsubscribe the given email&#45;address." alt="" coords="439,236,531,262"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="255,186,334,211"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="74,186,127,211"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="getAddressBookInAddressBookHome" name="getAddressBookInAddressBookHome">
+<area shape="rect" id="node1" title="Fetches an address book for a given principalUri and URI Returns null if address book does not exist." alt="" coords="252,5,495,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_address_book_provider.html#a18fb8d431408236d8000f5df94eae4e7" title="Fetches all address books for a given principal uri." alt="" coords="5,5,204,31"/>
+</map>

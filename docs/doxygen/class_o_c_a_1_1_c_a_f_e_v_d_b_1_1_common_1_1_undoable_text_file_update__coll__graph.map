@@ -1,0 +1,6 @@
+<map id="UndoableTextFileUpdate" name="UndoableTextFileUpdate">
+<area shape="rect" id="node1" title="Update the content of the given text&#45;file with the given content." alt="" coords="19,225,184,251"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="5,152,197,177"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="38,79,165,104"/>
+<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="61,5,142,31"/>
+</map>

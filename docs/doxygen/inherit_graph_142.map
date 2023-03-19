@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,120,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_uuid_type.html" title="Like UuidBinaryType, but implement a more allowing convertToPHPValue() which accepts also string inpu..." alt="" coords="168,5,245,31"/>
+</map>

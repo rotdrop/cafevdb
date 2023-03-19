@@ -1,0 +1,6 @@
+<map id="getGroupSubAdmins" name="getGroupSubAdmins">
+<area shape="rect" id="node1" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,5,148,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2218693785fc68082d77740cc716623" title=" " alt="" coords="196,5,271,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a80ff7d4e6101b55bc46ce120b838b98d" title=" " alt="" coords="319,5,405,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="453,5,548,31"/>
+</map>

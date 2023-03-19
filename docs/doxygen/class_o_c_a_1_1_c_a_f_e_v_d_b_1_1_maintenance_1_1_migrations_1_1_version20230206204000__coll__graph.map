@@ -1,0 +1,6 @@
+<map id="Version20230206204000" name="Version20230206204000">
+<area shape="rect" id="node1" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="19,225,183,251"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_access_enum.html" title="Change participantAccess field to enum." alt="" coords="5,152,196,177"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="39,79,163,104"/>
+<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="61,5,140,31"/>
+</map>

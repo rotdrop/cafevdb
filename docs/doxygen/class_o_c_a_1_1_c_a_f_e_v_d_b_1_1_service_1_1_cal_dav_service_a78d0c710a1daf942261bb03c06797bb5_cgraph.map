@@ -1,0 +1,4 @@
+<map id="calendarById" name="calendarById">
+<area shape="rect" id="node1" title="Get a calendar with the given id." alt="" coords="5,5,104,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afedceb6879e8d7585b69081a5851c26a" title="Force \OCA\DAV\CalDAV\CalendarManager to be refreshed." alt="" coords="152,5,316,31"/>
+</map>

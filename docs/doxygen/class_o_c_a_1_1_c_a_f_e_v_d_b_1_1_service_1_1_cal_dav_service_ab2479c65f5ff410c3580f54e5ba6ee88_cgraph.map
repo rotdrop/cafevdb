@@ -1,0 +1,4 @@
+<map id="getObjectUri" name="getObjectUri">
+<area shape="rect" id="node1" title="Convert an object UID to its local URI." alt="" coords="5,5,100,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afd08da0f2d0c21a2bc9d5d5ae56f7907" title="Get the uri of the original calendar." alt="" coords="148,5,287,31"/>
+</map>

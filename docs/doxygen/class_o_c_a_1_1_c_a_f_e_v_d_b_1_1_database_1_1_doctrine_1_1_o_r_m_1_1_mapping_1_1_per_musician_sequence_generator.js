@@ -1,0 +1,5 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_per_musician_sequence_generator =
+[
+    [ "generate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_per_musician_sequence_generator.html#a633c0c1c02901488f8bf7ded4296a411", null ],
+    [ "sequenceMax", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_per_musician_sequence_generator.html#ab89ed3c420a69fd83e229d3738f12416", null ]
+];

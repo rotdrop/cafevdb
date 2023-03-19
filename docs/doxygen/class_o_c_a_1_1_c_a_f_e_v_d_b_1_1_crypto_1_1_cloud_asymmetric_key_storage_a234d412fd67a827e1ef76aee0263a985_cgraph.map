@@ -1,0 +1,5 @@
+<map id="getPublicKey" name="getPublicKey">
+<area shape="rect" id="node1" title="{Retrieve an existing pulic key from the key&#45;storage.mixed|null Public key or null if none is found...." alt="" coords="5,31,104,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a22f229329d340dcd3fb629e91c9b95b9" title=" " alt="" coords="155,5,255,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a63312920564297d50e6f355d9c3c6e9b" title="Decode the raw data fetch from whatever storage backend." alt="" coords="152,55,259,80"/>
+</map>

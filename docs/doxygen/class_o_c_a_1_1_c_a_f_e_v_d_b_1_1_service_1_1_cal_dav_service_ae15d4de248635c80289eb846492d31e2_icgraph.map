@@ -1,0 +1,5 @@
+<map id="makeGroupShare" name="makeGroupShare">
+<area shape="rect" id="node1" title=" " alt="" coords="401,5,524,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a2e9d51a42cd379a76cf2918a15fe3f37" title="Share the given calendar with a group." alt="" coords="5,5,145,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a73af2c12aae06cdd9242151cfbdb94be" title="Test if the given calendar is shared with the given group." alt="" coords="193,31,353,56"/>
+</map>

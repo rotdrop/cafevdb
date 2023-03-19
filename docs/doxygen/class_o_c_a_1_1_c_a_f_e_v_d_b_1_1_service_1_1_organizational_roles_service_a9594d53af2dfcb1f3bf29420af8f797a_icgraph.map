@@ -1,0 +1,9 @@
+<map id="isDedicatedBoardMember" name="isDedicatedBoardMember">
+<area shape="rect" id="node1" title="Return true if the logged in or given user has a dedicated administrative role for the orchestra." alt="" coords="312,55,484,80"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a765964a060ee0973544ea2e53718b07c" title="Return true if the logged in user is the president." alt="" coords="177,5,263,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#aa89fb3a6133ceccf92a8ab1b741d22b6" title="Return true if the logged in user is the secretary." alt="" coords="176,55,264,80"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a25ecab08008a440e05ecbf2aff41a47f" title="Return true if the logged in user is the treasurer." alt="" coords="177,104,263,129"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a717a88ffb195d1b59bb99df780528638" title="Return true if the logged in user is in the president group." alt="" coords="5,5,128,31"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a4add7ffa5ef8592b6143de93c9841cda" title="Return true if the logged in user is in the secretary group." alt="" coords="5,55,128,80"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a23afca65d8a594e0ba9beec57b4ba58b" title="Return true if the logged in user is in the treasurer group." alt="" coords="5,104,128,129"/>
+</map>

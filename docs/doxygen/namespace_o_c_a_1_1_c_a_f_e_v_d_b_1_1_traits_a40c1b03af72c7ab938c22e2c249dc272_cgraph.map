@@ -1,0 +1,5 @@
+<map id="getDateTimeZone" name="getDateTimeZone">
+<area shape="rect" id="node1" title="Get the current timezone." alt="" coords="5,5,132,31"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a3a2983317152273aaf635e4bd61f0c7a" title=" " alt="" coords="180,5,279,31"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="327,5,428,31"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="projectEvents" name="projectEvents">
+<area shape="rect" id="node1" title=" " alt="" coords="351,55,453,80"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a2167926c53943f936dd0d8cfb9794449" title="Fetch the list of events associated with $projectId." alt="" coords="209,5,270,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aa0ac3177e93f6493517061766988cb27" title=" " alt="" coords="178,55,301,80"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a65acaff5b7ab74125bbfabf6cc45c3cc" title=" " alt="" coords="176,104,303,129"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a8beeaea47449131186f3182d74a639de" title="Return event data for given project id and calendar id." alt="" coords="5,5,128,31"/>
+</map>

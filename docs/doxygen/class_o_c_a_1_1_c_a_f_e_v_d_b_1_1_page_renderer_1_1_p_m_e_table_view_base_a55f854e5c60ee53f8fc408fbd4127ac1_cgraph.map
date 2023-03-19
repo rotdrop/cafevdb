@@ -1,0 +1,4 @@
+<map id="beforeDeleteSimplyDoDelete" name="beforeDeleteSimplyDoDelete">
+<area shape="rect" id="node1" title="This trigger simply deletes the given entity and prevents the legacy PHPMyEdit class to do the deleti..." alt="" coords="5,5,196,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7366f4cd17cfac976a1b643f34542bcb" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="244,5,405,31"/>
+</map>

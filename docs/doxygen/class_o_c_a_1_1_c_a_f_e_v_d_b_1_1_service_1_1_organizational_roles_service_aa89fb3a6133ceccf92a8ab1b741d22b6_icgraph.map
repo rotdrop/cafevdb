@@ -1,0 +1,4 @@
+<map id="isSecretary" name="isSecretary">
+<area shape="rect" id="node1" title="Return true if the logged in user is the secretary." alt="" coords="176,5,264,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a4add7ffa5ef8592b6143de93c9841cda" title="Return true if the logged in user is in the secretary group." alt="" coords="5,5,128,31"/>
+</map>

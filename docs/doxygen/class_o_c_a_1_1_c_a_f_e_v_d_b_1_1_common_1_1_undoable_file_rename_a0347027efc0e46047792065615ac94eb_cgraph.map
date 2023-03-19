@@ -1,0 +1,4 @@
+<map id="undo" name="undo">
+<area shape="rect" id="node1" title="{Undo that what was done by do().void}" alt="" coords="5,5,56,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html#a6036b2b6898da1490a4ffe2e9539e227" title="Rename $fromPath to $to." alt="" coords="104,5,169,31"/>
+</map>

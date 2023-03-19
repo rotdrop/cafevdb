@@ -1,0 +1,3 @@
+<map id="deleteNote" name="deleteNote">
+<area shape="rect" id="node1" title="Delete the given Note and the entire thread referring to it." alt="" coords="5,29,91,55"/>
+</map>

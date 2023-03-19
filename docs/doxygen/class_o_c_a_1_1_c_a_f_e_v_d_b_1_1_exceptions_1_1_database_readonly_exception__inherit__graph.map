@@ -1,0 +1,6 @@
+<map id="DatabaseReadonlyException" name="DatabaseReadonlyException">
+<area shape="rect" id="node1" title="Thrown when trying to mute data which should not be muted." alt="" coords="5,225,196,251"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="33,152,169,177"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="61,79,141,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="47,5,155,31"/>
+</map>

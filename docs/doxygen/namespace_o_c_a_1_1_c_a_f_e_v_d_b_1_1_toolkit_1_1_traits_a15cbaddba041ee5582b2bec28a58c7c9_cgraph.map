@@ -1,0 +1,5 @@
+<map id="log" name="log">
+<area shape="rect" id="node1" title="Log the given message at the specified level." alt="" coords="5,31,44,56"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="117,5,174,31"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="92,55,199,80"/>
+</map>

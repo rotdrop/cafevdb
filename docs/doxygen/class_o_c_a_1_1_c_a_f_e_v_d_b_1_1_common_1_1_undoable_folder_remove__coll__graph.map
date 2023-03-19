@@ -1,0 +1,7 @@
+<map id="UndoableFolderRemove" name="UndoableFolderRemove">
+<area shape="rect" id="node1" title="Remove the given node, which must be a folder." alt="" coords="35,299,198,324"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html" title="Remove the given path which may either point to a file or folder." alt="" coords="5,225,228,251"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="21,152,213,177"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="53,79,180,104"/>
+<area shape="rect" id="node5" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="76,5,157,31"/>
+</map>

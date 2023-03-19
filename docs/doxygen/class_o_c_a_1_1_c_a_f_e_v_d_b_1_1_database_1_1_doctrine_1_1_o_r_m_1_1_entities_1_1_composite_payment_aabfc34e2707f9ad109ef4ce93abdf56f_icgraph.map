@@ -1,0 +1,4 @@
+<map id="getMusician" name="getMusician">
+<area shape="rect" id="node1" title="Get musician." alt="" coords="277,20,369,45"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html#a873c9ac79309f9e2270f306925ffda85" title="Get the payment for the specified musician." alt="" coords="5,5,229,60"/>
+</map>

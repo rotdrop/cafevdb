@@ -1,0 +1,5 @@
+<map id="getProjectFolder" name="getProjectFolder">
+<area shape="rect" id="node1" title="Get the configured name of the or all or the specified folder." alt="" coords="5,5,123,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5a6b377d5fa6d991e6f34179e04615c1" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="171,5,313,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ae08f5afbcda6c928058fd4e9fc946cf8" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="361,5,544,31"/>
+</map>

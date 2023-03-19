@@ -1,0 +1,6 @@
+<map id="AsymmetricCryptorInterface" name="AsymmetricCryptorInterface">
+<area shape="rect" id="node1" title="Just there in order to branch depending on container specialization." alt="" coords="98,79,285,104"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_asymmetric_cryptor.html" title="Asymmetric encryption using the ParagonIE\Halite library." alt="" coords="5,152,175,177"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_cryptor.html" title="Asymmetric encryption using the OpenSSL extension of PHP." alt="" coords="199,152,389,177"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_i_cryptor.html" title="Simple wrapper interface." alt="" coords="157,5,226,31"/>
+</map>

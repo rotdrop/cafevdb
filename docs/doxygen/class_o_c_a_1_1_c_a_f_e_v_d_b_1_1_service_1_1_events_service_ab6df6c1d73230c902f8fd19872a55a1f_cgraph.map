@@ -1,0 +1,5 @@
+<map id="onCalendarObjectDeleted" name="onCalendarObjectDeleted">
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,176,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a8dbd777ef286c3c4b57fa2b6a6a4c205" title=" " alt="" coords="237,5,357,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a4ca9e894f130ddc7b2a4ce021282c50a" title="Remove the calendar object from the join table as the calendar object is no more." alt="" coords="224,55,371,80"/>
+</map>

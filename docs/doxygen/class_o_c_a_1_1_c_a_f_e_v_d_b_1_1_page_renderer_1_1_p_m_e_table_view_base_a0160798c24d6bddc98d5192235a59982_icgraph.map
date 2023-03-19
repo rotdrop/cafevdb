@@ -1,0 +1,9 @@
+<map id="debugPrintValues" name="debugPrintValues">
+<area shape="rect" id="node1" title=" " alt="" coords="587,109,709,134"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a936748b21bb69d2a3f9d51e14ce2cd87" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="343,27,499,53"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a882a0897b82d354409342d1c195c2f4d" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="334,77,509,102"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html#a845b4952ec7ba86475b456928bd641ae" title="Cleanup &quot;trigger&quot; which relocates several virtual inputs to their proper destination columns." alt="" coords="304,126,539,181"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ac4930892b628989ea570c18ef64c0b4b" title="The ranking of the mussician&#39;s instruments is implicitly stored in the order of the instrument ids." alt="" coords="335,205,507,230"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,5,256,45"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,69,234,109"/>
+</map>

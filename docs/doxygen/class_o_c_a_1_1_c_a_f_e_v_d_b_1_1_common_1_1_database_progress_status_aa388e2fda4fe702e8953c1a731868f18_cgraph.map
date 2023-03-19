@@ -1,0 +1,3 @@
+<map id="getLastModified" name="getLastModified">
+<area shape="rect" id="node1" title="{Return the cached value of the last modification time.DateTimeInterface}" alt="" coords="5,29,120,55"/>
+</map>

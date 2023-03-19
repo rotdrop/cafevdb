@@ -1,0 +1,4 @@
+<map id="isPresident" name="isPresident">
+<area shape="rect" id="node1" title="Return true if the logged in user is the president." alt="" coords="176,5,263,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a717a88ffb195d1b59bb99df780528638" title="Return true if the logged in user is in the president group." alt="" coords="5,5,128,31"/>
+</map>

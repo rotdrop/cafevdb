@@ -1,0 +1,4 @@
+<map id="isTreasurer" name="isTreasurer">
+<area shape="rect" id="node1" title="Return true if the logged in user is the treasurer." alt="" coords="176,5,263,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a23afca65d8a594e0ba9beec57b4ba58b" title="Return true if the logged in user is in the treasurer group." alt="" coords="5,5,128,31"/>
+</map>

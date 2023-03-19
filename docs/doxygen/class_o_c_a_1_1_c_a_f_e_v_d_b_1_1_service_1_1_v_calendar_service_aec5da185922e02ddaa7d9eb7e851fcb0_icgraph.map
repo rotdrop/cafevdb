@@ -1,0 +1,8 @@
+<map id="getUid" name="getUid">
+<area shape="rect" id="node1" title=" " alt="" coords="515,77,575,102"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a89595fb1b45135568c26cc3cd895fb1b" title="Inject a new event into the given calendar." alt="" coords="283,5,456,45"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3bc5b15a2fa8fffd6b6b075b0e70c81a" title="Inject a new task into the given calendar." alt="" coords="286,69,453,109"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9c5b6c8d51d88794475b33331e1afa98" title="Parse the respective event data and make sure the ProjectEvents table is uptodate." alt="" coords="272,134,467,189"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3b6658ae82665c492cf28af4e6277831" title=" " alt="" coords="5,94,224,149"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad0dad4413ad713821f2a1be6a76fd888" title=" " alt="" coords="5,173,224,227"/>
+</map>

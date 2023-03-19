@@ -1,0 +1,4 @@
+<map id="getKeyPair" name="getKeyPair">
+<area shape="rect" id="node1" title="Retrieve an existing private/public key pair from the key&#45;storage." alt="" coords="267,20,353,45"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_abstract_asymmetric_key_storage.html#a308f251fab785345c390aa8f71ce429f" title="{Retrieve an existing private key from the key&#45;storage.mixed Unlocked private key or null if not foun..." alt="" coords="5,5,219,60"/>
+</map>

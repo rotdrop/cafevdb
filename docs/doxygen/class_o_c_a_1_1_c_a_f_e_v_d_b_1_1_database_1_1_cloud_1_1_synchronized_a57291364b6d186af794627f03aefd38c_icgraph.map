@@ -1,0 +1,4 @@
+<map id="attach" name="attach">
+<area shape="rect" id="node1" title="Obtain object from database if it is &quot;clean&quot;, if it is dirty or new (no id) then create or update the..." alt="" coords="112,5,171,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8652674eb0728ffe1e44c3fe253936a1" title="Update multiple properties and write them through to the database if we are in $attached state." alt="" coords="5,5,64,31"/>
+</map>

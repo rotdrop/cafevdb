@@ -1,0 +1,9 @@
+<map id="shortenCamelCaseString" name="shortenCamelCaseString">
+<area shape="rect" id="node1" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="5,92,173,117"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="221,5,368,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae5c8c04fb41d334be00d1bf1a3b83039" title="Take any dashed or &quot;underscored&quot; lower&#45;case string and convert to camel&#45;case." alt="" coords="221,55,368,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a0bef3dc2eedd594dab3a84b15d183c36" title="A preg_explode() wrapper with some extra features." alt="" coords="261,128,328,153"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9d61dd42fc39a8ffa123b80bab2bf94f" title="Counter&#45;part to self::explode()." alt="" coords="261,201,328,227"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="416,128,547,153"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a733456b8dde51667bb86ef79e08597a7" title="Escape delimiters in the given value." alt="" coords="423,201,539,227"/>
+</map>

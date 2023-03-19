@@ -1,0 +1,7 @@
+<map id="refreshAddressBookManager" name="refreshAddressBookManager">
+<area shape="rect" id="node1" title="Force OCP\Contacts\IManager to be refreshed." alt="" coords="203,80,393,105"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_card_dav_service.html#a694043b49fba835fe447eb3d141ade45" title="Get a addressBook with the given its id." alt="" coords="17,5,143,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_card_dav_service.html#ae46b9f2a694b253dae20d1ebbd52bb60" title="Get a addressBook with the given display name." alt="" coords="5,55,155,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_card_dav_service.html#aaab5971299e1f25c57239b9043fa0992" title="Get or create a addressBook." alt="" coords="12,104,148,129"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_card_dav_service.html#a889e0ae6a7de43d1320c192809ffafbe" title="Delete the addressBook with the given id." alt="" coords="13,153,147,179"/>
+</map>

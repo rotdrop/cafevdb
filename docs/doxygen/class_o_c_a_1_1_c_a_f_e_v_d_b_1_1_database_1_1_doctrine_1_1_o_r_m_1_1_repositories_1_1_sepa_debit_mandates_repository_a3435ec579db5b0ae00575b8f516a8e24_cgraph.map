@@ -1,0 +1,5 @@
+<map id="ban" name="ban">
+<area shape="rect" id="node1" title="Ban a SEPA&#45;mandate (timeout, withdrawn, erroneous data etc.)." alt="" coords="5,37,48,63"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#aa83dc5c73575593e20ef022264c93b7c" title="Find a SEPA&#45;mandate by either its primary key or its mandate reference; no&#45;op if $idOrReference alrea..." alt="" coords="169,5,252,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="96,55,325,109"/>
+</map>

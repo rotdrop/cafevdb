@@ -1,0 +1,4 @@
+<map id="reset" name="reset">
+<area shape="rect" id="node1" title="{Reset initial state.void}" alt="" coords="144,5,195,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_create.html#a8e62e4feb0cb70954e3d1a2ae6a4fd04" title="Undoable folder rename, optionally ignoring non&#45;existing source folder." alt="" coords="5,5,96,31"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="getLanguage" name="getLanguage">
+<area shape="rect" id="node1" title="Return the language part of the current or given locale." alt="" coords="5,5,101,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ae705742d573e516c783122fb4a0e1aea" title="Return the locale as string, e.g." alt="" coords="149,5,228,31"/>
+</map>

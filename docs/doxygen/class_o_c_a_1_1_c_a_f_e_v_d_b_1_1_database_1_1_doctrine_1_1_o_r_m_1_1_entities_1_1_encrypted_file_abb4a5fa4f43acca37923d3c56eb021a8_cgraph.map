@@ -1,0 +1,4 @@
+<map id="removeOwner" name="removeOwner">
+<area shape="rect" id="node1" title="Remove the given musician from the list of owners." alt="" coords="5,20,108,45"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="156,5,335,60"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="defaultUserBase" name="defaultUserBase">
+<area shape="rect" id="node1" title="The default user base." alt="" coords="571,31,689,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a91325e5bf1c1dafd989c072cdd289f7e" title="Decode the check&#45;boxes which select the set of users we consider basically." alt="" coords="385,31,523,56"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="254,5,322,31"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a663723b25bb16f0aa79658c5111c8af9" title="Programmatically set the user base, e.g." alt="" coords="239,55,337,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ae40c9dafec946961dfd72815f6764fb8" title=" " alt="" coords="144,5,191,31"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1a3fa621489e73c7386685aa0e152c30" title="{}" alt="" coords="5,5,96,31"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="storedEmails" name="storedEmails">
+<area shape="rect" id="node1" title="Export an option array suitable to load stored email messages, currently templates and message drafts..." alt="" coords="272,20,371,45"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a3b7735f5cb4ca5fc5a30d2b599efa9e3" title="Regenerate the stored&#45;email options after updating drafts or templates." alt="" coords="5,5,224,60"/>
+</map>

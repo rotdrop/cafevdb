@@ -1,0 +1,5 @@
+<map id="bind" name="bind">
+<area shape="rect" id="node1" title="{Bind to the given storage object.Create a new object if $id is null.void}" alt="" coords="5,31,52,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html#a4a20559544fdf4dcb457e258dc976cf8" title="Reset the initial state." alt="" coords="100,5,151,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html#ac95792d19ae51b2fca46c4f69297c813" title="{Synchronize with the underlying storage, i.e.read the data into this instance.void}" alt="" coords="100,55,151,80"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="DatabaseCloudConnectorViewException" name="DatabaseCloudConnectorViewException">
+<area shape="rect" id="node1" title="Thrown during generation of the cloud&#45;user connector views." alt="" coords="5,225,207,265"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="38,152,174,177"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="66,79,146,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="52,5,160,31"/>
+</map>

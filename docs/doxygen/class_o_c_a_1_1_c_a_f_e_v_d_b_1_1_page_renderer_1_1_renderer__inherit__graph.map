@@ -1,0 +1,18 @@
+<map id="Renderer" name="Renderer">
+<area shape="rect" id="node1" title="Abstract base HTML renderer." alt="" coords="132,301,207,327"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="255,301,396,327"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="5,301,84,327"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html" title="Table generator for Instruments table." alt="" coords="481,5,614,31"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html" title="Render the instrument insurances of the club&#45;members." alt="" coords="473,55,621,80"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html" title="Table generator for Instruments table." alt="" coords="502,104,593,129"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_brokers.html" title="Table generator for Instruments table." alt="" coords="485,153,609,179"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_rates.html" title="Table generator for Instruments table." alt="" coords="490,203,605,228"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html" title="Table generator for Musicians table." alt="" coords="507,252,588,277"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html" title="Table generator for Instruments table." alt="" coords="444,301,651,327"/>
+<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html" title="Table generator for Instruments table." alt="" coords="467,351,627,376"/>
+<area shape="rect" id="node12" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html" title="Table generator for Instruments table." alt="" coords="481,400,613,425"/>
+<area shape="rect" id="node13" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html" title="Table generator for Instruments table." alt="" coords="486,449,609,475"/>
+<area shape="rect" id="node14" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html" title="Table generator for Projects table." alt="" coords="512,499,583,524"/>
+<area shape="rect" id="node15" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html" title="TBD." alt="" coords="479,548,616,573"/>
+<area shape="rect" id="node16" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html" title="TBD." alt="" coords="471,597,624,623"/>
+</map>

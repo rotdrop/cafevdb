@@ -1,0 +1,5 @@
+<map id="checkAndGetCloudDbUser" name="checkAndGetCloudDbUser">
+<area shape="rect" id="node1" title=" " alt="" coords="241,42,421,67"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#ab8482f7cd6afd7290823d6bfafe1c2a3" title="Update the personalized one&#45;row views which give individual orchestra members access to just their ow..." alt="" coords="5,5,193,45"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a93f6d9da1bc4c1797b708227e1a1d40f" title="Update the views interacting with the Nextcloud user_sql backend and update their grants." alt="" coords="27,70,171,95"/>
+</map>

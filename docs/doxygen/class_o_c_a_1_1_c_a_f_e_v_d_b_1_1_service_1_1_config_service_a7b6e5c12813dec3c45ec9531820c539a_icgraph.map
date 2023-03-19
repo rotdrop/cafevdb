@@ -1,0 +1,6 @@
+<map id="setUser" name="setUser">
+<area shape="rect" id="node1" title="Install a new user." alt="" coords="271,31,339,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6cacbeb3555df4a292566b2e1b9bb574" title="Install a new user id." alt="" coords="144,5,223,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a53fe11e3dd3059d6379dfabaf2fce346" title="Fake execution with other user&#45;id." alt="" coords="25,55,76,80"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab50a6081ca9ae60c52dd1ef10f545a55" title="{}" alt="" coords="5,5,96,31"/>
+</map>

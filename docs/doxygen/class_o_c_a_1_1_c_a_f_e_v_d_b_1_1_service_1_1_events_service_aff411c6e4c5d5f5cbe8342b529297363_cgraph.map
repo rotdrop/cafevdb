@@ -1,0 +1,6 @@
+<map id="onCalendarUpdated" name="onCalendarUpdated">
+<area shape="rect" id="node1" title=" " alt="" coords="5,55,143,80"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a22bc18698bcfc1dd2c944ea1e404f53c" title="Return the configured calendar display name." alt="" coords="191,5,361,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad0c26e96685f3326cedfc84c4abc9efc" title=" " alt="" coords="225,55,327,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a7382dab4b4fdc5728aa5106f679610d2" title="Set the configured calendar display name." alt="" coords="191,104,361,129"/>
+</map>

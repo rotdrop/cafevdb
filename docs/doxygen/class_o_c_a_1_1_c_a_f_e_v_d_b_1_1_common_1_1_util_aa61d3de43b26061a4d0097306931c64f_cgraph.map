@@ -1,0 +1,4 @@
+<map id="removeSpaces" name="removeSpaces">
+<area shape="rect" id="node1" title="Remove all whitespace." alt="" coords="5,5,115,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a420255eaf134f40b32155f8138cde030" title="Normalize spaces and commas after and before spaces." alt="" coords="163,5,285,31"/>
+</map>

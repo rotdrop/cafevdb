@@ -1,0 +1,6 @@
+var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener =
+[
+    [ "getFallbackTranslation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener.html#ad42cb424f874b4b6d555e9fe8f3c3222", null ],
+    [ "getFallbackUntranslation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener.html#a1f292224da51c6cce0ef30db33d3e3a1", null ],
+    [ "getObjectConfiguration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_translatable_listener.html#ab01b9d235d5e158f1c44c62aee1eefef", null ]
+];

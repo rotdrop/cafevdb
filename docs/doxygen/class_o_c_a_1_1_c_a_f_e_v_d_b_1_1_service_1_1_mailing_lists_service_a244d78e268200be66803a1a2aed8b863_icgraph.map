@@ -1,0 +1,5 @@
+<map id="setListConfig" name="setListConfig">
+<area shape="rect" id="node1" title="Set the list config." alt="" coords="244,31,343,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b" title="Configure the given list as an announcements&#45;only list." alt="" coords="5,5,196,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adb5ee6484051ff49357847bc6b203409" title="Unsubscribe the given email&#45;address." alt="" coords="55,55,147,80"/>
+</map>

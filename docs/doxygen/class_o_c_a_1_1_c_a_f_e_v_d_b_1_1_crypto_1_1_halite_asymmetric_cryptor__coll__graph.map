@@ -1,0 +1,5 @@
+<map id="HaliteAsymmetricCryptor" name="HaliteAsymmetricCryptor">
+<area shape="rect" id="node1" title="Asymmetric encryption using the ParagonIE\Halite library." alt="" coords="14,152,183,177"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_cryptor_interface.html" title="Just there in order to branch depending on container specialization." alt="" coords="5,79,192,104"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_i_cryptor.html" title="Simple wrapper interface." alt="" coords="64,5,133,31"/>
+</map>

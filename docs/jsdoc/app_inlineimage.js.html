@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/inlineimage.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#actionHandler">actionHandler</a></li><li><a href="global.html#addEditor">addEditor</a></li><li><a href="global.html#addMusicians">addMusicians</a></li><li><a href="global.html#addReadyCallback">addReadyCallback</a></li><li><a href="global.html#afterLoad">afterLoad</a></li><li><a href="global.html#ajaxFailData">ajaxFailData</a></li><li><a href="global.html#ajaxFailMessage">ajaxFailMessage</a></li><li><a href="global.html#ajaxHandleError">ajaxHandleError</a></li><li><a href="global.html#ajaxValidateResponse">ajaxValidateResponse</a></li><li><a href="global.html#appInfo">appInfo</a></li><li><a href="global.html#applyToolTips">applyToolTips</a></li><li><a href="global.html#appPrefix">appPrefix</a></li><li><a href="global.html#appSettings">appSettings</a></li><li><a href="global.html#attachHandlers">attachHandlers</a></li><li><a href="global.html#checkInvalidInputs">checkInvalidInputs</a></li><li><a href="global.html#chosenActive">chosenActive</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#closeActionMenu">closeActionMenu</a></li><li><a href="global.html#contactValidation">contactValidation</a></li><li><a href="global.html#containerSelector">containerSelector</a></li><li><a href="global.html#createProgressStatus">createProgressStatus</a></li><li><a href="global.html#debugPopup">debugPopup</a></li><li><a href="global.html#dialogCustomCloseButton">dialogCustomCloseButton</a></li><li><a href="global.html#dialogFullScreenButton">dialogFullScreenButton</a></li><li><a href="global.html#dialogToBackButton">dialogToBackButton</a></li><li><a href="global.html#documentReady">documentReady</a></li><li><a href="global.html#download">download</a></li><li><a href="global.html#emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li><a href="global.html#emailFormPopup">emailFormPopup</a></li><li><a href="global.html#emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li><a href="global.html#emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li><a href="global.html#emailPopup">emailPopup</a></li><li><a href="global.html#eventsPopup">eventsPopup</a></li><li><a href="global.html#findOptionByValue">findOptionByValue</a></li><li><a href="global.html#FindRanges">FindRanges</a></li><li><a href="global.html#formSubmit">formSubmit</a></li><li><a href="global.html#generateSettingsUrl">generateSettingsUrl</a></li><li><a href="global.html#generateUrl">generateUrl</a></li><li><a href="global.html#getAppUrl">getAppUrl</a></li><li><a href="global.html#getChildren">getChildren</a></li><li><a href="global.html#getControlObject">getControlObject</a></li><li><a href="global.html#getOptions">getOptions</a></li><li><a href="global.html#getOptionValues">getOptionValues</a></li><li><a href="global.html#getPersonalUrl">getPersonalUrl</a></li><li><a href="global.html#getSelectize">getSelectize</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUrl">getUrl</a></li><li><a href="global.html#getWidget">getWidget</a></li><li><a href="global.html#handleProjectActions">handleProjectActions</a></li><li><a href="global.html#handleQueryLogMenu">handleQueryLogMenu</a></li><li><a href="global.html#handleTableExportMenu">handleTableExportMenu</a></li><li><a href="global.html#htmlDecode">htmlDecode</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#installInputSelectize">installInputSelectize</a></li><li><a href="global.html#instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li><a href="global.html#invalidInputDowncount">invalidInputDowncount</a></li><li><a href="global.html#isVanilla">isVanilla</a></li><li><a href="global.html#jQuery">jQuery</a></li><li><a href="global.html#lazyBatchDecryptValues">lazyBatchDecryptValues</a></li><li><a href="global.html#loadPage">loadPage</a></li><li><a href="global.html#loadPMETable">loadPMETable</a></li><li><a href="global.html#loadPMETableFiltered">loadPMETableFiltered</a></li><li><a href="global.html#mandatesInit">mandatesInit</a></li><li><a href="global.html#mandateValidate">mandateValidate</a></li><li><a href="global.html#mandateValidatePME">mandateValidatePME</a></li><li><a href="global.html#mandateValidatePMEPromise">mandateValidatePMEPromise</a></li><li><a href="global.html#mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li><a href="global.html#maybeTranspose">maybeTranspose</a></li><li><a href="global.html#messages">messages</a></li><li><a href="global.html#modalizer">modalizer</a></li><li><a href="global.html#modalWaitNotification">modalWaitNotification</a></li><li><a href="global.html#myLoadAddMusicians">myLoadAddMusicians</a></li><li><a href="global.html#myLoadMusicians">myLoadMusicians</a></li><li><a href="global.html#myLoadProjectParticipants">myLoadProjectParticipants</a></li><li><a href="global.html#myPersonalRecordDialog">myPersonalRecordDialog</a></li><li><a href="global.html#nonTextInputTypes">nonTextInputTypes</a></li><li><a href="global.html#participantFieldsPopup">participantFieldsPopup</a></li><li><a href="global.html#photoEditCurrent">photoEditCurrent</a></li><li><a href="global.html#photoLoad">photoLoad</a></li><li><a href="global.html#photoLoadHandlers">photoLoadHandlers</a></li><li><a href="global.html#photoReady">photoReady</a></li><li><a href="global.html#photoUploadDragDrop">photoUploadDragDrop</a></li><li><a href="global.html#pmeCellSelector">pmeCellSelector</a></li><li><a href="global.html#pmeClassSelector">pmeClassSelector</a></li><li><a href="global.html#pmeClassSelectors">pmeClassSelectors</a></li><li><a href="global.html#pmeContainer">pmeContainer</a></li><li><a href="global.html#pmeContextMenu">pmeContextMenu</a></li><li><a href="global.html#pmeData">pmeData</a></li><li><a href="global.html#pmeDeferReload">pmeDeferReload</a></li><li><a href="global.html#pmeFilterSelector">pmeFilterSelector</a></li><li><a href="global.html#pmeFormSelector">pmeFormSelector</a></li><li><a href="global.html#pmeIdSelector">pmeIdSelector</a></li><li><a href="global.html#pmeInit">pmeInit</a></li><li><a href="global.html#pmeInner">pmeInner</a></li><li><a href="global.html#pmeInputSelector">pmeInputSelector</a></li><li><a href="global.html#pmeKeySelector">pmeKeySelector</a></li><li><a href="global.html#pmeNavigationSelector">pmeNavigationSelector</a></li><li><a href="global.html#pmeOpenRowDialog">pmeOpenRowDialog</a></li><li><a href="global.html#pmeQueryInfoSelector">pmeQueryInfoSelector</a></li><li><a href="global.html#pmeRec">pmeRec</a></li><li><a href="global.html#pmeRecordValue">pmeRecordValue</a></li><li><a href="global.html#pmeSelector">pmeSelector</a></li><li><a href="global.html#pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li><a href="global.html#pmeSys">pmeSys</a></li><li><a href="global.html#pmeSysNameSelector">pmeSysNameSelector</a></li><li><a href="global.html#pmeSysNameSelectors">pmeSysNameSelectors</a></li><li><a href="global.html#pmeTableDialogOpen">pmeTableDialogOpen</a></li><li><a href="global.html#pmeTableSelector">pmeTableSelector</a></li><li><a href="global.html#pmeToken">pmeToken</a></li><li><a href="global.html#pmeTriggerSubmit">pmeTriggerSubmit</a></li><li><a href="global.html#pmeTweaks">pmeTweaks</a></li><li><a href="global.html#pmeUnTweak">pmeUnTweak</a></li><li><a href="global.html#pmeValueSelector">pmeValueSelector</a></li><li><a href="global.html#pollProgressStatus">pollProgressStatus</a></li><li><a href="global.html#print_r">print_r</a></li><li><a href="global.html#projectPaymentPopup">projectPaymentPopup</a></li><li><a href="global.html#projectViewPopup">projectViewPopup</a></li><li><a href="global.html#projectWebPageRequest">projectWebPageRequest</a></li><li><a href="global.html#projectWebPageTabHandler">projectWebPageTabHandler</a></li><li><a href="global.html#pseudoSubmit">pseudoSubmit</a></li><li><a href="global.html#pseudoSubmitPost">pseudoSubmitPost</a></li><li><a href="global.html#queryData">queryData</a></li><li><a href="global.html#refreshSelectWidget">refreshSelectWidget</a></li><li><a href="global.html#refreshWidgetProperties">refreshWidgetProperties</a></li><li><a href="global.html#removeEditor">removeEditor</a></li><li><a href="global.html#renderTag">renderTag</a></li><li><a href="global.html#replaceSelectOptions">replaceSelectOptions</a></li><li><a href="global.html#runReadyCallbacks">runReadyCallbacks</a></li><li><a href="global.html#selectedOptions">selectedOptions</a></li><li><a href="global.html#selectedValues">selectedValues</a></li><li><a href="global.html#selectizeActive">selectizeActive</a></li><li><a href="global.html#setAppUrl">setAppUrl</a></li><li><a href="global.html#setPersonalUrl">setPersonalUrl</a></li><li><a href="global.html#setToken">setToken</a></li><li><a href="global.html#simpleSetHandler">simpleSetHandler</a></li><li><a href="global.html#simpleSetValueHandler">simpleSetValueHandler</a></li><li><a href="global.html#snapshotEditor">snapshotEditor</a></li><li><a href="global.html#stopEnterSubmit">stopEnterSubmit</a></li><li><a href="global.html#tableDialog">tableDialog</a></li><li><a href="global.html#tableDialogHandlers">tableDialogHandlers</a></li><li><a href="global.html#tableDialogReload">tableDialogReload</a></li><li><a href="global.html#tableDialogReplace">tableDialogReplace</a></li><li><a href="global.html#Template">Template</a></li><li><a href="global.html#textareaResize">textareaResize</a></li><li><a href="global.html#toolTipsEnabled">toolTipsEnabled</a></li><li><a href="global.html#toolTipsInit">toolTipsInit</a></li><li><a href="global.html#transposeMainTable">transposeMainTable</a></li><li><a href="global.html#transposeReady">transposeReady</a></li><li><a href="global.html#unfocus">unfocus</a></li><li><a href="global.html#updateEditor">updateEditor</a></li><li><a href="global.html#urlDecode">urlDecode</a></li><li><a href="global.html#urlEncode">urlEncode</a></li><li><a href="global.html#validateInstrumentChoices">validateInstrumentChoices</a></li><li><a href="global.html#wikiPopup">wikiPopup</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/inlineimage.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine &lt;himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+
+import $ from './jquery.js';
+import { appName } from './app-info.js';
+import generateAppUrl from './generate-url.js';
+import * as Dialogs from './dialogs.js';
+import * as Ajax from './ajax.js';
+
+require('jquery-jcrop');
+require('../legacy/nextcloud/jquery/octemplate.js');
+require('inlineimage.css');
+
+const IMAGE_ID_ANY = -1;
+const IMAGE_ID_PLACEHOLDER = 0;
+
+const generateUrl = function(urlComponent, urlParams, urlOptions) {
+  let url = 'image';
+  if (urlComponent) {
+    url += '/' + urlComponent;
+  }
+  return generateAppUrl(url, urlParams, urlOptions);
+};
+
+const generateGetUrl = function(parameters) {
+  return generateUrl('{joinTable}/{ownerId}', parameters);
+};
+
+const generatePostUrl = function(operation) {
+  return generateUrl(operation);
+};
+
+const photoUpload = function(wrapper, filelist) {
+  const imageInfo = wrapper.data('imageInfo');
+  if (!filelist) {
+    Dialogs.alert(t(appName, 'No files selected for upload.'), t(appName, 'Error'));
+    return;
+  }
+  const file = filelist[0];
+  const form = $('#' + imageInfo.formId);
+  // var totalSize=0;
+  if (file.size > form.find('.max_upload').val()) {
+    Dialogs.alert(t(appName, 'The file you are trying to upload exceed the maximum size of {max} for file uploads on this server.', { max: form.find('.max_upload_human').val() }), t(appName, 'Error'));
+    return;
+  }
+
+  const uploadData = new FormData(form[0]);
+  $.ajax({
+    url: generatePostUrl('fileupload'),
+    data: uploadData,
+    type: 'POST',
+    processData: false,
+    contentType: false, // 'multipart/form-data' // ???
+  })
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown);
+    })
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, ['tmpKey', 'fileName'])) {
+        return;
+      }
+      editPhoto(wrapper, data.tmpKey, data.fileName);
+    });
+};
+
+/**
+ * Hide or show edit and delete buttons depending on whether there is
+ * a real image.
+ *
+ * @param {object} wrapper jQuery object for the wrapper-div.
+ */
+const photoLoadHandlers = function(wrapper) {
+  const imageInfo = wrapper.data('imageInfo');
+  const phototools = wrapper.find('.phototools');
+  if (parseInt(imageInfo.imageId) > IMAGE_ID_PLACEHOLDER) {
+    phototools.find('.delete, .edit').show();
+  } else {
+    phototools.find('.delete, .edit').hide();
+  }
+};
+
+const photoCloudSelected = function(wrapper, path) {
+  const imageInfo = wrapper.data('imageInfo');
+  $.post(generatePostUrl('cloud'), $.extend({ path }, imageInfo))
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown);
+    })
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, ['tmpKey', 'fileName'])) {
+        return;
+      }
+      editPhoto(wrapper, data.tmpKey, data.fileName);
+    });
+};
+
+/**
+ * Install the special upload and crop buttons inside the given
+ * container.
+ *
+ * @param {jQuery} wrapper jQuery object containing image and
+ * controls.
+ *
+ * @param {Function} callback TBD.
+ */
+const photoLoad = function(wrapper, callback) {
+  callback = callback || function() {};
+  const phototools = wrapper.find('.phototools');
+  const imageInfo = wrapper.data('imageInfo');
+  phototools.find('li a').cafevTooltip('hide');
+  wrapper.addClass(['loading', 'wait']);
+  wrapper.removeData('image');
+  const image = $(new Image());
+  wrapper.data('image', image);
+
+  const imageUrl = generateGetUrl($.extend({
+    refresh: Math.random(), // disable browser-caching
+    requesttoken: OC.requestToken,
+  }, imageInfo));
+
+  image
+    .on('load', function() {
+      wrapper.find('img.' + appName + '_inline_image').remove();
+      image.addClass(appName + '_inline_image');
+      image.addClass('zoomable');
+      image.insertAfter(phototools);
+      // wrapper.css('width', image.get(0).width + 10);
+      image.fadeIn(function() {
+        wrapper.removeClass(['loading', 'wait']);
+        callback();
+      });
+    })
+    .on('error', function(event) {
+      // BIG FAT NOTE: the "event" data passed to this error handler
+      // just does not contain any information about the error-data
+      // returned by the server. So only information is "there was an
+      // error".
+
+      Dialogs.alert(t(appName, 'Could not open image.'), t(appName, 'Error'), callback);
+    })
+    .attr('src', imageUrl);
+  photoLoadHandlers(wrapper);
+};
+
+/**
+ * Edit (crop) the current photo.
+ *
+ * @param {object} wrapper jQuery object containing image and
+ * controls.
+ */
+const photoEditCurrent = function(wrapper) {
+  const imageInfo = wrapper.data('imageInfo');
+  $.post(generatePostUrl('edit'), imageInfo)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown);
+      wrapper.removeClass('wait');
+    })
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, ['tmpKey', 'fileName'])) {
+        return;
+      }
+      editPhoto(wrapper, data.tmpKey, data.fileName);
+    });
+};
+
+const editPhoto = function(wrapper, tmpKey, fileName) {
+  const imageInfo = wrapper.data('imageInfo');
+
+  $.fn.cafevTooltip.remove();
+  // Simple event handler, called from onChange and onSelect
+  // event handlers, as per the Jcrop invocation above
+  const showCoords = function(c) {
+    $('#x1').val(c.x);
+    $('#y1').val(c.y);
+    $('#x2').val(c.x2);
+    $('#y2').val(c.y2);
+    $('#w').val(c.w);
+    $('#h').val(c.h);
+  };
+
+  const clearCoords = function() {
+    $('#coords input').val('');
+  };
+
+  const $cropBoxTmpl = $('#cropBoxTemplate');
+  $('body').append('&lt;div id="edit_photo_dialog">&lt;/div>');
+  const $cropBoxForm = $cropBoxTmpl.octemplate($.extend({ tmpKey, fileName }, imageInfo));
+  $(new Image())
+    .on('load', function() {
+      // var x = 5, y = 5, w = this.width-10, h = this.height-10;
+      const x = 0;
+      const y = 0;
+      const w = this.width;
+      const h = this.height;
+      $(this).attr('id', 'cropbox');
+      $(this).prependTo($cropBoxForm).fadeIn();
+      const boxW = Math.min(imageInfo.imageSize, window.innerWidth * 0.95);
+      const boxH = Math.min(imageInfo.imageSize, window.innerHeight * 0.80);
+
+      $(this).Jcrop({
+        onChange: showCoords,
+        onSelect: showCoords,
+        onRelease: clearCoords,
+        maxSize: [this.width, this.height], // max is just original image size
+        bgColor: 'black',
+        bgOpacity: 0.4,
+        boxWidth: boxW,
+        boxHeight: boxH,
+        setSelect: [x + w, y + h, x, y],
+        // aspectRatio: 0.8
+      });
+      $('#edit_photo_dialog').html($cropBoxForm).cafevDialog({
+        modal: true,
+        closeOnEscape: true,
+        title: t(appName, 'Edit inline image'),
+        resizable: true,
+        height: 'auto',
+        width: 'auto',
+        buttons: [
+          {
+            text: t(appName, 'Ok'),
+            click() {
+              savePhoto(wrapper, $(this));
+              $(this).dialog('close');
+            },
+          },
+          {
+            text: t(appName, 'Cancel'),
+            click() { $(this).dialog('close'); },
+          },
+        ],
+        close(event, ui) {
+          $(this).dialog('destroy').remove();
+          $('#edit_photo_dialog').remove();
+        },
+        open(event, ui) {
+          showCoords({ x, y, x2: x + w - 1, y2: y + h - 1, w, h });
+        },
+      });
+    })
+    .on('error', function() {
+      // no detailed information available here.
+      OC.notify({ message: t(appName, 'Error loading inline image.') });
+    })
+    .attr(
+      'src', generateGetUrl({
+        joinTable: 'cache',
+        ownerId: tmpKey,
+        requesttoken: OC.requestToken,
+      }));
+};
+
+const savePhoto = function(wrapper, $dlg) {
+  const form = $dlg.find('.cropform');
+  const q = form.serialize();
+  console.log('savePhoto', q);
+  $.post(generatePostUrl('save'), q)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown);
+    })
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, ['imageId'])) {
+        return;
+      }
+      const imageInfo = wrapper.data('imageInfo');
+      if ('' + imageInfo.imageId === '' + IMAGE_ID_PLACEHOLDER &amp;&amp; wrapper.hasClass('multi')) {
+        const newWrapper = wrapper.clone(true, false);
+        const newImageInfo = $.extend({}, wrapper.data('imageInfo'));
+        newImageInfo.imageId = data.imageId;
+        newImageInfo.formId = undefined;
+        newWrapper.data('imageInfo', newImageInfo);
+        photoReady(newWrapper);
+        wrapper.before(newWrapper);
+      } else {
+        imageInfo.imageId = data.imageId;
+        createImageUploadForm(imageInfo);
+        photoLoad(wrapper);
+      }
+    });
+};
+
+const deletePhoto = function(wrapper) {
+  const imageInfo = wrapper.data('imageInfo');
+  wrapper.addClass('wait');
+  $.post(generatePostUrl('delete'), imageInfo)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown);
+      wrapper.removeClass('wait');
+    })
+    .done(function(data) {
+      if (wrapper.hasClass('multi')) {
+        wrapper.remove();
+        return;
+      }
+      imageInfo.imageId = IMAGE_ID_PLACEHOLDER;
+      createImageUploadForm(imageInfo);
+      photoLoad(wrapper);
+      wrapper.removeClass('wait');
+    });
+};
+
+/**
+ * Install the special upload and crop buttons inside the given
+ * container.
+ *
+ * @param {object} wrapper jQuery object containing image and
+ * controls.
+ */
+const attachHandlers = function(wrapper) {
+  const uploadStart = $('#' + wrapper.data('imageInfo').formId).find('.file_upload_start');
+  const phototools = wrapper.find('.phototools');
+
+  phototools.find('li a').click(function() {
+    $(this).cafevTooltip('hide');
+  });
+  wrapper.hover(
+    function() {
+      phototools.slideDown(200);
+    },
+    function() {
+      phototools.slideUp(200);
+    }
+  );
+  phototools.hover(
+    function() {
+      $(this).removeClass('transparent');
+    },
+    function() {
+      $(this).addClass('transparent');
+    }
+  );
+  phototools.find('.upload').on('click', function(event) {
+    uploadStart.trigger('click');
+    event.stopImmediatePropagation();
+    return false;
+  });
+  phototools.find('.cloud').on('click', function(event) {
+    Dialogs.filePicker(
+      t(appName, 'Select image'),
+      function(path) {
+        photoCloudSelected(wrapper, path);
+      },
+      false,
+      ['image\\/.*'],
+      true, // modal
+      undefined, // type
+      undefined /* path */, {
+        filter(file) {
+          if (file.type === 'dir') {
+            return true;
+          }
+          return /image\/.*/.test(file.mimetype);
+        },
+      });
+    event.stopImmediatePropagation();
+    return false;
+  });
+  phototools.find('.delete').on('click', function(event) {
+    const $self = $(this);
+    $self.cafevTooltip('hide');
+    deletePhoto(wrapper);
+    $self.hide();
+    event.stopImmediatePropagation();
+    return false;
+  });
+  phototools.find('.edit').on('click', function(event) {
+    $(this).cafevTooltip('hide');
+    photoEditCurrent(wrapper);
+    event.stopImmediatePropagation();
+    return false;
+  });
+  phototools.find('li a').cafevTooltip();
+
+  // Profile image upload handling
+  // New profile image selected
+  uploadStart.on('change', function() {
+    photoUpload(wrapper, this.files);
+  });
+  wrapper.bind('dragover', function(event) {
+    $(event.target).addClass('droppable');
+    event.stopPropagation();
+    event.preventDefault();
+  });
+  wrapper.bind('dragleave', function(event) {
+    $(event.target).removeClass('droppable');
+  });
+  wrapper.bind('drop', function(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    $(event.target).removeClass('droppable');
+    photoUploadDragDrop(wrapper, event.originalEvent.dataTransfer.files);
+  });
+};
+
+/**
+ * Upload images with drag'n drop
+ *
+ * @param {object} wrapper Wrapping div with data.
+ *
+ * @param {Array} files Files to be uploaded.
+ */
+const photoUploadDragDrop = function(wrapper, files) {
+  const imageInfo = wrapper.data('imageInfo');
+  if (files.length &lt; 1) {
+    return;
+  }
+  const file = files[0];
+  if (file.size > $('#max_upload').val()) {
+    Dialogs.alert(t(appName, 'The file you are trying to upload exceed the maximum size for file uploads on this server.'), t(appName, 'Upload too large'));
+    return;
+  }
+  if (file.type.indexOf('image') !== 0) {
+    Dialogs.alert(t(appName, 'Only image files can be used as profile picture.'), t(appName, 'Wrong file type'));
+    return;
+  }
+  const xhr = new XMLHttpRequest();
+
+  if (!xhr.upload) {
+    Dialogs.alert(t(appName, 'Your browser doesn\'t support AJAX upload. Please click on the profile picture to select a photo to upload.'), t(appName, 'Error'));
+  }
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) { // done
+      const data = $.parseJSON(xhr.responseText);
+      if (xhr.status === Ajax.httpStatus.OK) {
+        if (!Ajax.validateResponse(data, ['tmpKey', 'fileName'])) {
+          return;
+        }
+        editPhoto(wrapper, data.tmpKey, data.fileName);
+      } else {
+        Ajax.handleError(xhr, xhr.status, Ajax.httpStatus[xhr.status]);
+      }
+    }
+  };
+
+  xhr.upload.onprogress = function(e) {
+    if (e.lengthComputable) {
+      // const progress = Math.round((e.loaded * 100) / e.total);
+      // if (_progress != 100){
+      // }
+    }
+  };
+
+  xhr.open(
+    'POST',
+    generatePostUrl('dragndrop')
+      + '?'
+      + $.param($.extend({
+        requesttoken: OC.requestToken,
+        imageFile: file.name,
+      }, imageInfo)),
+    true);
+  xhr.setRequestHeader('Cache-Control', 'no-cache');
+  xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  xhr.setRequestHeader('X-File-Name', encodeURIComponent(file.name));
+  xhr.setRequestHeader('X-File-Size', file.size);
+  xhr.setRequestHeader('Content-Type', file.type);
+  xhr.send(file);
+};
+
+const uploadFormId = function(imageInfo) {
+  return ('image-upload-form-' + imageInfo.ownerId + '-' + imageInfo.imageId)
+    .replace(/^[^a-zA-Z]+|[^\w:-]+/g, '_');
+};
+
+const createImageUploadForm = function(imageInfo) {
+  $('#' + imageInfo.formId).remove();
+  imageInfo.formId = uploadFormId(imageInfo);
+  $('#' + imageInfo.formId).remove();
+  imageInfo.requestToken = OC.requestToken;
+  const $imageUploadTemplate = $('#imageUploadTemplate');
+  const $imageUploadForm = $imageUploadTemplate.octemplate(imageInfo);
+  $('body').append($imageUploadForm);
+};
+
+/**
+ * The document-ready handler, should also be called after
+ * dynamically injecting html that needs the image upload
+ * functionality.
+ *
+ * @param {object} container jQuery object containing the
+ * photo-wrapper div.
+ *
+ * @param {Function} callback TBD.
+ */
+const photoReady = function(container, callback) {
+  const wrapperSelector = '.' + appName + '_inline_image_wrapper';
+  const wrapper = container.is(wrapperSelector)
+    ? container
+    : container.find(wrapperSelector);
+  const imageInfo = wrapper.data('imageInfo');
+  callback = callback || function() {};
+  if (imageInfo.joinTable === undefined
+      || imageInfo.ownerId === undefined
+      || +imageInfo.ownerId &lt;= 0) {
+    // still run the callback
+    callback();
+    return;
+  }
+  if (imageInfo.imageId === undefined || +imageInfo.imageId &lt; 0) {
+    imageInfo.imageId = IMAGE_ID_ANY;
+  }
+  createImageUploadForm(imageInfo);
+  photoLoad(wrapper, callback);
+  attachHandlers(wrapper);
+};
+
+const onPopupLoad = function(event) {
+  const $imgClone = $(this);
+  const $dialogHolder = $('&lt;div id="photooverlay" style="width:auto;height:auto;">&lt;/div>');
+
+  $imgClone.removeClass('zoomable');
+  $dialogHolder.append($imgClone);
+  $.fn.cafevTooltip.remove(); // get rid of disturbing tooltips.
+
+  const dialogPosition = {
+    my: 'center top',
+    at: 'center top + 5%',
+    of: '#app-content',
+  };
+
+  $dialogHolder.cafevDialog({
+    title: t(appName, 'Photo Zoom'),
+    position: dialogPosition,
+    width: 'auto',
+    height: 'auto',
+    modal: true,
+    closeOnEscape: false,
+    dialogClass: 'photo-zoom no-close transparent-titlebar no-border content-box',
+    resizable: false,
+    open() {
+      const $dialogHolder = $(this);
+      const $dialogWidget = $dialogHolder.dialog('widget');
+      $dialogHolder.imagesLoaded(function() {
+        const title = $dialogWidget.find('.ui-dialog-titlebar');
+        const titleBarHeight = title.is(':visible') ? title.outerHeight() : '0';
+        const newHeight = $dialogWidget.height() - titleBarHeight;
+        const newWidth = $dialogWidget.width();
+
+        const height = $dialogHolder.height();
+        const width = $dialogHolder.width();
+        const outerHeight = $dialogHolder.outerHeight(true);
+        const outerWidth = $dialogHolder.outerWidth(true);
+
+        const imageHeight = $imgClone.height();
+        const imageWidth = $imgClone.width();
+        const imageOuterHeight = $imgClone.outerHeight(true);
+        const imageOuterWidth = $imgClone.outerWidth(true);
+
+        console.log('inner w/h', width, height);
+        console.log('outer w/h', outerWidth, outerHeight);
+        console.log('new w/h', newWidth, newHeight);
+        console.log('img w/h', imageWidth, imageHeight);
+        console.log('img o w/h', imageOuterWidth, imageOuterHeight);
+
+        /* newHeight and newWidth are the relevant sizes
+         * which must hold the entire stuff.
+         */
+        const vOffset = outerHeight - height;
+        const hOffset = outerWidth - width;
+        const imgVOffset = imageOuterHeight - imageHeight;
+        const imgHOffset = imageOuterWidth - imageWidth;
+        const imageMaxHeight = Math.round(newHeight - vOffset - imgVOffset);
+        const imageMaxWidth = Math.round(newWidth - hOffset - imgHOffset);
+        const imageRatio = imageWidth / imageHeight;
+
+        console.log('off h/v', hOffset, vOffset);
+        console.log('imgoff h/v', imgHOffset, imgVOffset);
+        console.log('img max w/h', imageMaxWidth, imageMaxHeight);
+
+        if (imageHeight > imageMaxHeight) {
+          if (imageMaxHeight * imageRatio > imageMaxWidth) {
+            // scale width
+            console.log('scale width to', imageMaxWidth);
+            $imgClone.width(imageMaxWidth);
+          } else {
+            // scale height
+            console.log('scale height to', imageMaxHeight);
+            $imgClone.height(imageMaxHeight);
+          }
+        } else if (imageWidth > imageMaxWidth) {
+          console.log('scale width to', imageMaxWidth);
+          $imgClone.width(imageMaxWidth);
+        }
+
+        console.log('new image w/h', $imgClone.width(), $imgClone.height());
+
+        // imageHeight = $imgClone.height();
+        // if (imageHeight &lt; imageMaxHeight) {
+        //   console.log('shift image down by', (imageMaxHeight - imageHeight) / 2);
+        //   $imgClone.css('margin-top', "+="+((imageMaxHeight - imageHeight) / 2));
+        // }
+        // $dialogWidget.css('width', $imgClone.width() + imgHOffset + hOffset);
+        // $dialogWidget.css('width', 'auto');
+
+        $dialogHolder.dialog('option', 'position', dialogPosition);
+
+        $('#app-content').data('photoPopup', $dialogHolder).addClass('has-photo-popup');
+      });
+    },
+    close() {
+      $dialogHolder.dialog('destroy').remove();
+    },
+  });
+
+};
+
+const photoPopup = function(image) {
+  const $appContent = $('#app-content');
+  if (!$appContent.data('hasPhotoPopupCloser')) {
+    $appContent.on('click', function(event) {
+      const $photoPopup = $appContent.data('photoPopup');
+      if ($photoPopup) {
+        $photoPopup.dialog('close');
+        $appContent.removeData('photoPopup');
+        $appContent.removeClass('has-photo-popup');
+      }
+    });
+    $appContent.data('hasPhotoPopupCloser', true);
+  }
+  const $image = $(image);
+  const $imgClone = $('&lt;img class="' + $image.attr('class') + '" src="">');
+  $imgClone.on('load', onPopupLoad);
+  $imgClone.attr('src', $image.attr('src').replace(/&amp;previewWidth=[0-9]+/i, ''));
+
+};
+
+export {
+  photoPopup as popup,
+  photoReady as ready,
+};
+
+// Local Variables: ***
+// js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Mar 19 2023 16:22:02 GMT+0100 (Mitteleuropäische Normalzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

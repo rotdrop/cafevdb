@@ -1,0 +1,13 @@
+<map id="bind" name="bind">
+<area shape="rect" id="node1" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="5,153,52,179"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ae0e6a2643a679ae23f2975018436da50" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="100,104,247,129"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a830652bacd2fe88b917967c2db01e092" title=" " alt="" coords="119,204,227,229"/>
+<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ad340ac2983f99f3d7695db636ec83c6d" title="Initialize the per&#45;user public/private key pair, which inparticular is used to propagate the app&#39;s en..." alt="" coords="117,153,230,179"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ac00a76ffe038ef8a433357bd4114bb52" title="Test if we a bound to a user." alt="" coords="343,5,400,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7f3eb9937785e05b6d3e638fc187072c" title="Fetch the value for the given key and possibly decrypt it." alt="" coords="316,55,427,80"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a89044dae403670e1950421f9500ab7e4" title=" " alt="" coords="295,153,448,179"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#af00d9a637dd0c0e25a62685bad893023" title=" " alt="" coords="329,104,414,129"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="526,80,621,105"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#adb19126b250726643c9e37b9a15dc6f2" title="Get and decrypt an personal &#39;user&#39; value encrypted with the public key of key&#45;pair." alt="" coords="496,153,651,179"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#aef02d325583d49207e4852023acf572d" title=" " alt="" coords="297,255,445,280"/>
+</map>

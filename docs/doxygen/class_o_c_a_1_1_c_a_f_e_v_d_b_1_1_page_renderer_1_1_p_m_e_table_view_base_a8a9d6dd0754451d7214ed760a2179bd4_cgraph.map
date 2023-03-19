@@ -1,0 +1,5 @@
+<map id="addSlug" name="addSlug">
+<area shape="rect" id="node1" title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class." alt="" coords="5,5,75,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="253,5,331,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="123,31,205,56"/>
+</map>

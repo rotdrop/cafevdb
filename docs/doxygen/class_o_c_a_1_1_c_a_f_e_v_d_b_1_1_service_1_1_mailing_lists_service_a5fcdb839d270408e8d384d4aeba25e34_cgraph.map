@@ -1,0 +1,5 @@
+<map id="renameList" name="renameList">
+<area shape="rect" id="node1" title="Rename an existing list." alt="" coords="5,31,92,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a7256e710e9b1bc7d7a4aa0f6d693f6ac" title="Somehow add an email alias to the mail system ..." alt="" coords="140,5,245,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aecc30b9b9f6fa310798e1c78ec2079a9" title="Fetch the list configuration from the server." alt="" coords="143,55,242,80"/>
+</map>

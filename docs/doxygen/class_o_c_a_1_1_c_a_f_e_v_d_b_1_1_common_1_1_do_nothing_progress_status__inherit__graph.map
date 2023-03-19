@@ -1,0 +1,5 @@
+<map id="DoNothingProgressStatus" name="DoNothingProgressStatus">
+<area shape="rect" id="node1" title="Dummy implementation doing nothing." alt="" coords="5,152,180,177"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="12,79,173,104"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="35,5,151,31"/>
+</map>

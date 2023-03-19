@@ -1,0 +1,8 @@
+<map id="AbstractReceivablesGenerator" name="AbstractReceivablesGenerator">
+<area shape="rect" id="node1" title="Base class for the specific receivable generators." alt="" coords="264,95,464,120"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_do_nothing_receivables_generator.html" title="Do nothing implementation to have something implementing the interface." alt="" coords="512,5,725,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_instrument_insurance_receivables_generator.html" title="Do nothing implementation to have something implementing the interface." alt="" coords="512,55,725,95"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_manually_generated_receivables_generator.html" title="Do nothing implementation to have something implementing the interface." alt="" coords="515,119,722,159"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_periodic_receivables_generator.html" title="Always generate a new payment request." alt="" coords="519,184,718,209"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html" title="Generate recurring receivables and manifest them as recurring Entities\ProjectParticipantField entity..." alt="" coords="5,95,216,120"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="logException" name="logException">
+<area shape="rect" id="node1" title=" " alt="" coords="489,133,587,159"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ae41bfe81b67dc7952c7a75d6dbc16c85" title="Change the given group&#45;shared folder – given by its old mount&#45;point – to a new mount&#45;point." alt="" coords="242,5,438,60"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53fd119ff90cc9e9a546accd6bd9f9e2" title="Delete any auth token secured with the given passphrase." alt="" coords="281,84,399,109"/>
+<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#aaa8017e1895f612bf3c22f75f20705d0" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="289,133,391,159"/>
+<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a700b0335035909f6817fb197ae6ef571" title="Try to fetch the login&#45;credentials contained in the auth token which is secured with the given passwo..." alt="" coords="239,183,441,208"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1b1d06b8849380605b6a83ff72dd8689" title=" " alt="" coords="251,232,429,287"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a5b62df0076a109c14c456e0664583bbe" title=" " alt="" coords="9,192,187,247"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#ab63abc381405369b014b433dded6a20c" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,271,191,325"/>
+</map>

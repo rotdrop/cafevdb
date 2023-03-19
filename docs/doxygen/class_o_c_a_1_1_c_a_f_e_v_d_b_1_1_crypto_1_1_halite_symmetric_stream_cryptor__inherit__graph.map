@@ -1,0 +1,5 @@
+<map id="HaliteSymmetricStreamCryptor" name="HaliteSymmetricStreamCryptor">
+<area shape="rect" id="node1" title="Lik HaliteSymmetricCryptor, but use the stream&#45;versions which work on chunks of 1M and thus scale bet..." alt="" coords="5,152,209,177"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_symmetric_cryptor_interface.html" title="Just there in order to branch depending on container specialization." alt="" coords="18,79,197,104"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_i_cryptor.html" title="Simple wrapper interface." alt="" coords="73,5,142,31"/>
+</map>

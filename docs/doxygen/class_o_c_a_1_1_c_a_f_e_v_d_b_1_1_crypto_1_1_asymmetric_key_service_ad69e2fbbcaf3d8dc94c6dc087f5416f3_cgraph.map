@@ -1,0 +1,4 @@
+<map id="getSharedPrivateData" name="getSharedPrivateData">
+<area shape="rect" id="node1" title="Return the entire encrypted config&#45;space." alt="" coords="5,5,156,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#a32f61ea261107431a8863c0cafe8901d" title="Fetch and decrypt one private value." alt="" coords="204,5,359,31"/>
+</map>

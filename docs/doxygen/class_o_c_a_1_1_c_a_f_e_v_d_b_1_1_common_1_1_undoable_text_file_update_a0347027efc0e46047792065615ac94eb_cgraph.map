@@ -1,0 +1,4 @@
+<map id="undo" name="undo">
+<area shape="rect" id="node1" title="{Undo that what was done by do().void}" alt="" coords="5,20,56,45"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html#aaf4e41b7d6e58b84e58b6e7650234a5b" title="Create a new unique name for renaming." alt="" coords="104,5,300,60"/>
+</map>

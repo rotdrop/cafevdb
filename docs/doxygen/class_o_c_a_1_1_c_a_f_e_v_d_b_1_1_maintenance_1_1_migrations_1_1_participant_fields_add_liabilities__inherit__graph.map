@@ -1,0 +1,6 @@
+<map id="ParticipantFieldsAddLiabilities" name="ParticipantFieldsAddLiabilities">
+<area shape="rect" id="node1" title="Change participantAccess field to enum." alt="" coords="5,152,201,177"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230207133000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="21,225,185,251"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="41,79,165,104"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="64,5,143,31"/>
+</map>

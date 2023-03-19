@@ -1,0 +1,4 @@
+<map id="getManagementOption" name="getManagementOption">
+<area shape="rect" id="node1" title="Get the special option holding management data if present." alt="" coords="5,5,159,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a89433c0611d15401dd1832ffe69f620f" title="Get one specific option." alt="" coords="207,5,313,31"/>
+</map>

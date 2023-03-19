@@ -1,0 +1,6 @@
+<map id="sanitizePersist" name="sanitizePersist">
+<area shape="rect" id="node1" title="{{Call sanitize(SANITIZE_PERSIST, $flush).void\SanitizerException}}" alt="" coords="5,31,113,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#a6cfd3fa108b089d483f43cf4142d9e68" title=" " alt="" coords="325,5,424,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#a184909dab34698899937d810a9f5d393" title="{{bool Return \true if the entity is ok to the judgement of this sanitizer, \false otherwise...." alt="" coords="161,56,228,81"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#ad60c68165a8e9716714c651edc2dd159" title=" " alt="" coords="276,55,473,109"/>
+</map>

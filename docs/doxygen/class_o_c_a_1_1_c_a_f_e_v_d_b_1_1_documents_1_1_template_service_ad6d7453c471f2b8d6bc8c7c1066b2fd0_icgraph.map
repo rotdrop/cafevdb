@@ -1,0 +1,4 @@
+<map id="getTemplatePath" name="getTemplatePath">
+<area shape="rect" id="node1" title="Return the file&#45;system path to the given template file." alt="" coords="207,5,327,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_documents_1_1_template_service.html#a58ebc860240f356fe725b01692a12577" title="Return the given template as a file&#45;node or null if not found." alt="" coords="5,5,159,31"/>
+</map>

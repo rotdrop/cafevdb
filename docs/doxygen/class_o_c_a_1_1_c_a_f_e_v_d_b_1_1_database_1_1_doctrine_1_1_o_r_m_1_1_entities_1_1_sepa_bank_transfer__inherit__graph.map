@@ -1,0 +1,5 @@
+<map id="SepaBankTransfer" name="SepaBankTransfer">
+<area shape="rect" id="node1" title="Ordinary bank transfer to destination account." alt="" coords="13,152,144,177"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bulk_transaction.html" title="SepaBulkTransaction." alt="" coords="5,79,152,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="30,5,127,31"/>
+</map>

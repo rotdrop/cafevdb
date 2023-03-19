@@ -1,0 +1,6 @@
+<map id="find" name="find">
+<area shape="rect" id="node1" title=" " alt="" coords="219,31,261,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a5234e2ee74d02ed9cdf5e867d1492795" title="{}" alt="" coords="113,5,169,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a57291364b6d186af794627f03aefd38c" title="Obtain object from database if it is &quot;clean&quot;, if it is dirty or new (no id) then create or update the..." alt="" coords="112,55,171,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8652674eb0728ffe1e44c3fe253936a1" title="Update multiple properties and write them through to the database if we are in $attached state." alt="" coords="5,55,64,80"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="deleteAuthToken" name="deleteAuthToken">
+<area shape="rect" id="node1" title="Delete any auth token secured with the given passphrase." alt="" coords="5,31,124,56"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="172,5,269,31"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="192,55,249,80"/>
+</map>

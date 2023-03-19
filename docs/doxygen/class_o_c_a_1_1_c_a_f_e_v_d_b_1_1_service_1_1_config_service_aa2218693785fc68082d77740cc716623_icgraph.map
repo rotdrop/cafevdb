@@ -1,0 +1,6 @@
+<map id="getGroup" name="getGroup">
+<area shape="rect" id="node1" title=" " alt="" coords="196,55,271,80"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#adeb37b77de6c78ae8303acd786f08ebf" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,5,148,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6" title="Return the dedicated admin&#45;group if it exists." alt="" coords="9,55,144,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4eb4832e8e3774063978db6e58d29edc" title=" " alt="" coords="6,104,147,129"/>
+</map>

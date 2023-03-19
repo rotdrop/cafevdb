@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_i_cryptor.html" title="Simple wrapper interface." alt="" coords="5,104,75,129"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_cryptor_interface.html" title="Just there in order to branch depending on container specialization." alt="" coords="123,55,309,80"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_seal_cryptor.html" title="Use the encryption service provided by the ambient cloud software." alt="" coords="171,104,261,129"/>
+<area shape="rect" id="node6" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_symmetric_cryptor_interface.html" title="Just there in order to branch depending on container specialization." alt="" coords="127,153,305,179"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_asymmetric_cryptor.html" title="Asymmetric encryption using the ParagonIE\Halite library." alt="" coords="375,5,544,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_cryptor.html" title="Asymmetric encryption using the OpenSSL extension of PHP." alt="" coords="364,55,555,80"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_symmetric_cryptor.html" title="Use the encryption service provided by the ambient cloud software." alt="" coords="378,104,541,129"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_symmetric_cryptor.html" title="Use libsodium through Halite." alt="" coords="378,153,541,179"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_symmetric_stream_cryptor.html" title="Lik HaliteSymmetricCryptor, but use the stream&#45;versions which work on chunks of 1M and thus scale bet..." alt="" coords="357,203,561,228"/>
+</map>

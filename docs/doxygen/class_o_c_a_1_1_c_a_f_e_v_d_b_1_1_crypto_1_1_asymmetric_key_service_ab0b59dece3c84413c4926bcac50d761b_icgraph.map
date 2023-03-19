@@ -1,0 +1,4 @@
+<map id="getSessionUserId" name="getSessionUserId">
+<area shape="rect" id="node1" title="Fetch the user&#45;id for the currently logged in user." alt="" coords="200,5,327,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#a1b5fe2c361de6401eb0e21ceaf74a665" title="Initialize a private/public key&#45;pair by either retreiving it from the config&#45;space or generating a ne..." alt="" coords="5,5,152,31"/>
+</map>

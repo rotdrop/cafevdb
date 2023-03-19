@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['nameprojectwebpages_0',['nameProjectWebPages',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aaca1775b3cf46e3a263aa4953315f185',1,'OCA::CAFEVDB::Service::ProjectService']]],
+  ['navigation_1',['navigation',['../interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html#a7c872230ae003c93d82e0e6de31f6212',1,'OCA\CAFEVDB\PageRenderer\IPageRenderer\navigation()'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7c872230ae003c93d82e0e6de31f6212',1,'OCA\CAFEVDB\PageRenderer\PMETableViewBase\navigation()']]],
+  ['navigation_2',['Navigation',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_util_1_1_navigation.html',1,'OCA::CAFEVDB::PageRenderer::Util']]],
+  ['needphpsession_3',['needPhpSession',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a4971c7a07753f11eb8b95ff168d8be64',1,'OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper\needPhpSession()'],['../interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html#a4971c7a07753f11eb8b95ff168d8be64',1,'OCA\CAFEVDB\PageRenderer\IRenderer\needPhpSession()'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a4971c7a07753f11eb8b95ff168d8be64',1,'OCA\CAFEVDB\PageRenderer\Projects\needPhpSession()'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html#a4971c7a07753f11eb8b95ff168d8be64',1,'OCA\CAFEVDB\PageRenderer\Renderer\needPhpSession()']]],
+  ['needsmigration_4',['needsMigration',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a4843a615c27e75e06b6d8c8ed69426ab',1,'OCA::CAFEVDB::Service::MigrationsService']]],
+  ['newdraftsfile_5',['newDraftsFile',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a6356c90b226e71323a190d0f5723a9de',1,'OCA::CAFEVDB::Storage::AppStorage']]],
+  ['newevent_6',['newEvent',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a6c83e799d4a9e5c85e69f5980f3ed41a',1,'OCA\CAFEVDB\Controller\LegacyEventsController\newEvent()'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a89595fb1b45135568c26cc3cd895fb1b',1,'OCA\CAFEVDB\Service\EventsService\newEvent()']]],
+  ['neweventform_7',['newEventForm',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a8760a80191af6b0890768e015fd317e6',1,'OCA::CAFEVDB::Controller::LegacyEventsController']]],
+  ['newfolder_8',['newFolder',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a31956852c940764b8b48f73a7c547c67',1,'OCA::CAFEVDB::Storage::AppStorage']]],
+  ['newtask_9',['newTask',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3bc5b15a2fa8fffd6b6b075b0e70c81a',1,'OCA::CAFEVDB::Service::EventsService']]],
+  ['newtemporaryfile_10',['newTemporaryFile',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a75a5d99cbfbafad3c439f7a3973974f6',1,'OCA::CAFEVDB::Storage::AppStorage']]],
+  ['newuploadfile_11',['newUploadFile',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a4191806f234a12ebbb893b84be75cbe4',1,'OCA::CAFEVDB::Storage::AppStorage']]],
+  ['nextcloud_2dapp_2dtoolkit_12',['nextcloud-app-toolkit',['../md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html',1,'']]],
+  ['nil_13',['nil',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html#a97fd18a681a708798dd19a95095acbaf',1,'OCA::CAFEVDB::Common::Uuid']]],
+  ['normalize_14',['normalize',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#a5e70683882a307d0d4c7ef1b3e546747',1,'OCA::CAFEVDB::Service::PhoneNumberService']]],
+  ['normalizedirectoryname_15',['normalizeDirectoryName',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283',1,'OCA::CAFEVDB::Storage::Database::Storage']]],
+  ['normalizepath_16',['normalizePath',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html#a9d8ac3ab9c2a02c50e22cc2393aaf61f',1,'OCA::CAFEVDB::Common::AbstractFileSystemUndoable']]],
+  ['normalizespaces_17',['normalizeSpaces',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a420255eaf134f40b32155f8138cde030',1,'OCA::CAFEVDB::Common::Util']]],
+  ['normalizetemplatename_18',['normalizeTemplateName',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_composer.html#a28c3e766ec95a8d1201a7dc1c857b0b3',1,'OCA::CAFEVDB::EmailForm::Composer']]],
+  ['notfound_19',['notFound',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html#ace6d783883f72ec0adeaa8c32595ff8a',1,'OCA::CAFEVDB::Controller::PageController']]],
+  ['notificationpending_20',['notificationPending',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a7c74e744ff535398db9cf5aaf9f77b33',1,'OCA::CAFEVDB::Database::Cloud::Mapper::BlogMapper']]],
+  ['notifier_21',['Notifier',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_notifications_1_1_notifier.html',1,'OCA::CAFEVDB::Notifications']]],
+  ['nounappliedmigrations_22',['noUnappliedMigrations',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a5ffead28fa0e9af899c4a790555f4162',1,'OCA::CAFEVDB::Service::ConfigCheckService']]]
+];

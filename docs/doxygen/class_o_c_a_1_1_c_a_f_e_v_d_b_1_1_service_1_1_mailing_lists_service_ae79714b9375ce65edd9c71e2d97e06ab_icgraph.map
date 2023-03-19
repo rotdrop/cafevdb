@@ -1,0 +1,19 @@
+<map id="getListId" name="getListId">
+<area shape="rect" id="node1" title="Fetch the list&#45;id of the given list." alt="" coords="975,359,1047,385"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="833,359,927,385"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b" title="Configure the given list as an announcements&#45;only list." alt="" coords="5,61,196,86"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aefa0430a83ca9e375d65e0913b2ee33a" title="Delete an existing list." alt="" coords="665,435,744,461"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aaaae3e91aaffd49bf070d401c23092f6" title=" " alt="" coords="654,485,755,510"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a3008702564aa487e4416cc9c0410cb30" title=" " alt="" coords="637,534,772,559"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="649,182,761,207"/>
+<area shape="rect" id="node12" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="255,186,334,211"/>
+<area shape="rect" id="node14" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adb5ee6484051ff49357847bc6b203409" title="Unsubscribe the given email&#45;address." alt="" coords="439,235,531,261"/>
+<area shape="rect" id="node15" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ade1a05b11f9d74137ad1ee533133decf" title="Get or check for a pending invitation (=== email confirmation request) for the given subscription&#45;add..." alt="" coords="624,283,785,309"/>
+<area shape="rect" id="node16" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a0fee216c2f18c3e73b3ef43f97bf4329" title="Dispose any pending subscription request with the given action." alt="" coords="394,334,575,359"/>
+<area shape="rect" id="node17" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#af02e2e78988cc16dfe382ff0a245afad" title="Install a message template." alt="" coords="631,583,778,609"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae62eae7d1bae43dae28edc191f40da81" title="Fetch the subscription preferences." alt="" coords="393,137,576,162"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a80b3751e479bc6620f7007cdd019869b" title="Return a brief status for the requested list and email address." alt="" coords="409,285,560,310"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a56dd65a95afc760129f3e87827317339" title="Patch the membership config for the given email address." alt="" coords="244,35,345,61"/>
+<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="393,186,576,211"/>
+<area shape="rect" id="node13" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="74,186,127,211"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="substituteAnnouncementsMailingList" name="substituteAnnouncementsMailingList">
+<area shape="rect" id="node1" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="5,104,240,129"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ac721d278c1106843d05dc3b9176b5fb9" title=" " alt="" coords="288,5,464,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="319,55,433,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a87e968763c59bd64b366af7d5a17598f" title=" " alt="" coords="295,104,457,129"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="317,153,435,179"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a85f86aca4c8ab5404203209c76241c7e" title=" " alt="" coords="309,203,443,228"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="512,153,583,179"/>
+</map>

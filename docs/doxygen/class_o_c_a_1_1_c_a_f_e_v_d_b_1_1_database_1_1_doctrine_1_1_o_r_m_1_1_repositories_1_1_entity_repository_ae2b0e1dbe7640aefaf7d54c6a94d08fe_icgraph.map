@@ -1,0 +1,15 @@
+<map id="getEntityManager" name="getEntityManager">
+<area shape="rect" id="node1" title="Public export of parent function." alt="" coords="588,151,712,176"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a3435ec579db5b0ae00575b8f516a8e24" title="Ban a SEPA&#45;mandate (timeout, withdrawn, erroneous data etc.)." alt="" coords="308,5,540,60"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a5592d318f18909a8b81537a3dce08164" title="Delete the given mandate if it is not used." alt="" coords="5,5,260,60"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#a9c87ed6646d36ad79c36d3d6daeca656" title="Find images for the given &quot;using&quot; entity class." alt="" coords="319,136,529,191"/>
+<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ab6f5f4edde190f5e5f1cd1e2fdd402d4" title="Set and get the given name as the current database target entity." alt="" coords="343,250,505,290"/>
+<area shape="rect" id="node13" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_web_pages_repository.html#a7beca857a9256c414d23d82cc4aaf0c3" title=" " alt="" coords="327,314,521,383"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#ae9058a484b4d2461ac8fb60b4c761db8" title="Find the first or only image for the given using entity." alt="" coords="15,84,250,139"/>
+<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113" title="Counts entities by a set of criteria." alt="" coords="55,163,211,203"/>
+<area shape="rect" id="node8" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a53ac2b252066fd57152201418ca9a238" title="Finds an entity by its primary key / identifier." alt="" coords="42,228,223,253"/>
+<area shape="rect" id="node9" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af92918b0467da12c739883470b4bcc31" title="Finds all entities in the repository." alt="" coords="55,278,211,318"/>
+<area shape="rect" id="node10" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a94c8ff9bcf707932a5c13d04d16a8e7f" title="Finds entities by a set of criteria." alt="" coords="55,342,211,382"/>
+<area shape="rect" id="node11" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a25792cc13a33a74c4a8ecc7755fd76bc" title="Finds a single entity by a set of criteria." alt="" coords="55,406,211,446"/>
+<area shape="rect" id="node12" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad9829bdefbdf3098ba512082b136ab4e" title="Select all elements from a selectable that match the expression and return a new collection containin..." alt="" coords="55,470,211,510"/>
+</map>

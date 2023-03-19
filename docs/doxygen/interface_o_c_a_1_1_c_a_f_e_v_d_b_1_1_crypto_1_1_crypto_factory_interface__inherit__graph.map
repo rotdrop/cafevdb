@@ -1,0 +1,5 @@
+<map id="CryptoFactoryInterface" name="CryptoFactoryInterface">
+<area shape="rect" id="node1" title="Interface for crypto&#45;factory." alt="" coords="78,5,234,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_crypto_factory.html" title="Factory using the Nextcloud crypto routines as backend." alt="" coords="5,79,144,104"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_crypto_factory.html" title="Factory class using Halite as encryption backend." alt="" coords="168,79,307,104"/>
+</map>

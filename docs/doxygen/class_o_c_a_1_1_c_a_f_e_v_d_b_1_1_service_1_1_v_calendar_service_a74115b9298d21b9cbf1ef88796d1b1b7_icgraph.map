@@ -1,0 +1,6 @@
+<map id="getVObjectType" name="getVObjectType">
+<area shape="rect" id="node1" title="Return the type of the respective calendar object." alt="" coords="515,60,629,85"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9c5b6c8d51d88794475b33331e1afa98" title="Parse the respective event data and make sure the ProjectEvents table is uptodate." alt="" coords="272,45,467,100"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3b6658ae82665c492cf28af4e6277831" title=" " alt="" coords="5,5,224,60"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad0dad4413ad713821f2a1be6a76fd888" title=" " alt="" coords="5,84,224,139"/>
+</map>

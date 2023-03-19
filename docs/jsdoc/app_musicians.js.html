@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/musicians.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#actionHandler">actionHandler</a></li><li><a href="global.html#addEditor">addEditor</a></li><li><a href="global.html#addMusicians">addMusicians</a></li><li><a href="global.html#addReadyCallback">addReadyCallback</a></li><li><a href="global.html#afterLoad">afterLoad</a></li><li><a href="global.html#ajaxFailData">ajaxFailData</a></li><li><a href="global.html#ajaxFailMessage">ajaxFailMessage</a></li><li><a href="global.html#ajaxHandleError">ajaxHandleError</a></li><li><a href="global.html#ajaxValidateResponse">ajaxValidateResponse</a></li><li><a href="global.html#appInfo">appInfo</a></li><li><a href="global.html#applyToolTips">applyToolTips</a></li><li><a href="global.html#appPrefix">appPrefix</a></li><li><a href="global.html#appSettings">appSettings</a></li><li><a href="global.html#attachHandlers">attachHandlers</a></li><li><a href="global.html#checkInvalidInputs">checkInvalidInputs</a></li><li><a href="global.html#chosenActive">chosenActive</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#closeActionMenu">closeActionMenu</a></li><li><a href="global.html#contactValidation">contactValidation</a></li><li><a href="global.html#containerSelector">containerSelector</a></li><li><a href="global.html#createProgressStatus">createProgressStatus</a></li><li><a href="global.html#debugPopup">debugPopup</a></li><li><a href="global.html#dialogCustomCloseButton">dialogCustomCloseButton</a></li><li><a href="global.html#dialogFullScreenButton">dialogFullScreenButton</a></li><li><a href="global.html#dialogToBackButton">dialogToBackButton</a></li><li><a href="global.html#documentReady">documentReady</a></li><li><a href="global.html#download">download</a></li><li><a href="global.html#emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li><a href="global.html#emailFormPopup">emailFormPopup</a></li><li><a href="global.html#emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li><a href="global.html#emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li><a href="global.html#emailPopup">emailPopup</a></li><li><a href="global.html#eventsPopup">eventsPopup</a></li><li><a href="global.html#findOptionByValue">findOptionByValue</a></li><li><a href="global.html#FindRanges">FindRanges</a></li><li><a href="global.html#formSubmit">formSubmit</a></li><li><a href="global.html#generateSettingsUrl">generateSettingsUrl</a></li><li><a href="global.html#generateUrl">generateUrl</a></li><li><a href="global.html#getAppUrl">getAppUrl</a></li><li><a href="global.html#getChildren">getChildren</a></li><li><a href="global.html#getControlObject">getControlObject</a></li><li><a href="global.html#getOptions">getOptions</a></li><li><a href="global.html#getOptionValues">getOptionValues</a></li><li><a href="global.html#getPersonalUrl">getPersonalUrl</a></li><li><a href="global.html#getSelectize">getSelectize</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUrl">getUrl</a></li><li><a href="global.html#getWidget">getWidget</a></li><li><a href="global.html#handleProjectActions">handleProjectActions</a></li><li><a href="global.html#handleQueryLogMenu">handleQueryLogMenu</a></li><li><a href="global.html#handleTableExportMenu">handleTableExportMenu</a></li><li><a href="global.html#htmlDecode">htmlDecode</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#installInputSelectize">installInputSelectize</a></li><li><a href="global.html#instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li><a href="global.html#invalidInputDowncount">invalidInputDowncount</a></li><li><a href="global.html#isVanilla">isVanilla</a></li><li><a href="global.html#jQuery">jQuery</a></li><li><a href="global.html#lazyBatchDecryptValues">lazyBatchDecryptValues</a></li><li><a href="global.html#loadPage">loadPage</a></li><li><a href="global.html#loadPMETable">loadPMETable</a></li><li><a href="global.html#loadPMETableFiltered">loadPMETableFiltered</a></li><li><a href="global.html#mandatesInit">mandatesInit</a></li><li><a href="global.html#mandateValidate">mandateValidate</a></li><li><a href="global.html#mandateValidatePME">mandateValidatePME</a></li><li><a href="global.html#mandateValidatePMEPromise">mandateValidatePMEPromise</a></li><li><a href="global.html#mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li><a href="global.html#maybeTranspose">maybeTranspose</a></li><li><a href="global.html#messages">messages</a></li><li><a href="global.html#modalizer">modalizer</a></li><li><a href="global.html#modalWaitNotification">modalWaitNotification</a></li><li><a href="global.html#myLoadAddMusicians">myLoadAddMusicians</a></li><li><a href="global.html#myLoadMusicians">myLoadMusicians</a></li><li><a href="global.html#myLoadProjectParticipants">myLoadProjectParticipants</a></li><li><a href="global.html#myPersonalRecordDialog">myPersonalRecordDialog</a></li><li><a href="global.html#nonTextInputTypes">nonTextInputTypes</a></li><li><a href="global.html#participantFieldsPopup">participantFieldsPopup</a></li><li><a href="global.html#photoEditCurrent">photoEditCurrent</a></li><li><a href="global.html#photoLoad">photoLoad</a></li><li><a href="global.html#photoLoadHandlers">photoLoadHandlers</a></li><li><a href="global.html#photoReady">photoReady</a></li><li><a href="global.html#photoUploadDragDrop">photoUploadDragDrop</a></li><li><a href="global.html#pmeCellSelector">pmeCellSelector</a></li><li><a href="global.html#pmeClassSelector">pmeClassSelector</a></li><li><a href="global.html#pmeClassSelectors">pmeClassSelectors</a></li><li><a href="global.html#pmeContainer">pmeContainer</a></li><li><a href="global.html#pmeContextMenu">pmeContextMenu</a></li><li><a href="global.html#pmeData">pmeData</a></li><li><a href="global.html#pmeDeferReload">pmeDeferReload</a></li><li><a href="global.html#pmeFilterSelector">pmeFilterSelector</a></li><li><a href="global.html#pmeFormSelector">pmeFormSelector</a></li><li><a href="global.html#pmeIdSelector">pmeIdSelector</a></li><li><a href="global.html#pmeInit">pmeInit</a></li><li><a href="global.html#pmeInner">pmeInner</a></li><li><a href="global.html#pmeInputSelector">pmeInputSelector</a></li><li><a href="global.html#pmeKeySelector">pmeKeySelector</a></li><li><a href="global.html#pmeNavigationSelector">pmeNavigationSelector</a></li><li><a href="global.html#pmeOpenRowDialog">pmeOpenRowDialog</a></li><li><a href="global.html#pmeQueryInfoSelector">pmeQueryInfoSelector</a></li><li><a href="global.html#pmeRec">pmeRec</a></li><li><a href="global.html#pmeRecordValue">pmeRecordValue</a></li><li><a href="global.html#pmeSelector">pmeSelector</a></li><li><a href="global.html#pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li><a href="global.html#pmeSys">pmeSys</a></li><li><a href="global.html#pmeSysNameSelector">pmeSysNameSelector</a></li><li><a href="global.html#pmeSysNameSelectors">pmeSysNameSelectors</a></li><li><a href="global.html#pmeTableDialogOpen">pmeTableDialogOpen</a></li><li><a href="global.html#pmeTableSelector">pmeTableSelector</a></li><li><a href="global.html#pmeToken">pmeToken</a></li><li><a href="global.html#pmeTriggerSubmit">pmeTriggerSubmit</a></li><li><a href="global.html#pmeTweaks">pmeTweaks</a></li><li><a href="global.html#pmeUnTweak">pmeUnTweak</a></li><li><a href="global.html#pmeValueSelector">pmeValueSelector</a></li><li><a href="global.html#pollProgressStatus">pollProgressStatus</a></li><li><a href="global.html#print_r">print_r</a></li><li><a href="global.html#projectPaymentPopup">projectPaymentPopup</a></li><li><a href="global.html#projectViewPopup">projectViewPopup</a></li><li><a href="global.html#projectWebPageRequest">projectWebPageRequest</a></li><li><a href="global.html#projectWebPageTabHandler">projectWebPageTabHandler</a></li><li><a href="global.html#pseudoSubmit">pseudoSubmit</a></li><li><a href="global.html#pseudoSubmitPost">pseudoSubmitPost</a></li><li><a href="global.html#queryData">queryData</a></li><li><a href="global.html#refreshSelectWidget">refreshSelectWidget</a></li><li><a href="global.html#refreshWidgetProperties">refreshWidgetProperties</a></li><li><a href="global.html#removeEditor">removeEditor</a></li><li><a href="global.html#renderTag">renderTag</a></li><li><a href="global.html#replaceSelectOptions">replaceSelectOptions</a></li><li><a href="global.html#runReadyCallbacks">runReadyCallbacks</a></li><li><a href="global.html#selectedOptions">selectedOptions</a></li><li><a href="global.html#selectedValues">selectedValues</a></li><li><a href="global.html#selectizeActive">selectizeActive</a></li><li><a href="global.html#setAppUrl">setAppUrl</a></li><li><a href="global.html#setPersonalUrl">setPersonalUrl</a></li><li><a href="global.html#setToken">setToken</a></li><li><a href="global.html#simpleSetHandler">simpleSetHandler</a></li><li><a href="global.html#simpleSetValueHandler">simpleSetValueHandler</a></li><li><a href="global.html#snapshotEditor">snapshotEditor</a></li><li><a href="global.html#stopEnterSubmit">stopEnterSubmit</a></li><li><a href="global.html#tableDialog">tableDialog</a></li><li><a href="global.html#tableDialogHandlers">tableDialogHandlers</a></li><li><a href="global.html#tableDialogReload">tableDialogReload</a></li><li><a href="global.html#tableDialogReplace">tableDialogReplace</a></li><li><a href="global.html#Template">Template</a></li><li><a href="global.html#textareaResize">textareaResize</a></li><li><a href="global.html#toolTipsEnabled">toolTipsEnabled</a></li><li><a href="global.html#toolTipsInit">toolTipsInit</a></li><li><a href="global.html#transposeMainTable">transposeMainTable</a></li><li><a href="global.html#transposeReady">transposeReady</a></li><li><a href="global.html#unfocus">unfocus</a></li><li><a href="global.html#updateEditor">updateEditor</a></li><li><a href="global.html#urlDecode">urlDecode</a></li><li><a href="global.html#urlEncode">urlEncode</a></li><li><a href="global.html#validateInstrumentChoices">validateInstrumentChoices</a></li><li><a href="global.html#wikiPopup">wikiPopup</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/musicians.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine &lt;himself@claus-justus-heine.de
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+
+import $ from './jquery.js';
+import { appName } from './app-info.js';
+import generateUrl from './generate-url.js';
+import * as CAFEVDB from './cafevdb.js';
+import * as Ajax from './ajax.js';
+import * as Dialogs from './dialogs.js';
+import * as ProjectParticipants from './project-participants.js';
+import * as PHPMyEdit from './pme.js';
+import * as Notification from './notification.js';
+import { selected as selectedValues } from './select-utils.js';
+import { token as pmeToken, data as pmeData, sys as pmeSys, classSelectors as pmeClassSelectors } from './pme-selectors.js';
+import { busyIcon as pageBusyIcon } from './page.js';
+import {
+  lazyDecrypt,
+  reject as rejectDecryptionPromise,
+  promise as decryptionPromise,
+} from './lazy-decryption.js';
+
+require('../legacy/nextcloud/jquery/octemplate.js');
+require('jquery-ui/ui/widgets/autocomplete');
+require('jquery-ui/themes/base/autocomplete.css');
+require('sepa-bank-accounts.scss');
+require('musicians.scss');
+
+const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
+
+/**
+ * Add several musicians.
+ *
+ * @param {jQuery} $form TBD.
+ *
+ * @param {object} post TBD.
+ */
+const addMusicians = function($form, post) {
+  const projectId = $form.find('input[name="projectId"]').val();
+  const projectName = $form.find('input[name="projectName"]').val();
+  if (typeof post === 'undefined') {
+    post = $form.serialize();
+  }
+
+  // Open the change-musician dialog with the newly
+  // added musician in case of success.
+  $.post(generateUrl('projects/participants/add-musicians'),
+    post)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, function() {
+        // ProjectParticipants.loadProjectParticipants(form);
+      });
+    })
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, ['musicians'])) {
+        // Load the underlying base-view in any case in order to go "back" ...
+        ProjectParticipants.loadProjectParticipants($form);
+        return;
+      }
+      console.log(data);
+      // Notification.messages(data.message);
+      if (data.musicians.length === 1) {
+        // open single person change dialog
+        const musicianId = data.musicians[0];
+        // alert('data: '+CAFEVDB.print_r(musician, true));
+        ProjectParticipants.loadProjectParticipants(
+          $form,
+          undefined,
+          function() {
+            Notification.messages(data.message);
+            ProjectParticipants.personalRecordDialog(
+              musicianId, {
+                projectId,
+                projectName,
+                initialValue: 'Change',
+                modified: true,
+              });
+          });
+      } else {
+        // load the instrumentation table, initially restricted to the new musicians
+        ProjectParticipants.loadProjectParticipants($form, data.musicians, function() {
+          Notification.messages(data.message);
+        });
+      }
+    });
+};
+
+/**
+ * Add auto-complete and validation handlers to musician input-data,
+ * in particular personal data. In principle this is only relevant in
+ * change and add mode.
+ *
+ * @param {jQuery|string} container TBD.
+ */
+const contactValidation = function(container) {
+
+  const $container = container || $('body');
+
+  const $form = $container.find('form.' + pmeToken('form'));
+
+  // "read-only" forms do not need contact validation handlers
+  if ($form.hasClass(pmeToken('list'))
+      || $form.hasClass(pmeToken('view'))
+      || $form.hasClass(pmeToken('delete'))
+  ) {
+    return;
+  }
+
+  $form.find('input.phone-number')
+    .not('.pme-filter')
+    .off('blur')
+    .on('blur', function(event) {
+
+      event.stopImmediatePropagation();
+
+      const submitDefer = PHPMyEdit.deferReload(container);
+
+      const phones = $form.find('input.phone-number');
+      const post = $form.serialize();
+      const mobile = phones.filter('input[name$="mobile_phone"]');
+      const fixedLine = phones.filter('input[name$="fixed_line_phone"]');
+
+      phones.prop('disabled', true);
+
+      const cleanup = function() {
+        phones.prop('disabled', false);
+        submitDefer.resolve();
+      };
+
+      $.post(
+        generateUrl('validate/musicians/phone'),
+        post)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(
+            data, [
+              'message',
+              'mobilePhone',
+              'mobileMeta',
+              'fixedLinePhone',
+              'fixedLineMeta',
+            ],
+            cleanup)) {
+            return false;
+          }
+          // inject the sanitized value into their proper input fields
+          mobile.val(data.mobilePhone);
+          fixedLine.val(data.fixedLinePhone);
+          if (data.mobileMeta) {
+            mobile.removeAttr('data-original-title');
+            mobile.attr('title', data.mobileMeta);
+            mobile.cafevTooltip();
+          }
+          if (data.fixedLineMeta) {
+            fixedLine.removeAttr('data-original-title');
+            fixedLine.attr('title', data.fixedLineMeta);
+            fixedLine.cafevTooltip();
+          }
+          const message = Array.isArray(data.message)
+            ? data.message.join('&lt;br>')
+            : data.message;
+          if (message !== '') {
+            Dialogs.alert(
+              message,
+              t(appName, 'Phone Number Validation'),
+              function() {
+                phones.prop('disabled', false);
+                submitDefer.resolve();
+              }, true, true);
+            Dialogs.debugPopup(data);
+          } else {
+            phones.prop('disabled', false);
+            submitDefer.resolve();
+          }
+          return false;
+        });
+    });
+
+  const $emailInput = $form.find('[name$="email"]').filter('[name^="' + pmeData('') + '"]');
+  const $allEmailsInput = $form.find('[name$="MusicianEmailAddresses@all:address[]"]');
+
+  $allEmailsInput
+    .off('change')
+    .on('change', function(event) {
+      const allEmails = selectedValues($allEmailsInput);
+      console.info('ALL EMAILS', allEmails);
+      if (allEmails.length > 0) {
+        $emailInput.val(allEmails[0]).trigger('change');
+      }
+      $.fn.cafevTooltip.remove();
+      return false;
+    });
+
+  $emailInput
+    .off('blur, change')
+    .on('blur, change', function(event) {
+
+      event.stopImmediatePropagation();
+
+      const submitDefer = PHPMyEdit.deferReload(container);
+
+      const post = $form.serialize();
+      $emailInput.prop('disabled', true);
+
+      const cleanup = function() {
+        $emailInput.prop('disabled', false);
+        submitDefer.resolve();
+      };
+
+      $.post(
+        generateUrl('validate/musicians/email'),
+        post)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['message', 'email'], cleanup)) {
+            return;
+          }
+          // inject the sanitized value into their proper input fields
+          $emailInput.val(data.email);
+          const message = Array.isArray(data.message)
+            ? data.message.join('&lt;br>')
+            : data.message;
+          if (message !== '') {
+            Dialogs.alert(
+              message,
+              t(appName, 'Email Validation'),
+              cleanup, true, true);
+            Dialogs.debugPopup(data);
+          } else {
+            cleanup();
+          }
+        });
+    });
+
+  const $mailingListStatus = $form.find('span.mailing-list.announcements.status.status-label');
+  const $mailingListOperationsContainer = $form.find('.mailing-list.announcements.dropdown-container');
+  const $mailingListOperations = $mailingListOperationsContainer.find('.subscription-action');
+
+  const $displayNameInput = $form.find('input[name$="display_name"]').filter('[name^="' + pmeData('') + '"]');
+
+  $mailingListOperations
+    .off('click')
+    .on('click', function(event, triggerData) {
+      const $this = $(this);
+      triggerData = triggerData || { setup: false };
+
+      const operation = $this.data('operation');
+      if (!operation) {
+        return;
+      }
+
+      const email = $emailInput.val();
+      if (email === '') {
+        if (!triggerData.setup) {
+          Notification.messages(t(appName, 'Email-address is empty, cannot perform mailing list operations.'));
+        }
+        return false;
+      }
+      const displayName = $displayNameInput.val() || $displayNameInput.attr('placeholder');
+
+      let cleanup = () => {
+        $mailingListOperationsContainer.removeClass('busy');
+        $this.removeClass('busy');
+      };
+      let onFail = (xhr, status, errorThrown) => Ajax.handleError(xhr, status, errorThrown, cleanup);
+      if (triggerData.setup) {
+        // don't annoy the user with an error message on page load.
+        cleanup = () => {};
+        onFail = () => {};
+      } else {
+        $this.addClass('busy');
+        $mailingListOperationsContainer.addClass('busy');
+      }
+
+      $.fn.cafevTooltip.remove(); // remove pending tooltips ...
+
+      const post = {
+        list: 'announcements',
+        email,
+        displayName,
+      };
+
+      $.post(generateUrl('mailing-lists/' + operation), post)
+        .fail(onFail)
+        .done(function(data) {
+          const status = data.status;
+          $mailingListStatus.html(t(appName, status));
+
+          $mailingListOperationsContainer.data('status', status);
+          $mailingListOperationsContainer.attr(
+            'class',
+            $mailingListOperationsContainer.attr('class').replace(/(^|\s)status-\S+/, '$1status-' + status)
+          );
+          $mailingListOperations.each(function(index) {
+            const $this = $(this);
+            const visible = $this.hasClass('status-' + status + '-visible');
+            const disabled = !visible || ($this.hasClass('expert-mode-only') &amp;&amp; !$('body').hasClass('cafevdb-expert-mode'));
+            $this.prop('disabled', disabled);
+            $this.toggleClass('disabled', disabled);
+          });
+          cleanup();
+        });
+      return false;
+    });
+  // Trigger reload on page load. The problem is that meanwhile some
+  // data-base fixups run on events after the legacy PME code has
+  // generated its HTML output.
+  $mailingListOperations.filter('.reload').trigger('click', [{ setup: true }]);
+
+  const address = $form.find('input.musician-address');
+  const city = address.filter('.city');
+  const street = address.filter('.street');
+  const postalCode = address.filter('.postal-code');
+
+  const $countrySelect = $form.find('select.musician-address.country');
+  const $allAddressFields = $(address).add($countrySelect);
+
+  $allAddressFields.each(function() {
+    const $this = $(this);
+    $this.data('oldValue', $this.val());
+  });
+
+  const updateAutocompleteData = function() {
+    postalCode.data('oldValue', null);
+    postalCode.trigger('blur');
+  };
+
+  const needAutocompleteUpdate = function() {
+    return ($countrySelect.data('oldValue') !== $countrySelect.val()
+            || city.data('oldValue') !== city.val()
+            || postalCode.data('oldValue') !== postalCode.val());
+  };
+
+  address
+    .autocomplete({
+      source: [],
+      minLength: 0,
+      open(event, ui) {
+        const $input = $(event.target);
+        const $results = $input.autocomplete('widget');
+        const top = $results.position().top;
+        const height = $results.outerHeight();
+        const inputHeight = $input.outerHeight();
+        const newTop = top - height - inputHeight;
+
+        $results.css('top', newTop + 'px');
+      },
+      select(event, ui) {
+        const $input = $(event.target);
+        $input.val(ui.item.value);
+        $input.blur();
+      },
+    })
+    .on('focus, click', function() {
+      if (!$(this).autocomplete('widget').is(':visible')) {
+        $(this).autocomplete('search', '');
+      }
+    });
+
+  // Inject a text input element for possible suggestions for the country setting.
+  const $countryInput = $('&lt;input type="text"'
+                         + ' class="musician-address country"'
+                         + ' id="country-autocomplete"'
+                         + ' placeholder="' + t(appName, 'Suggestions') + '" />');
+  $countryInput.hide();
+  $countrySelect.before($countryInput);
+
+  $countryInput
+    .autocomplete({
+      source: [],
+      minLength: 0,
+      open(event, ui) {
+        const $input = $(event.target);
+        const $results = $input.autocomplete('widget');
+        const top = $results.position().top;
+        const height = $results.outerHeight();
+        const inputHeight = $input.outerHeight();
+        const newTop = top - height - inputHeight;
+
+        $results.css('top', newTop + 'px');
+      },
+      select(event, ui) {
+        const country = ui.item.value;
+        $countryInput.val(country);
+        $countryInput.trigger('blur');
+        return true;
+      },
+    })
+    .on('focus, click', function() {
+      if (!$(this).autocomplete('widget').is(':visible')) {
+        $(this).autocomplete('search', '');
+      }
+    })
+    .on('blur', function(event) {
+      const self = $(this);
+
+      event.stopImmediatePropagation();
+
+      $countrySelect.data('oldValue', selectedValues($countrySelect, self.val(), true));
+
+      return false;
+    });
+
+  let lockCountry = false;
+  $countrySelect.on('change', function(event) {
+    if (needAutocompleteUpdate()) {
+      updateAutocompleteData();
+    }
+    lockCountry = !!selectedValues($countrySelect);
+    return false;
+  });
+
+  let autocompletePlaceRequest = null;
+  let autocompleteStreetRequest = null;
+
+  const fetchPlaceAutocompletion = function() {
+
+    const submitDefer = PHPMyEdit.deferReload(container);
+
+    const post = $form.serialize();
+
+    if (autocompletePlaceRequest) {
+      autocompletePlaceRequest.abort('cancelled');
+    }
+
+    pageBusyIcon(true);
+
+    const cleanup = function() {
+      submitDefer.resolve();
+      autocompletePlaceRequest = null;
+      if (!autocompleteStreetRequest) {
+        pageBusyIcon(false);
+      } else {
+        $.when(autocompleteStreetRequest).then(() => pageBusyIcon(false));
+      }
+    };
+
+    autocompletePlaceRequest = $.post(
+      generateUrl('validate/musicians/autocomplete/place'),
+      post)
+      .fail(function(xhr, status, errorThrown) {
+        if (status !== 'cancelled') {
+          console.error('Auto-complete update failed', xhr, status, errorThrown);
+        } else {
+          console.error('Auto-complete update cancelled');
+        }
+        cleanup();
+      })
+      .done(function(data) {
+        if (!data || !data.cities || !data.countries || !data.postalCodes) {
+          console.error('Auto-complete request does not contain the requested data.', data);
+          cleanup();
+          return;
+        }
+
+        city.autocomplete('option', 'source', data.cities);
+        postalCode.autocomplete('option', 'source', data.postalCodes);
+
+        address.each(function() {
+          const $this = $(this);
+          const sourceSize = $this.autocomplete('option', 'source').length;
+          $this.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
+        });
+
+        const selectedCountry = selectedValues($countrySelect);
+        const countries = data.countries;
+        $countryInput.hide();
+        $countryInput.autocomplete('option', 'source', []);
+        if (countries.length === 1 &amp;&amp; countries[0] !== selectedCountry &amp;&amp; !lockCountry) {
+
+          // if we have just one matching country, we force the
+          // country-select to hold this value.
+          $countrySelect.data('oldValue', selectedValues($countrySelect, countries));
+
+        } else if (countries.length > 1) {
+          // provide the user with some more choices.
+          $countryInput.autocomplete('option', 'source', countries);
+          $countryInput.show();
+        }
+        lockCountry = false;
+
+        Notification.messages(data.message);
+
+        cleanup();
+
+      });
+
+    return autocompletePlaceRequest;
+  };
+
+  const fetchStreetAutocompletion = function() {
+
+    // const submitDefer = PHPMyEdit.deferReload(container);
+
+    const post = $form.serialize();
+
+    if (autocompleteStreetRequest) {
+      autocompleteStreetRequest.abort('cancelled');
+    }
+
+    pageBusyIcon(true);
+
+    const cleanup = function() {
+      // submitDefer.resolve();
+      autocompleteStreetRequest = null;
+      if (!autocompletePlaceRequest) {
+        pageBusyIcon(false);
+      } else {
+        $.when(autocompletePlaceRequest).then(() => pageBusyIcon(false));
+      }
+    };
+
+    autocompleteStreetRequest = $.post(
+      generateUrl('validate/musicians/autocomplete/street'),
+      post)
+      .fail(function(xhr, status, errorThrown) {
+        if (status !== 'cancelled') {
+          console.error('Auto-complete update failed', xhr, status, errorThrown);
+          cleanup();
+        } else {
+          console.error('Auto-complete update cancelled');
+        }
+      })
+      .done(function(data) {
+        if (!data || !data.streets) {
+          console.error('Auto-complete request does not contain the requested data.', data);
+          cleanup();
+          return;
+        }
+
+        if (street.autocomplete('instance') === undefined) {
+          console.error('STREET INPUT ELEMENT LACKS AUTOCOMPLETE WIDGET', street);
+        } else {
+          street.autocomplete('option', 'source', data.streets);
+          const sourceSize = street.autocomplete('option', 'source').length;
+          street.autocomplete('option', 'minLength', sourceSize > 20 ? 3 : 0);
+
+          Notification.messages(data.message);
+        }
+
+        cleanup();
+
+      });
+
+    PHPMyEdit.pushCancellable(container, autocompleteStreetRequest);
+
+    return autocompleteStreetRequest;
+  };
+
+  address.on('blur', function(event) {
+    const self = $(this);
+
+    if (self.hasClass('street')) {
+      // too costly
+      return true;
+    }
+
+    if (self.data('oldValue') === self.val()) {
+      // avoid refresh when the value has not changed
+      return true;
+    }
+
+    self.data('oldValue', self.val());
+
+    // this is somehow needed here ...
+    event.stopImmediatePropagation();
+
+    if (self.autocomplete('widget').is(':visible')) {
+      // don't validate while select box is open
+      return false;
+    }
+
+    fetchPlaceAutocompletion();
+    fetchStreetAutocompletion();
+
+    return false;
+  });
+
+  // force an update of the autocomplete data
+  updateAutocompleteData();
+};
+
+let nameValidationActive = false;
+
+const checkForDuplicateMusicians = function($container, onCheckPassed) {
+
+  if (nameValidationActive) {
+    return;
+  }
+
+  nameValidationActive = true;
+
+  const $form = $container.find('form.pme-form');
+  const $submits = $form.find(submitSel);
+
+  $submits.prop('disabled', true);
+
+  const post = $form.serialize();
+
+  if (typeof onCheckPassed !== 'function') {
+    onCheckPassed = function() {};
+  }
+
+  const cleanup = function() {
+    nameValidationActive = false;
+    $submits.prop('disabled', false);
+  };
+
+  $.post(
+    generateUrl('validate/musicians/duplicates'),
+    post)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, cleanup);
+    })
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, ['message'], cleanup)) {
+        return;
+      }
+
+      Notification.messages(data.message);
+
+      const duplicates = data.duplicates || {};
+      const ids = Object.keys(duplicates);
+      const numDuplicates = ids.length;
+      if (numDuplicates === 0) {
+        cleanup();
+        onCheckPassed();
+        return;
+      }
+      const $musicianViewTemplate = $('#musicianAddressViewTemplate');
+      const $musicianViews = $('&lt;div class="duplicate-musicians-view">&lt;/div>');
+      let maxPropability = 0.0;
+      const maxIds = [];
+      for (const [musicianId, musician] of Object.entries(duplicates)) {
+        const $musicianView = $musicianViewTemplate.octemplate(musician);
+        $musicianViews.append($musicianView);
+        if (musician.duplicatesPropability === maxPropability) {
+          maxIds.push(musicianId);
+        } else if (musician.duplicatesPropability > maxPropability) {
+          maxPropability = musician.duplicatesPropability;
+          maxIds.length = 0;
+          maxIds.push(musicianId);
+        }
+      }
+
+      if (maxPropability === 1.0) {
+        // remove all none 100% people
+        $musicianViews.empty();
+        for (const musicianId of maxIds) {
+          const $musicianView = $musicianViewTemplate.octemplate(duplicates[musicianId]);
+          $musicianViews.append($musicianView);
+        }
+
+        Dialogs.alert(
+          t(appName, 'I am refusing to add duplicates to the database.')
+            + n(
+              appName,
+              'The following musician matches exactly your input:',
+              'The following musicians match exactly your input:', numDuplicates)
+            + $musicianViews.html()
+            + t(appName, `When you click the 'OK'-button or close this alert-window
+you will be redirected to the existing musician's data in order to inspect the sitution
+and to add the existing musician to the project instead of generating a new duplicate
+entry.`),
+          t(appName, 'Duplicates Detected'),
+          function() {
+            cleanup();
+            Notification.hide();
+            const $mainContainer = $($container.data('ambientContainer'));
+            const $mainForm = $mainContainer.find(PHPMyEdit.formSelector);
+            $container.dialog('close');
+            if (maxIds.length === 1) {
+              const projectId = $mainForm.find('input[name="projectId"]').val();
+              const projectName = $mainForm.find('input[name="projectName"]').val();
+              ProjectParticipants.personalRecordDialog(
+                ids[0], {
+                  table: 'Musicians',
+                  initialValue: 'View',
+                  projectId: projectId || -1,
+                  projectName,
+                  [pmeSys('cur_tab')]: 1,
+                });
+            } else {
+              ProjectParticipants.loadMusicians($mainForm, maxIds, null);
+            }
+          },
+          true, // modal
+          true, // html
+        );
+      } else {
+        Dialogs.confirm(
+          t(appName, 'You definitely do not want to add duplicates to the database.')
+            + ' '
+            + n(
+              appName,
+              'The following musician matches your input:',
+              'The following musicians match also your input:', numDuplicates)
+            + $musicianViews.html()
+            + t(appName, `Please answer "YES" in order not to add a new musician,
+otherwise answer "no" (but please do not do this). If you react in a positive manner
+you will be redirected to a web form in order to bring
+the personal data of the respective musician up-to-date.`),
+          t(appName, 'Avoid Possible Duplicate?'),
+          function(answer) {
+            cleanup();
+            Notification.hide();
+            if (!answer) {
+              onCheckPassed();
+              return;
+            }
+            const $mainContainer = $($container.data('ambientContainer'));
+            const $mainForm = $mainContainer.find(PHPMyEdit.formSelector);
+            $container.dialog('close');
+            if (numDuplicates === 1) {
+              const projectId = $mainForm.find('input[name="ProjectId"]').val();
+              const projectName = $mainForm.find('input[name="ProjectName"]').val();
+              ProjectParticipants.personalRecordDialog(
+                ids[0], {
+                  table: 'Musicians',
+                  initialValue: 'View',
+                  projectId: projectId || -1,
+                  projectName,
+                  [pmeSys('cur_tab')]: 1,
+                });
+            } else {
+              ProjectParticipants.loadMusicians($mainForm, ids, null);
+            }
+          },
+          true, // modal
+          true, // html
+        );
+      }
+    }); // done callback
+
+};
+
+const novalidateSubmits = [
+  'savedelete',
+  'morechange',
+  'savechange',
+];
+
+const ready = function(container) {
+
+  // sanitize
+  const $container = PHPMyEdit.container(container);
+
+  contactValidation($container);
+
+  rejectDecryptionPromise();
+  console.time('DECRYPTION PROMISE');
+  decryptionPromise.done((maxJobs) => {
+    console.timeEnd('DECRYPTION PROMISE');
+    console.info('MAX DECRYPTION JOBS HANDLED', maxJobs);
+  });
+  lazyDecrypt($container);
+
+  const $form = $container.find('form.pme-form');
+
+  if (container) {
+    // const submits = $form.find(submitSel);
+
+    $form
+      .off('click', submitSel)
+      .on('click', submitSel, function(event) {
+        const $this = $(this);
+        if (novalidateSubmits.findIndex(submit => $this.attr('name').indexOf(submit) >= 0) &lt; 0) {
+          checkForDuplicateMusicians($container, function() {
+            $form.off('click', submitSel);
+            $this.trigger('click');
+          });
+          return false;
+        } else {
+          return true;
+        }
+      });
+  }
+
+  // avoid duplicate entries in the DB, but only when adding new
+  // musicians.
+  $form
+    .find('input.add-musician.duplicates-indicator')
+    .off('blur')
+    .on('blur', function(event) {
+      if (nameValidationActive || $(this).val() === '') {
+        event.stopImmediatePropagation();
+        return false;
+      }
+
+      checkForDuplicateMusicians($container);
+
+      return false;
+    });
+
+  $form
+    .find('input.register-musician')
+    .off('click')
+    .on('click', function(event) {
+      const projectId = $form.find('input[name="projectId"]').val();
+      const projectName = $form.find('input[name="projectName"]').val();
+      const musicianId = $(this).data('musician-id');
+
+      addMusicians($form, {
+        projectId,
+        projectName,
+        musicianId,
+      });
+      return false;
+    });
+
+  $form
+    .find(['input', 'bulkcommit', pmeToken('misc'), pmeToken('commit')].join('.'))
+    .addClass('pme-custom')
+    .prop('disabled', false)
+    .off('click')
+    .on('click', function(event) {
+      addMusicians($form);
+      return false;
+    });
+
+};
+
+const documentReady = function() {
+
+  CAFEVDB.addReadyCallback(function() {
+    if ($('div#cafevdb-page-body.musicians').length > 0) {
+      ready();
+    }
+  });
+};
+
+export {
+  ready,
+  documentReady,
+  contactValidation,
+};
+
+// Local Variables: ***
+// js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Mar 19 2023 16:22:02 GMT+0100 (Mitteleuropäische Normalzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

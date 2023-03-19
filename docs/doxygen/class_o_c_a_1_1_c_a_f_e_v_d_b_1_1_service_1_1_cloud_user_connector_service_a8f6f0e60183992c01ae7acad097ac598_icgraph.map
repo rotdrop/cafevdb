@@ -1,0 +1,11 @@
+<map id="viewName" name="viewName">
+<area shape="rect" id="node1" title=" " alt="" coords="699,85,783,111"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a1a19b48267e2ba917d0226da1acdcb25" title="Generate a config array for the user_sql app &quot;as of now&quot;." alt="" coords="493,7,650,32"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a891ee9425b9ec2b464cd8d38c8f5bc9a" title=" " alt="" coords="492,60,651,85"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#ac82adab72318c73cb5c69f91bde1782e" title="Delete the user&#45;sql views." alt="" coords="497,109,645,135"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a93f6d9da1bc4c1797b708227e1a1d40f" title="Update the views interacting with the Nextcloud user_sql backend and update their grants." alt="" coords="499,159,643,184"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a738d301bd56cac033014f9e648939e42" title="For the moment this just fills in our own app&#45;config." alt="" coords="277,5,412,31"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#afd669fc5c9519ec4df86f83338241f86" title="Generate the (My&#45;)SQL statements for defining the personalized single&#45;row musician views." alt="" coords="245,55,444,95"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a10e78d362d26b66ba16cfd97a46499da" title="Delete the personalized one&#45;row views which give individual orchestra members access to just their ow..." alt="" coords="5,23,197,63"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#ab8482f7cd6afd7290823d6bfafe1c2a3" title="Update the personalized one&#45;row views which give individual orchestra members access to just their ow..." alt="" coords="7,87,195,127"/>
+</map>

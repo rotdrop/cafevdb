@@ -1,0 +1,8 @@
+<map id="getLocale" name="getLocale">
+<area shape="rect" id="node1" title="Return the locale as string, e.g." alt="" coords="208,128,287,153"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a36b4b01cbb88f7176a72e268695c0d6f" title="Convert a float value in the given or default locale." alt="" coords="43,5,122,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ad50ea5d1877a5adc2e231dc935b7bffc" title="Return the language part of the current or given locale." alt="" coords="35,55,131,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aebf35da354e45247c2ee85031bfa3a82" title=" " alt="" coords="11,128,155,153"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4c1dc0e4e1b0686a92c0f6486e91b7c6" title=" " alt="" coords="5,177,160,203"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaeb05cf94149de0821a30628a8c7bcef" title="Convert $value to a currency value in the given or the user&#39;s locale." alt="" coords="36,227,129,252"/>
+</map>

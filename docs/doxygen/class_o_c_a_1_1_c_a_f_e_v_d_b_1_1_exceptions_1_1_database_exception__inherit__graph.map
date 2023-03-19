@@ -1,0 +1,13 @@
+<map id="DatabaseException" name="DatabaseException">
+<area shape="rect" id="node1" title="Base&#45;class for database exceptions." alt="" coords="289,206,425,231"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html" title="Thrown during generation of the cloud&#45;user connector views." alt="" coords="489,5,690,45"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_found_exception.html" title="Thrown if an entity could not be found." alt="" coords="476,70,703,95"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_unique_exception.html" title="Thrown if more than one entity is found when there should be only one." alt="" coords="473,119,705,145"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_inconsistent_value_exception.html" title="Thrown if inconsistencies are detected." alt="" coords="499,169,680,209"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html" title="Thrown if a field has an incompatible type for the operation." alt="" coords="488,234,691,259"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html" title="Thrown during database migrations." alt="" coords="495,283,684,309"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html" title="Thrown when trying to mute data which should not be muted." alt="" coords="494,333,685,358"/>
+<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html" title="Thrown when trying to fiddle with an active transaction but there is none." alt="" coords="487,383,691,423"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="161,206,241,231"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,206,113,231"/>
+</map>

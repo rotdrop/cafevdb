@@ -1,0 +1,5 @@
+<map id="getDatabaseRepository" name="getDatabaseRepository">
+<area shape="rect" id="node1" title="Set and get the given name as the current database target entity." alt="" coords="5,52,164,77"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="212,5,441,60"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae8292d652c1dc8225df1cd0630dbaf27" title="Set the given name as the current database target entity." alt="" coords="247,84,406,109"/>
+</map>

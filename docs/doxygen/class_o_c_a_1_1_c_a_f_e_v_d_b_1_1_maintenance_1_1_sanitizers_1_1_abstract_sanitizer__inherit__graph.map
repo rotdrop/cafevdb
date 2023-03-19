@@ -1,0 +1,5 @@
+<map id="AbstractSanitizer" name="AbstractSanitizer">
+<area shape="rect" id="node1" title="Add part of shared contents to the interface." alt="" coords="13,79,136,104"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html" title="See that we always have both, some@gmail.com as well as some@googlemail.com." alt="" coords="5,152,144,177"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_sanitizer.html" title="&quot;Sanitizers&quot; are snippets of code which perform a task on a given single entity (although this may me..." alt="" coords="36,5,113,31"/>
+</map>

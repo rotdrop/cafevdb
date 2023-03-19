@@ -1,0 +1,6 @@
+<map id="getEntryByName" name="getEntryByName">
+<area shape="rect" id="node1" title=" " alt="" coords="5,45,128,70"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e" title="Convenience function." alt="" coords="176,37,356,77"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#af2691c40495d429502e48d4824f0b080" title="Convenience function to generate Collections\Criteria." alt="" coords="404,5,583,45"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#ae987ce50626dd3e4a9b255037433c776" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="404,69,583,109"/>
+</map>

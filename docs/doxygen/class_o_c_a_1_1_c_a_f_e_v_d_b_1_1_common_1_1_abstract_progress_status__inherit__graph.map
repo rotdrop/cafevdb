@@ -1,0 +1,7 @@
+<map id="AbstractProgressStatus" name="AbstractProgressStatus">
+<area shape="rect" id="node1" title="Simplistic progress&#45;status interface." alt="" coords="205,79,366,104"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status.html" title="Progress&#45;status via database table." alt="" coords="5,152,173,177"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status.html" title="Dummy implementation doing nothing." alt="" coords="198,152,373,177"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html" title="Progress status with a plain local file as storage." alt="" coords="397,152,560,177"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="227,5,343,31"/>
+</map>

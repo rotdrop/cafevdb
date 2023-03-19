@@ -1,0 +1,13 @@
+<map id="AbstractFileSystemUndoable" name="AbstractFileSystemUndoable">
+<area shape="rect" id="node1" title="Base for file&#45;system related IUndoable implementations." alt="" coords="309,129,501,155"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html" title="Rename the given paths." alt="" coords="587,5,734,31"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_replace.html" title="Replace one file by another, maintaining an undo history in the cloud." alt="" coords="587,55,734,80"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html" title="Remove the given path which may either point to a file or folder." alt="" coords="549,104,772,129"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_create.html" title="Create the given path as folder, remove the directory when undo is requested." alt="" coords="585,153,737,179"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_rename.html" title="Rename the given paths." alt="" coords="579,203,742,228"/>
+<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_text_file_update.html" title="Update the content of the given text&#45;file with the given content." alt="" coords="578,252,743,277"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="135,129,261,155"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="5,129,87,155"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_remove.html" title="Remove the given node, which must be a regular file." alt="" coords="828,80,975,105"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_remove.html" title="Remove the given node, which must be a folder." alt="" coords="820,129,983,155"/>
+</map>

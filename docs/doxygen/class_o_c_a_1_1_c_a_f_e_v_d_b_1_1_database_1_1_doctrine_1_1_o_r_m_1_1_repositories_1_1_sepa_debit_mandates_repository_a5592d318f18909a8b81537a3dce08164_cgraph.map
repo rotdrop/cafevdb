@@ -1,0 +1,7 @@
+<map id="remove" name="remove">
+<area shape="rect" id="node1" title="Delete the given mandate if it is not used." alt="" coords="5,72,71,97"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a3435ec579db5b0ae00575b8f516a8e24" title="Ban a SEPA&#45;mandate (timeout, withdrawn, erroneous data etc.)." alt="" coords="126,47,169,72"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#aa83dc5c73575593e20ef022264c93b7c" title="Find a SEPA&#45;mandate by either its primary key or its mandate reference; no&#45;op if $idOrReference alrea..." alt="" coords="297,5,380,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe" title="Public export of parent function." alt="" coords="224,64,453,119"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a797cbefa38da929fb4dac2e9ef8b64ae" title="Fetch usage information about the given identifier." alt="" coords="119,148,176,173"/>
+</map>

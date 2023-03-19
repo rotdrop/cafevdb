@@ -1,0 +1,6 @@
+<map id="ProjectUpdatedEvent" name="ProjectUpdatedEvent">
+<area shape="rect" id="node1" title="Dispatched after flushing entities to the data&#45;base, but before the final commit." alt="" coords="116,79,263,104"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_project_updated_event.html" title="Dispatched after flushing entities to the data&#45;base, but before the final commit." alt="" coords="5,152,179,177"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_project_updated_event.html" title="Dispatched before flushing entities to the data&#45;base." alt="" coords="203,152,370,177"/>
+<area shape="rect" id="node2" title=" " alt="" coords="161,5,217,31"/>
+</map>

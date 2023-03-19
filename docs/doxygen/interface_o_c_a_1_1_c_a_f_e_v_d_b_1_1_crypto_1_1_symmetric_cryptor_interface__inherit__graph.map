@@ -1,0 +1,7 @@
+<map id="SymmetricCryptorInterface" name="SymmetricCryptorInterface">
+<area shape="rect" id="node1" title="Just there in order to branch depending on container specialization." alt="" coords="184,79,363,104"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_symmetric_cryptor.html" title="Use the encryption service provided by the ambient cloud software." alt="" coords="5,152,168,177"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_symmetric_cryptor.html" title="Use libsodium through Halite." alt="" coords="192,152,355,177"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_symmetric_stream_cryptor.html" title="Lik HaliteSymmetricCryptor, but use the stream&#45;versions which work on chunks of 1M and thus scale bet..." alt="" coords="379,152,583,177"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_i_cryptor.html" title="Simple wrapper interface." alt="" coords="239,5,308,31"/>
+</map>

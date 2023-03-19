@@ -1,0 +1,7 @@
+<map id="update" name="update">
+<area shape="rect" id="node1" title="Update to the given values, where null arguments are simply ignored." alt="" coords="229,139,291,164"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a58e95c1e3550af42d009d6692bc77b25" title="{Add the given amount to the progress&#45;status counter.bool|int Current value of the counter or false i..." alt="" coords="5,5,181,60"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a54b218bca4b02eacd7ebd688eebdda1d" title="{Set the current value and sync.void}" alt="" coords="5,84,181,139"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a87449bdd364c33ff024d32896342bf31" title="{Set the data value and sync.void}" alt="" coords="5,163,181,217"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a186796ac9898d948be13005f114e45f5" title="{Set the target value and sync.void}" alt="" coords="5,241,181,296"/>
+</map>

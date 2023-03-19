@@ -1,0 +1,5 @@
+<map id="createNode" name="createNode">
+<area shape="rect" id="node1" title="Internal helper function." alt="" coords="213,5,303,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html#ae466f6e98c463abb7c4fdbca7d7ce3b1" title="{}" alt="" coords="112,5,165,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html#a239b1c70258014a86569483c2d009de6" title="Create a default Uuid." alt="" coords="5,5,64,31"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="getSubAdminGroupId" name="getSubAdminGroupId">
+<area shape="rect" id="node1" title="Return the id of the dedicated admin&#45;group which contains all sub&#45;admins." alt="" coords="188,31,335,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6" title="Return the dedicated admin&#45;group if it exists." alt="" coords="5,5,140,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="9,55,136,80"/>
+</map>

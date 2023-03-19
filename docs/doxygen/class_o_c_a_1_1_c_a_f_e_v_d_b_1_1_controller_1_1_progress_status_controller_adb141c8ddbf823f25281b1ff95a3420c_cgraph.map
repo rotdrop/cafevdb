@@ -1,0 +1,7 @@
+<map id="progressResponse" name="progressResponse">
+<area shape="rect" id="node1" title=" " alt="" coords="5,109,136,134"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#ad926899d7cac34a3f1a90e552d8eb27d" title="Return the cached value of the current state." alt="" coords="184,5,369,45"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a81a67162a6288d78fc4c55283325f0b4" title="Return the cached value of the custom data, i.e." alt="" coords="189,69,365,109"/>
+<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a12251d0c022e9e21c137a105ff683f13" title="Obtain a unique but opaque identifier (e.g." alt="" coords="189,133,365,173"/>
+<area shape="rect" id="node5" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#afd77d5a1c164c8d6f4a18cbf9c341410" title="Return the cached value of the target state." alt="" coords="187,197,366,237"/>
+</map>

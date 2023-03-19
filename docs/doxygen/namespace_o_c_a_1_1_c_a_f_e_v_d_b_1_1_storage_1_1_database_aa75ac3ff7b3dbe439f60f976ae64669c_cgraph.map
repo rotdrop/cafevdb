@@ -1,0 +1,5 @@
+<map id="getBankTransactionsFolderName" name="getBankTransactionsFolderName">
+<area shape="rect" id="node1" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="5,13,221,38"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="269,13,360,38"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="408,5,576,45"/>
+</map>

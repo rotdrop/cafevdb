@@ -1,0 +1,5 @@
+<map id="getMimeTypeMapping" name="getMimeTypeMapping">
+<area shape="rect" id="node1" title=" " alt="" coords="235,31,384,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a5b62df0076a109c14c456e0664583bbe" title=" " alt="" coords="13,5,179,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#ab63abc381405369b014b433dded6a20c" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,55,187,80"/>
+</map>

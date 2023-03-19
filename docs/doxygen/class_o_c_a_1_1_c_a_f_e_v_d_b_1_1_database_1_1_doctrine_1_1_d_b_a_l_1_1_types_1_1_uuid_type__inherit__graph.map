@@ -1,0 +1,4 @@
+<map id="UuidType" name="UuidType">
+<area shape="rect" id="node1" title="Like UuidBinaryType, but implement a more allowing convertToPHPValue() which accepts also string inpu..." alt="" coords="24,79,101,104"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,120,31"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="inTreasurerGroup" name="inTreasurerGroup">
+<area shape="rect" id="node1" title="Return true if the logged in user is in the treasurer group." alt="" coords="5,5,128,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a25ecab08008a440e05ecbf2aff41a47f" title="Return true if the logged in user is the treasurer." alt="" coords="176,5,263,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a9594d53af2dfcb1f3bf29420af8f797a" title="Return true if the logged in or given user has a dedicated administrative role for the orchestra." alt="" coords="311,5,483,31"/>
+</map>

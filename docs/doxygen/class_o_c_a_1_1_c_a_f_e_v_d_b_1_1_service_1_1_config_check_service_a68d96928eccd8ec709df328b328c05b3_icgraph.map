@@ -1,0 +1,4 @@
+<map id="shareOwnerExists" name="shareOwnerExists">
+<area shape="rect" id="node1" title="Return true if the share&#45;owner exists and belongs to the orchestra user group (and only to this group..." alt="" coords="136,5,265,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#acc6554d7a33fcab6ab9e472cb191d322" title="Return an array with necessary configuration items, being either true or false, depending the checks ..." alt="" coords="5,5,88,31"/>
+</map>

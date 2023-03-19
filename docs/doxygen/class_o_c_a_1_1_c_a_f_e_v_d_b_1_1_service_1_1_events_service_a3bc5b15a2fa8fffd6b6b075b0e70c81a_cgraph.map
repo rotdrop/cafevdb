@@ -1,0 +1,5 @@
+<map id="newTask" name="newTask">
+<area shape="rect" id="node1" title="Inject a new task into the given calendar." alt="" coords="5,45,80,70"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aec5da185922e02ddaa7d9eb7e851fcb0" title=" " alt="" coords="149,5,322,45"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="128,69,343,109"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="MusicianEmailEvent" name="MusicianEmailEvent">
+<area shape="rect" id="node1" title="Base class for musician email events." alt="" coords="109,129,251,155"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_change_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after the email address is changed." alt="" coords="301,5,479,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_persist_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after a new email address has been persi..." alt="" coords="303,55,477,80"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_post_remove_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after the email address is changed." alt="" coords="299,104,481,129"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_change_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook before the email address is changed." alt="" coords="304,153,476,179"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_persist_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after a new email address has been persi..." alt="" coords="306,203,474,228"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_pre_remove_musician_email.html" title="Event fired by the Musician entity through a life&#45;cycle hook after the email address is changed." alt="" coords="302,252,478,277"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,129,61,155"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="hasUpdated" name="hasUpdated">
+<area shape="rect" id="node1" title="{}" alt="" coords="5,57,97,83"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae16b6afbab9462a9af681b9393af361e" title="{}" alt="" coords="145,57,220,83"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="551,32,677,57"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a9d7ac9f8614357ce6b7358708b9ab040" title=" " alt="" coords="268,32,460,57"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a8eb3e49592d26a52be7e8987722d1aa3" title="Get the overall modification time of the entire storage as Unix time&#45;stamp." alt="" coords="272,131,456,156"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5877dd78fbe10fb5f3ee3d25e3fbe11e" title="{}" alt="" coords="337,81,391,107"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="768,7,844,32"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="771,56,841,81"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="892,56,1059,81"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae5a252c76f3eca6363a55691f69dd932" title="Return the overall modification time of the entire storage." alt="" coords="508,131,720,156"/>
+</map>

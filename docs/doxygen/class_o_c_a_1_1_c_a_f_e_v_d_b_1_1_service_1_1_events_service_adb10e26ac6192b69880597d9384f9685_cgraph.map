@@ -1,0 +1,7 @@
+<map id="makeEvent" name="makeEvent">
+<area shape="rect" id="node1" title="Augment the database entity by calendar data." alt="" coords="5,109,93,134"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a20bce1060035becc1a931e3cd65aeecc" title=" " alt="" coords="151,5,346,45"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="141,69,356,109"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a2dad03f32dc06c2aa1711b0f2243c18d" title="Return a reference to the object contained in a Sabre VCALENDAR object." alt="" coords="149,133,349,173"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a8aa4a7a29d5680924f966b2fbc64a901" title="Unconditionally unregister the given event with the given project." alt="" coords="209,198,288,223"/>
+</map>

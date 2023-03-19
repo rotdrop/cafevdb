@@ -1,0 +1,6 @@
+<map id="render" name="render">
+<area shape="rect" id="node1" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,69,64,94"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="127,29,303,69"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="112,93,319,133"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="367,29,565,69"/>
+</map>

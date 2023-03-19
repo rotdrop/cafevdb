@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/modalizer.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#actionHandler">actionHandler</a></li><li><a href="global.html#addEditor">addEditor</a></li><li><a href="global.html#addMusicians">addMusicians</a></li><li><a href="global.html#addReadyCallback">addReadyCallback</a></li><li><a href="global.html#afterLoad">afterLoad</a></li><li><a href="global.html#ajaxFailData">ajaxFailData</a></li><li><a href="global.html#ajaxFailMessage">ajaxFailMessage</a></li><li><a href="global.html#ajaxHandleError">ajaxHandleError</a></li><li><a href="global.html#ajaxValidateResponse">ajaxValidateResponse</a></li><li><a href="global.html#appInfo">appInfo</a></li><li><a href="global.html#applyToolTips">applyToolTips</a></li><li><a href="global.html#appPrefix">appPrefix</a></li><li><a href="global.html#appSettings">appSettings</a></li><li><a href="global.html#attachHandlers">attachHandlers</a></li><li><a href="global.html#checkInvalidInputs">checkInvalidInputs</a></li><li><a href="global.html#chosenActive">chosenActive</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#closeActionMenu">closeActionMenu</a></li><li><a href="global.html#contactValidation">contactValidation</a></li><li><a href="global.html#containerSelector">containerSelector</a></li><li><a href="global.html#createProgressStatus">createProgressStatus</a></li><li><a href="global.html#debugPopup">debugPopup</a></li><li><a href="global.html#dialogCustomCloseButton">dialogCustomCloseButton</a></li><li><a href="global.html#dialogFullScreenButton">dialogFullScreenButton</a></li><li><a href="global.html#dialogToBackButton">dialogToBackButton</a></li><li><a href="global.html#documentReady">documentReady</a></li><li><a href="global.html#download">download</a></li><li><a href="global.html#emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li><a href="global.html#emailFormPopup">emailFormPopup</a></li><li><a href="global.html#emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li><a href="global.html#emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li><a href="global.html#emailPopup">emailPopup</a></li><li><a href="global.html#eventsPopup">eventsPopup</a></li><li><a href="global.html#findOptionByValue">findOptionByValue</a></li><li><a href="global.html#FindRanges">FindRanges</a></li><li><a href="global.html#formSubmit">formSubmit</a></li><li><a href="global.html#generateSettingsUrl">generateSettingsUrl</a></li><li><a href="global.html#generateUrl">generateUrl</a></li><li><a href="global.html#getAppUrl">getAppUrl</a></li><li><a href="global.html#getChildren">getChildren</a></li><li><a href="global.html#getControlObject">getControlObject</a></li><li><a href="global.html#getOptions">getOptions</a></li><li><a href="global.html#getOptionValues">getOptionValues</a></li><li><a href="global.html#getPersonalUrl">getPersonalUrl</a></li><li><a href="global.html#getSelectize">getSelectize</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUrl">getUrl</a></li><li><a href="global.html#getWidget">getWidget</a></li><li><a href="global.html#handleProjectActions">handleProjectActions</a></li><li><a href="global.html#handleQueryLogMenu">handleQueryLogMenu</a></li><li><a href="global.html#handleTableExportMenu">handleTableExportMenu</a></li><li><a href="global.html#htmlDecode">htmlDecode</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#installInputSelectize">installInputSelectize</a></li><li><a href="global.html#instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li><a href="global.html#invalidInputDowncount">invalidInputDowncount</a></li><li><a href="global.html#isVanilla">isVanilla</a></li><li><a href="global.html#jQuery">jQuery</a></li><li><a href="global.html#lazyBatchDecryptValues">lazyBatchDecryptValues</a></li><li><a href="global.html#loadPage">loadPage</a></li><li><a href="global.html#loadPMETable">loadPMETable</a></li><li><a href="global.html#loadPMETableFiltered">loadPMETableFiltered</a></li><li><a href="global.html#mandatesInit">mandatesInit</a></li><li><a href="global.html#mandateValidate">mandateValidate</a></li><li><a href="global.html#mandateValidatePME">mandateValidatePME</a></li><li><a href="global.html#mandateValidatePMEPromise">mandateValidatePMEPromise</a></li><li><a href="global.html#mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li><a href="global.html#maybeTranspose">maybeTranspose</a></li><li><a href="global.html#messages">messages</a></li><li><a href="global.html#modalizer">modalizer</a></li><li><a href="global.html#modalWaitNotification">modalWaitNotification</a></li><li><a href="global.html#myLoadAddMusicians">myLoadAddMusicians</a></li><li><a href="global.html#myLoadMusicians">myLoadMusicians</a></li><li><a href="global.html#myLoadProjectParticipants">myLoadProjectParticipants</a></li><li><a href="global.html#myPersonalRecordDialog">myPersonalRecordDialog</a></li><li><a href="global.html#nonTextInputTypes">nonTextInputTypes</a></li><li><a href="global.html#participantFieldsPopup">participantFieldsPopup</a></li><li><a href="global.html#photoEditCurrent">photoEditCurrent</a></li><li><a href="global.html#photoLoad">photoLoad</a></li><li><a href="global.html#photoLoadHandlers">photoLoadHandlers</a></li><li><a href="global.html#photoReady">photoReady</a></li><li><a href="global.html#photoUploadDragDrop">photoUploadDragDrop</a></li><li><a href="global.html#pmeCellSelector">pmeCellSelector</a></li><li><a href="global.html#pmeClassSelector">pmeClassSelector</a></li><li><a href="global.html#pmeClassSelectors">pmeClassSelectors</a></li><li><a href="global.html#pmeContainer">pmeContainer</a></li><li><a href="global.html#pmeContextMenu">pmeContextMenu</a></li><li><a href="global.html#pmeData">pmeData</a></li><li><a href="global.html#pmeDeferReload">pmeDeferReload</a></li><li><a href="global.html#pmeFilterSelector">pmeFilterSelector</a></li><li><a href="global.html#pmeFormSelector">pmeFormSelector</a></li><li><a href="global.html#pmeIdSelector">pmeIdSelector</a></li><li><a href="global.html#pmeInit">pmeInit</a></li><li><a href="global.html#pmeInner">pmeInner</a></li><li><a href="global.html#pmeInputSelector">pmeInputSelector</a></li><li><a href="global.html#pmeKeySelector">pmeKeySelector</a></li><li><a href="global.html#pmeNavigationSelector">pmeNavigationSelector</a></li><li><a href="global.html#pmeOpenRowDialog">pmeOpenRowDialog</a></li><li><a href="global.html#pmeQueryInfoSelector">pmeQueryInfoSelector</a></li><li><a href="global.html#pmeRec">pmeRec</a></li><li><a href="global.html#pmeRecordValue">pmeRecordValue</a></li><li><a href="global.html#pmeSelector">pmeSelector</a></li><li><a href="global.html#pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li><a href="global.html#pmeSys">pmeSys</a></li><li><a href="global.html#pmeSysNameSelector">pmeSysNameSelector</a></li><li><a href="global.html#pmeSysNameSelectors">pmeSysNameSelectors</a></li><li><a href="global.html#pmeTableDialogOpen">pmeTableDialogOpen</a></li><li><a href="global.html#pmeTableSelector">pmeTableSelector</a></li><li><a href="global.html#pmeToken">pmeToken</a></li><li><a href="global.html#pmeTriggerSubmit">pmeTriggerSubmit</a></li><li><a href="global.html#pmeTweaks">pmeTweaks</a></li><li><a href="global.html#pmeUnTweak">pmeUnTweak</a></li><li><a href="global.html#pmeValueSelector">pmeValueSelector</a></li><li><a href="global.html#pollProgressStatus">pollProgressStatus</a></li><li><a href="global.html#print_r">print_r</a></li><li><a href="global.html#projectPaymentPopup">projectPaymentPopup</a></li><li><a href="global.html#projectViewPopup">projectViewPopup</a></li><li><a href="global.html#projectWebPageRequest">projectWebPageRequest</a></li><li><a href="global.html#projectWebPageTabHandler">projectWebPageTabHandler</a></li><li><a href="global.html#pseudoSubmit">pseudoSubmit</a></li><li><a href="global.html#pseudoSubmitPost">pseudoSubmitPost</a></li><li><a href="global.html#queryData">queryData</a></li><li><a href="global.html#refreshSelectWidget">refreshSelectWidget</a></li><li><a href="global.html#refreshWidgetProperties">refreshWidgetProperties</a></li><li><a href="global.html#removeEditor">removeEditor</a></li><li><a href="global.html#renderTag">renderTag</a></li><li><a href="global.html#replaceSelectOptions">replaceSelectOptions</a></li><li><a href="global.html#runReadyCallbacks">runReadyCallbacks</a></li><li><a href="global.html#selectedOptions">selectedOptions</a></li><li><a href="global.html#selectedValues">selectedValues</a></li><li><a href="global.html#selectizeActive">selectizeActive</a></li><li><a href="global.html#setAppUrl">setAppUrl</a></li><li><a href="global.html#setPersonalUrl">setPersonalUrl</a></li><li><a href="global.html#setToken">setToken</a></li><li><a href="global.html#simpleSetHandler">simpleSetHandler</a></li><li><a href="global.html#simpleSetValueHandler">simpleSetValueHandler</a></li><li><a href="global.html#snapshotEditor">snapshotEditor</a></li><li><a href="global.html#stopEnterSubmit">stopEnterSubmit</a></li><li><a href="global.html#tableDialog">tableDialog</a></li><li><a href="global.html#tableDialogHandlers">tableDialogHandlers</a></li><li><a href="global.html#tableDialogReload">tableDialogReload</a></li><li><a href="global.html#tableDialogReplace">tableDialogReplace</a></li><li><a href="global.html#Template">Template</a></li><li><a href="global.html#textareaResize">textareaResize</a></li><li><a href="global.html#toolTipsEnabled">toolTipsEnabled</a></li><li><a href="global.html#toolTipsInit">toolTipsInit</a></li><li><a href="global.html#transposeMainTable">transposeMainTable</a></li><li><a href="global.html#transposeReady">transposeReady</a></li><li><a href="global.html#unfocus">unfocus</a></li><li><a href="global.html#updateEditor">updateEditor</a></li><li><a href="global.html#urlDecode">urlDecode</a></li><li><a href="global.html#urlEncode">urlEncode</a></li><li><a href="global.html#validateInstrumentChoices">validateInstrumentChoices</a></li><li><a href="global.html#wikiPopup">wikiPopup</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/modalizer.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2021, 2022 Claus-Justus Heine &lt;himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+
+import { globalState, $ } from './globals.js';
+
+/**
+ * Open one invisible modal dialog in order to have a persistent
+ * overlay for a group of dialogs. Note that the overlay blocking the
+ * rest of the UI is the standard modal overlay of jquery-ui. This
+ * dialog just has zero width and is just an anchor.
+ *
+ * @param {boolean} open TBD.
+ *
+ * @returns {boolean|jQuery}
+ */
+const modalizer = function(open) {
+  const modalizer = $('#cafevdb-modalizer');
+  if (open) {
+    if (modalizer.length > 0) {
+      $('body').addClass('cafevdb-modalizer');
+      return modalizer;
+    }
+    const dialogHolder = $('&lt;div id="cafevdb-modalizer" class="cafevdb-modalizer">&lt;/div>');
+    $('body').append(dialogHolder);
+    dialogHolder.cafevDialog({
+      title: '',
+      position: {
+        my: 'top left',
+        at: 'top-100% left-100%',
+        of: window,
+      },
+      width: '0px',
+      height: '0px',
+      modal: true,
+      closeOnEscape: false,
+      dialogClass: 'transparent no-close zero-size cafevdb-modalizer',
+      resizable: false,
+      open() {
+        // This one must be ours.
+        globalState.dialogOverlay = $('.ui-widget-overlay:last');
+        $('body').addClass('cafevdb-modalizer');
+      },
+      close() {
+        globalState.dialogOverlay = false;
+        dialogHolder.dialog('close');
+        dialogHolder.dialog('destroy').remove();
+        $('body').removeClass('cafevdb-modalizer');
+      },
+    });
+    return dialogHolder;
+  } else {
+    if (modalizer.length &lt;= 0) {
+      $('body').removeClass('cafevdb-modalizer');
+      return true;
+    }
+    const overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
+    console.debug('overlay index: ', overlayIndex);
+    let numDialogs = 0;
+    $('.ui-dialog.ui-widget').each(function(index) {
+      const $this = $(this);
+      const thisIndex = $this.data('z-index') || parseInt($this.css('z-index'));
+      console.debug('that index: ', thisIndex);
+      if (thisIndex >= overlayIndex) {
+        ++numDialogs;
+      }
+    });
+
+    console.debug('num dialogs open: ', numDialogs);
+    if (numDialogs > 1) {
+      // one is the modalizer itself, of course.
+      return modalizer;
+    }
+
+    modalizer.dialog('close');
+    $('body').removeClass('cafevdb-modalizer');
+
+    return true;
+  }
+};
+
+export default modalizer;
+
+// Local Variables: ***
+// js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Mar 19 2023 16:22:02 GMT+0100 (Mitteleuropäische Normalzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

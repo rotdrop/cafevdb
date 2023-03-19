@@ -1,0 +1,20 @@
+<map id="log" name="log">
+<area shape="rect" id="node1" title="Log the given message at the specified level." alt="" coords="1107,330,1145,355"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="981,178,1059,203"/>
+<area shape="rect" id="node11" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a90f07ed512379da471e822b7471b72fc" title="Log an error." alt="" coords="987,281,1053,306"/>
+<area shape="rect" id="node12" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a1fb524592651892e64d519e7878ae862" title="Log a fatal error message." alt="" coords="986,330,1054,355"/>
+<area shape="rect" id="node13" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8e67cfd6a09d264ed60634dd794bb30" title="Log an informational message." alt="" coords="989,379,1051,405"/>
+<area shape="rect" id="node18" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a1cf05ff14f22eb60dd635484e8f09109" title="Log a warning message." alt="" coords="985,429,1055,454"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a13bfe0a165b8f3fc32dd8e598709e465" title=" " alt="" coords="737,202,933,257"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="737,123,933,178"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="249,86,445,141"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab053279bea70dd2be3ff1676354fd041" title="Return all shared folders matching the given regexp." alt="" coords="493,227,689,282"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a2c5736677056d73dbd8d456de4babd92" title=" " alt="" coords="249,7,445,62"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="493,123,689,178"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab6b826e4a8edcd655850277fbb5e9e74" title="Create a shared folder and set appropriate permissions." alt="" coords="5,47,201,102"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ad4fb86c5bb03d98824c51cfe67154a56" title=" " alt="" coords="249,227,445,282"/>
+<area shape="rect" id="node14" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1b1d06b8849380605b6a83ff72dd8689" title=" " alt="" coords="746,333,925,387"/>
+<area shape="rect" id="node15" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a5b62df0076a109c14c456e0664583bbe" title=" " alt="" coords="502,429,681,483"/>
+<area shape="rect" id="node17" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a53e661a445d92119cf8033c6a394de7f" title="Parse a storage user input value and return its value in bytes." alt="" coords="787,411,884,437"/>
+<area shape="rect" id="node16" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#ab63abc381405369b014b433dded6a20c" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="499,333,684,387"/>
+</map>

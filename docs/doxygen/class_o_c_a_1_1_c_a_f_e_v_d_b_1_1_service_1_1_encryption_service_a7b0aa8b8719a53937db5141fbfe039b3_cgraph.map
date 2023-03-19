@@ -1,0 +1,4 @@
+<map id="setSharedPrivateValue" name="setSharedPrivateValue">
+<area shape="rect" id="node1" title="Encrypt the given value with the user&#39;s public key." alt="" coords="5,5,160,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ac00a76ffe038ef8a433357bd4114bb52" title="Test if we a bound to a user." alt="" coords="208,5,265,31"/>
+</map>

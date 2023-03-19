@@ -1,0 +1,11 @@
+<map id="logDebug" name="logDebug">
+<area shape="rect" id="node1" title="Log a debug message." alt="" coords="981,136,1059,161"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a13bfe0a165b8f3fc32dd8e598709e465" title=" " alt="" coords="737,5,933,60"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="737,187,933,241"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="249,121,445,176"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab053279bea70dd2be3ff1676354fd041" title="Return all shared folders matching the given regexp." alt="" coords="493,265,689,320"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a2c5736677056d73dbd8d456de4babd92" title=" " alt="" coords="493,56,689,111"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="493,187,689,241"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab6b826e4a8edcd655850277fbb5e9e74" title="Create a shared folder and set appropriate permissions." alt="" coords="5,89,201,144"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ad4fb86c5bb03d98824c51cfe67154a56" title=" " alt="" coords="249,265,445,320"/>
+</map>

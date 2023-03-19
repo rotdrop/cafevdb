@@ -1,0 +1,6 @@
+<map id="newTemporaryFile" name="newTemporaryFile">
+<area shape="rect" id="node1" title="Generate a random file." alt="" coords="5,31,133,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a43e2b8de357718737d0fa45498269a3f" title="Ensure a folder exists withtout throwing an exception." alt="" coords="181,31,279,56"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a330e8edf0ecc220b330e6e6c37058e49" title="Get the folder with name $name." alt="" coords="330,5,406,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a31956852c940764b8b48f73a7c547c67" title="Create a new folder named $name." alt="" coords="327,55,409,80"/>
+</map>

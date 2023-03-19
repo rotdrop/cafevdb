@@ -1,0 +1,4 @@
+<map id="findForEntity" name="findForEntity">
+<area shape="rect" id="node1" title="Find images for the given &quot;using&quot; entity class." alt="" coords="173,5,269,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#ae9058a484b4d2461ac8fb60b4c761db8" title="Find the first or only image for the given using entity." alt="" coords="5,5,125,31"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="AsymmetricKeyStorageInterface" name="AsymmetricKeyStorageInterface">
+<area shape="rect" id="node1" title="Key&#45;storage interface." alt="" coords="112,5,323,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_abstract_asymmetric_key_storage.html" title="Abstract base providing default implementations." alt="" coords="113,79,322,104"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html" title="Key&#45;storage base&#45;class." alt="" coords="120,152,315,177"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_asymmetric_key_storage.html" title="Key&#45;storage for Halite." alt="" coords="5,225,200,251"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_key_storage.html" title="Key&#45;storage for OpenSSL backend." alt="" coords="224,225,440,251"/>
+</map>

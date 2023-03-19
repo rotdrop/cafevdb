@@ -1,0 +1,4 @@
+<map id="setCurrent" name="setCurrent">
+<area shape="rect" id="node1" title="{Set the current value and sync.void}" alt="" coords="5,13,88,38"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a60696fa745c7b2fd721f2f3fbbc8d39f" title="Update to the given values, where null arguments are simply ignored." alt="" coords="136,5,312,45"/>
+</map>

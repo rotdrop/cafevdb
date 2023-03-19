@@ -1,0 +1,13 @@
+<map id="createFolder" name="createFolder">
+<area shape="rect" id="node1" title="Create a shared folder and set appropriate permissions." alt="" coords="5,80,100,105"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a8148448c37311dced215dca1c67a66e0" title="Add a single group to the given shared folder." alt="" coords="155,5,283,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a3f43811af00573cb21e27cb201c49623" title=" " alt="" coords="148,55,291,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="181,104,257,129"/>
+<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a2c5736677056d73dbd8d456de4babd92" title=" " alt="" coords="339,155,442,180"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="339,53,443,79"/>
+<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="633,97,795,137"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="491,53,585,79"/>
+<area shape="rect" id="node8" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="843,97,1004,137"/>
+<area shape="rect" id="node9" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="1052,65,1213,105"/>
+<area shape="rect" id="node10" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="1052,129,1213,169"/>
+</map>

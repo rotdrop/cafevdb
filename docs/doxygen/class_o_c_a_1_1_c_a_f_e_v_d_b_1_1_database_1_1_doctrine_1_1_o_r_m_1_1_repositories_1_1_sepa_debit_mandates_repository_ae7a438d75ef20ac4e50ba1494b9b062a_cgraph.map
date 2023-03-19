@@ -1,0 +1,4 @@
+<map id="findNewest" name="findNewest">
+<area shape="rect" id="node1" title="Find the sepa&#45;mandate with the highest sequence number, if any." alt="" coords="5,5,93,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#aa83dc5c73575593e20ef022264c93b7c" title="Find a SEPA&#45;mandate by either its primary key or its mandate reference; no&#45;op if $idOrReference alrea..." alt="" coords="141,5,224,31"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="invite" name="invite">
+<area shape="rect" id="node1" title="Just send an invitation." alt="" coords="5,34,59,60"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="107,34,185,60"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="635,34,728,60"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="260,34,389,60"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="233,84,416,109"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="776,34,848,60"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="896,34,979,60"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4cd47312ba83aa234d85affa07109dc2" title="MAJOR.MINOR.REVISION." alt="" coords="464,34,587,60"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="469,84,581,109"/>
+</map>

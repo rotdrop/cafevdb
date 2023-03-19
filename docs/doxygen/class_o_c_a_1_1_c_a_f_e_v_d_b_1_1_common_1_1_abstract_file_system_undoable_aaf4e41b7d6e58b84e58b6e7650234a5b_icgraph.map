@@ -1,0 +1,9 @@
+<map id="renamedName" name="renamedName">
+<area shape="rect" id="node1" title="Create a new unique name for renaming." alt="" coords="480,127,587,152"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_create.html#a4a20559544fdf4dcb457e258dc976cf8" title="{Reset initial state.void}" alt="" coords="236,19,425,59"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_text_file_update.html#a4a20559544fdf4dcb457e258dc976cf8" title="{Reset initial state.void}" alt="" coords="229,87,432,127"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_create.html#a0347027efc0e46047792065615ac94eb" title="{Undo that what was done by do().void}" alt="" coords="237,151,425,191"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_text_file_update.html#a0347027efc0e46047792065615ac94eb" title="{Undo that what was done by do().void}" alt="" coords="230,215,431,255"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_create.html#a8e62e4feb0cb70954e3d1a2ae6a4fd04" title="Undoable folder rename, optionally ignoring non&#45;existing source folder." alt="" coords="5,5,181,60"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_text_file_update.html#a37bdb46a6022eaf6ab3156aaa986321f" title=" " alt="" coords="5,84,181,139"/>
+</map>

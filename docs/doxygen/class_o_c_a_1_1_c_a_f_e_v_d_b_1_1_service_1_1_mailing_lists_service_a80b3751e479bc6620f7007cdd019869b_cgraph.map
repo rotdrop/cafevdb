@@ -1,0 +1,8 @@
+<map id="getSubscriptionStatus" name="getSubscriptionStatus">
+<area shape="rect" id="node1" title="Return a brief status for the requested list and email address." alt="" coords="5,31,156,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="229,5,341,31"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ade1a05b11f9d74137ad1ee533133decf" title="Get or check for a pending invitation (=== email confirmation request) for the given subscription&#45;add..." alt="" coords="204,55,365,80"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="413,31,507,56"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="555,31,627,56"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="675,31,757,56"/>
+</map>

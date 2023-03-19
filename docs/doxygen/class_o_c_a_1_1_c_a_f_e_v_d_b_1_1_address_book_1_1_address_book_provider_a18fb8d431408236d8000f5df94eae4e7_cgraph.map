@@ -1,0 +1,5 @@
+<map id="fetchAllForAddressBookHome" name="fetchAllForAddressBookHome">
+<area shape="rect" id="node1" title="Fetches all address books for a given principal uri." alt="" coords="5,5,204,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_address_book_provider.html#a1cc61874464379ab2df292b995d1aaed" title=" " alt="" coords="543,5,657,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_address_book_provider.html#a7905b6cd5ddffe9ebfc1dc078943bd4e" title="Fetches an address book for a given principalUri and URI Returns null if address book does not exist." alt="" coords="252,31,495,56"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="MusicianCard" name="MusicianCard">
+<area shape="rect" id="node1" title="ICard implementation linking to the musicians database." alt="" coords="5,79,108,104"/>
+<area shape="rect" id="node2" title=" " alt="" coords="29,5,84,31"/>
+</map>

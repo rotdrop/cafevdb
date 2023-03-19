@@ -1,0 +1,6 @@
+<map id="DatabaseEntityNotUniqueException" name="DatabaseEntityNotUniqueException">
+<area shape="rect" id="node1" title="Thrown if more than one entity is found when there should be only one." alt="" coords="5,225,237,251"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="53,152,189,177"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="81,79,161,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="67,5,175,31"/>
+</map>

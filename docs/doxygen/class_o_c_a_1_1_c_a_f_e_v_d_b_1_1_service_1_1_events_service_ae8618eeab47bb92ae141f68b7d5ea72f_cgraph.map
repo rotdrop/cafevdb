@@ -1,0 +1,8 @@
+<map id="fetchEvent" name="fetchEvent">
+<area shape="rect" id="node1" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="5,109,91,134"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#adb10e26ac6192b69880597d9384f9685" title="Augment the database entity by calendar data." alt="" coords="139,109,227,134"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a20bce1060035becc1a931e3cd65aeecc" title=" " alt="" coords="285,5,479,45"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="275,69,489,109"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a2dad03f32dc06c2aa1711b0f2243c18d" title="Return a reference to the object contained in a Sabre VCALENDAR object." alt="" coords="282,133,482,173"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a8aa4a7a29d5680924f966b2fbc64a901" title="Unconditionally unregister the given event with the given project." alt="" coords="343,198,421,223"/>
+</map>

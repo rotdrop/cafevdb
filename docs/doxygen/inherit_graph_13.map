@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_storage_interface.html" title="Key&#45;storage interface." alt="" coords="5,31,216,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_abstract_asymmetric_key_storage.html" title="Abstract base providing default implementations." alt="" coords="264,31,473,56"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html" title="Key&#45;storage base&#45;class." alt="" coords="521,31,716,56"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_asymmetric_key_storage.html" title="Key&#45;storage for Halite." alt="" coords="775,5,969,31"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_key_storage.html" title="Key&#45;storage for OpenSSL backend." alt="" coords="764,55,980,80"/>
+</map>

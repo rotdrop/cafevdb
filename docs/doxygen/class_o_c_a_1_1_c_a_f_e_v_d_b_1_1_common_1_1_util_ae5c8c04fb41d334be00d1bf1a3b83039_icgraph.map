@@ -1,0 +1,4 @@
+<map id="dashesToCamelCase" name="dashesToCamelCase">
+<area shape="rect" id="node1" title="Take any dashed or &quot;underscored&quot; lower&#45;case string and convert to camel&#45;case." alt="" coords="221,5,368,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae7d345a0cb6a0cc4e54913f819db998d" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="5,5,173,31"/>
+</map>

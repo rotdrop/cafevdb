@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_crypto_factory_interface.html" title="Interface for crypto&#45;factory." alt="" coords="5,31,161,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_crypto_factory.html" title="Factory using the Nextcloud crypto routines as backend." alt="" coords="209,5,348,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_crypto_factory.html" title="Factory class using Halite as encryption backend." alt="" coords="209,55,348,80"/>
+</map>

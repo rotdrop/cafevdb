@@ -1,0 +1,4 @@
+<map id="usage" name="usage">
+<area shape="rect" id="node1" title="Fetch usage information about the given identifier." alt="" coords="119,5,176,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a5592d318f18909a8b81537a3dce08164" title="Delete the given mandate if it is not used." alt="" coords="5,5,71,31"/>
+</map>

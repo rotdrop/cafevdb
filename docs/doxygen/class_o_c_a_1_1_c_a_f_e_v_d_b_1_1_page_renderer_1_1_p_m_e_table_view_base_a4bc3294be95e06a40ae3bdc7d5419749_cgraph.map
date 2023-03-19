@@ -1,0 +1,10 @@
+<map id="makeJoinTableField" name="makeJoinTableField">
+<area shape="rect" id="node1" title="Generate a join&#45;table field, given join&#45;table and field name." alt="" coords="5,129,143,155"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a8a9d6dd0754451d7214ed760a2179bd4" title="Add a &quot;slug&quot; as tooltips&#45;index and css&#45;class." alt="" coords="244,31,313,56"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="191,93,367,133"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="211,157,347,183"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="191,207,367,232"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aee57cb8d60602879f6a65e257cdcbf63" title=" " alt="" coords="661,5,739,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a166d2dbd24c4913a9461c5813bbb4232" title="Generate a &quot;unified&quot; tooltip&#45;slug in order to obtain tool&#45;tips from the ToolTipsService." alt="" coords="473,31,555,56"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="415,105,613,145"/>
+</map>

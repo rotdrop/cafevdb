@@ -1,0 +1,6 @@
+<map id="findOneBy" name="findOneBy">
+<area shape="rect" id="node1" title="Find a SEPA&#45;mandate by either its primary key or its mandate reference; no&#45;op if $idOrReference alrea..." alt="" coords="255,56,337,81"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a3435ec579db5b0ae00575b8f516a8e24" title="Ban a SEPA&#45;mandate (timeout, withdrawn, erroneous data etc.)." alt="" coords="141,5,184,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#a5592d318f18909a8b81537a3dce08164" title="Delete the given mandate if it is not used." alt="" coords="5,31,71,56"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_debit_mandates_repository.html#ae7a438d75ef20ac4e50ba1494b9b062a" title="Find the sepa&#45;mandate with the highest sequence number, if any." alt="" coords="119,107,207,132"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="updateVCalendarFromRequest" name="updateVCalendarFromRequest">
+<area shape="rect" id="node1" title="Updates an VCalendar Object from the request data." alt="" coords="5,31,207,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#abeb36349d137f59529296be433ce51b4" title="Returns the options for an yearly repeating event which occurs on specific month of the year." alt="" coords="255,5,392,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#ad515ca85336eabd9bab2062442e733f8" title="Returns the options for an weekly repeating event." alt="" coords="259,55,387,80"/>
+</map>

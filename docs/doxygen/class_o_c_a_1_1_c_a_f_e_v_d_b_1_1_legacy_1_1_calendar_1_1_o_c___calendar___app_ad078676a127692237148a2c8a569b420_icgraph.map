@@ -1,0 +1,5 @@
+<map id="scanCategories" name="scanCategories">
+<area shape="rect" id="node1" title="Scan events for categories." alt="" coords="352,5,465,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#a4c5656d6a34fbce12f67fd3690511dcb" title="returns the vcategories object of the user" alt="" coords="192,5,304,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#a4f51807e3837a73286e2cca20d70fb06" title="returns the categories of the vcategories object" alt="" coords="5,5,144,31"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="remove" name="remove">
+<area shape="rect" id="node1" title="Removes an entity instance." alt="" coords="5,5,71,31"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad9f7964d2ea3ec421dd166a41e4ff17d" title="Flushes all changes to objects that have been queued up to now to the database." alt="" coords="119,5,169,31"/>
+</map>

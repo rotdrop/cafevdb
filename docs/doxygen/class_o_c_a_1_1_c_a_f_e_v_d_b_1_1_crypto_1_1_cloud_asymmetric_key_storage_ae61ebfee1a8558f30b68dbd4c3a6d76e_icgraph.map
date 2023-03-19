@@ -1,0 +1,5 @@
+<map id="serializeKey" name="serializeKey">
+<area shape="rect" id="node1" title="Serialize key to string for storage in whatever storage backend." alt="" coords="227,31,320,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#ab5f2576425cc58141382946e399e8520" title="{Initialize a private/public key&#45;pair by either retreiving it from the config&#45;space or generating a n..." alt="" coords="33,5,151,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a25a10985652081b58efa617fc924597e" title="{Change the the passphrase of the given unlocked private&#45;key.void}" alt="" coords="5,55,179,80"/>
+</map>

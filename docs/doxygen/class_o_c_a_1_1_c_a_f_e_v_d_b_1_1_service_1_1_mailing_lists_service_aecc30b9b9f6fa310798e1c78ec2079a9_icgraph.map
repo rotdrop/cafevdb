@@ -1,0 +1,4 @@
+<map id="getListConfig" name="getListConfig">
+<area shape="rect" id="node1" title="Fetch the list configuration from the server." alt="" coords="140,5,239,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a5fcdb839d270408e8d384d4aeba25e34" title="Rename an existing list." alt="" coords="5,5,92,31"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="addressBookByName" name="addressBookByName">
+<area shape="rect" id="node1" title="Get a addressBook with the given display name." alt="" coords="5,5,155,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_card_dav_service.html#ae7f223e0fef994941e2c2f4a42618d7a" title="Force OCP\Contacts\IManager to be refreshed." alt="" coords="203,5,393,31"/>
+</map>

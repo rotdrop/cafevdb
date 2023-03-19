@@ -1,0 +1,6 @@
+<map id="renderSepaAccounts" name="renderSepaAccounts">
+<area shape="rect" id="node1" title="Generate join&#45;structure and field&#45;descriptions for the SEPA information." alt="" coords="5,55,148,80"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#af8f8d938e140f52f23f83939ed2cd32b" title=" " alt="" coords="202,5,281,31"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a25fab94847afb28af86ce6a484cf0021" title="Use the encryption machine also used by the entity&#45;manager." alt="" coords="196,55,287,80"/>
+<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_field_traits.html#a5127db8e9f26604c0c0dc87c06ce5ba2" title="Use the encryption machine also used by the entity&#45;manager." alt="" coords="197,104,286,129"/>
+</map>

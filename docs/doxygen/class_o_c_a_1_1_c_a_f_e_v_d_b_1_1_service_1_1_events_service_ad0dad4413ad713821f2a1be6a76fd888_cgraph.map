@@ -1,0 +1,10 @@
+<map id="onCalendarObjectUpdated" name="onCalendarObjectUpdated">
+<area shape="rect" id="node1" title=" " alt="" coords="5,117,180,142"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a8dbd777ef286c3c4b57fa2b6a6a4c205" title=" " alt="" coords="238,91,358,117"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9c5b6c8d51d88794475b33331e1afa98" title="Parse the respective event data and make sure the ProjectEvents table is uptodate." alt="" coords="228,141,368,166"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7b56dda98a141d37413cf9829d8321a1" title="Return the category list for the given object." alt="" coords="422,5,638,45"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aec5da185922e02ddaa7d9eb7e851fcb0" title=" " alt="" coords="443,69,617,109"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="423,133,637,173"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a2dad03f32dc06c2aa1711b0f2243c18d" title="Return a reference to the object contained in a Sabre VCALENDAR object." alt="" coords="430,197,630,237"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a74115b9298d21b9cbf1ef88796d1b1b7" title="Return the type of the respective calendar object." alt="" coords="416,261,644,301"/>
+</map>

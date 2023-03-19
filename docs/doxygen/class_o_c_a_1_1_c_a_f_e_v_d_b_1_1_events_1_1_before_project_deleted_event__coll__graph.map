@@ -1,0 +1,5 @@
+<map id="BeforeProjectDeletedEvent" name="BeforeProjectDeletedEvent">
+<area shape="rect" id="node1" title="Fired before the project is actually deleted or soft&#45;deleted." alt="" coords="5,152,185,177"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_event.html" title="ProjectEvents." alt="" coords="47,79,144,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="47,5,144,31"/>
+</map>

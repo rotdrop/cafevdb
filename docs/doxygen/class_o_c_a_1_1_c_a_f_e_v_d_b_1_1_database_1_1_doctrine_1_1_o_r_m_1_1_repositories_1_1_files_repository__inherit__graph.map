@@ -1,0 +1,6 @@
+<map id="FilesRepository" name="FilesRepository">
+<area shape="rect" id="node1" title="Entity&#45;repository for file enitites." alt="" coords="35,152,148,177"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_encrypted_files_repository.html" title="Entity&#45;repository for encrypted file enitites." alt="" coords="5,225,177,251"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="32,79,151,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="32,5,151,31"/>
+</map>

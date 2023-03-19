@@ -1,0 +1,9 @@
+<map id="get" name="get">
+<area shape="rect" id="node1" title="Static query of a service through the app container." alt="" coords="516,171,556,196"/>
+<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="300,163,468,203"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#aa75ac3ff7b3dbe439f60f976ae64669c" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="24,5,233,60"/>
+<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a500c86bb6c2ba2499fa7483b57cf0638" title="Get the name of the sub&#45;folder holding hard&#45;copies of debit&#45;mandates." alt="" coords="33,84,225,139"/>
+<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#aca493be719cd1bd0b6768d6fcf09991a" title="Get the name of the per&#45;participant document folder." alt="" coords="7,163,250,203"/>
+<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a3705793e74052e05461d75092eaf5cc3" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="5,227,252,267"/>
+<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a5e944e99f6ed7901c8c872001e002e76" title=" " alt="" coords="12,292,245,347"/>
+</map>

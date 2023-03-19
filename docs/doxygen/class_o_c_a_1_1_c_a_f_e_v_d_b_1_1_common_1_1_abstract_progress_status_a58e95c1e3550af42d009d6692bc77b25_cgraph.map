@@ -1,0 +1,5 @@
+<map id="increment" name="increment">
+<area shape="rect" id="node1" title="{Add the given amount to the progress&#45;status counter.bool|int Current value of the counter or false i..." alt="" coords="5,45,84,70"/>
+<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#ad926899d7cac34a3f1a90e552d8eb27d" title="Return the cached value of the current state." alt="" coords="132,5,317,45"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a60696fa745c7b2fd721f2f3fbbc8d39f" title="Update to the given values, where null arguments are simply ignored." alt="" coords="137,69,313,109"/>
+</map>

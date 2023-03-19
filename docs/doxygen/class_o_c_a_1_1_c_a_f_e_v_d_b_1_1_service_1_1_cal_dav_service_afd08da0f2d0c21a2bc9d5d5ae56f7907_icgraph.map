@@ -1,0 +1,6 @@
+<map id="calendarPrincipalUri" name="calendarPrincipalUri">
+<area shape="rect" id="node1" title="Get the uri of the original calendar." alt="" coords="343,31,481,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ab2479c65f5ff410c3580f54e5ba6ee88" title="Convert an object UID to its local URI." alt="" coords="200,31,295,56"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a1a333660bc649269f9583a2985635564" title="Remove the given calendar object." alt="" coords="5,5,152,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#abcd98e2faa0452813888b33a9bf8a834" title="Fetch an event object by its local URI." alt="" coords="13,55,144,80"/>
+</map>

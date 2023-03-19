@@ -1,0 +1,6 @@
+<map id="findThread" name="findThread">
+<area shape="rect" id="node1" title="Fetch the array of messages referring to $id via inReplyTo." alt="" coords="337,67,420,92"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a0b1088a181ae69a49c7d67570a2e2efa" title="Delete the given Note and the entire thread referring to it." alt="" coords="192,29,277,55"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a8141b43e7efef89313e5358478647548" title="Generate a complex tree structure reflecting the message threads." alt="" coords="180,103,289,128"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a021c7a67206f271d83d48044c1bacfd1" title="Generate a complex tree structure reflecting the message threads." alt="" coords="5,103,132,128"/>
+</map>

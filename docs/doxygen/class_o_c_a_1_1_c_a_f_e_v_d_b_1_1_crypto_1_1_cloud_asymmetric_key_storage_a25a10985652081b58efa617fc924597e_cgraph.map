@@ -1,0 +1,5 @@
+<map id="setPrivateKeyPassphrase" name="setPrivateKeyPassphrase">
+<area shape="rect" id="node1" title="{Change the the passphrase of the given unlocked private&#45;key.void}" alt="" coords="5,31,179,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#ae61ebfee1a8558f30b68dbd4c3a6d76e" title="Serialize key to string for storage in whatever storage backend." alt="" coords="230,5,323,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#aafad48628125d0a5bcbbe6e1fddbe1ea" title=" " alt="" coords="227,55,327,80"/>
+</map>

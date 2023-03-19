@@ -1,0 +1,5 @@
+<map id="PeriodicReceivablesGenerator" name="PeriodicReceivablesGenerator">
+<area shape="rect" id="node1" title="Always generate a new payment request." alt="" coords="11,152,210,177"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_abstract_receivables_generator.html" title="Base class for the specific receivable generators." alt="" coords="11,79,211,104"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html" title="Generate recurring receivables and manifest them as recurring Entities\ProjectParticipantField entity..." alt="" coords="5,5,216,31"/>
+</map>

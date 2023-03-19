@@ -1,0 +1,8 @@
+<map id="action" name="action">
+<area shape="rect" id="node1" title=" " alt="" coords="5,109,63,134"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html#adb141c8ddbf823f25281b1ff95a3420c" title=" " alt="" coords="111,109,241,134"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#ad926899d7cac34a3f1a90e552d8eb27d" title="Return the cached value of the current state." alt="" coords="289,5,475,45"/>
+<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a81a67162a6288d78fc4c55283325f0b4" title="Return the cached value of the custom data, i.e." alt="" coords="294,69,470,109"/>
+<area shape="rect" id="node5" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a12251d0c022e9e21c137a105ff683f13" title="Obtain a unique but opaque identifier (e.g." alt="" coords="294,133,470,173"/>
+<area shape="rect" id="node6" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#afd77d5a1c164c8d6f4a18cbf9c341410" title="Return the cached value of the target state." alt="" coords="293,197,471,237"/>
+</map>

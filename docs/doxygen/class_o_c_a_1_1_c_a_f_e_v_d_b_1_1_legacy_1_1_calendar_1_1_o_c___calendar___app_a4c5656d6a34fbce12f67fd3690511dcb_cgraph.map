@@ -1,0 +1,5 @@
+<map id="getVCategories" name="getVCategories">
+<area shape="rect" id="node1" title="returns the vcategories object of the user" alt="" coords="5,31,117,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#aeb8ce2eb142ff02f9202bea87d5fd42c" title="returns the default categories of ownCloud" alt="" coords="165,5,311,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#ad078676a127692237148a2c8a569b420" title="Scan events for categories." alt="" coords="181,55,295,80"/>
+</map>

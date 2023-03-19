@@ -1,0 +1,9 @@
+<map id="configured" name="configured">
+<area shape="rect" id="node1" title="Return an array with necessary configuration items, being either true or false, depending the checks ..." alt="" coords="5,129,88,155"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#abe484932e47748f91bd875c24618c2c8" title="Check whether we have data&#45;base access by connecting to the data&#45;base server and selecting the config..." alt="" coords="155,5,293,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a5ffead28fa0e9af899c4a790555f4162" title=" " alt="" coords="147,55,301,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#af14e4a90cbf23a06903be97acf0b8613" title=" " alt="" coords="136,104,312,129"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a6f152b7d3b0f5ee7a4b2269d58251cb7" title="We require that the share&#45;owner owns a directory shared with the orchestra group." alt="" coords="157,153,291,179"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a68f667537c720241cca484d98c248029" title="Return true if the share&#45;group is set as application configuration option and exists." alt="" coords="161,203,287,228"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_check_service.html#a68d96928eccd8ec709df328b328c05b3" title="Return true if the share&#45;owner exists and belongs to the orchestra user group (and only to this group..." alt="" coords="159,252,289,277"/>
+</map>

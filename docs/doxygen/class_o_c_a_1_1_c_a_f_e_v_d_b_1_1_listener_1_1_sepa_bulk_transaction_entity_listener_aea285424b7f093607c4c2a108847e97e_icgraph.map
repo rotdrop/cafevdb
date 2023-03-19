@@ -1,0 +1,4 @@
+<map id="unlockEntity" name="unlockEntity">
+<area shape="rect" id="node1" title="Protect against re&#45;entrance when the preRemove() handler causes changes to the entity." alt="" coords="136,5,231,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#ae43bfa533a54b1bbaf1660a0aae5f26d" title="{}" alt="" coords="5,5,88,31"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="defineJoinStructure" name="defineJoinStructure">
+<area shape="rect" id="node1" title="Define a basic join&#45;structure for phpMyEdit by using the information from self::$joinStructure." alt="" coords="5,5,140,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a67e29f07640bea5f1c3132bb88270a2b" title="The name of the master join table field which triggers PME to actually do the join." alt="" coords="188,5,364,31"/>
+</map>

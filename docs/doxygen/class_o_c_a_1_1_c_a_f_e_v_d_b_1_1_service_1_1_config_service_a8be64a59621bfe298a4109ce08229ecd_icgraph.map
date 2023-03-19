@@ -1,0 +1,12 @@
+<map id="getUser" name="getUser">
+<area shape="rect" id="node1" title=" " alt="" coords="445,179,513,204"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="319,104,397,129"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7b6e5c12813dec3c45ec9531820c539a" title="Install a new user." alt="" coords="324,229,392,255"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6cacbeb3555df4a292566b2e1b9bb574" title="Install a new user id." alt="" coords="168,203,247,228"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7edad4866aa3ca9b33d80a94bbca867f" title=" " alt="" coords="157,5,257,31"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5b0f9418642a2dfbcfde1475c7d10c9d" title=" " alt="" coords="174,55,241,80"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="144,104,271,129"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab47d7f5da92d211bb6c3a02d2cc5ca07" title=" " alt="" coords="157,153,257,179"/>
+<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a53fe11e3dd3059d6379dfabaf2fce346" title="Fake execution with other user&#45;id." alt="" coords="25,252,76,277"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab50a6081ca9ae60c52dd1ef10f545a55" title="{}" alt="" coords="5,203,96,228"/>
+</map>

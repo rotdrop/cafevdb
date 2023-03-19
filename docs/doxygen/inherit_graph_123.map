@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,55,148,80"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_migration_1_1_version060000_date20201001210735.html" title="Auto&#45;generated migration step: Please modify to your needs!" alt="" coords="196,5,431,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_migration_1_1_version060000_date20201022230000.html" title="Add in_reply_to column to blog entries." alt="" coords="196,55,431,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_migration_1_1_version070000_date20211120104235.html" title="Auto&#45;generated migration step: Please modify to your needs!" alt="" coords="197,104,430,129"/>
+</map>

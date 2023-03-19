@@ -1,0 +1,8 @@
+<map id="searchFolders" name="searchFolders">
+<area shape="rect" id="node1" title="Return all shared folders matching the given regexp." alt="" coords="5,45,109,70"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="157,19,252,45"/>
+<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="300,37,461,77"/>
+<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="509,37,671,77"/>
+<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="719,5,880,45"/>
+<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="719,69,880,109"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="CloudAsymmetricKeyStorage" name="CloudAsymmetricKeyStorage">
+<area shape="rect" id="node1" title="Key&#45;storage base&#45;class." alt="" coords="13,152,208,177"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_abstract_asymmetric_key_storage.html" title="Abstract base providing default implementations." alt="" coords="6,79,215,104"/>
+<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_storage_interface.html" title="Key&#45;storage interface." alt="" coords="5,5,216,31"/>
+</map>

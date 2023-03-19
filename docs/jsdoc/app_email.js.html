@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>app/email.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#actionHandler">actionHandler</a></li><li><a href="global.html#addEditor">addEditor</a></li><li><a href="global.html#addMusicians">addMusicians</a></li><li><a href="global.html#addReadyCallback">addReadyCallback</a></li><li><a href="global.html#afterLoad">afterLoad</a></li><li><a href="global.html#ajaxFailData">ajaxFailData</a></li><li><a href="global.html#ajaxFailMessage">ajaxFailMessage</a></li><li><a href="global.html#ajaxHandleError">ajaxHandleError</a></li><li><a href="global.html#ajaxValidateResponse">ajaxValidateResponse</a></li><li><a href="global.html#appInfo">appInfo</a></li><li><a href="global.html#applyToolTips">applyToolTips</a></li><li><a href="global.html#appPrefix">appPrefix</a></li><li><a href="global.html#appSettings">appSettings</a></li><li><a href="global.html#attachHandlers">attachHandlers</a></li><li><a href="global.html#checkInvalidInputs">checkInvalidInputs</a></li><li><a href="global.html#chosenActive">chosenActive</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#closeActionMenu">closeActionMenu</a></li><li><a href="global.html#contactValidation">contactValidation</a></li><li><a href="global.html#containerSelector">containerSelector</a></li><li><a href="global.html#createProgressStatus">createProgressStatus</a></li><li><a href="global.html#debugPopup">debugPopup</a></li><li><a href="global.html#dialogCustomCloseButton">dialogCustomCloseButton</a></li><li><a href="global.html#dialogFullScreenButton">dialogFullScreenButton</a></li><li><a href="global.html#dialogToBackButton">dialogToBackButton</a></li><li><a href="global.html#documentReady">documentReady</a></li><li><a href="global.html#download">download</a></li><li><a href="global.html#emailFormCompositionHandlers">emailFormCompositionHandlers</a></li><li><a href="global.html#emailFormPopup">emailFormPopup</a></li><li><a href="global.html#emailFormRecipientsHandlers">emailFormRecipientsHandlers</a></li><li><a href="global.html#emailFormRecipientsSelectControls">emailFormRecipientsSelectControls</a></li><li><a href="global.html#emailPopup">emailPopup</a></li><li><a href="global.html#eventsPopup">eventsPopup</a></li><li><a href="global.html#findOptionByValue">findOptionByValue</a></li><li><a href="global.html#FindRanges">FindRanges</a></li><li><a href="global.html#formSubmit">formSubmit</a></li><li><a href="global.html#generateSettingsUrl">generateSettingsUrl</a></li><li><a href="global.html#generateUrl">generateUrl</a></li><li><a href="global.html#getAppUrl">getAppUrl</a></li><li><a href="global.html#getChildren">getChildren</a></li><li><a href="global.html#getControlObject">getControlObject</a></li><li><a href="global.html#getOptions">getOptions</a></li><li><a href="global.html#getOptionValues">getOptionValues</a></li><li><a href="global.html#getPersonalUrl">getPersonalUrl</a></li><li><a href="global.html#getSelectize">getSelectize</a></li><li><a href="global.html#getToken">getToken</a></li><li><a href="global.html#getUrl">getUrl</a></li><li><a href="global.html#getWidget">getWidget</a></li><li><a href="global.html#handleProjectActions">handleProjectActions</a></li><li><a href="global.html#handleQueryLogMenu">handleQueryLogMenu</a></li><li><a href="global.html#handleTableExportMenu">handleTableExportMenu</a></li><li><a href="global.html#htmlDecode">htmlDecode</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#installInputSelectize">installInputSelectize</a></li><li><a href="global.html#instrumentationNumbersPopup">instrumentationNumbersPopup</a></li><li><a href="global.html#invalidInputDowncount">invalidInputDowncount</a></li><li><a href="global.html#isVanilla">isVanilla</a></li><li><a href="global.html#jQuery">jQuery</a></li><li><a href="global.html#lazyBatchDecryptValues">lazyBatchDecryptValues</a></li><li><a href="global.html#loadPage">loadPage</a></li><li><a href="global.html#loadPMETable">loadPMETable</a></li><li><a href="global.html#loadPMETableFiltered">loadPMETableFiltered</a></li><li><a href="global.html#mandatesInit">mandatesInit</a></li><li><a href="global.html#mandateValidate">mandateValidate</a></li><li><a href="global.html#mandateValidatePME">mandateValidatePME</a></li><li><a href="global.html#mandateValidatePMEPromise">mandateValidatePMEPromise</a></li><li><a href="global.html#mandateValidatePMEWorker">mandateValidatePMEWorker</a></li><li><a href="global.html#maybeTranspose">maybeTranspose</a></li><li><a href="global.html#messages">messages</a></li><li><a href="global.html#modalizer">modalizer</a></li><li><a href="global.html#modalWaitNotification">modalWaitNotification</a></li><li><a href="global.html#myLoadAddMusicians">myLoadAddMusicians</a></li><li><a href="global.html#myLoadMusicians">myLoadMusicians</a></li><li><a href="global.html#myLoadProjectParticipants">myLoadProjectParticipants</a></li><li><a href="global.html#myPersonalRecordDialog">myPersonalRecordDialog</a></li><li><a href="global.html#nonTextInputTypes">nonTextInputTypes</a></li><li><a href="global.html#participantFieldsPopup">participantFieldsPopup</a></li><li><a href="global.html#photoEditCurrent">photoEditCurrent</a></li><li><a href="global.html#photoLoad">photoLoad</a></li><li><a href="global.html#photoLoadHandlers">photoLoadHandlers</a></li><li><a href="global.html#photoReady">photoReady</a></li><li><a href="global.html#photoUploadDragDrop">photoUploadDragDrop</a></li><li><a href="global.html#pmeCellSelector">pmeCellSelector</a></li><li><a href="global.html#pmeClassSelector">pmeClassSelector</a></li><li><a href="global.html#pmeClassSelectors">pmeClassSelectors</a></li><li><a href="global.html#pmeContainer">pmeContainer</a></li><li><a href="global.html#pmeContextMenu">pmeContextMenu</a></li><li><a href="global.html#pmeData">pmeData</a></li><li><a href="global.html#pmeDeferReload">pmeDeferReload</a></li><li><a href="global.html#pmeFilterSelector">pmeFilterSelector</a></li><li><a href="global.html#pmeFormSelector">pmeFormSelector</a></li><li><a href="global.html#pmeIdSelector">pmeIdSelector</a></li><li><a href="global.html#pmeInit">pmeInit</a></li><li><a href="global.html#pmeInner">pmeInner</a></li><li><a href="global.html#pmeInputSelector">pmeInputSelector</a></li><li><a href="global.html#pmeKeySelector">pmeKeySelector</a></li><li><a href="global.html#pmeNavigationSelector">pmeNavigationSelector</a></li><li><a href="global.html#pmeOpenRowDialog">pmeOpenRowDialog</a></li><li><a href="global.html#pmeQueryInfoSelector">pmeQueryInfoSelector</a></li><li><a href="global.html#pmeRec">pmeRec</a></li><li><a href="global.html#pmeRecordValue">pmeRecordValue</a></li><li><a href="global.html#pmeSelector">pmeSelector</a></li><li><a href="global.html#pmeSubmitOuterForm">pmeSubmitOuterForm</a></li><li><a href="global.html#pmeSys">pmeSys</a></li><li><a href="global.html#pmeSysNameSelector">pmeSysNameSelector</a></li><li><a href="global.html#pmeSysNameSelectors">pmeSysNameSelectors</a></li><li><a href="global.html#pmeTableDialogOpen">pmeTableDialogOpen</a></li><li><a href="global.html#pmeTableSelector">pmeTableSelector</a></li><li><a href="global.html#pmeToken">pmeToken</a></li><li><a href="global.html#pmeTriggerSubmit">pmeTriggerSubmit</a></li><li><a href="global.html#pmeTweaks">pmeTweaks</a></li><li><a href="global.html#pmeUnTweak">pmeUnTweak</a></li><li><a href="global.html#pmeValueSelector">pmeValueSelector</a></li><li><a href="global.html#pollProgressStatus">pollProgressStatus</a></li><li><a href="global.html#print_r">print_r</a></li><li><a href="global.html#projectPaymentPopup">projectPaymentPopup</a></li><li><a href="global.html#projectViewPopup">projectViewPopup</a></li><li><a href="global.html#projectWebPageRequest">projectWebPageRequest</a></li><li><a href="global.html#projectWebPageTabHandler">projectWebPageTabHandler</a></li><li><a href="global.html#pseudoSubmit">pseudoSubmit</a></li><li><a href="global.html#pseudoSubmitPost">pseudoSubmitPost</a></li><li><a href="global.html#queryData">queryData</a></li><li><a href="global.html#refreshSelectWidget">refreshSelectWidget</a></li><li><a href="global.html#refreshWidgetProperties">refreshWidgetProperties</a></li><li><a href="global.html#removeEditor">removeEditor</a></li><li><a href="global.html#renderTag">renderTag</a></li><li><a href="global.html#replaceSelectOptions">replaceSelectOptions</a></li><li><a href="global.html#runReadyCallbacks">runReadyCallbacks</a></li><li><a href="global.html#selectedOptions">selectedOptions</a></li><li><a href="global.html#selectedValues">selectedValues</a></li><li><a href="global.html#selectizeActive">selectizeActive</a></li><li><a href="global.html#setAppUrl">setAppUrl</a></li><li><a href="global.html#setPersonalUrl">setPersonalUrl</a></li><li><a href="global.html#setToken">setToken</a></li><li><a href="global.html#simpleSetHandler">simpleSetHandler</a></li><li><a href="global.html#simpleSetValueHandler">simpleSetValueHandler</a></li><li><a href="global.html#snapshotEditor">snapshotEditor</a></li><li><a href="global.html#stopEnterSubmit">stopEnterSubmit</a></li><li><a href="global.html#tableDialog">tableDialog</a></li><li><a href="global.html#tableDialogHandlers">tableDialogHandlers</a></li><li><a href="global.html#tableDialogReload">tableDialogReload</a></li><li><a href="global.html#tableDialogReplace">tableDialogReplace</a></li><li><a href="global.html#Template">Template</a></li><li><a href="global.html#textareaResize">textareaResize</a></li><li><a href="global.html#toolTipsEnabled">toolTipsEnabled</a></li><li><a href="global.html#toolTipsInit">toolTipsInit</a></li><li><a href="global.html#transposeMainTable">transposeMainTable</a></li><li><a href="global.html#transposeReady">transposeReady</a></li><li><a href="global.html#unfocus">unfocus</a></li><li><a href="global.html#updateEditor">updateEditor</a></li><li><a href="global.html#urlDecode">urlDecode</a></li><li><a href="global.html#urlEncode">urlEncode</a></li><li><a href="global.html#validateInstrumentChoices">validateInstrumentChoices</a></li><li><a href="global.html#wikiPopup">wikiPopup</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">app/email.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine &lt;himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see &lt;http://www.gnu.org/licenses/>.
+ */
+
+import { globalState, appName, $, appPrefix } from './globals.js';
+import * as CAFEVDB from './cafevdb.js';
+import * as Ajax from './ajax.js';
+import * as Page from './page.js';
+import * as Dialogs from './dialogs.js';
+import * as ProjectParticipants from './project-participants.js';
+import * as Projects from './projects.js';
+import * as WysiwygEditor from './wysiwyg-editor.js';
+import * as FileUpload from './file-upload.js';
+import * as Legacy from '../legacy.js';
+import * as DialogUtils from './dialog-utils.js';
+import * as ProgressStatus from './progress-status.js';
+import * as Notification from './notification.js';
+import * as SelectUtils from './select-utils.js';
+import { urlDecode } from './url-decode.js';
+import generateAppUrl from './generate-url.js';
+import { setPersonalUrl } from './settings-urls.js';
+import print_r from './print-r.js';
+import chosenPopup from './chosen-popup.js';
+import queryData from './query-data.js';
+import modalizer from './modalizer.js';
+import { handleMenu as handleUserManualMenu } from './user-manual.js';
+import fileDownload from './file-download.js';
+
+import 'selectize';
+import 'selectize/dist/css/selectize.bootstrap4.css';
+// import 'selectize/dist/css/selectize.css';
+require('cafevdb-selectize.scss');
+
+const selectizeOptions = {
+  plugins: ['remove_button'],
+  delimiter: ',',
+  persist: false,
+  openOnFocus: false,
+  closeAfterSelect: true,
+  hideSelected: false,
+};
+
+require('./jquery-readonly.js');
+require('bootstrap4-duallistbox');
+require('emailform.scss');
+
+const Email = globalState.Email = {
+  topicUnspecific: 'general',
+  active: false,
+  autoSaveTimer: null,
+  autoSaveDelete() {},
+};
+
+function generateUrl(url, urlParams, urlOptions) {
+  return generateAppUrl('communication/email/outgoing/' + url, urlParams, urlOptions);
+}
+
+function generateComposerUrl(operation, topic) {
+  if (topic === undefined &amp;&amp; operation.operation) {
+    topic = operation.topic;
+    operation = operation.operation;
+  }
+  topic = topic || Email.topicUnspecific;
+  return generateUrl('composer/{operation}/{topic}', { operation, topic });
+}
+
+function attachmentFromJSON(response, info) {
+  const fileAttachmentsHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attachments');
+  if (fileAttachmentsHolder === '') {
+    Dialogs.alert(t(appName, 'Not called from main email-form.'), t(appName, 'Error'));
+    return;
+  }
+
+  let file = response;
+  file.status = 'new';
+  if (typeof info === 'object') {
+    file = $.extend(file, info);
+  }
+  let fileAttachments = fileAttachmentsHolder.val();
+
+  if (fileAttachments === '') {
+    fileAttachments = [file];
+  } else {
+    fileAttachments = $.parseJSON(fileAttachments);
+    fileAttachments.push(file);
+  }
+  fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
+}
+
+const cloudAttachment = function(paths, callback) {
+  $.post(generateUrl('attachment/cloud'), { paths })
+    .fail(Ajax.handleError)
+    .done(function(response) {
+      for (const attachment of response) {
+        attachmentFromJSON(attachment, { origin: 'cloud' });
+      }
+      if (typeof callback === 'function') {
+        callback();
+      }
+    });
+};
+
+function emailTabResize(dialogWidget, panelHolder) {
+  // panelHolder.css('width', 'auto');
+  // panelHolder.css('height', 'auto');
+  panelHolder.css('max-height', 'none'); // reset in order to get auto-configuration
+  const titleOffset = (dialogWidget.find('.ui-dialog-titlebar').outerHeight(true)
+                       + dialogWidget.find('.ui-tabs-nav').outerHeight(true));
+  const panelHeight = panelHolder.outerHeight(true);
+  const panelOffset = panelHeight - panelHolder.height();
+  const dialogHeight = dialogWidget.height();
+  // alert('outer: '+panelHeight+' dialog '+dialogHeight);
+  if (panelHeight > dialogHeight - titleOffset) {
+    panelHolder.css('max-height', (dialogHeight - titleOffset - panelOffset) + 'px');
+  }
+  // if (panelHolder.get(0).scrollHeight > panelHolder.outerHeight(true)) {
+  //   panelHolder.css('padding-right', '2.4em');
+  // } else {
+  //   panelHolder.css('padding-right', '');
+  // }
+}
+
+function updateComposerElements($emailForm, elements) {
+  elements = elements || ['to'];
+  if (!Array.isArray(elements)) {
+    elements = [elements];
+  }
+  // we better serialize the entire form here
+  let post = $emailForm.serialize();
+  // place our update request
+  post += '&amp;emailComposer[request]=update';
+  for (const element of elements) {
+    post += '&amp;' + 'emailComposer[formElement][]=' + element;
+  }
+  const url = generateComposerUrl('update', 'element');
+  $.post(url, post)
+    .fail(Ajax.handleError)
+    .done(function(data) {
+      if (!Ajax.validateResponse(data, [
+        'projectId', 'projectName', 'operation', 'requestData',
+      ])) {
+        return;
+      }
+
+      for (const element of data.requestData.formElement) {
+        switch (element.toLowerCase()) {
+        case 'to': {
+          const toSpan = $emailForm.find('span.email-recipients');
+          let rcpts = data.requestData.elementData[element];
+          const numRcpts = rcpts.length;
+
+          rcpts = numRcpts === 0 ? toSpan.data('placeholder') : rcpts.join(', ');
+          const title = toSpan.data('titleIntro') + '&lt;br>' + rcpts;
+
+          toSpan.cafevTooltip('dispose');
+          toSpan.html(rcpts);
+          toSpan.attr('title', title);
+          toSpan.cafevTooltip();
+
+          $emailForm.find('#check-disclosed-recipients').prop('disabled', numRcpts &lt;= 1);
+          break;
+        }
+        case 'subjecttag': {
+          const $subjectTag = $emailForm.find('span.subject.tag');
+          const subjectTag = data.requestData.elementData[element];
+          $subjectTag.html(subjectTag);
+          break;
+        }
+        default:
+          break;
+        }
+      }
+    });
+}
+
+/**
+ * Add some extra JS stuff for the select boxes. This has to be
+ * called when the tab is actually visible because the add-on
+ * libraries use the size of the original controls as base for their
+ * layout.
+ *
+ * @param {jQuery} dialogHolder TBD.
+ *
+ * @param {jQuery} fieldset TBD.
+ */
+const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
+
+  if (dialogHolder.tabs('option', 'active') !== 0 // visible?
+      || fieldset.find('#member_status_filter_chosen').length > 0 // already initialized
+  ) {
+    return;
+  }
+
+  const $memberStatusFilter = fieldset.find('#member-status-filter');
+  $memberStatusFilter.selectize(selectizeOptions);
+  // $memberStatusFilter.chosen();
+
+  const $instrumentsFilter = fieldset.find('#instruments-filter');
+  $instrumentsFilter.selectize(selectizeOptions);
+  // $instrumentsFilter.chosen();
+
+  const $recipientsSelect = fieldset.find('#recipients-select');
+  $recipientsSelect.bootstrapDualListbox({
+    // moveOnSelect: false,
+    // preserveSelectionOnMove : 'all',
+    moveAllLabel: t(appName, 'Move all'),
+    moveSelectedLabel: t(appName, 'Move selected'),
+    removeSelectedLabel: t(appName, 'Remove selected'),
+    removeAllLabel: t(appName, 'Remove all'),
+    nonSelectedListLabel: t(appName, 'Remaining Recipients'),
+    selectedListLabel: t(appName, 'Selected Recipients'),
+    infoText: '&amp;nbsp;', // t(appName, 'Showing all {0}'),
+    infoTextFiltered: '&lt;span class="badge badge-warning">'
+      + t(appName, 'Filtered')
+      + '&lt;/span> {0} '
+      + t(appName, 'from')
+      + ' {1}',
+    infoTextEmpty: t(appName, 'Empty list'),
+    filterPlaceHolder: t(appName, 'Filter'),
+    filterTextClear: t(appName, 'show all'),
+    selectorMinimalHeight: 200,
+  });
+  const $dualListBoxContainer = fieldset.find('.bootstrap-duallistbox-container');
+  const dualSelect = $dualListBoxContainer.find('select');
+  dualSelect.attr(
+    'title',
+    t(appName, 'Click on the names to move the respective person to the other box'));
+  dualSelect.addClass('tooltip-top');
+
+  if ($recipientsSelect.prop('readonly')) {
+    $dualListBoxContainer.find('input, select, button').readonly(true);
+  }
+
+  CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformrecipients'));
+};
+
+/**
+ * Add handlers to the control elements, and call the AJAX sciplets
+ * for validation to update the recipients selection tab accordingly.
+ *
+ * @param {jQuery} fieldset The field-set enclosing the recipients selection part
+ *
+ * @param {jQuery} form TBD.
+ *
+ * @param {jQuery} dialogHolder The div holding the jQuery dialog for everything
+ *
+ * @param {jQuery} panelHolder The div enclosing the fieldset
+ *
+ * @returns {boolean}
+ */
+const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panelHolder) {
+
+  emailFormRecipientsSelectControls(dialogHolder, fieldset);
+
+  const recipientsSelect = fieldset.find('select#recipients-select');
+  const missingAddresses = fieldset.find('.missing-email-addresses.names');
+  const missingLabel = fieldset.find('.missing-email-addresses.label');
+  const noMissingLabel = fieldset.find('.missing-email-addresses.label.empty');
+  const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
+  const instrumentsSelect = instrumentsFilter.find('select');
+  const filterHistoryInput = fieldset.find('#recipients-filter-history');
+  const debugOutput = form.find('#emailformdebug');
+  const busyIndicator = fieldset.find('.busy-indicator');
+
+  let filterUpdateActive = false;
+
+  // Apply the instruments filter
+  const applyRecipientsFilter = function(event, parameters) {
+    const defaultParameters = {
+      historySnapshot: false,
+      cleanup() {},
+    };
+
+    $.fn.cafevTooltip.hide();
+
+    event.preventDefault(); // as our return value is not necessarily passed back to JQ
+
+    if (filterUpdateActive) {
+      return false;
+    }
+
+    filterUpdateActive = true;
+
+    parameters = $.extend({}, defaultParameters, parameters);
+
+    const historySnapshot = parameters.historySnapshot;
+    if (!historySnapshot) {
+      busyIndicator.show();
+    }
+
+    let post = fieldset.serialize();
+    if (historySnapshot) {
+      post += '&amp;' + $.param({ emailRecipients: { HistorySnapshot: 'snapshot' } });
+    } else {
+      post += '&amp;' + form.find('fieldset.form-data').serialize();
+      const $this = $(this);
+      if ($this.is(':button')) {
+        post += '&amp;' + $.param($this);
+      }
+    }
+    $.post(generateUrl('recipients-filter'), post)
+      .fail(function(xhr, textStatus, errorThrown) {
+        Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+          parameters.cleanup();
+          busyIndicator.hide();
+          filterUpdateActive = false;
+        });
+      })
+      .done(function(data) {
+        const requiredResponse = historySnapshot
+          ? ['filterHistory']
+          : [
+            'contents',
+            'recipientsOptions',
+            'missingEmailAddresses',
+            'filterHistory',
+            'instrumentsFilter',
+          ];
+        if (!Ajax.validateResponse(data, requiredResponse)) {
+          parameters.cleanup();
+          busyIndicator.hide();
+          filterUpdateActive = false;
+          return;
+        }
+        let resize = false;
+        if (historySnapshot) {
+          // Just update the history, but nothing else
+          filterHistoryInput.val(data.filterHistory);
+        } else if (data.contents !== undefined &amp;&amp; data.contents.length > 0) {
+          // replace the entire tab.
+          $.fn.cafevTooltip.remove();
+          panelHolder.html(data.contents);
+          fieldset = panelHolder.find('fieldset.email-recipients.page');
+          emailFormRecipientsHandlers(fieldset, form, dialogHolder, panelHolder);
+          resize = true;
+        } else {
+          // partial update
+          $.fn.cafevTooltip.hide();
+
+          // list of recipients
+          recipientsSelect.html(data.recipientsOptions);
+          recipientsSelect.bootstrapDualListbox('refresh', true);
+          filterHistoryInput.val(data.filterHistory);
+
+          // list of broken email addresses
+          missingAddresses.html(data.missingEmailAddresses);
+          if (data.missingEmailAddresses.length > 0) {
+            missingLabel.removeClass('reallyhidden');
+            noMissingLabel.addClass('reallyhidden');
+          } else {
+            missingLabel.addClass('reallyhidden');
+            noMissingLabel.removeClass('reallyhidden');
+          }
+
+          // update the instruments filter
+          SelectUtils.replaceOptions(instrumentsSelect, data.instrumentsFilter);
+
+          resize = true;
+        }
+
+        const filterHistory = data.filterHistory;
+        if (filterHistory.historyPosition >= 0
+            &amp;&amp; filterHistory.historyPosition &lt; filterHistory.historySize - 1) {
+          // enable the undo button
+          fieldset.find('#instruments-filter-undo').prop('disabled', false);
+        } else {
+          fieldset.find('#instruments-filter-undo').prop('disabled', true);
+        }
+        if (filterHistory.historyPosition > 0) {
+          // enable the redo button as well
+          fieldset.find('#instruments-filter-redo').prop('disabled', false);
+        } else {
+          fieldset.find('#instruments-filter-redo').prop('disabled', true);
+        }
+
+        if (!historySnapshot) {
+          let debugText = '';
+          if (data.debug !== undefined) {
+            debugText = data.debug;
+          }
+          debugOutput.html('&lt;pre>' + $('&lt;div>&lt;/div>').text(debugText).html() + '&lt;/pre>'
+                           + '&lt;pre>'
+                           + $('&lt;div>&lt;/div>').text(data.recipientsOptions).html()
+                           + '&lt;/pre>'
+                           + data.missingEmailAddresses
+                           + '&lt;br/>'
+                           + $('&lt;div>&lt;/div>').text(urlDecode(post)).html());
+        }
+        parameters.cleanup();
+        if (resize) {
+          panelHolder.trigger('resize', { position: 'bottom' });
+        }
+
+        busyIndicator.hide();
+
+        filterUpdateActive = false;
+      });
+    return false;
+  };
+
+  /**
+   * Prevent user interaction to the filter controls during loading or
+   * if one of the mailing lists has been chosen as the sole
+   * recipient.
+   *
+   * @param {boolean} state TBD.
+   *
+   * @param {Array} exceptions Array of CSS selectors to exclude from
+   * the read-only attempt.
+   */
+  const readonlyFilterControls = function(state, exceptions) {
+
+    fieldset.toggleClass('filter-controls-disabled', state);
+
+    exceptions = exceptions || [];
+    exceptions.push('.action-menu-toggle.basic-recipients-set');
+
+    const $otherInputs = fieldset.find('input, select, button').not(exceptions.join(','));
+    // Disable all recipient filters as they do not make any
+    // sense. Sending to the mailing lists means to just send to
+    // that list, further recipient choices are technically not possible.
+    $otherInputs.readonly(state);
+
+    missingAddresses.toggleClass('disabled', state);
+  };
+
+  // Attach above function to almost every sensible control :)
+
+  // Controls :..
+  const controlsContainer = fieldset.find('.filter-controls.' + appPrefix('container'));
+
+  instrumentsFilter
+    .off('change')
+    .on('change', function(event) {
+      readonlyFilterControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFilterControls(false),
+      });
+    });
+
+  // Member status filter
+  const memberStatusFilter = fieldset.find('select.member-status-filter');
+  memberStatusFilter
+    .off('change')
+    .on('change', function(event) {
+      readonlyFilterControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFilterControls(false),
+      });
+    });
+
+  // Basic recipients set (from project, except project, use mailing lists)
+  const basicRecipientsSetContainer = fieldset.find('.basic-recipients-set.' + appPrefix('container'));
+  const basicRecipientsSet = basicRecipientsSetContainer.find('input[type="checkbox"], input[type="radio"]');
+  const basicRecipientsSetProject = basicRecipientsSet.not('.mailing-list, .database');
+  const basicRecipientsSetMailingList = basicRecipientsSet.filter('.mailing-list, .database');
+
+  basicRecipientsSetMailingList
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      const mailingListRecipients = $this.is('.mailing-list') &amp;&amp; $this.prop('checked');
+
+      if (mailingListRecipients) {
+        basicRecipientsSetMailingList.not(this).prop('checked', false);
+        readonlyFilterControls(mailingListRecipients, ['.mailing-list', '.database']);
+      } else {
+        readonlyFilterControls(true);
+        applyRecipientsFilter.call(this, event, {
+          cleanup: () => readonlyFilterControls(false),
+        });
+      }
+      basicRecipientsSet.filter('.mailing-list').each(function() {
+        const $radio = $(this);
+        basicRecipientsSetContainer.toggleClass($radio.val(), $radio.prop('checked'));
+      });
+      updateComposerElements(form, ['to', 'subjectTag']);
+      return false;
+    });
+
+  basicRecipientsSetProject
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      basicRecipientsSetContainer.toggleClass($this.val(), $this.prop('checked'));
+      readonlyFilterControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFilterControls(false),
+      });
+      updateComposerElements(form, ['to', 'subjectTag']);
+    });
+
+  // initialization
+  if (basicRecipientsSet.filter('.mailing-list').prop('checked')) {
+    readonlyFilterControls(true, ['.mailing-list', '.database']);
+  }
+
+  // "submit" when hitting any of the control buttons
+  controlsContainer
+    .off('click', '**')
+    .on('click', 'input', function(event) {
+      readonlyFilterControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFilterControls(false),
+      });
+    });
+
+  // Record history when the select box changes. Maybe too slow, but
+  // we will see.
+  recipientsSelect
+    .off('change')
+    .on('change', function(event) {
+      applyRecipientsFilter.call(this, event, { historySnapshot: true });
+    });
+
+  // Give the user a chance to change broken or missing email
+  // addresses from here.
+  dialogHolder
+    .off('pmedialog:changed')
+    .on('pmedialog:changed', function(event) {
+      readonlyFilterControls(true);
+      applyRecipientsFilter.call(this, event, {
+        cleanup: () => readonlyFilterControls(false),
+      });
+    });
+
+  missingAddresses
+    .off('click', '.personal-record')
+    .on('click', '.personal-record', function(event) {
+      const $this = $(this);
+
+      const musicianId = $this.data('musicianId');
+      const isParticipant = $this.data('isParticipant');
+
+      const formData = form.find('fieldset.form-data');
+      const projectId = formData.find('input[name="projectId"]').val();
+      const projectName = formData.find('input[name="projectName"]').val();
+
+      ProjectParticipants.personalRecordDialog(
+        musicianId, {
+          table: isParticipant ? 'ProjectParticipants' : 'Musicians',
+          projectId,
+          projectName,
+          initialValue: 'Change',
+          ambientContainerSelector: '#emailformdialog',
+        });
+
+      return false;
+    });
+
+  panelHolder
+    .off('resize')
+    .on('resize', function() {
+      emailTabResize(dialogHolder.dialog('widget'), panelHolder);
+    });
+
+  return false;
+};
+
+/**
+ * Add handlers to the control elements, and call the AJAX scriplets
+ * for validation to update the message composition tab accordingly.
+ *
+ * @param {jQuery} fieldset The field-set enclosing the composition window part.
+ *
+ * @param {jQuery} form TBD.
+ *
+ * @param {jQuery} dialogHolder The div holding the jQuery dialog for everything
+ *
+ * @param {jQuery} panelHolder The div enclosing the fieldset
+ *
+ */
+const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, panelHolder) {
+
+  {
+    // @todo why is this so separated from rest???
+    WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+
+    $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
+    $('#cafevdb-sent-messages-selector').chosen({ disable_search_threshold: 10 });
+
+    const composerPanel = $('#emailformcomposer');
+    const fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
+    fileAttachmentsSelect.chosen();
+    fileAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
+      composerPanel.stop().animate({
+        scrollTop: composerPanel.prop('scrollHeight'),
+      }, 2000);
+      return true;
+    });
+    const eventAttachmentsSelect = composerPanel.find('#event-attachments-selector');
+    eventAttachmentsSelect.chosen();
+    eventAttachmentsSelect.on('chosen:showing_dropdown', function(event) {
+      composerPanel.stop().animate({
+        scrollTop: composerPanel.prop('scrollHeight'),
+      }, 2000);
+      return true;
+    });
+
+    CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformcomposer'));
+  }
+
+  const formData = form.find('fieldset.form-data');
+  const $projectId = formData.find('input[name="projectId"]');
+  const $projectName = formData.find('input[name="projectName"]');
+  const $bulkTransactionId = formData.find('input[name="bulkTransactionid"]');
+  const projectId = function(value) {
+    if (value === undefined) {
+      return $projectId.val();
+    } else {
+      $projectId.val(value);
+      form.toggleClass('project-mode', +value > 0);
+      return value;
+    }
+  };
+  const projectName = function(value) {
+    if (value === undefined) {
+      return $projectName.val();
+    } else {
+      $projectName.val(value);
+      return value;
+    }
+  };
+  const bulkTransactionId = function(value) {
+    if (value === undefined) {
+      return $bulkTransactionId.val();
+    } else {
+      $bulkTransactionId.val(value);
+      return value;
+    }
+  };
+
+  const debugOutput = form.find('#emailformdebug');
+  const storedEmailsSelector = fieldset.find('select.stored-messages-selector');
+  const sentEmailsSelector = fieldset.find('select.sent-messages-selector');
+  const currentTemplate = fieldset.find('#emailCurrentTemplate');
+  const saveAsTemplate = fieldset.find('#check-save-as-template');
+  const draftAutoSave = fieldset.find('#check-draft-auto-save');
+  const discloseRecipients = fieldset.find('#check-disclosed-recipients');
+  const messageText = fieldset.find('textarea');
+  const eventAttachmentsRow = fieldset.find('tr.event-attachments');
+  const eventAttachmentsSelector = eventAttachmentsRow.find('select.event-attachments');
+  const fileAttachmentsRow = fieldset.find('tr.file-attachments');
+  const fileAttachmentsSelector = fileAttachmentsRow.find('select.file-attachments');
+  const sendButton = fieldset.find('input.submit.send');
+  const dialogWidget = dialogHolder.dialog('widget');
+
+  // Event dispatcher, so to say
+  const applyComposerControls = function(event, request, validateLockCB) {
+
+    if (request === undefined) {
+      throw Error('Request is undefined');
+    }
+
+    $.fn.cafevTooltip.hide();
+
+    if (validateLockCB === undefined) {
+      validateLockCB = function(lock) {};
+    }
+
+    const validateLock = function() {
+      Page.busyIcon(true);
+      validateLockCB(true);
+    };
+
+    const validateUnlock = function() {
+      validateLockCB(false);
+      Page.busyIcon(false);
+    };
+
+    // until end of validation
+    validateLock(true);
+
+    const url = generateComposerUrl(request);
+    let post = '';
+    if (request.singleItem) {
+      // Only serialize the request, no need to post all data around.
+      post = $.param({ emailComposer: request });
+    } else {
+      if (request.submitAll) {
+        // Everything is greedily submitted ...
+        post = form.serialize();
+      } else {
+        // Serialize almost everything and submit it
+        post = fieldset.serialize();
+        post += '&amp;' + form.find('fieldset.form-data').serialize();
+      }
+      const $this = $(this);
+      if ($this.is(':button') || $this.is(':submit')) {
+        post += '&amp;' + $.param($this);
+      }
+      // add the request itself as data
+      post += '&amp;' + $.param({ emailComposer: request });
+    }
+
+    const noDebug = request.noDebug || false;
+    if (!noDebug) {
+      debugOutput.html('');
+    }
+    $.post(url, post)
+      .fail(function(xhr, textStatus, errorThrown) {
+        Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+          let debugText = '';
+          if (data.caption !== undefined) {
+            debugText += '&lt;div class="error caption">' + data.caption + '&lt;/div>';
+          }
+          if (data.message !== undefined) {
+            debugText += data.message;
+          }
+          debugOutput.html(debugText);
+          validateUnlock();
+        });
+      })
+      .done(function(data) {
+        let postponeEnable = false;
+        $.fn.cafevTooltip.remove();
+        if (!Ajax.validateResponse(
+          data,
+          ['projectId', 'projectName', 'operation', 'requestData'], validateUnlock)) {
+          return false;
+        }
+        const operation = data.operation;
+        const topic = data.topic;
+        const requestData = data.requestData;
+        switch (operation) {
+        case 'send':
+          storedEmailsSelector.html(requestData.storedEmailOptions);
+          SelectUtils.deselectAll(storedEmailsSelector);
+          sentEmailsSelector.html(requestData.sentEmailOptions);
+          SelectUtils.deselectAll(sentEmailsSelector);
+          if (data.message !== undefined &amp;&amp; data.caption !== undefined) {
+            Dialogs.alert(data.message, data.caption, undefined, true, true);
+          }
+          break;
+        case 'cancel':
+          // status feed-back handled by general code.
+          break;
+        case 'update':
+          switch (topic) {
+          case Email.topicUnspecific:
+            // replace the entire tab.
+            $.fn.cafevTooltip.remove();
+            WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
+            panelHolder.html(requestData.elementData);
+            fieldset = panelHolder.find('fieldset.email-composition.page');
+            emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
+            break;
+          case 'element': {
+            const formElements = Array.isArray(requestData.formElement)
+              ? requestData.formElement
+              : [requestData.formElement];
+            for (const formElement of formElements) {
+              const elementData = requestData.elementData[formElement];
+              switch (formElement) {
+              case 'to': {
+                const toSpan = fieldset.find('span.email-recipients');
+                let rcpts = elementData;
+                if (rcpts.length === 0) {
+                  rcpts = toSpan.data('placeholder');
+                }
+                const title = toSpan.data('titleIntro') + '&lt;br>' + rcpts;
+
+                toSpan.html(rcpts);
+                toSpan.attr('title', title);
+                toSpan.cafevTooltip();
+                break;
+              }
+              case 'fileAttachments': {
+                const options = elementData.options;
+                const fileAttachments = elementData.attachments;
+                const fileAttachmentsHolder = fieldset.find('input.file-attachments');
+                fileAttachmentsHolder.val(JSON.stringify(fileAttachments));
+                fileAttachmentsSelector.html(options);
+                fileAttachmentsRow.toggleClass('empty-selection', fileAttachmentsSelector.val().length === 0);
+                fileAttachmentsRow.toggleClass('no-attachments', options.length === 0);
+                fileAttachmentsSelector.trigger('chosen:updated');
+                panelHolder.trigger('resize', { position: 'bottom' });
+                break;
+              }
+              case 'eventAttachments': {
+                const options = elementData.options;
+                // const eventAttachments = requestData.elementData.attachments;
+                eventAttachmentsSelector.html(options);
+                eventAttachmentsRow.toggleClass('no-attachments', options.length === 0);
+                eventAttachmentsRow.toggleClass('empty-selection', eventAttachmentsSelector.val().length === 0);
+                eventAttachmentsSelector.trigger('chosen:updated');
+                panelHolder.trigger('resize');
+
+                break;
+              }
+              default:
+                postponeEnable = true;
+                Dialogs.alert(
+                  t(appName, 'Unknown form element: {formElement}', { formElement }),
+                  t(appName, 'Error'),
+                  validateUnlock,
+                  true, true);
+                break;
+              }
+            }
+            break; // element
+          }
+          }
+          break; // update
+        case 'validateEmailRecipients':
+          // already reported by the general error-handling functions
+          break;
+        case 'load':
+          switch (topic) {
+          case 'template': {
+            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            dataItem.val('');
+            fieldset.find('input[name^="emailComposer[referencing]"]').remove();
+            fieldset.find('input[name^="emailComposer[inReplyTo]"]').val('');
+            currentTemplate.val(requestData.emailTemplateName);
+            WysiwygEditor.updateEditor(messageText, requestData.message);
+            fieldset.find('input.email-subject').val(requestData.subject);
+            break;
+          }
+          case 'draft': {
+            $.fn.cafevTooltip.remove();
+
+            // replace the entire composer tab
+            WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
+            panelHolder.html(requestData.composerForm);
+            fieldset = panelHolder.find('fieldset.email-composition.page');
+            emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
+
+            // replace the recipients tab as well ...
+            const rcptPanelHolder = dialogHolder.find('div#emailformrecipients');
+            rcptPanelHolder.html(requestData.recipientsForm);
+            const rcptFieldSet = form.find('fieldset.email-recipients.page');
+            emailFormRecipientsHandlers(rcptFieldSet, form, dialogHolder, rcptPanelHolder);
+
+            // adjust the title of the dialog
+            let dlgTitle = '';
+            if (requestData.projectId > 0) {
+              dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: requestData.projectName });
+            } else {
+              dlgTitle = t(appName, 'Em@il Form');
+            }
+            dialogHolder.dialog('option', 'title', dlgTitle);
+
+            // update the "global" project name and id
+            projectId(requestData.projectId);
+            projectName(requestData.projectName);
+            bulkTransactionId(requestData.bulkTransactionId);
+
+            // Make the debug output less verbose
+            delete requestData.composerForm;
+            delete requestData.recipientsForm;
+
+            break;
+          }
+          case 'sent': {
+            $.fn.cafevTooltip.remove();
+
+            // replace the entire composer tab
+            WysiwygEditor.removeEditor(panelHolder.find('textarea.wysiwyg-editor'));
+            panelHolder.html(requestData.composerForm);
+            fieldset = panelHolder.find('fieldset.email-composition.page');
+            emailFormCompositionHandlers(fieldset, form, dialogHolder, panelHolder);
+
+            // replace the recipients tab ...
+            const rcptPanelHolder = dialogHolder.find('div#emailformrecipients');
+            rcptPanelHolder.html(requestData.recipientsForm);
+            const rcptFieldSet = form.find('fieldset.email-recipients.page');
+            emailFormRecipientsHandlers(rcptFieldSet, form, dialogHolder, rcptPanelHolder);
+
+            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            dataItem.val('');
+            saveAsTemplate.prop('checked', false).trigger('change');
+            // WysiwygEditor.updateEditor(messageText, requestData.message);
+            // fieldset.find('input.email-subject').val(requestData.subject);
+
+            // Make the debug output less verbose
+            delete requestData.composerForm;
+            delete requestData.recipientsForm;
+
+            updateComposerElements(form);
+
+            break;
+          }
+          }
+          // deselect menu item
+          SelectUtils.deselectAll(storedEmailsSelector);
+          break; // load
+        case 'save':
+          switch (topic) {
+          case 'template':
+            break;
+          case 'draft': {
+            // perhaps rather use data stuff in the future ...
+            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            dataItem.val(requestData.messageDraftId);
+            break;
+          }
+          }
+          storedEmailsSelector.html(requestData.storedEmailOptions);
+          SelectUtils.deselectAll(storedEmailsSelector);
+          break; // save
+        case 'delete':
+          switch (topic) {
+          case 'template':
+            currentTemplate.val(requestData.emailTemplateName);
+            WysiwygEditor.updateEditor(messageText, requestData.message);
+            break;
+          case 'draft': {
+            const dataItem = fieldset.find('input[name="emailComposer[messageDraftId]"]');
+            dataItem.val('');
+            break;
+          }
+          }
+          storedEmailsSelector.html(requestData.storedEmailOptions);
+          SelectUtils.deselectAll(storedEmailsSelector);
+          break; // delete
+        default:
+          postponeEnable = true;
+          data.message =
+            t(appName, 'Unknown request: {operation} / {topic}', { operation, topic });
+          data.caption = t(appName, 'Error');
+          Dialogs.alert(data.message, data.caption, validateUnlock, true, true);
+          break;
+        } // switch (operation)
+
+        if (!noDebug) {
+          let debugText = '';
+          if (data.caption !== undefined) {
+            debugText += '&lt;div class="error caption">' + data.caption + '&lt;/div>';
+          }
+          if (data.message !== undefined) {
+            debugText += data.message;
+          }
+          if (data.debug !== undefined) {
+            debugText += '&lt;pre>' + data.debug + '&lt;/pre>';
+          }
+          if (debugText !== '') {
+            let addOn;
+            addOn = print_r(queryData(post, true), true);
+            addOn = $('&lt;div>&lt;/div>').text(addOn).html();
+            debugText += '&lt;pre>post = ' + addOn + '&lt;/pre>';
+            addOn = print_r(requestData, true);
+            addOn = $('&lt;div>&lt;/div>').text(addOn).html();
+            debugText += '&lt;pre>requestData = ' + addOn + '&lt;/pre>';
+            debugOutput.html(debugText);
+          }
+        }
+
+        if (!postponeEnable) {
+          validateUnlock();
+        }
+      });
+    return false;
+  };
+
+  /*************************************************************************
+   *
+   * Finally send the entire mess to the recipients
+   */
+  sendButton
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+
+      // try to provide status feed-back for large transfers or
+      // sending to many recipients. To this end we poll a special
+      // data-base table. If not finished after 5 seconds, we pop-up a
+      // dialog with status information.
+
+      const progressWrapper = dialogHolder.find('div#sendingprogresswrapper');
+
+      const pollProgress = function(id, current, target, data) {
+        const value = current;
+        const max = target;
+        const rel = value / max * 100.0;
+        let progressTitle;
+        progressWrapper.find('div.messagecount').html(progressTitle);
+        if (data.total > 1) {
+          progressTitle =
+            t(appName, 'Sending message {active} out of {total}', data);
+        } else {
+          progressTitle = t(appName, 'Message delivery in progress');
+        }
+        progressWrapper.find('div.messagecount').html(progressTitle);
+        if (data.proto !== 'imap') {
+          progressWrapper.find('div.imap span.progressbar')
+            .progressbar('option', 'value', 0);
+        } else {
+          // assume SMTP was finished, the left-over partial
+          // progress-bar from too slowly-polled messages just is a
+          // little bit disturbing.
+          progressWrapper.find('div.smtp span.progressbar')
+            .progressbar('option', 'value', 100);
+        }
+        progressWrapper.find('div.' + data.proto + ' span.progressbar')
+          .progressbar('option', 'value', rel);
+        return !(data.proto === 'imap' &amp;&amp; rel === 100 &amp;&amp; data.active === data.total);
+      };
+
+      // submit the progress status id with the send request to the server.
+      ProgressStatus.create(0, 0, { proto: 'undefined', active: 0, total: -1 })
+        .fail(Ajax.handleError)
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['id'])) {
+            return;
+          }
+          const progressToken = data.id;
+          let progressOpen = false;
+          progressWrapper.find('span.progressbar').progressbar({ value: 0, max: 100 });
+          progressWrapper.cafevDialog({
+            title: t(appName, 'Message Delivery Status'),
+            width: 'auto',
+            height: 'auto',
+            modal: true,
+            closeOnEscape: false,
+            resizable: false,
+            dialogClass: 'emailform delivery progress no-close',
+            open() {
+              progressOpen = true;
+              ProgressStatus.poll(progressToken, {
+                update: pollProgress,
+                fail(xhr, status, errorThrown) { Ajax.handleError(xhr, status, errorThrown); },
+                interval: 500,
+              });
+            },
+            close() {
+              progressOpen = false;
+              ProgressStatus.poll.stop();
+              ProgressStatus.delete(progressToken);
+              progressWrapper.dialog('destroy');
+              progressWrapper.hide();
+            },
+          });
+
+          applyComposerControls.call(
+            $this, event, {
+              operation: 'send',
+              progressToken,
+              send: 'ThePointOfNoReturn',
+              submitAll: true,
+              projectId: projectId(),
+              projectName: projectName(),
+            },
+            function(lock) {
+              if (lock) {
+                $(window).on('beforeunload', function(event) {
+                  return t(appName, 'Email sending is in progress. Leaving the page now will cancel the email submission.');
+                });
+                dialogWidget.addClass('pme-table-dialog-blocked');
+              } else {
+                $(window).off('beforeunload');
+                if (progressOpen) {
+                  progressWrapper.dialog('close');
+                }
+                dialogWidget.removeClass('pme-table-dialog-blocked');
+              }
+            });
+        });
+
+      return false;
+    });
+
+  /*************************************************************************
+   *
+   * Message export to html.
+   */
+  fieldset
+    .find('input.submit.message-export')
+    .off('click')
+    .on('click', function(event) {
+
+      const post = form.serialize();
+
+      Page.busyIcon(true);
+
+      $.post(generateComposerUrl('preview'), post)
+        .fail(function(xhr, textStatus, errorThrown) {
+          Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+            let debugText = '';
+            if (data.caption !== undefined) {
+              debugText += '&lt;div class="error caption">' + data.caption + '&lt;/div>';
+            }
+            if (data.message !== undefined) {
+              debugText += data.message;
+            }
+            const hasPreviewMessages = data.requestData &amp;&amp; data.requestData.previewData;
+            if (hasPreviewMessages) {
+              debugText += data.requestData.previewData;
+            }
+            debugOutput.html(debugText);
+            debugOutput.find('.for-dialog').addClass('hidden');
+
+            Page.busyIcon(false);
+
+            if (hasPreviewMessages) {
+              dialogHolder.tabs('option', 'active', 2);
+            }
+
+            $.fn.cafevTooltip.remove();
+          });
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(
+            data, ['contents'], function() {
+              Page.busyIcon(false);
+            })) {
+            return false;
+          }
+
+          debugOutput.html(data.contents);
+
+          Page.busyIcon(false);
+
+          dialogHolder.tabs('option', 'active', 2);
+
+          $.fn.cafevTooltip.remove();
+        });
+      return false;
+    });
+
+  // fieldset.find('input.submit.message-blah-export').
+  //   off('click').
+  //   on('click', function(event) {
+
+  //   Page.busyIcon(true);
+
+  //   var action = OC.filePath(appName, 'ajax/email', 'exporter.php');
+  //   var formPost = form.serialize();
+  //   var post = {};
+  //   post[$(this).attr('name')] = "whatever";
+  //   post['DownloadCookie'] = generateId();
+  //   formPost += '&amp;'+$.param(post);
+  //   $.fileDownload(action, {
+  //     httpMethod: 'POST',
+  //     data: formPost,
+  //     cookieName: 'email_preview_download',
+  //     cookieValue: post['DownloadCookie'],
+  //     cookiePath: oc_webroot,
+  //     successCallback: function() {
+  //       Page.busyIcon(false);
+  //     },
+  //     failCallback: function(responseHtml, url, error) {
+  //       Dialogs.alert(t(appName, 'Unable to export message(s):')+
+  //                        ' '+
+  //                        responseHtml,
+  //                        t(appName, 'Error'),
+  //                        function() { Page.busyIcon(false); },
+  //                        true, true);
+  //     }
+  //   });
+  //   return false;
+  // });
+
+  /*************************************************************************
+   *
+   * Close the dialog
+   */
+
+  fieldset
+    .find('input.submit.cancel')
+    .off('click')
+    .on('click', function(event) {
+      applyComposerControls.call(this, event, {
+        operation: 'cancel',
+        formStatus: 'submitted',
+        singleItem: true,
+        projectId: projectId(),
+        projectName: projectName(),
+      });
+      // Close the dialog in any case.
+      dialogHolder.dialog('close');
+      return false;
+    });
+
+  /*************************************************************************
+   *
+   * Template handling (save, delete, load)
+   */
+
+  const autoSaveSeconds = draftAutoSave.data('auto-save-interval') || 300;
+  const autoSaveTimeout = autoSaveSeconds * 1000;
+
+  const autoSaveHandler = function() {
+    if (Email.autoSaveTimer) {
+      clearTimeout(Email.autoSaveTimer);
+    }
+    Email.autoSaveTimer = null;
+    // add a dummy subject in order to please the save-validator
+    if (fieldset.find('input.email-subject').val() === '') {
+      fieldset.find('input.email-subject').val(t(appName, 'Dummy Autosave Subject'));
+    }
+    applyComposerControls(
+      null, {
+        operation: 'save',
+        topic: 'draft',
+        submitAll: true,
+        noDebug: true,
+        projectId: projectId(),
+        projectName: projectName(),
+        autoSave: true,
+      },
+      function(lock) {
+        if (!lock) {
+          // restart timer when ready
+          if (Email.autoSaveTimer) {
+            return;
+          }
+          Email.autoSaveTimer = setTimeout(autoSaveHandler, autoSaveTimeout);
+        }
+      });
+  };
+
+  const confirmAutoSaveDelete = function(doDelete) {
+    const draftId = parseInt(fieldset.find('input[name="emailComposer[messageDraftId]"]').val());
+    if (draftId &lt;= 0) {
+      return;
+    }
+    const autoGenerated = storedEmailsSelector.find('option[value="__draft-' + draftId + '"]').data('autoGenerated') || false;
+    if (autoGenerated &amp;&amp; (doDelete || draftAutoSave.prop('checked'))) {
+      Dialogs.confirm(
+        t(appName,
+          'Do you want to delete the auto-save backup copy of the current message-draft (id = {id})?'
+          + '&lt;br/>'
+          + 'If you answer "no" then the current message will be saved again and marked as manually saved. '
+          + 'It will then linger on until you or someone else deletes it manually.',
+          { id: draftId }),
+        t(appName, 'Delete Auto-Save Draft?'),
+        function(confirmed) {
+          if (confirmed) {
+            applyComposerControls(
+              null, {
+                operation: 'delete',
+                topic: 'draft',
+                messageDraftId: draftId,
+                noDebug: true,
+                projectId: projectId(),
+                projectName: projectName(),
+              }
+            );
+          } else {
+            // perform a manual save to clear the "autoGenerated" flag
+            applyComposerControls(
+              null, {
+                operation: 'save',
+                topic: 'draft',
+                submitAll: true,
+                noDebug: true,
+                projectId: projectId(),
+                projectName: projectName(),
+                autoSave: false,
+              });
+          }
+        },
+        true,
+        true
+      );
+    }
+  };
+  Email.autoSaveDelete = confirmAutoSaveDelete;
+
+  const startDraftAutoSave = function($element) {
+    if (Email.autoSaveTimer) {
+      clearTimeout(Email.autoSaveTimer);
+      Email.autoSaveTimer = null;
+    }
+    if ($element.prop('checked')) {
+      // perhaps add a popup to set the auto-save timeout
+      Email.autoSaveTimer = setTimeout(autoSaveHandler, autoSaveTimeout);
+    }
+  };
+
+  draftAutoSave
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      startDraftAutoSave($this);
+      $.post(setPersonalUrl('email-draft-auto-save'), {
+        value: $this.prop('checked') ? autoSaveSeconds : 0,
+      })
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, function() {
+            $this.prop('checked', !$this.prop('checked'));
+          });
+        })
+        .done(function(data) {
+          if (data.message) {
+            const message = $this.prop('checked')
+              ? t(appName, 'Draft-auto-save interval set to {seconds} seconds.', { seconds: autoSaveSeconds })
+              : t(appName, 'Draft-auto-save switched off');
+            Notification.show(message, { timeout: 15 });
+          }
+          if (!$this.prop('checked')) {
+            confirmAutoSaveDelete(true);
+          }
+        });
+      return false;
+    });
+
+  startDraftAutoSave(draftAutoSave);
+
+  saveAsTemplate
+    .off('change')
+    .on('change', function(event) {
+      currentTemplate.prop('disabled', !saveAsTemplate.is(':checked'));
+      return false;
+    });
+
+  fieldset
+    .find('input.submit.save-message')
+    .off('click')
+    .on('click', function(event) {
+      const self = this;
+
+      if (saveAsTemplate.is(':checked')) {
+        const request = { operation: 'save', topic: 'template', submitAll: true };
+        // We do a quick client-side validation and ask the user for ok
+        // when a template with the same name is already present.
+        const current = currentTemplate.val();
+        if (storedEmailsSelector.find('option').filter(function() { return $(this).html() === current; }).length > 0) {
+          Dialogs.confirm(
+            t(appName, 'A template with the name `{emailTemplateName}\' already exists, '
+              + 'do you want to overwrite it?', { emailTemplateName: current }),
+            t(appName, 'Overwrite existing template?'),
+            function(confirmed) {
+              if (confirmed) {
+                applyComposerControls.call(self, event, request);
+              }
+            },
+            true);
+        } else {
+          applyComposerControls.call(self, event, request);
+        }
+      } else {
+        applyComposerControls.call(self, event, {
+          operation: 'save',
+          topic: 'draft',
+          submitAll: true,
+          noDebug: true,
+          projectId: projectId(),
+          projectName: projectName(),
+          autoSave: false,
+        });
+      }
+      return false;
+    });
+
+  fieldset
+    .find('input.submit.delete-message')
+    .off('click')
+    .on('click', function(event) {
+      const self = this;
+
+      if (saveAsTemplate.is(':checked')) {
+        // We do a quick client-side validation and ask the user for ok.
+        const current = currentTemplate.val();
+        if (storedEmailsSelector.find('option').filter(function() {
+          return $(this).html().trim() === current;
+        }).length > 0) {
+          Dialogs.confirm(
+            t(appName, 'Do you really want to delete the template with the name `{emailTemplateName}\'?',
+              { emailTemplateName: current }),
+            t(appName, 'Really Delete Template?'),
+            function(confirmed) {
+              if (confirmed) {
+                applyComposerControls.call(self, event, {
+                  operation: 'delete',
+                  topic: 'template',
+                  projectId: projectId(),
+                  projectName: projectName(),
+                });
+              }
+            },
+            true);
+        } else {
+          Dialogs.alert(
+            t(appName, 'Cannot delete non-existing template `{emailTemplateName}\'',
+              { emailTemplateName: current }),
+            t(appName, 'Unknown Template'));
+        }
+      } else {
+        const draftId = fieldset.find('input[name="emailComposer[messageDraftId]"]').val();
+
+        if (draftId > 0) {
+          // find the draft data in the select which we mis-use as data-storage here
+          const $draftOption = SelectUtils.optionByValue(storedEmailsSelector, '__draft-' + draftId);
+          let draftMeta = '';
+          if ($draftOption.length === 1) {
+            const title = $draftOption.attr('title') || $draftOption.attr('data-original-title') || $draftOption.html();
+            draftMeta = '&lt;br/>' + title;
+          }
+          Dialogs.confirm(
+            t(appName,
+              'Do you really want to delete the backup copy of the current message (id = {id})?',
+              { id: draftId })
+              + draftMeta,
+            t(appName, 'Really Delete Draft?'),
+            function(confirmed) {
+              if (confirmed) {
+                applyComposerControls.call(self, event, {
+                  operation: 'delete',
+                  topic: 'draft',
+                  messageDraftId: draftId,
+                  projectId: projectId(),
+                  projectName: projectName(),
+                });
+              }
+            },
+            true,
+            true);
+        }
+      }
+      return false;
+    });
+
+  storedEmailsSelector
+    .off('change')
+    .on('change', function(event) {
+
+      const choice = storedEmailsSelector.val();
+      if (choice.match(/^__draft-[0-9]+$/)) {
+        applyComposerControls.call(
+          this, event, {
+            operation: 'load',
+            topic: 'draft',
+            projectId: projectId(),
+            projectName: projectName(),
+          },
+          function(lock) {
+            if (lock) {
+              dialogWidget.addClass('pme-table-dialog-blocked');
+            } else {
+              dialogWidget.removeClass('pme-table-dialog-blocked');
+              dialogHolder.tabs('option', 'disabled', []);
+            }
+          });
+      } else if (choice.match(/__draft--1/)) {
+        Dialogs.alert(
+          t(appName, 'There are currently no stored draft messages available.'),
+          t(appName, 'No Drafts Available'),
+          function() {
+            SelectUtils.deselectAll(storedEmailsSelector);
+          });
+      } else {
+        applyComposerControls.call(this, event, {
+          operation: 'load',
+          topic: 'template',
+          projectId: projectId(),
+          projectName: projectName(),
+        });
+      }
+      return false;
+    });
+
+  sentEmailsSelector
+    .off('change')
+    .on('change', function(event) {
+
+      applyComposerControls.call(
+        this, event, {
+          operation: 'load',
+          topic: 'sent',
+          projectId,
+          projectName,
+        },
+        function(lock) {
+          if (lock) {
+            dialogWidget.addClass('pme-table-dialog-blocked');
+          } else {
+            SelectUtils.deselectAll(sentEmailsSelector);
+            dialogWidget.removeClass('pme-table-dialog-blocked');
+            dialogHolder.tabs('option', 'disabled', []);
+          }
+        }
+      );
+      return false;
+    });
+
+  /*************************************************************************
+   *
+   * Subject and sender name. We simply trim the spaces away.
+   */
+  fieldset
+    .off('blur', 'input.email-subject, input.sender-name')
+    .on(
+      'blur', 'input.email-subject, input.sender-name',
+      function(event) {
+        const $self = $(this);
+        $self.val($self.val().trim());
+        return false;
+      });
+
+  /**************************************************************************
+   *
+   */
+  discloseRecipients
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+
+      if ($this.prop('checked')) {
+        Dialogs.confirm(
+          t(appName,
+            'Do you really want to disclose the bulk-message recipients?'
+            + ' This may violate privacy regulations.'),
+          t(appName, 'Really disclose the recipients?'),
+          function(confirmed) {
+            $this.prop('checked', confirmed);
+          },
+          true,
+          true
+        );
+        return false;
+      }
+      return true;
+    });
+
+  /**
+   * Validate Cc: and Bcc: entries.
+   *
+   * @param {object} event TBD.
+   *
+   * @param {string} header TBD.
+   *
+   * @returns {boolean}
+   */
+  const carbonCopyBlur = function(event, header) {
+    const $self = $(this);
+    const request = {
+      operation: 'validateEmailRecipients',
+      recipients: $self.val(),
+      header,
+      singleItem: true,
+      projectId: projectId(),
+      projectName: projectName(),
+    };
+    request[header] = request.Recipients; // remove duplicate later
+    applyComposerControls.call(
+      this, event, request,
+      function(lock) {
+        sendButton.prop('disabled', lock);
+        $self.prop('disabled', lock);
+        // if (lock) {
+        //   self.off('blur');
+        // } else {
+        //   self.on('blur', function(event) {
+        //     carbonCopyBlur.call(this, event, header);
+        //   });
+        // }
+      });
+    return false;
+  };
+
+  fieldset
+    .find('#carbon-copy')
+    .off('blur')
+    .on('blur', function(event) {
+      return carbonCopyBlur.call(this, event, 'CC');
+    });
+  fieldset
+    .find('#blind-carbon-copy')
+    .off('blur')
+    .on('blur', function(event) {
+      return carbonCopyBlur.call(this, event, 'BCC');
+    });
+
+  /*************************************************************************
+   *
+   * Project events attachments
+   */
+
+  fieldset
+    .find('button.attachment.events')
+    .off('click')
+    .on('click', function(event) {
+      const wasVisible = eventAttachmentsRow.is(':visible');
+      let events = eventAttachmentsSelector.val();
+      if (!events) {
+        events = [];
+      }
+      eventAttachmentsRow.addClass('show-selectable');
+      Projects.eventsPopup({
+        projectId: projectId(),
+        projectName: projectName(),
+        eventSelect: events,
+      },
+      false /* only move to top if already open */);
+
+      if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+        panelHolder.trigger('resize', { position: 'bottom' });
+      }
+
+      return false;
+    });
+
+  // Update our selected events on request
+  dialogHolder
+    .off('cafevdb:events_changed')
+    .on('cafevdb:events_changed', function(event, events) {
+      const requestData = {
+        operation: 'update',
+        topic: 'element',
+        formElement: 'eventAttachments',
+        singleItem: true,
+        attachedEvents: events,
+        projectId: projectId(),
+        projectName: projectName(),
+      };
+      applyComposerControls.call(this, event, requestData);
+      return false;
+    });
+
+  fieldset
+    .find('tr.attachments input.visibility-toggle')
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+      const $row = $this.closest('tr');
+      $row.removeClass('show-selectable').addClass('hidden');
+      panelHolder.trigger('resize', { position: 'bottom' });
+    });
+
+  fieldset
+    .find('tr.all-attachments button.visibility-toggle')
+    .off('click')
+    .on('click', function(event) {
+      const $attachmentRows = $('tr.attachments');
+      if ($attachmentRows.filter(':visible').length === 2) {
+        $attachmentRows.removeClass('show-selectable').addClass('hidden');
+      } else {
+        $attachmentRows.addClass('show-selectable').removeClass('hidden');
+      }
+      panelHolder.trigger('resize', { position: 'bottom' });
+    });
+
+  fieldset
+    .find('input.delete-all-event-attachments')
+    .off('click')
+    .on('click', function(event) {
+      const wasVisible = eventAttachmentsRow.is(':visible');
+
+      const numSelected = eventAttachmentsSelector.val().length;
+      const numOptions = eventAttachmentsSelector.find('option').length;
+
+      // must this be here?
+      eventAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
+
+      if (numSelected === 0) {
+        eventAttachmentsRow.removeClass('show-selectable');
+        if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+          panelHolder.trigger('resize', { position: 'bottom' });
+        }
+      } else {
+        // Ask for confirmation
+        Dialogs.confirm(
+          t(appName,
+            'Do you really want to delete all event attachments?'),
+          t(appName, 'Really Delete Attachments?'),
+          function(confirmed) {
+            if (!confirmed) {
+              return false;
+            }
+            // simply void the selection
+            eventAttachmentsSelector.val('');
+            eventAttachmentsSelector.trigger('change');
+            eventAttachmentsSelector.trigger('chosen:updated');
+            eventAttachmentsRow.removeClass('show-selectable');
+            eventAttachmentsRow.addClass('empty-selection');
+
+            if (wasVisible !== eventAttachmentsRow.is(':visible')) {
+              panelHolder.trigger('resize', { position: 'bottom' });
+            }
+
+            return false;
+          },
+          true);
+      }
+
+      return false;
+    });
+
+  eventAttachmentsSelector
+    .off('change')
+    .on('change', function(event) {
+      const $this = $(this);
+      const eventDialog = $('.cafevdb-project-events #events');
+      let events = $this.val();
+      if (events.length === 0) {
+        events = [];
+        // fieldset.find('tr.event-attachments').hide();
+      }
+      $this.closest('tr')
+        .toggleClass('empty-selection', events.length === 0)
+        .toggleClass('no-attachments', $this.find('option').length === 0);
+      events = events.map(item => JSON.parse(item).uri);
+      eventDialog.trigger('cafevdb:events_changed', [events]);
+      return false;
+    });
+
+  /*************************************************************************
+   *
+   * File upload.
+   */
+
+  fileAttachmentsSelector.on('change', function(event) {
+    const $this = $(this);
+    $this.closest('tr')
+      .toggleClass('empty-selection', $this.val().length === 0)
+      .toggleClass('no-attachments', $this.find('option').length === 0);
+  });
+
+  const updateFileAttachments = function() {
+    const fileAttachments = fieldset.find('input.file-attachments').val();
+    const selectedAttachments = fileAttachmentsSelector.val();
+
+    const requestData = {
+      operation: 'update',
+      topic: 'element',
+      singleItem: true,
+      formElement: 'fileAttachments',
+      fileAttachments, // JSON data of all files
+      formStatus: 'submitted',
+      projectId: projectId(),
+      projectName: projectName(),
+    };
+    if (selectedAttachments) {
+      requestData.attachedFiles = selectedAttachments;
+    }
+    applyComposerControls.call(this, $.Event('click'), requestData);
+    return false;
+  };
+
+  // Arguably, these should only be active if the
+  // composer tab is active. Mmmh.
+  FileUpload.init({
+    url: generateUrl('attachment/upload'),
+    doneCallback(json, index, container) {
+      attachmentFromJSON(json, { origin: 'upload', index });
+    },
+    stopCallback: updateFileAttachments,
+    dropZone: null, // initially disabled, enabled on tab-switch
+    inputSelector: '#attachment_upload_start',
+    containerSelector: '#attachment_upload_wrapper',
+  });
+
+  fieldset
+    .find('.attachment.upload')
+    .off('click')
+    .on('click', function() {
+      $('#attachment_upload_start').trigger('click');
+      return false;
+    });
+
+  fieldset
+    .find('.attachment.cloud')
+    .off('click')
+    .on('click', function() {
+      let folderPromise;
+      if (projectId() > 0) {
+        folderPromise = $.get(generateAppUrl('projects/' + projectId() + '/folder/project'));
+      } else {
+        const deferred = $.Deferred();
+        folderPromise = deferred.promise();
+        deferred.resolve({ folder: CAFEVDB.globalState.sharedFolder });
+      }
+
+      folderPromise
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown);
+        })
+        .done(function(data) {
+          Dialogs.filePicker(
+            t(appName, 'Select Attachment'),
+            function(paths) {
+              cloudAttachment(paths, updateFileAttachments);
+              return false;
+            },
+            true, '', true, undefined, data.folder);
+        });
+    });
+
+  fieldset
+    .find('.attachment.personal')
+    .off('click')
+    .on('click', function() {
+      const wasVisible = fileAttachmentsRow.is(':visible');
+      fileAttachmentsRow.addClass('show-selectable');
+      if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+        panelHolder.trigger('resize', { position: 'bottom' });
+      }
+      return false;
+    });
+
+  fieldset
+    .find('input.delete-all-file-attachments')
+    .off('click')
+    .on('click', function(event) {
+      const wasVisible = fileAttachmentsRow.is(':visible');
+
+      const numSelected = fileAttachmentsSelector.val().length;
+      const numOptions = fileAttachmentsSelector.find('option').length;
+
+      fileAttachmentsRow.toggleClass('no-attachments', numOptions === 0);
+
+      if (numSelected === 0) {
+        fileAttachmentsRow.removeClass('show-selectable');
+        if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+          panelHolder.trigger('resize', { position: 'bottom' });
+        }
+      } else {
+        // Ask for confirmation
+        Dialogs.confirm(
+          t(appName,
+            'Do you really want to delete all file attachments?'),
+          t(appName, 'Really Delete Attachments?'),
+          function(confirmed) {
+            if (!confirmed) {
+              return false;
+            }
+            // simply void the selection
+            fileAttachmentsSelector.val('');
+            fileAttachmentsSelector.trigger('change');
+            fileAttachmentsSelector.trigger('chosen:updated');
+            fileAttachmentsRow.removeClass('show-selectable');
+            fileAttachmentsRow.addClass('empty-selection');
+
+            if (wasVisible !== fileAttachmentsRow.is(':visible')) {
+              panelHolder.trigger('resize', { position: 'bottom' });
+            }
+            return false;
+          },
+          true);
+      }
+
+      return false;
+    });
+
+  /*************************************************************************
+   *
+   * We try to be nice with Cc: and Bcc: and even provide an
+   * address-book connector
+   */
+  fieldset
+    .find('input.address-book-emails')
+    .off('click')
+    .on('click', function(event) {
+
+      const self = $(this);
+      const input = fieldset.find(self.data('for'));
+
+      self.addClass('loading');
+      const cleanup = function() {
+        self.removeClass('loading');
+      };
+
+      if (input.val().trim() !== '') {
+        // We trigger validation before we pop-up, but no need to do
+        // so on empty input.
+        input.trigger('blur');
+      }
+
+      const post = { freeFormRecipients: input.val() };
+      $.post(generateUrl('contacts/list'), post)
+        .fail(function(xhr, status, errorThrown) {
+          Ajax.handleError(xhr, status, errorThrown, cleanup);
+        })
+        .done(function(data) {
+          if (!Ajax.validateResponse(data, ['contents'])) {
+            cleanup();
+            return;
+          }
+          chosenPopup(data.contents, {
+            title: t(appName, 'Address Book'),
+            saveText: t(appName, 'Accept'),
+            buttons: [
+              {
+                text: t(appName, 'Save Contacts'),
+                class: 'save-contacts',
+                title: t(
+                  appName, 'Save the selected supplementary emails to the address-book for later reusal.'),
+                click() {
+                  const dialogHolder = $(this);
+                  const selectElement = dialogHolder.find('select');
+                  // We are interested in all selected options
+                  // inside the first options group
+                  const selectedFreeForm = [];
+                  SelectUtils.children(selectElement).filter('optgroup.free-form option:selected').each(function(idx) {
+                    const self = $(this);
+                    selectedFreeForm[idx] = {
+                      value: self.val(),
+                      html: self.html(),
+                      text: self.text(),
+                    };
+                  });
+                  const innerPost = { addressBookCandidates: selectedFreeForm };
+                  $.post(generateUrl('contacts/save'), innerPost)
+                    .fail(Ajax.handleError)
+                    .done(function(data) {
+                      $.post(generateUrl('contacts/list'), post)
+                        .fail(Ajax.handleError)
+                        .done(function(data) {
+                          if (!Ajax.validateResponse(data, ['contents'])) {
+                            return;
+                          }
+                          const newOptions = $(data.contents).html();
+                          SelectUtils.replaceOptions(selectElement, newOptions);
+                          if (selectElement.find('optgroup.free-form').length === 0) {
+                            dialogHolder.dialog('widget')
+                              .find('button.save-contacts').prop('disabled', true);
+                          }
+                        });
+                    });
+                },
+              },
+            ],
+            dialogClass: 'address-book-emails',
+            position: {
+              my: 'right top',
+              at: 'right bottom',
+              of: self,
+            },
+            openCallback(selectElement) {
+              cleanup();
+              if (selectElement.find('optgroup.free-form').length === 0) {
+                $(this).dialog('widget')
+                  .find('button.save-contacts').prop('disabled', true);
+              }
+            },
+            saveCallback(selectElement, selectedOptions) {
+              let recipients = '';
+              const numSelected = selectedOptions.length;
+              if (numSelected > 0) {
+                recipients += selectedOptions[0].text;
+                for (let idx = 1; idx &lt; numSelected; ++idx) {
+                  recipients += ', ' + selectedOptions[idx].text;
+                }
+              }
+              input.val(recipients);
+              input.trigger('blur');
+              $(this).dialog('close');
+            },
+            // ,closeCallback: function(selectElement) {}
+          });
+          return false;
+        });
+      return false;
+    });
+
+  /*************************************************************************
+   *
+   * The usual resize madness with dialog popups
+   */
+
+  panelHolder.off('resize');
+  panelHolder.on('resize', function(event, eventData) {
+    //    const eventData = event.data;
+    emailTabResize(dialogWidget, panelHolder);
+    if (eventData &amp;&amp; eventData.position === 'bottom') {
+      panelHolder.scrollTop(panelHolder.prop('scrollHeight'));
+    }
+  });
+};
+
+/**
+ * Open the mass-email form in a popup window.
+ *
+ * @param {object|string} post Necessary post data, either serialized or as
+ * object. In principle post can be empty. For project emails the
+ * following two fields are necessary:
+ *
+ * - projectId: the id
+ * - projectName: the name of the project (obsolete: Project)
+ *
+ * Optional pre-selected ids for email recipients:
+ *
+ * - PME_sys_mrecs: array of ids of pre-selected musicians
+ *
+ * - eventSelect: array of ids of events to attach.
+ *
+ * @param {boolean} modal TBD, default true.
+ *
+ * @param {boolean} single TBD, default false.
+ *
+ * @param {Function} afterInit TBD.
+ */
+function emailFormPopup(post, modal, single, afterInit) {
+
+  if (typeof afterInit !== 'function') {
+    afterInit = function() {};
+  }
+
+  if (Email.active === true) {
+    afterInit();
+    return;
+  }
+
+  Email.active = true;
+
+  if (modal === undefined) {
+    modal = true;
+  }
+  if (single === undefined) {
+    single = false;
+  }
+  if (typeof afterInit !== 'function') {
+    afterInit = function() {};
+  }
+  $.post(generateUrl('form'), post)
+    .fail(function(xhr, status, errorThrown) {
+      Ajax.handleError(xhr, status, errorThrown, function() {
+        Email.active = false;
+        afterInit(false);
+      });
+    })
+    .done(function(data) {
+      const containerId = 'emailformdialog';
+
+      if (!Ajax.validateResponse(
+        data, ['contents'], function() {
+          Email.active = false;
+          afterInit(false);
+        })) {
+        return false;
+      }
+
+      afterInit(true);
+
+      const dialogHolder = $('&lt;div id="' + containerId + '">&lt;/div>');
+      dialogHolder.html(data.contents);
+      $('body').append(dialogHolder);
+
+      const emailForm = $('form#cafevdb-email-form');
+      const recipientsPanel = dialogHolder.find('div#emailformrecipients');
+      const composerPanel = dialogHolder.find('div#emailformcomposer');
+
+      let dlgTitle = '';
+      if (data.projectId > 0) {
+        dlgTitle = t(appName, 'Em@il Form for {projectName}', { projectName: data.projectName });
+      } else {
+        dlgTitle = t(appName, 'Em@il Form');
+      }
+
+      if (modal) {
+        modalizer(true);
+      }
+
+      dialogHolder.cafevDialog({
+        title: dlgTitle,
+        position: {
+          my: 'middle top',
+          at: 'middle bottom+50px',
+          of: '#header',
+        },
+        width: 'auto',
+        height: 'auto',
+        modal: false, // modal,
+        closeOnEscape: false,
+        dialogClass: 'emailform custom-close',
+        resizable: false,
+        open() {
+          $.fn.cafevTooltip.remove();
+          DialogUtils.toBackButton(dialogHolder);
+          DialogUtils.fullScreenButton(dialogHolder, function(mode, when) {
+            if (when === 'before') {
+              WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+            }
+            if (when === 'after') {
+              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+            }
+          });
+          DialogUtils.customCloseButton(dialogHolder, function(event, container) {
+            event.stopImmediatePropagation();
+            dialogHolder.find('input.submit.cancel[type="submit"]').trigger('click');
+            // dialogHolder.dialog('close');
+            return false;
+          });
+          const dialogWidget = dialogHolder.dialog('widget');
+
+          // this must come before calling emailFormRecipientsHandlers
+          dialogHolder.tabs({
+            active: single ? 1 : 0,
+            disabled: single ? [0] : [],
+            heightStyle: 'content',
+            create(event, ui) {
+              emailTabResize(dialogWidget, ui.panel);
+              return true;
+            },
+            activate(event, ui) {
+              const newTabId = ui.newTab.attr('id');
+
+              if (newTabId === 'emailformdebug-tab') {
+                // The following is primarily for the debug
+                // output in order to get the scroll-bars right
+                const panel = ui.newPanel;
+                let newHeight = dialogWidget.height()
+                    - dialogWidget.find('.ui-dialog-titlebar').outerHeight(true);
+                newHeight -= $('#emailformtabs').outerHeight(true);
+                newHeight -= panel.outerHeight(true) - panel.height();
+                panel.height(newHeight);
+              } else {
+                if (newTabId === 'emailformcomposer-tab') {
+                  $('#attachment_upload_start').fileupload('option', 'dropZone', ui.newPanel);
+                } else {
+                  $('#attachment_upload_start').fileupload('option', 'dropZone', null);
+                  const recipientsFieldSet = emailForm.find('fieldset.email-recipients.page');
+                  emailFormRecipientsSelectControls(dialogHolder, recipientsFieldSet);
+                }
+
+                // At least in FF there is also a resize event,
+                // but only for the composition window. Don't
+                // know why.
+                emailTabResize(dialogWidget, ui.newPanel);
+              }
+
+              return true;
+            },
+            beforeActivate(event, ui) {
+              // When activating the composition window we
+              // first have to update the email addresses. This
+              // is cosmetics, but this entire thing is DAU
+              // cosmetics stuff
+              const newTabId = ui.newTab.attr('id');
+              const oldTabId = ui.oldTab.attr('id');
+
+              if (newTabId === 'emailformhelp-tab') {
+                event.preventDefault();
+                return true;
+              }
+
+              ui.newPanel.css('max-height', '');
+              ui.newPanel.css('height', 'auto');
+
+              if (oldTabId !== 'emailformrecipients-tab'
+                  || newTabId !== 'emailformcomposer-tab') {
+                return true;
+              }
+
+              updateComposerElements(emailForm, ['to', 'subjectTag']);
+
+              return true;
+            },
+          });
+
+          handleUserManualMenu(dialogHolder);
+
+          const recipientsFieldSet = emailForm.find('fieldset.email-recipients.page');
+          const composerFieldSet = emailForm.find('fieldset.email-composition.page');
+
+          // Fine, now add handlers and AJAX callbacks. We can
+          // probably move some of the code above to the
+          // respective tab-handler.
+          emailFormRecipientsHandlers(
+            recipientsFieldSet,
+            emailForm,
+            dialogHolder,
+            recipientsPanel);
+          emailFormCompositionHandlers(
+            composerFieldSet,
+            emailForm,
+            dialogHolder,
+            composerPanel);
+
+          // download support
+          dialogHolder.on('click', 'a.download-link.ajax-download', function(event) {
+            const $this = $(this);
+            fileDownload($this.attr('href'), $this.data());
+            return false;
+          });
+
+          // we have to recompute the tab size for the recipients controls
+          emailTabResize(dialogWidget, recipientsPanel);
+
+          dialogHolder.dialog('moveToTop');
+        },
+        close() {
+          if (Email.autoSaveTimer) {
+            clearTimeout(Email.autoSaveTimer);
+            Email.autoSaveTimer = null;
+          }
+          Email.autoSaveDelete();
+
+          Email.autoSaveDelete = function() {};
+
+          $.fn.cafevTooltip.remove();
+          WysiwygEditor.removeEditor(dialogHolder.find('textarea.wysiwyg-editor'));
+          dialogHolder.dialog('close');
+          dialogHolder.dialog('destroy').remove();
+
+          modalizer(false);
+          Email.active = false;
+        },
+      });
+      return false;
+    });
+}
+
+const documentReady = function() {
+
+  $('button.eventattachments.edit').click(function(event) {
+    event.preventDefault();
+
+    // Edit existing event
+    const post = [];
+    const type = {};
+    type.name = 'id';
+    type.value = $(this).val();
+    post.push(type);
+    $('#dialog_holder').load(
+      generateAppUrl('legacy/events/forms/edit'),
+      post,
+      function(response, textStatus, xhr) {
+        if (textStatus === 'success') {
+          $('input[name="delete"]').prop('disabled', true);
+          Legacy.Calendar.UI.startEventDialog();
+          return;
+        }
+        Ajax.handleError(xhr, textStatus, xhr.status);
+      });
+
+    return false;
+  });
+
+};
+
+export {
+  documentReady,
+  emailFormPopup,
+};
+
+// Local Variables: ***
+// js-indent-level: 2 ***
+// indent-tabs-mode: nil ***
+// End: ***
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Sun Mar 19 2023 16:22:02 GMT+0100 (Mitteleuropäische Normalzeit) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

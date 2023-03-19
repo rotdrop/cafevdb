@@ -1,0 +1,6 @@
+<map id="ensureMigrationsAreLoaded" name="ensureMigrationsAreLoaded">
+<area shape="rect" id="node1" title="Ensure all unapplied migrations are loaded." alt="" coords="164,55,347,80"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a9373d69fc1eb23888bfb4dac0bf2dc9e" title="Apply all found migrations, stop when one is failing." alt="" coords="27,5,95,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a3342f7b73b92ce33402a634fd37375f9" title=" " alt="" coords="11,55,110,80"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a4843a615c27e75e06b6d8c8ed69426ab" title="Check whether there need any migrations to be applied." alt="" coords="5,104,116,129"/>
+</map>

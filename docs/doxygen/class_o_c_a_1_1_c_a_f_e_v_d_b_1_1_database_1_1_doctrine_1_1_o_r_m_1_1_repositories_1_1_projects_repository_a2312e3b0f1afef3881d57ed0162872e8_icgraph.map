@@ -1,0 +1,4 @@
+<map id="findById" name="findById">
+<area shape="rect" id="node1" title="Find a project by its Id." alt="" coords="156,5,227,31"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository.html#aec4dad312885473d9f8fdab265c065a1" title="Convenience function: just return the argument if it is already a project entity, otherwise fetch the..." alt="" coords="5,5,108,31"/>
+</map>
