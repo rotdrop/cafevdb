@@ -59,6 +59,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class UserStorage
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait;
 
   const PATH_SEP = Constants::PATH_SEP;
   const CACHE_DIRECTORY = self::PATH_SEP.'cache';
@@ -209,53 +210,6 @@ class UserStorage
   }
 
   /**
-   * Walk the given $pathOrFolder and apply the callable to each found node.
-   *
-   * @param string|Folder $pathOrFolder Folder-path or \OCP\Files\Folder instance.
-   *
-   * @param null|callable $callback The callback receives two arguments, the
-   * current file-system node and the recursion depth.
-   *
-   * @param int $depth Internal recursion depth parameters. The $callback
-   * receives it as second argument.
-   *
-   * @return int The number of plain files found during the walk.
-   */
-  public function folderWalk(mixed $pathOrFolder, ?callable $callback = null, int $depth = 0):int
-  {
-    /** @var \OCP\Files\File $node */
-    if (!($pathOrFolder instanceof Folder)) {
-      $folder = $this->getFolder($pathOrFolder);
-    } else {
-      $folder = $pathOrFolder;
-    }
-
-    if (empty($folder)) {
-      return 0;
-    }
-
-    if (!empty($callback)) {
-      $callback($folder, $depth);
-    }
-    ++$depth;
-
-    $numberOfFiles = 0;
-    $folderContents = $folder->getDirectoryListing();
-    /** @var Node $node */
-    foreach ($folderContents as $node) {
-      if ($node->getType() == FileInfo::TYPE_FILE) {
-        if (!empty($callback)) {
-          $callback($node, $depth);
-        }
-        ++$numberOfFiles;
-      } else {
-        $numberOfFiles += $this->folderWalk($node, $callback, $depth);
-      }
-    }
-    return $numberOfFiles;
-  }
-
-  /**
    * Recursively add all files in all sub-directories to the zip archive.
    *
    * @param Folder $folder The folder to archive.
@@ -328,6 +282,148 @@ class UserStorage
     fclose($dataStream);
 
     return $data;
+  }
+
+  /**
+   * @var int
+   *
+   * Flag for copyTree(), keep any already existing target file. This is the
+   * default.
+   */
+  public const KEEP_DEST = 0;
+
+  /**
+   * @var int
+   *
+   * Flag for copyTree(), overwrite already existing target files.
+   */
+  public const OVWR_DEST = (1 << 0);
+
+  /**
+   * @var int
+   *
+   * Flag for copyTree(), remove any files in the destination folder which do
+   * not exist in the source folder. In conjunction with OVWR_DEST this will
+   * result in an "exact" copy of the source folder. If OVWR_DEST is not
+   * specified then existing files will be kept, but files not existing in the
+   * source tree will be deleted.
+   */
+  public const CLEAN_DEST = (1 << 0);
+
+  /**
+   * Copy a source folder tree to a target folder tree.
+   *
+   * @param string|Folder $src Source folder tree. May be an FS node or the
+   * path relative to the user folder.
+   *
+   * @param string|Folder $dst Destination folder. May be an FS node of the
+   * path relative to the user folder. The destination will be created if it
+   * does not exist.
+   *
+   * @param null|string $excludeRegexp If given a regular expression applied
+   * to the basename of the source files. If it matches then the respective
+   * source file is not copied.
+   *
+   * @param int $flags Flags controlling conflict resolution.
+   *
+   * @return null|Folder The destination folder or null in case of an error.
+   */
+  public function copyTree(mixed $src, mixed $dst, ?string $excludeRegexp = null, int $flags = self::KEEP_DEST):?Folder
+  {
+    $this->logInfo('SRC // DST ' . $src . ' || ' . $dst);
+
+    /** @var Folder $sourceFolder */
+    if (!($src instanceof Folder)) {
+      $sourceFolder = $this->getFolder($src);
+    } else {
+      $sourceFolder = $src;
+    }
+
+    if (empty($sourceFolder)) {
+      $this->logInfo('NO SOURCE FOLDER ' . $src . ' || ' . $dst);
+      return null;
+    }
+
+    $sourceRootPath = $sourceFolder->getPath();
+    $sourceRootLen = strlen($sourceRootPath);
+
+    $userFolderPrefix = $this->userFolder->getPath();
+    $userFolderLen = strlen($userFolderPrefix);
+
+    if ($dst instanceof Folder) {
+      $destFolder = $dst;
+      $destRootPath = $destFolder->getPath();
+      $destUserPath = trim(substr($destRootPath, $userFolderLen), self::PATH_SEP);
+    } else {
+      $destUserPath = $dst;
+      try {
+        $destFolder = $this->userFolder->get($destUserPath);
+        $destRootPath = $destFolder->getPath();
+      } catch (FileNotFoundException $e) {
+        $destFolder = null;
+      }
+    }
+    if ($destFolder
+        && (($flags & self::CLEAN_DEST) || $destFolder->getType() != FileInfo::TYPE_FOLDER)) {
+      $destFolder->delete();
+      $destFolder = null;
+    }
+    if (empty($destFolder)) {
+      $destFolder = $this->ensureFolder($destUserPath);
+      $destRootPath = $destFolder->getPath();
+    }
+
+    $this->folderWalk($sourceFolder, function(
+      Node $sourceNode,
+      int $depth,
+    ) use (
+      $sourceFolder,
+      $sourceRootPath,
+      $sourceRootLen,
+      $destFolder,
+      $destRootPath,
+      $excludeRegexp,
+      $flags,
+    ) {
+      if (!empty($excludeRegexp) && preg_match($excludeRegexp, $sourceNode->getName())) {
+        $this->logInfo('EXCLUDE HIT FOR PATTERN ' . $excludeRegexp);
+        return false;
+      }
+
+      $sourcePath = $sourceNode->getPath();
+      $relativePath = trim(substr($sourcePath, $sourceRootLen), self::PATH_SEP);
+      $destPath = $destRootPath . self::PATH_SEP . $relativePath;
+      switch ($sourceNode->getType()) {
+        case FileInfo::TYPE_FOLDER:
+          try {
+            $destNode = $destFolder->get($relativePath);
+            if ($destNode->getType() != FileInfo::TYPE_FOLDER && ($flags & self::OVWR_DEST)) {
+              $destNode->delete();
+              throw new FileNotFoundException($this->l->t("Deleted non-directory %s", [$destPath]));
+            }
+            $this->logInfo('TARGET FOLDER ALREADY EXISTS: ' . $destPath);
+          } catch (FileNotFoundException $e) {
+            $destNode = $destFolder->newFolder($relativePath);
+          }
+          break;
+        case FileInfo::TYPE_FILE:
+          try {
+            $destNode = $destFolder->get($relativePath);
+            if ($flags & self::OVWR_DEST) {
+              $destNode->delete();
+              throw new FileNotFoundException($this->l->t("Overwrite requested, deleted %s", [$destPath]));
+            } else {
+              $this->logInfo('KEEPING EXISTING FILE: ' . $destPath);
+            }
+          } catch (FileNotFoundException $e) {
+            $sourceNode->copy($destPath);
+          }
+          break;
+      }
+      return true;
+    });
+
+    return null;
   }
 
   /**
@@ -483,7 +579,7 @@ class UserStorage
   }
 
   /**
-   * Rename $oldPath to $newPath which are interpreted as paths
+   * Copy $oldPath to $newPath which are interpreted as paths
    * relative to the user's folder.
    *
    * @param string $oldPath The source path.
@@ -536,7 +632,7 @@ class UserStorage
   }
 
   /**
-   * Make sure the all components of the given array exists where each
+   * Make sure that all components of the given array exists where each
    * following component is chained to the previous one. So the final
    * path to construct is
    * ```
