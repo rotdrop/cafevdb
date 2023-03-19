@@ -1,5 +1,5 @@
 # CAFeV-DB API Docs
 
-- [phpdoc](phpdoc/index.html)
-- [doxygen](doxygen/index.html)
-- [jsdoc](jsdoc/index.html)
+- [phpdoc](phpdoc/html/index.html)
+- [doxygen](doxygen/html/index.html)
+- [jsdoc](jsdoc/html/index.html)
