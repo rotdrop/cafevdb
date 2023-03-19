@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-02-28 10:59+0100\n"
+"POT-Creation-Date: 2023-03-19 21:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,6 +94,27 @@ msgstr ""
 #: lib/Command/ParticipantFolders.php:201
 #, php-format
 msgid "Ensured existence of folder \"%s\"."
+msgstr ""
+
+#: lib/Command/ProjectFolders.php:137
+msgid ""
+"One of the options \"years=RANGE\", \"--folder=FOLDER\", \"--"
+"project=PROJECT\" or \"--all\" has to be specified."
+msgstr ""
+
+#: lib/Command/ProjectFolders.php:143
+msgid ""
+"\"--all\" cannot be compbined with \"years=RANGE\", \"--folder=FOLDER\" or "
+"\"--project=PROJECT\"."
+msgstr ""
+
+#: lib/Command/ProjectFolders.php:148
+msgid "SKELETON must be one of \"omit\", \"overwrite\" or \"clean\"."
+msgstr ""
+
+#: lib/Command/ProjectFolders.php:153
+#, php-format
+msgid "FOLDER must be one of \"%s\""
 msgstr ""
 
 #: lib/Command/WikiOverview.php:93
@@ -1302,7 +1323,7 @@ msgid ""
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:967
-#: lib/Service/ProjectService.php:2617
+#: lib/Service/ProjectService.php:2664
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr ""
@@ -1317,7 +1338,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr ""
 
 #: lib/Controller/PersonalSettingsController.php:1001
-#: lib/Service/ProjectService.php:2859
+#: lib/Service/ProjectService.php:2906
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -3265,7 +3286,7 @@ msgstr ""
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2410
+#: lib/EmailForm/Composer.php:2403
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -3291,158 +3312,158 @@ msgid ""
 "</html>"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:2651
-#: lib/EmailForm/Composer.php:3121
+#: lib/EmailForm/Composer.php:2644
+#: lib/EmailForm/Composer.php:3114
 msgid "DO NOT REPLY"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3304
+#: lib/EmailForm/Composer.php:3297
 msgid "*** empty content ***"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3358
+#: lib/EmailForm/Composer.php:3351
 msgid "Message(s) exported successfully!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3360
+#: lib/EmailForm/Composer.php:3353
 msgid "Prewiew generation detected errors!"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3409
+#: lib/EmailForm/Composer.php:3402
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3412
+#: lib/EmailForm/Composer.php:3405
 msgid "The email text contains personalized substitutions."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3415
+#: lib/EmailForm/Composer.php:3408
 msgid "The email contains personalized attachments."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3659
+#: lib/EmailForm/Composer.php:3652
 msgid "Pre-composition validation has failed!"
 msgstr ""
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3694
+#: lib/EmailForm/Composer.php:3687
 msgid "ALL_PERSONS: musicians"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3795
-#: lib/EmailForm/Composer.php:3811
+#: lib/EmailForm/Composer.php:3788
+#: lib/EmailForm/Composer.php:3804
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3924
-#: lib/EmailForm/Composer.php:4054
-#: lib/EmailForm/Composer.php:4064
+#: lib/EmailForm/Composer.php:3917
+#: lib/EmailForm/Composer.php:4047
+#: lib/EmailForm/Composer.php:4057
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr ""
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:3946
+#: lib/EmailForm/Composer.php:3939
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3950
+#: lib/EmailForm/Composer.php:3943
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3956
+#: lib/EmailForm/Composer.php:3949
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3983
+#: lib/EmailForm/Composer.php:3976
 msgid "no project involved"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3986
+#: lib/EmailForm/Composer.php:3979
 msgid "PROJECT_PUBLIC_SHARE"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:3996
+#: lib/EmailForm/Composer.php:3989
 msgid "PROJECT_PUBLIC_SHARE_EXPIRATION"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4008
+#: lib/EmailForm/Composer.php:4001
 msgid "phrase"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4025
+#: lib/EmailForm/Composer.php:4018
 #, php-format
 msgid "(expires at %s)"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4165
+#: lib/EmailForm/Composer.php:4158
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4500
+#: lib/EmailForm/Composer.php:4493
 msgid "Unable to load draft without id"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4512
+#: lib/EmailForm/Composer.php:4505
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4536
+#: lib/EmailForm/Composer.php:4529
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4567
+#: lib/EmailForm/Composer.php:4560
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4627
-#: lib/EmailForm/Composer.php:4754
+#: lib/EmailForm/Composer.php:4620
+#: lib/EmailForm/Composer.php:4747
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4663
+#: lib/EmailForm/Composer.php:4656
 msgid "Cleaning temporary files succeeded."
 msgstr ""
 
-#: lib/EmailForm/Composer.php:4688
+#: lib/EmailForm/Composer.php:4681
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5424
+#: lib/EmailForm/Composer.php:5417
 msgid "Blank Template"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5425
+#: lib/EmailForm/Composer.php:5418
 msgid "blank"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5428
+#: lib/EmailForm/Composer.php:5421
 msgid "Personalized"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5431
+#: lib/EmailForm/Composer.php:5424
 msgid "Cloud"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5434
+#: lib/EmailForm/Composer.php:5427
 msgid "Local Filesystem"
 msgstr ""
 
-#: lib/EmailForm/Composer.php:5560
+#: lib/EmailForm/Composer.php:5553
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr ""
@@ -6485,29 +6506,42 @@ msgstr ""
 msgid "templates"
 msgstr ""
 
-#: lib/Service/ProjectService.php:554
+#: lib/Service/ProjectService.php:484
+msgid "skeleton"
+msgstr ""
+
+#: lib/Service/ProjectService.php:491
+msgid "management"
+msgstr ""
+
+#. TRANSLATORS: this is a placeholder for the login id. It must in particular remain all lowercase.
+#: lib/Service/ProjectService.php:543
+msgid "forename.surname"
+msgstr ""
+
+#: lib/Service/ProjectService.php:601
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:815
+#: lib/Service/ProjectService.php:862
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
 "project \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:825
+#: lib/Service/ProjectService.php:872
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1237
+#: lib/Service/ProjectService.php:1284
 #, php-format
 msgid "Projects of %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1301
+#: lib/Service/ProjectService.php:1348
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -6537,151 +6571,151 @@ msgid ""
 "Whatever."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1410
+#: lib/Service/ProjectService.php:1457
 #, php-format
 msgid "%1$s has been renamed to %2$s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1497
+#: lib/Service/ProjectService.php:1544
 msgid "Preview"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1499
-#: lib/Service/ProjectService.php:1554
-#: lib/Service/ProjectService.php:1719
-#: lib/Service/ProjectService.php:1763
-#: lib/Service/ProjectService.php:1823
+#: lib/Service/ProjectService.php:1546
+#: lib/Service/ProjectService.php:1601
+#: lib/Service/ProjectService.php:1766
+#: lib/Service/ProjectService.php:1810
+#: lib/Service/ProjectService.php:1870
 #: lib/Settings/PersonalForm.php:352
 msgid "Rehearsals"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1501
+#: lib/Service/ProjectService.php:1548
 msgid "Archive"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1503
+#: lib/Service/ProjectService.php:1550
 msgid "Trashbin"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1548
+#: lib/Service/ProjectService.php:1595
 msgid "Empty project."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1575
+#: lib/Service/ProjectService.php:1622
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1598
+#: lib/Service/ProjectService.php:1645
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1619
+#: lib/Service/ProjectService.php:1666
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1658
+#: lib/Service/ProjectService.php:1705
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1701
+#: lib/Service/ProjectService.php:1748
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1865
+#: lib/Service/ProjectService.php:1912
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr ""
 
-#: lib/Service/ProjectService.php:1909
+#: lib/Service/ProjectService.php:1956
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1925
+#: lib/Service/ProjectService.php:1972
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1947
+#: lib/Service/ProjectService.php:1994
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr ""
 
-#: lib/Service/ProjectService.php:1999
+#: lib/Service/ProjectService.php:2046
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
 "instrumentation list for the project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2053
+#: lib/Service/ProjectService.php:2100
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2062
+#: lib/Service/ProjectService.php:2109
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2118
+#: lib/Service/ProjectService.php:2165
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2184
+#: lib/Service/ProjectService.php:2231
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2322
+#: lib/Service/ProjectService.php:2369
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2347
+#: lib/Service/ProjectService.php:2394
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2400
+#: lib/Service/ProjectService.php:2447
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2441
+#: lib/Service/ProjectService.php:2488
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2471
+#: lib/Service/ProjectService.php:2518
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr ""
 
-#: lib/Service/ProjectService.php:2939
+#: lib/Service/ProjectService.php:2986
 msgid "Project not found."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2972
+#: lib/Service/ProjectService.php:3019
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
 "background and a resolution of 600 DPI or more."
 msgstr ""
 
-#: lib/Service/ProjectService.php:2978
+#: lib/Service/ProjectService.php:3025
 msgid "Validation of projects not yet implemented."
 msgstr ""
 
-#: lib/Service/ProjectService.php:3024
+#: lib/Service/ProjectService.php:3071
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr ""
@@ -9280,65 +9314,65 @@ msgid ""
 "\"%s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:169
+#: lib/Storage/UserStorage.php:170
 #, php-format
 msgid ""
 "File-system node \"%1$s\" has been found but has not the required type "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:176
+#: lib/Storage/UserStorage.php:177
 #, php-format
 msgid "File-system node \"%s\" could not been found."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:422
+#: lib/Storage/UserStorage.php:454
 #, php-format
 msgid "Unable to restore \"%s\": TrashManager cannot be loaded"
 msgstr ""
 
-#: lib/Storage/UserStorage.php:481
+#: lib/Storage/UserStorage.php:513
 #, php-format
 msgid "Rename of \"%s\" to \"%s\" failed."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:504
+#: lib/Storage/UserStorage.php:536
 #, php-format
 msgid "Copy of \"%s\" to \"%s\" failed."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:529
+#: lib/Storage/UserStorage.php:561
 #, php-format
 msgid "Deleted non-directory %s"
 msgstr ""
 
-#: lib/Storage/UserStorage.php:596
+#: lib/Storage/UserStorage.php:628
 #, php-format
 msgid "Unable to set content of file \"%s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:617
+#: lib/Storage/UserStorage.php:649
 #, php-format
 msgid "Cannot read from folder \"%s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:620
+#: lib/Storage/UserStorage.php:652
 #, php-format
 msgid "Unable to get content of file \"%s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:683
-#: lib/Storage/UserStorage.php:734
-#: lib/Storage/UserStorage.php:767
+#: lib/Storage/UserStorage.php:715
+#: lib/Storage/UserStorage.php:766
+#: lib/Storage/UserStorage.php:799
 msgid "Argument must be a valid path or already a file-system node."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:704
+#: lib/Storage/UserStorage.php:736
 #, php-format
 msgid "Unknown file type \"%s\" for download file \"%s\"."
 msgstr ""
 
-#: lib/Storage/UserStorage.php:729
+#: lib/Storage/UserStorage.php:761
 #, php-format
 msgid "Cannot find directory entry \"%s\"."
 msgstr ""
