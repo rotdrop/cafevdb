@@ -31,8 +31,11 @@ var NAVTREE =
     ] ],
     [ "nextcloud-app-toolkit", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html", [
       [ "Description", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md3", null ],
-      [ "Setup", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md4", null ],
-      [ "Why", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md5", null ]
+      [ "Setup", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md4", [
+        [ "Direct Use as GIT Sub-Repo", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md5", null ],
+        [ "Indirect \"Scoped\" Use", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md6", null ]
+      ] ],
+      [ "Why", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md7", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Bug List", "bug.html", null ],

@@ -101,11 +101,18 @@ $(document).ready(function(){initNavTree('md__var_www_dev1_htdocs_nextcloud_git_
   <div class="headertitle"><div class="title">nextcloud-app-toolkit </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md3"></a>
+<div class="textblock"><p><b>Table of Contents</b> </p><pre class="fragment">- [Description](#description)
+- [Setup](#setup)
+    - [Direct Use as GIT Sub-Repo](#direct-use-as-git-sub-repo)
+    - [Indirect "Scoped" Use](#indirect-scoped-use)
+- [Why](#why)
+</pre><h1><a class="anchor" id="autotoc_md3"></a>
 Description</h1>
 <p>Some common PHP classes for my Nextcloud apps. The Idea is to use <code>git subtree</code> or maybe <a href="https://github.com/ingydotnet/git-subrepo"><code>git-subrepo</code></a> and just "quote" the code into a sub-directory of the <code>lib/</code>-folder of a project.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Setup</h1>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Direct Use as GIT Sub-Repo</h2>
 <p>Say we choose <code>lib/Toolkit/</code> as destination folder, then one could do </p><div class="fragment"><div class="line">git subrepo clone THIS_REPOS_URL lib/Toolkit</div>
 </div><!-- fragment --><p>Then one needs to add an auto-loading directive to the project's <code>composer.json</code>: </p><div class="fragment"><div class="line">&quot;autoload&quot;: {</div>
 <div class="line">  &quot;psr-4&quot;: {</div>
@@ -113,7 +120,16 @@ Setup</h1>
 <div class="line">  }</div>
 <div class="line">},</div>
 </div><!-- fragment --><p>This will instruct the <code>composer</code> to generate appropriate auto-loading files such that the classes can be found.</p>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Indirect "Scoped" Use</h2>
+<p>When using this toolkit in more than one app then the usual compatibility problems occur when using the code directly as described above. Different apps may depend on different versions but only one shared instance of the package is used. To work around this it is possible to wrap the entire package into a namespace. This is done by simple exchanging the <code>Rotdrop</code> PHP namespace by another one. When using <code>make</code> for the build process in an app this can be done with the following <code>Makefile</code> snippet:</p>
+<div class="fragment"><div class="line">APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit</div>
+<div class="line">APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit</div>
+<div class="line">APP_TOOLKIT_NS = CAFEVDB</div>
+<div class="line"> </div>
+<div class="line">include $(APP_TOOLKIT_DIR)/tools/scopeme.mk</div>
+</div><!-- fragment --><p>Here <code>ABSSRCDIR</code> is assumed to contain the absolute path to the consuming package and <code>php-toolkit</code> is a folder which contains the sources of this package.</p>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Why</h1>
 <p>One could have created a vanilla composer package. However, that has issues with the Transifex translation integration if the code needs some strings translated. The hope is also that a subtree or subrepo simplifies development while still being able to share common code between different apps. </p>
 </div></div><!-- contents -->
@@ -122,7 +138,7 @@ Why</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Mar 20 2023 09:15:52 for CamerataDB by
+    <li class="footer">Generated on Mon Mar 20 2023 16:34:19 for CamerataDB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.9.6 </li>
   </ul>
