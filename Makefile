@@ -367,20 +367,60 @@ cleanup: $(BUILDDIR)/core-exclude
 	while read LINE; do rm -rf $$(dirname $$LINE); done< <(cat $<)
 	$(COMPOSER_TOOL) dump-autoload
 
+APP_BUILD_HASH = app-git-build-hash
+APP_PREV_BUILD_HASH = $(shell cat $(ABSSRCDIR)/$(APP_BUILD_HASH) 2> /dev/null || echo)
+APP_GIT_BUILD_HASH = $(shell { $(ABSSRCDIR:%=D=%; echo $$D; git -C $$D rev-parse HEAD;) })
+
+ifneq ($(APP_PREV_BUILD_HASH), $(APP_GIT_BUILD_HASH))
+.PHONY: $(APP_BUILD_HASH)
+endif
+$(APP_BUILD_HASH):
+	@echo "GIT repository of the app has changed"
+	@echo "OLD HASH $(APP_PREV_BUILD_HASH)"
+	@echo "NEW HASH $(APP_GIT_BUILD_HASH)"
+	echo $(APP_GIT_BUILD_HASH) > $@
+
+###############################################################################
+#
+# START DOCS
+
 .PHONY: doc
 doc: phpdoc doxygen jsdoc
 
-gh-pages: doc
-	cd doc/gh-pages/; \
+GH_PAGES_BUILD_DIR = $(DOC_BUILD_DIR)/gh-pages/
+GH_PAGES_PHPDOC_HTML = $(GH_PAGES_BUILD_DIR)/docs/phpdoc/html/
+GH_PAGES_DOXYGEN_HTML = $(GH_PAGES_BUILD_DIR)/docs/doxygen/html/
+GH_PAGES_JSDOC_HTML = $(GH_PAGES_BUILD_DIR)/docs/jsdoc/html/
+
+$(GH_PAGES_BUILD_DIR):
+	if [ -d "$@" ]; then\
+  git -C "$@" checkout gh-pages;\
+  git -C "$@" reset --hard origin/gh-pages;\
+else\
+  git clone --depth 2 -b gh-pages git@github.com:rotdrop/cafevdb.git $@;\
+fi
+
+.PHONY: gh-pages
+gh-pages: $(GH_PAGES_PHPDOC_HTML)/index.html $(GH_PAGES_DOXYGEN_HTML)/index.html $(GH_PAGES_JSDOC_HTML)/index.html
+	cd $(GH_PAGES_BUILD_DIR); \
  git add .; \
  git commit -a -m "Update API docs"; \
  git push
-	git commit -m "Update API docs" doc/gh-pages/
-	git push
+
+PHPDOC_HTML = $(DOC_BUILD_DIR)/phpdoc/
+
+$(GH_PAGES_PHPDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(PHPDOC_HTML)/index.html
+	mkdir -p $(GH_PAGES_PHPDOC_HTML)
+	cp -a $(PHPDOC_HTML)/. $(GH_PAGES_PHPDOC_HTML)/.
+
+.PHONY: pre-php-docs
+pre-php-docs: app-toolkit
 
 .PHONY: phpdoc
-phpdoc: $(PHPDOC)
-	rm -rf $(DOC_BUILD_DIR)/phpdoc/*
+phpdoc: pre-php-docs $(PHPDOC_HTML)/index.html
+
+$(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH)
+	rm -rf $(PHPDOC_HTML)/*
 	$(PHPDOC) run \
  $(PHPDOC_TEMPLATE) \
  --force \
@@ -391,13 +431,42 @@ phpdoc: $(PHPDOC)
  -d $(ABSSRCDIR)/lib -d $(ABSSRCDIR)/appinfo \
  --setting graphs.enabled=true \
  --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
- -t $(DOC_BUILD_DIR)/phpdoc/
-	mkdir -p doc/gh-pages/docs/$@/html/
-	cd doc/gh-pages/docs/$@/html/; \
- cp -a $(DOC_BUILD_DIR)/$@/. .
+ -t $(PHPDOC_HTML)
 
 #--setting guides.enabled=true \
 #
+
+DOXYGEN_HTML = $(DOC_BUILD_DIR)/doxygen/html/
+
+.PHONY: doxygen
+doxygen: pre-php-docs $(DOXYGEN_HTML)/index.html
+
+$(GH_PAGES_DOXYGEN_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(DOXYGEN_HTML)/index.html
+	mkdir -p $(GH_PAGES_DOXYGEN_HTML)
+	cp -a $(DOXYGEN_HTML)/. $(GH_PAGES_DOXYGEN_HTML)/.
+
+$(DOXYGEN_HTML)/index.html: doc/doxygen/Doxyfile $(APP_BUILD_HASH)
+	rm -rf $(DOXYGEN_HTML)/*
+	mkdir -p $(DOXYGEN_HTML)
+	cd doc/doxygen && doxygen
+
+JSDOC_HTML = $(DOC_BUILD_DIR)/jsdoc/
+
+.PHONY: jsdoc
+jsdoc: $(JSDOC_HTML)/index.html
+
+$(GH_PAGES_JSDOC_HTML)/index.html: $(GH_PAGES_BUILD_DIR) $(JSDOC_HTML)/index.html
+	mkdir -p $(GH_PAGES_JSDOC_HTML)
+	cp -a $(JSDOC_HTML)/. $(GH_PAGES_JSDOC_HTML)/.
+
+$(JSDOC_HTML)/index.html: doc/jsdoc/jsdoc.json $(APP_BUILD_HASH)
+	rm -rf $(JSDOC_HTML)/*
+	mkdir -p $(JSDOC_HTML)
+	npm run generate-docs
+
+# END DOCS
+#
+###############################################################################
 
 $(SRCDIR)/vendor/bin/phpcs: composer
 
@@ -410,24 +479,6 @@ phpcs: $(SRCDIR)/vendor/bin/phpcs
 .PHONY: phpcs-errors
 phpcs-errors: $(SRCDIR)/vendor/bin/phpcs
 	$(SRCDIR)/vendor/bin/phpcs --ignore=$(PHPCS_IGNORE) -n --standard=.phpcs.xml lib/ templates/|grep FILE:|awk '{ print $$2; }'
-
-.PHONY: doxygen
-doxygen: doc/doxygen/Doxyfile
-	rm -rf $(DOC_BUILD_DIR)/doxygen/*
-	mkdir -p $(DOC_BUILD_DIR)/doxygen
-	cd doc/doxygen && doxygen
-	mkdir -p doc/gh-pages/docs/$@/html/
-	cd doc/gh-pages/docs/$@/html/; \
- cp -a $(DOC_BUILD_DIR)/$@/html/. .
-
-.PHONY: jsdoc
-jsdoc: doc/jsdoc/jsdoc.json
-	rm -rf $(DOC_BUILD_DIR)/jsdoc/*
-	mkdir -p $(DOC_BUILD_DIR)/jsdoc
-	npm run generate-docs
-	mkdir -p doc/gh-pages/docs/$@/html/
-	cd doc/gh-pages/docs/$@/html/; \
- cp -a $(DOC_BUILD_DIR)/$@/. .
 
 # Builds the source package
 .PHONY: source
