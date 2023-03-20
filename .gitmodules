@@ -55,7 +55,3 @@
 [submodule "3rdparty/nextcloud-files"]
 	path = 3rdparty/nextcloud-files
 	url = git@github.com:rotdrop/nextcloud-files.git
-[submodule "doc/gh-pages"]
-	path = doc/gh-pages
-	url = git@github.com:rotdrop/cafevdb.git
-	branch = gh-pages
