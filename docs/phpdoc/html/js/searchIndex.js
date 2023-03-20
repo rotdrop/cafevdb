@@ -33236,6 +33236,11 @@ Search.appendIndex(
             "summary": "Get\u0020the\u0020configured\u0020name\u0020of\u0020the\u0020or\u0020all\u0020or\u0020the\u0020specified\u0020folder.",
             "url": "classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectFolder"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectService\u003A\u003AgetProjectSkeletonPaths\u0028\u0029",
+            "name": "getProjectSkeletonPaths",
+            "summary": "Return\u0020an\u0020array\u0020with\u0020the\u0020project\u0020skeleton\u0020paths,\u0020indexed\u0020by\u0020folder\u002Dtype.",
+            "url": "classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectSkeletonPaths"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectService\u003A\u003AensureProjectFolders\u0028\u0029",
             "name": "ensureProjectFolders",
             "summary": "Check\u0020for\u0020the\u0020existence\u0020of\u0020the\u0020project\u0020folders.\u0020Returns\u0020an\u0020array\nof\u0020folders\u0020\u0028balance\u0020and\u0020general\u0020files\u0029.",
@@ -33273,7 +33278,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectService\u003A\u003AensureParticipantFolder\u0028\u0029",
             "name": "ensureParticipantFolder",
-            "summary": "Make\u0020sure\u0020the\u0020per\u002Dproject\u0020per\u002Dparticipant\u0020folder\u0020exists\u0020for\u0020the\ngiven\u0020project\u0020and\u0020musician.",
+            "summary": "Make\u0020sure\u0020the\u0020per\u002Dproject\u0020per\u002Dparticipant\u0020folder\u0020exists\u0020for\u0020the\u0020given\nproject\u0020and\u0020musician.\u0020If\u0020a\u0020skeleton\u0020folder\u0020exists\u0020then\u0020its\u0020contents\u0020is\nalso\u0020copied\u0020over.",
             "url": "classes/OCA-CAFEVDB-Service-ProjectService.html#method_ensureParticipantFolder"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectService\u003A\u003AgetParticipantFolder\u0028\u0029",
@@ -33471,6 +33476,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_PARTICIPANTS"
         },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectService\u003A\u003AFOLDER_TYPE_PARTICIPANTS_TEMPLATE",
+            "name": "FOLDER_TYPE_PARTICIPANTS_TEMPLATE",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_PARTICIPANTS_TEMPLATE"
+        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectService\u003A\u003AFOLDER_TYPE_POSTERS",
             "name": "FOLDER_TYPE_POSTERS",
             "summary": "",
@@ -33500,6 +33510,11 @@ Search.appendIndex(
             "name": "PROJECT_FOLDER_CONFIG_KEYS",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Service-ProjectService.html#constant_PROJECT_FOLDER_CONFIG_KEYS"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectService\u003A\u003A\u0024skeletonPaths",
+            "name": "skeletonPaths",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Service-ProjectService.html#property_skeletonPaths"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Service\\ProjectService\u003A\u003A\u0024userStorage",
             "name": "userStorage",
@@ -35416,11 +35431,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#method_getFolder"
         },                {
-            "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AfolderWalk\u0028\u0029",
-            "name": "folderWalk",
-            "summary": "Walk\u0020the\u0020given\u0020\u0024pathOrFolder\u0020and\u0020apply\u0020the\u0020callable\u0020to\u0020each\u0020found\u0020node.",
-            "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#method_folderWalk"
-        },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AarchiveFolderRecursively\u0028\u0029",
             "name": "archiveFolderRecursively",
             "summary": "Recursively\u0020add\u0020all\u0020files\u0020in\u0020all\u0020sub\u002Ddirectories\u0020to\u0020the\u0020zip\u0020archive.",
@@ -35430,6 +35440,11 @@ Search.appendIndex(
             "name": "getFolderArchive",
             "summary": "Return\u0020the\u0020given\u0020\u0024pathOrFolder\u0020as\u0020a\u0020zip\u0020archive\u0020as\u0020binary\nstring.\u0020Empty\u0020directories\u0020will\u0020be\u0020omitted.",
             "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#method_getFolderArchive"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AcopyTree\u0028\u0029",
+            "name": "copyTree",
+            "summary": "Copy\u0020a\u0020source\u0020folder\u0020tree\u0020to\u0020a\u0020target\u0020folder\u0020tree.",
+            "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#method_copyTree"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003ApathCat\u0028\u0029",
             "name": "pathCat",
@@ -35463,7 +35478,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003Acopy\u0028\u0029",
             "name": "copy",
-            "summary": "Rename\u0020\u0024oldPath\u0020to\u0020\u0024newPath\u0020which\u0020are\u0020interpreted\u0020as\u0020paths\nrelative\u0020to\u0020the\u0020user\u0027s\u0020folder.",
+            "summary": "Copy\u0020\u0024oldPath\u0020to\u0020\u0024newPath\u0020which\u0020are\u0020interpreted\u0020as\u0020paths\nrelative\u0020to\u0020the\u0020user\u0027s\u0020folder.",
             "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#method_copy"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AensureFolder\u0028\u0029",
@@ -35473,7 +35488,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AensureFolderChain\u0028\u0029",
             "name": "ensureFolderChain",
-            "summary": "Make\u0020sure\u0020the\u0020all\u0020components\u0020of\u0020the\u0020given\u0020array\u0020exists\u0020where\u0020each\nfollowing\u0020component\u0020is\u0020chained\u0020to\u0020the\u0020previous\u0020one.\u0020So\u0020the\u0020final\npath\u0020to\u0020construct\u0020is\n\u0060\u0060\u0060\n\u0027\/\u0027.implode\u0028\u0027\/\u0027,\u0020\u0024chain\u0029\n\u0060\u0060\u0060",
+            "summary": "Make\u0020sure\u0020that\u0020all\u0020components\u0020of\u0020the\u0020given\u0020array\u0020exists\u0020where\u0020each\nfollowing\u0020component\u0020is\u0020chained\u0020to\u0020the\u0020previous\u0020one.\u0020So\u0020the\u0020final\npath\u0020to\u0020construct\u0020is\n\u0060\u0060\u0060\n\u0027\/\u0027.implode\u0028\u0027\/\u0027,\u0020\u0024chain\u0029\n\u0060\u0060\u0060",
             "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#method_ensureFolderChain"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AgetCacheFolder\u0028\u0029",
@@ -35520,6 +35535,21 @@ Search.appendIndex(
             "name": "CACHE_DIRECTORY",
             "summary": "",
             "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#constant_CACHE_DIRECTORY"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AKEEP_DEST",
+            "name": "KEEP_DEST",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#constant_KEEP_DEST"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003AOVWR_DEST",
+            "name": "OVWR_DEST",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#constant_OVWR_DEST"
+        },                {
+            "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003ACLEAN_DEST",
+            "name": "CLEAN_DEST",
+            "summary": "",
+            "url": "classes/OCA-CAFEVDB-Storage-UserStorage.html#constant_CLEAN_DEST"
         },                {
             "fqsen": "\\OCA\\CAFEVDB\\Storage\\UserStorage\u003A\u003A\u0024appContainer",
             "name": "appContainer",

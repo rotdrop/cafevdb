@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -91,8 +91,8 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
    * @param bool $gracefully Do not throw if folder already exists.
    *
    * @param bool $mkdir Whether or not to create missing parent
-   * directories. However, even if set to \false a regular which is in the way
-   * will be removed.
+   * directories. However, even if set to \false a regular file which is in
+   * the way will be removed.
    */
   public function __construct(mixed $name, ?string $content, ?string $replacableContent = null, bool $gracefully = false, bool $mkdir = true)
   {

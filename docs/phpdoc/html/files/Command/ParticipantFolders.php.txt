@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -122,10 +122,12 @@ class ParticipantFolders extends Command
       $output->writeln('<error>' . $this->l->t('One of the options "--user=USER", "--project=PROJECT" or "--all" has to be specified.') . '</error>');
       $output->writeln('');
       (new DescriptorHelper)->describe($output, $this);
+      return 1;
     }
     if (!empty($all) && (!empty($memberUserId) || !empty($projectName))) {
       $output->writeln('<error>' . $this->l->t('"--all" cannot be compbined with "--user=USER" or "--project=PROJECT".') . '</error>');
       $output->writeln('');
+      return 1;
     }
 
     $result = $this->authenticate($input, $output);

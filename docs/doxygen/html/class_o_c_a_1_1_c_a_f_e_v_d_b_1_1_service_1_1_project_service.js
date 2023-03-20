@@ -23,6 +23,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service =
     [ "getProjectFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ab62a010ed016f8544297f9ffc62f7ab0", null ],
     [ "getProjectPathComponents", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ae08f5afbcda6c928058fd4e9fc946cf8", null ],
     [ "getProjectPathPrefix", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5a6b377d5fa6d991e6f34179e04615c1", null ],
+    [ "getProjectSkeletonPaths", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#abcd150088c29b3dd822e7afaf66fd540", null ],
     [ "instrumentationBalance", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#af53decf05e9d3bb3a3b5f8a908614b90", null ],
     [ "nameProjectWebPages", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aaca1775b3cf46e3a263aa4953315f185", null ],
     [ "participantFilename", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a4d2f0d701bacfd21d282006c86785ba3", null ],
@@ -41,5 +42,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service =
     [ "webPageCMSURL", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aa1d1a1a30c10f3bc7f2f4cbf7bbbfce3", null ],
     [ "webPagesRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5bc5d043588dd30488680d5e78bf67eb", null ],
     [ "wikiRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#af41e3612124ad9e93c88bc039e6584a3", null ],
-    [ "yearFromName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a1b821b06262e293620923b69b7133e56", null ]
+    [ "yearFromName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a1b821b06262e293620923b69b7133e56", null ],
+    [ "$skeletonPaths", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a81b10d37877e822b67b051000850018e", null ]
 ];

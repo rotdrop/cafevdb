@@ -179,6 +179,12 @@ Doctrine\ORM and CAFEVDB\PageRenderer.</p>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_PARTICIPANTS_TEMPLATE">FOLDER_TYPE_PARTICIPANTS_TEMPLATE</a>
+    <span>
+        &nbsp;= self::FOLDER_TYPE_PARTICIPANTS . &#039;template&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_POSTERS">FOLDER_TYPE_POSTERS</a>
     <span>
         &nbsp;= &#039;posters&#039;                            </span>
@@ -191,6 +197,12 @@ Doctrine\ORM and CAFEVDB\PageRenderer.</p>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_PROJECT_FOLDER_CONFIG_KEYS">PROJECT_FOLDER_CONFIG_KEYS</a>
+    <span>
+        &nbsp;= [\OCA\CAFEVDB\Service\ConfigService::PROJECTS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_POSTERS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::BALANCES_FOLDER]                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_WEBPAGE_TYPE_CONCERT">WEBPAGE_TYPE_CONCERT</a>
     <span>
         &nbsp;= &#039;concert&#039;                            </span>
@@ -200,12 +212,6 @@ Doctrine\ORM and CAFEVDB\PageRenderer.</p>
     <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_WEBPAGE_TYPE_REHEARSALS">WEBPAGE_TYPE_REHEARSALS</a>
     <span>
         &nbsp;= &#039;rehearsals&#039;                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
-    <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_PROJECT_FOLDER_CONFIG_KEYS">PROJECT_FOLDER_CONFIG_KEYS</a>
-    <span>
-        &nbsp;= [\OCA\CAFEVDB\Service\ConfigService::PROJECTS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_POSTERS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::BALANCES_FOLDER]                            </span>
 </dt>
 
     </dl>
@@ -281,6 +287,12 @@ Doctrine\ORM and CAFEVDB\PageRenderer.</p>
     <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_repository">$repository</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Repositories-ProjectsRepository.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository">ProjectsRepository</abbr></a>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_skeletonPaths">$skeletonPaths</a>
+    <span>
+                        &nbsp;: array&lt;string, string&gt;            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -491,8 +503,9 @@ subscribed.</dd>
     <span>
                                 &nbsp;: string    </span>
 </dt>
-<dd>Make sure the per-project per-participant folder exists for the
-given project and musician.</dd>
+<dd>Make sure the per-project per-participant folder exists for the given
+project and musician. If a skeleton folder exists then its contents is
+also copied over.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_ensurePostersFolder">ensurePostersFolder()</a>
@@ -647,6 +660,13 @@ path:
 - ProjectType::TEMPORARY -- path is YEAR/PROJECT_NAME
 - ProjectType::PERMANENT -- path is just PROJECT_NAME
 - ProjectType::TEMPLATE -- path is L10N_TEMPLATE_NAME/PROJECT_NAME</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectSkeletonPaths">getProjectSkeletonPaths()</a>
+    <span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Return an array with the project skeleton paths, indexed by folder-type.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_instrumentationBalance">instrumentationBalance()</a>
@@ -1687,9 +1707,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1716,9 +1736,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1765,9 +1785,9 @@ during error recovery.</dd>
 
 </article>
                     <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_FOLDER_TYPE_POSTERS">
-        FOLDER_TYPE_POSTERS
-        <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_POSTERS" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="constant_FOLDER_TYPE_PARTICIPANTS_TEMPLATE">
+        FOLDER_TYPE_PARTICIPANTS_TEMPLATE
+        <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_PARTICIPANTS_TEMPLATE" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
 
@@ -1777,6 +1797,35 @@ during error recovery.</dd>
     <span class="phpdocumentor-element-found-in__line">70</span>
 
             <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">FOLDER_TYPE_PARTICIPANTS_TEMPLATE</span>
+    = <span class="phpdocumentor-signature__default-value">self::FOLDER_TYPE_PARTICIPANTS . &#039;template&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_FOLDER_TYPE_POSTERS">
+        FOLDER_TYPE_POSTERS
+        <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_POSTERS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">71</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1823,6 +1872,35 @@ during error recovery.</dd>
 
 </article>
                     <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PROJECT_FOLDER_CONFIG_KEYS">
+        PROJECT_FOLDER_CONFIG_KEYS
+        <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_PROJECT_FOLDER_CONFIG_KEYS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">78</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.78" class="phpdocumentor-element-found-in__source" data-line="78" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PROJECT_FOLDER_CONFIG_KEYS</span>
+    = <span class="phpdocumentor-signature__default-value">[\OCA\CAFEVDB\Service\ConfigService::PROJECTS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_POSTERS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::BALANCES_FOLDER]</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_WEBPAGE_TYPE_CONCERT">
         WEBPAGE_TYPE_CONCERT
         <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_WEBPAGE_TYPE_CONCERT" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1832,9 +1910,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1861,9 +1939,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">75</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1872,35 +1950,6 @@ during error recovery.</dd>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">WEBPAGE_TYPE_REHEARSALS</span>
     = <span class="phpdocumentor-signature__default-value">&#039;rehearsals&#039;</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -private ">
-    <h4 class="phpdocumentor-element__name" id="constant_PROJECT_FOLDER_CONFIG_KEYS">
-        PROJECT_FOLDER_CONFIG_KEYS
-        <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_PROJECT_FOLDER_CONFIG_KEYS" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">77</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">PROJECT_FOLDER_CONFIG_KEYS</span>
-    = <span class="phpdocumentor-signature__default-value">[\OCA\CAFEVDB\Service\ConfigService::PROJECTS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_POSTERS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER, \OCA\CAFEVDB\Service\ConfigService::BALANCES_FOLDER]</span>
 </code>
 
 
@@ -2175,9 +2224,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">109</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2209,9 +2258,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2243,9 +2292,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">89</span>
+    <span class="phpdocumentor-element-found-in__line">97</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.97" class="phpdocumentor-element-found-in__source" data-line="97" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2277,9 +2326,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2301,6 +2350,42 @@ during error recovery.</dd>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="property_skeletonPaths">
+        $skeletonPaths
+        <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_skeletonPaths" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">91</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">array&lt;string, string&gt;</span>
+    <span class="phpdocumentor-signature__name">$skeletonPaths</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+    
+        <section class="phpdocumentor-description"><p>Cached array of project folder skeleton paths.</p>
+</section>
+
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="property_userStorage">
         $userStorage
         <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_userStorage" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2311,9 +2396,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2345,9 +2430,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">103</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2379,9 +2464,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2418,9 +2503,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2496,9 +2581,9 @@ during error recovery.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1861</span>
+    <span class="phpdocumentor-element-found-in__line">1924</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1861" class="phpdocumentor-element-found-in__source" data-line="1861" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1924" class="phpdocumentor-element-found-in__source" data-line="1924" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add the given musicians to the project.</p>
@@ -2584,9 +2669,9 @@ instead of &quot;int $projectId&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1802</span>
+    <span class="phpdocumentor-element-found-in__line">1865</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1802" class="phpdocumentor-element-found-in__source" data-line="1802" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1865" class="phpdocumentor-element-found-in__source" data-line="1865" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Search through the list of all projects and attach those with a
@@ -2637,9 +2722,9 @@ controls.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1714</span>
+    <span class="phpdocumentor-element-found-in__line">1777</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1714" class="phpdocumentor-element-found-in__source" data-line="1714" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1777" class="phpdocumentor-element-found-in__source" data-line="1777" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Attach an existing web page to the project.</p>
@@ -2766,9 +2851,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2415</span>
+    <span class="phpdocumentor-element-found-in__line">2478</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2415" class="phpdocumentor-element-found-in__source" data-line="2415" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2478" class="phpdocumentor-element-found-in__source" data-line="2478" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a new project with the given name and optional year.</p>
@@ -2833,9 +2918,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2341</span>
+    <span class="phpdocumentor-element-found-in__line">2404</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2341" class="phpdocumentor-element-found-in__source" data-line="2341" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2404" class="phpdocumentor-element-found-in__source" data-line="2404" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create the infra-structure to the given project. The function
@@ -2881,9 +2966,9 @@ or an array with at least the entries for the id and name fields.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2079</span>
+    <span class="phpdocumentor-element-found-in__line">2142</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2079" class="phpdocumentor-element-found-in__source" data-line="2079" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2142" class="phpdocumentor-element-found-in__source" data-line="2142" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a mailing list for the project and add the orchestra email address
@@ -2948,9 +3033,9 @@ as list-member.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1543</span>
+    <span class="phpdocumentor-element-found-in__line">1606</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1543" class="phpdocumentor-element-found-in__source" data-line="1543" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1606" class="phpdocumentor-element-found-in__source" data-line="1606" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create and add a new web-page. The first one will have the name
@@ -3226,9 +3311,9 @@ Tango2014-5.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2466</span>
+    <span class="phpdocumentor-element-found-in__line">2529</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2466" class="phpdocumentor-element-found-in__source" data-line="2466" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2529" class="phpdocumentor-element-found-in__source" data-line="2529" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the given project or id.</p>
@@ -3294,9 +3379,9 @@ actually deleted, else the updated &quot;soft-deleted&quot; project instance.</p
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2197</span>
+    <span class="phpdocumentor-element-found-in__line">2260</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2197" class="phpdocumentor-element-found-in__source" data-line="2197" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2260" class="phpdocumentor-element-found-in__source" data-line="2260" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3338,9 +3423,9 @@ actually deleted, else the updated &quot;soft-deleted&quot; project instance.</p
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2989</span>
+    <span class="phpdocumentor-element-found-in__line">3052</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2989" class="phpdocumentor-element-found-in__source" data-line="2989" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.3052" class="phpdocumentor-element-found-in__source" data-line="3052" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete or disable a project participant.</p>
@@ -3383,9 +3468,9 @@ actually deleted, else the updated &quot;soft-deleted&quot; project instance.</p
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1637</span>
+    <span class="phpdocumentor-element-found-in__line">1700</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1637" class="phpdocumentor-element-found-in__source" data-line="1637" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1700" class="phpdocumentor-element-found-in__source" data-line="1700" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete a web page. This is implemented by moving the page to the
@@ -3438,9 +3523,9 @@ Trashbin category, leaving the real cleanup to a human being.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1343</span>
+    <span class="phpdocumentor-element-found-in__line">1406</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1343" class="phpdocumentor-element-found-in__source" data-line="1343" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1406" class="phpdocumentor-element-found-in__source" data-line="1406" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the wiki page.</p>
@@ -3489,9 +3574,9 @@ Trashbin category, leaving the real cleanup to a human being.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1689</span>
+    <span class="phpdocumentor-element-found-in__line">1752</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1689" class="phpdocumentor-element-found-in__source" data-line="1689" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1752" class="phpdocumentor-element-found-in__source" data-line="1752" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Detach a web page, but do not delete it. Meant as utility routine
@@ -3544,9 +3629,9 @@ for the UI (in order to correct wrong associations).</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">751</span>
+    <span class="phpdocumentor-element-found-in__line">810</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.751" class="phpdocumentor-element-found-in__source" data-line="751" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Make sure the per-project downloads folder exists for the given project and is shared via link.</p>
@@ -3605,9 +3690,9 @@ perform any file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">766</span>
+    <span class="phpdocumentor-element-found-in__line">825</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.766" class="phpdocumentor-element-found-in__source" data-line="766" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.825" class="phpdocumentor-element-found-in__source" data-line="825" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Make sure the per-project downloads folder exists for the given project and is shared via link.</p>
@@ -3667,9 +3752,9 @@ perform any file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2230</span>
+    <span class="phpdocumentor-element-found-in__line">2293</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2230" class="phpdocumentor-element-found-in__source" data-line="2230" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2293" class="phpdocumentor-element-found-in__source" data-line="2293" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Subscribe the participant to the mailing list if it is not already
@@ -3725,9 +3810,9 @@ subscribed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2290</span>
+    <span class="phpdocumentor-element-found-in__line">2353</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2290" class="phpdocumentor-element-found-in__source" data-line="2290" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2353" class="phpdocumentor-element-found-in__source" data-line="2353" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Unsubscribe the participant from the mailing list if it is subscribed</p>
@@ -3770,13 +3855,14 @@ subscribed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">850</span>
+    <span class="phpdocumentor-element-found-in__line">910</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.850" class="phpdocumentor-element-found-in__source" data-line="850" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.910" class="phpdocumentor-element-found-in__source" data-line="910" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Make sure the per-project per-participant folder exists for the
-given project and musician.</p>
+        <p class="phpdocumentor-summary">Make sure the per-project per-participant folder exists for the given
+project and musician. If a skeleton folder exists then its contents is
+also copied over.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -3839,9 +3925,9 @@ perform any file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">735</span>
+    <span class="phpdocumentor-element-found-in__line">794</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.735" class="phpdocumentor-element-found-in__source" data-line="735" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.794" class="phpdocumentor-element-found-in__source" data-line="794" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Make sure the per-project posters folder exists for the given project.</p>
@@ -3900,9 +3986,9 @@ perform any file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">485</span>
+    <span class="phpdocumentor-element-found-in__line">533</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.485" class="phpdocumentor-element-found-in__source" data-line="485" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.533" class="phpdocumentor-element-found-in__source" data-line="533" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check for the existence of the project folders. Returns an array
@@ -3976,9 +4062,9 @@ file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">378</span>
+    <span class="phpdocumentor-element-found-in__line">386</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.386" class="phpdocumentor-element-found-in__source" data-line="386" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4016,9 +4102,9 @@ file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">366</span>
+    <span class="phpdocumentor-element-found-in__line">374</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.374" class="phpdocumentor-element-found-in__source" data-line="374" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4068,9 +4154,9 @@ file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1461</span>
+    <span class="phpdocumentor-element-found-in__line">1524</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1461" class="phpdocumentor-element-found-in__source" data-line="1461" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1524" class="phpdocumentor-element-found-in__source" data-line="1524" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch fetch the article entities from the database</p>
@@ -4231,9 +4317,9 @@ file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">326</span>
+    <span class="phpdocumentor-element-found-in__line">334</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.326" class="phpdocumentor-element-found-in__source" data-line="326" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.334" class="phpdocumentor-element-found-in__source" data-line="334" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find a project by its id.</p>
@@ -4278,9 +4364,9 @@ file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">338</span>
+    <span class="phpdocumentor-element-found-in__line">346</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.338" class="phpdocumentor-element-found-in__source" data-line="338" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.346" class="phpdocumentor-element-found-in__source" data-line="346" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find a project by its name.</p>
@@ -4325,9 +4411,9 @@ file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">220</span>
+    <span class="phpdocumentor-element-found-in__line">228</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.220" class="phpdocumentor-element-found-in__source" data-line="220" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Find the participant given by $projectOrId and $musicianOrId</p>
@@ -4444,9 +4530,9 @@ file-system operations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1298</span>
+    <span class="phpdocumentor-element-found-in__line">1361</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1298" class="phpdocumentor-element-found-in__source" data-line="1298" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1361" class="phpdocumentor-element-found-in__source" data-line="1361" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate an almost empty project page. This spares people the
@@ -4578,9 +4664,9 @@ need to click on &quot;new page&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1200</span>
+    <span class="phpdocumentor-element-found-in__line">1263</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1200" class="phpdocumentor-element-found-in__source" data-line="1200" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1263" class="phpdocumentor-element-found-in__source" data-line="1263" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate an automated overview</p>
@@ -4729,9 +4815,9 @@ deletion of projects.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">926</span>
+    <span class="phpdocumentor-element-found-in__line">989</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.926" class="phpdocumentor-element-found-in__source" data-line="926" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.989" class="phpdocumentor-element-found-in__source" data-line="989" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generatet the full path to the parent folder of the files attached to the
@@ -4786,9 +4872,9 @@ given field data (if there are any)</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">871</span>
+    <span class="phpdocumentor-element-found-in__line">934</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.871" class="phpdocumentor-element-found-in__source" data-line="871" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.934" class="phpdocumentor-element-found-in__source" data-line="934" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">More leight-weight construction of the participant folder, assuming
@@ -4845,9 +4931,9 @@ everything else is just is ok.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">434</span>
+    <span class="phpdocumentor-element-found-in__line">442</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.434" class="phpdocumentor-element-found-in__source" data-line="434" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.442" class="phpdocumentor-element-found-in__source" data-line="442" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the configured name of the or all or the specified folder.</p>
@@ -4907,9 +4993,9 @@ the ConfigService class, @see ConfigService.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">394</span>
+    <span class="phpdocumentor-element-found-in__line">402</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.394" class="phpdocumentor-element-found-in__source" data-line="394" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.402" class="phpdocumentor-element-found-in__source" data-line="402" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Depending on the type of the project generate the partial project-folder
@@ -4958,9 +5044,9 @@ path:
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">418</span>
+    <span class="phpdocumentor-element-found-in__line">426</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.418" class="phpdocumentor-element-found-in__source" data-line="418" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.426" class="phpdocumentor-element-found-in__source" data-line="426" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Depending on the type of the project generate the partial project-folder
@@ -5001,6 +5087,58 @@ path:
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getProjectSkeletonPaths">
+        getProjectSkeletonPaths()
+        <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectSkeletonPaths" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">484</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.484" class="phpdocumentor-element-found-in__source" data-line="484" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return an array with the project skeleton paths, indexed by folder-type.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getProjectSkeletonPaths</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectSkeletonPaths#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">see</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Service\ensureProjectFolders()">ensureProjectFolders()</abbr></span>
+                                        
+                                             
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_instrumentationBalance">
         instrumentationBalance()
         <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_instrumentationBalance" class="headerlink"><i class="fas fa-link"></i></a>
@@ -5009,9 +5147,9 @@ path:
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">282</span>
+    <span class="phpdocumentor-element-found-in__line">290</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.290" class="phpdocumentor-element-found-in__source" data-line="290" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the instrumentation balance for the given project.</p>
@@ -5187,9 +5325,9 @@ consists of the instrument only.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1751</span>
+    <span class="phpdocumentor-element-found-in__line">1814</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1751" class="phpdocumentor-element-found-in__source" data-line="1751" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1814" class="phpdocumentor-element-found-in__source" data-line="1814" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the name of all registered web-pages to the canonical name,
@@ -5250,9 +5388,9 @@ project name given.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">984</span>
+    <span class="phpdocumentor-element-found-in__line">1047</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.984" class="phpdocumentor-element-found-in__source" data-line="984" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1047" class="phpdocumentor-element-found-in__source" data-line="1047" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the file for a field-datum and return path-info like information
@@ -5334,9 +5472,9 @@ database-storage mount.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">906</span>
+    <span class="phpdocumentor-element-found-in__line">969</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.906" class="phpdocumentor-element-found-in__source" data-line="906" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.969" class="phpdocumentor-element-found-in__source" data-line="969" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Avoid duplicated &quot;extensions&quot; in file-names, i.e. use
@@ -5405,9 +5543,9 @@ dashes.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">195</span>
+    <span class="phpdocumentor-element-found-in__line">203</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.203" class="phpdocumentor-element-found-in__source" data-line="203" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate an option table with all participants, suitable to be
@@ -5477,9 +5615,9 @@ DB if not specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">355</span>
+    <span class="phpdocumentor-element-found-in__line">363</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.355" class="phpdocumentor-element-found-in__source" data-line="355" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.363" class="phpdocumentor-element-found-in__source" data-line="363" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Persist and flush the database.</p>
@@ -5537,9 +5675,9 @@ DB if not specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1449</span>
+    <span class="phpdocumentor-element-found-in__line">1512</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1449" class="phpdocumentor-element-found-in__source" data-line="1449" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1512" class="phpdocumentor-element-found-in__source" data-line="1512" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5592,9 +5730,9 @@ DB if not specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">237</span>
+    <span class="phpdocumentor-element-found-in__line">245</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.237" class="phpdocumentor-element-found-in__source" data-line="237" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate an selection options array.</p>
@@ -5665,9 +5803,9 @@ DB if not specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1484</span>
+    <span class="phpdocumentor-element-found-in__line">1547</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1484" class="phpdocumentor-element-found-in__source" data-line="1484" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1547" class="phpdocumentor-element-found-in__source" data-line="1547" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch all articles known to the system.</p>
@@ -5722,9 +5860,9 @@ DB if not specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1183</span>
+    <span class="phpdocumentor-element-found-in__line">1246</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1183" class="phpdocumentor-element-found-in__source" data-line="1183" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1246" class="phpdocumentor-element-found-in__source" data-line="1246" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5774,9 +5912,9 @@ DB if not specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">576</span>
+    <span class="phpdocumentor-element-found-in__line">635</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.576" class="phpdocumentor-element-found-in__source" data-line="576" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.635" class="phpdocumentor-element-found-in__source" data-line="635" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Remove the folder for the given project.</p>
@@ -5844,9 +5982,9 @@ plain query result or project id.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1087</span>
+    <span class="phpdocumentor-element-found-in__line">1150</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1087" class="phpdocumentor-element-found-in__source" data-line="1087" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1150" class="phpdocumentor-element-found-in__source" data-line="1150" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Rename all project-participants folders in order to reflect changes in
@@ -5926,9 +6064,9 @@ per-project files.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2720</span>
+    <span class="phpdocumentor-element-found-in__line">2783</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2720" class="phpdocumentor-element-found-in__source" data-line="2720" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2783" class="phpdocumentor-element-found-in__source" data-line="2783" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Rename the given project or id.</p>
@@ -5989,9 +6127,9 @@ entity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">661</span>
+    <span class="phpdocumentor-element-found-in__line">720</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.661" class="phpdocumentor-element-found-in__source" data-line="661" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.720" class="phpdocumentor-element-found-in__source" data-line="720" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Rename the associated project folders after project rename.</p>
@@ -6053,9 +6191,9 @@ entity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1402</span>
+    <span class="phpdocumentor-element-found-in__line">1465</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1402" class="phpdocumentor-element-found-in__source" data-line="1402" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1465" class="phpdocumentor-element-found-in__source" data-line="1465" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Rename the associated wiki-pages after project rename.</p>
@@ -6124,9 +6262,9 @@ entity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1671</span>
+    <span class="phpdocumentor-element-found-in__line">1734</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1671" class="phpdocumentor-element-found-in__source" data-line="1671" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1734" class="phpdocumentor-element-found-in__source" data-line="1734" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Restore the web-pages previously deleted by deleteProjectWebPage()</p>
@@ -6178,9 +6316,9 @@ entity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1368</span>
+    <span class="phpdocumentor-element-found-in__line">1431</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1368" class="phpdocumentor-element-found-in__source" data-line="1368" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1431" class="phpdocumentor-element-found-in__source" data-line="1431" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Restore the wiki page to the given or lastest version.</p>
@@ -6240,9 +6378,9 @@ entity.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2902</span>
+    <span class="phpdocumentor-element-found-in__line">2965</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2902" class="phpdocumentor-element-found-in__source" data-line="2902" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2965" class="phpdocumentor-element-found-in__source" data-line="2965" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Validate the name, no spaces, camel case, last four characters
@@ -6300,9 +6438,9 @@ mandatory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2935</span>
+    <span class="phpdocumentor-element-found-in__line">2998</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2935" class="phpdocumentor-element-found-in__source" data-line="2935" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2998" class="phpdocumentor-element-found-in__source" data-line="2998" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Sanitize the given project, i.e. make sure its infrastructure is
@@ -6496,9 +6634,9 @@ up-to-date.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1439</span>
+    <span class="phpdocumentor-element-found-in__line">1502</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1439" class="phpdocumentor-element-found-in__source" data-line="1439" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1502" class="phpdocumentor-element-found-in__source" data-line="1502" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -6557,9 +6695,9 @@ up-to-date.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2880</span>
+    <span class="phpdocumentor-element-found-in__line">2943</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2880" class="phpdocumentor-element-found-in__source" data-line="2880" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.2943" class="phpdocumentor-element-found-in__source" data-line="2943" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Extract the year from the project name if present.</p>
@@ -12227,9 +12365,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1898</span>
+    <span class="phpdocumentor-element-found-in__line">1961</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1898" class="phpdocumentor-element-found-in__source" data-line="1898" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.1961" class="phpdocumentor-element-found-in__source" data-line="1961" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add one given musician to the project.</p>
@@ -12314,9 +12452,9 @@ MusiciansRepository::find().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">622</span>
+    <span class="phpdocumentor-element-found-in__line">681</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.622" class="phpdocumentor-element-found-in__source" data-line="622" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.681" class="phpdocumentor-element-found-in__source" data-line="681" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Restore the folders for the given project in order to undelete or
@@ -12379,9 +12517,9 @@ only try to restore folders in the given interval.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">178</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Lazy getter for WebPagesRPC</p>
@@ -12416,9 +12554,9 @@ only try to restore folders in the given interval.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectService.php"><a href="files/service-projectservice.html"><abbr title="Service/ProjectService.php">ProjectService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">156</span>
+    <span class="phpdocumentor-element-found-in__line">164</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectService.html#source-view.164" class="phpdocumentor-element-found-in__source" data-line="164" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Lazy getter for WikiRPC</p>
@@ -12556,11 +12694,12 @@ only try to restore folders in the given interval.</p>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_BALANCE">FOLDER_TYPE_BALANCE</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_DOWNLOADS">FOLDER_TYPE_DOWNLOADS</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_PARTICIPANTS">FOLDER_TYPE_PARTICIPANTS</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_PARTICIPANTS_TEMPLATE">FOLDER_TYPE_PARTICIPANTS_TEMPLATE</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_POSTERS">FOLDER_TYPE_POSTERS</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_FOLDER_TYPE_PROJECT">FOLDER_TYPE_PROJECT</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_PROJECT_FOLDER_CONFIG_KEYS">PROJECT_FOLDER_CONFIG_KEYS</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_WEBPAGE_TYPE_CONCERT">WEBPAGE_TYPE_CONCERT</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_WEBPAGE_TYPE_REHEARSALS">WEBPAGE_TYPE_REHEARSALS</a></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#constant_PROJECT_FOLDER_CONFIG_KEYS">PROJECT_FOLDER_CONFIG_KEYS</a></li>
                                             </ul>
                 </li>
             
@@ -12578,6 +12717,7 @@ only try to restore folders in the given interval.</p>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_musicianService">$musicianService<a href="classes/OCA-CAFEVDB-Service-ProjectService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_participantFieldsService">$participantFieldsService<a href="classes/OCA-CAFEVDB-Service-ProjectService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_repository">$repository<a href="classes/OCA-CAFEVDB-Service-ProjectService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_skeletonPaths">$skeletonPaths<a href="classes/OCA-CAFEVDB-Service-ProjectService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_userStorage">$userStorage<a href="classes/OCA-CAFEVDB-Service-ProjectService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_webPagesRPCInstance">$webPagesRPCInstance<a href="classes/OCA-CAFEVDB-Service-ProjectService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#property_wikiRPCInstance">$wikiRPCInstance<a href="classes/OCA-CAFEVDB-Service-ProjectService.html"></li>
@@ -12633,6 +12773,7 @@ only try to restore folders in the given interval.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectFolder">getProjectFolder()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectPathComponents">getProjectPathComponents()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectPathPrefix">getProjectPathPrefix()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_getProjectSkeletonPaths">getProjectSkeletonPaths()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectService.html#method_instrumentationBalance">instrumentationBalance()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_logger">logger()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_moneyValue">moneyValue()</a></li>
