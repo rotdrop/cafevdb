@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -277,6 +277,8 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
   const noMissingLabel = fieldset.find('.missing-email-addresses.label.empty');
   const instrumentsFilter = fieldset.find('.instruments-filter.' + appPrefix('container'));
   const instrumentsSelect = instrumentsFilter.find('select');
+  const memberStatusFilter = fieldset.find('.member-status-filter.' + appPrefix('container'));
+  const memberStatusSelect = memberStatusFilter.find('select');
   const filterHistoryInput = fieldset.find('#recipients-filter-history');
   const debugOutput = form.find('#emailformdebug');
   const busyIndicator = fieldset.find('.busy-indicator');
@@ -312,9 +314,14 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       post += '&' + $.param({ emailRecipients: { HistorySnapshot: 'snapshot' } });
     } else {
       post += '&' + form.find('fieldset.form-data').serialize();
-      const $this = $(this);
-      if ($this.is(':button')) {
-        post += '&' + $.param($this);
+      const $element = $(event.target);
+      if ($element.is(':button')) {
+        post += '&' + $.param($element);
+      }
+      // add the name of the cause for this havoc as additional parameter
+      const elementNames = [...$element.attr('name').matchAll(/([^[]+)\[([^\]]+)\]/g)];
+      if (elementNames.length === 1 && elementNames[0].length === 3) {
+        post += '&' + elementNames[0][1] + '[userInteraction]=' + elementNames[0][2];
       }
     }
     $.post(generateUrl('recipients-filter'), post)
@@ -334,6 +341,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
             'missingEmailAddresses',
             'filterHistory',
             'instrumentsFilter',
+            'memberStatusFilter',
           ];
         if (!Ajax.validateResponse(data, requiredResponse)) {
           parameters.cleanup();
@@ -373,6 +381,9 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
 
           // update the instruments filter
           SelectUtils.replaceOptions(instrumentsSelect, data.instrumentsFilter);
+
+          // update the member-status filter
+          SelectUtils.replaceOptions(memberStatusSelect, data.memberStatusFilter);
 
           resize = true;
         }
@@ -458,7 +469,6 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     });
 
   // Member status filter
-  const memberStatusFilter = fieldset.find('select.member-status-filter');
   memberStatusFilter
     .off('change')
     .on('change', function(event) {

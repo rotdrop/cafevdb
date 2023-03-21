@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -883,6 +883,7 @@ class EmailFormController extends Controller
         'contents' => $contents,
         // remaining parameter are expected by JS code and need to be there
         'instrumentsFilter' => '',
+        'memberStatusFilter' => '',
         'recipientsOptions' => '',
         'missingEmailAddresses' => '',
         'filterHistory' => '',
@@ -901,9 +902,16 @@ class EmailFormController extends Controller
 
     $instrumentsFilter = (new TemplateResponse(
       $this->appName,
-        'emailform/part.instruments-filter', [
-          'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
-        ],
+      'emailform/part.instruments-filter', [
+        'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
+      ],
+      'blank'))->render();
+
+    $memberStatusFilter = (new TemplateResponse(
+      $this->appName,
+      'emailform/part.member-status-filter', [
+        'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
+      ],
       'blank'))->render();
 
     return self::dataResponse([
@@ -913,6 +921,7 @@ class EmailFormController extends Controller
       'missingEmailAddresses' => $missingEmailAddresses,
       'filterHistory' => $filterHistory,
       'instrumentsFilter' => $instrumentsFilter,
+      'memberStatusFilter' => $memberStatusFilter,
       // remaining parameter is expected by JS code and needs to be there
       'contents' => '',
     ]);

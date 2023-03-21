@@ -270,7 +270,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
               name="emailRecipients[memberStatusFilter][]"
               <?php p($filterReadonly); ?>
       >
-        <?php echo PageNavigation::selectOptions($memberStatusFilter); ?>
+        <?php echo $this->inc('emailform/part.member-status-filter', []); ?>
       </select>
     </span>
     <span class="instruments-filter <?php p($containerClass); ?> right vmiddle tooltip-left"
