@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -295,9 +295,9 @@ class RecipientsFilter
     }
 
     $this->remapEmailRecords();
+    $this->determineUserBase();
     $this->getMemberStatusNames();
     $this->initMemberStatusFilter();
-    $this->determineUserBase();
     $this->getInstrumentsFromDB();
     $this->fetchInstrumentsFilter();
     $this->getMusiciansFromDB();
@@ -306,11 +306,20 @@ class RecipientsFilter
       // Do this at end in order to have any tweaks around
       $this->setDefaultHistory();
     } elseif (!$this->reload) {
+      $previousRecipientSet = $this->filterHistory[$this->historyPosition]['data'][self::BASIC_RECIPIENTS_SET_KEY] ?? [];
       // add the current selection to the history if it is different
       // from the previous filter selection (i.e.: no-ops like
       // hitten apply over and over again or multiple double-clicks
       // will not alter the history.
       $this->pushHistory();
+      if (!empty($this->project)
+          && !$this->announcementsMailingList() && !$this->projectMailingList()
+          && ($previousRecipientSet[self::EXCEPT_PROJECT_KEY] != $this->recipientsExceptProject())) {
+        // if in project mode and not using a mailing list and posting to/not
+        // to the non-participants has changed then reset the member-status
+        // filter.
+        $this->memberFilter = $this->defaultByStatus();
+      }
     }
 
     $this->storeHistory();
@@ -790,7 +799,7 @@ class RecipientsFilter
       return array_keys($this->memberStatusNames);
     }
     $byStatusDefault = [ 'regular' ];
-    if ($this->projectId > 0) {
+    if ($this->projectId > 0 && !$this->recipientsExceptProject()) {
       $byStatusDefault[] = DBTypes\EnumMemberStatus::PASSIVE;
       $byStatusDefault[] = DBTypes\EnumMemberStatus::TEMPORARY;
     }
@@ -824,7 +833,6 @@ class RecipientsFilter
       'memberStatusFilter',
       $this->submitted ? [] : $this->defaultByStatus());
   }
-
 
   /** @return array Form a SQL filter expression for the member status. */
   private function memberStatusBlackList():array
@@ -1013,10 +1021,7 @@ class RecipientsFilter
    */
   public function memberStatusFilter():array
   {
-    $memberStatus = $this->cgiValue(
-      'memberStatusFilter',
-      $this->submitted ? [] : $this->defaultByStatus()
-    );
+    $memberStatus = $this->memberFilter;
     $memberStatus = array_flip($memberStatus);
     $result = [];
     foreach ($this->memberStatusNames as $tag => $name) {
