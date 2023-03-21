@@ -25,7 +25,7 @@
 /**
  * @param array $instrumentsFilter
  *
- * @file PHP snippet to render the list of broken emails.
+ * @file PHP snippet to render instruments filter.
  */
 
 namespace OCA\CAFEVDB;
