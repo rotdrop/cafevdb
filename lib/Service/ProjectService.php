@@ -285,7 +285,7 @@ class ProjectService
    * If $sumVoices == true, the voice field is not present and the key
    * consists of the instrument only.
    *
-   * @see \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository::fetchInstrumentationBalance().
+   * @see \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectInstrumentationNumbersRepository::fetchInstrumentationBalance()
    */
   public function instrumentationBalance(mixed $projectOrId, bool $sumVoices = false):array
   {
