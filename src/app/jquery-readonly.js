@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,11 @@
 
 import $ from './jquery.js';
 import { refreshWidgetProperties, widget as selectWidget, isVanilla as isSelectVanilla } from './select-utils.js';
+import generateId from './generate-id.js';
 
 require('jquery-readonly.scss');
 
+const mutationObserverDataKey = 'mutationObserver';
 const readonlyStateDataKey = 'readonlyState';
 const placeholderDataKey = 'readonlyPlaceholder';
 const restoreDisabledDataKey = 'readonlyRestoreDisabled';
@@ -102,12 +104,54 @@ const overrideProp = function(property, value) {
 
 $.fn.prop = overrideProp;
 
+function generatePlaceHolder($element, name, value, $pivotElement, remove) {
+  $pivotElement = $pivotElement || $element;
+  let id = $element[0].id;
+  if (!id) {
+    $element[0].id = generateId();
+    id = $element[0].id;
+  }
+  if (remove || remove === undefined) {
+    $pivotElement.parent().find('input[name="' + name + '"] [value="' + value + '"]' + '.' + placeholderCssClass).remove();
+  }
+  const idClass = 'for-id-' + id;
+  const placeholder = $('<input type="hidden" name="' + name + '" class="' + placeholderCssClass + ' ' + idClass + '"/>');
+  $pivotElement.before(placeholder);
+  $element.data(placeholderDataKey, placeholder);
+
+  const observer = $pivotElement.data(mutationObserverDataKey) || new MutationObserver((mutationList, observer) => {
+    for (const mutation of mutationList) {
+      for (const removedNode of mutation.removedNodes) {
+        const id = removedNode.id;
+        if (id) {
+          const selector = '.' + placeholderCssClass + '.for-id-' + id;
+          $pivotElement.parent().find(selector).remove();
+        }
+      }
+    }
+  });
+  $pivotElement.data(mutationObserverDataKey, observer);
+  observer.observe($pivotElement[0], { childList: true }); // attributes: true, subtree: true
+
+  return placeholder;
+}
+
 $.fn.readonly = function(state) {
   if (state === undefined) {
     state = true;
   } else if (state === 'cleanup') {
     this.each(function() {
-      $(this).parent().find('.' + placeholderCssClass).remove();
+      let selector = '.' + placeholderCssClass;
+      const $this = $(this);
+      const id = $this.attr('id');
+      if (id) {
+        selector += '.for-id-' + id;
+      }
+      $this.parent().find(selector).remove();
+      const observer = $this.data(mutationObserverDataKey);
+      if (observer) {
+        observer.disconnect();
+      }
     });
     return this;
   } else {
@@ -157,13 +201,7 @@ $.fn.readonly = function(state) {
           const placeholderDisabled = !state || !vanillaProp.call($option, 'selected');
           let placeholder = $option.data(placeholderDataKey);
           if (!placeholder) {
-            if (placeholderInitialized) {
-              // can happen when replacing options dynamically
-              $this.parent().find('input[name="' + name + '"][value="' + optionValue + '"]' + '.' + placeholderCssClass).remove();
-            }
-            placeholder = $('<input type="hidden" name="' + name + '" class="' + placeholderCssClass + '"/>');
-            $this.before(placeholder);
-            $option.data(placeholderDataKey, placeholder);
+            placeholder = generatePlaceHolder($option, name, optionValue, $this, placeholderInitialized);
           }
           placeholder.attr('value', optionValue);
           vanillaProp.call(placeholder, 'disabled', placeholderDisabled);
@@ -228,10 +266,7 @@ $.fn.readonly = function(state) {
       const checkboxValue = $this.attr('value') || 'on';
       const placeholderDisabled = !state || !vanillaProp.call($this, 'checked');
       if (!placeholder) {
-        $this.parent().find('input[name="' + name + '"] [value="' + checkboxValue + '"]' + '.' + placeholderCssClass).remove();
-        placeholder = $('<input type="hidden" name="' + name + '" class="' + placeholderCssClass + '"/>');
-        $this.before(placeholder);
-        $this.data(placeholderDataKey, placeholder);
+        placeholder = generatePlaceHolder($this, name, checkboxValue);
       }
       placeholder.attr('value', checkboxValue);
       vanillaProp.call(placeholder, 'disabled', placeholderDisabled);
