@@ -665,7 +665,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $fdd = [
       'email' => [
         'name' => $this->l->t('Em@il'),
-        'css'      => [ 'postfix' => [ 'email', 'clip-long-text', 'short-width', ], ],
+        'css|LF'   => [ 'postfix' => [ 'email', 'clip-long-text', 'short-width', ], ],
+        'css'      => [ 'postfix' => [ 'email', ], ],
         'URL'      => 'mailto:$link?$key',
         'URLdisp'  => '$value',
         'display|LF' => ['popup' => 'data'],
