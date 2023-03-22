@@ -231,14 +231,20 @@ trait ParticipantFileFieldsTrait
       $downloadLink = $dbFileName = $dbExtension = '';
     }
     if (!empty($participantFolder)) {
-      $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder, subDir: true);
-      $filesAppTarget = md5($filesAppLinkParticipant);
-      $filesAppPath = $participantFolder . $subDirPrefix;
       try {
-        $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
+        $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder, subDir: true);
+        $filesAppTarget = md5($filesAppLinkParticipant);
+        $filesAppPath = $participantFolder . $subDirPrefix;
+        try {
+          $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
+        } catch (\OCP\Files\NotFoundException $e) {
+          $this->logDebug('No file found for ' . $filesAppPath);
+          $filesAppLink = $filesAppLinkParticipant;
+        }
       } catch (\OCP\Files\NotFoundException $e) {
-        $this->logDebug('No file found for ' . $filesAppPath);
-        $filesAppLink = $filesAppLinkParticipant;
+        $this->logDebug('No folder found for ' . $participantFolder);
+        $filesAppPath = '';
+        $filesAppLink = '';
       }
     } else {
       $filesAppPath = '';
