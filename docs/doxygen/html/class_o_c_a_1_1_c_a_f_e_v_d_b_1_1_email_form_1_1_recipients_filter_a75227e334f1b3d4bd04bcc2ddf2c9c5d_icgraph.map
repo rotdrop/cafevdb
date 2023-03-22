@@ -1,0 +1,11 @@
+<map id="recipientsExceptProject" name="recipientsExceptProject">
+<area shape="rect" id="node1" title=" " alt="" coords="1001,158,1161,184"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="839,108,953,133"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="239,108,307,133"/>
+<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ae6e956522f1d298f15c4b2a07f0bd7" title="Get the current filter." alt="" coords="355,57,508,82"/>
+<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a30a395e6e48481531a93ec374c412775" title="Compose a default history record for the initial state." alt="" coords="611,108,735,133"/>
+<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a29389bb5db716e59f8a94e5083f8b58e" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="556,157,791,182"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ae40c9dafec946961dfd72815f6764fb8" title=" " alt="" coords="144,108,191,133"/>
+<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1a3fa621489e73c7386685aa0e152c30" title="{}" alt="" coords="5,108,96,133"/>
+<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab85bd7c01c06a6b1507047bfd28f941c" title="Load the history from the session data." alt="" coords="387,158,475,184"/>
+</map>

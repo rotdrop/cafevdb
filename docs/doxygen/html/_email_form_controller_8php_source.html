@@ -886,281 +886,290 @@ $(document).ready(function(){initNavTree('_email_form_controller_8php_source.htm
 <div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>        <span class="stringliteral">&#39;contents&#39;</span> =&gt; $contents,</div>
 <div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>        <span class="comment">// remaining parameter are expected by JS code and need to be there</span></div>
 <div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>        <span class="stringliteral">&#39;instrumentsFilter&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
-<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>        <span class="stringliteral">&#39;recipientsOptions&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
-<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>        <span class="stringliteral">&#39;missingEmailAddresses&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
-<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>        <span class="stringliteral">&#39;filterHistory&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
-<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>      ]);</div>
-<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>    }</div>
-<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span> </div>
-<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>    $recipientsChoices = $recipientsFilter-&gt;emailRecipientsChoices();</div>
-<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>    $recipientsOptions = <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_util_1_1_navigation.html#aed16592e165b311c58025b62f7626e91">PageNavigation::selectOptions</a>($recipientsChoices);</div>
-<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span> </div>
-<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>    $missingEmailAddresses = (<span class="keyword">new</span> TemplateResponse(</div>
-<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>      $this-&gt;appName,</div>
-<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>        <span class="stringliteral">&#39;emailform/part.broken-email-addresses&#39;</span>, [</div>
-<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>          <span class="stringliteral">&#39;missingEmailAddresses&#39;</span> =&gt; $recipientsFilter-&gt;missingEmailAddresses(),</div>
-<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>        ],</div>
-<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>      <span class="stringliteral">&#39;blank&#39;</span>))-&gt;render();</div>
-<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span> </div>
-<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span>    $instrumentsFilter = (<span class="keyword">new</span> TemplateResponse(</div>
-<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>      $this-&gt;appName,</div>
-<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>        <span class="stringliteral">&#39;emailform/part.instruments-filter&#39;</span>, [</div>
-<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>          <span class="stringliteral">&#39;instrumentsFilter&#39;</span> =&gt; $recipientsFilter-&gt;instrumentsFilter(),</div>
-<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>        ],</div>
-<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>      <span class="stringliteral">&#39;blank&#39;</span>))-&gt;render();</div>
-<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span> </div>
-<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>    <span class="keywordflow">return</span> self::dataResponse([</div>
-<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>      <span class="stringliteral">&#39;projectName&#39;</span> =&gt; $projectName,</div>
-<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>      <span class="stringliteral">&#39;projectId&#39;</span> =&gt; $projectId,</div>
-<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>      <span class="stringliteral">&#39;recipientsOptions&#39;</span> =&gt; $recipientsOptions,</div>
-<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>      <span class="stringliteral">&#39;missingEmailAddresses&#39;</span> =&gt; $missingEmailAddresses,</div>
-<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>      <span class="stringliteral">&#39;filterHistory&#39;</span> =&gt; $filterHistory,</div>
-<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>      <span class="stringliteral">&#39;instrumentsFilter&#39;</span> =&gt; $instrumentsFilter,</div>
-<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>      <span class="comment">// remaining parameter is expected by JS code and needs to be there</span></div>
-<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>      <span class="stringliteral">&#39;contents&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
-<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>    ]);</div>
-<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>  }</div>
-<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span> </div>
-<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>  <span class="keyword">public</span> <span class="keyword">function</span> contacts(<span class="keywordtype">string</span> $operation):Response</div>
-<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>  {</div>
-<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>    $contactsService = $this-&gt;appContainer-&gt;query(ContactsService::class);</div>
-<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>    <span class="keywordflow">switch</span> ($operation) {</div>
-<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>      <span class="keywordflow">case</span> <span class="stringliteral">&#39;list&#39;</span>:</div>
-<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>        <span class="comment">// Free-form recipients from Cc: or Bcc:</span></div>
-<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>        $freeForm  = $this-&gt;parameterService-&gt;getParam(<span class="stringliteral">&#39;freeFormRecipients&#39;</span>, <span class="stringliteral">&#39;&#39;</span>);</div>
-<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span> </div>
-<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>        <span class="comment">// Convert the free-form input to an array (possibly)</span></div>
-<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>        $parser = <span class="keyword">new</span> Mail_RFC822(<span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span>        $recipients = $parser-&gt;parseAddressList($freeForm);</div>
-<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span>        $parseError = $parser-&gt;parseError();</div>
-<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>        <span class="keywordflow">if</span> ($parseError !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>          <span class="keywordflow">return</span> self::grumble(</div>
-<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span>            $this-&gt;l-&gt;t(</div>
-<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>              <span class="stringliteral">&#39;Unable to parse email-recipients &quot;%s&quot;.&#39;</span>,</div>
-<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>              vsprintf($parseError[<span class="stringliteral">&#39;message&#39;</span>], $parseError[<span class="stringliteral">&#39;data&#39;</span>])</div>
-<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>            ));</div>
-<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>        }</div>
-<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>        $freeForm = [];</div>
-<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>        <span class="keywordflow">foreach</span> ($recipients as $emailRecord) {</div>
-<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>          $email = $emailRecord-&gt;mailbox.<span class="charliteral">&#39;@&#39;</span>.$emailRecord-&gt;host;</div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>          $name  = $emailRecord-&gt;personal;</div>
-<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>          $freeForm[$email] = $name;</div>
-<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>        }</div>
-<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span> </div>
-<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>        <span class="comment">// Fetch all known address-book contacts with email</span></div>
-<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>        $bookContacts = $contactsService-&gt;emailContacts();</div>
-<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span> </div>
-<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>        $addressBookEmails = [];</div>
-<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>        <span class="keywordflow">foreach</span> ($bookContacts as $entry) {</div>
-<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>          $addressBookEmails[$entry[<span class="stringliteral">&#39;email&#39;</span>]] = $entry[<span class="stringliteral">&#39;name&#39;</span>];</div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>        }</div>
-<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span> </div>
-<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>        <span class="comment">// Convert the free-form input in &quot;book-format&quot;, but exclude those</span></div>
-<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>        <span class="comment">// contacts already present in the address-book in order not to list</span></div>
-<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>        <span class="comment">// contacts twice.</span></div>
-<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>        $formContacts = [];</div>
-<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>        <span class="keywordflow">foreach</span> ($freeForm as $email =&gt; $name) {</div>
-<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>          <span class="keywordflow">if</span> (isset($addressBookEmails[$email]) <span class="comment">/* &amp;&amp; $addressBookEmails[$email] == $name*/</span>) {</div>
-<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>            <span class="comment">// skip free-form if already listed in address-book</span></div>
-<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>          }</div>
-<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>          $formContacts[] = [</div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>            <span class="stringliteral">&#39;email&#39;</span> =&gt; $email,</div>
-<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>            <span class="stringliteral">&#39;name&#39;</span> =&gt; $name,</div>
-<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>            <span class="stringliteral">&#39;addressBook&#39;</span> =&gt; $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Form Input&#39;</span>),</div>
-<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>            <span class="stringliteral">&#39;class&#39;</span> =&gt; <span class="stringliteral">&#39;free-form&#39;</span></div>
-<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>          ];</div>
-<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>        }</div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span> </div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>        <span class="comment">// The total options list is the union of the (remaining) free-form</span></div>
-<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>        <span class="comment">// addresses and the address-book entries</span></div>
-<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>        $emailOptions = array_merge($formContacts, $bookContacts);</div>
-<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span> </div>
-<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>        <span class="comment">// Now convert it into a form Navigation::selectOptions()</span></div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>        <span class="comment">// understands</span></div>
-<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>        $selectOptions = [];</div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>        <span class="keywordflow">foreach</span> ($emailOptions as $entry) {</div>
-<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span>          $email = $entry[<span class="stringliteral">&#39;email&#39;</span>];</div>
-<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>          <span class="keywordflow">if</span> ($entry[<span class="stringliteral">&#39;name&#39;</span>] == <span class="stringliteral">&#39;&#39;</span>) {</div>
-<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>            $displayName = $email;</div>
-<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>            $displayName = $entry[<span class="stringliteral">&#39;name&#39;</span>].<span class="stringliteral">&#39; &lt;&#39;</span>.$email.<span class="charliteral">&#39;&gt;&#39;</span>;</div>
-<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>          }</div>
-<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span> </div>
-<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>          $option = [</div>
-<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>            <span class="stringliteral">&#39;value&#39;</span> =&gt; $email,</div>
-<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>            <span class="stringliteral">&#39;name&#39;</span> =&gt; $displayName,</div>
-<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>            <span class="stringliteral">&#39;flags&#39;</span> =&gt; isset($freeForm[$email]) ? PageNavigation::SELECTED : 0,</div>
-<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>            <span class="stringliteral">&#39;group&#39;</span> =&gt; $entry[<span class="stringliteral">&#39;addressBook&#39;</span>],</div>
-<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>          ];</div>
-<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>          <span class="keywordflow">if</span> (isset($entry[<span class="stringliteral">&#39;class&#39;</span>])) {</div>
-<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>            $option[<span class="stringliteral">&#39;groupClass&#39;</span>] = $entry[<span class="stringliteral">&#39;class&#39;</span>];</div>
-<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>          }</div>
-<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>          $selectOptions[] = $option;</div>
-<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>        }</div>
-<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span> </div>
-<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>        <span class="comment">// $phpMailer = new \OCA\CAFEVDB\CommonPHPMailer(true); could validate addresses here</span></div>
-<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span> </div>
-<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>        $html = (<span class="keyword">new</span> TemplateResponse(</div>
-<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>          $this-&gt;appName,</div>
-<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>          <span class="stringliteral">&#39;emailform/addressbook&#39;</span>,</div>
-<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>          [ <span class="stringliteral">&#39;emailOptions&#39;</span> =&gt; $selectOptions ],</div>
-<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>          <span class="stringliteral">&#39;blank&#39;</span>))-&gt;render();</div>
-<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span> </div>
-<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>        <span class="keywordflow">return</span> self::dataResponse([ <span class="stringliteral">&#39;contents&#39;</span> =&gt; $html ]);</div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span> </div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>      <span class="keywordflow">case</span> <span class="stringliteral">&#39;save&#39;</span>:</div>
-<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>        <span class="comment">// Get some common post data, rest has to be handled by the</span></div>
-<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>        <span class="comment">// recipients and the sender class.</span></div>
-<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>        $addressBookCandidates = $this-&gt;parameterService-&gt;getParam(<span class="stringliteral">&#39;addressBookCandidates&#39;</span>, []);</div>
-<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span> </div>
-<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>        $formContacts = [];</div>
-<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>        <span class="keywordflow">foreach</span> ($addressBookCandidates as $record) {</div>
-<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>          <span class="comment">// This is already pre-parsed. If there is a natural name for the</span></div>
-<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>          <span class="comment">// person, then it is the thing until the first occurence of &#39;&lt;&#39;.</span></div>
-<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>          $text = $record[<span class="stringliteral">&#39;text&#39;</span>]; <span class="comment">// use html?</span></div>
-<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>          $name = strchr($text, <span class="charliteral">&#39;&lt;&#39;</span>, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>          <span class="keywordflow">if</span> ($name !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>            $name = Util::normalizeSpaces($name);</div>
-<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>            $name = <span class="stringliteral">&#39;&#39;</span>;</div>
-<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>          }</div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>          $email = $record[<span class="stringliteral">&#39;value&#39;</span>];</div>
-<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>          $formContacts[] = [</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>            <span class="stringliteral">&#39;email&#39;</span> =&gt; $email,</div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>            <span class="stringliteral">&#39;name&#39;</span> =&gt; $name,</div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>            <span class="stringliteral">&#39;display&#39;</span> =&gt; htmlspecialchars($name.<span class="stringliteral">&#39; &lt;&#39;</span>.$email.<span class="charliteral">&#39;&gt;&#39;</span>)</div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>          ];</div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>        }</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>        $failedContacts = [];</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>        <span class="keywordflow">foreach</span> ($formContacts as $contact) {</div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>          <span class="keywordflow">if</span> ($contactsService-&gt;addEmailContact($contact) === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>            $failedContacts[] = $contact[<span class="stringliteral">&#39;display&#39;</span>];</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>          }</div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>        }</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span> </div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113">count</a>($failedContacts) &gt; 0) {</div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>          <span class="keywordflow">return</span> self::grumble(</div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>            $this-&gt;l-&gt;t(</div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>              <span class="stringliteral">&#39;The following contacts could not be stored: %s&#39;</span>,</div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>              implode(<span class="stringliteral">&#39;, &#39;</span>, $failedContacts)));</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>        }</div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span> </div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>        <span class="keywordflow">return</span> self::response(<span class="stringliteral">&#39;&#39;</span>);</div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>    }</div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>    <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;UNIMPLEMENTED&#39;</span>));</div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>  }</div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span> </div>
-<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"><a class="line" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a2f64ed89c772afcc6fa1f7817acdfe87"> 1071</a></span>  <span class="keyword">public</span> <span class="keyword">function</span> <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a2f64ed89c772afcc6fa1f7817acdfe87">attachment</a>(<span class="keywordtype">string</span> $source):DataResponse</div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>  {</div>
-<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>    $composer = $this-&gt;appContainer-&gt;query(Composer::class);</div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>    $uploadMaxFileSize = \OCP\Util::computerFileSize(ini_get(<span class="stringliteral">&#39;upload_max_filesize&#39;</span>));</div>
-<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>    $postMaxSize = \OCP\Util::computerFileSize(ini_get(<span class="stringliteral">&#39;post_max_size&#39;</span>));</div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>    $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);</div>
-<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);</div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span> </div>
-<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>    $this-&gt;session-&gt;close();</div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span> </div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>    <span class="keywordflow">switch</span> ($source) {</div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>      <span class="keywordflow">case</span> AttachmentOrigin::CLOUD:</div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>        $paths = $this-&gt;parameterService[<span class="stringliteral">&#39;paths&#39;</span>];</div>
-<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>        <span class="keywordflow">if</span> (empty($paths)) {</div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>          <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Attachment file-names were not submitted&#39;</span>));</div>
-<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>        }</div>
+<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>        <span class="stringliteral">&#39;memberStatusFilter&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
+<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>        <span class="stringliteral">&#39;recipientsOptions&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
+<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>        <span class="stringliteral">&#39;missingEmailAddresses&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
+<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>        <span class="stringliteral">&#39;filterHistory&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
+<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>      ]);</div>
+<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>    }</div>
+<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span> </div>
+<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>    $recipientsChoices = $recipientsFilter-&gt;emailRecipientsChoices();</div>
+<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>    $recipientsOptions = <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_util_1_1_navigation.html#aed16592e165b311c58025b62f7626e91">PageNavigation::selectOptions</a>($recipientsChoices);</div>
+<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span> </div>
+<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>    $missingEmailAddresses = (<span class="keyword">new</span> TemplateResponse(</div>
+<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>      $this-&gt;appName,</div>
+<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>        <span class="stringliteral">&#39;emailform/part.broken-email-addresses&#39;</span>, [</div>
+<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>          <span class="stringliteral">&#39;missingEmailAddresses&#39;</span> =&gt; $recipientsFilter-&gt;missingEmailAddresses(),</div>
+<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>        ],</div>
+<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>      <span class="stringliteral">&#39;blank&#39;</span>))-&gt;render();</div>
+<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span> </div>
+<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>    $instrumentsFilter = (<span class="keyword">new</span> TemplateResponse(</div>
+<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>      $this-&gt;appName,</div>
+<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>      <span class="stringliteral">&#39;emailform/part.instruments-filter&#39;</span>, [</div>
+<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>        <span class="stringliteral">&#39;instrumentsFilter&#39;</span> =&gt; $recipientsFilter-&gt;instrumentsFilter(),</div>
+<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>      ],</div>
+<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>      <span class="stringliteral">&#39;blank&#39;</span>))-&gt;render();</div>
+<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span> </div>
+<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>    $memberStatusFilter = (<span class="keyword">new</span> TemplateResponse(</div>
+<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>      $this-&gt;appName,</div>
+<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>      <span class="stringliteral">&#39;emailform/part.member-status-filter&#39;</span>, [</div>
+<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>        <span class="stringliteral">&#39;memberStatusFilter&#39;</span> =&gt; $recipientsFilter-&gt;memberStatusFilter(),</div>
+<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>      ],</div>
+<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>      <span class="stringliteral">&#39;blank&#39;</span>))-&gt;render();</div>
+<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span> </div>
+<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>    <span class="keywordflow">return</span> self::dataResponse([</div>
+<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>      <span class="stringliteral">&#39;projectName&#39;</span> =&gt; $projectName,</div>
+<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>      <span class="stringliteral">&#39;projectId&#39;</span> =&gt; $projectId,</div>
+<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>      <span class="stringliteral">&#39;recipientsOptions&#39;</span> =&gt; $recipientsOptions,</div>
+<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>      <span class="stringliteral">&#39;missingEmailAddresses&#39;</span> =&gt; $missingEmailAddresses,</div>
+<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>      <span class="stringliteral">&#39;filterHistory&#39;</span> =&gt; $filterHistory,</div>
+<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>      <span class="stringliteral">&#39;instrumentsFilter&#39;</span> =&gt; $instrumentsFilter,</div>
+<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>      <span class="stringliteral">&#39;memberStatusFilter&#39;</span> =&gt; $memberStatusFilter,</div>
+<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>      <span class="comment">// remaining parameter is expected by JS code and needs to be there</span></div>
+<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>      <span class="stringliteral">&#39;contents&#39;</span> =&gt; <span class="stringliteral">&#39;&#39;</span>,</div>
+<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>    ]);</div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>  }</div>
+<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span> </div>
+<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>  <span class="keyword">public</span> <span class="keyword">function</span> contacts(<span class="keywordtype">string</span> $operation):Response</div>
+<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>  {</div>
+<div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span>    $contactsService = $this-&gt;appContainer-&gt;query(ContactsService::class);</div>
+<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>    <span class="keywordflow">switch</span> ($operation) {</div>
+<div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>      <span class="keywordflow">case</span> <span class="stringliteral">&#39;list&#39;</span>:</div>
+<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span>        <span class="comment">// Free-form recipients from Cc: or Bcc:</span></div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>        $freeForm  = $this-&gt;parameterService-&gt;getParam(<span class="stringliteral">&#39;freeFormRecipients&#39;</span>, <span class="stringliteral">&#39;&#39;</span>);</div>
+<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span> </div>
+<div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>        <span class="comment">// Convert the free-form input to an array (possibly)</span></div>
+<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>        $parser = <span class="keyword">new</span> Mail_RFC822(<span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>        $recipients = $parser-&gt;parseAddressList($freeForm);</div>
+<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span>        $parseError = $parser-&gt;parseError();</div>
+<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span>        <span class="keywordflow">if</span> ($parseError !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span>          <span class="keywordflow">return</span> self::grumble(</div>
+<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>            $this-&gt;l-&gt;t(</div>
+<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>              <span class="stringliteral">&#39;Unable to parse email-recipients &quot;%s&quot;.&#39;</span>,</div>
+<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>              vsprintf($parseError[<span class="stringliteral">&#39;message&#39;</span>], $parseError[<span class="stringliteral">&#39;data&#39;</span>])</div>
+<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>            ));</div>
+<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>        }</div>
+<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>        $freeForm = [];</div>
+<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>        <span class="keywordflow">foreach</span> ($recipients as $emailRecord) {</div>
+<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>          $email = $emailRecord-&gt;mailbox.<span class="charliteral">&#39;@&#39;</span>.$emailRecord-&gt;host;</div>
+<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>          $name  = $emailRecord-&gt;personal;</div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>          $freeForm[$email] = $name;</div>
+<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>        }</div>
+<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span> </div>
+<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>        <span class="comment">// Fetch all known address-book contacts with email</span></div>
+<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>        $bookContacts = $contactsService-&gt;emailContacts();</div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span> </div>
+<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>        $addressBookEmails = [];</div>
+<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>        <span class="keywordflow">foreach</span> ($bookContacts as $entry) {</div>
+<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>          $addressBookEmails[$entry[<span class="stringliteral">&#39;email&#39;</span>]] = $entry[<span class="stringliteral">&#39;name&#39;</span>];</div>
+<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>        }</div>
+<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span> </div>
+<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>        <span class="comment">// Convert the free-form input in &quot;book-format&quot;, but exclude those</span></div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>        <span class="comment">// contacts already present in the address-book in order not to list</span></div>
+<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>        <span class="comment">// contacts twice.</span></div>
+<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>        $formContacts = [];</div>
+<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>        <span class="keywordflow">foreach</span> ($freeForm as $email =&gt; $name) {</div>
+<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>          <span class="keywordflow">if</span> (isset($addressBookEmails[$email]) <span class="comment">/* &amp;&amp; $addressBookEmails[$email] == $name*/</span>) {</div>
+<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>            <span class="comment">// skip free-form if already listed in address-book</span></div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>          }</div>
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>          $formContacts[] = [</div>
+<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>            <span class="stringliteral">&#39;email&#39;</span> =&gt; $email,</div>
+<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>            <span class="stringliteral">&#39;name&#39;</span> =&gt; $name,</div>
+<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>            <span class="stringliteral">&#39;addressBook&#39;</span> =&gt; $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Form Input&#39;</span>),</div>
+<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>            <span class="stringliteral">&#39;class&#39;</span> =&gt; <span class="stringliteral">&#39;free-form&#39;</span></div>
+<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>          ];</div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>        }</div>
+<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span> </div>
+<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>        <span class="comment">// The total options list is the union of the (remaining) free-form</span></div>
+<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>        <span class="comment">// addresses and the address-book entries</span></div>
+<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>        $emailOptions = array_merge($formContacts, $bookContacts);</div>
+<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span> </div>
+<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>        <span class="comment">// Now convert it into a form Navigation::selectOptions()</span></div>
+<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>        <span class="comment">// understands</span></div>
+<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>        $selectOptions = [];</div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>        <span class="keywordflow">foreach</span> ($emailOptions as $entry) {</div>
+<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>          $email = $entry[<span class="stringliteral">&#39;email&#39;</span>];</div>
+<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>          <span class="keywordflow">if</span> ($entry[<span class="stringliteral">&#39;name&#39;</span>] == <span class="stringliteral">&#39;&#39;</span>) {</div>
+<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>            $displayName = $email;</div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>            $displayName = $entry[<span class="stringliteral">&#39;name&#39;</span>].<span class="stringliteral">&#39; &lt;&#39;</span>.$email.<span class="charliteral">&#39;&gt;&#39;</span>;</div>
+<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>          }</div>
+<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span> </div>
+<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>          $option = [</div>
+<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>            <span class="stringliteral">&#39;value&#39;</span> =&gt; $email,</div>
+<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>            <span class="stringliteral">&#39;name&#39;</span> =&gt; $displayName,</div>
+<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>            <span class="stringliteral">&#39;flags&#39;</span> =&gt; isset($freeForm[$email]) ? PageNavigation::SELECTED : 0,</div>
+<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>            <span class="stringliteral">&#39;group&#39;</span> =&gt; $entry[<span class="stringliteral">&#39;addressBook&#39;</span>],</div>
+<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>          ];</div>
+<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>          <span class="keywordflow">if</span> (isset($entry[<span class="stringliteral">&#39;class&#39;</span>])) {</div>
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>            $option[<span class="stringliteral">&#39;groupClass&#39;</span>] = $entry[<span class="stringliteral">&#39;class&#39;</span>];</div>
+<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>          }</div>
+<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>          $selectOptions[] = $option;</div>
+<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>        }</div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span> </div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>        <span class="comment">// $phpMailer = new \OCA\CAFEVDB\CommonPHPMailer(true); could validate addresses here</span></div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span> </div>
+<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>        $html = (<span class="keyword">new</span> TemplateResponse(</div>
+<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>          $this-&gt;appName,</div>
+<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>          <span class="stringliteral">&#39;emailform/addressbook&#39;</span>,</div>
+<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>          [ <span class="stringliteral">&#39;emailOptions&#39;</span> =&gt; $selectOptions ],</div>
+<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>          <span class="stringliteral">&#39;blank&#39;</span>))-&gt;render();</div>
+<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span> </div>
+<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>        <span class="keywordflow">return</span> self::dataResponse([ <span class="stringliteral">&#39;contents&#39;</span> =&gt; $html ]);</div>
+<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span> </div>
+<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>      <span class="keywordflow">case</span> <span class="stringliteral">&#39;save&#39;</span>:</div>
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>        <span class="comment">// Get some common post data, rest has to be handled by the</span></div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>        <span class="comment">// recipients and the sender class.</span></div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>        $addressBookCandidates = $this-&gt;parameterService-&gt;getParam(<span class="stringliteral">&#39;addressBookCandidates&#39;</span>, []);</div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span> </div>
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>        $formContacts = [];</div>
+<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>        <span class="keywordflow">foreach</span> ($addressBookCandidates as $record) {</div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>          <span class="comment">// This is already pre-parsed. If there is a natural name for the</span></div>
+<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>          <span class="comment">// person, then it is the thing until the first occurence of &#39;&lt;&#39;.</span></div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>          $text = $record[<span class="stringliteral">&#39;text&#39;</span>]; <span class="comment">// use html?</span></div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>          $name = strchr($text, <span class="charliteral">&#39;&lt;&#39;</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>          <span class="keywordflow">if</span> ($name !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>            $name = Util::normalizeSpaces($name);</div>
+<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>            $name = <span class="stringliteral">&#39;&#39;</span>;</div>
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>          }</div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>          $email = $record[<span class="stringliteral">&#39;value&#39;</span>];</div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>          $formContacts[] = [</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>            <span class="stringliteral">&#39;email&#39;</span> =&gt; $email,</div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>            <span class="stringliteral">&#39;name&#39;</span> =&gt; $name,</div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>            <span class="stringliteral">&#39;display&#39;</span> =&gt; htmlspecialchars($name.<span class="stringliteral">&#39; &lt;&#39;</span>.$email.<span class="charliteral">&#39;&gt;&#39;</span>)</div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>          ];</div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>        }</div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>        $failedContacts = [];</div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>        <span class="keywordflow">foreach</span> ($formContacts as $contact) {</div>
+<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>          <span class="keywordflow">if</span> ($contactsService-&gt;addEmailContact($contact) === <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>            $failedContacts[] = $contact[<span class="stringliteral">&#39;display&#39;</span>];</div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>          }</div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>        }</div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span> </div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113">count</a>($failedContacts) &gt; 0) {</div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>          <span class="keywordflow">return</span> self::grumble(</div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>            $this-&gt;l-&gt;t(</div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>              <span class="stringliteral">&#39;The following contacts could not be stored: %s&#39;</span>,</div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>              implode(<span class="stringliteral">&#39;, &#39;</span>, $failedContacts)));</div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>        }</div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span> </div>
+<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>        <span class="keywordflow">return</span> self::response(<span class="stringliteral">&#39;&#39;</span>);</div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>    }</div>
+<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>    <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;UNIMPLEMENTED&#39;</span>));</div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>  }</div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span> </div>
+<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"><a class="line" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a2f64ed89c772afcc6fa1f7817acdfe87"> 1080</a></span>  <span class="keyword">public</span> <span class="keyword">function</span> <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a2f64ed89c772afcc6fa1f7817acdfe87">attachment</a>(<span class="keywordtype">string</span> $source):DataResponse</div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>  {</div>
+<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>    $composer = $this-&gt;appContainer-&gt;query(Composer::class);</div>
+<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>    $uploadMaxFileSize = \OCP\Util::computerFileSize(ini_get(<span class="stringliteral">&#39;upload_max_filesize&#39;</span>));</div>
+<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>    $postMaxSize = \OCP\Util::computerFileSize(ini_get(<span class="stringliteral">&#39;post_max_size&#39;</span>));</div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);</div>
+<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>    $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);</div>
 <div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span> </div>
-<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>        <span class="comment">// @todo find file in cloud</span></div>
-<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>        $storage = $this-&gt;appContainer-&gt;query(UserStorage::class);</div>
-<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>        $files = [];</div>
-<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>        <span class="keywordflow">foreach</span> ($paths as $path) {</div>
-<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>          $node = $storage-&gt;get($path);</div>
-<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>          <span class="keywordflow">if</span> (empty($node)) {</div>
-<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>            <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;File &quot;%s&quot; could not be found in cloud storage.&#39;</span>, $path));</div>
-<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>          }</div>
-<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>          <span class="keywordflow">if</span> ($node-&gt;getType() != FileInfo::TYPE_FILE) {</div>
-<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>            <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;File &quot;%s&quot; is not a plain file, this is not yet implemented.&#39;</span>));</div>
-<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>          }</div>
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span> </div>
-<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>          <span class="comment">// We emulate an uploaded file here:</span></div>
-<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>          $fileRecord = [</div>
-<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>            <span class="stringliteral">&#39;name&#39;</span> =&gt; $path,</div>
-<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>            <span class="stringliteral">&#39;error&#39;</span> =&gt; 0,</div>
-<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>            <span class="stringliteral">&#39;tmp_name&#39;</span> =&gt; $node-&gt;getStorage()-&gt;getLocalFile($node-&gt;getInternalPath()),</div>
-<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span>            <span class="stringliteral">&#39;type&#39;</span> =&gt; $node-&gt;getMimetype(),</div>
-<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>            <span class="stringliteral">&#39;size&#39;</span> =&gt; $node-&gt;getSize(),</div>
-<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>            <span class="stringliteral">&#39;node&#39;</span> =&gt; $node,</div>
-<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>          ];</div>
-<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span> </div>
-<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>          <span class="keywordflow">if</span> ($composer-&gt;saveAttachment($fileRecord) === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span>            <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Couldn\&#39;t save temporary file for: %s&#39;</span>, $fileRecord[<span class="stringliteral">&#39;name&#39;</span>]));</div>
-<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>          }</div>
-<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span> </div>
-<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>          $fileRecord[<span class="stringliteral">&#39;original_name&#39;</span>]      = $fileRecord[<span class="stringliteral">&#39;name&#39;</span>]; <span class="comment">// clone</span></div>
-<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>          $fileRecord[<span class="stringliteral">&#39;upload_max_file_size&#39;</span>] = $maxUploadFileSize;</div>
-<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>          $fileRecord[<span class="stringliteral">&#39;max_human_file_size&#39;</span>]  = $maxHumanFileSize;</div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>          $files[] = $fileRecord;</div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>        }</div>
-<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>        <span class="keywordflow">return</span> self::dataResponse($files);</div>
-<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>      <span class="keywordflow">case</span> AttachmentOrigin::UPLOAD:</div>
-<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>        $files = $this-&gt;request-&gt;files[self::UPLOAD_KEY];</div>
-<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>        <span class="keywordflow">if</span> (empty($files)) {</div>
-<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>          <span class="comment">// may be caused by PHP restrictions which are not caught by</span></div>
-<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>          <span class="comment">// error handlers.</span></div>
-<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>          $contentLength = $this-&gt;request-&gt;server[<span class="stringliteral">&#39;CONTENT_LENGTH&#39;</span>];</div>
-<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>          $limit = \OCP\Util::uploadLimit();</div>
-<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>          <span class="keywordflow">if</span> ($contentLength &gt; $limit) {</div>
-<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>            <span class="keywordflow">return</span> self::grumble(</div>
-<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>              $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Upload size %s exceeds limit %s, contact your server administrator.&#39;</span>, [</div>
-<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>                \OCP\Util::humanFileSize($contentLength),</div>
-<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>                \OCP\Util::humanFileSize($limit),</div>
-<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>              ]));</div>
-<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>          }</div>
-<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>          $error = error_get_last();</div>
-<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>          <span class="keywordflow">if</span> (!empty($error)) {</div>
-<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>            <span class="keywordflow">return</span> self::grumble(</div>
-<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>              $this-&gt;l-&gt;t(<span class="stringliteral">&#39;No file was uploaded, error message was &quot;%s&quot;.&#39;</span>, $error[<span class="stringliteral">&#39;message&#39;</span>]));</div>
-<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>          }</div>
-<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>          <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;No file was uploaded. Unknown error&#39;</span>));</div>
-<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>        }</div>
-<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span> </div>
-<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>        $files = Util::transposeArray($files);</div>
-<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span> </div>
-<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>        $totalSize = 0;</div>
-<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>        <span class="keywordflow">foreach</span> ($files as &amp;$file) {</div>
-<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span> </div>
-<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>          $totalSize += $file[<span class="stringliteral">&#39;size&#39;</span>];</div>
-<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span> </div>
-<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>          <span class="keywordflow">if</span> ($maxUploadFileSize &gt;= 0 and $totalSize &gt; $maxUploadFileSize) {</div>
-<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>            <span class="keywordflow">return</span> self::grumble([</div>
-<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>              <span class="stringliteral">&#39;message&#39;</span> =&gt; $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Not enough storage available&#39;</span>),</div>
-<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>              <span class="stringliteral">&#39;upload_max_file_size&#39;</span> =&gt; $maxUploadFileSize,</div>
-<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>              <span class="stringliteral">&#39;max_human_file_size&#39;</span> =&gt; $maxHumanFileSize,</div>
-<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>            ]);</div>
-<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>          }</div>
-<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span> </div>
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span>          $file[<span class="stringliteral">&#39;upload_max_file_size&#39;</span>] = $maxUploadFileSize;</div>
-<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>          $file[<span class="stringliteral">&#39;max_human_file_size&#39;</span>]  = $maxHumanFileSize;</div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>          $file[<span class="stringliteral">&#39;original_name&#39;</span>] = $file[<span class="stringliteral">&#39;name&#39;</span>]; <span class="comment">// clone</span></div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span> </div>
-<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>          $file[<span class="stringliteral">&#39;str_error&#39;</span>] = Util::fileUploadError($file[<span class="stringliteral">&#39;error&#39;</span>], $this-&gt;l);</div>
-<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>          <span class="keywordflow">if</span> ($file[<span class="stringliteral">&#39;error&#39;</span>] != UPLOAD_ERR_OK) {</div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    $this-&gt;session-&gt;close();</div>
+<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span> </div>
+<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>    <span class="keywordflow">switch</span> ($source) {</div>
+<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>      <span class="keywordflow">case</span> AttachmentOrigin::CLOUD:</div>
+<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>        $paths = $this-&gt;parameterService[<span class="stringliteral">&#39;paths&#39;</span>];</div>
+<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>        <span class="keywordflow">if</span> (empty($paths)) {</div>
+<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>          <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Attachment file-names were not submitted&#39;</span>));</div>
+<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>        }</div>
+<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span> </div>
+<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>        <span class="comment">// @todo find file in cloud</span></div>
+<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>        $storage = $this-&gt;appContainer-&gt;query(UserStorage::class);</div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>        $files = [];</div>
+<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>        <span class="keywordflow">foreach</span> ($paths as $path) {</div>
+<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>          $node = $storage-&gt;get($path);</div>
+<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>          <span class="keywordflow">if</span> (empty($node)) {</div>
+<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>            <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;File &quot;%s&quot; could not be found in cloud storage.&#39;</span>, $path));</div>
+<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>          }</div>
+<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span>          <span class="keywordflow">if</span> ($node-&gt;getType() != FileInfo::TYPE_FILE) {</div>
+<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>            <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;File &quot;%s&quot; is not a plain file, this is not yet implemented.&#39;</span>));</div>
+<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>          }</div>
+<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span> </div>
+<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span>          <span class="comment">// We emulate an uploaded file here:</span></div>
+<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>          $fileRecord = [</div>
+<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span>            <span class="stringliteral">&#39;name&#39;</span> =&gt; $path,</div>
+<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>            <span class="stringliteral">&#39;error&#39;</span> =&gt; 0,</div>
+<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>            <span class="stringliteral">&#39;tmp_name&#39;</span> =&gt; $node-&gt;getStorage()-&gt;getLocalFile($node-&gt;getInternalPath()),</div>
+<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>            <span class="stringliteral">&#39;type&#39;</span> =&gt; $node-&gt;getMimetype(),</div>
+<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>            <span class="stringliteral">&#39;size&#39;</span> =&gt; $node-&gt;getSize(),</div>
+<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>            <span class="stringliteral">&#39;node&#39;</span> =&gt; $node,</div>
+<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>          ];</div>
+<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span> </div>
+<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>          <span class="keywordflow">if</span> ($composer-&gt;saveAttachment($fileRecord) === <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>            <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Couldn\&#39;t save temporary file for: %s&#39;</span>, $fileRecord[<span class="stringliteral">&#39;name&#39;</span>]));</div>
+<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>          }</div>
+<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span> </div>
+<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>          $fileRecord[<span class="stringliteral">&#39;original_name&#39;</span>]      = $fileRecord[<span class="stringliteral">&#39;name&#39;</span>]; <span class="comment">// clone</span></div>
+<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>          $fileRecord[<span class="stringliteral">&#39;upload_max_file_size&#39;</span>] = $maxUploadFileSize;</div>
+<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>          $fileRecord[<span class="stringliteral">&#39;max_human_file_size&#39;</span>]  = $maxHumanFileSize;</div>
+<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>          $files[] = $fileRecord;</div>
+<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>        }</div>
+<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>        <span class="keywordflow">return</span> self::dataResponse($files);</div>
+<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>      <span class="keywordflow">case</span> AttachmentOrigin::UPLOAD:</div>
+<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>        $files = $this-&gt;request-&gt;files[self::UPLOAD_KEY];</div>
+<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>        <span class="keywordflow">if</span> (empty($files)) {</div>
+<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>          <span class="comment">// may be caused by PHP restrictions which are not caught by</span></div>
+<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>          <span class="comment">// error handlers.</span></div>
+<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>          $contentLength = $this-&gt;request-&gt;server[<span class="stringliteral">&#39;CONTENT_LENGTH&#39;</span>];</div>
+<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>          $limit = \OCP\Util::uploadLimit();</div>
+<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>          <span class="keywordflow">if</span> ($contentLength &gt; $limit) {</div>
+<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>            <span class="keywordflow">return</span> self::grumble(</div>
+<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>              $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Upload size %s exceeds limit %s, contact your server administrator.&#39;</span>, [</div>
+<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>                \OCP\Util::humanFileSize($contentLength),</div>
+<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>                \OCP\Util::humanFileSize($limit),</div>
+<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>              ]));</div>
+<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>          }</div>
+<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>          $error = error_get_last();</div>
+<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>          <span class="keywordflow">if</span> (!empty($error)) {</div>
+<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>            <span class="keywordflow">return</span> self::grumble(</div>
+<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>              $this-&gt;l-&gt;t(<span class="stringliteral">&#39;No file was uploaded, error message was &quot;%s&quot;.&#39;</span>, $error[<span class="stringliteral">&#39;message&#39;</span>]));</div>
+<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>          }</div>
+<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>          <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;No file was uploaded. Unknown error&#39;</span>));</div>
+<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>        }</div>
+<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span> </div>
+<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>        $files = Util::transposeArray($files);</div>
+<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span> </div>
+<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>        $totalSize = 0;</div>
+<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>        <span class="keywordflow">foreach</span> ($files as &amp;$file) {</div>
+<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span> </div>
+<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>          $totalSize += $file[<span class="stringliteral">&#39;size&#39;</span>];</div>
+<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span> </div>
+<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>          <span class="keywordflow">if</span> ($maxUploadFileSize &gt;= 0 and $totalSize &gt; $maxUploadFileSize) {</div>
+<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>            <span class="keywordflow">return</span> self::grumble([</div>
+<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>              <span class="stringliteral">&#39;message&#39;</span> =&gt; $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Not enough storage available&#39;</span>),</div>
+<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>              <span class="stringliteral">&#39;upload_max_file_size&#39;</span> =&gt; $maxUploadFileSize,</div>
+<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>              <span class="stringliteral">&#39;max_human_file_size&#39;</span> =&gt; $maxHumanFileSize,</div>
+<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>            ]);</div>
 <div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>          }</div>
 <div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span> </div>
-<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>          <span class="comment">// Move the temporary files to locations where we can find them later.</span></div>
-<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>          <span class="keywordflow">if</span> ($composer-&gt;saveAttachment($file) === <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>            $file[<span class="stringliteral">&#39;error&#39;</span>] = 99;</div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>            $file[<span class="stringliteral">&#39;str_error&#39;</span>] = $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Couldn\&#39;t save temporary file for: %s&#39;</span>, $file[<span class="stringliteral">&#39;name&#39;</span>]);</div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>          }</div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>        }</div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>        <span class="keywordflow">return</span> self::dataResponse($files);</div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>    }</div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>    <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown attachment source: &quot;%s&quot;.&#39;</span>, $source));</div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>  }</div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>}</div>
+<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>          $file[<span class="stringliteral">&#39;upload_max_file_size&#39;</span>] = $maxUploadFileSize;</div>
+<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>          $file[<span class="stringliteral">&#39;max_human_file_size&#39;</span>]  = $maxHumanFileSize;</div>
+<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>          $file[<span class="stringliteral">&#39;original_name&#39;</span>] = $file[<span class="stringliteral">&#39;name&#39;</span>]; <span class="comment">// clone</span></div>
+<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span> </div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>          $file[<span class="stringliteral">&#39;str_error&#39;</span>] = Util::fileUploadError($file[<span class="stringliteral">&#39;error&#39;</span>], $this-&gt;l);</div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>          <span class="keywordflow">if</span> ($file[<span class="stringliteral">&#39;error&#39;</span>] != UPLOAD_ERR_OK) {</div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>          }</div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span> </div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>          <span class="comment">// Move the temporary files to locations where we can find them later.</span></div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>          <span class="keywordflow">if</span> ($composer-&gt;saveAttachment($file) === <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>            $file[<span class="stringliteral">&#39;error&#39;</span>] = 99;</div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>            $file[<span class="stringliteral">&#39;str_error&#39;</span>] = $this-&gt;l-&gt;t(<span class="stringliteral">&#39;Couldn\&#39;t save temporary file for: %s&#39;</span>, $file[<span class="stringliteral">&#39;name&#39;</span>]);</div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>          }</div>
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>        }</div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>        <span class="keywordflow">return</span> self::dataResponse($files);</div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>    }</div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>    <span class="keywordflow">return</span> self::grumble($this-&gt;l-&gt;t(<span class="stringliteral">&#39;Unknown attachment source: &quot;%s&quot;.&#39;</span>, $source));</div>
+<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span>  }</div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>}</div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html">OCA\CAFEVDB\Common\Util</a></div><div class="ttdoc">General static utility routines.</div><div class="ttdef"><b>Definition:</b> <a href="_common_2_util_8php_source.html#l00037">Util.php:38</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html">OCA\CAFEVDB\Controller\EmailFormController</a></div><div class="ttdoc">Controller class for the mass-email form.</div><div class="ttdef"><b>Definition:</b> <a href="_email_form_controller_8php_source.html#l00056">EmailFormController.php:57</a></div></div>
-<div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller_html_a2f64ed89c772afcc6fa1f7817acdfe87"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a2f64ed89c772afcc6fa1f7817acdfe87">OCA\CAFEVDB\Controller\EmailFormController\attachment</a></div><div class="ttdeci">attachment(string $source)</div><div class="ttdoc">Fetch uploaded attachments, or faked &quot;uploads&quot; from the cloud FS.</div><div class="ttdef"><b>Definition:</b> <a href="_email_form_controller_8php_source.html#l01071">EmailFormController.php:1071</a></div></div>
+<div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller_html_a2f64ed89c772afcc6fa1f7817acdfe87"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a2f64ed89c772afcc6fa1f7817acdfe87">OCA\CAFEVDB\Controller\EmailFormController\attachment</a></div><div class="ttdeci">attachment(string $source)</div><div class="ttdoc">Fetch uploaded attachments, or faked &quot;uploads&quot; from the cloud FS.</div><div class="ttdef"><b>Definition:</b> <a href="_email_form_controller_8php_source.html#l01080">EmailFormController.php:1080</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller_html_a3516f568c439cf0b0ee522f21d5eac76"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a3516f568c439cf0b0ee522f21d5eac76">OCA\CAFEVDB\Controller\EmailFormController\recipientsFilter</a></div><div class="ttdeci">recipientsFilter(?int $projectId, ?string $projectName, ?int $bulkTransactionId,)</div><div class="ttdef"><b>Definition:</b> <a href="_email_form_controller_8php_source.html#l00835">EmailFormController.php:835</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller_html_a3b7735f5cb4ca5fc5a30d2b599efa9e3"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#a3b7735f5cb4ca5fc5a30d2b599efa9e3">OCA\CAFEVDB\Controller\EmailFormController\storedEmailOptions</a></div><div class="ttdeci">storedEmailOptions(Composer $composer)</div><div class="ttdoc">Regenerate the stored-email options after updating drafts or templates.</div><div class="ttdef"><b>Definition:</b> <a href="_email_form_controller_8php_source.html#l00253">EmailFormController.php:253</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller_html_ac756b6056810538328ee9bf4ea544a5e"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#ac756b6056810538328ee9bf4ea544a5e">OCA\CAFEVDB\Controller\EmailFormController\getEmailDraftAutoSave</a></div><div class="ttdeci">getEmailDraftAutoSave()</div><div class="ttdef"><b>Definition:</b> <a href="_email_form_controller_8php_source.html#l00112">EmailFormController.php:112</a></div></div>
@@ -1192,7 +1201,7 @@ $(document).ready(function(){initNavTree('_email_form_controller_8php_source.htm
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_44fb3714814401477baf4d93fe8e9c4d.html">Controller</a></li><li class="navelem"><b>EmailFormController.php</b></li>
-    <li class="footer">Generated on Mon Mar 20 2023 19:56:39 for CamerataDB by
+    <li class="footer">Generated on Wed Mar 22 2023 10:35:59 for CamerataDB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.9.6 </li>
   </ul>

@@ -46,9 +46,9 @@ if (edges && edges.length) {
         </defs>
 
 <script type="text/javascript">
-var viewWidth = 507;
+var viewWidth = 514;
 var viewHeight = 156;
-var sectionId = 'dynsection-28';
+var sectionId = 'dynsection-29';
 </script>
 <script xlink:href="svgpan.js"/>
 <svg id="graph" class="graph">
@@ -93,18 +93,18 @@ var sectionId = 'dynsection-28';
 <path fill="none" stroke="#63b8ff" d="M66.22,-82.5C73.79,-82.5 82.08,-82.5 90.38,-82.5"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="90.13,-86 100.13,-82.5 90.13,-79 90.13,-86"/>
 </g>
-<!-- Node6 -->
-<g id="node6" class="node">
-<title>Node6</title>
-<g id="a_node6"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a69438f7e0899945b1e31f677ce1251af" target="_top" xlink:title="Validate the given history records, return false on error.">
+<!-- Node7 -->
+<g id="node7" class="node">
+<title>Node7</title>
+<g id="a_node7"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a69438f7e0899945b1e31f677ce1251af" target="_top" xlink:title="Validate the given history records, return false on error.">
 <polygon fill="white" stroke="#666666" points="189.5,-37 107.5,-37 107.5,-18 189.5,-18 189.5,-37"/>
 <text text-anchor="middle" x="148.5" y="-25" font-family="Helvetica,sans-Serif" font-size="10.00">validateHistory</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node6 -->
-<g id="edge7" class="edge">
-<title>Node1&#45;&gt;Node6</title>
+<!-- Node1&#45;&gt;Node7 -->
+<g id="edge8" class="edge">
+<title>Node1&#45;&gt;Node7</title>
 <path fill="none" stroke="#63b8ff" d="M54.55,-72.54C71.91,-64.13 97.02,-51.96 116.76,-42.39"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="118.26,-45.56 125.74,-38.05 115.21,-39.26 118.26,-45.56"/>
 </g>
@@ -115,7 +115,7 @@ var sectionId = 'dynsection-28';
 <polygon fill="#63b8ff" stroke="#63b8ff" points="319.1,-140.58 313.12,-131.83 312.34,-142.4 319.1,-140.58"/>
 </g>
 <!-- Node3&#45;&gt;Node2 -->
-<g id="edge6" class="edge">
+<g id="edge7" class="edge">
 <title>Node3&#45;&gt;Node2</title>
 <path fill="none" stroke="#63b8ff" d="M186.28,-92.48C204.57,-97.45 226.79,-103.48 245.92,-108.67"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="244.75,-111.98 255.32,-111.22 246.59,-105.23 244.75,-111.98"/>
@@ -150,35 +150,50 @@ var sectionId = 'dynsection-28';
 <path fill="none" stroke="#63b8ff" d="M188.13,-72.57C204.19,-68.44 223.04,-63.59 240.1,-59.2"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="240.72,-62.66 249.53,-56.78 238.98,-55.88 240.72,-62.66"/>
 </g>
-<!-- Node7 -->
-<g id="node7" class="node">
-<title>Node7</title>
-<g id="a_node7"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aeeefa163256bf7669c5591e228f57850" target="_top" xlink:title="Validate all history records.">
-<polygon fill="white" stroke="#666666" points="350,-19 231,-19 231,0 350,0 350,-19"/>
-<text text-anchor="middle" x="290.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">validateHistoryRecords</text>
+<!-- Node6 -->
+<g id="node6" class="node">
+<title>Node6</title>
+<g id="a_node6"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="506,-56 386,-56 386,-37 506,-37 506,-56"/>
+<text text-anchor="middle" x="446" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">recipientsExceptProject</text>
 </a>
 </g>
 </g>
-<!-- Node6&#45;&gt;Node7 -->
-<g id="edge8" class="edge">
-<title>Node6&#45;&gt;Node7</title>
-<path fill="none" stroke="#63b8ff" d="M189.99,-22.29C199.21,-21.11 209.25,-19.82 219.3,-18.53"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="219.64,-22.01 229.11,-17.26 218.74,-15.07 219.64,-22.01"/>
+<!-- Node5&#45;&gt;Node6 -->
+<g id="edge6" class="edge">
+<title>Node5&#45;&gt;Node6</title>
+<path fill="none" stroke="#63b8ff" d="M333.85,-46.5C346.33,-46.5 360.34,-46.5 374.1,-46.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="374.04,-50 384.04,-46.5 374.04,-43 374.04,-50"/>
 </g>
 <!-- Node8 -->
 <g id="node8" class="node">
 <title>Node8</title>
-<g id="a_node8"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a356c7d5f6dcee2bfc20c2285237a341f" target="_top" xlink:title="Validate one history entry.">
-<polygon fill="white" stroke="#666666" points="499,-19 386,-19 386,0 499,0 499,-19"/>
-<text text-anchor="middle" x="442.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">validateHistoryRecord</text>
+<g id="a_node8"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#aeeefa163256bf7669c5591e228f57850" target="_top" xlink:title="Validate all history records.">
+<polygon fill="white" stroke="#666666" points="350,-19 231,-19 231,0 350,0 350,-19"/>
+<text text-anchor="middle" x="290.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">validateHistoryRecords</text>
 </a>
 </g>
 </g>
 <!-- Node7&#45;&gt;Node8 -->
 <g id="edge9" class="edge">
 <title>Node7&#45;&gt;Node8</title>
-<path fill="none" stroke="#63b8ff" d="M350.35,-9.5C358.28,-9.5 366.45,-9.5 374.5,-9.5"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="374.24,-13 384.24,-9.5 374.24,-6 374.24,-13"/>
+<path fill="none" stroke="#63b8ff" d="M189.99,-22.29C199.21,-21.11 209.25,-19.82 219.3,-18.53"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="219.64,-22.01 229.11,-17.26 218.74,-15.07 219.64,-22.01"/>
+</g>
+<!-- Node9 -->
+<g id="node9" class="node">
+<title>Node9</title>
+<g id="a_node9"><a xlink:href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a356c7d5f6dcee2bfc20c2285237a341f" target="_top" xlink:title="Validate one history entry.">
+<polygon fill="white" stroke="#666666" points="502.5,-19 389.5,-19 389.5,0 502.5,0 502.5,-19"/>
+<text text-anchor="middle" x="446" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">validateHistoryRecord</text>
+</a>
+</g>
+</g>
+<!-- Node8&#45;&gt;Node9 -->
+<g id="edge10" class="edge">
+<title>Node8&#45;&gt;Node9</title>
+<path fill="none" stroke="#63b8ff" d="M350.41,-9.5C359.33,-9.5 368.58,-9.5 377.66,-9.5"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="377.51,-13 387.51,-9.5 377.51,-6 377.51,-13"/>
 </g>
 </g>
 </svg>
