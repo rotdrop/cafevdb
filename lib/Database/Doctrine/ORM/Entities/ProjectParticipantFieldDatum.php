@@ -504,6 +504,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
     if ($value !== null && $this->field->getDataType() == DataType::LIABILITIES) {
       $value = -$value;
     }
+    return $value;
   }
 
   /**
