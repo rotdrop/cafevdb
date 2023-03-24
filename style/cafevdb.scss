@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -632,6 +632,18 @@ body.cafevdb-modalizer {
     /* Links inside the dropdown */
     ul, ul.menu-list {
       li, li.menu-item {
+        &:not([data-operation="none"]) {
+          a {
+            /* Change color of dropdown links on hover */
+            &:hover {
+              background-color: var(--color-background-hover);
+            }
+
+            &:active {
+            background-color: var(--color-primary-light);
+            }
+          }
+        }
         margin:0!important;
         padding:0!important;
         float:none!important;
@@ -671,13 +683,14 @@ body.cafevdb-modalizer {
             display: none;
           }
 
-          /* Change color of dropdown links on hover */
-          &:hover {
-            background-color: var(--color-background-hover);
-          }
-
-          &:active {
-            background-color: var(--color-primary-light);
+          .context-menu-title {
+            font-weight: bold;
+            color: blue;
+            font-style:italic;
+            text-align:center;
+            display:inline-block;
+            margin:auto;
+            width:100%;
           }
         }
         input.checkbox + {
