@@ -101,6 +101,14 @@ form.pme-form.project-participant-fields-display {
       text-overflow:ellipsis;
       /*position:absolute;*/ /* needs position != static on parent */
       /*left:0;*/
+      &.money {
+        &.liabilities {
+          color:red;
+        }
+        &.receivables {
+          color:blue;
+        }
+      }
     }
 
     span.allowed-option-value.money {
@@ -109,6 +117,12 @@ form.pme-form.project-participant-fields-display {
       white-space:nowrap;
       /*position:absolute;*/
       /*right:0;*/
+      &.liabilities {
+        color:red;
+      }
+      &.receivables {
+        color:blue;
+      }
     }
 
     span.allowed-option.group {
@@ -604,6 +618,14 @@ form.pme-form.project-participant-fields-display {
   }
   span.allowed-option-name {
     font-style:italic;
+    &.money {
+      &.liabilities {
+        color:red;
+      }
+      &.receivables {
+        color:blue;
+      }
+    }
   }
   span.allowed-option-separator {
     display:inline-block;
@@ -612,6 +634,12 @@ form.pme-form.project-participant-fields-display {
   span.allowed-option-value.money {
     font-family:monospace;
     float:right;
+    &.liabilities {
+      color:red;
+    }
+    &.receivables {
+      color:blue;
+    }
   }
   .operation {
     display:none;
