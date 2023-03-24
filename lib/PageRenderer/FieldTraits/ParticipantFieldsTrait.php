@@ -1232,6 +1232,12 @@ trait ParticipantFieldsTrait
                   $keyFdd['select'] = 'D';
                 }
                 $keyFdd['css']['postfix'][] = $dataType;
+
+                // TODO: try selectize with sort options for a better user
+                // experience
+                $keyFdd['css']['postfix'][] = 'no-chosen';
+                $keyFdd['css']['postfix'][] = 'selectize';
+                $keyFdd['css']['postfix'][] = 'select-wide';
                 break;
             }
             break;
