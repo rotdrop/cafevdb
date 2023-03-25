@@ -541,13 +541,15 @@ class EntityManager extends EntityManagerDecorator
    */
   private function getEntityManager(?array $params = null):EntityManagerInterface
   {
+    $conParams = $this->connectionParameters($params);
+
     list($config, $eventManager) = $this->createSimpleConfiguration();
     list($config, $eventManager, $annotationReader) = $this->createGedmoConfiguration($config, $eventManager);
 
     $this->annotationReader = $annotationReader;
 
     // mysql set names UTF-8 if required
-    $eventManager->addEventSubscriber(new DBALEventListeners\MysqlSessionInit);
+    $eventManager->addEventSubscriber(new DBALEventListeners\MysqlSessionInit($conParams['charset'], $conParams['collate']));
 
     $eventManager->addEventListener([
       ORM\Tools\ToolEvents::postGenerateSchema,
@@ -581,7 +583,7 @@ class EntityManager extends EntityManagerDecorator
     $config->setSQLLogger($this->sqlLogger);
 
     // obtaining the entity manager
-    $entityManager = ORMEntityManager::create($this->connectionParameters($params), $config, $eventManager);
+    $entityManager = ORMEntityManager::create($conParams, $config, $eventManager);
 
     if (!$this->showSoftDeleted) {
       $entityManager->getFilters()->enable(self::SOFT_DELETEABLE_FILTER);
