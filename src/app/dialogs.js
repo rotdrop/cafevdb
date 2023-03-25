@@ -122,7 +122,7 @@ const debugPopup = function(data, callback) {
 };
 
 const filePicker = function(title, callback, multiselect, mimetypeFilter, modal, type, path, options) {
-  return OC.dialogs.filepicker(title, callback, multiselect, mimetypeFilter, modal, type, path, options);
+  return OC.dialogs.filepicker(title, callback, multiselect, mimetypeFilter || [], modal, type, path, options);
 };
 
 const attachDialogHandlers = function(container) {
