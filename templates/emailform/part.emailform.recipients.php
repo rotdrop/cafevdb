@@ -259,7 +259,7 @@ $recipientSetDescriptions = RecipientsFilter::getUserBaseDescriptions($l);
       <span class="label top">
         <label for="member-status-filter"
                >
-          <?php echo $l->t('Member-Status'); ?>
+          <?php echo $l->t('Recipient-Status'); ?>
         </label>
       </span>
       <select id="member-status-filter"
