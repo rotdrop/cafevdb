@@ -307,11 +307,8 @@ class RecipientsFilter
       $this->setDefaultHistory();
     } elseif (!$this->reload) {
       $previousRecipientSet = $this->filterHistory[$this->historyPosition]['data'][self::BASIC_RECIPIENTS_SET_KEY] ?? [];
-      // add the current selection to the history if it is different
-      // from the previous filter selection (i.e.: no-ops like
-      // hitten apply over and over again or multiple double-clicks
-      // will not alter the history.
-      $this->pushHistory();
+      // $this->logInfo('PREV RCPTS ' . print_r($previousRecipientSet, true));
+      // $this->logInfo('USER BASE ' . $this->userBase);
       if (!empty($this->project)
           && !$this->announcementsMailingList() && !$this->projectMailingList()
           && ($previousRecipientSet[self::EXCEPT_PROJECT_KEY] != $this->recipientsExceptProject())) {
@@ -320,6 +317,11 @@ class RecipientsFilter
         // filter.
         $this->memberFilter = $this->defaultByStatus();
       }
+      // add the current selection to the history if it is different
+      // from the previous filter selection (i.e.: no-ops like
+      // hitten apply over and over again or multiple double-clicks
+      // will not alter the history.
+      $this->pushHistory();
     }
 
     $this->storeHistory();

@@ -514,9 +514,11 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       basicRecipientsSetContainer.toggleClass($this.val(), $this.prop('checked'));
       readonlyFilterControls(true);
       applyRecipientsFilter.call(this, event, {
-        cleanup: () => readonlyFilterControls(false),
+        cleanup: () => {
+          updateComposerElements(form, ['to', 'subjectTag']);
+          readonlyFilterControls(false);
+        },
       });
-      updateComposerElements(form, ['to', 'subjectTag']);
     });
 
   // initialization
