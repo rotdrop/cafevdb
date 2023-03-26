@@ -552,11 +552,22 @@ class ProjectParticipants extends PMETableViewBase
       ]);
 
     $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'display_name_personal', [
+        'name'     => $this->l->t('Display-Name (pers.)'),
+        'tab'      => [ 'id' => 'musician' ],
+        'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', ], ],
+        'options'  => 'LF',
+        'input' => $this->pmeBare ? 'R' : 'HR', // handy for export
+        'sql' => parent::musicianPublicNameSql(firstNameFirst: true),
+        'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'user_id_slug', [
         'tab'      => [ 'id' => 'musician' ],
         'name'     => $this->l->t('User Id'),
         'css'      => [ 'postfix' => [ 'musician-name', ], ],
-        'input|LF' => 'H',
+        'input|LF' => $this->pmeBare ? 'R' : 'HR',
         // 'options'  => 'AVCPD',
         'select'   => 'T',
         'maxlen'   => 256,
