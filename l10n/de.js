@@ -882,6 +882,7 @@ OC.L10N.register(
     "e.g. Cathy" : "z.B. Michi",
     "Display-Name" : "Anzeigename",
     "e.g. Doe, Cathy" : "z.B. Muster, Michi",
+    "Display-Name (pers.)" : "Anzeigename (pers.)",
     "User Id" : "Benutzerkennung",
     "Instrument Sort Order" : "Instrumenten Reihenfolge",
     "Disabled Instruments" : "Gesperrte Instrumente",

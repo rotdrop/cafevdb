@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-03-26 12:51+0200\n"
-"PO-Revision-Date: 2023-03-26 13:19+0200\n"
+"POT-Creation-Date: 2023-03-26 17:55+0200\n"
+"PO-Revision-Date: 2023-03-26 17:56+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -4381,7 +4381,7 @@ msgid "Mailing List"
 msgstr "Mailing-Liste"
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:137
-#: lib/PageRenderer/ProjectParticipants.php:1064
+#: lib/PageRenderer/ProjectParticipants.php:1075
 #: templates/emailform/part.emailform.recipients.php:201
 msgid "Project Mailing List"
 msgstr "Projekt-Email-Verteiler"
@@ -4448,9 +4448,9 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:260
 #: lib/PageRenderer/InstrumentFamilies.php:250
-#: lib/PageRenderer/Instruments.php:302 lib/PageRenderer/Musicians.php:600
+#: lib/PageRenderer/Instruments.php:302 lib/PageRenderer/Musicians.php:610
 #: lib/PageRenderer/ProjectParticipantFields.php:385
-#: lib/PageRenderer/ProjectParticipants.php:592
+#: lib/PageRenderer/ProjectParticipants.php:603
 #: lib/PageRenderer/Projects.php:319
 msgid "Deleted"
 msgstr "Gelöscht"
@@ -4684,7 +4684,7 @@ msgid "Family"
 msgstr "Familie"
 
 #: lib/PageRenderer/InstrumentFamilies.php:223
-#: lib/PageRenderer/Musicians.php:611
+#: lib/PageRenderer/Musicians.php:621
 msgid "Instruments"
 msgstr "Instrumente"
 
@@ -4717,7 +4717,7 @@ msgstr "Veschiedenes"
 #: lib/PageRenderer/InstrumentInsurances.php:238
 #: lib/PageRenderer/Musicians.php:354
 #: lib/PageRenderer/ProjectParticipantFields.php:270
-#: lib/PageRenderer/ProjectParticipants.php:1567
+#: lib/PageRenderer/ProjectParticipants.php:1578
 #: lib/PageRenderer/ProjectPayments.php:452
 #: lib/PageRenderer/SepaBankAccounts.php:1138
 #: lib/PageRenderer/SepaBulkTransactions.php:275
@@ -4777,7 +4777,7 @@ msgid "Total Insurance"
 msgstr "Gesamtversicherungssumme"
 
 #: lib/PageRenderer/InstrumentInsurances.php:642
-#: lib/PageRenderer/Musicians.php:915
+#: lib/PageRenderer/Musicians.php:925
 #, php-format
 msgid "Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;"
 msgstr "Gesamtsumme %02.02f &euro;, Jahresbeitrag %02.02f &euro;"
@@ -4920,7 +4920,7 @@ msgid "Instruments and Status"
 msgstr "Instrumente und Status"
 
 #: lib/PageRenderer/Musicians.php:345
-#: lib/PageRenderer/ProjectParticipants.php:1550
+#: lib/PageRenderer/ProjectParticipants.php:1561
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
@@ -4967,108 +4967,113 @@ msgstr "Anzeigename"
 msgid "e.g. Doe, Cathy"
 msgstr "z.B. Muster, Michi"
 
-#: lib/PageRenderer/Musicians.php:564
-#: lib/PageRenderer/ProjectParticipants.php:557
+#: lib/PageRenderer/Musicians.php:563
+#: lib/PageRenderer/ProjectParticipants.php:556
+msgid "Display-Name (pers.)"
+msgstr "Anzeigename (pers.)"
+
+#: lib/PageRenderer/Musicians.php:574
+#: lib/PageRenderer/ProjectParticipants.php:568
 #: lib/PageRenderer/ProjectPayments.php:538
 msgid "User Id"
 msgstr "Benutzerkennung"
 
-#: lib/PageRenderer/Musicians.php:656
-#: lib/PageRenderer/ProjectParticipants.php:647
+#: lib/PageRenderer/Musicians.php:666
+#: lib/PageRenderer/ProjectParticipants.php:658
 msgid "Instrument Sort Order"
 msgstr "Instrumenten Reihenfolge"
 
-#: lib/PageRenderer/Musicians.php:670
-#: lib/PageRenderer/ProjectParticipants.php:919
+#: lib/PageRenderer/Musicians.php:680
+#: lib/PageRenderer/ProjectParticipants.php:930
 msgid "Disabled Instruments"
 msgstr "Gesperrte Instrumente"
 
-#: lib/PageRenderer/Musicians.php:698
-#: lib/PageRenderer/ProjectParticipants.php:949
+#: lib/PageRenderer/Musicians.php:708
+#: lib/PageRenderer/ProjectParticipants.php:960
 msgid "Email Status"
 msgstr "Email-Empfang"
 
-#: lib/PageRenderer/Musicians.php:709
-#: lib/PageRenderer/ProjectParticipants.php:974
+#: lib/PageRenderer/Musicians.php:719
+#: lib/PageRenderer/ProjectParticipants.php:985
 msgid "Cloud Account Deactivated"
 msgstr "Cloud-Zugang deaktiviert"
 
-#: lib/PageRenderer/Musicians.php:728
-#: lib/PageRenderer/ProjectParticipants.php:993
+#: lib/PageRenderer/Musicians.php:738
+#: lib/PageRenderer/ProjectParticipants.php:1004
 msgid "Hidden from Cloud"
 msgstr "Kein Cloud-Zugang"
 
-#: lib/PageRenderer/Musicians.php:750
-#: lib/PageRenderer/ProjectParticipants.php:1077
+#: lib/PageRenderer/Musicians.php:760
+#: lib/PageRenderer/ProjectParticipants.php:1088
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#: lib/PageRenderer/Musicians.php:764
-#: lib/PageRenderer/ProjectParticipants.php:1092
+#: lib/PageRenderer/Musicians.php:774
+#: lib/PageRenderer/ProjectParticipants.php:1103
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#: lib/PageRenderer/Musicians.php:782
-#: lib/PageRenderer/ProjectParticipants.php:1107
+#: lib/PageRenderer/Musicians.php:792
+#: lib/PageRenderer/ProjectParticipants.php:1118
 msgid "Address Supplement"
 msgstr "Adresszusatz"
 
-#: lib/PageRenderer/Musicians.php:793
-#: lib/PageRenderer/ProjectParticipants.php:1118
+#: lib/PageRenderer/Musicians.php:803
+#: lib/PageRenderer/ProjectParticipants.php:1129
 msgid "Street"
 msgstr "Straße"
 
-#: lib/PageRenderer/Musicians.php:808
-#: lib/PageRenderer/ProjectParticipants.php:1132
+#: lib/PageRenderer/Musicians.php:818
+#: lib/PageRenderer/ProjectParticipants.php:1143
 msgid "Street Number"
 msgstr "Hausnummer"
 
-#: lib/PageRenderer/Musicians.php:819
-#: lib/PageRenderer/ProjectParticipants.php:1143
+#: lib/PageRenderer/Musicians.php:829
+#: lib/PageRenderer/ProjectParticipants.php:1154
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: lib/PageRenderer/Musicians.php:828
-#: lib/PageRenderer/ProjectParticipants.php:1152
+#: lib/PageRenderer/Musicians.php:838
+#: lib/PageRenderer/ProjectParticipants.php:1163
 msgid "City"
 msgstr "Stadt"
 
-#: lib/PageRenderer/Musicians.php:840
-#: lib/PageRenderer/ProjectParticipants.php:1164
+#: lib/PageRenderer/Musicians.php:850
+#: lib/PageRenderer/ProjectParticipants.php:1175
 msgid "Country"
 msgstr "Land"
 
-#: lib/PageRenderer/Musicians.php:855
-#: lib/PageRenderer/ProjectParticipants.php:1182
+#: lib/PageRenderer/Musicians.php:865
+#: lib/PageRenderer/ProjectParticipants.php:1193
 msgid "Remarks"
 msgstr "Bemerkungen"
 
-#: lib/PageRenderer/Musicians.php:873
-#: lib/PageRenderer/ProjectParticipants.php:1202
+#: lib/PageRenderer/Musicians.php:883
+#: lib/PageRenderer/ProjectParticipants.php:1213
 msgid "Language"
 msgstr "Sprache"
 
-#: lib/PageRenderer/Musicians.php:903
+#: lib/PageRenderer/Musicians.php:913
 msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
-#: lib/PageRenderer/Musicians.php:934
-#: lib/PageRenderer/ProjectParticipants.php:1214
+#: lib/PageRenderer/Musicians.php:944
+#: lib/PageRenderer/ProjectParticipants.php:1225
 msgid "Photo"
 msgstr "Foto"
 
-#: lib/PageRenderer/Musicians.php:996
-#: lib/PageRenderer/ProjectParticipants.php:1273
+#: lib/PageRenderer/Musicians.php:1006
+#: lib/PageRenderer/ProjectParticipants.php:1284
 #: lib/PageRenderer/Projects.php:880
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
-#: lib/PageRenderer/Musicians.php:1009
-#: lib/PageRenderer/ProjectParticipants.php:1285 src/app/ajax.js:37
+#: lib/PageRenderer/Musicians.php:1019
+#: lib/PageRenderer/ProjectParticipants.php:1296 src/app/ajax.js:37
 msgid "Created"
 msgstr "Erzeugt"
 
-#: lib/PageRenderer/Musicians.php:1023
+#: lib/PageRenderer/Musicians.php:1033
 #, php-format
 msgid "Add all to %s"
 msgstr "Alle zu %s"
@@ -5274,7 +5279,7 @@ msgid "Orchestral Sorting"
 msgstr "Orchestersortierung"
 
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:284
-#: lib/PageRenderer/ProjectParticipants.php:663
+#: lib/PageRenderer/ProjectParticipants.php:674
 msgid "Voice"
 msgstr "Stimme"
 
@@ -5282,7 +5287,7 @@ msgstr "Stimme"
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:302
 #: lib/PageRenderer/ProjectParticipantFields.php:704
 #: lib/PageRenderer/ProjectParticipantFields.php:713
-#: lib/PageRenderer/ProjectParticipants.php:767
+#: lib/PageRenderer/ProjectParticipants.php:778
 msgid "n/a"
 msgstr "n/a"
 
@@ -5534,27 +5539,27 @@ msgstr "Musizierenden-Id"
 msgid "First Name"
 msgstr "Vorname"
 
-#: lib/PageRenderer/ProjectParticipants.php:604
+#: lib/PageRenderer/ProjectParticipants.php:615
 msgid "Project Instrument"
 msgstr "Instrument"
 
-#: lib/PageRenderer/ProjectParticipants.php:776
+#: lib/PageRenderer/ProjectParticipants.php:787
 msgid "Section Leader"
 msgstr "Stimmführer"
 
-#: lib/PageRenderer/ProjectParticipants.php:850
+#: lib/PageRenderer/ProjectParticipants.php:861
 msgid "Participation"
 msgstr "Teilnahme"
 
-#: lib/PageRenderer/ProjectParticipants.php:859
+#: lib/PageRenderer/ProjectParticipants.php:870
 msgid "tentatively"
 msgstr "vorläufig"
 
-#: lib/PageRenderer/ProjectParticipants.php:859
+#: lib/PageRenderer/ProjectParticipants.php:870
 msgid "confirmed"
 msgstr "bestätigt"
 
-#: lib/PageRenderer/ProjectParticipants.php:868
+#: lib/PageRenderer/ProjectParticipants.php:879
 #, php-format
 msgid ""
 "Set to `%s' in order to mark participants who passed a personally signed "
@@ -5563,7 +5568,7 @@ msgstr ""
 "Auf `%s' setzen um offiziell angemeldete Personen zu markieren "
 "(unterschriebene Anmeldung liegt vor)"
 
-#: lib/PageRenderer/ProjectParticipants.php:869
+#: lib/PageRenderer/ProjectParticipants.php:880
 msgid ""
 "Check in order to mark participants who passed a personally signed "
 "registration form to us."
@@ -5571,39 +5576,39 @@ msgstr ""
 "Anklicken um offiziell angemeldete Personen zu markieren (unterschriebene "
 "Anmeldung liegt vor)."
 
-#: lib/PageRenderer/ProjectParticipants.php:879
+#: lib/PageRenderer/ProjectParticipants.php:890
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: lib/PageRenderer/ProjectParticipants.php:962
+#: lib/PageRenderer/ProjectParticipants.php:973
 msgid "Musician Deleted"
 msgstr "Person gelöscht"
 
-#: lib/PageRenderer/ProjectParticipants.php:1071
+#: lib/PageRenderer/ProjectParticipants.php:1082
 msgid "Announcements List"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/PageRenderer/ProjectParticipants.php:1526
+#: lib/PageRenderer/ProjectParticipants.php:1537
 #: lib/Service/InstrumentationService.php:173
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/PageRenderer/ProjectParticipants.php:1531
+#: lib/PageRenderer/ProjectParticipants.php:1542
 #: lib/Service/InstrumentationService.php:178
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1538
+#: lib/PageRenderer/ProjectParticipants.php:1549
 #: lib/Service/InstrumentationService.php:185
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1555
+#: lib/PageRenderer/ProjectParticipants.php:1566
 #: lib/Service/InstrumentationService.php:197
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1562
+#: lib/PageRenderer/ProjectParticipants.php:1573
 #: lib/PageRenderer/SepaBankAccounts.php:1131
 msgid "Miscinfo"
 msgstr "Verschiedenes"
