@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ $cssClasses = [
   ],
   MailingListsController::OPERATION_SUBSCRIBE => [
     'status-unsubscribed-visible' => true,
-    'expert-mode-only' => true,
+    // 'expert-mode-only' => true,
   ],
   MailingListsController::OPERATION_UNSUBSCRIBE => [
     'status-subscribed-visible' => true,
