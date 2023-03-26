@@ -31,6 +31,9 @@ use OCA\CAFEVDB\Common\Util;
 /** Add the email address traits. */
 trait MusicianEmailsTrait
 {
+  /** @var bool */
+  protected $expertMode;
+
   /**
    * @param string $musicianIdField The field name of the column with the
    * musician id. If null assume that the musicians table is the master table
@@ -95,6 +98,7 @@ trait MusicianEmailsTrait
             'name'   => $this->l->t('Em@ils'),
             'tab'    => [ 'id' => $tableTab ],
             'sql'    => 'CONCAT_WS(",", ' . $emailField . ', GROUP_CONCAT(DISTINCT IF($join_col_fqn = ' . $emailField .  ', NULL, $join_col_fqn)))',
+            'options' => $this->expertMode ? 'LFACDPV' : 'ACDPV', // principal email is enough for list view
             'input' => 'M',
             'select|FL' => 'T',
             'select' => 'M',
@@ -145,7 +149,7 @@ trait MusicianEmailsTrait
         $this->defaultFDD['email'], [
           'name'  => $this->l->t('Principal Em@il'),
           'tab'   => [ 'id' => $tableTab ],
-          'options' => 'ACDPV',
+          // 'options' => 'ACDPV',
           'input' => 'RM',
           'select' => 'T',
           'select|LF' => 'T',
