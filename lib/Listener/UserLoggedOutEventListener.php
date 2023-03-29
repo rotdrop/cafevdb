@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,9 +27,10 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\User\Events\UserLoggedOutEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IGroupManager;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
+// use OCP\IGroupManager;
+// use Psr\Log\LoggerInterface as ILogger;
+// use OCP\IL10N;
+use OCP\AppFramework\IAppContainer;
 
 /**
  * Perform necessary tasks at logout time.
@@ -39,22 +40,17 @@ use OCP\IL10N;
  */
 class UserLoggedOutEventListener implements IEventListener
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  // use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const EVENT = HandledEvent::class;
 
-  /** @var ISubAdmin */
-  private $groupManager;
+  /** @var IAppContainer */
+  private $appContainer;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(
-    IGroupManager $groupManager,
-    ILogger $logger,
-    IL10N $l10n,
-  ) {
-    $this->groupManager = $groupManager;
-    $this->logger = $logger;
-    $this->l = $l10n;
+  public function __construct(IAppContainer $appContainer)
+  {
+    $this->appContainer = $appContainer;
   }
   // phpcs:enable
 

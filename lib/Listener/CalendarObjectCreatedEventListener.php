@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,7 @@ namespace OCA\CAFEVDB\Listener;
 
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
+use OCP\AppFramework\IAppContainer;
 
 use OCA\DAV\Events\CalendarObjectCreatedEvent as HandledEvent;
 
@@ -44,18 +43,13 @@ class CalendarObjectCreatedEventListener implements IEventListener
 
   const EVENT = HandledEvent::class;
 
-  /** @var EventsService */
-  private $eventsService;
+  /** @var IAppContainer */
+  private $appContainer;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(
-    EventsService $eventsService,
-    ILogger $logger,
-    IL10N $l10n,
-  ) {
-    $this->eventsService = $eventsService;
-    $this->logger = $logger;
-    $this->l = $l10n;
+  public function __construct(IAppContainer $appContainer)
+  {
+    $this->appContainer = $appContainer;
   }
   // phpcs:enable
 
@@ -65,6 +59,8 @@ class CalendarObjectCreatedEventListener implements IEventListener
     if (!($event instanceof HandledEvent)) {
       return;
     }
-    $this->eventsService->onCalendarObjectCreated($event);
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer->get(EventsService::class);
+    $eventsService->onCalendarObjectCreated($event);
   }
 }
