@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -96,14 +96,13 @@ class ProjectEventsController extends Controller
         $selected[$eventUri] = true;
       }
 
+      $events = null;
       switch ($topic) {
         case 'dialog': // open
           $template = 'events';
-          $events = $this->eventsService->events($projectId);
           break;
         case 'redisplay':
           $template = 'eventslisting';
-          $events = $this->eventsService->events($projectId);
           break;
         case 'select':
           $template = 'eventslisting';
@@ -115,7 +114,6 @@ class ProjectEventsController extends Controller
           break;
         case 'deselect':
           $template = 'eventslisting';
-          $events = $this->eventsService->events($projectId);
           $selected = []; // array marking selected events
           break;
         case 'delete':
@@ -124,7 +122,6 @@ class ProjectEventsController extends Controller
           $calendarId = $this->parameterService['CalendarId'][$eventUri];
           $this->calDavService->deleteCalendarObject($calendarId, $eventUri);
           $this->eventsService->unregister($projectId, $eventUri);
-          $events = $this->eventsService->events($projectId);
           unset($selected[$eventUri]);
           break;
         case 'detach':
@@ -157,6 +154,9 @@ class ProjectEventsController extends Controller
           return self::grumble($this->l->t('Unknown Request'));
       }
 
+      if ($events === null) {
+        $events = $this->eventsService->events($projectId);
+      }
       $dfltIds = $this->eventsService->defaultCalendars();
       $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
 
