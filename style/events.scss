@@ -337,11 +337,11 @@
 	margin: 3px 0;
 }
 /* normal font weight for secondary buttons for less obtrusiveness */
-#advanced_options_button,
-#editEvent-export,
-#editEvent-delete {
-	font-weight: normal;
-}
+/* #advanced_options_button, */
+/* #editEvent-export, */
+/* #editEvent-delete { */
+/* 	font-weight: normal; */
+/* } */
 
 #advanced_options {
   display:none;
@@ -444,6 +444,7 @@ div.google-popup {
     }
     .button.calendar-app {
       margin:3px 0;
+      line-height:1em;
     }
   }
 }
