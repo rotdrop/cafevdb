@@ -92,8 +92,9 @@ class ProjectEventsController extends Controller
       $selectedEvents = $this->parameterService->getParam('eventSelect', []);
       $selected = []; // array marking selected events
 
-      foreach ($selectedEvents as $eventUri) {
-        $selected[$eventUri] = true;
+      foreach ($selectedEvents as $eventIdentifier) {
+        $eventIdentifier = json_decode($eventIdentifier, true);
+        $selected[$eventIdentifier['uri']] = true;
       }
 
       $events = null;
