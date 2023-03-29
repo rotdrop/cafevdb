@@ -131,6 +131,7 @@ class ProjectService
       $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     } catch (Throwable $t) {
       $this->logError('HELLO');
+      /** @var \OCP\IRequest $request */
       $request = \OC::$server->query(\OCP\IRequest::class);
       $this->logError('HELLO2');
       $userId = $this->userId();
@@ -139,6 +140,7 @@ class ProjectService
       } else {
         $this->logError('User "'.$userId.'", no request?!');
       }
+
       $this->logError('SERVER '.print_r($_SERVER, true));
       $this->logError('POST '.print_r($_REQUEST, true));
       $this->repository = null;
