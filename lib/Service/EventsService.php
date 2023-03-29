@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,11 @@ namespace OCA\CAFEVDB\Service;
 use \Exception;
 use \DateTimeImmutable;
 use \DateTimeZone;
+
+use Sabre\VObject\Recur\EventIterator;
+use Sabre\VObject\Recur\MaxInstancesExceededException;
+use Sabre\VObject\Recur\NoInstancesException;
+use Sabre\VObject\Component\VEvent;
 
 use OCA\DAV\Events\CalendarUpdatedEvent;
 use OCA\DAV\Events\CalendarDeletedEvent;
@@ -304,6 +309,7 @@ class EventsService
    * [
    *   'projectid' => PROJECT_ID,
    *   'uri' => EVENT_URI,
+   *   'uid' => EVENT_UID,
    *   'calendarid' => CALENDAR_ID,
    *   'start' => \DateTime,
    *   'end' => \DateTime,
@@ -336,8 +342,68 @@ class EventsService
     }
     $vCalendar = VCalendarService::getVCalendar($calendarObject);
     $vObject = VCalendarService::getVObject($vCalendar);
+    $this->fillEventDataFromVObject($vObject, $event);
+
+    $this->logInfo('RECURRING ' . (int)VCalendarService::isEventRecurring($vObject));
+
+    if (VCalendarService::isEventRecurring($vObject)) {
+      $end = $event['end'];
+      $siblings = [];
+
+      $vEvents = VCalendarService::getAllVObjects($vCalendar);
+      try {
+        // there is also the expand() method on the VCalendar ...
+        $eventIterator = new EventIterator($vEvents);
+        while ($eventIterator->valid()) {
+          $sibling = $eventIterator->getEventObject();
+          $sibling = $this->fillEventDataFromVObject($sibling);
+          $siblings[] = $sibling;
+          $end = max($end, $sibling['end']);
+          $eventIterator->next();
+        }
+      } catch (NoInstancesException $e) {
+        // This event is recurring, but it doesn't have a single
+        // instance. We are skipping this event from the output
+        // entirely.
+      } catch (MaxInstancesExceededException $e) {
+        // The event has more than 3500 recurring-instances
+        // so we can ignore it
+      }
+
+      $event['siblings'] = $siblings;
+      $event['end'] = $end;
+    }
+
+    $this->logInfo('EVENT ' . print_r($event, true));
+
+    return $event;
+  }
+
+  /**
+   * Convert the given VEvent object to a simpler flat array structure.
+   *
+   * @param VEvent $vObject
+   *
+   * @param array $event Output array to fill.
+   *
+   * @return array Just return $event, with the following data filled in:
+   * ```
+   * [
+   *   ...
+   *   'start' => \DateTime,
+   *   'end' => \DateTime,
+   *   'allday' => BOOL
+   *   'summary' => SUMMARY,
+   *   'description' => DESCRTION,
+   *   'location' => LOCATION,
+   *   ...
+   * ]
+   * ```
+   */
+  private function fillEventDataFromVObject(VEvent $vObject, array &$event = []):array
+  {
     $dtStart = $vObject->DTSTART;
-    $dtEnd   = VCalendarService::getDTEnd($vCalendar);
+    $dtEnd   = VCalendarService::getDTEnd($vObject);
 
     $start = $dtStart->getDateTime();
     $end = $dtEnd->getDateTime();
@@ -352,8 +418,6 @@ class EventsService
         $end = $end->setTimezone($timeZone);
       }
     } else {
-      // the following is not overly correct, but make a prettier
-      // display:
       $start = new DateTimeImmutable($start->format('Y-m-d H:i:s'), $timeZone);
       $end = new DateTimeImmutable($end->format('Y-m-d H:i:s'), $timeZone);
     }
@@ -706,8 +770,6 @@ class EventsService
    * list of attendees.
    *
    * @return A string with the ICAL data.
-   *
-   * @todo Include local timezone.
    */
   public function exportEvents(array $events, string $projectName, bool $hideParticipants = false)
   {
@@ -724,15 +786,14 @@ class EventsService
     foreach ($events as $eventURI => $calendarId) {
       $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
       $vCalendar = VCalendarService::getVCalendar($event);
-      $vObject = VCalendarService::getVObject($vCalendar);
-      if (empty($vObject)) {
-        continue;
+      $vObjects = VCalendarService::getAllVObjects($vCalendar);
+      foreach ($vObjects as $vObject) {
+        if ($hideParticipants) {
+          $vObject->remove('ATTENDEE');
+          $vObject->remove('ORGANIZER');
+        }
+        $result .= $vObject->serialize();
       }
-      if ($hideParticipants) {
-        $vObject->remove('ATTENDEE');
-        $vObject->remove('ORGANIZER');
-      }
-      $result .= $vObject->serialize();
     }
     $result .= "END:VCALENDAR".$eol;
 
