@@ -90,11 +90,12 @@ class ProjectEventsController extends Controller
       }
 
       $selectedEvents = $this->parameterService->getParam('eventSelect', []);
-      $selected = []; // array marking selected events
+      $calendarIds = $this->parameterService['calendarId'];
 
+      $selected = []; // array marking selected events
       foreach ($selectedEvents as $eventIdentifier) {
         $eventIdentifier = json_decode($eventIdentifier, true);
-        $selected[$eventIdentifier['uri']] = true;
+        $selected[$eventIdentifier['uri']] = $eventIdentifier['calendarId'];
       }
 
       $events = null;
@@ -119,29 +120,20 @@ class ProjectEventsController extends Controller
           break;
         case 'delete':
           $template = 'eventslisting';
-          $eventUri = $this->parameterService['EventURI'];
-          $calendarId = $this->parameterService['CalendarId'][$eventUri];
+          $eventUri = $this->parameterService['eventURI'];
+          $calendarId = $calendarIds[$eventUri];
           $this->calDavService->deleteCalendarObject($calendarId, $eventUri);
           $this->eventsService->unregister($projectId, $eventUri);
           unset($selected[$eventUri]);
           break;
         case 'detach':
           $template = 'eventslisting';
-          $eventUri = $this->parameterService['EventURI'];
+          $eventUri = $this->parameterService['eventURI'];
           $this->eventsService->unchain($projectId, $eventUri);
           unset($selected[$eventUri]);
           break;
         case 'download':
-          $calendarIds = $this->parameterService['CalendarId'];
-
-          if (count($selected) > 0) {
-            $exports = [];
-            foreach (array_keys($selected) as $eventUri) {
-              $exports[$eventUri] = $calendarIds[$eventUri];
-            }
-          } else {
-            $exports = $calendarIds;
-          }
+          $exports = count($selected) > 0 ? $selected : $calendarIds;
 
           $fileName = $projectName.'-'.$this->timeStamp().'.ics';
 

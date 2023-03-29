@@ -83,7 +83,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
     echo <<<__EOT__
       <tr class="$cssClass step-$n">
         <td class="eventbuttons">
-          <input type="hidden" id="calendarid-$evtUri" name="CalendarId[$evtUri]" value="$calId"/>
+          <input type="hidden" id="calendarid-$evtUri" name="calendarId[$evtUri]" value="$calId"/>
 __EOT__;
     foreach ($evtButtons as $btn => $values) {
       $tag   = $values['tag'];
