@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ use OCA\CAFEVDB\Common\Uuid;
  * @todo: replace the stuff below by more persistent APIs. As it shows
  * (Sep. 2020) the only option would be http calls to the dav service. Even
  * the perhaps-forthcoming writable calendar API does not allow the creation
- * of calendars or altering shring options.
+ * of calendars or altering sharing options.
  */
 class CalDavService
 {
@@ -383,7 +383,8 @@ class CalDavService
    *
    * @param int $calendarId Numeric calendar id.
    *
-   * @param null|string $localUri Local URI to use or null.
+   * @param null|string $localUri Local URI to use or null in which case an
+   * URI based on a UUID will be generated.
    *
    * @param mixed $object Calendar data.
    *
@@ -410,7 +411,7 @@ class CalDavService
    *
    * @param int $calendarId Numeric calendar id.
    *
-   * @param null|string $localUri Local URI to use or null.
+   * @param null|string $localUri Local URI to use.
    *
    * @param mixed $object Calendar data.
    *
@@ -500,7 +501,7 @@ class CalDavService
    *
    * @param string $objectIdentifier Either the URI or the UID of the
    * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
-   * other the UID.
+   * otherwise it is treated as UID.
    *
    * @return string|null The local URI (basename).
    *
