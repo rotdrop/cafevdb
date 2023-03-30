@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@
  */
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -47,21 +50,6 @@ class ProjectEvent implements \ArrayAccess
   private $project;
 
   /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=764, nullable=false)
-   * @ORM\Id
-   */
-  private $eventUri;
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=764, nullable=false)
-   */
-  private $eventUid;
-
-  /**
    * @var int
    *
    * @ORM\Column(type="integer", nullable=false)
@@ -71,9 +59,25 @@ class ProjectEvent implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=764, nullable=false)
+   * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
+   * @ORM\Id
    */
   private $calendarUri;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
+   * @ORM\Id
+   */
+  private $eventUri;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=255, nullable=false, options={"collation"="ascii_general_ci"})
+   */
+  private $eventUid;
 
   /**
    * @var null|Types\EnumVCalendarType
@@ -82,10 +86,33 @@ class ProjectEvent implements \ArrayAccess
    */
   private $type;
 
+  /**
+   * @var Collection
+   *
+   * Linked ProjectParticipantField entities which can be used to record
+   * asence from rehearsals or other calendar events. As calendar events are
+   * possibly repeating or we need a list of linked fields in order to record
+   * the participation for each event instance.
+   *
+   * @ORM\ManyToMany(targetEntity="ProjectParticipantField", fetch="EXTRA_LAZY")
+   * @ORM\JoinTable(
+   *   joinColumns={
+   *     @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *     @ORM\JoinColumn(name="calendar_uri", referencedColumnName="calendar_uri"),
+   *     @ORM\JoinColumn(name="event_uri", referencedColumnName="event_uri")
+   *   },
+   *   inverseJoinColumns={
+   *     @ORM\JoinColumn(unique=true)
+   *   }
+   * )
+   */
+  private $absenceFields;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
+    $this->absenceFields = new ArrayCollection;
   }
   // phpcs:enable
 
@@ -235,5 +262,29 @@ class ProjectEvent implements \ArrayAccess
   public function getType(): ?Types\EnumVCalendarType
   {
     return $this->type;
+  }
+
+  /**
+   * Set absenceFields.
+   *
+   * @param Collection $absenceFields
+   *
+   * @return ProjectEvents
+   */
+  public function setAbsenceFields(Collection $absenceFields):ProjectEvent
+  {
+    $this->absenceFields = $absenceFields;
+
+    return $this;
+  }
+
+  /**
+   * Get absenceFields.
+   *
+   * @return Collection
+   */
+  public function getAbsenceFields():Collection
+  {
+    return $this->absenceFields;
   }
 }
