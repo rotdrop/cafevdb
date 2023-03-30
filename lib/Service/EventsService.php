@@ -430,6 +430,10 @@ class EventsService
     $event['summary'] = (string)$vObject->SUMMARY;
     $event['description'] = (string)$vObject->DESCRIPTION;
     $event['location'] = (string)$vObject->LOCATION;
+    $recurrenceId = $vObject->{'RECURRENCE-ID'};
+    if ($recurrenceId !== null) {
+      $event['recurrenceId'] = (string)$recurrenceId;
+    }
 
     return $event;
   }
