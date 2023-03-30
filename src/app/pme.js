@@ -1434,7 +1434,17 @@ function installInputSelectize(containerSel, onlyClass) {
     if (toolTip) {
       $selectWidget.attr('title', toolTip).addClass('tooltip-auto').cafevTooltip();
     }
-    $self.off('dropdown_open, dropdown_close').on('dropdown_open, dropdown_close', function(event) { $.fn.cafevTooltip.remove(); });
+    console.info('DROPDOWN HANDLERS');
+    selectizeInstance.off('before_dropdown_open');
+    selectizeInstance.on('before_dropdown_open', function(event) {
+      ensureDropdownVisibility(container);
+      $.fn.cafevTooltip.remove();
+    });
+    selectizeInstance.off('dropdown_close');
+    selectizeInstance.on('dropdown_close', function(event) {
+      resetDropdownVisibility(container);
+      $.fn.cafevTooltip.remove();
+    });
   });
 }
 
@@ -1705,6 +1715,59 @@ const pmeOpenRowDialog = function(element, event, container) {
   }
 };
 
+const tableContainerId = pmeIdSelector('table-container');
+const dropdownSavedOverflow = 'dropdownSavedOverflow';
+
+/**
+ * Set the overflow of dialogs to 'visible' if they do not have
+ * vertical scrollbars. This is used as callback for drop-down "open"
+ * events in order to ensure the visibility of the drop-down menus if
+ * the ambient dialog is too small.
+ *
+ * @param {jQuery} $container TBD.
+ */
+const ensureDropdownVisibility = function($container) {
+  if (!$container.hasClass('ui-widget-content')) {
+    return;
+  }
+  if ($container.hasVerticalScrollbar()) {
+    return;
+  }
+  const $widget = $container.cafevDialog('widget');
+  const $tableContainer = $container.find(tableContainerId);
+  if ($widget.hasVerticalScrollbar() || $tableContainer.hasVerticalScrollbar()) {
+    return;
+  }
+  const elements = [$container, $widget, $tableContainer];
+  for (const $element of elements) {
+    $element.data(dropdownSavedOverflow, $element[0].style.overflow || '');
+    $element.css('overflow', 'visible');
+  }
+};
+
+/**
+ * Reset the CSS overflow property of dialogs to empty if they do not
+ * have vertical scrollbars. This is used as callback for drop-down
+ * "close" events in order to reset the visibility of the drop-down
+ * menus when they are closing.
+ *
+ * @param {jQuery} $container TBD.
+ */
+const resetDropdownVisibility = function($container) {
+  const elements = [
+    $container,
+    $container.cafevDialog('widget'),
+    $container.find(tableContainerId),
+  ];
+  for (const $element of elements) {
+    const savedOverflow = $element.data(dropdownSavedOverflow);
+    if (savedOverflow !== undefined) {
+      $element.css('overflow', savedOverflow);
+      $element.removeData(dropdownSavedOverflow);
+    }
+  }
+};
+
 /**
  * @param {object} containerSel Selector of jQuery element of the
  * container around the form.
@@ -1904,24 +1967,10 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
    * if the select box is close to the bottom of the page.
    *
    */
-  const tableContainerId = pmeIdSelector('table-container');
 
+  // @todo: the same for selectize
   container.on('chosen:before_showing_dropdown', tableContainerId + ' select', function(event) {
-    if (!container.hasClass('ui-widget-content')) {
-      return true;
-    }
-    if (container.hasVerticalScrollbar()) {
-      return true;
-    }
-    const widget = container.cafevDialog('widget');
-    const tableContainer = container.find(tableContainerId);
-    if (widget.hasVerticalScrollbar() || tableContainer.hasVerticalScrollbar()) {
-      return true;
-    }
-    widget.css('overflow', 'visible');
-    container.css('overflow', 'visible');
-    tableContainer.css('overflow', 'visible');
-    return true;
+    ensureDropdownVisibility(container);
   });
 
   // container.on('chosen:before_hiding_dropdown', tableContainerId + ' select', function(event) {
@@ -1934,21 +1983,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
   // });
 
   container.on('chosen:hiding_dropdown', tableContainerId + ' select', function(event) {
-    if (!container.hasClass('ui-widget-content')) {
-      return true;
-    }
-    if (container.hasVerticalScrollbar()) {
-      return true;
-    }
-    const widget = container.cafevDialog('widget');
-    const tableContainer = container.find(tableContainerId);
-    if (widget.hasVerticalScrollbar() || tableContainer.hasVerticalScrollbar()) {
-      return true;
-    }
-    tableContainer.css('overflow', '');
-    container.css('overflow', '');
-    widget.css('overflow', '');
-    return true;
+    resetDropdownVisibility(container);
   });
 
   // Handle some special check-boxes disabling text-input fields
