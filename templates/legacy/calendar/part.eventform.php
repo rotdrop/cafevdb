@@ -151,7 +151,7 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
       <td><input type="hidden" style="float:right;" class="submit" value="<?php p($l->t("Advanced")); ?>" id="advanced_options_button_repeat"></td>
     </tr>
   </table>
-  <div id="advanced_options_repeating" style="/* display:none; */">
+  <div id="advanced_options_repeating"> <!-- style="/* display:none; */"> -->
     <table style="width:100%">
       <tr id="advanced_month" style="display:none;">
 	<th width="75px"></th>

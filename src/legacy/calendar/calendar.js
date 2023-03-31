@@ -616,6 +616,8 @@ const Calendar = {
         }
         if ($('#repeat option:selected').val() === 'doesnotrepeat') {
           $('#advanced_options_repeating').slideUp('slow');
+        } else {
+          $('#advanced_options_repeating').slideDown('slow');
         }
       }
       if (task === 'month') {
