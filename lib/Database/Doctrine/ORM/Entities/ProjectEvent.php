@@ -35,7 +35,13 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectEvents
  *
- * @ORM\Table(name="ProjectEvents", uniqueConstraints={@ORM\UniqueConstraint(columns={"project_id", "event_uid"})})
+ * @ORM\Table(
+ *   name="ProjectEvents",
+ *   indexes={
+ *     @ORM\Index(columns={"event_uri"}),
+ *     @ORM\Index(columns={"calendar_id"}),
+ *   }
+ * )
  * @ORM\Entity
  */
 class ProjectEvent implements \ArrayAccess
@@ -50,13 +56,6 @@ class ProjectEvent implements \ArrayAccess
   private $project;
 
   /**
-   * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   */
-  private $calendarId;
-
-  /**
    * @var string
    *
    * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
@@ -67,17 +66,47 @@ class ProjectEvent implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
+   * @ORM\Column(type="string", length=255, nullable=false, options={"collation"="ascii_general_ci"})
    * @ORM\Id
    */
-  private $eventUri;
+  private $eventUid;
+
+  /**
+   * @var int
+   * The SEQUENCE number tied to the event. We always use the highest
+   * sequence, but technically this is part of the id.i
+   *
+   * @ORM\Column(type="integer", options={"default"=0})
+   * @ORM\Id
+   */
+  private $sequence;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=255, nullable=false, options={"collation"="ascii_general_ci"})
+   * The RECURRENCE-ID for repeating events, without the range. Note that this
+   * has a date-time format `YYYYMMDDTHHMMSS...` but this only coincides with
+   * DTSTART until DTSTART is changed. It remains constant throughout the
+   * life-time of the recurrence set.
+   *
+   * @ORM\Column(type="string", length=64, nullable=false, options={"default"="", "collation"="ascii_bin"})
+   * @ORM\Id
    */
-  private $eventUid;
+  private $recurrenceId;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
+   */
+  private $eventUri;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   */
+  private $calendarId;
 
   /**
    * @var null|Types\EnumVCalendarType
@@ -87,32 +116,21 @@ class ProjectEvent implements \ArrayAccess
   private $type;
 
   /**
-   * @var Collection
+   * @var ProjectParticipantField
    *
-   * Linked ProjectParticipantField entities which can be used to record
-   * asence from rehearsals or other calendar events. As calendar events are
+   * Linked ProjectParticipantField entity which can be used to record
+   * absence from rehearsals or other calendar events. As calendar events are
    * possibly repeating or we need a list of linked fields in order to record
    * the participation for each event instance.
    *
-   * @ORM\ManyToMany(targetEntity="ProjectParticipantField", fetch="EXTRA_LAZY")
-   * @ORM\JoinTable(
-   *   joinColumns={
-   *     @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *     @ORM\JoinColumn(name="calendar_uri", referencedColumnName="calendar_uri"),
-   *     @ORM\JoinColumn(name="event_uri", referencedColumnName="event_uri")
-   *   },
-   *   inverseJoinColumns={
-   *     @ORM\JoinColumn(unique=true)
-   *   }
-   * )
+   * @ORM\OneToOne(targetEntity="ProjectParticipantField", fetch="EXTRA_LAZY")
    */
-  private $absenceFields;
+  private $absenceField;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
-    $this->absenceFields = new ArrayCollection;
   }
   // phpcs:enable
 
@@ -237,6 +255,54 @@ class ProjectEvent implements \ArrayAccess
   }
 
   /**
+   * Set sequence.
+   *
+   * @param int $sequence
+   *
+   * @return ProjectEvents
+   */
+  public function setSequence(int $sequence):ProjectEvent
+  {
+    $this->sequence = $sequence;
+
+    return $this;
+  }
+
+  /**
+   * Get sequence.
+   *
+   * @return int
+   */
+  public function getSequence():int
+  {
+    return $this->sequence;
+  }
+
+  /**
+   * Set recurrenceId.
+   *
+   * @param string $recurrenceId
+   *
+   * @return ProjectEvents
+   */
+  public function setRecurrenceId(string $recurrenceId):ProjectEvent
+  {
+    $this->recurrenceId = $recurrenceId;
+
+    return $this;
+  }
+
+  /**
+   * Get recurrenceId.
+   *
+   * @return string
+   */
+  public function getRecurrenceId():string
+  {
+    return $this->recurrenceId;
+  }
+
+  /**
    * Set type.
    *
    * @param Types\EnumVCalendarType|null|string $type
@@ -265,26 +331,26 @@ class ProjectEvent implements \ArrayAccess
   }
 
   /**
-   * Set absenceFields.
+   * Set absenceField.
    *
-   * @param Collection $absenceFields
+   * @param ProjectParticipantField $absenceField
    *
    * @return ProjectEvents
    */
-  public function setAbsenceFields(Collection $absenceFields):ProjectEvent
+  public function setAbsenceField(ProjectParticipantField $absenceField):ProjectEvent
   {
-    $this->absenceFields = $absenceFields;
+    $this->absenceField = $absenceField;
 
     return $this;
   }
 
   /**
-   * Get absenceFields.
+   * Get absenceField.
    *
-   * @return Collection
+   * @return ProjectParticipantField
    */
-  public function getAbsenceFields():Collection
+  public function getAbsenceField():ProjectParticipantField
   {
-    return $this->absenceFields;
+    return $this->absenceField;
   }
 }

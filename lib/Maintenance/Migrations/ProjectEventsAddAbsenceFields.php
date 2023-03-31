@@ -36,12 +36,17 @@ class ProjectEventsAddAbsenceFields extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      "CREATE TABLE IF NOT EXISTS project_event_project_participant_field (project_id INT NOT NULL, calendar_uri VARCHAR(764) NOT NULL COLLATE `ascii_bin`, event_uri VARCHAR(764) NOT NULL COLLATE `ascii_bin`, project_participant_field_id INT NOT NULL, INDEX IDX_CB1BE8A3166D1F9C7A7DD39295D374F2 (project_id, calendar_uri, event_uri), UNIQUE INDEX UNIQ_CB1BE8A36C95B1E2 (project_participant_field_id), PRIMARY KEY(project_id, calendar_uri, event_uri, project_participant_field_id))",
       "ALTER TABLE ProjectEvents DROP PRIMARY KEY",
-      "ALTER TABLE ProjectEvents CHANGE event_uri event_uri VARCHAR(764) NOT NULL COLLATE `ascii_bin`, CHANGE calendar_uri calendar_uri VARCHAR(764) NOT NULL COLLATE `ascii_bin`, CHANGE event_uid event_uid VARCHAR(255) NOT NULL COLLATE `ascii_general_ci`",
-      "ALTER TABLE ProjectEvents ADD PRIMARY KEY (project_id, calendar_uri, event_uri)",
-      "ALTER TABLE project_event_project_participant_field ADD CONSTRAINT CB1BE8A3166D1F9C7A7DD39295D374F2 FOREIGN KEY IF NOT EXISTS (project_id, calendar_uri, event_uri) REFERENCES ProjectEvents (project_id, calendar_uri, event_uri)",
-      "ALTER TABLE project_event_project_participant_field ADD CONSTRAINT FK_CB1BE8A36C95B1E2 FOREIGN KEY IF NOT EXISTS (project_participant_field_id) REFERENCES ProjectParticipantFields (id)",
+      "DROP INDEX IF EXISTS UNIQ_7E38FC8B166D1F9C4254C3D5 ON ProjectEvents",
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS sequence INT DEFAULT 0 NOT NULL",
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS recurrence_id VARCHAR(64) DEFAULT '' NOT NULL COLLATE `ascii_bin`",
+      "ALTER TABLE ProjectEvents CHANGE COLUMN IF EXISTS recurrence_id recurrence_id VARCHAR(64) DEFAULT '' NOT NULL COLLATE `ascii_bin`",
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS absence_field_id INT DEFAULT NULL",
+      "CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_7E38FC8BA79D8A87 ON ProjectEvents (absence_field_id)",
+      "ALTER TABLE ProjectEvents ADD CONSTRAINT FK_7E38FC8BA79D8A87 FOREIGN KEY IF NOT EXISTS (absence_field_id) REFERENCES ProjectParticipantFields (id)",
+      "ALTER TABLE ProjectEvents ADD PRIMARY KEY (project_id, calendar_uri, event_uid, sequence, recurrence_id)",
+      "CREATE INDEX IF NOT EXISTS IDX_7E38FC8B95D374F2 ON ProjectEvents (event_uri)",
+      "CREATE INDEX IF NOT EXISTS IDX_7E38FC8BA40A2C8 ON ProjectEvents (calendar_id)",
     ],
     self::TRANSACTIONAL => [],
   ];
@@ -49,6 +54,6 @@ class ProjectEventsAddAbsenceFields extends AbstractMigration
   /** {@inheritdoc} */
   public function description():string
   {
-    return $this->l->t('Link optional per participant fields to record absence from rehearsals.');
+    return $this->l->t('Link optional per participant fields to project events in order to record absence.');
   }
 }
