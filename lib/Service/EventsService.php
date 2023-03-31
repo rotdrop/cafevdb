@@ -879,7 +879,10 @@ class EventsService
    * Parse the respective event data and make sure the ProjectEvents
    * table is uptodate.
    *
-   * @param array $objectData Calendar object data provided by event.
+   * @param array $objectData Calendar object data provided by event. The
+   * calendar data may define a repeating event. Each recurrence instance will
+   * get its own slot in the ProjectEvents table in order to decouple the rest
+   * of the code from the complicated recurrence rules of iCalendar events.
    *
    * @param bool $unregister Whether to unregister the event from projects not
    * mentioned in its category list.
@@ -904,10 +907,11 @@ class EventsService
 
     $type = VCalendarService::getVObjectType($vCalendar);
 
-    // As a temporary hack enforce all events to be public as there is
-    // currently no means to share calendars with really full-access. This is
-    // a missing delegation feature in NC.
     if ($type == 'VEVENT') {
+      // As a temporary hack enforce all events to be public as there is
+      // currently no means to share calendars with really full-access. This is
+      // a missing delegation feature in NC.
+
       $vEvent = VCalendarService::getVObject($vCalendar);
       if (!empty($vEvent->CLASS) && ($vEvent->CLASS == 'CONFIDENTIAL' || $vEvent->CLASS == 'PRIVATE')) {
         $this->logInfo('FORCE EVENT ' . $eventURI . ' TO BE PUBLIC ' . $vEvent->CLASS);
@@ -926,6 +930,10 @@ class EventsService
         $this->calDavService->updateCalendarObject($calId, $eventURI, $originalVCalendar);
         return []; // there will be another event which then is used to update the project links.
       }
+
+      // Perhaps add another hack and turn any full-day multi-day event into
+      // its equivalent recurring event (i.e. same number of days, but with
+      // recurrence rules.
     }
 
     // Now fetch all projects and their names ...
@@ -935,6 +943,8 @@ class EventsService
     $unregistered = [];
     // Do the sync. The categories stored in the event are
     // the criterion for this.
+
+    /** @var Entities\Project $project */
     foreach ($projects as $project) {
       $prKey = $project->getId();
       if (in_array($project->getName(), $categories)) {
