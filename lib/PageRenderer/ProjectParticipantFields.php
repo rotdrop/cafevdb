@@ -372,6 +372,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
       'css' => [ 'postfix' => [ 'participant-fields-usage', ], ],
+      'options' => 'CDVLF',
       'select' => 'N',
       'align' => 'right',
       'input' => 'V',
