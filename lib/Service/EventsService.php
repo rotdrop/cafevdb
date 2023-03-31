@@ -434,6 +434,10 @@ class EventsService
     if ($recurrenceId !== null) {
       $event['recurrenceId'] = (string)$recurrenceId;
     }
+    $sequence = $vObject->SEQUENCE;
+    if ($sequence) {
+      $event['sequence'] = (string)$sequence;
+    }
 
     return $event;
   }
