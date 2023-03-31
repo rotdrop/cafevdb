@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1369,6 +1369,20 @@ const installFilterChosen = function(containerSel) {
   });
 };
 
+const removeButtonPlugin = {
+  // eslint-disable-next-line camelcase
+  remove_button: {
+    title: t(appName, 'Remove'),
+  },
+};
+
+const clearButtonPlugin = {
+  // eslint-disable-next-line camelcase
+  clear_button: {
+    title: t(appName, 'Clear'),
+  },
+};
+
 /**
  * Internal helper function.
  *
@@ -1388,7 +1402,7 @@ function installInputSelectize(containerSel, onlyClass) {
     const $self = $(this);
     const selectizeOptions = mergician({ appendArrays: true, dedupArrays: true })(
       {
-        plugins: ['remove_button'],
+        plugins: $self.prop('multiple') ? removeButtonPlugin : clearButtonPlugin,
         delimiter: ',',
         persist: false,
         hideSelected: false,
@@ -1396,6 +1410,7 @@ function installInputSelectize(containerSel, onlyClass) {
         items: $self.data('initialValues'),
         // closeAfterSelect: true,
         create: false,
+        inputClass: 'pme-selectize-input',
       },
       $self.data('selectizeOptions') || {}
     );
@@ -1428,13 +1443,12 @@ function installInputSelectize(containerSel, onlyClass) {
     // console.info('SELECTIZE OPTIONS', { ...selectizeOptions });
     $self.selectize(selectizeOptions);
     const selectizeInstance = getSelectConstrolObject($self);
-    selectizeInstance.$control_input.removeAttr('autofill').addClass('selectize-input-element');
+    selectizeInstance.$control_input.removeAttr('autofill');
     const $selectWidget = selectWidget($self);
     const toolTip = $self.attr('title') || $self.attr('data-original-title');
     if (toolTip) {
       $selectWidget.attr('title', toolTip).addClass('tooltip-auto').cafevTooltip();
     }
-    console.info('DROPDOWN HANDLERS');
     selectizeInstance.off('before_dropdown_open');
     selectizeInstance.on('before_dropdown_open', function(event) {
       ensureDropdownVisibility(container);
