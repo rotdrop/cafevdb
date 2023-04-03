@@ -309,7 +309,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @return ProjectEvents
    */
-  public function setType($type = null):ProjectEvent
+  public function setType(mixed $type = null):ProjectEvent
   {
     if ($type === null) {
       $this->type = $type;
