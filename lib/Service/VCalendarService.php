@@ -41,6 +41,7 @@ use Sabre\VObject\Property\ICalendar;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Legacy\Calendar\OC_Calendar_Object;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 
 /** Operation/Builder for VCalendar objects */
 class VCalendarService
@@ -50,10 +51,10 @@ class VCalendarService
   /** @var OC_Calendar_Object */
   private $legacyCalendarObject;
 
-  const VTODO = 'VTODO';
-  const VEVENT = 'VEVENT';
-  const VCARD = 'VCARD';
-  const VJOURNAL = 'VJOURNAL';
+  const VTODO = VCalendarType::VTODO;
+  const VEVENT = VCalendarType::VEVENT;
+  const VCARD = VCalendarType::VCARD;
+  const VJOURNAL = VCalendarType::VJOURNAL;
 
   const ALARM_ACTION_DISPLAY = 'DISPLAY';
   const ALARM_ACTION_AUDIO = 'AUDIO';
@@ -490,31 +491,39 @@ class VCalendarService
   /**
    * Return the category list for the given object
    *
-   * @param VCalendar $vCalendar Sabe vCalendar object.
+   * @param VComponent $vComponent Sabre VCalendar or VEvent object.
    *
    * @return An array with the categories for the object.
    */
-  public static function getCategories(VCalendar $vCalendar):array
+  public static function getCategories(VComponent $vComponent):array
   {
-    // get the inner object
-    $vObject = self::getVObject($vCalendar);
-
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
     return isset($vObject->CATEGORIES) ? $vObject->CATEGORIES->getParts() : [];
   }
 
   /**
-   * @param VCalendar $vCalendar Object reference.
+   * @param VComponent $vComponent Sabre VCalendar or VEvent object.
    *
    * @param array $categories Array of strings.
    *
-   * @return VCalendar Pass through of $vCalendar.
+   * @return VComponent Pass through of $vComponent.
    */
-  public static function setCategories(VCalendar $vCalendar, array $categories):VCalendar
+  public static function setCategories(VComponent $vComponent, array $categories):VCalendar
   {
-    // get the inner object
-    $vObject = self::getVObject($vCalendar);
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
     $vObject->CATEGORIES = $categories;
-    return $vCalendar;
+
+    return $vComponent;
   }
 
   /**
