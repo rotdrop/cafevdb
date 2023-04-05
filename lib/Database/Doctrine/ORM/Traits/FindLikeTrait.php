@@ -214,7 +214,10 @@ trait FindLikeTrait
    *
    * @param array $criteria Search criteria.
    *
-   * @param null|array $orderBy Order-by criteria.
+   * @param null|array $orderBy Order-by criteria. In addition to ASC and DESC
+   * an ordering of INDEX is also supported. INDEX will add a corresponding
+   * "INDEX BY" directive to the generated DQL query which will generate a
+   * result array indexed by the specified column.
    *
    * @param int|null $limit Limit on the number of results.
    *
