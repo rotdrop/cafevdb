@@ -513,7 +513,7 @@ class VCalendarService
    *
    * @return VComponent Pass through of $vComponent.
    */
-  public static function setCategories(VComponent $vComponent, array $categories):VCalendar
+  public static function setCategories(VComponent $vComponent, array $categories):VComponent
   {
     if ($vComponent instanceof VCalendar) {
       // get the inner object
@@ -527,89 +527,115 @@ class VCalendarService
   }
 
   /**
-   * @param VCalendar $vCalendar Sabre calendar object.
+   * @param VComponent $vComponent Sabre VCalendar or VEvent object.
    *
    * @return null|string The UID of $vCalendar.
    */
-  public static function getUid(VCalendar $vCalendar):?string
+  public static function getUid(VComponent $vComponent):?string
   {
-    // get the inner object
-    $vObject = self::getVObject($vCalendar);
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
 
     return isset($vObject->UID) ? $vObject->UID : null;
   }
 
   /**
-   * @param VCalendar $vCalendar Object reference.
+   * @param VComponent $vComponent Sabre VCalendar or VEvent object.
    *
    * @param string $uid The uid to set.
    *
    * @return VCalendar Pass through of $vCalendar.
    */
-  public static function setUid(VCalendar $vCalendar, string $uid):VCalendar
+  public static function setUid(VComponent $vComponent, string $uid):VComponent
   {
-    // get the inner object
-    $vObject = self::getVObject($vCalendar);
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
     $vObject->UID = $uid;
 
-    return $vCalendar;
+    return $vComponent;
   }
 
   /**
-   * @param VCalendar $vCalendar Sabre calendar object.
+   * @param VComponent $vComponent Sabre calendar object.
    *
    * @return null|string The summary comment of $vCalendar.
    */
-  public static function getSummary(VCalendar $vCalendar):?string
+  public static function getSummary(VComponent $vComponent):?string
   {
-    // get the inner object
-    $vObject = self::getVObject($vCalendar);
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
 
     return isset($vObject->SUMMARY) ? $vObject->SUMMARY : null;
   }
 
   /**
-   * @param VCalendar $vCalendar Object reference.
+   * @param VComponent $vComponent Object reference.
    *
    * @param null|string $summary The summary to set.
    *
-   * @return VCalendar Pass through of $vCalendar.
+   * @return VComponent Pass through of $vComponent.
    */
-  public static function setSummary(VCalendar $vCalendar, ?string $summary):VCalendar
+  public static function setSummary(VComponent $vComponent, ?string $summary):VComponent
   {
-    // get the inner object
-    $vObject = self::getVObject($vCalendar);
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
     $vObject->SUMMARY = $summary;
 
-    return $vCalendar;
+    return $vComponent;
   }
 
   /**
-   * @param VCalendar $vCalendar Sabre calendar object.
+   * @param VComponent $vComponent Sabre calendar object.
    *
    * @return null|string The summary comment of $vCalendar.
    */
-  public static function getDescription(VCalendar $vCalendar):?string
+  public static function getDescription(VComponent $vComponent):?string
   {
-    // get the inner object
-    $vObject = self::getVObject($vCalendar);
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
 
     return isset($vObject->DESCRIPTION) ? $vObject->DESCRIPTION : null;
   }
 
   /**
-   * @param VCalendar $vCalendar Object reference.
+   * @param VComponent $vComponent Object reference.
    *
    * @param null|string $description The description to set.
    *
-   * @return VCalendar Pass through of $vCalendar.
+   * @return VComponent Pass through of $vComponent.
    */
-  public static function setDescription(VCalendar $vCalendar, ?string $description):VCalendar
+  public static function setDescription(VComponent $vComponent, ?string $description):VComponent
   {
     // get the inner object
-    $vObject = self::getVObject($vCalendar);
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
     $vObject->DESCRIPTION = $description;
-    return $vCalendar;
+
+    return $vComponent;
   }
 
   /**
