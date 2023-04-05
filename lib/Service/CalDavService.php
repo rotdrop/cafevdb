@@ -472,7 +472,7 @@ class CalDavService
    *
    * @param string $objectIdentifier Either the URI or the UID of the
    * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
-   * other the UID.
+   * otherwise the UID.
    *
    * @return array|null
    *
