@@ -27,7 +27,8 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-use OCA\DAV\Events\CalendarDeletedEvent as HandledEvent;
+use OCA\DAV\Events\CalendarDeletedEvent;
+use OCA\DAV\Events\CalendarMovedToTrashEvent;
 
 use OCA\CAFEVDB\Service\EventsService;
 
@@ -38,7 +39,10 @@ use OCA\CAFEVDB\Service\EventsService;
  */
 class CalendarDeletedEventListener implements IEventListener
 {
-  const EVENT = HandledEvent::class;
+  const EVENT = [
+    CalendarDeletedEvent::class,
+    CalendarMovedToTrashEvent::class,
+  ];
 
   /** @var IAppContainer */
   private $appContainer;
@@ -53,7 +57,7 @@ class CalendarDeletedEventListener implements IEventListener
   /** {@inheritdoc} */
   public function handle(Event $event):void
   {
-    if (!($event instanceof HandledEvent)) {
+    if (!in_array(get_class($event), self::EVENT)) {
       return;
     }
     /** @var EventsService $eventsService */

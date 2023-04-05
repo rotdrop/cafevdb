@@ -27,8 +27,8 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
-
-use OCA\DAV\Events\CalendarObjectCreatedEvent as HandledEvent;
+use OCA\DAV\Events\CalendarObjectCreatedEvent;
+use OCA\DAV\Events\CalendarObjectRestoredEvent;
 
 use OCA\CAFEVDB\Service\EventsService;
 
@@ -41,7 +41,10 @@ class CalendarObjectCreatedEventListener implements IEventListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  const EVENT = HandledEvent::class;
+  const EVENT = [
+    CalendarObjectCreatedEvent::class,
+    CalendarObjectRestoredEvent::class,
+  ];
 
   /** @var IAppContainer */
   private $appContainer;
@@ -56,7 +59,7 @@ class CalendarObjectCreatedEventListener implements IEventListener
   /** {@inheritdoc} */
   public function handle(Event $event):void
   {
-    if (!($event instanceof HandledEvent)) {
+    if (!in_array(get_class($event), self::EVENT)) {
       return;
     }
     /** @var EventsService $eventsService */
