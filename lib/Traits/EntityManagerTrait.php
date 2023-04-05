@@ -162,7 +162,7 @@ trait EntityManagerTrait
       return;
     }
     $this->entityManager->remove($entity);
-    if ($hard) {
+    if ($hard && (!method_exists($entity, 'isDeleted') || !$entity->isDeleted())) {
       $this->flush();
       $this->entityManager->remove($entity);
     }
