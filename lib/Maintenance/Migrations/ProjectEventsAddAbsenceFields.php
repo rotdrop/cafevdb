@@ -36,20 +36,35 @@ class ProjectEventsAddAbsenceFields extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
-      "ALTER TABLE ProjectEvents DROP PRIMARY KEY",
-      "DROP INDEX IF EXISTS UNIQ_7E38FC8B166D1F9C4254C3D5 ON ProjectEvents",
-      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS sequence INT DEFAULT 0 NOT NULL",
-      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS recurrence_id VARCHAR(64) DEFAULT '' NOT NULL COLLATE `ascii_bin`",
-      "ALTER TABLE ProjectEvents CHANGE COLUMN IF EXISTS recurrence_id recurrence_id VARCHAR(64) DEFAULT '' NOT NULL COLLATE `ascii_bin`",
+      "ALTER TABLE ProjectEvents DROP FOREIGN KEY IF EXISTS FK_7E38FC8B166D1F9C",
+      //
+      // "ALTER TABLE ProjectEvents DROP PRIMARY KEY",
+      "ALTER TABLE ProjectEvents DROP INDEX IF EXISTS `PRIMARY`, ADD COLUMN IF NOT EXISTS id INT AUTO_INCREMENT NOT NULL, ADD PRIMARY KEY (id)",
       "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS absence_field_id INT DEFAULT NULL",
+      //
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS recurrence_id VARCHAR(64) DEFAULT '' NOT NULL COLLATE `ascii_bin`",
+      "ALTER TABLE ProjectEvents CHANGE recurrence_id recurrence_id VARCHAR(64) DEFAULT '' NOT NULL COLLATE `ascii_bin`",
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS sequence INT DEFAULT 0 NOT NULL",
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS deleted DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
+      "ALTER TABLE ProjectEvents CHANGE type type enum('VEVENT','VTODO','VJOURNAL','VCARD') NOT NULL
+  COMMENT 'enum(VEVENT,VTODO,VJOURNAL,VCARD)(DC2Type:EnumVCalendarType)'",
+      //
+      "CREATE INDEX IF NOT EXISTS IDX_7E38FC8B166D1F9C ON ProjectEvents (project_id)",
+      "ALTER TABLE ProjectEvents ADD CONSTRAINT FK_7E38FC8B166D1F9C FOREIGN KEY IF NOT EXISTS (project_id) REFERENCES Projects (id)",
+      //
       "CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_7E38FC8BA79D8A87 ON ProjectEvents (absence_field_id)",
       "ALTER TABLE ProjectEvents ADD CONSTRAINT FK_7E38FC8BA79D8A87 FOREIGN KEY IF NOT EXISTS (absence_field_id) REFERENCES ProjectParticipantFields (id)",
-      "ALTER TABLE ProjectEvents ADD PRIMARY KEY (project_id, calendar_uri, event_uid, sequence, recurrence_id)",
-      "CREATE INDEX IF NOT EXISTS IDX_7E38FC8B95D374F2 ON ProjectEvents (event_uri)",
-      "CREATE INDEX IF NOT EXISTS IDX_7E38FC8BA40A2C8 ON ProjectEvents (calendar_id)",
+      //
+      "CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_7E38FC8B166D1F9C7A7DD3924254C3D52C414CE8 ON ProjectEvents (project_id, calendar_uri, event_uid, recurrence_id)",
+      "CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_7E38FC8B166D1F9CA40A2C84254C3D52C414CE8 ON ProjectEvents (project_id, calendar_id, event_uid, recurrence_id)",
+      "CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_7E38FC8B166D1F9C7A7DD39295D374F22C414CE8 ON ProjectEvents (project_id, calendar_uri, event_uri, recurrence_id)",
+      "CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_7E38FC8B166D1F9CA40A2C895D374F22C414CE8 ON ProjectEvents (project_id, calendar_id, event_uri, recurrence_id)",
+      //
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS series_uid BINARY(16) NOT NULL COMMENT '(DC2Type:uuid_binary)'",
     ],
     self::TRANSACTIONAL => [],
   ];
+
 
   /** {@inheritdoc} */
   public function description():string

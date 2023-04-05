@@ -24,42 +24,73 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+
+use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * ProjectEvents
  *
  * @ORM\Table(
  *   name="ProjectEvents",
- *   indexes={
- *     @ORM\Index(columns={"event_uri"}),
- *     @ORM\Index(columns={"calendar_id"}),
+ *   uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"project_id", "calendar_uri", "event_uid", "recurrence_id"}),
+ *     @ORM\UniqueConstraint(columns={"project_id", "calendar_id", "event_uid", "recurrence_id"}),
+ *     @ORM\UniqueConstraint(columns={"project_id", "calendar_uri", "event_uri", "recurrence_id"}),
+ *     @ORM\UniqueConstraint(columns={"project_id", "calendar_id", "event_uri", "recurrence_id"}),
  *   }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectEventsRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class ProjectEvent implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+  use CAFEVDB\Traits\SoftDeleteableEntity;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="calendarEvents", fetch="EXTRA_LAZY")
+   * @var int
+   *
+   * While it would be tempting to just use the calendar URI and event UID and
+   * perhaps the recurrence id as composite key it turns out that this is
+   * complicated for repeating events: calendar apps may choose to split
+   * existing series into two when changing "this event and future" events and
+   * at that point one needs to match the recurrence ids in order to "find"
+   * the correct new old event. The event will then be part of a new event
+   * series with a new UID.
+   *
+   * @ORM\Column(type="integer", nullable=false)
    * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+  private $id;
+
+  /**
+   * @var Project
+   *
+   * @ORM\ManyToOne(targetEntity="Project", inversedBy="calendarEvents", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumn(nullable=false)
    */
   private $project;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   */
+  private $calendarId;
 
   /**
    * @var string
    *
    * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
-   * @ORM\Id
    */
   private $calendarUri;
 
@@ -67,19 +98,26 @@ class ProjectEvent implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=255, nullable=false, options={"collation"="ascii_general_ci"})
-   * @ORM\Id
    */
   private $eventUid;
 
   /**
-   * @var int
-   * The SEQUENCE number tied to the event. We always use the highest
-   * sequence, but technically this is part of the id.i
+   * @var \OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface
    *
-   * @ORM\Column(type="integer", options={"default"=0})
-   * @ORM\Id
+   * A unique identifier which links RELATED-TO events. This occurs if
+   * recurring event series are split but applying changes to "this and
+   * future" events.
+   *
+   * @ORM\Column(type="uuid_binary", nullable=false)
    */
-  private $sequence;
+  private $seriesUid;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
+   */
+  private $eventUri;
 
   /**
    * @var string
@@ -90,28 +128,22 @@ class ProjectEvent implements \ArrayAccess
    * life-time of the recurrence set.
    *
    * @ORM\Column(type="string", length=64, nullable=false, options={"default"="", "collation"="ascii_bin"})
-   * @ORM\Id
    */
   private $recurrenceId;
 
   /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
-   */
-  private $eventUri;
-
-  /**
    * @var int
+   * The SEQUENCE number tied to the event. We always use the highest
+   * sequence, but technically this is part of the id.
    *
-   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Column(type="integer", nullable=false, options={"default"=0})
    */
-  private $calendarId;
+  private $sequence;
 
   /**
    * @var null|Types\EnumVCalendarType
    *
-   * @ORM\Column(type="EnumVCalendarType", nullable=true)
+   * @ORM\Column(type="EnumVCalendarType", nullable=false)
    */
   private $type;
 
@@ -135,11 +167,35 @@ class ProjectEvent implements \ArrayAccess
   // phpcs:enable
 
   /**
+   * Set id.
+   *
+   * @param int $id
+   *
+   * @return IdEvent
+   */
+  public function setId(int $id):ProjectEvent
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
+  /**
+   * Get id.
+   *
+   * @return int
+   */
+  public function getId():int
+  {
+    return $this->id;
+  }
+
+  /**
    * Set projectId.
    *
    * @param null|Project $project
    *
-   * @return ProjectEvents
+   * @return ProjectEvent
    */
   public function setProject($project):ProjectEvent
   {
@@ -163,7 +219,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @param null|int $calendarId
    *
-   * @return ProjectEvents
+   * @return ProjectEvent
    */
   public function setCalendarId($calendarId):ProjectEvent
   {
@@ -187,7 +243,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @param string $calendarUri
    *
-   * @return ProjectEvents
+   * @return ProjectEvent
    */
   public function setCalendarUri(string $calendarUri):ProjectEvent
   {
@@ -211,7 +267,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @param string|null $eventUri
    *
-   * @return ProjectEvents
+   * @return ProjectEvent
    */
   public function setEventUri($eventUri)
   {
@@ -255,11 +311,37 @@ class ProjectEvent implements \ArrayAccess
   }
 
   /**
+   * Set seriesUid.
+   *
+   * @param string|null $seriesUid
+   *
+   * @return ProjectEvent
+   */
+  public function setSeriesUid(mixed $seriesUid):ProjectEvent
+  {
+    $seriesUid = Uuid::asUuid($seriesUid);
+
+    $this->seriesUid = $seriesUid;
+
+    return $this;
+  }
+
+  /**
+   * Get seriesUid.
+   *
+   * @return UuidInterface
+   */
+  public function getSeriesUid():UuidInterface
+  {
+    return $this->seriesUid;
+  }
+
+  /**
    * Set sequence.
    *
    * @param int $sequence
    *
-   * @return ProjectEvents
+   * @return ProjectEvent
    */
   public function setSequence(int $sequence):ProjectEvent
   {
@@ -283,7 +365,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @param string $recurrenceId
    *
-   * @return ProjectEvents
+   * @return ProjectEvent
    */
   public function setRecurrenceId(string $recurrenceId):ProjectEvent
   {
@@ -307,7 +389,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @param Types\EnumVCalendarType|null|string $type
    *
-   * @return ProjectEvents
+   * @return ProjectEvent
    */
   public function setType(mixed $type = null):ProjectEvent
   {
@@ -335,7 +417,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @param ProjectParticipantField $absenceField
    *
-   * @return ProjectEvents
+   * @return ProjectEvent
    */
   public function setAbsenceField(ProjectParticipantField $absenceField):ProjectEvent
   {
