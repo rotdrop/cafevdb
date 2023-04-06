@@ -391,6 +391,29 @@ class ProjectService
   }
 
   /**
+   * Fetch some project matching the specified criteria.
+   *
+   * @param array $criteria
+   *
+   * @param array $orderBy Sorting criteria. Default is to index by project id
+   * and sort descending by type, descending by year, ascending by name.
+   *
+   * @return array<int, Entities\Project>
+   */
+  public function fetch(array $criteria, ?array $orderBy = []):array
+  {
+    if (empty($orderBy)) {
+      $orderBy['type'] = 'DESC';
+      $orderBy['year'] = 'DESC';
+      $orderBy['name'] = 'ASC';
+    }
+    if (!in_array('INDEX', array_values($orderBy))) {
+      $orderBy['id'] = 'INDEX';
+    }
+    return $this->repository->findBy($criteria, $orderBy);
+  }
+
+  /**
    * Depending on the type of the project generate the partial project-folder
    * path:
    * - ProjectType::TEMPORARY -- path is YEAR/PROJECT_NAME
