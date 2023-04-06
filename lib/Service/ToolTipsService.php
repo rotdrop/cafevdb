@@ -1179,6 +1179,7 @@ will open an Email form suitable for
 sending the marked events to selected
 recipients.'),
 
+          'calendar' => $this->l->t('Open the respective event instance in the calendar app in another browser window or tab.'),
         ],
 
         'all' => [
