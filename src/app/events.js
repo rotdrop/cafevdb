@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,16 +39,16 @@ require('jquery-ui/ui/widgets/accordion');
 
 require('events.scss');
 
-const Events = globalState.Events = {
+globalState.Events = {
   projectId: -1,
   projectName: '',
-  events: { /* nothing */ },
-  confirmText: {
-    delete: t(appName, 'Do you really want to delete this event?'),
-    detach: t(appName, 'Do you really want to detach this event from the current project?'),
-    select: '',
-    deselect: '',
-  },
+};
+
+const confirmText = {
+  delete: t(appName, 'Do you really want to delete this event?'),
+  detach: t(appName, 'Do you really want to detach this event from the current project?'),
+  select: '',
+  deselect: '',
 };
 
 const accordionList = function(selector, $dialogHolder) {
@@ -190,8 +190,8 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           $.post(
             generateUrl('projects/events/redisplay'),
             {
-              projectId: Events.projectId,
-              projectName: Events.projectName,
+              projectId: globalState.Events.projectId,
+              projectName: globalState.Events.projectName,
               eventSelect: events,
             })
             .fail(handleError)
@@ -281,9 +281,6 @@ const adjustSize = function($dialogHolder) {
 };
 
 const relist = function(htmlContent, textStatus, xhr, afterInit) {
-
-  // globalState.Events.projectId = parseInt(xhr.getResponseHeader('X-' + appName + '-project-id'));
-  // globalState.Events.projectName = xhr.getResponseHeader('X-' + appName + '-project-name');
 
   afterInit = afterInit || (() => pageBusyIcon(false));
 
@@ -406,7 +403,7 @@ const buttonClick = function(event) {
 
     post.push({ name: 'eventIdentifier', value: $this.val() });
 
-    const really = globalState.Events.confirmText[name];
+    const really = confirmText[name];
     if (really !== undefined && really !== '') {
       // Attention: dialogs do not block, so the action needs to be
       // wrapped into the callback.
