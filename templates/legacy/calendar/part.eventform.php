@@ -96,7 +96,7 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
          href="<?php
                print_unescaped(
                  $urlGenerator->linkToRoute('maps.page.index')
-                 . '?search=' . urlencode($_['location'])
+                 . '?search=' . urlencode($_['location'] ?? '')
                );
                ?>"
       >
