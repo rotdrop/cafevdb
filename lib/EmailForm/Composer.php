@@ -5511,7 +5511,12 @@ Störung.';
       foreach ($eventGroup['events'] as $event) {
         $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
         $name = stripslashes($event['summary']).', '.$datestring;
-        $value = json_encode([ 'uri' => $event['uri'], 'calendarId' => $event['calendarid'], ]);
+        $value = json_encode([
+          'uri' => $event['uri'],
+          'calendarId' => $event['calendarid'],
+          'recurrenceId' => $event['recurrenceId'] ?? '',
+          'seriesUid' => $event['seriesUid'] ?? '',
+        ]);
         $selectOptions[] = [
           'value' => $value,
           'name' => $name,
