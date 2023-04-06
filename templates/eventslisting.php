@@ -24,11 +24,11 @@
 
 use OCA\CAFEVDB\Common\Util;
 
-?>
-<div class="size-holder event-list-container">
-<?php
-
 $evtButtons = [
+  'Calendar' => [
+    'tag' => 'calendar',
+    'title' => $toolTips['projectevents:event:calendar'],
+  ],
   'Edit' => [
     'tag' => 'edit',
     'title' => $toolTips['projectevents:event:edit'],
@@ -47,6 +47,10 @@ $evtButtons = [
   ],
 ];
 
+?>
+<div class="size-holder event-list-container">
+<?php
+
 $n = 0;
 foreach ($eventMatrix as $key => $eventGroup) {
   $class = [ 'listing', ];
@@ -60,14 +64,22 @@ foreach ($eventMatrix as $key => $eventGroup) {
   } else {
     continue;
   }
-  echo '<h4 class="heading ' . implode(' ', $class). '">' . $dpyName . '</h4>';
-  echo '<div class="table-container">
-  <table class="' . implode(' ', $class) . '">
-    <tbody>
-';
+  $classes = implode(' ', $class);
+?>
+  <h4 class="heading <?php p($classes); ?>"><?php p($dpyName); ?></h4>
+  <div class="table-container">
+    <table class="<?php p($classes); ?>">
+      <tbody>
+<?php
   foreach ($eventGroup['events'] as $event) {
-    $evtUri  = $event['uri'];
     $calId  = $event['calendarid'];
+    $evtUri  = $event['uri'];
+    $recurrenceId = $event['recurrenceId'];
+    $seriesUid = $event['seriesUid'];
+
+    $flatIdentifier = implode(':', [ $calId, $evtUri, $recurrenceId ]);
+    $inputValue = json_encode([ 'calendarId' => $calId, 'uri' => $evtUri, 'recurrenceId' => $recurrenceId, 'seriesUid' => $seriesUid ]);
+
     $brief  = htmlspecialchars(stripslashes($event['summary']));
     $location = htmlspecialchars(stripslashes($event['location']));
     $description = htmlspecialchars(nl2br(stripslashes($event['description'])));
@@ -79,47 +91,51 @@ foreach ($eventMatrix as $key => $eventGroup) {
       . (!empty($brief) ? '<br/>' . $brief  : '')
       . (!empty($location) ? '<br/>' . $location  : '')
       . (!empty($description) ? '<br/>' . $description : '');
-
-    echo <<<__EOT__
-      <tr class="$cssClass step-$n">
-        <td class="eventbuttons">
-          <input type="hidden" id="calendarid-$evtUri" name="calendarId[$evtUri]" value="$calId"/>
-__EOT__;
+?>
+        <tr class="<?php p($cssClass); ?> step-<?php p($n); ?>"
+            data-calendar-id="<?php p($calId); ?>"
+            data-event-uri="<?php p($evtUri); ?>"
+            data-recurrence-id="<?php p($recurrenceId); ?>"
+            data-series-uid="<?php p($seriesUid); ?>"
+        >
+          <td class="eventbuttons">
+            <input type="hidden" id="calendarid-<?php p($evtUri); ?>" name="calendarId[<?php p($evtUri); ?>]" value="<?php p($calId); ?>"/>
+<?php
     foreach ($evtButtons as $btn => $values) {
       $tag   = $values['tag'];
       $title = $values['title'];
       $name  = $tag."[$evtUri]";
-      echo <<<__EOT__
-          <input class="$tag event-action"
-                 id="$tag-$evtUri"
-                 type="button"
-                 name="$tag"
-                 title="$title"
-                 value="$evtUri"
-                 data-calendar-id="$calId"
-          />
-__EOT__;
+?>
+            <input class="<?php p($tag); ?> event-action"
+                   id="<?php p($tag); ?>-<?php p($flatIdentifier); ?>"
+                   type="button"
+                   name="<?php p($tag); ?>"
+                   title="<?php p($title); ?>"
+                   value='<?php p($inputValue); ?>'
+            />
+<?php
     }
     $title = $toolTips['projectevents:event:select'];
-    $checked = isset($selected[$evtUri]) ? 'checked="checked"' : '';
-    $emailValue = Util::htmlEscape(json_encode([ 'uri' => $evtUri, 'calendarId' => $calId ]));
-    echo <<<__EOT__
-        </td>
-        <td class="eventemail">
-          <label class="email-check" for="email-check-$evtUri"  title="$title" >
-          <input class="email-check" title="" id="email-check-$evtUri" type="checkbox" name="eventSelect[]" value="$emailValue" $checked />
-          <div class="email-check" /></label>
-        </td>
-        <td class="eventdata brief tooltip-top tooltip-wide" id="brief-$evtUri" title="$description">$brief</td>
-        <td class="eventdata date tooltip-top tooltip-wide" id="data-$evtUri" title="$description">$datestring</td>
-      </tr>
-__EOT__;
+    $checked = isset($selected[$flatIdentifier]) ? 'checked="checked"' : '';
+    $emailCheckId = 'email-check-' . $flatIdentifier;
+?>
+          </td>
+          <td class="eventemail">
+            <label class="email-check" for="<?php p($emailCheckId); ?>"  title="<?php p($title); ?>">
+            <input class="email-check" title="" id="<?php p($emailCheckId); ?>" type="checkbox" name="eventSelect[]" value='<?php p($inputValue); ?>' <?php p($checked); ?>/>
+            <div class="email-check" /></label>
+          </td>
+          <td class="eventdata brief tooltip-top tooltip-wide" id="brief-<?php p($evtUri); ?>" title="<?php p($description); ?>"><?php p($brief); ?></td>
+          <td class="eventdata date tooltip-top tooltip-wide" id="data-<?php p($evtUri); ?>" title="<?php p($description); ?>"><?php p($datestring); ?></td>
+        </tr>
+<?php
     $n = ($n + 1) & 1;
   }
-  echo '    </tbody>
+?>
+    </tbody>
   </table>
 </div>
-';
+<?php
 }
 ?>
 </div>
