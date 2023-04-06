@@ -479,12 +479,18 @@ class VCalendarService
   /**
    * Determine if the given event is recurring or not.
    *
-   * @param VEvent $vObject
+   * @param VComponent $vComponent Sabre VCalendar or VEvent object.
    *
    * @return bool
    */
-  public static function isEventRecurring(VEvent $vObject):bool
+  public static function isEventRecurring(VComponent $vComponent):bool
   {
+    if ($vComponent instanceof VCalendar) {
+      // get the inner object
+      $vObject = self::getVObject($vComponent);
+    } else {
+      $vObject = $vComponent;
+    }
     return isset($vObject->RRULE) || isset($vObject->RDATE);
   }
 
