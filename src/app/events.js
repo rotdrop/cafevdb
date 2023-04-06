@@ -95,8 +95,8 @@ const init = function(htmlContent, textStatus, request, afterInit) {
   dialogContent.cafevDialog({
     dialogClass: 'cafevdb-project-events no-scroll',
     position: {
-      my: 'middle middle',
-      at: 'middle top+50%',
+      my: 'center top',
+      at: 'center top+50',
       of: '#app-content',
     },
     width: 'auto', // 510,
@@ -179,6 +179,10 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           $(this).parent().find(':button.edit').trigger('click');
           return false;
         });
+
+      eventForm
+        .off('change', 'input.email-check')
+        .on('change', 'input.email-check', emailSelection);
 
       $dialogHolder
         .off('cafevdb:events_changed')
@@ -316,6 +320,22 @@ const redisplay = function() {
     .done(relist);
 };
 
+const emailSelection = function(event) {
+  const $this = $(this);
+  const eventUri = $this.closest('tr').data('eventUri');
+  const selector = 'tr[data-event-uri="' + eventUri + '"] input.email-check';
+
+  console.info(
+    'HELLO EMAIL CHANGE',
+    selector,
+    $this.closest('table').find('tr[data-event-uri="' + eventUri + '"]'),
+    $this.closest('table').find('tr[data-event-uri="' + eventUri + '"] input.email-check')
+  );
+
+  $this.closest('table').find('tr[data-event-uri="' + eventUri + '"] input.email-check').prop('checked', $this.prop('checked'));
+  return false;
+};
+
 const buttonClick = function(event) {
   event.preventDefault();
 
@@ -335,13 +355,21 @@ const buttonClick = function(event) {
   $('#events #debug').hide();
   $('#events #debug').empty();
 
-  const name = $(this).attr('name');
+  const $this = $(this);
+  const $row = $this.closest('tr');
+  const calendarId = $row.data('calendarId');
+  // const recurrenceId = $row.data('recurrenceId');
+  const name = $this.attr('name');
 
   switch (name) {
+  case 'calendar':
+    // edit existing event in calendar app
+    afterInit();
+    break;
   case 'edit': {
     // Edit existing event
-    post.push({ name: 'uri', value: $(this).val() });
-    post.push({ name: 'calendarid', value: $(this).data('calendarId') });
+    post.push({ name: 'uri', value: $this.val() });
+    post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
       generateUrl('legacy/events/forms/edit'),
       post,
@@ -356,8 +384,8 @@ const buttonClick = function(event) {
   }
   case 'clone': {
     // Clone existing event
-    post.push({ name: 'uri', value: $(this).val() });
-    post.push({ name: 'calendarid', value: $(this).data('calendarId') });
+    post.push({ name: 'uri', value: $this.val() });
+    post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
       generateUrl('legacy/events/forms/clone'),
       post,
@@ -376,7 +404,7 @@ const buttonClick = function(event) {
   case 'deselect': {
     // Execute the task and redisplay the event list.
 
-    post.push({ name: 'eventURI', value: $(this).val() });
+    post.push({ name: 'eventIdentifier', value: $this.val() });
 
     const really = globalState.Events.confirmText[name];
     if (really !== undefined && really !== '') {
@@ -436,6 +464,9 @@ const buttonClick = function(event) {
     redisplay(afterInit);
     break;
   }
+  default:
+    afterInit();
+    break;
   }
 
   return false;
@@ -445,8 +476,3 @@ export {
   init,
   redisplay,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
