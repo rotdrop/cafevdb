@@ -60,7 +60,7 @@ class ProjectEventsAddAbsenceFields extends AbstractMigration
       "CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_7E38FC8B166D1F9C7A7DD39295D374F22C414CE8 ON ProjectEvents (project_id, calendar_uri, event_uri, recurrence_id)",
       "CREATE UNIQUE INDEX IF NOT EXISTS UNIQ_7E38FC8B166D1F9CA40A2C895D374F22C414CE8 ON ProjectEvents (project_id, calendar_id, event_uri, recurrence_id)",
       //
-      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS series_uid BINARY(16) NOT NULL COMMENT '(DC2Type:uuid_binary)'",
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS series_uid BINARY(16) DEFAULT NULL COMMENT '(DC2Type:uuid_binary)'",
     ],
     self::TRANSACTIONAL => [],
   ];

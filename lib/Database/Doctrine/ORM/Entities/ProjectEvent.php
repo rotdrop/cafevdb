@@ -108,7 +108,7 @@ class ProjectEvent implements \ArrayAccess
    * recurring event series are split but applying changes to "this and
    * future" events.
    *
-   * @ORM\Column(type="uuid_binary", nullable=false)
+   * @ORM\Column(type="uuid_binary", nullable=true)
    */
   private $seriesUid;
 
@@ -331,7 +331,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @return UuidInterface
    */
-  public function getSeriesUid():UuidInterface
+  public function getSeriesUid():?UuidInterface
   {
     return $this->seriesUid;
   }
