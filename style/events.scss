@@ -216,6 +216,11 @@
       background-image: url(../img/pme-copy.png);
     }
 
+    input.calendar {
+      background-image: url(../img/calendar-dark.svg);
+      background-size: 16px;
+    }
+
     input.email-check[type=checkbox] {
       display:none;
       /* visibility:hidden; */
