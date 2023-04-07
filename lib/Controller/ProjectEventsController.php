@@ -133,13 +133,13 @@ class ProjectEventsController extends Controller
       $events = null;
       switch ($topic) {
         case 'dialog': // open
-          $template = 'events';
+          $template = 'project-events/events';
           break;
         case 'redisplay':
-          $template = 'eventslisting';
+          $template = 'project-events/eventslisting';
           break;
         case 'select':
-          $template = 'eventslisting';
+          $template = 'project-events/eventslisting';
           $events = $this->eventsService->events($projectId);
           $selected = []; // array marking selected events
           foreach ($events as $event) {
@@ -148,11 +148,11 @@ class ProjectEventsController extends Controller
           }
           break;
         case 'deselect':
-          $template = 'eventslisting';
+          $template = 'project-events/eventslisting';
           $selected = []; // array marking selected events
           break;
         case 'delete':
-          $template = 'eventslisting';
+          $template = 'project-events/eventslisting';
 
           $calendarId = $eventIdentifier['calendarId'];
           $eventUri = $eventIdentifier['uri'];
@@ -164,7 +164,7 @@ class ProjectEventsController extends Controller
           $selected = array_filter($selected, fn($value, $key) => !str_starts_with($key, $flatIdentifier), ARRAY_FILTER_USE_BOTH);
           break;
         case 'detach':
-          $template = 'eventslisting';
+          $template = 'project-events/eventslisting';
 
           $calendarId = $eventIdentifier['calendarId'];
           $eventUri = $eventIdentifier['uri'];
