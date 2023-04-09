@@ -21,6 +21,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "sass:list";
+
+@import 'color-palette.scss';
+
 #events {
 
   $dialog-title-bar-height: 39px;
@@ -73,7 +77,7 @@
       min-width:100%;
       padding:0;
       margin:0;
-      overflow:hidden;
+      /* overflow:hidden; ?? */
       border:0;
     }
     table.listing {
@@ -84,8 +88,75 @@
     }
 
     select, input, option, button {
-      border-radius:4px;
-      background-color:#F4F4F4;
+      &:not(.action-menu-toggle) {
+        border-radius:4px;
+        background-color:#F4F4F4;
+      }
+    }
+
+    .event-actions.dropdown-container {
+      display: inline-block;
+      max-height: 24px;
+      margin: -3px 0 -3px 0;
+      overflow: visible;
+      .action-menu-toggle {
+        min-height: 0;
+        width: 30px;
+        height: 30px;
+      }
+      .event-action {
+        .menu-item-label {
+          padding-left: 24px;
+          background-position: left center;
+          background-repeat: no-repeat;
+          background-size: 16px;
+        }
+        &.event-action-select {
+          input.email-check:checked ~ label .label-unchecked {
+            display: none !important;
+          }
+          input.email-check:not(:checked) ~ label .label-checked {
+            display: none !important;
+          }
+        }
+        &.event-action-calendar-app {
+          .menu-item-label {
+            background-image: url(../img/calendar-dark.svg);
+          }
+        }
+        &.event-action-edit {
+          .menu-item-label {
+            background-image: url(../img/pme-change.png);
+          }
+        }
+        &.event-action-clone {
+          .menu-item-label {
+            background-image: url(../img/pme-copy.png);
+          }
+        }
+        &.event-action-delete {
+          .menu-item-label {
+            background-image: url(../img/pme-delete.png);
+          }
+        }
+        &.event-action-detach {
+          .menu-item-label {
+            background-image: url(../img/link_break16x16.png);
+          }
+        }
+      }
+      label {
+        text-align: left;
+        display: flex;
+        align-items: center;
+        &::before {
+          margin: 0 8px 0 1px;
+        }
+      }
+      nav {
+        left:unset;
+        position:fixed;
+      }
     }
 
     .cafevdb-menu {
@@ -135,17 +206,10 @@
     input[type="submit"],
     input[type="button"],
     button {
-      height:28px;
-      vertical-align:middle;
-    }
-
-    td.management {
-      padding-left:1em;
-    }
-
-    td.management input {
-      width:100%;
-      /*background-color:#C6DEFF !important;*/
+      &:not(.action-menu-toggle) {
+        height:28px;
+        vertical-align:middle;
+      }
     }
 
     input.image-button {
@@ -174,6 +238,10 @@
       float:right;
       input.projectevents-reload {
         background-image: url(../img/reload-solid.svg);
+        background-size: 24px;
+        &.loading {
+          background-image:url('../../../core/img/loading.gif');
+        }
       }
     }
 
@@ -185,40 +253,6 @@
       padding: 4px 14px 4px 24px;
       min-height:28px;
       vertical-align:middle;
-    }
-
-    input.event-action {
-      background-repeat:no-repeat;
-      background-color:rgba(0,0,0,0) !important;
-      min-width:unset;
-      width:16px;
-      height:15px;
-      border:0;
-      font-size:0;
-      vertical-align:middle;
-      min-height:unset;
-      padding:5px;
-    }
-
-    input.detach {
-      background-image: url(../img/link_break16x16.png);
-    }
-
-    input.edit {
-      background-image: url(../img/pme-change.png);
-    }
-
-    input.delete {
-      background-image: url(../img/pme-delete.png);
-    }
-
-    input.clone {
-      background-image: url(../img/pme-copy.png);
-    }
-
-    input.calendar {
-      background-image: url(../img/calendar-dark.svg);
-      background-size: 16px;
     }
 
     input.email-check[type=checkbox] {
@@ -251,51 +285,81 @@
       /*vertical-align:middle;*/
     }
 
-    td.eventdata, td.eventbuttons, td.eventemail {
-      /*vertical-align:middle;*/
-      border:1px solid #004d9c;
-      padding:3px;
-    }
+    table.listing {
 
-    td.eventbuttons, td.eventemail {
-      text-align:center;
-      width:0.1%;
-      white-space:nowrap;
-    }
+      tr {
+        &.event-is-not-repeating .only-repeating {
+          display:none;
+        }
+        &.event-has-no-cross-series-relations .only-cross-series-relations {
+          display:none;
+        }
 
-    td.eventdata {
-      cursor:pointer;
-    }
+        &.step-0, &.step-1 {
+          td {
+            /*vertical-align:middle;*/
+            border:1px solid #004d9c;
+            padding:3px;
+            @for $index from 1 through 8 {
+              &.event-series-uid-#{$index - 1}, &.event-uid-#{$index - 1} {
+                color: list.nth($colorPalette, $index);
+                background-color: list.nth($colorPalette, $index);
+              }
+            }
+            &.event-uid, &.event-series-uid {
+              .uid-index, .series-uid-index {
+                filter: invert(100%);
+                background-color: rgba(1, 1, 1, 0);
+              }
+            }
+          }
 
-    tr.projectevents:hover td {
-      background-color: #9BAFC8!important;
-    }
+          &.eventbuttons, &.eventemail {
+            text-align:center;
+            width:0.1%;
+            white-space:nowrap;
+          }
 
-    tr.step-0 td {
-      background:#B7CEEC;
-    }
+          &.eventdata {
+            cursor:pointer;
+          }
 
-    tr.step-1 td {
-      background:#C6DEFF;
-    }
+          &.eventdata-date {
+            max-height:1em;
+            width:10.5em !important;
+          }
 
-    td.eventdata-date {
-      max-height:1em;
-      width:10.5em !important;
-    }
+          /* Hide everything but the first line*/
+          &.eventdata-brief {
+            max-width:18.5em;
+            min-width:18.5em;
+            max-height:1em;
+            /* white-space:normal; */
+            overflow:hidden;
+            text-overflow:ellipsis !important;
+            vertical-align:middle;
+          }
+        }
 
-    /* Hide everything but the first line*/
-    td.eventdata-brief {
-      max-width:18.5em;
-      min-width:18.5em;
-      max-height:1em;
-      /* white-space:normal; */
-      overflow:hidden;
-      text-overflow:ellipsis !important;
-      vertical-align:middle;
-    }
+        &.projectevents {
+          &.event-is-not-repeating:hover td {
+            background-color: #9BAFC8!important;
+          }
+          &:hover td:not(.event-uid, .event-series-uid) {
+            background-color: #9BAFC8!important;
+          }
+        }
+
+        &.step-0 td {
+          background:#B7CEEC;
+        }
+
+        &.step-1 td {
+          background:#C6DEFF;
+        }
+      } // tr
+    } // table.listing
   }
-
 }
 
 /* input fields take whole width */
@@ -453,9 +517,3 @@ div.google-popup {
     }
   }
 }
-
-/*
- * LocalVariables: ***
- * css-indent-offset: 2 ***
- * End: ***
- */
