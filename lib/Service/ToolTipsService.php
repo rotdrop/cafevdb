@@ -1173,13 +1173,19 @@ adding the project-name to its
 categories.'),
 
           'select' => $this->l->t('Mark the respective event for being
-sent by email as ICS-attachment per email.
-Hitting the email button above the form
-will open an Email form suitable for
-sending the marked events to selected
-recipients.'),
+sent by email as ICS-attachment.
 
-          'calendar' => $this->l->t('Open the respective event instance in the calendar app in another browser window or tab.'),
+Hitting the email button at the top of the dialog
+will open an Email form suitable for sending the
+marked events to selected recipients.
+
+The download button at the top will just download the selected items.'),
+
+          'calendar-app' => $this->l->t('Open the respective event instance in the calendar app in another browser window or tab.'),
+
+          'event-series-uid' => $this->l->t('When changing particular events of repeating event series then calendar apps may choose to even split those repeating events into several distinct series. This happens in particular if the user chooses to alter properties for "this and future events". This column is used to visually group such related event series. Events which do not belong to a repeating event will have no label and just show the background color.'),
+
+          'event-uid' => $this->l->t('If this particular event instance belongs to a series of repeating events then all events which belong to this series will show the same letter and color in this column in order to visually group events which belong to the same series. Events which do not belong to a repeating event will have no label and just show the background color.'),
         ],
 
         'all' => [

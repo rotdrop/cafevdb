@@ -34,6 +34,7 @@ import { token as pmeToken } from './pme-selectors.js';
 import { revertRows as revertTableRows } from './table-utils.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 import modalizer from './modalizer.js';
+import { close as closeActionMenus } from './action-menu.js';
 
 require('jquery-ui/ui/widgets/accordion');
 
@@ -80,8 +81,17 @@ const accordionList = function(selector, $dialogHolder) {
   return true;
 };
 
+const setLoadingIndicator = function(state) {
+  pageBusyIcon(state);
+  $('#projectevents-reload').toggleClass('loading', state);
+  if (!state) {
+    console.trace('CLOSE ACTION MENU');
+    closeActionMenus();
+  }
+};
+
 const handleError = function(xhr, textStatus, errorThrown) {
-  Ajax.handleError(xhr, textStatus, errorThrown, () => pageBusyIcon(false));
+  Ajax.handleError(xhr, textStatus, errorThrown, () => setLoadingIndicator(false));
 };
 
 const init = function(htmlContent, textStatus, request, afterInit) {
@@ -157,7 +167,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           post,
           function(response, textStatus, xhr) {
             if (textStatus === 'success') {
-              Legacy.Calendar.UI.startEventDialog(() => pageBusyIcon(false));
+              Legacy.Calendar.UI.startEventDialog(() => setLoadingIndicator(false));
               return;
             }
             handleError(xhr, textStatus, xhr.status);
@@ -169,20 +179,60 @@ const init = function(htmlContent, textStatus, request, afterInit) {
         return false;
       });
 
+      const eventActionSelector = ':button:not(.action-menu-toggle), .event-action:not(.event-action-select, .event-action-scope)';
       eventForm
-        .off('click', ':button')
-        .on('click', ':button', buttonClick);
+        .off('click', eventActionSelector)
+        .on('click', eventActionSelector, eventAction);
+
+      const contextMenuRowSelector = 'tr.projectevents';
+      eventForm
+        .off('contextmenu', contextMenuRowSelector)
+        .on('contextmenu', contextMenuRowSelector, function(event) {
+          if (event.ctrlKey) {
+            return; // let the user see the normal context menu
+          }
+          if ($(event.target).closest('.dropdown-container').length > 0) {
+            return; // ignore right click in drop-down menu
+          }
+          const $row = $(this);
+          const $menu = $row.find('.dropdown-container.event-actions');
+
+          if ($menu.length === 0) {
+            return;
+          }
+
+          const $menuToggle = $menu.find('.action-menu-toggle');
+          const $menuContent = $menu.find('.dropdown-content');
+
+          event.preventDefault();
+          event.stopImmediatePropagation();
+
+          $menuContent.css({
+            position: 'fixed',
+            left: event.originalEvent.clientX,
+            top: event.originalEvent.clientY,
+          });
+
+          $menu.addClass('context-menu');
+          $menuToggle.trigger('click');
+
+          return false;
+        });
 
       eventForm
         .off('click', 'td.eventdata')
         .on('click', 'td.eventdata', function(event) {
-          $(this).parent().find(':button.edit').trigger('click');
+          $(this).parent().find('.event-actions .event-action-edit').trigger('click');
           return false;
         });
 
       eventForm
         .off('change', 'input.email-check')
         .on('change', 'input.email-check', emailSelection);
+
+      eventForm
+        .off('change', 'input.scope-radio')
+        .on('change', 'input.scope-radio', scopeSelection);
 
       $dialogHolder
         .off('cafevdb:events_changed')
@@ -282,7 +332,7 @@ const adjustSize = function($dialogHolder) {
 
 const relist = function(htmlContent, textStatus, xhr, afterInit) {
 
-  afterInit = afterInit || (() => pageBusyIcon(false));
+  afterInit = afterInit || (() => setLoadingIndicator(false));
 
   const $dialogHolder = $('#events');
   const listing = $dialogHolder.find('#eventlistholder');
@@ -319,21 +369,37 @@ const redisplay = function() {
 
 const emailSelection = function(event) {
   const $this = $(this);
-  const eventUri = $this.closest('tr').data('eventUri');
+  const eventUri = $this.closest('tr').data('uri');
   const selector = 'tr[data-event-uri="' + eventUri + '"] input.email-check';
 
   console.info(
     'HELLO EMAIL CHANGE',
     selector,
-    $this.closest('table').find('tr[data-event-uri="' + eventUri + '"]'),
-    $this.closest('table').find('tr[data-event-uri="' + eventUri + '"] input.email-check')
+    $this.closest('table').find('tr[data-uri="' + eventUri + '"]'),
+    $this.closest('table').find('tr[data-uri="' + eventUri + '"] input.email-check')
   );
 
-  $this.closest('table').find('tr[data-event-uri="' + eventUri + '"] input.email-check').prop('checked', $this.prop('checked'));
+  $this.closest('table').find('tr[data-uri="' + eventUri + '"] input.email-check').prop('checked', $this.prop('checked'));
+
   return false;
 };
 
-const buttonClick = function(event) {
+const scopeSelection = function(event) {
+  const $this = $(this);
+  const $row = $this.closest('tr');
+
+  console.info('SCOPE SELECTION', $this.val());
+
+  // arguably one could try to adjust the selection on scope change ...
+
+  $row.attr('data-action-scope', $this.val()); // this for CSS
+  $row.data('actionScope', $this.val()); // this for consistency in jQuery
+
+  return false;
+};
+
+const eventAction = function(event) {
+
   event.preventDefault();
 
   const evntdlgopen = $('#event').dialog('isOpen');
@@ -346,26 +412,31 @@ const buttonClick = function(event) {
     return false;
   }
 
-  pageBusyIcon(true);
-  const afterInit = () => pageBusyIcon(false);
+  setLoadingIndicator(true);
+  const afterInit = () => setLoadingIndicator(false);
 
   $('#events #debug').hide();
   $('#events #debug').empty();
 
   const $this = $(this);
   const $row = $this.closest('tr');
-  const calendarId = $row.data('calendarId');
+  const rowData = $row.data() || {};
+  const calendarId = rowData.calendarId;
+  const uri = rowData.uri;
   // const recurrenceId = $row.data('recurrenceId');
-  const name = $this.attr('name');
+
+  const name = $this.attr('name') || $this.data('operation');
+
+  console.info('NAME', name, $this.attr('name'), $this.data('operation'));
 
   switch (name) {
   case 'calendar':
-    // edit existing event in calendar app
+    // @todo edit existing event in calendar app
     afterInit();
     break;
   case 'edit': {
     // Edit existing event
-    post.push({ name: 'uri', value: $this.val() });
+    post.push({ name: 'uri', value: uri });
     post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
       generateUrl('legacy/events/forms/edit'),
@@ -381,7 +452,7 @@ const buttonClick = function(event) {
   }
   case 'clone': {
     // Clone existing event
-    post.push({ name: 'uri', value: $this.val() });
+    post.push({ name: 'uri', value: uri });
     post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
       generateUrl('legacy/events/forms/clone'),
@@ -396,12 +467,10 @@ const buttonClick = function(event) {
     break;
   }
   case 'delete':
-  case 'detach':
-  case 'select':
-  case 'deselect': {
+  case 'detach': {
     // Execute the task and redisplay the event list.
 
-    post.push({ name: 'eventIdentifier', value: $this.val() });
+    post.push({ name: 'eventIdentifier', value: JSON.stringify(rowData) });
 
     const really = confirmText[name];
     if (really !== undefined && really !== '') {

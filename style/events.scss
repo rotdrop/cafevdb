@@ -159,6 +159,8 @@
       }
     }
 
+
+
     .cafevdb-menu {
       &.chosen-container {
 	margin-right:3px;
@@ -288,6 +290,24 @@
     table.listing {
 
       tr {
+        &[data-action-scope="related"] {
+          .scope-related-disabled {
+            &, * {
+              opacity: 0.5;
+              pointer-events: none;
+              cursor: not-allowed;
+            }
+          }
+        }
+        &[data-action-scope="single"].event-is-repeating {
+          .repeating-scope-single-disabled {
+            &, * {
+              opacity: 0.5;
+              pointer-events: none;
+              cursor: not-allowed;
+            }
+          }
+        }
         &.event-is-not-repeating .only-repeating {
           display:none;
         }
