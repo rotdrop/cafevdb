@@ -24,32 +24,29 @@
 
 use OCA\CAFEVDB\Common\Util;
 
-$evtButtons = [
-  'Calendar' => [
-    'tag' => 'calendar',
-    'title' => $toolTips['projectevents:event:calendar'],
-  ],
-  'Edit' => [
-    'tag' => 'edit',
-    'title' => $toolTips['projectevents:event:edit'],
-  ],
-  'Copy' => [
-    'tag' => 'clone',
-    'title' => $toolTips['projectevents:event:clone'],
-  ],
-  'Delete' => [
-    'tag' => 'delete',
-    'title' => $toolTips['projectevents:event:delete'],
-  ],
-  'Detach' => [
-    'tag' => 'detach',
-    'title' => $toolTips['projectevents:event:detach'],
-  ],
-];
-
 ?>
 <div class="size-holder event-list-container">
 <?php
+
+$relationMatrix = [];
+$eventSeries = [];
+$eventRelations = [];
+foreach ($eventMatrix as $key => $eventGroup) {
+  foreach ($eventGroup['events'] as $event) {
+    if (!empty($event['seriesUid'])) {
+      $eventRelations[$event['seriesUid']] = ($eventRelations[$event['seriesUid']] ?? 0) + 1;
+      $eventSeries[$event['uid']] = ($eventSeries[$event['uid']] ?? 0) + 1;
+      if (empty($relationMatrix[$event['seriesUid']])) {
+        $relationMatrix[$event['seriesUid']] = [];
+      }
+      $relationMatrix[$event['seriesUid']][$event['uid']] = true;
+    }
+  }
+}
+$eventSeries = array_flip(array_keys($eventSeries));
+$eventRelations = array_flip(array_keys($eventRelations));
+$haveEventSeries = count($eventSeries) > 0;
+$haveCrossSeriesRelations = array_reduce($relationMatrix, fn(bool $crossRelations, array $uids) => $crossRelations || count($uids) > 1, false);
 
 $n = 0;
 foreach ($eventMatrix as $key => $eventGroup) {
@@ -71,20 +68,39 @@ foreach ($eventMatrix as $key => $eventGroup) {
     <table class="<?php p($classes); ?>">
       <tbody>
 <?php
-  foreach ($eventGroup['events'] as $event) {
+  foreach ($events as $event) {
     $calId  = $event['calendarid'];
-    $evtUri  = $event['uri'];
+    $evtUri = $event['uri'];
+    $evtUid = $event['uid'];
     $recurrenceId = $event['recurrenceId'];
-    $seriesUid = $event['seriesUid'];
+    $seriesUid = $event['seriesUid'] ?? '';
 
     $flatIdentifier = implode(':', [ $calId, $evtUri, $recurrenceId ]);
     $inputValue = json_encode([ 'calendarId' => $calId, 'uri' => $evtUri, 'recurrenceId' => $recurrenceId, 'seriesUid' => $seriesUid ]);
+
+    $isRepeating = isset($eventSeries[$evtUid]);
+    $hasCrossSeriesRelations = count($relationMatrix[$seriesUid] ?? []) > 1;
+
+    $actionScope = $isRepeating ? 'series' : 'single';
+
+    $rowCssClass = $cssClass;
+    if ($isRepeating) {
+      $rowCssClass .= ' event-is-repeating';
+    } else {
+      $rowCssClass .= ' event-is-not-repeating';
+    }
+    if ($hasCrossSeriesRelations) {
+      $rowCssClass .= ' event-has-cross-series-relations';
+    } else {
+      $rowCssClass .= ' event-has-no-cross-series-relations';
+    }
+    $rowCssClass .= ' event-action-scope-' . $actionScope;
 
     $brief  = htmlspecialchars(stripslashes($event['summary']));
     $location = htmlspecialchars(stripslashes($event['location']));
     $description = htmlspecialchars(nl2br(stripslashes($event['description'])));
 
-    $datestring = $eventsService->briefEventDate($event, $timezone, $locale);
+    $dateString = $eventsService->briefEventDate($event, $timezone, $locale);
     $longDate = $eventsService->longEventDate($event, $timezone, $locale);
 
     $description = $longDate
@@ -92,32 +108,31 @@ foreach ($eventMatrix as $key => $eventGroup) {
       . (!empty($location) ? '<br/>' . $location  : '')
       . (!empty($description) ? '<br/>' . $description : '');
 ?>
-        <tr class="<?php p($cssClass); ?> step-<?php p($n); ?>"
+        <tr class="<?php p($rowCssClass); ?> step-<?php p($n); ?>"
             data-calendar-id="<?php p($calId); ?>"
-            data-event-uri="<?php p($evtUri); ?>"
+            data-uri="<?php p($evtUri); ?>"
             data-recurrence-id="<?php p($recurrenceId); ?>"
             data-series-uid="<?php p($seriesUid); ?>"
+            data-action-scope="<?php p($actionScope); ?>"
         >
           <td class="eventbuttons">
             <input type="hidden" id="calendarid-<?php p($evtUri); ?>" name="calendarId[<?php p($evtUri); ?>]" value="<?php p($calId); ?>"/>
 <?php
-    foreach ($evtButtons as $btn => $values) {
-      $tag   = $values['tag'];
-      $title = $values['title'];
-      $name  = $tag."[$evtUri]";
-?>
-            <input class="<?php p($tag); ?> event-action"
-                   id="<?php p($tag); ?>-<?php p($flatIdentifier); ?>"
-                   type="button"
-                   name="<?php p($tag); ?>"
-                   title="<?php p($title); ?>"
-                   value='<?php p($inputValue); ?>'
-            />
-<?php
-    }
     $title = $toolTips['projectevents:event:select'];
     $checked = isset($selected[$flatIdentifier]) ? 'checked="checked"' : '';
     $emailCheckId = 'email-check-' . $flatIdentifier;
+?>
+<?php
+    echo $this->inc('project-events/event-actions', [
+      'flatIdentifier' => $flatIdentifier,
+      'inputValue' => $inputValue,
+      'selected' => $checked,
+      'dateString' => $dateString,
+      'seriesUid' => $seriesUid,
+      'isRepeating' => $isRepeating,
+      'hasCrossSeriesRelations' => $hasCrossSeriesRelations,
+      'actionScope' => $actionScope,
+    ]);
 ?>
           </td>
           <td class="eventemail">
@@ -125,8 +140,28 @@ foreach ($eventMatrix as $key => $eventGroup) {
             <input class="email-check" title="" id="<?php p($emailCheckId); ?>" type="checkbox" name="eventSelect[]" value='<?php p($inputValue); ?>' <?php p($checked); ?>/>
             <div class="email-check" /></label>
           </td>
-          <td class="eventdata brief tooltip-top tooltip-wide" id="brief-<?php p($evtUri); ?>" title="<?php p($description); ?>"><?php p($brief); ?></td>
-          <td class="eventdata date tooltip-top tooltip-wide" id="data-<?php p($evtUri); ?>" title="<?php p($description); ?>"><?php p($datestring); ?></td>
+          <td class="event-uid tooltip-auto event-uid-<?php p($eventSeries[$evtUid] ?? ''); ?><?php $haveEventSeries || p(' really hidden'); ?>"
+              title="<?php echo $toolTips['projectevents:event:event-uid']; ?>"
+          >
+            <span class="uid-index"><?php isset($eventRelations[$seriesUid]) && p(chr(ord('A') + $eventSeries[$evtUid])); ?></span>
+            <span class="really hidden"><?php p($evtUid); ?></span>
+          </td>
+          <td class="event-series-uid tooltip-auto event-series-uid-<?php p($eventRelations[$seriesUid] ?? ''); ?><?php $haveCrossSeriesRelations || p(' really hidden'); ?>"
+              title="<?php echo $toolTips['projectevents:event:event-series-uid']; ?>"
+          >
+            <span class="series-uid-index"><?php isset($eventRelations[$seriesUid]) && p(mb_chr(mb_ord('α') + $eventRelations[$seriesUid])); ?></span>
+            <span class="really hidden"><?php p($seriesUid); ?></span>
+          </td>
+          <td class="eventdata brief tooltip-top tooltip-wide"
+              id="brief-<?php p($flatIdentifier); ?>"
+              title="<?php p($description); ?>"
+          >
+            <?php p($brief); ?>
+          </td>
+          <td class="eventdata date tooltip-top tooltip-wide"
+              id="data-<?php p($flatIdentifier); ?>"
+              title="<?php p($description); ?>"><?php p($dateString); ?>
+          </td>
         </tr>
 <?php
     $n = ($n + 1) & 1;

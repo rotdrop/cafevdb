@@ -84,16 +84,8 @@ $calendarUris = array_column(ConfigService::CALENDARS, 'uri');
       </span>
     </div>
     <div id="eventlistholder" class="container scroller eventlist">
-      <?php echo $this->inc('eventslisting', $_); ?>
+      <?php echo $this->inc('project-events/eventslisting', $_); ?>
     </div>
   </form>
   <div id="debug"></div>
 </div>
-
-<?php
-
-/*
- * Local Variables: ***
- * c-basic-offset: 2 ***
- * End: ***
- */
