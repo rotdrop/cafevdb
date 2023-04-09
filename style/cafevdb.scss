@@ -631,9 +631,17 @@ body.cafevdb-modalizer {
 
     /* Links inside the dropdown */
     ul, ul.menu-list {
+      li.menu-item-separator {
+        hr {
+          color: black;
+          opacity: 0.5;
+          margin: 0;
+        }
+      }
       li, li.menu-item {
         &:not([data-operation="none"]) {
-          a {
+          a, label {
+            width:100%;
             /* Change color of dropdown links on hover */
             &:hover {
               background-color: var(--color-background-hover);
