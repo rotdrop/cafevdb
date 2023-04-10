@@ -149,9 +149,8 @@ class ProjectEvent implements \ArrayAccess
 
   /**
    * @var ProjectParticipantField
-   *
-   * Linked ProjectParticipantField entity which can be used to record
-   * absence from rehearsals or other calendar events. As calendar events are
+   * Linked ProjectParticipantField entities which can be used to record
+   * asence from rehearsals or other calendar events. As calendar events are
    * possibly repeating or we need a list of linked fields in order to record
    * the participation for each event instance.
    *
