@@ -143,7 +143,7 @@ class CalDavService
   }
 
   /**
-   * Create a new calendar if the one with the given id does not exist.
+   * Create a new calendar object.
    *
    * @param int $calendarId
    *
