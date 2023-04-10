@@ -23,6 +23,8 @@
  */
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Controller\ProjectEventsController;
 
 ?>
 <div class="size-holder event-list-container">
@@ -75,8 +77,8 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $recurrenceId = $event['recurrenceId'];
     $seriesUid = $event['seriesUid'] ?? '';
 
-    $flatIdentifier = implode(':', [ $calId, $evtUri, $recurrenceId ]);
-    $inputValue = json_encode([ 'calendarId' => $calId, 'uri' => $evtUri, 'recurrenceId' => $recurrenceId, 'seriesUid' => $seriesUid ]);
+    $flatIdentifier = EventsService::makeFlatIdentifier($event);
+    $inputValue = ProjectEventsController::makeInputValue($event);
 
     $isRepeating = isset($eventSeries[$evtUid]);
     $hasCrossSeriesRelations = count($relationMatrix[$seriesUid] ?? []) > 1;
@@ -121,12 +123,10 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $title = $toolTips['projectevents:event:select'];
     $checked = isset($selected[$flatIdentifier]) ? 'checked="checked"' : '';
     $emailCheckId = 'email-check-' . $flatIdentifier;
-?>
-<?php
     echo $this->inc('project-events/event-actions-menu', [
       'flatIdentifier' => $flatIdentifier,
       'inputValue' => $inputValue,
-      'selected' => $checked,
+      'selected' => $selected,
       'dateString' => $dateString,
       'seriesUid' => $seriesUid,
       'isRepeating' => $isRepeating,
