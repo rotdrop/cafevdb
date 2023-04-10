@@ -221,7 +221,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
 
       $dialogHolder
         .off('cafevdb:events_changed')
-        .on('cafevdb:events_changed', function(event, events) {
+        .on('cafevdb:events_changed', function(event, events, source) {
           $.post(
             generateUrl('projects/events/redisplay'),
             {
@@ -230,7 +230,9 @@ const init = function(htmlContent, textStatus, request, afterInit) {
               eventSelect: events,
             })
             .fail(handleError)
-            .done(relist);
+            .done((htmlContent, textStatus, xhr) => {
+              relist(htmlContent, textStatus, xhr, () => setLoadingIndicator(false));
+            });
           return false;
         });
       $dialogHolder
@@ -317,7 +319,10 @@ const adjustSize = function($dialogHolder) {
 
 const relist = function(htmlContent, textStatus, xhr, afterInit) {
 
-  afterInit = afterInit || (() => setLoadingIndicator(false));
+  afterInit = afterInit || (() => {
+    updateEmailForm();
+    setLoadingIndicator(false);
+  });
 
   const $dialogHolder = $('#events');
   const listing = $dialogHolder.find('#eventlistholder');
@@ -338,8 +343,6 @@ const relist = function(htmlContent, textStatus, xhr, afterInit) {
   $.fn.cafevTooltip.remove();
 
   CAFEVDB.toolTipsInit(listing);
-
-  updateEmailForm();
 
   afterInit();
 };
@@ -390,6 +393,8 @@ const emailSelection = function(event) {
     break;
   }
   }
+
+  updateEmailForm();
 
   return false;
 };

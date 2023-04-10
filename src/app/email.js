@@ -637,11 +637,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   const $bulkTransactionId = formData.find('input[name="bulkTransactionid"]');
   const projectId = function(value) {
     if (value === undefined) {
-      return $projectId.val();
+      return +$projectId.val();
     } else {
       $projectId.val(value);
       form.toggleClass('project-mode', +value > 0);
-      return value;
+      return +value;
     }
   };
   const projectName = function(value) {
