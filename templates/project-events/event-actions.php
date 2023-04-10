@@ -128,7 +128,7 @@ $actionItems = [
       </li>
       <?php foreach ($actionItems as $tag => $itemInfo) {
         $label = $itemInfo['label'];
-        $css= is_array($itemInfo['css']) ? ' ' . implode(' ', $itemInfo['css']) : '';
+        $css = !empty($itemInfo['css']) ? ' ' . implode(' ', $itemInfo['css']) : '';
       ?>
       <li class="event-action tooltip-auto event-action-<?php p($tag); ?><?php p($css); ?>"
           data-operation="<?php p($tag); ?>"
