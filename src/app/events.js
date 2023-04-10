@@ -369,8 +369,6 @@ const emailSelection = function(event) {
   const $row = $this.closest('tr');
   const scope = getRowScope($row);
 
-  console.info('SCOPE', scope);
-
   switch (scope) {
   case 'single': {
     const eventUri = $row.data('uri');
@@ -380,7 +378,6 @@ const emailSelection = function(event) {
     break;
   }
   case 'series': {
-    console.info('HANDLE SERIES');
     const eventUri = $row.data('uri');
     const selector = 'tr[data-uri="' + eventUri + '"] input.email-check';
     $this.closest('table').find(selector).prop('checked', $this.prop('checked'));
@@ -449,8 +446,6 @@ const eventAction = function(event) {
   // const recurrenceId = $row.data('recurrenceId');
 
   const name = $this.attr('name') || $this.data('operation');
-
-  console.info('NAME', name, $this.attr('name'), $this.data('operation'));
 
   switch (name) {
   case 'calendar':
