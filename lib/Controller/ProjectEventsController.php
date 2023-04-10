@@ -83,17 +83,6 @@ class ProjectEventsController extends Controller
   }
 
   /**
-   * @param string $flatIdentifier
-   *
-   * @return array
-   */
-  private static function explodeFlagIdentifier(string $flatIdentifier):array
-  {
-    list($calendarId, $uri, $recurrenceId, ) = explode(':', $flatIdentifier);
-    return compact('calendarId', 'uri','recurrenceId');
-  }
-
-  /**
    * @param string $topic
    *
    * @return Http\Response
@@ -114,14 +103,14 @@ class ProjectEventsController extends Controller
               empty($projectName) ? '?' : $projectName ]));
       }
 
-      $selectedEvents = $this->parameterService->getParam('eventSelect', []);
-      $calendarIds = $this->parameterService['calendarId'];
+      $selectedEvents = array_unique($this->parameterService->getParam('eventSelect', []));
+      $calendarIds = array_unique($this->parameterService->getParam('calendarId', []));
 
       $selected = []; // array marking selected events
       foreach ($selectedEvents as $eventIdentifier) {
         $eventIdentifier = json_decode($eventIdentifier, true);
         $flatIdentifier = self::makeFlatIdentifier($eventIdentifier);
-        $selected[$flatIdentifier] = true;
+        $selected[$flatIdentifier] = $eventIdentifier;
       }
 
       $eventIdentifier = $this->parameterService->getParam('eventIdentifier');
@@ -143,6 +132,7 @@ class ProjectEventsController extends Controller
           $events = $this->eventsService->events($projectId);
           $selected = []; // array marking selected events
           foreach ($events as $event) {
+            $this->logInfo('EVENT KEYS ' . print_r(array_keys($event), true));
             $flatIdentifier = self::makeFlatIdentifier($event);
             $selected[$flatIdentifier] = true;
           }
@@ -160,8 +150,7 @@ class ProjectEventsController extends Controller
 
           $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, $recurrenceId);
           $this->eventsService->unregister($projectId, $eventUri, $recurrenceId);
-
-          $selected = array_filter($selected, fn($value, $key) => !str_starts_with($key, $flatIdentifier), ARRAY_FILTER_USE_BOTH);
+          unset($selected[$flatIdentifier]);
           break;
         case 'detach':
           $template = 'project-events/eventslisting';
@@ -171,17 +160,14 @@ class ProjectEventsController extends Controller
           $recurrenceId = $eventIdentifier['recurrenceId'];
 
           $this->eventsService->unchain($projectId, $calendarId, $eventUri, $recurrenceId);
-
-          $selected = array_filter($selected, fn($value, $key) => !str_starts_with($key, $flatIdentifier), ARRAY_FILTER_USE_BOTH);
+          unset($selected[$flatIdentifier]);
           break;
         case 'download':
-          $exports = [];
-          foreach (array_keys($selected) as $flatIdentifier) {
-            $eventIdentifier = self::explodeFlagIdentifier($flatIdentifier);
-            $exports[$eventIdentifier['uri']] = $eventIdentifier['calendarId'];
-          }
+          $exports = $selected;
           if (empty($exports)) {
-            $exports = $calendarIds;
+            foreach ($calendarIds as $eventUri => $calendarId) {
+              $exports[] = [ 'calendarId' => $calendarId, 'uri' => $eventUri ];
+            }
           }
 
           $fileName = $projectName.'-'.$this->timeStamp().'.ics';

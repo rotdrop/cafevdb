@@ -821,7 +821,18 @@ class EventsService
    * Export the given events in ICAL format. The events need not
    * belong to the same calendar.
    *
-   * @param array $events An array with EVENT_URI => CALENDAR_ID.
+   * @param array $events An array of event identifiers in the form
+   * ```
+   * [
+   *   [ 'calendarId' => ID, 'uri' => EVENT_URI, 'recurrenceID' => RECUR_ID ],
+   *   ...
+   * ]
+   * ```
+   * where the recurrence-id may be missing or empty in which case the entire
+   * event is exported. If recurrence-ids are specified, then the function
+   * checks if $events contains all siblings and in this case simply exports
+   * the entire event. If siblings are missing, then only a collection of the
+   * requested events is exported.
    *
    * @param string $projectName Short project tag, will form part of the
    * name of the calendar.
@@ -844,19 +855,62 @@ class EventsService
             ."PRODID:Nextloud cafevdb " . $this->appVersion() . $eol
             ."X-WR-CALNAME:" . $projectName . ' (' . $this->getConfigValue('orchestra') . ')' . $eol;
 
-    foreach ($events as $eventURI => $calendarId) {
-      $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
-      $vCalendar = VCalendarService::getVCalendar($event);
-      $vObjects = VCalendarService::getAllVObjects($vCalendar);
-      foreach ($vObjects as $vObject) {
-        if ($hideParticipants) {
-          $vObject->remove('ATTENDEE');
-          $vObject->remove('ORGANIZER');
-        }
-        $result .= $vObject->serialize();
+    $selection = [];
+    foreach ($events as $eventIdentifier) {
+      $calendarId = $eventIdentifier['calendarId'];
+      $eventUri = $eventIdentifier['uri'];
+      $recurrenceId = $eventIdentifier['recurrenceId'] ?? null;
+      if (empty($selection[$calendarId][$eventUri])) {
+        $selection[$calendarId] = $selection[$calendarId] ?? [];
+        $selection[$calendarId][$eventUri] = [];
+      }
+      if (!empty($recurrenceId)) {
+        $selection[$calendarId][$eventUri][] = $recurrenceId;
       }
     }
-    $result .= "END:VCALENDAR".$eol;
+    foreach ($selection as $calendarId => $eventUris) {
+      foreach ($eventUris as $eventUri => $recurrenceIds) {
+        $event = $this->calDavService->getCalendarObject($calendarId, $eventUri);
+        $vCalendar = VCalendarService::getVCalendar($event);
+        if (!empty($recurrenceIds)) {
+          $siblings = $this->getVEventSiblings($event['calendarid'], $vCalendar);
+          $allRecurrenceIds = array_keys($siblings);
+          if (count($recurrenceIds) == count($allRecurrenceIds)
+              && array_diff($allRecurrenceIds, $recurrenceIds) == []
+              && array_diff($recurrenceIds, $allRecurrenceIds) == []) {
+            $recurrenceIds = []; // all events requested
+          }
+        }
+        if (empty($recurrenceIds)) {
+          $this->logInfo('ALL SIBLINGS');
+          $vObjects = VCalendarService::getAllVObjects($vCalendar);
+          foreach ($vObjects as $vObject) {
+            if ($hideParticipants) {
+              $vObject = clone $vObject;
+              $vObject->remove('ATTENDEE');
+              $vObject->remove('ORGANIZER');
+            }
+            $result .= $vObject->serialize();
+          }
+        } else {
+          $this->logInfo('ONLY SELECTED SIBLINGS' . print_r($recurrenceIds, true) . ' ' . print_r($allRecurrenceIds, true));
+          foreach ($recurrenceIds as $recurrenceId) {
+            $vObject = $siblings[$recurrenceId] ?? null;
+            if (empty($vObject)) {
+              $this->logError('Requested export of sibling ' . $recurrenceId . ' of event ' . $eventUri . ', but it does not exist.');
+              continue;
+            }
+            if ($hideParticipants) {
+              $vObject = clone $vObject;
+              $vObject->remove('ATTENDEE');
+              $vObject->remove('ORGANIZER');
+            }
+            $result .= $vObject->serialize();
+          }
+        }
+      }
+    }
+    $result .= "END:VCALENDAR" . $eol;
 
     return $result;
   }
@@ -1292,7 +1346,10 @@ class EventsService
    * @param null|string $recurrenceId Optional recurrence id in order to
    * define exceptions for recurring events.
    *
-   * @return mixed
+   * @return void
+   *
+   * @todo Combine a sence with deleteCalendarEntry() in order only to delete
+   * event instances attached to a project.
    */
   public function unchain(
     int $projectId,
@@ -1503,6 +1560,10 @@ class EventsService
    * define exceptions for recurring events.
    *
    * @return void
+   *
+   * @todo This is currently not suitable to only delete parts of a recurrence
+   * sequence attached to a project. Maybe add a filter callback which selects
+   * the siblings which should be deleted.
    */
   public function deleteCalendarEntry(
     int $calId,
