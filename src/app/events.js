@@ -367,19 +367,47 @@ const redisplay = function() {
     .done(relist);
 };
 
+const getRowScope = function($row, scope) {
+  scope = scope || $row.find('.scope-radio:checked').val();
+
+  if ($row.data('recurrenceId') === '') {
+    return 'single';
+  } else if (scope === 'related' && $row.hasClass('event-has-no-cross-series-relations')) {
+    return 'series';
+  }
+
+  return scope;
+};
+
 const emailSelection = function(event) {
   const $this = $(this);
-  const eventUri = $this.closest('tr').data('uri');
-  const selector = 'tr[data-event-uri="' + eventUri + '"] input.email-check';
+  const $row = $this.closest('tr');
+  const scope = getRowScope($row);
 
-  console.info(
-    'HELLO EMAIL CHANGE',
-    selector,
-    $this.closest('table').find('tr[data-uri="' + eventUri + '"]'),
-    $this.closest('table').find('tr[data-uri="' + eventUri + '"] input.email-check')
-  );
+  console.info('SCOPE', scope);
 
-  $this.closest('table').find('tr[data-uri="' + eventUri + '"] input.email-check').prop('checked', $this.prop('checked'));
+  switch (scope) {
+  case 'single': {
+    const eventUri = $row.data('uri');
+    const recurrenceId = $row.data('recurrenceId');
+    const selector = 'tr[data-uri="' + eventUri + '"][data-recurrence-id="' + recurrenceId + '"] input.email-check';
+    $this.closest('table').find(selector).prop('checked', $this.prop('checked'));
+    break;
+  }
+  case 'series': {
+    console.info('HANDLE SERIES');
+    const eventUri = $row.data('uri');
+    const selector = 'tr[data-uri="' + eventUri + '"] input.email-check';
+    $this.closest('table').find(selector).prop('checked', $this.prop('checked'));
+    break;
+  }
+  case 'related': {
+    const seriesUid = $row.data('seriesUid');
+    const selector = 'tr[data-series-uid="' + seriesUid + '"] input.email-check';
+    $this.closest('table').find(selector).prop('checked', $this.prop('checked'));
+    break;
+  }
+  }
 
   return false;
 };
@@ -387,13 +415,26 @@ const emailSelection = function(event) {
 const scopeSelection = function(event) {
   const $this = $(this);
   const $row = $this.closest('tr');
-
-  console.info('SCOPE SELECTION', $this.val());
+  const scope = $this.val();
 
   // arguably one could try to adjust the selection on scope change ...
 
-  $row.attr('data-action-scope', $this.val()); // this for CSS
-  $row.data('actionScope', $this.val()); // this for consistency in jQuery
+  $row.attr('data-action-scope', scope); // this line for CSS
+  $row.data('actionScope', scope); // this line for consistency in jQuery
+
+  // Synchronize the action scope. This essentially means that we
+  // should just have one set of scope controls, but for now we to it
+  // this way.
+
+  $this.closest('table').find('tr.projectevents').each(function() {
+    const $row = $(this);
+    const oldScope = $row.find('.scope-radio:checked').val();
+    const rowScope = getRowScope($row, scope);
+
+    if (oldScope !== rowScope) {
+      $row.find('input.scope-radio[value="' + rowScope + '"]').prop('checked', true).trigger('change');
+    }
+  });
 
   return false;
 };
@@ -435,7 +476,8 @@ const eventAction = function(event) {
     afterInit();
     break;
   case 'edit': {
-    // Edit existing event
+    // Edit existing event. The legacy code does not allow
+    // modifications of single instances in a series.
     post.push({ name: 'uri', value: uri });
     post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
@@ -451,7 +493,8 @@ const eventAction = function(event) {
     break;
   }
   case 'clone': {
-    // Clone existing event
+    // Clone an existing event. The legacy code does not allow
+    // modifications of single instances in a series.
     post.push({ name: 'uri', value: uri });
     post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
