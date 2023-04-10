@@ -509,11 +509,16 @@ const eventAction = function(event) {
       });
     break;
   }
+  case 'select':
+  case 'deselect':
   case 'delete':
   case 'detach': {
     // Execute the task and redisplay the event list.
 
-    post.push({ name: 'eventIdentifier', value: JSON.stringify(rowData) });
+    const rowJson = JSON.stringify(rowData);
+    if (rowJson !== '{}') {
+      post.push({ name: 'eventIdentifier', value: rowJson });
+    }
 
     const really = confirmText[name];
     if (really !== undefined && really !== '') {
