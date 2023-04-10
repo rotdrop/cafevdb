@@ -29,7 +29,6 @@ import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 import * as DialogUtils from './dialog-utils.js';
-import * as SelectUtils from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 import { revertRows as revertTableRows } from './table-utils.js';
 import { busyIcon as pageBusyIcon } from './page.js';
@@ -130,36 +129,23 @@ const init = function(htmlContent, textStatus, request, afterInit) {
       }
 
       const eventForm = $dialogHolder.find('#eventlistform');
-      const eventMenu = eventForm.find('select.event-menu');
-
-      // style the menu with chosen
-      eventMenu.chosen({
-        inherit_select_classes: true,
-        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
-        disable_search: true,
-        width: '10em',
-      });
-
-      SelectUtils.makePlaceholder(eventMenu);
+      const eventMenu = eventForm.find('.new-event-dropdown');
 
       DialogUtils.toBackButton($(this));
 
       $.fn.cafevTooltip.remove();
       CAFEVDB.toolTipsInit('#events');
 
-      eventMenu.on('change', function(event) {
-        event.preventDefault();
+      eventMenu.on('click', '.menu-item', function(event) {
+        const $this = $(this);
 
         if ($('#event').dialog('isOpen') === true) {
           $('#event').dialog('close');
           return false;
         }
 
-        $('#events #debug').hide();
-        $('#events #debug').empty();
-
         const post = eventForm.serializeArray();
-        const eventType = SelectUtils.selected(eventMenu);
+        const eventType = $this.data('operation');
         post.push({ name: 'eventKind', value: eventType });
 
         $('#dialog_holder').load(
@@ -173,7 +159,6 @@ const init = function(htmlContent, textStatus, request, afterInit) {
             handleError(xhr, textStatus, xhr.status);
           });
 
-        SelectUtils.deselectAll(eventMenu);
         $.fn.cafevTooltip.remove();
 
         return false;
@@ -455,9 +440,6 @@ const eventAction = function(event) {
 
   setLoadingIndicator(true);
   const afterInit = () => setLoadingIndicator(false);
-
-  $('#events #debug').hide();
-  $('#events #debug').empty();
 
   const $this = $(this);
   const $row = $this.closest('tr');

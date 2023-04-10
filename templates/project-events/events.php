@@ -34,25 +34,8 @@ $calendarUris = array_column(ConfigService::CALENDARS, 'uri');
     <input type="hidden" name="projectName" value="<?php p($projectName); ?>" />
     <input type="hidden" name="requesttoken" value="<?php p($requesttoken); ?>"/>
     <div class="eventcontrols content-controls">
-      <select class="event-menu cafevdb-menu tooltip-right"
-              data-placeholder="<?php p($l->t('New Event')); ?>"
-              title="<?php echo $toolTips['projectevents:all:new']; ?>">
-        <option value=""></option>
-        <?php foreach ($calendarUris as $uri) { ?>
-          <option value="<?php p($uri); ?>"
-                  title="<?php echo $toolTips['projectevents:all:new:' . $uri]; ?>"
-          >
-            <?php p($l->t(ucfirst($uri))); ?>
-          </option>
-        <?php } ?>
-      </select>
-      <span class="<?php p($cssClass); ?>-email">
-        <input type="button"
-               class="<?php p($cssClass); ?>-sendmail tooltip-bottom"
-               name="sendmail"
-               value="Em@il"
-               title="<?php echo $toolTips['projectevents:all:sendmail']; ?>"
-        />
+      <?php echo $this->inc('project-events/new-event-menu', $_); ?>
+      <span class="<?php p($cssClass); ?>-select">
         <input type="button"
                class="<?php p($cssClass); ?>-sendmail-select image-button tooltip-bottom"
                name="select"
@@ -64,6 +47,14 @@ $calendarUris = array_column(ConfigService::CALENDARS, 'uri');
                name="deselect"
                value="-"
                title="<?php echo $toolTips['projectevents:all:deselect']; ?>"
+        />
+      </span>
+      <span class="<?php p($cssClass); ?>-email">
+        <input type="button"
+               class="<?php p($cssClass); ?>-sendmail tooltip-bottom"
+               name="sendmail"
+               value="Em@il"
+               title="<?php echo $toolTips['projectevents:all:sendmail']; ?>"
         />
       </span>
       <span class="<?php p($cssClass); ?>-download">
@@ -87,5 +78,4 @@ $calendarUris = array_column(ConfigService::CALENDARS, 'uri');
       <?php echo $this->inc('project-events/eventslisting', $_); ?>
     </div>
   </form>
-  <div id="debug"></div>
 </div>

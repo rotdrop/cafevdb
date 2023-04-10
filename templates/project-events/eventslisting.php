@@ -123,7 +123,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $emailCheckId = 'email-check-' . $flatIdentifier;
 ?>
 <?php
-    echo $this->inc('project-events/event-actions', [
+    echo $this->inc('project-events/event-actions-menu', [
       'flatIdentifier' => $flatIdentifier,
       'inputValue' => $inputValue,
       'selected' => $checked,
