@@ -42,8 +42,8 @@ class ProjectEventsAddAbsenceFields extends AbstractMigration
       "ALTER TABLE ProjectEvents DROP INDEX IF EXISTS `PRIMARY`, ADD COLUMN IF NOT EXISTS id INT AUTO_INCREMENT NOT NULL, ADD PRIMARY KEY (id)",
       "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS absence_field_id INT DEFAULT NULL",
       //
-      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS recurrence_id VARCHAR(64) DEFAULT '' NOT NULL COLLATE `ascii_bin`",
-      "ALTER TABLE ProjectEvents CHANGE recurrence_id recurrence_id VARCHAR(64) DEFAULT '' NOT NULL COLLATE `ascii_bin`",
+      "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS recurrence_id INT DEFAULT 0 NOT NULL",
+      "ALTER TABLE ProjectEvents CHANGE recurrence_id recurrence_id INT DEFAULT 0 NOT NULL",
       "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS sequence INT DEFAULT 0 NOT NULL",
       "ALTER TABLE ProjectEvents ADD COLUMN IF NOT EXISTS deleted DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'",
       "ALTER TABLE ProjectEvents CHANGE type type enum('VEVENT','VTODO','VJOURNAL','VCARD') NOT NULL

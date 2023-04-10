@@ -24,15 +24,45 @@
 
 namespace OCA\CAFEVDB;
 
+use DateTimeImmutable;
+
 $selectId = 'select-check-' . $flatIdentifier;
 $actionScopeId = 'scope-radio-' . $flatIdentifier;
 
+$calendarLink = [];
+$remoteEventUrl = $remoteUrl . '/' . $event['uri'];
+$calendarLink['single'] = $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
+  'view' => 'timeGridWeek',
+  'timeRange' => $event['start']->format('Y-m-d'),
+  'mode' => 'sidebar',
+  'objectId' =>  base64_encode($remoteEventUrl),
+  'recurrenceId' => empty($event['recurrenceId']) ? $event['start']->getTimestamp() : $event['recurrenceId'],
+]);
+$calendarLink['series'] = $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
+  'view' => 'timeGridWeek',
+  'timeRange' => $event['seriesStart']->format('Y-m-d'),
+  'mode' => 'sidebar',
+  'objectId' =>  base64_encode($remoteEventUrl),
+  'recurrenceId' => $event['seriesStart']->getTimestamp(),
+]);
+$calendarTarget = md5($urlGenerator->linkToRoute('calendar.view.indexdirect.edit', [ 'objectId' =>  $appName ]));
+
 $actionItems = [
-  'calendar-app' => [
+  'calendar-app-single' => [
     'label' => $l->t('edit in calendar app'),
     'css' => [
-      'scope-related-disabled',
+      'scope-related-invisible scope-series-invisible',
     ],
+    'href' => $calendarLink['single'],
+    'target' => $calendarTarget,
+  ],
+  'calendar-app-series' => [
+    'label' => $l->t('edit in calendar app'),
+    'css' => [
+      'scope-related-disabled scope-single-invisible',
+    ],
+    'href' => $calendarLink['series'],
+    'target' => $calendarTarget,
   ],
   'edit' => [
     'label' => $l->t('edit in simple editor'),
@@ -137,12 +167,14 @@ $actionItems = [
       <?php foreach ($actionItems as $tag => $itemInfo) {
         $label = $itemInfo['label'];
         $css = !empty($itemInfo['css']) ? ' ' . implode(' ', $itemInfo['css']) : '';
+        $href = $itemInfo['href'] ?? '#';
+        $target = empty($itemInfo['target']) ? '' : ' target="' . $itemInfo['target'] . '"';
       ?>
       <li class="event-action tooltip-right event-action-<?php p($tag); ?><?php p($css); ?>"
           data-operation="<?php p($tag); ?>"
           title="<?php echo $toolTips['projectevents:event:' . $tag]; ?>"
       >
-        <a href="#" class="flex-container flex-center">
+        <a href="<?php p($href); ?>"<?php p($target); ?> class="flex-container flex-center">
           <span class="menu-item-label"><?php p($label); ?></span>
         </a>
       </li>

@@ -131,7 +131,7 @@
             display: none !important;
           }
         }
-        &.event-action-calendar-app {
+        &.event-action-calendar-app-single, &.event-action-calendar-app-series {
           .menu-item-label {
             background-image: url(../img/calendar-dark.svg);
           }
@@ -302,22 +302,37 @@
     table.listing {
 
       tr {
-        &[data-action-scope="related"].event-has-cross-series-relations {
-          .scope-related-disabled {
-            &, * {
-              opacity: 0.5;
-              pointer-events: none;
-              cursor: not-allowed;
+        &[data-action-scope="related"] {
+          &.event-has-cross-series-relations {
+            .scope-related-disabled {
+              &, * {
+                opacity: 0.5;
+                pointer-events: none;
+                cursor: not-allowed;
+              }
             }
           }
+          .scope-related-invisible {
+            display:none;
+          }
         }
-        &[data-action-scope="single"].event-is-repeating {
-          .repeating-scope-single-disabled {
-            &, * {
-              opacity: 0.5;
-              pointer-events: none;
-              cursor: not-allowed;
+        &[data-action-scope="series"] {
+          .scope-series-invisible {
+            display:none;
+          }
+        }
+        &[data-action-scope="single"] {
+          &.event-is-repeating {
+            .repeating-scope-single-disabled {
+              &, * {
+                opacity: 0.5;
+                pointer-events: none;
+                cursor: not-allowed;
+              }
             }
+          }
+          .scope-single-invisible {
+            display:none;
           }
         }
         &.event-is-not-repeating .only-repeating {

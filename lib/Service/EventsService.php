@@ -347,7 +347,7 @@ class EventsService
       return $siblings;
     }
     if (!VCalendarService::isEventRecurring($vObject)) {
-      $siblings = [ '' => $vObject ];
+      $siblings = [ 0 => $vObject ];
     } else {
       $vEvents = VCalendarService::getAllVObjects($vCalendar);
       try {
@@ -356,7 +356,8 @@ class EventsService
         $eventIterator = new EventIterator($vEvents);
         while ($eventIterator->valid()) {
           $sibling = $eventIterator->getEventObject();
-          $siblings[(string)$sibling->{'RECURRENCE-ID'}] = $sibling;
+          $recurrenceId = $sibling->{'RECURRENCE-ID'}->getDateTime()->getTimestamp();
+          $siblings[$recurrenceId] = $sibling;
           $eventIterator->next();
         }
       } catch (NoInstancesException $e) {
@@ -424,10 +425,14 @@ class EventsService
     $siblings = $this->getVEventSiblings($event['calendarid'], $vCalendar);
     $vEvent = $siblings[$event['recurrenceId']] ?? null;
     if ($vEvent === null) {
-      $this->logError('Unable to find event-sibling for uri ' . $event['uri'] . ' and recurrence-id ' . $event['recurrenceId']);
+      $this->logError('Unable to find the event-sibling for uri ' . $event['uri'] . ' and recurrence-id ' . $event['recurrenceId'] . ' ' . print_r(array_keys($siblings), true));
       return null;
     }
     $this->fillEventDataFromVObject($vEvent, $event);
+
+    $vObject = VCalendarService::getVObject($vCalendar);
+    $event['seriesStart'] = $vObject->DTSTART->getDateTime();
+
 
     return $event;
   }
@@ -485,7 +490,7 @@ class EventsService
     $event['location'] = (string)$vObject->LOCATION;
     $recurrenceId = $vObject->{'RECURRENCE-ID'};
     if ($recurrenceId !== null) {
-      $event['recurrenceId'] = (string)$recurrenceId;
+      $event['recurrenceId'] = $recurrenceId->getDateTime()->getTimestamp();
     }
     $sequence = $vObject->SEQUENCE;
     if ($sequence) {
@@ -562,7 +567,7 @@ class EventsService
     return implode(':', [
       $eventIdentifier['calendarId'],
       $eventIdentifier['uri'],
-      $eventIdentifier['recurrenceId'] ?? '',
+      $eventIdentifier['recurrenceId'] ?? 0,
     ]);
   }
 
@@ -712,13 +717,18 @@ class EventsService
                    : strval($this->l->t('Unknown Calendar').' '.$calendarId);
       $displayName = str_replace(' (' . $shareOwnerId . ')', '', $displayName);
 
+      $calendarUris = $this->calDavService->calendarUris($calendarId);
+      $remoteUrl = $this->urlGenerator()->linkTo('', sprintf('remote.php/dav/calendars/%s/%s', $this->userId(), $calendarUris['shareuri']));
+
       $result[$calendarId] = [
         'name' => $displayName,
+        'remoteUrl' => $remoteUrl,
         'events' => [],
       ];
     }
     $result[-1] = [
       'name' => strval($this->l->t('Miscellaneous Calendars')),
+      'remoteUrl' => null,
       'events' => []
     ];
 
@@ -874,7 +884,7 @@ class EventsService
     foreach ($events as $eventIdentifier) {
       $calendarId = $eventIdentifier['calendarId'];
       $eventUri = $eventIdentifier['uri'];
-      $recurrenceId = $eventIdentifier['recurrenceId'] ?? null;
+      $recurrenceId = $eventIdentifier['recurrenceId'] ?? 0;
       if (empty($selection[$calendarId][$eventUri])) {
         $selection[$calendarId] = $selection[$calendarId] ?? [];
         $selection[$calendarId][$eventUri] = [];
@@ -897,7 +907,6 @@ class EventsService
           }
         }
         if (empty($recurrenceIds)) {
-          $this->logInfo('ALL SIBLINGS');
           $vObjects = VCalendarService::getAllVObjects($vCalendar);
           foreach ($vObjects as $vObject) {
             if ($hideParticipants) {
@@ -908,7 +917,6 @@ class EventsService
             $result .= $vObject->serialize();
           }
         } else {
-          $this->logInfo('ONLY SELECTED SIBLINGS' . print_r($recurrenceIds, true) . ' ' . print_r($allRecurrenceIds, true));
           foreach ($recurrenceIds as $recurrenceId) {
             $vObject = $siblings[$recurrenceId] ?? null;
             if (empty($vObject)) {
@@ -1232,7 +1240,7 @@ class EventsService
    *
    * @param int $sequence The event sequence.
    *
-   * @param string $recurrenceId The recurrence id for recurring events.
+   * @param int $recurrenceId The recurrence id for recurring events.
    *
    * @param string $eventURI The event key (external key).
    *
@@ -1257,7 +1265,7 @@ class EventsService
     string $calendarURI,
     string $eventUID,
     int $sequence,
-    string $recurrenceId,
+    int $recurrenceId,
     string $eventURI,
     int $calendarId,
     mixed $type,
@@ -1358,7 +1366,7 @@ class EventsService
    *
    * @param string $eventURI The event uri.
    *
-   * @param null|string $recurrenceId Optional recurrence id in order to
+   * @param null|int $recurrenceId Optional recurrence id in order to
    * define exceptions for recurring events.
    *
    * @return void
@@ -1370,13 +1378,12 @@ class EventsService
     int $projectId,
     int $calendarId,
     string $eventUri,
-    ?string $recurrenceId = null,
+    ?int $recurrenceId = null,
   ):void {
     $criteria = [
       'project' => $projectId,
       'calendarId' => $calendarId,
       'eventUri' => $eventUri,
-      'recurrenceId' => $recurrenceId ?? '',
     ];
     if (!empty($recurrenceId)) {
       $criteria['recurrenceId'] = $recurrenceId;
@@ -1571,7 +1578,7 @@ class EventsService
    * object. If the identifier ends with '.ics' it is assumed to be an URI,
    * other a UID.
    *
-   * @param null|string $recurrenceId Optional recurrence id in order to
+   * @param null|int $recurrenceId Optional recurrence id in order to
    * define exceptions for recurring events.
    *
    * @return void
@@ -1583,7 +1590,7 @@ class EventsService
   public function deleteCalendarEntry(
     int $calId,
     string $objectIdentifier,
-    ?string $recurrenceId = null,
+    ?int $recurrenceId = null,
   ):void {
     if (!empty($recurrenceId)) {
       $event = $this->calDavService->getCalendarObject($calId, $objectIdentifier);
@@ -1628,7 +1635,7 @@ class EventsService
 
     // this instance could already be an explicit exception, if so remove it
     foreach (VCalendarService::getAllVObjects($vCalendar) as $vEvent) {
-      if (isset($vEvent->{'RECURRENCE-ID'}) && $vEvent->{'RECURRENCE-ID'} == $recurrenceId) {
+      if (isset($vEvent->{'RECURRENCE-ID'}) && $vEvent->{'RECURRENCE-ID'}->getDateTime()->getTimestamp() == $recurrenceId) {
         $vCalendar->remove($vEvent);
       }
       $instanceSequence = isset($vEvent->SEQUENCE) ? $vEvent->SEQUENCE->getValue() : 0;
