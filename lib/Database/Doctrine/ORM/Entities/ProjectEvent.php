@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use DateTimeInterface;
+
 use OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
@@ -54,6 +56,7 @@ class ProjectEvent implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var int
@@ -120,14 +123,12 @@ class ProjectEvent implements \ArrayAccess
   private $eventUri;
 
   /**
-   * @var string
+   * @var int
    *
-   * The RECURRENCE-ID for repeating events, without the range. Note that this
-   * has a date-time format `YYYYMMDDTHHMMSS...` but this only coincides with
-   * DTSTART until DTSTART is changed. It remains constant throughout the
-   * life-time of the recurrence set.
+   * The recurrence-id of the event instance as Unix timestamp. Non-recurring
+   * events have an id of 0.
    *
-   * @ORM\Column(type="string", length=64, nullable=false, options={"default"="", "collation"="ascii_bin"})
+   * @ORM\Column(type="integer", nullable=false, options={"default"=0})
    */
   private $recurrenceId;
 
@@ -362,12 +363,15 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Set recurrenceId.
    *
-   * @param string $recurrenceId
+   * @param mixed $recurrenceId
    *
    * @return ProjectEvent
    */
-  public function setRecurrenceId(string $recurrenceId):ProjectEvent
+  public function setRecurrenceId(mixed $recurrenceId):ProjectEvent
   {
+    if ($recurrenceId instanceof DateTimeInterface) {
+      $recurrenceId = $recurrenceId->getTimestamp();
+    }
     $this->recurrenceId = $recurrenceId;
 
     return $this;
@@ -376,9 +380,9 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Get recurrenceId.
    *
-   * @return string
+   * @return int
    */
-  public function getRecurrenceId():string
+  public function getRecurrenceId():int
   {
     return $this->recurrenceId;
   }

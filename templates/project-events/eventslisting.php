@@ -54,14 +54,15 @@ $n = 0;
 foreach ($eventMatrix as $key => $eventGroup) {
   $class = [ 'listing', ];
   $dpyName = $eventGroup['name'];
+  $remoteUrl = $eventGroup['remoteUrl'];
   $events  = $eventGroup['events'];
-  if (!empty($events)) {
-    // nothing
-  } elseif ($key >= 0) {
-    $dpyName .= ' (' . $l->t('no events') . ')';
-    $class[] = 'empty';
-  } else {
-    continue;
+  if (empty($events)) {
+    if ($key >= 0) {
+      $dpyName .= ' (' . $l->t('no events') . ')';
+      $class[] = 'empty';
+    } else {
+      continue;
+    }
   }
   $classes = implode(' ', $class);
 ?>
@@ -132,6 +133,8 @@ foreach ($eventMatrix as $key => $eventGroup) {
       'isRepeating' => $isRepeating,
       'hasCrossSeriesRelations' => $hasCrossSeriesRelations,
       'actionScope' => $actionScope,
+      'remoteUrl' => $remoteUrl,
+      'event' => $event,
     ]);
 ?>
           </td>

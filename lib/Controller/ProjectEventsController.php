@@ -81,7 +81,7 @@ class ProjectEventsController extends Controller
     return json_encode([
       'calendarId' => $event['calendarId'],
       'uri' => $event['uri'],
-      'recurrenceId' => $event['recurrenceId' ] ?? '',
+      'recurrenceId' => $event['recurrenceId' ] ?? 0,
       'seriesUid' => $event['seriesUid'] ?? '',
     ]);
   }
@@ -195,6 +195,7 @@ class ProjectEventsController extends Controller
       $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
 
       $templateParameters = [
+        'appName' => $this->appName,
         'projectId' => $projectId,
         'projectName' => $projectName,
         'cssClass' => 'projectevents',
@@ -205,6 +206,7 @@ class ProjectEventsController extends Controller
         'selected' => $selected,
         'eventsService' => $this->eventsService,
         'toolTips' => $this->di(ToolTipsService::class),
+        'urlGenerator' => $this->urlGenerator(),
         'requesttoken' => \OCP\Util::callRegister(),
       ];
       $response = new TemplateResponse(

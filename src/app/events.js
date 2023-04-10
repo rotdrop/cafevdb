@@ -428,8 +428,6 @@ const scopeSelection = function(event) {
 
 const eventAction = function(event) {
 
-  event.preventDefault();
-
   const evntdlgopen = $('#event').dialog('isOpen');
 
   const post = $('#eventlistform').serializeArray();
@@ -453,10 +451,11 @@ const eventAction = function(event) {
   const name = $this.attr('name') || $this.data('operation');
 
   switch (name) {
-  case 'calendar':
-    // @todo edit existing event in calendar app
+  case 'calendar-app-single':
+  case 'calendar-app-series':
+    // just let the browser follow the link
     afterInit();
-    break;
+    return true;
   case 'edit': {
     // Edit existing event. The legacy code does not allow
     // modifications of single instances in a series.
