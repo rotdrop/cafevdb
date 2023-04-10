@@ -55,6 +55,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\InstrumentationService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\SimpleSharingService;
@@ -2890,7 +2891,8 @@ Störung.';
     $events = $this->eventAttachments();
     $locale = $this->getLocale();
     $timezone = $this->getTimezone();
-    foreach (array_keys($events) as $eventUri) {
+    foreach (array_values($events) as $eventIdentifier) {
+      $eventUri = $eventIdentifier['uri'];
       $event = $this->eventsService->fetchEvent($this->projectId, $eventUri);
       $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
       $name = stripslashes($event['summary']).', '.$datestring;
@@ -3641,7 +3643,8 @@ Störung.';
 
     // event attachment
     $events = $this->eventAttachments();
-    foreach (array_keys($events) as $eventUri) {
+    foreach (array_values($events) as $event) {
+      $eventUri = $event['uri'];
       if (!$this->eventsService->fetchEvent($this->projectId, $eventUri)) {
         $this->executionStatus = false;
         $this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION]['Events'][] = $eventUri;
@@ -5472,8 +5475,10 @@ Störung.';
     $events = [];
     foreach ($attachedEvents as $event) {
       $event = json_decode($event, true);
-      $events[$event['uri']] = $event['calendarId'];
+      $flatIdentifier = EventsService::makeFlatIdentifier($event);
+      $events[$flatIdentifier] = $event;
     }
+    $this->logInfo('EVENTS ' . print_r($events, true));
 
     return $events;
   }
@@ -5511,17 +5516,13 @@ Störung.';
       foreach ($eventGroup['events'] as $event) {
         $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
         $name = stripslashes($event['summary']).', '.$datestring;
-        $value = json_encode([
-          'uri' => $event['uri'],
-          'calendarId' => $event['calendarid'],
-          'recurrenceId' => $event['recurrenceId'] ?? '',
-          'seriesUid' => $event['seriesUid'] ?? '',
-        ]);
+        $value = ProjectEventsController::makeInputValue($event);
+        $flatIdentifier = EventsService::makeFlatIdentifier($event);
         $selectOptions[] = [
           'value' => $value,
           'name' => $name,
           'group' => $group,
-          'flags' => isset($attachedEvents[$event['uri']]) ? PageNavigation::SELECTED : 0
+          'flags' => isset($attachedEvents[$flatIdentifier]) ? PageNavigation::SELECTED : 0
         ];
       }
     }

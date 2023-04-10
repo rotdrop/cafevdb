@@ -509,7 +509,7 @@ class EventsService
    */
   public function fetchEvent(int $projectId, string $eventURI):?array
   {
-    $projectEvent = $this->find(['project' => $projectId, 'eventUri' => $eventURI]);
+    $projectEvent = $this->findOneBy(['project' => $projectId, 'eventUri' => $eventURI]);
     if (empty($projectEvent)) {
       return null;
     }
@@ -549,6 +549,21 @@ class EventsService
     //$this->logInfo("Events: ".print_r($events, true));
 
     return $events;
+  }
+
+  /**
+   * @param array $event Array with at least the keys "calendarId", "uri" and
+   * "recurrenceId", e.g. an item in the array returned by self::events().
+   *
+   * @return string
+   */
+  public static function makeFlatIdentifier(array $eventIdentifier):string
+  {
+    return implode(':', [
+      $eventIdentifier['calendarId'],
+      $eventIdentifier['uri'],
+      $eventIdentifier['recurrenceId'] ?? '',
+    ]);
   }
 
   /**
