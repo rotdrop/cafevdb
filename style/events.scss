@@ -290,7 +290,7 @@
     table.listing {
 
       tr {
-        &[data-action-scope="related"] {
+        &[data-action-scope="related"].event-has-cross-series-relations {
           .scope-related-disabled {
             &, * {
               opacity: 0.5;
