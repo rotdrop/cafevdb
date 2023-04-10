@@ -88,9 +88,20 @@
     }
 
     select, input, option, button {
-      &:not(.action-menu-toggle) {
+      &:not(.event-actions .action-menu-toggle) {
         border-radius:4px;
-        background-color:#F4F4F4;
+        &, &:hover {
+          background-color:#F4F4F4 !important;
+        }
+      }
+    }
+
+    .new-event.dropdown-container {
+      .action-menu-toggle {
+        background-image:url('../../../core/img/actions/add.svg');
+        &:hover {
+          border: 1px solid;
+        }
       }
     }
 
@@ -208,13 +219,13 @@
     input[type="submit"],
     input[type="button"],
     button {
-      &:not(.action-menu-toggle) {
+      &:not(.event-actions .action-menu-toggle) {
         height:28px;
         vertical-align:middle;
       }
     }
 
-    input.image-button {
+    .image-button {
       background-repeat:no-repeat;
       background-position:center;
       width:28px;
@@ -327,6 +338,7 @@
               }
             }
             &.event-uid, &.event-series-uid {
+              min-width:16px;
               .uid-index, .series-uid-index {
                 filter: invert(100%);
                 background-color: rgba(1, 1, 1, 0);

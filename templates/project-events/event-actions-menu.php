@@ -58,10 +58,12 @@ $actionItems = [
 
 ?>
 
-<span class="event-actions dropdown-container dropdown-no-hover"
-      data-calendar-id=""
->
-  <button class="menu-title action-menu-toggle">&bull;&bull;&bull;</button>
+<span class="event-actions dropdown-container dropdown-no-hover">
+  <button class="menu-title action-menu-toggle"
+          title="<?php echo $toolTips['projectevents:event']; ?>"
+  >
+    &bull;&bull;&bull;
+  </button>
   <nav class="event-actions-dropdown dropdown-content dropdown-align-left">
     <ul>
       <li class="event-date"
@@ -72,7 +74,7 @@ $actionItems = [
         </a>
       </li>
       <li class="menu-item-separator" data-operation="none"><hr/></li>
-      <li class="event-action tooltip-auto event-action-scope dropdown-item dropdown-no-close only-repeating"
+      <li class="event-action tooltip-right event-action-scope dropdown-item dropdown-no-close only-repeating"
           data-operation="scope"
           title="<?php echo $toolTips['projectevents:event:scope']; ?>"
       >
@@ -84,7 +86,9 @@ $actionItems = [
                  value="single"
                  <?php ($actionScope == 'single') && p('checked'); ?>
           />
-          <label class="scope-radio" for="scope-radio-single-<?php p($flatIdentifier); ?>">
+          <label class="scope-radio" for="scope-radio-single-<?php p($flatIdentifier); ?>"
+                 title="<?php echo $toolTips['projectevents:event:scope:single']; ?>"
+          >
             <?php p($l->t('act only on this event')); ?>
           </label>
           <input id="scope-radio-series-<?php p($flatIdentifier); ?>"
@@ -94,7 +98,9 @@ $actionItems = [
                  value="series"
                  <?php ($actionScope == 'series') && p('checked'); ?>
           />
-          <label class="scope-radio" for="scope-radio-series-<?php p($flatIdentifier); ?>">
+          <label class="scope-radio" for="scope-radio-series-<?php p($flatIdentifier); ?>"
+                 title="<?php echo $toolTips['projectevents:event:scope:series']; ?>"
+          >
             <?php p($l->t('act on the event series')); ?>
           </label>
           <input id="scope-radio-related-<?php p($flatIdentifier); ?>"
@@ -104,13 +110,15 @@ $actionItems = [
                  value="related"
                  <?php ($actionScope == 'related') && p('checked'); ?>
           />
-          <label class="scope-radio only-cross-series-relations" for="scope-radio-related-<?php p($flatIdentifier); ?>">
+          <label class="scope-radio only-cross-series-relations" for="scope-radio-related-<?php p($flatIdentifier); ?>"
+                 title="<?php echo $toolTips['projectevents:event:scope:related']; ?>"
+          >
             <?php p($l->t('act on all related events')); ?>
           </label>
         </div>
       </li>
       <li class="menu-item-separator only-repeating" data-operation="none"><hr/></li>
-      <li class="event-action tooltip-auto event-action-select dropdown-item dropdown-no-close"
+      <li class="event-action tooltip-right event-action-select dropdown-item dropdown-no-close"
           data-operation="select"
           title="<?php echo $toolTips['projectevents:event:select']; ?>"
       >
@@ -130,7 +138,7 @@ $actionItems = [
         $label = $itemInfo['label'];
         $css = !empty($itemInfo['css']) ? ' ' . implode(' ', $itemInfo['css']) : '';
       ?>
-      <li class="event-action tooltip-auto event-action-<?php p($tag); ?><?php p($css); ?>"
+      <li class="event-action tooltip-right event-action-<?php p($tag); ?><?php p($css); ?>"
           data-operation="<?php p($tag); ?>"
           title="<?php echo $toolTips['projectevents:event:' . $tag]; ?>"
       >
