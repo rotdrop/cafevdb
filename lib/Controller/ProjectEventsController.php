@@ -69,16 +69,20 @@ class ProjectEventsController extends Controller
   // phpcs:enable
 
   /**
-   * @param array $eventIdentifier
+   * Provide a value for an input element (select option, input) which codes
+   * all neccessary info to uniquely identify the event.
+   *
+   * @param array $event
    *
    * @return string
    */
-  private static function makeFlatIdentifier(array $eventIdentifier):string
+  public static function makeInputValue(array $event):string
   {
-    return implode(':', [
-      $eventIdentifier['calendarId'],
-      $eventIdentifier['uri'],
-      $eventIdentifier['recurrenceId'],
+    return json_encode([
+      'calendarId' => $event['calendarId'],
+      'uri' => $event['uri'],
+      'recurrenceId' => $event['recurrenceId' ] ?? '',
+      'seriesUid' => $event['seriesUid'] ?? '',
     ]);
   }
 
@@ -109,14 +113,16 @@ class ProjectEventsController extends Controller
       $selected = []; // array marking selected events
       foreach ($selectedEvents as $eventIdentifier) {
         $eventIdentifier = json_decode($eventIdentifier, true);
-        $flatIdentifier = self::makeFlatIdentifier($eventIdentifier);
+        $flatIdentifier = EventsService::makeFlatIdentifier($eventIdentifier);
         $selected[$flatIdentifier] = $eventIdentifier;
       }
+
+      $this->logInfo('SELECTED ' . print_r($selected, true));
 
       $eventIdentifier = $this->parameterService->getParam('eventIdentifier');
       if (!empty($eventIdentifier)) {
         $eventIdentifier = json_decode($eventIdentifier, true);
-        $flatIdentifier = self::makeFlatIdentifier($eventIdentifier);
+        $flatIdentifier = EventsService::makeFlatIdentifier($eventIdentifier);
       }
 
       $events = null;
@@ -133,7 +139,7 @@ class ProjectEventsController extends Controller
           $selected = []; // array marking selected events
           foreach ($events as $event) {
             $this->logInfo('EVENT KEYS ' . print_r(array_keys($event), true));
-            $flatIdentifier = self::makeFlatIdentifier($event);
+            $flatIdentifier = EventsService::makeFlatIdentifier($event);
             $selected[$flatIdentifier] = true;
           }
           break;
