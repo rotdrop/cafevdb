@@ -127,7 +127,7 @@ $actionItems = [
                type="checkbox"
                name="eventSelect[]"
                value='<?php p($inputValue); ?>'
-               <?php $selected && p('checked'); ?>
+               <?php isset($selected[$flatIdentifier]) && p('checked'); ?>
         />
         <label class="select-check" for="<?php p($selectId); ?>">
           <span class="label-checked"><?php p($l->t('selected')); ?></span>
