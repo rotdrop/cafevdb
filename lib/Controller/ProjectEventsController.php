@@ -123,6 +123,10 @@ class ProjectEventsController extends Controller
       if (!empty($eventIdentifier)) {
         $eventIdentifier = json_decode($eventIdentifier, true);
         $flatIdentifier = EventsService::makeFlatIdentifier($eventIdentifier);
+        $scope = $this->parameterService->getParam('scope');
+        if (!empty($scope[$flatIdentifier])) {
+          $scope = $scope[$flatIdentifier];
+        }
       }
 
       $events = null;
@@ -154,9 +158,45 @@ class ProjectEventsController extends Controller
           $eventUri = $eventIdentifier['uri'];
           $recurrenceId = $eventIdentifier['recurrenceId'];
 
-          $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, $recurrenceId);
-          $this->eventsService->unregister($projectId, $eventUri, $recurrenceId);
-          unset($selected[$flatIdentifier]);
+          switch ($scope) {
+            case 'single':
+              $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, $recurrenceId);
+              $this->eventsService->unregister($projectId, $eventUri, $recurrenceId);
+              unset($selected[$flatIdentifier]);
+              break;
+            case 'series':
+              $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, recurrenceId: null);
+              $this->eventsService->unregister($projectId, $eventUri, recurrenceId: null);
+              $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
+              $selected = array_filter(
+                $selected,
+                fn($flatIdentifier) => !str_starts_with($flatIdentifier, $seriesIdentifier),
+                ARRAY_FILTER_USE_KEY,
+              );
+              break;
+            case 'related':
+              $seriesUid = $eventIdentifier['seriesUid'];
+              $events = $this->eventsService->events($projectId);
+              $candidates = [];
+              foreach ($events as $event) {
+                if ($event['seriesUid'] == $seriesUid) {
+                  $candidates[$event['calendarid']][$event['uri']] = true;
+                }
+              }
+              foreach ($candidates as $calendarId => $uris) {
+                foreach ($uris as $events) {
+                  $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, recurrenceId: null);
+                  $this->eventsService->unregister($projectId, $eventUri, recurrenceId: null);
+                  $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
+                  $selected = array_filter(
+                    $selected,
+                    fn($flatIdentifier) => !str_starts_with($flatIdentifier, $seriesIdentifier),
+                    ARRAY_FILTER_USE_KEY,
+                  );
+                }
+              }
+              break;
+          }
           break;
         case 'detach':
           $template = 'project-events/eventslisting';
@@ -165,8 +205,42 @@ class ProjectEventsController extends Controller
           $eventUri = $eventIdentifier['uri'];
           $recurrenceId = $eventIdentifier['recurrenceId'];
 
-          $this->eventsService->unchain($projectId, $calendarId, $eventUri, $recurrenceId);
-          unset($selected[$flatIdentifier]);
+          switch ($scope) {
+            case 'single':
+              $this->eventsService->unchain($projectId, $calendarId, $eventUri, $recurrenceId);
+              unset($selected[$flatIdentifier]);
+              break;
+            case 'series':
+              $this->eventsService->unchain($projectId, $calendarId, $eventUri, recurrenceId: null);
+              $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
+              $selected = array_filter(
+                $selected,
+                fn($flatIdentifier) => !str_starts_with($flatIdentifier, $seriesIdentifier),
+                ARRAY_FILTER_USE_KEY,
+              );
+              break;
+            case 'related':
+              $seriesUid = $eventIdentifier['seriesUid'];
+              $events = $this->eventsService->events($projectId);
+              $candidates = [];
+              foreach ($events as $event) {
+                if ($event['seriesUid'] == $seriesUid) {
+                  $candidates[$event['calendarid']][$event['uri']] = true;
+                }
+              }
+              foreach ($candidates as $calendarId => $uris) {
+                foreach ($uris as $events) {
+                  $this->eventsService->unchain($projectId, $calendarId, $eventUri, recurrenceId: null);
+                  $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
+                  $selected = array_filter(
+                    $selected,
+                    fn($flatIdentifier) => !str_starts_with($flatIdentifier, $seriesIdentifier),
+                    ARRAY_FILTER_USE_KEY,
+                  );
+                }
+              }
+              break;
+          }
           break;
         case 'download':
           $exports = $selected;
