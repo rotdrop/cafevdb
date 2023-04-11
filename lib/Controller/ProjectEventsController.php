@@ -117,8 +117,6 @@ class ProjectEventsController extends Controller
         $selected[$flatIdentifier] = $eventIdentifier;
       }
 
-      $this->logInfo('SELECTED ' . print_r($selected, true));
-
       $eventIdentifier = $this->parameterService->getParam('eventIdentifier');
       if (!empty($eventIdentifier)) {
         $eventIdentifier = json_decode($eventIdentifier, true);
