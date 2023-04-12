@@ -211,6 +211,32 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           return false;
         });
 
+      const eventUidSelector = 'tr.event-is-repeating td.event-uid';
+      eventForm
+        .off('click', eventUidSelector)
+        .on('click', eventUidSelector, function(event) {
+          const $this = $(this);
+          const $row = $this.closest('tr');
+          $row.find('input.scope-radio[value="series"]').prop('checked', true).trigger('change');
+          const $emailCheck = $row.find('input.email-check');
+          $emailCheck.prop('checked', !$emailCheck.prop('checked')).trigger('change');
+
+          return false;
+        });
+
+      const eventSeriesUidSelector = 'tr.event-has-cross-series-relations td.event-series-uid';
+      eventForm
+        .off('click', eventSeriesUidSelector)
+        .on('click', eventSeriesUidSelector, function(event) {
+          const $this = $(this);
+          const $row = $this.closest('tr');
+          $row.find('input.scope-radio[value="related"]').prop('checked', true).trigger('change');
+          const $emailCheck = $row.find('input.email-check');
+          $emailCheck.prop('checked', !$emailCheck.prop('checked')).trigger('change');
+
+          return false;
+        });
+
       eventForm
         .off('change', 'input.email-check')
         .on('change', 'input.email-check', emailSelection);
@@ -358,10 +384,19 @@ const redisplay = function() {
 const getRowScope = function($row, scope) {
   scope = scope || $row.find('.scope-radio:checked').val();
 
-  if ($row.data('recurrenceId') === '') {
-    return 'single';
-  } else if (scope === 'related' && $row.hasClass('event-has-no-cross-series-relations')) {
-    return 'series';
+  switch (scope) {
+  case 'single':
+    break;
+  case 'series':
+    if ($row.hasClass('event-is-not-repeating')) {
+      scope = 'single';
+    }
+    break;
+  case 'related':
+    if ($row.hasClass('event-has-no-cross-series-relations')) {
+      scope = $row.hasClass('event-is-not-repeating') ? 'single' : 'series';
+    }
+    break;
   }
 
   return scope;
