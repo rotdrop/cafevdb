@@ -656,8 +656,6 @@ class VCalendarService
       return $vObject->DTEND;
     }
     $dtEnd = clone $vObject->DTSTART;
-    // clone creates a shallow copy, also clone DateTime
-    $dtEnd->setDateTime(clone $dtEnd->getDateTime());
     if ($vObject->DURATION) {
       $duration = strval($vObject->DURATION);
       $invert = 0;
