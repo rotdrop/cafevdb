@@ -174,15 +174,14 @@ class ProjectEventsController extends Controller
               break;
             case 'related':
               $seriesUid = $eventIdentifier['seriesUid'];
-              $events = $this->eventsService->events($projectId);
               $candidates = [];
-              foreach ($events as $event) {
+              foreach ($this->eventsService->events($projectId) as $event) {
                 if ($event['seriesUid'] == $seriesUid) {
                   $candidates[$event['calendarid']][$event['uri']] = true;
                 }
               }
               foreach ($candidates as $calendarId => $uris) {
-                foreach ($uris as $events) {
+                foreach (array_keys($uris) as $eventUri) {
                   $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, recurrenceId: null);
                   $this->eventsService->unregister($projectId, $eventUri, recurrenceId: null);
                   $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
@@ -219,15 +218,14 @@ class ProjectEventsController extends Controller
               break;
             case 'related':
               $seriesUid = $eventIdentifier['seriesUid'];
-              $events = $this->eventsService->events($projectId);
               $candidates = [];
-              foreach ($events as $event) {
+              foreach ($this->eventsService->events($projectId) as $event) {
                 if ($event['seriesUid'] == $seriesUid) {
                   $candidates[$event['calendarid']][$event['uri']] = true;
                 }
               }
               foreach ($candidates as $calendarId => $uris) {
-                foreach ($uris as $events) {
+                foreach (array_keys($uris) as $eventUri) {
                   $this->eventsService->unchain($projectId, $calendarId, $eventUri, recurrenceId: null);
                   $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
                   $selected = array_filter(
