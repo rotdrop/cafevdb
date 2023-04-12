@@ -2893,7 +2893,8 @@ Störung.';
     $timezone = $this->getTimezone();
     foreach (array_values($events) as $eventIdentifier) {
       $eventUri = $eventIdentifier['uri'];
-      $event = $this->eventsService->fetchEvent($this->projectId, $eventUri);
+      $recurrenceId = $eventIdentifier['recurrenceId'];
+      $event = $this->eventsService->fetchEvent($this->projectId, $eventUri, $recurrenceId);
       $datestring = $this->eventsService->briefEventDate($event, $timezone, $locale);
       $name = stripslashes($event['summary']).', '.$datestring;
       $this->diagnostics[self::DIAGNOSTICS_MESSAGE]['Events'][] = $name;

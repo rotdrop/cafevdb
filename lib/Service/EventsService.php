@@ -511,13 +511,24 @@ class EventsService
    *
    * @param string $eventURI CalDAV URI.
    *
+   * @param null|int $recurrenceId If non empty find this
+   * instance. Otherwise just pick one event instance if behind the URI we
+   * have an event series.
+   *
    * @return null|array
    *
    * @see makeEvent()
    */
-  public function fetchEvent(int $projectId, string $eventURI):?array
+  public function fetchEvent(int $projectId, string $eventURI, ?int $recurrenceId):?array
   {
-    $projectEvent = $this->findOneBy(['project' => $projectId, 'eventUri' => $eventURI]);
+    $criteria = [
+      'project' => $projectId,
+      'eventUri' => $eventURI,
+    ];
+    if (!empty($recurrenceId)) {
+      $criteria['recurrenceId'] = $recurrenceId;
+    }
+    $projectEvent = $this->findOneBy($criteria);
     if (empty($projectEvent)) {
       return null;
     }
