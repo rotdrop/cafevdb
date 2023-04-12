@@ -933,6 +933,57 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Generate an "absence" field for the given project event if such a field
+   * does not yet exist. Otherwise make sure its title is updated, and
+   * soft-delete it if the given project event is also soft-deleted.
+   *
+   * @param Entities\ProjectEvent $projectEvent
+   *
+   * @param bool $flush Whether to flusht the changes to the database.
+   *
+   * @return Entities\ProjectParticipantField
+   */
+  public function ensureAbsenceField(Entities\ProjectEvent $projectEvent, bool $flush = false):?Entities\ProjectParticipantField
+  {
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer()->get(Service\EventsService::class);
+    $eventData = $eventsService->fetchEvent($projectEvent->getProject(), $projectEvent->getEventUri(), $projectEvent->getRecurrenceId());
+
+    $absenceField = $projectEvent->getAbsenceField();
+    if (empty($absenceField)) {
+      $absenceField = (new Entities\ProjectParticipantField)
+        ->setMultiplicity(Multiplicity::MULTIPLE)
+        ->setDataType(DataType::TEXT);
+      $options = [
+        (string)$this->l->t('absent') => $this->l->t('This person will not participate in this event.'),
+        (string)$this->l->t('contacted') => $this->l->t('This person has been asked to confirm the participation but did not yet answer.'),
+        (string)$this->l->t('tentative') => $this->l->t('This person does not yet know whether a participation is possible.'),
+      ];
+      foreach ($options as $label => $tooltip) {
+        /** @var Entities\ProjectParticipantFieldDataOption $option */
+        $option = (new Entities\ProjectParticipantFieldDataOption)
+          ->setLabel($label)
+          ->setTooltip($tooltip)
+          ->setField($absenceField);
+        $absenceField->getDataOptions()->set($option->getKey(), $option);
+      }
+      $this->persist($absenceField);
+    }
+    $absenceField->setName($eventsService->briefEventDate($eventData))
+      ->setTooltip($eventsService->longEventDate($eventData));
+
+    if ($projectEvent->isDeleted()) {
+      $this->remove($absenceField, soft: true);
+    }
+
+    if ($flush) {
+      $this->flush();
+    }
+
+    return null;
+  }
+
+  /**
    * Create a field with given name and type. The field returned is not yet persisted.
    *
    * @param string $name
