@@ -24,10 +24,11 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \Exception;
-use \DateTimeImmutable;
-use \DateTimeZone;
+use Exception;
+use DateTimeImmutable;
+use DateTimeZone;
 
+use Sabre\VObject;
 use Sabre\VObject\Recur\EventIterator;
 use Sabre\VObject\Recur\MaxInstancesExceededException;
 use Sabre\VObject\Recur\NoInstancesException;
@@ -54,6 +55,8 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 
+use OCA\CAFEVDB\Exceptions;
+
 /**
  * Events and tasks handling.
  *
@@ -64,6 +67,7 @@ class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   const VALARM_FROM_START = VCalendarService::VALARM_FROM_START;
   const VALARM_FROM_END = VCalendarService::VALARM_FROM_END;
@@ -94,7 +98,7 @@ class EventsService
 
   /**
    * @var array Cache the siblings of recurring events by project-id,
-   * calendar-uri, event-uid, recurrence-id. This cache contains ProjectEvent
+   * calendar-uri, recurrence-id, event-uid. This cache contains ProjectEvent
    * entities.
    */
   private $projectEventSiblings;
@@ -162,7 +166,6 @@ class EventsService
     $calendarId = $objectData['calendarid'];
 
     if (!in_array($calendarId, $calendarIds)) {
-      $this->logInfo('OBJECT ' . $objectData['uri'] . ' IS NOT FOR US');
       // not for us
       return;
     }
@@ -409,7 +412,7 @@ class EventsService
     $event['seriesUid'] = (string)$projectEvent->getSeriesUid();
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
-      $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());
+      $this->logError('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());
       if (false) {
         // clean up orphaned events
         try {
@@ -537,6 +540,7 @@ class EventsService
     $projectEvents = $this->projectEvents($projectId);
 
     $events = [];
+    /** @var Entities\ProjectEvent $projectEvent */
     foreach ($projectEvents as $projectEvent) {
       $eventData = $this->makeEvent($projectEvent);
       if (empty($eventData)) {
@@ -586,6 +590,8 @@ class EventsService
    * ```
    * [ 'start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ... ]
    * ```
+   *
+   * @todo Perhaps convert to DateTime class instead of using strftime().
    */
   private function eventTimes(array$eventObject, ?string $timezone = null, ?string $locale = null):array
   {
@@ -602,15 +608,18 @@ class EventsService
 
     $startStamp = $start->getTimestamp();
 
-    /* Event end is inclusive the last second of "end" to generate
-     * non-confusing dates and times for whole-day events.
-     */
-    $endStamp = $end->getTimestamp() + ($allDay ? -1 : 0);
+    $endStamp = $end->getTimestamp();
 
-    $startdate = Util::strftime("%x", $startStamp, $timezone, $locale);
-    $starttime = Util::strftime("%H:%M", $startStamp, $timezone, $locale);
-    $enddate = Util::strftime("%x", $endStamp, $timezone, $locale);
-    $endtime = Util::strftime("%H:%M", $endStamp, $timezone, $locale);
+    $startDate = Util::strftime("%x", $startStamp, $timezone, $locale);
+    $startTime = Util::strftime("%H:%M", $startStamp, $timezone, $locale);
+    $endTime = Util::strftime("%H:%M", $endStamp, $timezone, $locale);
+    if ($endTime == '00:00') {
+      // make whole-day events a little more readable
+      $endTime = '24:00';
+      $endDate = Util::strftime("%x", $endStamp - 1, $timezone, $locale);
+    } else {
+      $endDate = Util::strftime("%x", $endStamp, $timezone, $locale);
+    }
 
     return [
       'timezone' => $timezone,
@@ -618,13 +627,13 @@ class EventsService
       'allday' => $allDay,
       'start' => [
         'stamp' => $startStamp,
-        'date' => $startdate,
-        'time' => $starttime,
+        'date' => $startDate,
+        'time' => $startTime,
       ],
       'end' => [
         'stamp' => $endStamp,
-        'date' => $enddate,
-        'time' => $endtime,
+        'date' => $endDate,
+        'time' => $endTime,
       ],
     ];
   }
@@ -647,7 +656,11 @@ class EventsService
     $times = $this->eventTimes($eventObject, $timezone, $locale);
 
     if ($times['start']['date'] == $times['end']['date']) {
-      $datestring = $times['start']['date'].($times['allday'] ? '' : ', '.$times['start']['time']);
+      $datestring = $times['start']['date'];
+      if (!$times['allday']) {
+        $startTime = $times['start']['time'];
+        $datestring .= ', ' . ($startTime == '00:00' ? $this->l->t('till %s', $times['end']['time']) : $startTime);
+      }
     } else {
       $datestring = $times['start']['date'].' - '.$times['end']['date'];
     }
@@ -1027,8 +1040,6 @@ class EventsService
    */
   public function syncCalendarObject(array $objectData, bool $unregister = true):array
   {
-    $this->logInfo('HELLO');
-
     $eventURI = $objectData['uri'];
     $calId = $objectData['calendarid'];
     $vCalendar = VCalendarService::getVCalendar($objectData);
@@ -1049,7 +1060,6 @@ class EventsService
           $originalVCalendar = VCalendarService::getVCalendar($originalEvent);
           foreach (VCalendarService::getAllVObjects($originalVCalendar) as $vEvent) {
             if (!empty($vEvent->CLASS) && ($vEvent->CLASS == 'CONFIDENTIAL' || $vEvent->CLASS == 'PRIVATE')) {
-              $this->logInfo('FORCE EVENT ' . $eventURI . ' TO BE PUBLIC ' . $vEvent->CLASS);
               $vEvent->CLASS = 'PUBLIC';
               $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
               $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
@@ -1063,6 +1073,98 @@ class EventsService
       // Perhaps add another hack and turn any full-day multi-day event into
       // its equivalent recurring event (i.e. same number of days, but with
       // recurrence rules.
+
+      /** @var VEvent $vEvent */
+      $vEvent = VCalendarService::getVObject($vCalendar);
+      if (!VCalendarService::isEventRecurring($vEvent)) {
+        $dtStart = $vEvent->DTSTART;
+        $dtEnd = VCalendarService::getDTEnd($vEvent);
+        $start = $dtStart->getDateTime();
+        $end = $dtEnd->getDateTime();
+        $allDay = !$dtStart->hasTime();
+        if ($allDay) {
+          $days = ($end->getTimestamp() - $start->getTimestamp()) / (24 * 60 * 60);
+          if ($days > 1) {
+            unset($vEvent->DURATION);
+            $vEvent->DTEND = clone $dtEnd;
+            $vEvent->DTEND->setDateTime($start->modify('+1 day'));
+            // RRULE:FREQ=DAILY;INTERVAL=1;UNTIL=20230417
+            $dtEnd->setDateTime($end->modify('-1 day')); // RRULE UNTIL includes the end date.
+            $vEvent->add(
+              'RRULE', [
+                'FREQ' => 'DAILY',
+                'INTERVAL' => 1,
+                'UNTIL' => $dtEnd,
+              ]);
+            $vEvent->{'LAST-MODIFIED'} =
+              $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
+            return []; // there will be another event which then is used to update the project links.
+          }
+        } else {
+          $hours = ($end->getTimestamp() - $start->getTimestamp()) / 3600;
+          if ($hours > 48) {
+            $startDate = self::convertToTimezoneDate($start);
+            $endDate = self::convertToTimezoneDate($end);
+
+            unset($vEvent->DURATION);
+
+            // convert to a daily recurring event with two exceptions at the start and the end.
+            $vStart = clone $vCalendar;
+            $vEnd = clone $vCalendar;
+
+            $vStart->VEVENT = $vStartEvent = clone $vEvent;
+            $vEnd->VEVENT = $vEndEvent = clone $vEvent;
+
+            //$vStartEvent->DTEND = clone $dtStart;
+            unset($vStartEvent->DTEND);
+            $vStartEvent->add('DTEND', clone $dtStart);
+            $vStartEvent->DTEND->setDateTime($startDate->modify('+1 day'));
+            $vStartEvent->UID =  VObject\UUIDUtil::getUUID();
+
+            unset($vEndEvent->DTSTART);
+            $vEndEvent->add('DTSTART', clone $dtEnd);
+            $vEndEvent->DTSTART->setDateTime($endDate);
+            $vEndEvent->UID =  VObject\UUIDUtil::getUUID();
+
+            $dtStart->setDateTime($startDate->modify('+1 day'));
+            unset($vEvent->DTSTART);
+            $vEvent->add('DTSTART', $dtStart, [ 'VALUE' => 'DATE' ]);
+
+            unset($vEvent->DTEND);
+            $vEvent->add('DTEND', clone $dtStart, [ 'VALUE' => 'DATE' ]);
+            $vEvent->DTEND->setDateTime($startDate->modify('+ 2 day'));
+
+            $dtEnd['VALUE'] = 'DATE';
+            $dtEnd->setDateTime($endDate->modify('-1 day'));
+            $vEvent->add(
+              'RRULE', [
+                'FREQ' => 'DAILY',
+                'INTERVAL' => 1,
+                'UNTIL' => $dtEnd,
+              ]);
+
+            $vEvent->add('RELATED-TO', $vStartEvent->UID, [ 'RELTYPE' => 'SIBLING', ]);
+            $vEvent->add('RELATED-TO', $vEndEvent->UID, [ 'RELTYPE' => 'SIBLING', ]);
+
+            $vStartEvent->add('RELATED-TO', $vEvent->UID, [ 'RELTYPE' => 'SIBLING', ]);
+            $vStartEvent->add('RELATED-TO', $vEndEvent->UID, [ 'RELTYPE' => 'SIBLING', ]);
+
+            $vEndEvent->add('RELATED-TO', $vStartEvent->UID, [ 'RELTYPE' => 'SIBLING', ]);
+            $vEndEvent->add('RELATED-TO', $vEvent->UID, [ 'RELTYPE' => 'SIBLING', ]);
+
+            foreach ([$vEvent, $vStartEvent, $vEndEvent] as $vObject) {
+              $vObject->{'LAST-MODIFIED'} =
+                $vObject->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            }
+
+            $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
+            $this->calDavService->createCalendarObject($calId, null, $vStart);
+            $this->calDavService->createCalendarObject($calId, null, $vEnd);
+            return []; // there will be other events which then are used to update the project links.
+          }
+        }
+      }
     }
 
     $calURI     = $objectData['calendaruri'];
@@ -1093,10 +1195,9 @@ class EventsService
 
     // register current events and record which recurrence-ids are there
 
-    $this->logInfo(' SIBLINGS' . count($siblings) . ' ' . print_r(array_keys($siblings), true));
-
     /** @var VEvent $sibling */
     foreach ($siblings as $recurrenceId => $sibling) {
+
       // recurring events can have exceptions, so we need to fetch the
       // categories for all siblings separately.
       $categories = VCalendarService::getCategories($sibling);
@@ -1192,7 +1293,7 @@ class EventsService
    *
    * @param array<int, string> $relatedEvents
    *
-   * @return array<string, Entities\ProjectEvent>
+   * @return array<string, array<string, Entities\ProjectEvent> >
    */
   private function findRelatedEvents(
     int $projectId,
@@ -1200,30 +1301,36 @@ class EventsService
     array $relatedEvents,
   ):array {
     $siblings = [];
-    foreach (($this->projectEventSiblings[$projectId][$calendarId] ?? []) as $uid => $instances) {
-      if (in_array($uid, $relatedEvents)) {
-        $siblings = array_replace($siblings, $instances);
+    foreach (($this->projectEventSiblings[$projectId][$calendarId] ?? []) as $recurrenceId => $uidSiblings) {
+      foreach ($uidSiblings as $uid => $sibling) {
+        if (in_array($uid, $relatedEvents)) {
+          $siblings[$recurrenceId][$uid] = $sibling;
+          $relatedEvents = array_filter($relatedEvents, fn($value) => $value != $uid);
+        }
       }
     }
-    if (empty($siblings)) {
+    if (!empty($relatedEvents)) {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-      $siblings = $this->findBy(
+      $flatSiblings = $this->findBy(
         criteria: [
           'project' => $projectId,
           'calendarId' => $calendarId,
           'eventUid' => $relatedEvents,
         ],
         orderBy: [
-          'recurrenceId' => 'INDEX',
+          'eventUid' => 'ASC',
+          'recurrenceId' => 'ASC',
         ],
       );
-      /** @var Entities\ProjectEvent $sibling */
-      foreach ($siblings as $recurrenceId => $sibling) {
-        $this->projectEventSiblings[$projectId][$calendarId][$sibling->getEventUid()][$recurrenceId] = $sibling;
-      }
       $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+      /** @var Entities\ProjectEvent $sibling */
+      foreach ($flatSiblings as $sibling) {
+        $uid = $sibling->getEventUid();
+        $recurrenceId = $sibling->getRecurrenceId();
+        $this->projectEventSiblings[$projectId][$calendarId][$recurrenceId][$uid] = $sibling;
+        $siblings[$recurrenceId][$uid] = $sibling;
+      }
     }
-
 
     return $siblings;
   }
@@ -1284,11 +1391,23 @@ class EventsService
     $siblings = $this->findRelatedEvents($projectId, $calendarId, $relatedEvents);
 
     /** @var Entities\ProjectEvent $entity */
-    $entity = $siblings[$recurrenceId] ?? null;
+    $entity = null;
+    foreach (($siblings[$recurrenceId] ?? []) as $uid => $sibling) {
+      if (empty($recurrenceId) && $uid == $eventUID) {
+        $entity = $sibling;
+        break;
+      } elseif (!empty($recurrenceId)) {
+        $entity = $sibling;
+        break;
+      }
+    }
 
     if (empty($entity)) {
+      $seriesUid = null;
+      if (!empty($siblings)) {
+        $seriesUid = array_values(array_values($siblings)[0])[0]->getSeriesUid();
+      }
       $entity = new Entities\ProjectEvent();
-      $seriesUid = empty($siblings) ? null : array_values($siblings)[0]->getSeriesUid();
       $entity->setProject($projectOrId)
         ->setCalendarUri($calendarURI)
         ->setCalendarId($calendarId)
@@ -1297,7 +1416,7 @@ class EventsService
         ->setSeriesUid($seriesUid);
       $added = true;
       $this->persist($entity);
-      $this->projectEventSiblings[$projectId][$calendarId][$eventUID][$recurrenceId] = $entity;
+      $this->projectEventSiblings[$projectId][$calendarId][$recurrenceId][$eventUID] = $entity;
     } else {
       $seriesUid = $entity->getSeriesUid();
       $added = false;
@@ -1611,7 +1730,12 @@ class EventsService
     }
 
     if (empty($recurrenceId)) {
-      $this->calDavService->deleteCalendarObject($calId, $objectIdentifier);
+      try {
+        $this->calDavService->deleteCalendarObject($calId, $objectIdentifier);
+      } catch (Exceptions\CalendarEntryNotFoundException $e) {
+        $this->logException($e, 'Ignoring exception');
+      }
+      return;
     }
 
     // more than one sibling left: define an exception
@@ -1666,7 +1790,6 @@ class EventsService
     $vCalendar  = VCalendarService::getVCalendar($object);
     if (!empty($changeSet)) {
       if (!empty($vCalendar->VEVENT)) {
-        $this->logInfo('EVENT ' . print_r(array_keys($object), true));
         $this->updateCalendarEvent($object, $changeSet);
       } elseif (!empty($vCalendar->VTODO)) {
         $this->updateCalendarTask($object, $changeSet);
