@@ -48,7 +48,7 @@ $calendarLink['series'] = $urlGenerator->linkToRoute('calendar.view.indexview.ti
 $calendarTarget = md5($urlGenerator->linkToRoute('calendar.view.indexdirect.edit', [ 'objectId' =>  $appName ]));
 
 $actionItems = [
-  'calendar-app-single' => [
+  'calendar-app:single' => [
     'label' => $l->t('edit in calendar app'),
     'css' => [
       'scope-related-invisible scope-series-invisible',
@@ -56,7 +56,7 @@ $actionItems = [
     'href' => $calendarLink['single'],
     'target' => $calendarTarget,
   ],
-  'calendar-app-series' => [
+  'calendar-app:series' => [
     'label' => $l->t('edit in calendar app'),
     'css' => [
       'scope-related-disabled scope-single-invisible',
@@ -109,7 +109,7 @@ $actionItems = [
           title="<?php echo $toolTips['projectevents:event:scope']; ?>"
       >
         <div class="scope-container flex-container flex-start flex-column">
-          <div>
+          <div class="fit-width">
             <input id="scope-radio-single-<?php p($flatIdentifier); ?>"
                    class="scope-radio radio"
                    type="radio"
@@ -117,13 +117,13 @@ $actionItems = [
                    value="single"
                    <?php ($actionScope == 'single') && p('checked'); ?>
             />
-            <label class="scope-radio" for="scope-radio-single-<?php p($flatIdentifier); ?>"
+            <label class="scope-radio tooltip-right" for="scope-radio-single-<?php p($flatIdentifier); ?>"
                    title="<?php echo $toolTips['projectevents:event:scope:single']; ?>"
             >
               <?php p($l->t('act only on this event')); ?>
             </label>
           </div>
-          <div class="only-repeating">
+          <div class="only-repeating fit-width">
             <input id="scope-radio-series-<?php p($flatIdentifier); ?>"
                    class="scope-radio radio"
                    type="radio"
@@ -131,13 +131,13 @@ $actionItems = [
                    value="series"
                    <?php ($actionScope == 'series') && p('checked'); ?>
             />
-            <label class="scope-radio" for="scope-radio-series-<?php p($flatIdentifier); ?>"
-                 title="<?php echo $toolTips['projectevents:event:scope:series']; ?>"
+            <label class="scope-radio tooltip-right" for="scope-radio-series-<?php p($flatIdentifier); ?>"
+                   title="<?php echo $toolTips['projectevents:event:scope:series']; ?>"
             >
               <?php p($l->t('act on the event series')); ?>
             </label>
           </div>
-          <div class="only-only-cross-series-relations">
+          <div class="only-only-cross-series-relations fit-width">
             <input id="scope-radio-related-<?php p($flatIdentifier); ?>"
                    class="scope-radio radio"
                    type="radio"
@@ -145,8 +145,8 @@ $actionItems = [
                    value="related"
                    <?php ($actionScope == 'related') && p('checked'); ?>
             />
-            <label class="scope-radio" for="scope-radio-related-<?php p($flatIdentifier); ?>"
-                 title="<?php echo $toolTips['projectevents:event:scope:related']; ?>"
+            <label class="scope-radio tooltip-right" for="scope-radio-related-<?php p($flatIdentifier); ?>"
+                   title="<?php echo $toolTips['projectevents:event:scope:related']; ?>"
             >
               <?php p($l->t('act on all related events')); ?>
             </label>
@@ -170,15 +170,17 @@ $actionItems = [
           <span class="label-unchecked"><?php p($l->t('select')); ?></span>
         </label>
       </li>
-      <?php foreach ($actionItems as $tag => $itemInfo) {
+      <?php
+      foreach ($actionItems as $tag => $itemInfo) {
+        list($tag, $subTag,) = array_pad(explode(':', $tag), 2, null);
         $label = $itemInfo['label'];
         $css = !empty($itemInfo['css']) ? ' ' . implode(' ', $itemInfo['css']) : '';
         $href = $itemInfo['href'] ?? '#';
         $target = empty($itemInfo['target']) ? '' : ' target="' . $itemInfo['target'] . '"';
       ?>
-      <li class="event-action tooltip-right event-action-<?php p($tag); ?><?php p($css); ?>"
+      <li class="event-action tooltip-right event-action-<?php p($tag); ?><?php p($css); ?> <?php p($tag); ?><?php $subTag && p($tag . '-' . $subTag); ?>"
           data-operation="<?php p($tag); ?>"
-          title="<?php echo $toolTips['projectevents:event:' . $tag]; ?>"
+          title="<?php echo $toolTips['projectevents:event:' . $tag . ($subTag ? ':' . $subTag : '')]; ?>"
       >
         <a href="<?php p($href); ?>"<?php p($target); ?> class="flex-container flex-center">
           <span class="menu-item-label"><?php p($label); ?></span>
