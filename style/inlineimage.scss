@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,10 @@
 
 #edit_photo_dialog {
   text-align:center;
-}
-#edit_photo_dialog form.cropform {
-  display:inline-block;
+
+  form.cropform {
+    display:inline-block;
+  }
 }
 
 /* #edit_photo_dialog_img { */
@@ -56,19 +57,19 @@
 .cafevdb_inline_image_wrapper {
   height: auto;
   width: auto;
-}
-
-.cafevdb_inline_image_wrapper.portrait {
-  min-height: 100px;
-}
-
-.cafevdb_inline_image_wrapper.wait,
-.cafevdb_inline_image_wrapper.loading {
-  opacity: 0.6;
-  filter:alpha(opacity=0.6);
-  z-index:1000;
-  background: url('../../../core/img/loading.gif') no-repeat center center;
-  cursor: wait;
+  &.portrait {
+    min-height: 100px;
+  }
+  &.wait, &.loading {
+    opacity: 0.6;
+    filter:alpha(opacity=0.6);
+    z-index:1000;
+    background: url('../../../core/img/loading.gif') no-repeat center center;
+    cursor: wait;
+  }
+  &.loading {
+    background: url('../../../core/img/loading.gif') no-repeat center center; -moz-box-shadow: 0 1px 3px #777;
+  }
 }
 
 .cafevdb_inline_image {
@@ -78,26 +79,10 @@
   box-shadow: 0 1px 3px #777;
   opacity: 1;
   position:relative;
-}
-
-.cafevdb_inline_image_wrapper.loading {
-  background: url('../../../core/img/loading.gif') no-repeat center center; -moz-box-shadow: 0 1px 3px #777;
-}
-
-div#photooverlay .cafevdb_inline_image {
-  top:3px;
-  margin:0.3em;
-}
-
-.cafevdb_inline_image:hover {
-  background: #000;
-  cursor: zoom-in;
-}
-
-.ui-dialog.ui-widget.photo-zoom {
-  overflow:hidden !important;
-  max-height:100% !important;
-  max-width:100% !important;
+  &:hover {
+    background: #000;
+    cursor: zoom-in;
+  }
 }
 
 div#photooverlay {
@@ -107,6 +92,27 @@ div#photooverlay {
   padding:0.5em;
   vertical-align:middle;
   display:inline-block !important;
+  &.ui-dialog-content {
+    display:block!important;
+    overflow:hidden!important;
+    box-sizing:content-box;
+    text-align:center;
+    .cafevdb_inline_image {
+      display:inline-block;
+      box-sizing:content-box;
+      position:relative;
+    }
+  }
+  .cafevdb_inline_image {
+    top:3px;
+    margin:0.3em;
+  }
+}
+
+.ui-dialog.ui-widget.photo-zoom {
+  overflow:hidden !important;
+  max-height:100% !important;
+  max-width:100% !important;
 }
 
 #app-content.has-photo-popup .ui-widget-overlay:hover,
@@ -118,19 +124,6 @@ div#photooverlay .cafevdb_inline_image:hover {
 div.photo-zoom.ui-dialog {
   text-align:center;
   overflow:auto!important;
-}
-
-div#photooverlay.ui-dialog-content {
-  display:block!important;
-  overflow:hidden!important;
-  box-sizing:content-box;
-  text-align:center;
-}
-
-div#photooverlay.ui-dialog-content .cafevdb_inline_image {
-  display:inline-block;
-  box-sizing:content-box;
-  position:relative;
 }
 
 .phototools {
@@ -145,44 +138,38 @@ div#photooverlay.ui-dialog-content .cafevdb_inline_image {
   moz-box-shadow: 0 1px 3px #777;
   webkit-box-shadow: 0 1px 3px #777;
   box-shadow: 0 1px 3px #777;
+  li {
+    display: inline;
+    a {
+      float:left;
+      cursor:pointer;
+      width:22px;
+      height:22px;
+      opacity: 0.6;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+  /**************************************************************************
+   *
+   * Icons.
+   *
+   */
+  .add {
+    background:url('../../../core/img/actions/add.svg') no-repeat center;
+    clear: both;
+  }
+  .delete {
+    background:url('../../../core/img/actions/delete.svg') no-repeat center;
+  }
+  .edit {
+    background:url('../../../core/img/actions/rename.svg') no-repeat center;
+  }
+  .upload {
+    background:url('../../../core/img/actions/upload.svg') no-repeat center;
+  }
+  .cloud {
+    background:url('../img/cloud-icon.svg') no-repeat center;
+  }
 }
-.phototools li {
-  display: inline;
-}
-.phototools li a {
-  float:left;
-  cursor:pointer;
-  width:22px;
-  height:22px;
-  opacity: 0.6;
-}
-.phototools li a:hover {
-  opacity: 0.8;
-}
-/**************************************************************************
- *
- * Icons.
- *
- */
-.add {
-  background:url('../../../core/img/actions/add.svg') no-repeat center;
-  clear: both;
-}
-.delete {
-  background:url('../../../core/img/actions/delete.svg') no-repeat center;
-}
-.edit {
-  background:url('../../../core/img/actions/rename.svg') no-repeat center;
-}
-.upload {
-  background:url('../../../core/img/actions/upload.svg') no-repeat center;
-}
-.cloud {
-  background:url('../img/cloud-icon.svg') no-repeat center;
-}
-
-/*
- * LocalVariables: ***
- * css-indent-offset: 2 ***
- * End: ***
- */
