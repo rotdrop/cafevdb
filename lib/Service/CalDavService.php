@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \InvalidArgumentException;
-use \Sabre\DAV;
+use Exception;
+use InvalidArgumentException;
+use Sabre\DAV;
 
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\Calendar\ICalendar;
@@ -35,6 +36,7 @@ use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * Service class in order to interface to the dav app of Nextcloud
@@ -104,7 +106,7 @@ class CalDavService
         ]);
         $this->refreshCalendarManager();
         return $calendarId;
-      } catch (\Exception $e) {
+      } catch (Exception $e) {
         $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       }
     }
@@ -223,7 +225,7 @@ class CalDavService
       $propPatch = new DAV\PropPatch(['{DAV:}displayname' => $displayName]);
       $this->calDavBackend->updateCalendar($calendarId, $propPatch);
       $propPatch->commit();
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       return false;
     }
@@ -445,7 +447,7 @@ class CalDavService
   {
     $localUri = $this->getObjectUri($calendarId, $objectIdentifier);
     if (empty($localUri)) {
-      throw new InvalidArgumentException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
+      throw new Exceptions\CalendarEntryNotFoundException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
     }
     $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
   }
