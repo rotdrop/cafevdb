@@ -1361,6 +1361,8 @@ table.pme-main {
       background-position: center;
       background-repeat:  no-repeat;
       text-indent: -99999px;
+      padding-left: 17px;
+      padding-right: 17px;
       &.edit {
         background-image: url('../../../core/img/actions/rename.svg');
       }
