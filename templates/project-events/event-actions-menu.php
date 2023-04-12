@@ -104,50 +104,56 @@ $actionItems = [
         </a>
       </li>
       <li class="menu-item-separator" data-operation="none"><hr/></li>
-      <li class="event-action tooltip-right event-action-scope dropdown-item dropdown-no-close only-repeating"
+      <li class="event-action tooltip-right event-action-scope dropdown-item dropdown-no-close only-multi-scope"
           data-operation="scope"
           title="<?php echo $toolTips['projectevents:event:scope']; ?>"
       >
         <div class="scope-container flex-container flex-start flex-column">
-          <input id="scope-radio-single-<?php p($flatIdentifier); ?>"
-                 class="scope-radio radio"
-                 type="radio"
-                 name="scope[<?php p($flatIdentifier); ?>]"
-                 value="single"
-                 <?php ($actionScope == 'single') && p('checked'); ?>
-          />
-          <label class="scope-radio" for="scope-radio-single-<?php p($flatIdentifier); ?>"
-                 title="<?php echo $toolTips['projectevents:event:scope:single']; ?>"
-          >
-            <?php p($l->t('act only on this event')); ?>
-          </label>
-          <input id="scope-radio-series-<?php p($flatIdentifier); ?>"
-                 class="scope-radio radio"
-                 type="radio"
-                 name="scope[<?php p($flatIdentifier); ?>]"
-                 value="series"
-                 <?php ($actionScope == 'series') && p('checked'); ?>
-          />
-          <label class="scope-radio" for="scope-radio-series-<?php p($flatIdentifier); ?>"
+          <div>
+            <input id="scope-radio-single-<?php p($flatIdentifier); ?>"
+                   class="scope-radio radio"
+                   type="radio"
+                   name="scope[<?php p($flatIdentifier); ?>]"
+                   value="single"
+                   <?php ($actionScope == 'single') && p('checked'); ?>
+            />
+            <label class="scope-radio" for="scope-radio-single-<?php p($flatIdentifier); ?>"
+                   title="<?php echo $toolTips['projectevents:event:scope:single']; ?>"
+            >
+              <?php p($l->t('act only on this event')); ?>
+            </label>
+          </div>
+          <div class="only-repeating">
+            <input id="scope-radio-series-<?php p($flatIdentifier); ?>"
+                   class="scope-radio radio"
+                   type="radio"
+                   name="scope[<?php p($flatIdentifier); ?>]"
+                   value="series"
+                   <?php ($actionScope == 'series') && p('checked'); ?>
+            />
+            <label class="scope-radio" for="scope-radio-series-<?php p($flatIdentifier); ?>"
                  title="<?php echo $toolTips['projectevents:event:scope:series']; ?>"
-          >
-            <?php p($l->t('act on the event series')); ?>
-          </label>
-          <input id="scope-radio-related-<?php p($flatIdentifier); ?>"
-                 class="scope-radio radio only-cross-series-relations"
-                 type="radio"
-                 name="scope[<?php p($flatIdentifier); ?>]"
-                 value="related"
-                 <?php ($actionScope == 'related') && p('checked'); ?>
-          />
-          <label class="scope-radio only-cross-series-relations" for="scope-radio-related-<?php p($flatIdentifier); ?>"
+            >
+              <?php p($l->t('act on the event series')); ?>
+            </label>
+          </div>
+          <div class="only-only-cross-series-relations">
+            <input id="scope-radio-related-<?php p($flatIdentifier); ?>"
+                   class="scope-radio radio"
+                   type="radio"
+                   name="scope[<?php p($flatIdentifier); ?>]"
+                   value="related"
+                   <?php ($actionScope == 'related') && p('checked'); ?>
+            />
+            <label class="scope-radio" for="scope-radio-related-<?php p($flatIdentifier); ?>"
                  title="<?php echo $toolTips['projectevents:event:scope:related']; ?>"
-          >
-            <?php p($l->t('act on all related events')); ?>
-          </label>
+            >
+              <?php p($l->t('act on all related events')); ?>
+            </label>
+          </div>
         </div>
       </li>
-      <li class="menu-item-separator only-repeating" data-operation="none"><hr/></li>
+      <li class="menu-item-separator only-multi-scope" data-operation="none"><hr/></li>
       <li class="event-action tooltip-right event-action-select dropdown-item dropdown-no-close"
           data-operation="select"
           title="<?php echo $toolTips['projectevents:event:select']; ?>"

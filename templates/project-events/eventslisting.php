@@ -37,11 +37,13 @@ foreach ($eventMatrix as $key => $eventGroup) {
   foreach ($eventGroup['events'] as $event) {
     if (!empty($event['seriesUid'])) {
       $eventRelations[$event['seriesUid']] = ($eventRelations[$event['seriesUid']] ?? 0) + 1;
-      $eventSeries[$event['uid']] = ($eventSeries[$event['uid']] ?? 0) + 1;
       if (empty($relationMatrix[$event['seriesUid']])) {
         $relationMatrix[$event['seriesUid']] = [];
       }
       $relationMatrix[$event['seriesUid']][$event['uid']] = true;
+    }
+    if (!empty($event['recurrenceId'])) {
+      $eventSeries[$event['uid']] = ($eventSeries[$event['uid']] ?? 0) + 1;
     }
   }
 }
@@ -146,7 +148,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
           <td class="event-uid tooltip-auto event-uid-<?php p($eventSeries[$evtUid] ?? ''); ?><?php $haveEventSeries || p(' really hidden'); ?>"
               title="<?php echo $toolTips['projectevents:event:event-uid']; ?>"
           >
-            <span class="uid-index"><?php isset($eventRelations[$seriesUid]) && p(chr(ord('A') + $eventSeries[$evtUid])); ?></span>
+            <span class="uid-index"><?php isset($eventSeries[$evtUid]) && p(chr(ord('A') + $eventSeries[$evtUid])); ?></span>
             <span class="really hidden"><?php p($evtUid); ?></span>
           </td>
           <td class="event-series-uid tooltip-auto event-series-uid-<?php p($eventRelations[$seriesUid] ?? ''); ?><?php $haveCrossSeriesRelations || p(' really hidden'); ?>"

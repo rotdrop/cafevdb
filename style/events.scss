@@ -341,6 +341,9 @@
         &.event-has-no-cross-series-relations .only-cross-series-relations {
           display:none;
         }
+        &.event-is-not-repeating.event-has-no-cross-series-relations .only-multi-scope {
+          display:none;
+        }
 
         &.step-0, &.step-1 {
           td {
@@ -390,7 +393,7 @@
         }
 
         &.projectevents {
-          &.event-is-not-repeating:hover td {
+          &.event-is-not-repeating:hover td.event-uid, &.event-has-no-cross-series-relations:hover td.event-series-uid {
             background-color: #9BAFC8!important;
           }
           &:hover td:not(.event-uid, .event-series-uid) {
