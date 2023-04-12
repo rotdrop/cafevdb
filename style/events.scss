@@ -358,6 +358,7 @@
             }
             &.event-uid, &.event-series-uid {
               min-width:16px;
+              width:16px;
               .uid-index, .series-uid-index {
                 filter: invert(100%);
                 background-color: rgba(1, 1, 1, 0);
