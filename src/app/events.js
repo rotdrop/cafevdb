@@ -486,8 +486,7 @@ const eventAction = function(event) {
   const name = $this.attr('name') || $this.data('operation');
 
   switch (name) {
-  case 'calendar-app-single':
-  case 'calendar-app-series':
+  case 'calendar-app':
     // just let the browser follow the link
     afterInit();
     return true;

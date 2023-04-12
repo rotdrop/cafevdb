@@ -1177,6 +1177,10 @@ input[type=checkbox].cafevdb-password-show {
 }
 
 .cafevdb {
+  .fit-width {
+    width:100%;
+  }
+
   .inline-block.hidden, .inline.hidden, .block.hidden {
     display:none;
   }
