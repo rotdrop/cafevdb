@@ -1768,6 +1768,9 @@ const ensureDropdownVisibility = function($container) {
  * @param {jQuery} $container TBD.
  */
 const resetDropdownVisibility = function($container) {
+  if (!$container.hasClass('ui-widget-content')) {
+    return;
+  }
   const elements = [
     $container,
     $container.cafevDialog('widget'),
