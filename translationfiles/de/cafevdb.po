@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-04-15 10:27+0200\n"
-"PO-Revision-Date: 2023-04-15 10:35+0200\n"
+"POT-Creation-Date: 2023-04-15 16:18+0200\n"
+"PO-Revision-Date: 2023-04-15 15:47+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -419,7 +419,7 @@ msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 #: lib/Controller/MusicianValidationController.php:499
 #: lib/Controller/PersonalSettingsController.php:300
 #: lib/Controller/ProgressStatusController.php:161
-#: lib/Controller/ProjectEventsController.php:327
+#: lib/Controller/ProjectEventsController.php:325
 #: lib/Controller/ProjectParticipantsController.php:210
 #: lib/Controller/ProjectWebPagesController.php:186
 #: lib/Controller/ProjectsController.php:177
@@ -9435,7 +9435,7 @@ msgstr "Export als OpenDocument (LibreOffice/OpenOffice)"
 
 #: lib/Service/ToolTipsService.php:939
 msgid "Export as PDF in A3/Landscape, scaled to fit the page size"
-msgstr "Eport als PDF in A3/quer, skaliert auf die Seitengröße"
+msgstr "Export als PDF in A3/quer, skaliert auf die Seitengröße"
 
 #: lib/Service/ToolTipsService.php:941
 msgid "Export as `full-featured' Excel-2007 table, `.xslx'."
