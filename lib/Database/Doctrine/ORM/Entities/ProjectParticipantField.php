@@ -439,7 +439,12 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->dataOptions->count();
+    // return $this->dataOptions->count();
+    $usageCounter = 0;
+    foreach ($this->dataOptions as $dataOption) {
+      $usageCounter += $dataOption->usage();
+    }
+    return $usageCounter;
   }
 
   /**
