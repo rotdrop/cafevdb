@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -117,12 +117,17 @@ class ConfigService
     // ckeditor still uses excessive inline js-code. So what?
     'ckeditor' => [ 'name' => 'CKEditor', 'enabled' => true],
   ];
+  const CONCERTS_CALENDAR_URI = 'concerts';
+  const REHEARSALS_CALENDAR_URI = 'rehearsals';
+  const OTHER_CALENDAR_URI = 'other';
+  const MANAGEMENT_CALENDAR_URI = 'management';
+  const FINANCE_CALENDAR_URI = 'finance';
   const CALENDARS = [
-    [ 'uri' => 'concerts', 'public' => true ],
-    [ 'uri' => 'rehearsals', 'public' => true ],
-    [ 'uri' => 'other', 'public' => true ],
-    [ 'uri' => 'management', 'public' => false ],
-    [ 'uri' => 'finance', 'public' => false ],
+    [ 'uri' => self::CONCERTS_CALENDAR_URI, 'public' => true ],
+    [ 'uri' => self::REHEARSALS_CALENDAR_URI, 'public' => true ],
+    [ 'uri' => self::OTHER_CALENDAR_URI, 'public' => true ],
+    [ 'uri' => self::MANAGEMENT_CALENDAR_URI, 'public' => false ],
+    [ 'uri' => self::FINANCE_CALENDAR_URI, 'public' => false ],
   ];
 
   const BANK_ACCOUNT_OWNER = 'bankAccountOwner';
