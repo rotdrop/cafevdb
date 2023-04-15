@@ -28,6 +28,8 @@ use Exception;
 use DateTimeImmutable;
 use DateTimeZone;
 
+use OCP\IL10N;
+
 use Sabre\VObject;
 use Sabre\VObject\Recur\EventIterator;
 use Sabre\VObject\Recur\MaxInstancesExceededException;
@@ -44,6 +46,7 @@ use OCA\DAV\Events\CalendarObjectRestoredEvent;
 use OCA\DAV\Events\CalendarObjectDeletedEvent;
 use OCA\DAV\Events\CalendarObjectMovedToTrashEvent;
 use OCA\DAV\Events\CalendarObjectUpdatedEvent;
+use OCA\DAV\Events\CalendarObjectMovedEvent;
 
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\PreProjectUpdatedEvent;
@@ -68,6 +71,7 @@ class EventsService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   const VALARM_FROM_START = VCalendarService::VALARM_FROM_START;
   const VALARM_FROM_END = VCalendarService::VALARM_FROM_END;
@@ -75,7 +79,6 @@ class EventsService
   const TASK_IN_PROCESS = VCalendarService::VTODO_STATUS_IN_PROCESS;
   const TASK_COMPLETED = VCalendarService::VTODO_STATUS_COMPLETED;
   const TASK_NEEDS_ACTION = VCalendarService::VTODO_STATUS_NEEDS_ACTION;
-
 
   /** @var EntityManager */
   protected $entityManager;
@@ -151,7 +154,7 @@ class EventsService
     }
     $objectData['calendaruri'] = $calendarData['uri'];
 
-    $this->syncCalendarObject($objectData, false);
+    $this->syncCalendarObject($objectData, unregister: false);
   }
 
   /**
@@ -173,6 +176,27 @@ class EventsService
     $objectData['calendaruri'] = $calendarData['uri'];
 
     $this->syncCalendarObject($objectData);
+  }
+
+  /**
+   * @param CalendarObjectMovedEvent $event Event object.
+   *
+   * @return void
+   */
+  public function onCalendarObjectMoved(CalendarObjectMovedEvent $event):void
+  {
+    $objectData = $event->getObjectData();
+    $calendarIds = $this->defaultCalendars();
+    $calendarId = $objectData['calendarid'];
+
+    if (!in_array($calendarId, $calendarIds)) {
+      // not for us
+      return;
+    }
+    $calendarData = $event->getTargetCalendarData();
+    $objectData['calendaruri'] = $calendarData['uri'];
+
+    $this->syncCalendarObject($objectData, sourceCalendar: $event->getSourceCalendarData());
   }
 
   /**
@@ -416,7 +440,7 @@ class EventsService
     $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
-      $this->logError('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());
+      $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());
       if (false) {
         // clean up orphaned events
         try {
@@ -511,7 +535,7 @@ class EventsService
    * Fetch one specific event and convert start and end to DateTime,
    * also determine allDay.
    *
-   * @param int $projectId
+   * @param int|Entities\Project $projectOrId
    *
    * @param string $eventURI CalDAV URI.
    *
@@ -523,10 +547,10 @@ class EventsService
    *
    * @see makeEvent()
    */
-  public function fetchEvent(int $projectId, string $eventURI, ?int $recurrenceId):?array
+  public function fetchEvent(mixed $projectOrId, string $eventURI, ?int $recurrenceId):?array
   {
     $criteria = [
-      'project' => $projectId,
+      'project' => $projectOrId,
       'eventUri' => $eventURI,
     ];
     if (!empty($recurrenceId)) {
@@ -576,7 +600,7 @@ class EventsService
   }
 
   /**
-   * @param array $event Array with at least the keys "calendarId", "uri" and
+   * @param array $eventIdentifier Array with at least the keys "calendarId", "uri" and
    * "recurrenceId", e.g. an item in the array returned by self::events().
    *
    * @return string
@@ -980,7 +1004,7 @@ class EventsService
       if ($public && !$cal['public']) {
         continue;
       }
-      $result[] = $this->getConfigValue($cal['uri'].'calendar'.'id');
+      $result[$cal['uri']] = $this->getConfigValue($cal['uri'].'calendar'.'id');
     }
     return $result;
   }
@@ -1034,6 +1058,30 @@ class EventsService
   }
 
   /**
+   * @param null|IL10N $l
+   *
+   * @return string
+   */
+  public static function getAbsenceCategory(?IL10N $l = null):string
+  {
+    $category = self::t('record absence');
+    return empty($l) ? $category : $l->t($category);
+  }
+
+  /**
+   * Decide whether events in the given calendar should by default generate
+   * absence fields.
+   *
+   * @param string $calendarUri
+   *
+   * @return bool
+   */
+  public static function absenceFieldsDefault(string $calendarUri):bool
+  {
+    return $calendarUri == ConfigService::CONCERTS_CALENDAR_URI || $calendarUri == ConfigService::REHEARSALS_CALENDAR_URI;
+  }
+
+  /**
    * Parse the respective event data and make sure the ProjectEvents
    * table is uptodate.
    *
@@ -1041,6 +1089,9 @@ class EventsService
    * calendar data may define a repeating event. Each recurrence instance will
    * get its own slot in the ProjectEvents table in order to decouple the rest
    * of the code from the complicated recurrence rules of iCalendar events.
+   *
+   * @param null|array $sourceCalendar Information about the older calendar if
+   * the event has been moved between calendars.
    *
    * @param bool $unregister Whether to unregister the event from projects not
    * mentioned in its category list.
@@ -1053,7 +1104,7 @@ class EventsService
    * ]
    * ```
    */
-  public function syncCalendarObject(array $objectData, bool $unregister = true):array
+  public function syncCalendarObject(array $objectData, ?array $sourceCalendar = null, bool $unregister = true):array
   {
     $eventURI = $objectData['uri'];
     $calId = $objectData['calendarid'];
@@ -1064,6 +1115,8 @@ class EventsService
       // As a temporary hack enforce all events to be public as there is
       // currently no means to share calendars with really full-access. This is
       // a missing delegation feature in NC.
+
+      $needUpdate = false;
 
       /** @var VEvent $vEvent */
       foreach (VCalendarService::getAllVObjects($vCalendar) as $vEvent) {
@@ -1080,9 +1133,59 @@ class EventsService
               $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
             }
           }
-          $this->calDavService->updateCalendarObject($calId, $eventURI, $originalVCalendar);
-          return []; // there will be another event which then is used to update the project links.
+          $needUpdate = true;
+          $vCalendar = $originalVCalendar;
+          break;
         }
+      }
+
+      // Try to adjust our default categories and event names, if they have not been altered
+      if ($sourceCalendar !== null) {
+        $defaultCalendars = array_flip($this->defaultCalendars());
+        $sourceCalId = $sourceCalendar['id'];
+        if (!empty($defaultCalendars[$calId]) && !empty($defaultCalendars[$sourceCalId])) {
+          $l = $this->appL10n();
+          foreach (VCalendarService::getAllVObjects($vCalendar) as $vEvent) {
+            $categories = VCalendarService::getCategories($vEvent);
+            $key = array_search($defaultCalendars[$sourceCalId], $categories);
+            if ($key !== false) {
+              unset($categories[$key]);
+            }
+            $oldCalendarUri = $defaultCalendars[$sourceCalId];
+            $oldCalendarCategory = $l->t($oldCalendarUri);
+            $key = array_search($oldCalendarCategory, $categories);
+            if ($key !== false) {
+              unset($categories[$key]);
+            }
+            $calendarUri = $defaultCalendars[$calId];
+            $calendarCategory = $l->t($calendarUri);
+            $categories[] = $l->t($calendarCategory);
+            $summary = (string)($vEvent->SUMMARY ?? '');
+            if (str_starts_with($summary, $oldCalendarCategory)) {
+              $summary = str_replace($oldCalendarCategory, $calendarCategory, $summary);
+              $vEvent->SUMMARY = $summary;
+            }
+            if (self::absenceFieldsDefault($calendarUri)) {
+              $categories[] = self::getAbsenceCategory($l);
+            }
+            VCalendarService::setCategories($vEvent, $categories);
+            $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+            $vEvent->DTSTAMP = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+          }
+          $needUpdate = true;
+        }
+        $relatedTo = $vEvent->{'RELATED-TO'} ?? null;
+        foreach (($relatedTo ?? []) as $relatedUid) {
+          $related = $this->calDavService->getCalendarObject($sourceCalId, $relatedUid);
+          if (!empty($related)) {
+            $this->calDavService->moveCalendarObject($sourceCalId, $calId, $related);
+          }
+        }
+      }
+
+      if ($needUpdate) {
+        $this->calDavService->updateCalendarObject($calId, $eventURI, $vCalendar);
+        return []; // there will be another event which then is used to update the project links.
       }
 
       // Perhaps add another hack and turn any full-day multi-day event into
@@ -1182,6 +1285,8 @@ class EventsService
       }
     }
 
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
     $calURI     = $objectData['calendaruri'];
     $vEvent     = VCalendarService::getVObject($vCalendar);
 
@@ -1226,7 +1331,8 @@ class EventsService
           $projectRecurrenceIds[$projectId][] = $recurrenceId;
 
           // register or update the event in the ProjectEvents table.
-          $status = $this->register(
+          /** @var Entities\ProjectEvent $projectEvent */
+          list('isNew' => $status, 'entity' => $projectEvent) = $this->register(
             $project,
             calendarURI: $calURI,
             eventUID: $eventUID,
@@ -1242,6 +1348,26 @@ class EventsService
           if ($status) {
             $registered[] = $projectId;
           }
+          if (in_array(self::getAbsenceCategory(), $categories) || in_array(self::getAbsenceCategory($this->appL10n()), $categories)) {
+            // $this->logInfo('CATEGORIES ' . print_r($categories, true) . ' ' . $recurrenceId);
+            /** @var ProjectParticipantFieldsService $participantFieldsService */
+            $participantFieldsService = $this->appContainer()->get(ProjectParticipantFieldsService::class);
+            $participantFieldsService->ensureAbsenceField($projectEvent, flush: false);
+          } else {
+            $absenceField = $projectEvent->getAbsenceField();
+            if (!empty($absenceField)) {
+              if ($absenceField->unused()) {
+                // $this->logInfo('TRY REMOVE ABSENCE FIELD HARD');
+                // cleanup, unused fields are simply removed
+                $projectEvent->setAbsenceField(null);
+                $this->remove($absenceField, hard: true);
+              } else {
+                // $this->logInfo('TRY REMOVE ABSENCE FIELD SOFT');
+                // soft delete it in case the operator tries to recover it later
+                $this->remove($absenceField, soft: true);
+              }
+            }
+          }
         }
       }
     }
@@ -1255,7 +1381,7 @@ class EventsService
       [ '!project' => array_keys($projectRecurrenceIds) ], // untagged projects
     ];
 
-    // tagged projects with potentially excluded event siblings
+    // tagged events with potentially excluded event siblings
     foreach ($projectRecurrenceIds as $projectId => $recurrenceIds) {
       $criteria[] = [ '(&project' => $projectId ];
       $criteria[] = [ '!recurrenceId' => $recurrenceIds ];
@@ -1278,6 +1404,8 @@ class EventsService
 
     $registered = array_unique($registered);
     $unregistered = array_unique($unregistered);
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
 
     return [ 'registered' => $registered, 'unregistered' => $unregistered ];
   }
@@ -1316,20 +1444,20 @@ class EventsService
     array $relatedEvents,
   ):array {
     $siblings = [];
-    foreach (($this->projectEventSiblings[$projectId][$calendarId] ?? []) as $recurrenceId => $uidSiblings) {
-      foreach ($uidSiblings as $uid => $sibling) {
-        if (in_array($uid, $relatedEvents)) {
-          $siblings[$recurrenceId][$uid] = $sibling;
-          $relatedEvents = array_filter($relatedEvents, fn($value) => $value != $uid);
-        }
-      }
-    }
+    // foreach (($this->projectEventSiblings[$projectId][$calendarId] ?? []) as $recurrenceId => $uidSiblings) {
+    //   foreach ($uidSiblings as $uid => $sibling) {
+    //     if (in_array($uid, $relatedEvents)) {
+    //       $siblings[$recurrenceId][$uid] = $sibling;
+    //       $relatedEvents = array_filter($relatedEvents, fn($value) => $value != $uid);
+    //     }
+    //   }
+    // }
     if (!empty($relatedEvents)) {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       $flatSiblings = $this->findBy(
         criteria: [
           'project' => $projectId,
-          'calendarId' => $calendarId,
+          // 'calendarId' => $calendarId,
           'eventUid' => $relatedEvents,
         ],
         orderBy: [
@@ -1380,7 +1508,11 @@ class EventsService
    *
    * @param bool $flush Whether or not to flush the changes to the database default true.
    *
-   * @return bool true if the event has been newly registered.
+   * @return array
+   * ```
+   * [ 'isNew' => NEW_STATUS, 'entity' => PROJECT_EVENT_ENTITY ]
+   * ```
+   * where NEW_STATUS is true if a new event has been registered.
    */
   private function register(
     mixed $projectOrId,
@@ -1395,6 +1527,9 @@ class EventsService
     bool $isRecurring,
     bool $flush,
   ) {
+
+    // $this->logInfo('REGISTER ' . $eventUID);
+
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     if (empty($relatedEvents)) {
@@ -1418,6 +1553,7 @@ class EventsService
     }
 
     if (empty($entity)) {
+      // $this->logInfo('SIBLINGS FOR REC-ID ' . count($siblings[$recurrenceId] ?? []) . ' || ' . print_r(array_keys($siblings), true) . ' || RELATED ' . print_r($relatedEvents, true));
       $seriesUid = null;
       if (!empty($siblings)) {
         $seriesUid = array_values(array_values($siblings)[0])[0]->getSeriesUid();
@@ -1433,6 +1569,7 @@ class EventsService
       $this->persist($entity);
       $this->projectEventSiblings[$projectId][$calendarId][$recurrenceId][$eventUID] = $entity;
     } else {
+      // $this->logInfo('EXISTING RECURRENCE ID ' . $recurrenceId);
       $seriesUid = $entity->getSeriesUid();
       $added = false;
     }
@@ -1441,7 +1578,9 @@ class EventsService
       $entity->setSeriesUid(Uuid::create());
     }
 
-    $entity->setEventUid($eventUID)
+    $entity->setCalendarUri($calendarURI)
+      ->setCalendarId($calendarId)
+      ->setEventUid($eventUID)
       ->setEventUri($eventURI)
       ->setSequence($sequence)
       ->setDeleted(null);
@@ -1452,7 +1591,7 @@ class EventsService
 
     $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
 
-    return $added;
+    return [ 'isNew' => $added, 'entity' => $entity ];
   }
 
   /**
@@ -1498,15 +1637,12 @@ class EventsService
    *
    * @param int $calendarId The calendar id.
    *
-   * @param string $eventURI The event uri.
+   * @param string $eventUri The event uri.
    *
    * @param null|int $recurrenceId Optional recurrence id in order to
    * define exceptions for recurring events.
    *
    * @return void
-   *
-   * @todo Combine a sence with deleteCalendarEntry() in order only to delete
-   * event instances attached to a project.
    */
   public function unchain(
     int $projectId,
@@ -1590,7 +1726,120 @@ class EventsService
 
     $this->unregister($projectId, $eventUri, $recurrenceId, flush: true);
     $this->calDavService->updateCalendarObject($calendarId, $eventUri, $vCalendar);
+  }
 
+  /**
+   * Change the categories attached to the given event. The event must be a
+   * registered project event. The event is only updated if the categories
+   * have actually changed.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @param int $calendarId
+   *
+   * @param string $eventUri
+   *
+   * @param null|int $recurrenceId
+   *
+   * @param array<int, string> $additions
+   *
+   * @param array<int, string> $removals
+   *
+   * @return bool Return true if anything has changed.
+   *
+   * @throws Exceptions\CalendarEntryNotFoundException If an event could not
+   * be found, either in the calendar or in the project events registration
+   * table.
+   */
+  public function changeCategories(
+    int $projectOrId,
+    int $calendarId,
+    string $eventUri,
+    ?int $recurrenceId = null,
+    array $additions = [],
+    array $removals = [],
+  ):bool {
+    $criteria = [
+      'project' => $projectOrId,
+      'calendarId' => $calendarId,
+      'eventUri' => $eventUri,
+    ];
+    if (!empty($recurrenceId)) {
+      $criteria['recurrenceId'] = $recurrenceId;
+    }
+
+    $projectEvent = $this->findOneBy($criteria);
+
+    if (empty($projectEvent)) {
+      $projectId = $projectOrId instanceof Entities\Project ? $projectOrId->getId() : $projectOrId;
+      throw new Exceptions\CalendarEntryNotFoundException(
+        'Unable to find ' . $eventUri . ' for project ' . $projectId
+        . ' in calendar ' . $calendarId
+        . ' with recurrence id ' . $recurrenceId,
+      );
+    }
+
+    $event = $this->calDavService->getCalendarObject($calendarId, $eventUri);
+    $vCalendar  = VCalendarService::getVCalendar($event);
+    $masterEvent = VCalendarService::getVObject($vCalendar);
+
+    if (!empty($recurrenceId)) {
+      if (!VCalendarService::isEventRecurring($vCalendar)) {
+        $recurrenceId = null; // not recurring: just update
+      } else {
+        /** @var VEvent $sibling */
+        $siblings = $this->getVEventSiblings($calendarId, $vCalendar);
+        $sibling = $siblings[$recurrenceId] ?? null;
+        if (empty($sibling)) {
+          throw new Exceptions\CalendarEntryNotFoundException('Recurring event ' . $eventUri . ' carries no project event instance with recurrence id ' . $recurrenceId);
+        }
+        if (count($siblings) <= 1) {
+          $recurrenceId = null; // recurring with one instance
+        }
+      }
+    }
+
+    $timeStamp = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
+    $needUpdate = false;
+    if (empty($recurrenceId)) {
+      /** @var VEvent $vEvent */
+      foreach (VCalendarService::getAllVObjects($vCalendar) as $vEvent) {
+        $categories = VCalendarService::getCategories($vEvent);
+        $numCategories = count($categories);
+        $categories = array_diff($categories, $removals);
+        $needUpdate = $needUpdate || $numCategories != count($categories);
+        $categories = array_unique(array_merge($categories, $additions));
+        $needUpdate = $needUpdate || $numCategories != count($categories);
+        if ($needUpdate) {
+          VCalendarService::setCategories($vEvent, $categories);
+          $vEvent->DTSTAMP = $vEvent->{'LAST-MODIFIED'} = $timeStamp;
+        }
+      }
+    } else {
+      // perhaps add another recurrence instance
+      $categories = VCalendarService::getCategories($sibling);
+      $numCategories = count($categories);
+      $categories = array_diff($categories, $removals);
+      $needUpdate = $needUpdate || $numCategories != count($categories);
+      $categories = array_unique(array_merge($categories, $additions));
+      $needUpdate = $needUpdate || $numCategories != count($categories);
+      if ($needUpdate) {
+        VCalendarService::setCategories($sibling, $categories);
+        $sibling->DTSTAMP = $sibling->{'LAST-MODIFIED'} = $timeStamp;
+        $vCalendar->add($sibling);
+      }
+    }
+
+    if ($needUpdate) {
+      // tear done the siblings cache
+      $eventUid = (string)$masterEvent->UID;
+      $sequence = isset($masterEvent->SEQUENCE) ? $masterEvent->SEQUENCE->getValue() : 0;
+      unset($this->eventSiblings[$calendarId][$eventUid][$sequence]);
+      $this->calDavService->updateCalendarObject($calendarId, $eventUri, $vCalendar);
+    }
+
+    return $needUpdate;
   }
 
   /**

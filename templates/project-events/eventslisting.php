@@ -79,6 +79,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
     $evtUid = $event['uid'];
     $recurrenceId = $event['recurrenceId'];
     $seriesUid = $event['seriesUid'] ?? '';
+    $absenceFieldId = $event['absenceField'];
 
     $flatIdentifier = EventsService::makeFlatIdentifier($event);
     $inputValue = ProjectEventsController::makeInputValue($event);
@@ -119,6 +120,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
             data-recurrence-id="<?php p($recurrenceId); ?>"
             data-series-uid="<?php p($seriesUid); ?>"
             data-action-scope="<?php p($actionScope); ?>"
+            data-absence-field-id="<?php p($absenceFieldId); ?>"
         >
           <td class="eventbuttons">
             <input type="hidden" id="calendarid-<?php p($evtUri); ?>" name="calendarId[<?php p($evtUri); ?>]" value="<?php p($calId); ?>"/>
@@ -136,6 +138,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
       'hasCrossSeriesRelations' => $hasCrossSeriesRelations,
       'actionScope' => $actionScope,
       'remoteUrl' => $remoteUrl,
+      'absenceFieldId' => $absenceFieldId,
       'event' => $event,
     ]);
 ?>
@@ -156,6 +159,11 @@ foreach ($eventMatrix as $key => $eventGroup) {
           >
             <span class="series-uid-index"><?php isset($eventRelations[$seriesUid]) && p(mb_chr(mb_ord('α') + $eventRelations[$seriesUid])); ?></span>
             <span class="really hidden"><?php p($seriesUid); ?></span>
+          </td>
+          <td class="absence-field tooltip-auto"
+              title="<?php echo $toolTips['projectevents:event:absence-field:indicator']; ?>"
+          >
+            <div class="indicator"></div>
           </td>
           <td class="eventdata brief tooltip-top tooltip-wide"
               id="brief-<?php p($flatIdentifier); ?>"

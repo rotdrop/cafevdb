@@ -852,7 +852,7 @@ __EOT__;
       'sort' => true,
       'align' => 'right',
       'tooltip' => $this->toolTipsService['participant-fields-display-order'],
-      'display' => [ 'attributes' => [ 'min' => 0 ], ],
+      // 'display' => [ 'attributes' => [ 'min' => 0 ], ],
       'default' => null,
     ];
 
@@ -1949,9 +1949,13 @@ __EOT__;
                 case DataType::DATE:
                   if (!empty($fieldValue)) {
                     try {
+                      $reporting = error_reporting(0);
                       $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
                       $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
+                      error_reporting($reporting);
                     } catch (\Throwable $t) {
+                      error_reporting($reporting);
+                      $this->logInfo('IGNORE DATE PARSE ERROR');
                       // ignore
                     }
                   }
@@ -1959,9 +1963,13 @@ __EOT__;
                 case DataType::DATETIME:
                   if (!empty($fieldValue)) {
                     try {
+                      $reporting = error_reporting(0);
                       $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
                       $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
+                      error_reporting($reporting);
                     } catch (\Throwable $t) {
+                      error_reporting($reporting);
+                      $this->logInfo('IGNORE DATE PARSE ERROR');
                       // ignore
                     }
                   }

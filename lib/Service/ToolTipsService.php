@@ -1181,6 +1181,18 @@ marked events to selected recipients.
 
 The download button at the top will just download the selected items.'),
 
+          'absence-field' => [
+            'check' => $this->l->t('Optionally augment the instrumenation table by an additional columns which can
+be used to note down absence from events. The default is to automatically
+provide those fields for rehearsals and concerts, however, this checkbox can
+be used to generate or remove such fields as needed. The absence-fields are in
+principle just ordinary extra-fields where the name of the field is the date
+or the event.'),
+            'indicator' => $this->l->t('The instrumentation table can be augmented by additional columns which can be
+used to note down absence from events. This indiciator shows if this is the
+case for this particular event.'),
+          ],
+
           'calendar-app' => [
             'default' => $this->l->t('Open the respective event instance in the calendar app in another browser window or tab.'),
           ],

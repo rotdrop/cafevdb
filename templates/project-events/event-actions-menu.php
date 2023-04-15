@@ -28,6 +28,7 @@ use DateTimeImmutable;
 
 $selectId = 'select-check-' . $flatIdentifier;
 $actionScopeId = 'scope-radio-' . $flatIdentifier;
+$absenceFieldCssId = 'absence-field' . $flatIdentifier;
 
 $calendarLink = [];
 $remoteEventUrl = $remoteUrl . '/' . $event['uri'];
@@ -166,8 +167,22 @@ $actionItems = [
                <?php isset($selected[$flatIdentifier]) && p('checked'); ?>
         />
         <label class="select-check" for="<?php p($selectId); ?>">
-          <span class="label-checked"><?php p($l->t('selected')); ?></span>
-          <span class="label-unchecked"><?php p($l->t('select')); ?></span>
+          <?php p($l->t('em@ail / download')); ?>
+        </label>
+      </li>
+      <li class="event-action tooltip-right event-action-absence-field dropdown-item dropdown-no-close"
+          data-operation="absenceField"
+          title="<?php echo $toolTips['projectevents:event:absence-field:check']; ?>"
+      >
+        <input id="<?php p($absenceFieldCssId); ?>"
+               class="absence-field-check checkbox"
+               type="checkbox"
+               name="absenceField"
+               value='<?php p($inputValue); ?>'
+               <?php $absenceFieldId > 0 && p('checked'); ?>
+        />
+        <label class="absence-field-check" for="<?php p($absenceFieldCssId); ?>">
+          <?php p($l->t('absence field')); ?>
         </label>
       </li>
       <?php
