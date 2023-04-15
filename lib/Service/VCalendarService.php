@@ -527,7 +527,7 @@ class VCalendarService
     } else {
       $vObject = $vComponent;
     }
-    $vObject->CATEGORIES = $categories;
+    $vObject->CATEGORIES = array_unique($categories);
 
     return $vComponent;
   }
