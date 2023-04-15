@@ -66,7 +66,6 @@ if (!empty($appLocale)) {
   }
 
   $regionNames = $geoCodingService->getRegionNames($country);
-  \OCP\Util::writeLog('cafevdb', 'REGIONS ' . print_r($regionNames, true), \OCP\Util::INFO);
 
   $holidayOptions = [];
   foreach ($holidayRegions as $region) {
