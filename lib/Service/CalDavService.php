@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \InvalidArgumentException;
-use \Sabre\DAV;
+use Exception;
+use InvalidArgumentException;
+use Sabre\DAV;
 
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\Calendar\ICalendar;
@@ -35,6 +36,7 @@ use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\DAV\CalDAV\Calendar;
 
 use OCA\CAFEVDB\Common\Uuid;
+use OCA\CAFEVDB\Exceptions;
 
 /**
  * Service class in order to interface to the dav app of Nextcloud
@@ -44,7 +46,7 @@ use OCA\CAFEVDB\Common\Uuid;
  * @todo: replace the stuff below by more persistent APIs. As it shows
  * (Sep. 2020) the only option would be http calls to the dav service. Even
  * the perhaps-forthcoming writable calendar API does not allow the creation
- * of calendars or altering shring options.
+ * of calendars or altering sharing options.
  */
 class CalDavService
 {
@@ -104,7 +106,7 @@ class CalDavService
         ]);
         $this->refreshCalendarManager();
         return $calendarId;
-      } catch (\Exception $e) {
+      } catch (Exception $e) {
         $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       }
     }
@@ -143,7 +145,7 @@ class CalDavService
   }
 
   /**
-   * Create a new calendar if the one with the given id does not exist.
+   * Create a new calendar object.
    *
    * @param int $calendarId
    *
@@ -223,7 +225,7 @@ class CalDavService
       $propPatch = new DAV\PropPatch(['{DAV:}displayname' => $displayName]);
       $this->calDavBackend->updateCalendar($calendarId, $propPatch);
       $propPatch->commit();
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       $this->logError("Exception " . $e->getMessage . " trace " . $e->stackTraceAsString());
       return false;
     }
@@ -383,7 +385,8 @@ class CalDavService
    *
    * @param int $calendarId Numeric calendar id.
    *
-   * @param null|string $localUri Local URI to use or null.
+   * @param null|string $localUri Local URI to use or null in which case an
+   * URI based on a UUID will be generated.
    *
    * @param mixed $object Calendar data.
    *
@@ -405,12 +408,43 @@ class CalDavService
   }
 
   /**
+   * Move the given object, given by its local URI relative to the old
+   * calendar, to the given new calendar.
+   *
+   * @param int $sourceCalendarId
+   *
+   * @param int $targetCalendarId
+   *
+   * @param array|string $object Either an identifier or an array
+   *
+   * @bug This function used internal APIs.
+   */
+  public function moveCalendarObject(
+    int $sourceCalendarId,
+    int $targetCalendarId,
+    array|string $object
+  ):void {
+    $oldPrincipalUri = $this->calendarPrincipalUri($sourceCalendarId);
+    $newPrincipalUri = $this->calendarPrincipalUri($targetCalendarId);
+    if (!is_array($object)) {
+      $object = $this->getCalendarObject($sourceCalendarId, $object);
+    }
+
+    $this->calDavBackend->moveCalendarObject(
+      $sourceCalendarId,
+      $targetCalendarId,
+      $object['id'],
+      $oldPrincipalUri,
+      $newPrincipalUri);
+  }
+
+  /**
    * Update an entry in the given calendar from either a VCalendar blob or a
    * Sabre VCalendar object.
    *
    * @param int $calendarId Numeric calendar id.
    *
-   * @param null|string $localUri Local URI to use or null.
+   * @param null|string $localUri Local URI to use.
    *
    * @param mixed $object Calendar data.
    *
@@ -423,7 +457,7 @@ class CalDavService
     if (!is_string($object)) {
       $object = $object->serialize();
     }
-    $this->logError("calId: " . $calendarId . " uri " . $localUri);
+    // $this->logInfo("calId: " . $calendarId . " uri " . $localUri);
     $this->calDavBackend->updateCalendarObject($calendarId, $localUri, $object);
   }
 
@@ -444,7 +478,7 @@ class CalDavService
   {
     $localUri = $this->getObjectUri($calendarId, $objectIdentifier);
     if (empty($localUri)) {
-      throw new InvalidArgumentException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
+      throw new Exceptions\CalendarEntryNotFoundException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
     }
     $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
   }
@@ -471,7 +505,7 @@ class CalDavService
    *
    * @param string $objectIdentifier Either the URI or the UID of the
    * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
-   * other the UID.
+   * otherwise the UID.
    *
    * @return array|null
    *
@@ -500,7 +534,7 @@ class CalDavService
    *
    * @param string $objectIdentifier Either the URI or the UID of the
    * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
-   * other the UID.
+   * otherwise it is treated as UID.
    *
    * @return string|null The local URI (basename).
    *

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,26 +29,27 @@ import * as Ajax from './ajax.js';
 import * as Legacy from '../legacy.js';
 import * as Email from './email.js';
 import * as DialogUtils from './dialog-utils.js';
-import * as SelectUtils from './select-utils.js';
 import { token as pmeToken } from './pme-selectors.js';
 import { revertRows as revertTableRows } from './table-utils.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 import modalizer from './modalizer.js';
+import { close as closeActionMenus } from './action-menu.js';
 
 require('jquery-ui/ui/widgets/accordion');
 
 require('events.scss');
 
-const Events = globalState.Events = {
+globalState.Events = {
   projectId: -1,
   projectName: '',
-  events: { /* nothing */ },
-  confirmText: {
-    delete: t(appName, 'Do you really want to delete this event?'),
-    detach: t(appName, 'Do you really want to detach this event from the current project?'),
-    select: '',
-    deselect: '',
-  },
+};
+
+const confirmText = {
+  delete: t(appName, 'Do you really want to delete this event?'),
+  detach: t(appName, 'Do you really want to detach this event from the current project?'),
+  select: '',
+  deselect: '',
+  absenceField: '',
 };
 
 const accordionList = function(selector, $dialogHolder) {
@@ -80,8 +81,16 @@ const accordionList = function(selector, $dialogHolder) {
   return true;
 };
 
+const setLoadingIndicator = function(state) {
+  pageBusyIcon(state);
+  $('#projectevents-reload').toggleClass('loading', state);
+  if (!state) {
+    closeActionMenus();
+  }
+};
+
 const handleError = function(xhr, textStatus, errorThrown) {
-  Ajax.handleError(xhr, textStatus, errorThrown, () => pageBusyIcon(false));
+  Ajax.handleError(xhr, textStatus, errorThrown, () => setLoadingIndicator(false));
 };
 
 const init = function(htmlContent, textStatus, request, afterInit) {
@@ -95,8 +104,8 @@ const init = function(htmlContent, textStatus, request, afterInit) {
   dialogContent.cafevDialog({
     dialogClass: 'cafevdb-project-events no-scroll',
     position: {
-      my: 'middle middle',
-      at: 'middle top+50%',
+      my: 'center top',
+      at: 'center top+50',
       of: '#app-content',
     },
     width: 'auto', // 510,
@@ -120,36 +129,23 @@ const init = function(htmlContent, textStatus, request, afterInit) {
       }
 
       const eventForm = $dialogHolder.find('#eventlistform');
-      const eventMenu = eventForm.find('select.event-menu');
-
-      // style the menu with chosen
-      eventMenu.chosen({
-        inherit_select_classes: true,
-        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
-        disable_search: true,
-        width: '10em',
-      });
-
-      SelectUtils.makePlaceholder(eventMenu);
+      const eventMenu = eventForm.find('.new-event-dropdown');
 
       DialogUtils.toBackButton($(this));
 
       $.fn.cafevTooltip.remove();
       CAFEVDB.toolTipsInit('#events');
 
-      eventMenu.on('change', function(event) {
-        event.preventDefault();
+      eventMenu.on('click', '.menu-item', function(event) {
+        const $this = $(this);
 
         if ($('#event').dialog('isOpen') === true) {
           $('#event').dialog('close');
           return false;
         }
 
-        $('#events #debug').hide();
-        $('#events #debug').empty();
-
         const post = eventForm.serializeArray();
-        const eventType = SelectUtils.selected(eventMenu);
+        const eventType = $this.data('operation');
         post.push({ name: 'eventKind', value: eventType });
 
         $('#dialog_holder').load(
@@ -157,41 +153,116 @@ const init = function(htmlContent, textStatus, request, afterInit) {
           post,
           function(response, textStatus, xhr) {
             if (textStatus === 'success') {
-              Legacy.Calendar.UI.startEventDialog(() => pageBusyIcon(false));
+              Legacy.Calendar.UI.startEventDialog(() => setLoadingIndicator(false));
               return;
             }
             handleError(xhr, textStatus, xhr.status);
           });
 
-        SelectUtils.deselectAll(eventMenu);
         $.fn.cafevTooltip.remove();
 
         return false;
       });
 
+      const eventActionSelector = ':button:not(.action-menu-toggle), .event-action:not(.event-action-select, .event-action-scope, .event-action-absence-field)';
       eventForm
-        .off('click', ':button')
-        .on('click', ':button', buttonClick);
+        .off('click', eventActionSelector)
+        .on('click', eventActionSelector, eventAction);
+
+      const contextMenuRowSelector = 'tr.projectevents';
+      eventForm
+        .off('contextmenu', contextMenuRowSelector)
+        .on('contextmenu', contextMenuRowSelector, function(event) {
+          if (event.ctrlKey) {
+            return; // let the user see the normal context menu
+          }
+          if ($(event.target).closest('.dropdown-container').length > 0) {
+            return; // ignore right click in drop-down menu
+          }
+          const $row = $(this);
+          const $menu = $row.find('.dropdown-container.event-actions');
+
+          if ($menu.length === 0) {
+            return;
+          }
+
+          const $menuToggle = $menu.find('.action-menu-toggle');
+          const $menuContent = $menu.find('.dropdown-content');
+
+          event.preventDefault();
+          event.stopImmediatePropagation();
+
+          $menuContent.css({
+            position: 'fixed',
+            left: event.originalEvent.clientX,
+            top: event.originalEvent.clientY,
+          });
+
+          $menu.addClass('context-menu');
+          $menuToggle.trigger('click');
+
+          return false;
+        });
 
       eventForm
         .off('click', 'td.eventdata')
         .on('click', 'td.eventdata', function(event) {
-          $(this).parent().find(':button.edit').trigger('click');
+          $(this).parent().find('.event-actions .event-action-edit').trigger('click');
           return false;
         });
 
+      const eventUidSelector = 'tr.event-is-repeating td.event-uid';
+      eventForm
+        .off('click', eventUidSelector)
+        .on('click', eventUidSelector, function(event) {
+          const $this = $(this);
+          const $row = $this.closest('tr');
+          $row.find('input.scope-radio[value="series"]').prop('checked', true).trigger('change');
+          const $emailCheck = $row.find('input.email-check');
+          $emailCheck.prop('checked', !$emailCheck.prop('checked')).trigger('change');
+
+          return false;
+        });
+
+      const eventSeriesUidSelector = 'tr.event-has-cross-series-relations td.event-series-uid';
+      eventForm
+        .off('click', eventSeriesUidSelector)
+        .on('click', eventSeriesUidSelector, function(event) {
+          const $this = $(this);
+          const $row = $this.closest('tr');
+          $row.find('input.scope-radio[value="related"]').prop('checked', true).trigger('change');
+          const $emailCheck = $row.find('input.email-check');
+          $emailCheck.prop('checked', !$emailCheck.prop('checked')).trigger('change');
+
+          return false;
+        });
+
+      eventForm
+        .off('change', 'input.email-check')
+        .on('change', 'input.email-check', emailSelection);
+
+      eventForm
+        .off('change', 'input.scope-radio')
+        .on('change', 'input.scope-radio', scopeSelection);
+
+      eventForm
+        .off('change', 'input.absence-field-check')
+        .on('change', 'input.absence-field-check', eventAction);
+
       $dialogHolder
         .off('cafevdb:events_changed')
-        .on('cafevdb:events_changed', function(event, events) {
+        .on('cafevdb:events_changed', function(event, events, source) {
           $.post(
             generateUrl('projects/events/redisplay'),
             {
-              projectId: Events.projectId,
-              projectName: Events.projectName,
+              projectId: globalState.Events.projectId,
+              projectName: globalState.Events.projectName,
               eventSelect: events,
             })
             .fail(handleError)
-            .done(relist);
+            .done((htmlContent, textStatus, xhr) => {
+              relist(htmlContent, textStatus, xhr, () => setLoadingIndicator(false));
+            });
           return false;
         });
       $dialogHolder
@@ -278,10 +349,10 @@ const adjustSize = function($dialogHolder) {
 
 const relist = function(htmlContent, textStatus, xhr, afterInit) {
 
-  // globalState.Events.projectId = parseInt(xhr.getResponseHeader('X-' + appName + '-project-id'));
-  // globalState.Events.projectName = xhr.getResponseHeader('X-' + appName + '-project-name');
-
-  afterInit = afterInit || (() => pageBusyIcon(false));
+  afterInit = afterInit || (() => {
+    updateEmailForm();
+    setLoadingIndicator(false);
+  });
 
   const $dialogHolder = $('#events');
   const listing = $dialogHolder.find('#eventlistholder');
@@ -303,8 +374,6 @@ const relist = function(htmlContent, textStatus, xhr, afterInit) {
 
   CAFEVDB.toolTipsInit(listing);
 
-  updateEmailForm();
-
   afterInit();
 };
 
@@ -316,8 +385,87 @@ const redisplay = function() {
     .done(relist);
 };
 
-const buttonClick = function(event) {
-  event.preventDefault();
+const getRowScope = function($row, scope) {
+  scope = scope || $row.find('.scope-radio:checked').val();
+
+  switch (scope) {
+  case 'single':
+    break;
+  case 'series':
+    if ($row.hasClass('event-is-not-repeating')) {
+      scope = 'single';
+    }
+    break;
+  case 'related':
+    if ($row.hasClass('event-has-no-cross-series-relations')) {
+      scope = $row.hasClass('event-is-not-repeating') ? 'single' : 'series';
+    }
+    break;
+  }
+
+  return scope;
+};
+
+const emailSelection = function(event) {
+  const $this = $(this);
+  const $row = $this.closest('tr');
+  const scope = getRowScope($row);
+
+  switch (scope) {
+  case 'single': {
+    const eventUri = $row.data('uri');
+    const recurrenceId = $row.data('recurrenceId');
+    const selector = 'tr[data-uri="' + eventUri + '"][data-recurrence-id="' + recurrenceId + '"] input.email-check';
+    $row.closest('.event-list-container').find(selector).prop('checked', $this.prop('checked'));
+    break;
+  }
+  case 'series': {
+    const eventUri = $row.data('uri');
+    const selector = 'tr[data-uri="' + eventUri + '"] input.email-check';
+    $row.closest('.event-list-container').find(selector).prop('checked', $this.prop('checked'));
+    break;
+  }
+  case 'related': {
+    const seriesUid = $row.data('seriesUid');
+    const selector = 'tr[data-series-uid="' + seriesUid + '"] input.email-check';
+    $row.closest('.event-list-container').find(selector).prop('checked', $this.prop('checked'));
+    break;
+  }
+  }
+
+  updateEmailForm();
+
+  return false;
+};
+
+const scopeSelection = function(event) {
+  const $this = $(this);
+  const $row = $this.closest('tr');
+  const scope = $this.val();
+
+  // arguably one could try to adjust the selection on scope change ...
+
+  $row.attr('data-action-scope', scope); // this line for CSS
+  $row.data('actionScope', scope); // this line for consistency in jQuery
+
+  // Synchronize the action scope. This essentially means that we
+  // should just have one set of scope controls, but for now we to it
+  // this way.
+
+  $row.closest('.event-list-container').find('tr.projectevents').each(function() {
+    const $row = $(this);
+    const oldScope = $row.find('.scope-radio:checked').val();
+    const rowScope = getRowScope($row, scope);
+
+    if (oldScope !== rowScope) {
+      $row.find('input.scope-radio[value="' + rowScope + '"]').prop('checked', true).trigger('change');
+    }
+  });
+
+  return false;
+};
+
+const eventAction = function(event) {
 
   const evntdlgopen = $('#event').dialog('isOpen');
 
@@ -329,19 +477,28 @@ const buttonClick = function(event) {
     return false;
   }
 
-  pageBusyIcon(true);
-  const afterInit = () => pageBusyIcon(false);
+  setLoadingIndicator(true);
+  const afterInit = () => setLoadingIndicator(false);
 
-  $('#events #debug').hide();
-  $('#events #debug').empty();
+  const $this = $(this);
+  const $row = $this.closest('tr');
+  const rowData = $row.data() || {};
+  const calendarId = rowData.calendarId;
+  const uri = rowData.uri;
+  // const recurrenceId = $row.data('recurrenceId');
 
-  const name = $(this).attr('name');
+  const name = $this.attr('name') || $this.data('operation');
 
   switch (name) {
+  case 'calendar-app':
+    // just let the browser follow the link
+    afterInit();
+    return true;
   case 'edit': {
-    // Edit existing event
-    post.push({ name: 'uri', value: $(this).val() });
-    post.push({ name: 'calendarid', value: $(this).data('calendarId') });
+    // Edit existing event. The legacy code does not allow
+    // modifications of single instances in a series.
+    post.push({ name: 'uri', value: uri });
+    post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
       generateUrl('legacy/events/forms/edit'),
       post,
@@ -355,9 +512,10 @@ const buttonClick = function(event) {
     break;
   }
   case 'clone': {
-    // Clone existing event
-    post.push({ name: 'uri', value: $(this).val() });
-    post.push({ name: 'calendarid', value: $(this).data('calendarId') });
+    // Clone an existing event. The legacy code does not allow
+    // modifications of single instances in a series.
+    post.push({ name: 'uri', value: uri });
+    post.push({ name: 'calendarid', value: calendarId });
     $('#dialog_holder').load(
       generateUrl('legacy/events/forms/clone'),
       post,
@@ -370,15 +528,21 @@ const buttonClick = function(event) {
       });
     break;
   }
-  case 'delete':
-  case 'detach':
+  case 'absenceField':
+    post.push({ name: 'enableAbsenceField', value: $this.prop('checked') });
+    // fallthrough
   case 'select':
-  case 'deselect': {
+  case 'deselect':
+  case 'delete':
+  case 'detach': {
     // Execute the task and redisplay the event list.
 
-    post.push({ name: 'EventURI', value: $(this).val() });
+    const rowJson = JSON.stringify(rowData);
+    if (rowJson !== '{}') {
+      post.push({ name: 'eventIdentifier', value: rowJson });
+    }
 
-    const really = globalState.Events.confirmText[name];
+    const really = confirmText[name];
     if (really !== undefined && really !== '') {
       // Attention: dialogs do not block, so the action needs to be
       // wrapped into the callback.
@@ -436,6 +600,9 @@ const buttonClick = function(event) {
     redisplay(afterInit);
     break;
   }
+  default:
+    afterInit();
+    break;
   }
 
   return false;
@@ -445,8 +612,3 @@ export {
   init,
   redisplay,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

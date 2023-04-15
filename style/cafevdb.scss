@@ -631,9 +631,17 @@ body.cafevdb-modalizer {
 
     /* Links inside the dropdown */
     ul, ul.menu-list {
+      li.menu-item-separator {
+        hr {
+          color: black;
+          opacity: 0.5;
+          margin: 0;
+        }
+      }
       li, li.menu-item {
         &:not([data-operation="none"]) {
-          a {
+          a, label {
+            width:100%;
             /* Change color of dropdown links on hover */
             &:hover {
               background-color: var(--color-background-hover);
@@ -1169,6 +1177,10 @@ input[type=checkbox].cafevdb-password-show {
 }
 
 .cafevdb {
+  .fit-width {
+    width:100%;
+  }
+
   .inline-block.hidden, .inline.hidden, .block.hidden {
     display:none;
   }

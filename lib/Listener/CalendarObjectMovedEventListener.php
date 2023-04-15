@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,24 +24,21 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\User\Events\UserLoggedOutEvent as HandledEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-// use OCP\IGroupManager;
-// use Psr\Log\LoggerInterface as ILogger;
-// use OCP\IL10N;
+use OCA\DAV\Events\CalendarObjectMovedEvent as HandledEvent;
 use OCP\AppFramework\IAppContainer;
+use OCP\IUserSession;
+
+use OCA\CAFEVDB\Service\EventsService;
 
 /**
- * Perform necessary tasks at logout time.
+ * Act on updated events and tasks.
  *
- * @todo Make the CTOR less costly.
- * @todo This currently does nothing. Remove?
+ * @todo Make the CTOR less expensive.
  */
-class UserLoggedOutEventListener implements IEventListener
+class CalendarObjectMovedEventListener implements IEventListener
 {
-  // use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-
   const EVENT = HandledEvent::class;
 
   /** @var IAppContainer */
@@ -61,7 +58,14 @@ class UserLoggedOutEventListener implements IEventListener
       return;
     }
 
-    // $this->logInfo("Hello Logout-Handler!");
-    return;
+    /** @var IUserSession $userSession */
+    $userSession = $this->appContainer->get(IUserSession::class);
+    if (!$userSession->isLoggedIn()) {
+      return; // this cannot work
+    }
+
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer->get(EventsService::class);
+    $eventsService->onCalendarObjectMoved($event);
   }
 }

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-03-26 17:55+0200\n"
-"PO-Revision-Date: 2023-03-26 17:56+0200\n"
+"POT-Creation-Date: 2023-04-15 10:27+0200\n"
+"PO-Revision-Date: 2023-04-15 10:35+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -419,7 +419,7 @@ msgstr "Numerische Id des Threads fehlt, daher kann er nicht gelöscht werden."
 #: lib/Controller/MusicianValidationController.php:499
 #: lib/Controller/PersonalSettingsController.php:300
 #: lib/Controller/ProgressStatusController.php:161
-#: lib/Controller/ProjectEventsController.php:157
+#: lib/Controller/ProjectEventsController.php:327
 #: lib/Controller/ProjectParticipantsController.php:210
 #: lib/Controller/ProjectWebPagesController.php:186
 #: lib/Controller/ProjectsController.php:177
@@ -783,29 +783,29 @@ msgstr "Die Versicherungssumme sollte eine ganze Zahl sein."
 msgid "Unknown Request: \"%s / %s\"."
 msgstr "Unbekannte Anfrage: \"%s / %s\"."
 
-#: lib/Controller/LegacyEventsController.php:164
+#: lib/Controller/LegacyEventsController.php:165
 #, php-format
 msgid "unknown service requested: `%s/%s'."
 msgstr "Unbekannter Dienst angefragt: `%s/%s'."
 
-#: lib/Controller/LegacyEventsController.php:179
+#: lib/Controller/LegacyEventsController.php:180
 msgid "Project-id and/or name not set"
 msgstr "Projekt-Name und/oder Id nicht übermittelt."
 
-#: lib/Controller/LegacyEventsController.php:201
+#: lib/Controller/LegacyEventsController.php:207
 #, php-format
 msgid "Cannot access calendar: `%s'"
 msgstr "Auf den Kalender kann nicht zugegriffen werden: `%s'"
 
-#: lib/Controller/LegacyEventsController.php:335
-#: lib/Controller/LegacyEventsController.php:738
-#: lib/Controller/LegacyEventsController.php:780
+#: lib/Controller/LegacyEventsController.php:341
+#: lib/Controller/LegacyEventsController.php:744
+#: lib/Controller/LegacyEventsController.php:786
 #, php-format
 msgid "Could not fetch object `%s' from calendar `%s'."
 msgstr "Kann Objekt `%s' nicht aus dem Kalender `%s' laden."
 
-#: lib/Controller/LegacyEventsController.php:339
-#: lib/Controller/LegacyEventsController.php:784
+#: lib/Controller/LegacyEventsController.php:345
+#: lib/Controller/LegacyEventsController.php:790
 #, php-format
 msgid ""
 "Submitted calendar id `%s' and stored id `%s' for object `%s' do not match."
@@ -813,39 +813,39 @@ msgstr ""
 "Übermittelte Kalender-Id `%s' und gespeicherte Kalender-Id `%s' für Objekt "
 "`%s' stimmen nicht überein."
 
-#: lib/Controller/LegacyEventsController.php:344
-#: lib/Controller/LegacyEventsController.php:790
+#: lib/Controller/LegacyEventsController.php:350
+#: lib/Controller/LegacyEventsController.php:796
 #, php-format
 msgid "Unable to access calendar with id `%s'."
 msgstr "Auf den Kalender kann nicht zugegriffen werden: `%s'"
 
-#: lib/Controller/LegacyEventsController.php:593
+#: lib/Controller/LegacyEventsController.php:599
 #, php-format
 msgid "Don't know how to react to permissions `%s'"
 msgstr "Weiß nicht, wie ich auf die Zugriffsrechte `%s' reagieren soll"
 
-#: lib/Controller/LegacyEventsController.php:711
+#: lib/Controller/LegacyEventsController.php:717
 msgid "Failed to validate event creating request."
 msgstr "Fehler bei der Validierung der Termindaten."
 
-#: lib/Controller/LegacyEventsController.php:723
+#: lib/Controller/LegacyEventsController.php:729
 msgid "Calendar object successfully created."
 msgstr "Kalender Objekt wurde erfolgreich erzeugt."
 
-#: lib/Controller/LegacyEventsController.php:732
+#: lib/Controller/LegacyEventsController.php:738
 msgid "Failed to validate event updating request."
 msgstr "Validierung der Terminänderung fehlgeschlagen."
 
-#: lib/Controller/LegacyEventsController.php:745
+#: lib/Controller/LegacyEventsController.php:751
 msgid "Race-condition, event was modified in between."
 msgstr "Bearbeitungs-Kollision, Termin würde zwischenzeitlich verändert."
 
-#: lib/Controller/LegacyEventsController.php:756
+#: lib/Controller/LegacyEventsController.php:762
 #, php-format
 msgid "Successfully updated `%s'."
 msgstr "`%s' erfolgreich modifiziert."
 
-#: lib/Controller/LegacyEventsController.php:765
+#: lib/Controller/LegacyEventsController.php:771
 #, php-format
 msgid "Successfully deleted `%s'."
 msgstr "`%s' erfolgreich gelöscht."
@@ -1413,7 +1413,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:967
-#: lib/Service/ProjectService.php:2680
+#: lib/Service/ProjectService.php:2705
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -1430,7 +1430,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:1001
-#: lib/Service/ProjectService.php:2922
+#: lib/Service/ProjectService.php:2947
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -2006,7 +2006,7 @@ msgstr "Fortschrittsstatus \"%s\" wurde erfolgreich gelöscht."
 msgid "Invalid calendar type: \"%1$s\""
 msgstr "Ungültiger Kalendertyp \"%1$s\"."
 
-#: lib/Controller/ProjectEventsController.php:87
+#: lib/Controller/ProjectEventsController.php:109
 #, php-format
 msgid "Project-id AND -name have to be specified (%s / %s)"
 msgstr "Projekt-Id und -Name müssen angegeben werden (%s / %s)"
@@ -3532,77 +3532,77 @@ msgstr ""
 "Keine Daten für den Abschnitt \"%s\", Pfad \"%s\", in den Feld-Ersetzungen "
 "gefunden."
 
-#: lib/EmailForm/Composer.php:568
+#: lib/EmailForm/Composer.php:569
 msgid "announcement"
 msgstr "Ankündigung"
 
-#: lib/EmailForm/Composer.php:643
+#: lib/EmailForm/Composer.php:644
 msgid "ExampleFormletter"
 msgstr "BeispielSerienBrief"
 
-#: lib/EmailForm/Composer.php:656 src/app/email.js:1409
+#: lib/EmailForm/Composer.php:657 src/app/email.js:1409
 msgid "Unknown Template"
 msgstr "Unbekannte Email-Vorlage."
 
-#: lib/EmailForm/Composer.php:1015
+#: lib/EmailForm/Composer.php:1016
 msgid "Option"
 msgstr "Option"
 
-#: lib/EmailForm/Composer.php:1016 lib/EmailForm/Composer.php:1038
-#: lib/EmailForm/Composer.php:1435 lib/EmailForm/Composer.php:1487
+#: lib/EmailForm/Composer.php:1017 lib/EmailForm/Composer.php:1039
+#: lib/EmailForm/Composer.php:1436 lib/EmailForm/Composer.php:1488
 #: lib/PageRenderer/ProjectPayments.php:544
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
-#: lib/EmailForm/Composer.php:1016
+#: lib/EmailForm/Composer.php:1017
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:604
-#: lib/PageRenderer/ProjectParticipantFields.php:576
-#: lib/PageRenderer/ProjectParticipantFields.php:1892
-#: lib/PageRenderer/ProjectParticipantFields.php:1901
+#: lib/PageRenderer/ProjectParticipantFields.php:577
+#: lib/PageRenderer/ProjectParticipantFields.php:1893
+#: lib/PageRenderer/ProjectParticipantFields.php:1902
 msgid "Deposit"
 msgstr "Anzahlung"
 
-#: lib/EmailForm/Composer.php:1017 lib/EmailForm/Composer.php:1488
+#: lib/EmailForm/Composer.php:1018 lib/EmailForm/Composer.php:1489
 msgid "Received"
 msgstr "Eingegangen"
 
-#: lib/EmailForm/Composer.php:1018 lib/EmailForm/Composer.php:1489
+#: lib/EmailForm/Composer.php:1019 lib/EmailForm/Composer.php:1490
 msgid "Remaining"
 msgstr "Fehlbetrag"
 
-#: lib/EmailForm/Composer.php:1019
+#: lib/EmailForm/Composer.php:1020
 #: lib/PageRenderer/InstrumentInsurances.php:617
 #: lib/PageRenderer/PMETableViewBase.php:713
 msgid "Due Date"
 msgstr "Fälligkeit"
 
-#: lib/EmailForm/Composer.php:1158
+#: lib/EmailForm/Composer.php:1159
 msgid "members"
 msgstr "Mitglieder"
 
-#: lib/EmailForm/Composer.php:1485
+#: lib/EmailForm/Composer.php:1486
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
-#: lib/EmailForm/Composer.php:1486
+#: lib/EmailForm/Composer.php:1487
 msgid "Invoice Amount"
 msgstr "Rechnungsbetrag"
 
-#: lib/EmailForm/Composer.php:1599
+#: lib/EmailForm/Composer.php:1600
 #, php-format
 msgid "No substitution handler found for \"%s%s%s\"."
 msgstr "Kein Ersetzungsmethode für \"%s%s%s\" gefunden."
 
-#: lib/EmailForm/Composer.php:1683
+#: lib/EmailForm/Composer.php:1684
 msgid "Message(s) sent out successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:1799
+#: lib/EmailForm/Composer.php:1800
 #, php-format
 msgid "Unable to find a payment for the musician \"%s\" (transaction %d)"
 msgstr "Kann keine Buchung für die Person \"%s\" finden (Banktransaktion %d)"
 
-#: lib/EmailForm/Composer.php:2403
+#: lib/EmailForm/Composer.php:2404
 #, php-format
 msgid ""
 "<!DOCTYPE html>\n"
@@ -3650,23 +3650,23 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2644 lib/EmailForm/Composer.php:3114
+#: lib/EmailForm/Composer.php:2645 lib/EmailForm/Composer.php:3117
 msgid "DO NOT REPLY"
 msgstr "NICHT ANTWORTEN"
 
-#: lib/EmailForm/Composer.php:3297
+#: lib/EmailForm/Composer.php:3300
 msgid "*** empty content ***"
 msgstr "*** leeres Dokument ***"
 
-#: lib/EmailForm/Composer.php:3351
+#: lib/EmailForm/Composer.php:3354
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:3353
+#: lib/EmailForm/Composer.php:3356
 msgid "Prewiew generation detected errors!"
 msgstr "Bei der Erzeugung der Vorschauen gab es Fehler!"
 
-#: lib/EmailForm/Composer.php:3402
+#: lib/EmailForm/Composer.php:3405
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
@@ -3675,47 +3675,47 @@ msgstr ""
 "einfügen. Personalisierte Emails müssen einzeln an jeden Empfänger\n"
 "versendet werden."
 
-#: lib/EmailForm/Composer.php:3405
+#: lib/EmailForm/Composer.php:3408
 msgid "The email text contains personalized substitutions."
 msgstr "Der Email-Text enthält personalisierte Ersetzungen."
 
-#: lib/EmailForm/Composer.php:3408
+#: lib/EmailForm/Composer.php:3411
 msgid "The email contains personalized attachments."
 msgstr "Die Email enhält personalisierte Anhänge."
 
-#: lib/EmailForm/Composer.php:3652
+#: lib/EmailForm/Composer.php:3656
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3687
+#: lib/EmailForm/Composer.php:3691
 msgid "ALL_PERSONS: musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3788 lib/EmailForm/Composer.php:3804
+#: lib/EmailForm/Composer.php:3792 lib/EmailForm/Composer.php:3808
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3917 lib/EmailForm/Composer.php:4047
-#: lib/EmailForm/Composer.php:4057
+#: lib/EmailForm/Composer.php:3921 lib/EmailForm/Composer.php:4051
+#: lib/EmailForm/Composer.php:4061
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:3939
+#: lib/EmailForm/Composer.php:3943
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr "Die Rolle \"%s\" scheint nicht besetzt zu sein."
 
-#: lib/EmailForm/Composer.php:3943
+#: lib/EmailForm/Composer.php:3947
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:3949
+#: lib/EmailForm/Composer.php:3953
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
@@ -3723,88 +3723,88 @@ msgstr ""
 "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
 "sind %2$s."
 
-#: lib/EmailForm/Composer.php:3976
+#: lib/EmailForm/Composer.php:3980
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:3979
+#: lib/EmailForm/Composer.php:3983
 msgid "PROJECT_PUBLIC_SHARE"
 msgstr "PROJEKT_OEFFENTLICHE_FREIGABE"
 
-#: lib/EmailForm/Composer.php:3989
+#: lib/EmailForm/Composer.php:3993
 msgid "PROJECT_PUBLIC_SHARE_EXPIRATION"
 msgstr "PROJEKT_OEFFENTLICHE_FREIGABE_ABLAUF"
 
-#: lib/EmailForm/Composer.php:4001
+#: lib/EmailForm/Composer.php:4005
 msgid "phrase"
 msgstr "Phrase"
 
-#: lib/EmailForm/Composer.php:4018
+#: lib/EmailForm/Composer.php:4022
 #, php-format
 msgid "(expires at %s)"
 msgstr "(läuft ab am %s)"
 
-#: lib/EmailForm/Composer.php:4158
+#: lib/EmailForm/Composer.php:4162
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr "Am %1$s um %2$s schrieb %3$s:"
 
-#: lib/EmailForm/Composer.php:4493
+#: lib/EmailForm/Composer.php:4497
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:4505
+#: lib/EmailForm/Composer.php:4509
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:4529
+#: lib/EmailForm/Composer.php:4533
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:4560
+#: lib/EmailForm/Composer.php:4564
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4620 lib/EmailForm/Composer.php:4747
+#: lib/EmailForm/Composer.php:4624 lib/EmailForm/Composer.php:4751
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4656
+#: lib/EmailForm/Composer.php:4660
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:4681
+#: lib/EmailForm/Composer.php:4685
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:5417
+#: lib/EmailForm/Composer.php:5421
 msgid "Blank Template"
 msgstr "Blanko-Vorlage"
 
-#: lib/EmailForm/Composer.php:5418
+#: lib/EmailForm/Composer.php:5422
 msgid "blank"
 msgstr "blanko"
 
-#: lib/EmailForm/Composer.php:5421
+#: lib/EmailForm/Composer.php:5425
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:5424
+#: lib/EmailForm/Composer.php:5428
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:5427
+#: lib/EmailForm/Composer.php:5431
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:5553
+#: lib/EmailForm/Composer.php:5560
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
@@ -4131,6 +4131,14 @@ msgstr ""
 "Neuer Datentyp \"Verbindlichkeiten\" für die Personen-Daten, um negative "
 "Zahlen im Frontend zu vermeiden."
 
+#: lib/Maintenance/Migrations/ProjectEventsAddAbsenceFields.php:72
+msgid ""
+"Link optional per participant fields to project events in order to record "
+"absence."
+msgstr ""
+"Personendaten-Felder in der Besetzungstabelle mit Terminen verknüpfen, um "
+"Abwesenheit bei Proben modellieren zu können."
+
 #: lib/Maintenance/Sanitizers/AbstractSanitizer.php:142
 #: lib/Maintenance/Sanitizers/AbstractSanitizer.php:151
 #: lib/Maintenance/Sanitizers/AbstractSanitizer.php:162
@@ -4342,30 +4350,30 @@ msgid "Not Confirmed"
 msgstr "Nicht Bestätigt"
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:160
-#: lib/PageRenderer/ProjectParticipantFields.php:808
-#: lib/PageRenderer/ProjectParticipantFields.php:814
+#: lib/PageRenderer/ProjectParticipantFields.php:809
+#: lib/PageRenderer/ProjectParticipantFields.php:815
 msgid "yes"
 msgstr "ja"
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:161
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:877
-#: lib/PageRenderer/ProjectParticipantFields.php:716
-#: lib/PageRenderer/ProjectParticipantFields.php:925
-#: lib/PageRenderer/ProjectParticipantFields.php:1774
+#: lib/PageRenderer/ProjectParticipantFields.php:717
+#: lib/PageRenderer/ProjectParticipantFields.php:926
+#: lib/PageRenderer/ProjectParticipantFields.php:1775
 #: lib/Service/ProjectParticipantFieldsService.php:640
 msgid "true"
 msgstr "wahr"
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:164
-#: lib/PageRenderer/ProjectParticipantFields.php:808
+#: lib/PageRenderer/ProjectParticipantFields.php:809
 msgid "no"
 msgstr "nein"
 
 #: lib/PageRenderer/Export/PhpSpreadsheetValueBinder.php:165
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:876
-#: lib/PageRenderer/ProjectParticipantFields.php:716
-#: lib/PageRenderer/ProjectParticipantFields.php:926
-#: lib/PageRenderer/ProjectParticipantFields.php:1774
+#: lib/PageRenderer/ProjectParticipantFields.php:717
+#: lib/PageRenderer/ProjectParticipantFields.php:927
+#: lib/PageRenderer/ProjectParticipantFields.php:1775
 #: lib/Service/ProjectParticipantFieldsService.php:640
 #: templates/pme-table.php:80
 msgid "false"
@@ -4449,7 +4457,7 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:260
 #: lib/PageRenderer/InstrumentFamilies.php:250
 #: lib/PageRenderer/Instruments.php:302 lib/PageRenderer/Musicians.php:610
-#: lib/PageRenderer/ProjectParticipantFields.php:385
+#: lib/PageRenderer/ProjectParticipantFields.php:386
 #: lib/PageRenderer/ProjectParticipants.php:603
 #: lib/PageRenderer/Projects.php:319
 msgid "Deleted"
@@ -5285,8 +5293,8 @@ msgstr "Stimme"
 
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:296
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:302
-#: lib/PageRenderer/ProjectParticipantFields.php:704
-#: lib/PageRenderer/ProjectParticipantFields.php:713
+#: lib/PageRenderer/ProjectParticipantFields.php:705
+#: lib/PageRenderer/ProjectParticipantFields.php:714
 #: lib/PageRenderer/ProjectParticipants.php:778
 msgid "n/a"
 msgstr "n/a"
@@ -5350,88 +5358,88 @@ msgstr "Jahr"
 msgid "Field-Name"
 msgstr "Feld-Name"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:392
+#: lib/PageRenderer/ProjectParticipantFields.php:393
 msgid "Multiplicity"
 msgstr "Vielfachheit"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:409
+#: lib/PageRenderer/ProjectParticipantFields.php:410
 msgid "Data-Type"
 msgstr "Datentyp"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:441
+#: lib/PageRenderer/ProjectParticipantFields.php:442
 msgid "Deposit Due Date"
 msgstr "Fälligkeit Anzahlung"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:476
+#: lib/PageRenderer/ProjectParticipantFields.php:477
 msgid "Data Options"
 msgstr "Optionen"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:545
+#: lib/PageRenderer/ProjectParticipantFields.php:546
 #: lib/EmailForm/Composer.php:1942 lib/EmailForm/Composer.php:1948
 #: lib/Service/L10N/BiDirectionalL10N.php:80
 #, php-format
 msgid "Default"
 msgstr "Voreinstellung"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:547
-#: lib/PageRenderer/ProjectParticipantFields.php:1891
-#: lib/PageRenderer/ProjectParticipantFields.php:1900
+#: lib/PageRenderer/ProjectParticipantFields.php:548
+#: lib/PageRenderer/ProjectParticipantFields.php:1892
+#: lib/PageRenderer/ProjectParticipantFields.php:1901
 msgid "Data"
 msgstr "Daten"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:636
+#: lib/PageRenderer/ProjectParticipantFields.php:637
 msgid "Maximum Size"
 msgstr "Maximale Anzahl"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:663
-#: lib/PageRenderer/ProjectParticipantFields.php:758
-#: lib/PageRenderer/ProjectParticipantFields.php:793
+#: lib/PageRenderer/ProjectParticipantFields.php:664
+#: lib/PageRenderer/ProjectParticipantFields.php:759
+#: lib/PageRenderer/ProjectParticipantFields.php:794
 msgid "Default Value"
 msgstr "Voreinstellung"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:827
-#: lib/PageRenderer/ProjectParticipantFields.php:1894
-#: lib/PageRenderer/ProjectParticipantFields.php:1903
+#: lib/PageRenderer/ProjectParticipantFields.php:828
+#: lib/PageRenderer/ProjectParticipantFields.php:1895
+#: lib/PageRenderer/ProjectParticipantFields.php:1904
 msgid "Tooltip"
 msgstr "Kontext-Hilfe"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:847
+#: lib/PageRenderer/ProjectParticipantFields.php:848
 msgid "Display-Order"
 msgstr "Anzeige-Reihenfolge"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:859
+#: lib/PageRenderer/ProjectParticipantFields.php:860
 msgid "Table Tab"
 msgstr "Datenreiter"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:884
+#: lib/PageRenderer/ProjectParticipantFields.php:885
 msgid "New Tab Name"
 msgstr "Neuer Datenreiter"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:897
+#: lib/PageRenderer/ProjectParticipantFields.php:898
 msgid "name of new tab"
 msgstr "z.B. NeueKarte"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:903
+#: lib/PageRenderer/ProjectParticipantFields.php:904
 msgid "Participant Access"
 msgstr "Zugriff von Teilnehmenden"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:908
+#: lib/PageRenderer/ProjectParticipantFields.php:909
 msgid "no access"
 msgstr "kein Zugriff"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:909
+#: lib/PageRenderer/ProjectParticipantFields.php:910
 msgid "read"
 msgstr "lesen"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:910
+#: lib/PageRenderer/ProjectParticipantFields.php:911
 msgid "read / write"
 msgstr "lesen und schreiben"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:920
+#: lib/PageRenderer/ProjectParticipantFields.php:921
 msgid "Encrypted"
 msgstr "Verschlüsselt"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1051
+#: lib/PageRenderer/ProjectParticipantFields.php:1052
 #, php-format
 msgid ""
 "The name \"%1$s\" is reserved by the app in order to provide general help "
@@ -5441,57 +5449,57 @@ msgstr ""
 "Datei-System abzulegen und kann deshalb nicht als Feld-Name verwendet\n"
 "werden."
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1231
+#: lib/PageRenderer/ProjectParticipantFields.php:1232
 #, php-format
 msgid "Simple field-option key is not an UUID: \"%s\"."
 msgstr "Einfachauswahl Options-Id ist keine UUID: \"%s\"."
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1584
+#: lib/PageRenderer/ProjectParticipantFields.php:1585
 msgid "new option"
 msgstr "neue Auswahloption"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1666
+#: lib/PageRenderer/ProjectParticipantFields.php:1667
 #: lib/PageRenderer/SepaBankAccounts.php:378
 #: templates/fragments/participant-fields/recurring-receivable-generator-row.php:65
 msgid "In case of Conflict"
 msgstr "Bei Konflikt"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1687
+#: lib/PageRenderer/ProjectParticipantFields.php:1688
 msgid "field generator"
 msgstr "z.B. \\OCA\\CAFEVDB\\FieldGenerator"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1711
+#: lib/PageRenderer/ProjectParticipantFields.php:1712
 msgid "start date"
 msgstr "Anfangsdatum"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1793
+#: lib/PageRenderer/ProjectParticipantFields.php:1794
 msgid "empty"
 msgstr "leer"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1801
+#: lib/PageRenderer/ProjectParticipantFields.php:1802
 msgid "Show deleted items."
 msgstr "Gelöschte Einträge anzeigen."
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1803
+#: lib/PageRenderer/ProjectParticipantFields.php:1804
 msgid "Show data-fields."
 msgstr "Daten-Feld anzeigen."
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1889
-#: lib/PageRenderer/ProjectParticipantFields.php:1898
+#: lib/PageRenderer/ProjectParticipantFields.php:1890
+#: lib/PageRenderer/ProjectParticipantFields.php:1899
 msgid "Key"
 msgstr "Schlüssel"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1890
-#: lib/PageRenderer/ProjectParticipantFields.php:1899
+#: lib/PageRenderer/ProjectParticipantFields.php:1891
+#: lib/PageRenderer/ProjectParticipantFields.php:1900
 msgid "Label"
 msgstr "Bezeichnung"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1893
-#: lib/PageRenderer/ProjectParticipantFields.php:1902
+#: lib/PageRenderer/ProjectParticipantFields.php:1894
+#: lib/PageRenderer/ProjectParticipantFields.php:1903
 msgid "Limit"
 msgstr "Obergrenze"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:2219
+#: lib/PageRenderer/ProjectParticipantFields.php:2228
 #: lib/PageRenderer/ProjectPayments.php:558
 #: lib/PageRenderer/SepaBankAccounts.php:1092
 #: lib/PageRenderer/SepaBulkTransactions.php:389
@@ -5742,7 +5750,7 @@ msgid "Instrumentation"
 msgstr "Besetzung"
 
 #: lib/PageRenderer/Projects.php:377 lib/PageRenderer/Projects.php:449
-#: lib/PageRenderer/Projects.php:774
+#: lib/PageRenderer/Projects.php:774 src/app/pme.js:1382
 msgid "Clear"
 msgstr "Leeren"
 
@@ -5972,8 +5980,8 @@ msgstr "Bankverbindung, die zu diesem Mandat gehört."
 
 #: lib/PageRenderer/SepaBankAccounts.php:1079
 #: templates/sepa-debit-mandate.php:121
-#: templates/settings/orchestra-settings.php:161
-#: templates/settings/orchestra-settings.php:163
+#: templates/settings/orchestra-settings.php:164
+#: templates/settings/orchestra-settings.php:166
 msgid "Bank Account"
 msgstr "Bankverbindung"
 
@@ -6327,7 +6335,7 @@ msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: lib/Service/CalDavService.php:447
+#: lib/Service/CalDavService.php:481
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%1$s\" in calendar with id "
@@ -6463,13 +6471,22 @@ msgstr ""
 "Verschlüsselung für \"%s\" angefragt aber nicht konfiguriert, leeres "
 "Verschlüsselungs-Passwort."
 
-#: lib/Service/EventsService.php:572 lib/Service/EventsService.php:677
+#: lib/Service/EventsService.php:701
+#, php-format
+msgid "till %s"
+msgstr "bis %s"
+
+#: lib/Service/EventsService.php:769 lib/Service/EventsService.php:879
 msgid "Unknown Calendar"
 msgstr "Unbekannter Kalender."
 
-#: lib/Service/EventsService.php:581
+#: lib/Service/EventsService.php:782
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
+
+#: lib/Service/EventsService.php:1067
+msgid "record absence"
+msgstr "Abwesenheit erfassen"
 
 #: lib/Service/Finance/AbstractReceivablesGenerator.php:91
 msgid "Recompute all Receivables"
@@ -7011,34 +7028,67 @@ msgstr ""
 "Nur Sammlungen von Personen-Daten können gefiltert werden, nicht aber \"%s\"-"
 "Instanzen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:990
+#: lib/Service/ProjectParticipantFieldsService.php:969
+msgid "absent"
+msgstr "abwesend"
+
+#: lib/Service/ProjectParticipantFieldsService.php:969
+msgid "This person will not participate in this event."
+msgstr "Diese Person wird an dem Termin nicht teilnehmen."
+
+#: lib/Service/ProjectParticipantFieldsService.php:970
+msgid "contacted"
+msgstr "kontaktiert"
+
+#: lib/Service/ProjectParticipantFieldsService.php:970
+msgid ""
+"This person has been asked to confirm the participation but did not yet "
+"answer."
+msgstr ""
+"Die Person wurde nach ihrer Teilnahmedisposition gefragt, hat aber noch  "
+"nicht geantwortet."
+
+#: lib/Service/ProjectParticipantFieldsService.php:971
+msgid "tentative"
+msgstr "vorläufig"
+
+#: lib/Service/ProjectParticipantFieldsService.php:971
+msgid "This person does not yet know whether a participation is possible."
+msgstr "Diese Person weiß noch nicht, ob sie an dem Termin teilnehmen kann."
+
+#. TRANSLATORS: Column heading in table (capital first character)
+#: lib/Service/ProjectParticipantFieldsService.php:1001
+msgid "Absence"
+msgstr "Abwesenheit"
+
+#: lib/Service/ProjectParticipantFieldsService.php:1076
 #, php-format
 msgid "Unable to find participant field for id \"%s\""
 msgstr "Kann das Personen-Daten-Feld mit der Id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:410
+#: lib/Service/ProjectService.php:435
 msgid "templates"
 msgstr "Vorlagen"
 
-#: lib/Service/ProjectService.php:495
+#: lib/Service/ProjectService.php:520
 msgid "skeleton"
 msgstr "Skelett"
 
-#: lib/Service/ProjectService.php:502
+#: lib/Service/ProjectService.php:527
 msgid "management"
 msgstr "Verwaltung"
 
 #. TRANSLATORS: this is a placeholder for the login id. It must in particular remain all lowercase.
-#: lib/Service/ProjectService.php:512 lib/Service/ProjectService.php:555
+#: lib/Service/ProjectService.php:537 lib/Service/ProjectService.php:580
 msgid "forename.surname"
 msgstr "vorname.nachname"
 
-#: lib/Service/ProjectService.php:613
+#: lib/Service/ProjectService.php:638
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr "Kann nicht sicherstellen, dass der Ordner \"%s\" existiert."
 
-#: lib/Service/ProjectService.php:874
+#: lib/Service/ProjectService.php:899
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
@@ -7047,19 +7097,19 @@ msgstr ""
 "Das Verfallsdatum für die Projekt-Freigabe \"%1$s\" für das Projekt\n"
 "\"%2$s\" konnte nicht gesetzt werden."
 
-#: lib/Service/ProjectService.php:884
+#: lib/Service/ProjectService.php:909
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 "Konnte den Freigabe-Link für den Teilnehmenden-Download-Ordner für das "
 "Projekt \"%s\" nicht erstellen."
 
-#: lib/Service/ProjectService.php:1300
+#: lib/Service/ProjectService.php:1325
 #, php-format
 msgid "Projects of %s"
 msgstr "Projekte von %s"
 
-#: lib/Service/ProjectService.php:1364
+#: lib/Service/ProjectService.php:1389
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -7118,80 +7168,80 @@ msgstr ""
 "===== Location =====\n"
 "Was auch immer."
 
-#: lib/Service/ProjectService.php:1473
+#: lib/Service/ProjectService.php:1498
 #, php-format
 msgid "%1$s has been renamed to %2$s."
 msgstr "%1$s wurd zu %2$s umbenannt."
 
-#: lib/Service/ProjectService.php:1560
+#: lib/Service/ProjectService.php:1585
 msgid "Preview"
 msgstr "Vorschau"
 
-#: lib/Service/ProjectService.php:1562 lib/Service/ProjectService.php:1617
-#: lib/Service/ProjectService.php:1782 lib/Service/ProjectService.php:1826
-#: lib/Service/ProjectService.php:1886 lib/Settings/PersonalForm.php:352
+#: lib/Service/ProjectService.php:1587 lib/Service/ProjectService.php:1642
+#: lib/Service/ProjectService.php:1807 lib/Service/ProjectService.php:1851
+#: lib/Service/ProjectService.php:1911 lib/Settings/PersonalForm.php:352
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: lib/Service/ProjectService.php:1564
+#: lib/Service/ProjectService.php:1589
 msgid "Archive"
 msgstr "Archiv"
 
-#: lib/Service/ProjectService.php:1566
+#: lib/Service/ProjectService.php:1591
 msgid "Trashbin"
 msgstr "Mülltonne"
 
-#: lib/Service/ProjectService.php:1611
+#: lib/Service/ProjectService.php:1636
 msgid "Empty project."
 msgstr "Fehlendes Projekt."
 
-#: lib/Service/ProjectService.php:1638
+#: lib/Service/ProjectService.php:1663
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr "Kann die Web-Seiten für \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:1661
+#: lib/Service/ProjectService.php:1686
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr "Kann Web-Page %s nicht anlegen."
 
-#: lib/Service/ProjectService.php:1682
+#: lib/Service/ProjectService.php:1707
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr "Kann den Artikel \"%s\" nicht verknüpfen."
 
-#: lib/Service/ProjectService.php:1721
+#: lib/Service/ProjectService.php:1746
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 "Konnte die Web-Seite %d vom Projekt mit der Id %d leider nicht entfernen."
 
-#: lib/Service/ProjectService.php:1764
+#: lib/Service/ProjectService.php:1789
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr "Konnte die Web-Seite %d nicht vom Projekt %d entkoppeln\""
 
-#: lib/Service/ProjectService.php:1928
+#: lib/Service/ProjectService.php:1953
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr "Konnte das Projekt mit der Id %d nicht laden"
 
-#: lib/Service/ProjectService.php:1972
+#: lib/Service/ProjectService.php:1997
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr "Kann die Daten für die Musiker:Innen-Id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:1988
+#: lib/Service/ProjectService.php:2013
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr "Die Person %s ist bereits für das Projekt %s registriert."
 
-#: lib/Service/ProjectService.php:2010
+#: lib/Service/ProjectService.php:2035
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr "DiePerson %s scheint kein einziges Instrument zu spielen."
 
-#: lib/Service/ProjectService.php:2062
+#: lib/Service/ProjectService.php:2087
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
@@ -7200,61 +7250,61 @@ msgstr ""
 "Die Person \"%s\" spielt kein einziges Instrument, das in der\n"
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
-#: lib/Service/ProjectService.php:2116
+#: lib/Service/ProjectService.php:2141
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr "Person mit id \"%d\" konnte nicht hinzugefügt werden, Fehler \"%s\""
 
-#: lib/Service/ProjectService.php:2125
+#: lib/Service/ProjectService.php:2150
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr "Die Person %s wurde zum Projekt %s hinzugefügt."
 
-#: lib/Service/ProjectService.php:2181
+#: lib/Service/ProjectService.php:2206
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 "Konnte den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2247
+#: lib/Service/ProjectService.php:2272
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr "Konnte den Email-Verteiler \"%s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2385
+#: lib/Service/ProjectService.php:2410
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr "Kann die Person \"%s\" nicht vom Projekt-Email-Verteiler abmelden."
 
-#: lib/Service/ProjectService.php:2410
+#: lib/Service/ProjectService.php:2435
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr "Kann das Projekt zur id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2463
+#: lib/Service/ProjectService.php:2488
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
 "Projekt mit der Id \"%d\" nicht erzeugen."
 
-#: lib/Service/ProjectService.php:2504
+#: lib/Service/ProjectService.php:2529
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: lib/Service/ProjectService.php:2534
+#: lib/Service/ProjectService.php:2559
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:3002
+#: lib/Service/ProjectService.php:3027
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:3035
+#: lib/Service/ProjectService.php:3060
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -7264,11 +7314,11 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:3041
+#: lib/Service/ProjectService.php:3066
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/ProjectService.php:3087
+#: lib/Service/ProjectService.php:3112
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr "Kann \"%1$s\" nicht vom Projekt austragen."
@@ -9956,18 +10006,129 @@ msgstr ""
 #: lib/Service/ToolTipsService.php:1175
 msgid ""
 "Mark the respective event for being\n"
-"sent by email as ICS-attachment per email.\n"
-"Hitting the email button above the form\n"
-"will open an Email form suitable for\n"
-"sending the marked events to selected\n"
-"recipients."
+"sent by email as ICS-attachment.\n"
+"\n"
+"Hitting the email button at the top of the dialog\n"
+"will open an Email form suitable for sending the\n"
+"marked events to selected recipients.\n"
+"\n"
+"The download button at the top will just download the selected items."
 msgstr ""
-"Termin zum Versand als ICS-Attachment per Email auswählen. Der Email-Knopf "
-"über der Tabelle führt zu einem Email-Formular, über das der eigentliche "
-"Versand an ausgewählte Empfänger vorgenommen werden kann. Alternativ können "
-"die ausgwählten Termine auch einfach herunter-geladen werden."
+"Termin zum Versand als ICS-Attachment per Email auswählen.\n"
+"\n"
+"Der Email-Knopf über der Tabelle führt zu einem Email-Formular, über\n"
+"das der eigentliche Versand an ausgewählte Empfänger vorgenommen\n"
+"werden kann.\n"
+"\n"
+"Alternativ können die ausgwählten Termine auch einfach\n"
+"herunter-geladen werden."
 
-#: lib/Service/ToolTipsService.php:1186
+#: lib/Service/ToolTipsService.php:1185
+msgid ""
+"Optionally augment the instrumenation table by an additional columns which "
+"can\n"
+"be used to note down absence from events. The default is to automatically\n"
+"provide those fields for rehearsals and concerts, however, this checkbox "
+"can\n"
+"be used to generate or remove such fields as needed. The absence-fields are "
+"in\n"
+"principle just ordinary extra-fields where the name of the field is the "
+"date\n"
+"or the event."
+msgstr ""
+"Die Besetzungstabelle kann optional mit zusätzlichen Spalten ergänzt\n"
+"werden, um die Abwesenheit bei Terminen -- Proben, Konzerte -- zu\n"
+"notieren. Die Voreinstellung ist, für Proben- und Konzerttermine diese\n"
+"Felder einzurichten. Dieser Menü-Punkt kann aber dazu verwendet\n"
+"werden, eine solche Spalten auch für andere Termine zu erzeugen, oder\n"
+"die Spalten zu entfernen.\n"
+"\n"
+"Die \"Abwesenheits-Felder\" sind ganz normale zusätzliche Spalten in der\n"
+"Besetzungstabelle und können in der Rubrik \"Definition Personendaten\"\n"
+"auch modifiziert werden."
+
+#: lib/Service/ToolTipsService.php:1191
+msgid ""
+"The instrumentation table can be augmented by additional columns which can "
+"be\n"
+"used to note down absence from events. This indiciator shows if this is the\n"
+"case for this particular event."
+msgstr ""
+"Die Besetzungstabelle kann optional mit zusätzlichen Spalten ergänzt\n"
+"werden, um die Abwesenheit bei Terminen -- Proben, Konzerte -- zu\n"
+"notieren. Diese Spalte zeigt, ob ein solches Feld existiert."
+
+#: lib/Service/ToolTipsService.php:1197
+msgid ""
+"Open the respective event instance in the calendar app in another browser "
+"window or tab."
+msgstr ""
+"Die Kalender-App der Cloud in einem anderen Tab oder Fenster öffnen. Der "
+"aktuelle Termin kann dort detaillierter angezeigt und verändert werden."
+
+#: lib/Service/ToolTipsService.php:1200
+msgid ""
+"When changing particular events of repeating event series then calendar apps "
+"may choose to even split those repeating events into several distinct "
+"series. This happens in particular if the user chooses to alter properties "
+"for \"this and future events\". This column is used to visually group such "
+"related event series. Events which do not belong to a repeating event will "
+"have no label and just show the background color."
+msgstr ""
+"Wenn man einzelne Termine einer Terminserie ändert, spalten\n"
+"Kalender-Apps die ursprüngliche Serie ggf. auf. Das passiert\n"
+"insbesondere, wenn man Termineigenschaften für \"dieses und zukünftige\"\n"
+"Termine ändert. Diese Spalte dient dazu, solche zusammengehörigen\n"
+"Termine bzw. Terminserien visuell kenntlich zu machen. Für\n"
+"Einzeltermine bleibt diese Feld leer.\n"
+"\n"
+"Anklicken des Feldes wählt den Terminverbund zum Download oder\n"
+"Email-Versand aus."
+
+#: lib/Service/ToolTipsService.php:1202
+msgid ""
+"If this particular event instance belongs to a series of repeating events "
+"then all events which belong to this series will show the same letter and "
+"color in this column in order to visually group events which belong to the "
+"same series. Events which do not belong to a repeating event will have no "
+"label and just show the background color."
+msgstr ""
+"Wenn dieser spezielle Termin zu einer Terminserie gehört, dann haben\n"
+"alle Termine dieser Terminserie in dieser Spalte den gleichen\n"
+"Buchstaben und die gleiche Hintergrundfarbe, um die Terminserie\n"
+"visuell kenntlich zu machen. Für Einzeltermine bleibt diese Feld\n"
+"leer.\n"
+"\n"
+"Anklicken des Feldes wählt die Terminserie zum Download oder\n"
+"Email-Versand aus oder ab."
+
+#: lib/Service/ToolTipsService.php:1209
+msgid "Act only on this particular event."
+msgstr "Die folgende Aktionen beziehen sich nur auf diesen Termin."
+
+#: lib/Service/ToolTipsService.php:1210
+msgid "Act on the event series this event belongs to."
+msgstr ""
+"Die folgenden Aktion beziehen sich auf die ganze Terminserie, zu der dieser "
+"Termin gehört."
+
+#: lib/Service/ToolTipsService.php:1211
+msgid ""
+"Act on the entire family of related events. When changing particular events "
+"of\n"
+"repeating event series then calendar apps may choose to even split those\n"
+"repeating events into several distinct series. This happens in particular "
+"if\n"
+"the user chooses to alter properties for \"this and future events\"."
+msgstr ""
+"Wenn man einzelne Termine einer Terminserie ändert, spalten\n"
+"Kalender-Apps die ursprüngliche Serie ggf. auf. Das passiert\n"
+"insbesondere, wenn man Termineigenschaften für \"dieses und zukünftige\"\n"
+"Termine ändert. Die folgenden Aktionen beziehen sich auf die ganze\n"
+"Familie miteinander verknüpfter Termine, wenn dieser Schalter\n"
+"aktiviert ist."
+
+#: lib/Service/ToolTipsService.php:1220
 msgid ""
 "Add a new event for the project. The event is added to the respective\n"
 "calendar and will also be visible and editable through the calendar\n"
@@ -9986,28 +10147,28 @@ msgstr ""
 "Kalender-App und einem Projekt wird dadurch vermittelt, dass dem\n"
 "Termin der Projektname als \"Kategorie\" hinzugefügt wird."
 
-#: lib/Service/ToolTipsService.php:1194
+#: lib/Service/ToolTipsService.php:1228
 msgid "Add a new concert-event to the project."
 msgstr ""
 "Neuen Konzert-Termin für das Projekt in den Konzerte-Kalender eintragen."
 
-#: lib/Service/ToolTipsService.php:1196
+#: lib/Service/ToolTipsService.php:1230
 msgid "Add a new rehearsal-event to the project."
 msgstr "Neuen Proben-Termin für das Projekt in den Proben-Kalender eintragen."
 
-#: lib/Service/ToolTipsService.php:1198
+#: lib/Service/ToolTipsService.php:1232
 msgid "Add a non-categorized event to the project."
 msgstr ""
 "Neuen nicht-kategorisierten Termin für das Projekt in den Kalender eintragen."
 
-#: lib/Service/ToolTipsService.php:1200
+#: lib/Service/ToolTipsService.php:1234
 msgid ""
 "Add a private management event which is not exposed to the rest of the world."
 msgstr ""
 "Vorstands-Termin hinzufügen. Die Vorstandstermine sind nicht öffentlich "
 "sichtbar."
 
-#: lib/Service/ToolTipsService.php:1202
+#: lib/Service/ToolTipsService.php:1236
 msgid ""
 "Add a finance event to the project, e.g. a dead-line for debit-notes or bank "
 "transfers."
@@ -10015,7 +10176,7 @@ msgstr ""
 "Finanz-Termin zum Projekt hinzufügen, z.B. Ende einer Einreichungsfrist für "
 "Lastschriften oder Überweisungen."
 
-#: lib/Service/ToolTipsService.php:1205
+#: lib/Service/ToolTipsService.php:1239
 msgid ""
 "Click to open an email-form\n"
 "and send the selected events to\n"
@@ -10024,15 +10185,15 @@ msgstr ""
 "Ausgewählte Termine als ICS-Attachment per Email veschicken; öffnet ein "
 "Email-Formular."
 
-#: lib/Service/ToolTipsService.php:1209
+#: lib/Service/ToolTipsService.php:1243
 msgid "Select all events for email-submission"
 msgstr "Alle Termin für Download bzw. Email-Attachment auswählen."
 
-#: lib/Service/ToolTipsService.php:1211
+#: lib/Service/ToolTipsService.php:1245
 msgid "Exclude all events from email-submission"
 msgstr "Auswahl zum Download bzw. Email-Versand bei allen Terminen entfernen."
 
-#: lib/Service/ToolTipsService.php:1213
+#: lib/Service/ToolTipsService.php:1247
 msgid ""
 "Download the events as ICS file. In principle it is possible to import\n"
 "the ICS file into the respective calendar apps of your smartphone,\n"
@@ -10042,37 +10203,37 @@ msgstr ""
 "Prinzip in eine geeignete Kalender App Deines SmartPhones, Tables oder\n"
 "Desktop-PCs importiert werden."
 
-#: lib/Service/ToolTipsService.php:1217
+#: lib/Service/ToolTipsService.php:1251
 msgid "Reload all events from the cloud-calendars."
 msgstr "Alle Termine neu aus den Cloud-Kalendern laden."
 
-#: lib/Service/ToolTipsService.php:1222
+#: lib/Service/ToolTipsService.php:1256
 msgid ""
 "Force the re-creation of the folder where project balanaces are\n"
 "stored."
 msgstr "Erzwinge die Neu-Erstellung des Abrechnungs-Datei-Ordners."
 
-#: lib/Service/ToolTipsService.php:1225
+#: lib/Service/ToolTipsService.php:1259
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr "Erstellen des gemeinsamen Ordners erzwingen."
 
-#: lib/Service/ToolTipsService.php:1227
+#: lib/Service/ToolTipsService.php:1261
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr "Redaxo Artikel Kategorie für archivierte Konzerte."
 
-#: lib/Service/ToolTipsService.php:1229
+#: lib/Service/ToolTipsService.php:1263
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Konzertankündigungen."
 
-#: lib/Service/ToolTipsService.php:1231
+#: lib/Service/ToolTipsService.php:1265
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr "Artikel-Kategorier für Probenpläne."
 
-#: lib/Service/ToolTipsService.php:1233
+#: lib/Service/ToolTipsService.php:1267
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Templates."
 
-#: lib/Service/ToolTipsService.php:1235
+#: lib/Service/ToolTipsService.php:1269
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
@@ -10080,7 +10241,7 @@ msgstr ""
 "Papierkorb Pseudo-Kategorie. Wird ein Artikel über das DB-Interface\n"
 "gelöscht, landet der in diesem Unterordner."
 
-#: lib/Service/ToolTipsService.php:1238
+#: lib/Service/ToolTipsService.php:1272
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
@@ -10088,7 +10249,7 @@ msgstr ""
 "Fügt die Person zum Projekt hinzu. Auf der Folgeseite können dann Details "
 "eingetragen werden."
 
-#: lib/Service/ToolTipsService.php:1240
+#: lib/Service/ToolTipsService.php:1274
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
@@ -10097,12 +10258,12 @@ msgstr ""
 "uns eine unterschriebene Anmeldung geschickt haben. Ansonsten ist das\n"
 "Feld leer."
 
-#: lib/Service/ToolTipsService.php:1243
+#: lib/Service/ToolTipsService.php:1277
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 "Die Markierung ist bei Stimmführern gesetzt, ansonsten bleibt das Feld leer."
 
-#: lib/Service/ToolTipsService.php:1246
+#: lib/Service/ToolTipsService.php:1280
 msgid ""
 "Delete the given account. If the account has been used for payments then the "
 "bank-account will just be marked disabled, but not removed from the data-"
@@ -10112,21 +10273,21 @@ msgstr ""
 "Zahlungen verwendet wurde, wird der Account lediglich als inaktiv\n"
 "markiert, aber nicht in der Datenbank gelöscht."
 
-#: lib/Service/ToolTipsService.php:1247
+#: lib/Service/ToolTipsService.php:1281
 msgid "Add a new dialog with detailed information about the bank-account."
 msgstr ""
 "Öffnet einen neuen Eingabe-Dialog mit Detailinformationen zu dieser "
 "Bankverbindung."
 
-#: lib/Service/ToolTipsService.php:1248
+#: lib/Service/ToolTipsService.php:1282
 msgid "Add a new dialog for defining a new bank-account."
 msgstr "Öffnet einen Eingabedialog, um eine neue Bankverbindung zu definieren."
 
-#: lib/Service/ToolTipsService.php:1249
+#: lib/Service/ToolTipsService.php:1283
 msgid "Show also the disabled bank accounts, if any."
 msgstr "Auch deaktiviert Bankverbindungen anzeigen, falls vorhanden."
 
-#: lib/Service/ToolTipsService.php:1253
+#: lib/Service/ToolTipsService.php:1287
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -10143,7 +10304,7 @@ msgstr ""
 "muss der Haken zunächst wieder gesetzt werden, dann wird die IBAN auf\n"
 "Korrektheit überprüft und man kann dann anschließend speichern."
 
-#: lib/Service/ToolTipsService.php:1256
+#: lib/Service/ToolTipsService.php:1290
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -10154,7 +10315,7 @@ msgstr ""
 "verwendet und ist deshalb abgelaufen und kann nicht weiter verwendet\n"
 "werden. Bitte löschen und den Schatzmeister informieren, vielen Dank!"
 
-#: lib/Service/ToolTipsService.php:1261
+#: lib/Service/ToolTipsService.php:1295
 msgid ""
 "Use this debit-mandate only for the given project. Note that debit-mandates "
 "of club-members are always general debit-mandates for all receivables."
@@ -10164,17 +10325,17 @@ msgstr ""
 "immer nur allgemeine Mandate für alle Forderungen des Vereins\n"
 "gegenüber dem Mitglied sind."
 
-#: lib/Service/ToolTipsService.php:1262
+#: lib/Service/ToolTipsService.php:1296
 msgid "Use this as a general debit-mandate for all receivables of this person."
 msgstr ""
 "Dieses Lastschriftmandat als allgemeines Mandat für alle Forderungen\n"
 "des Vereins gegenüber der Person verwenden."
 
-#: lib/Service/ToolTipsService.php:1264
+#: lib/Service/ToolTipsService.php:1298
 msgid "Download the existing signed hard-copy of the debit mandate."
 msgstr "Die abgespeicherte Kopie des unterschriebenen Mandats herunterladen."
 
-#: lib/Service/ToolTipsService.php:1265
+#: lib/Service/ToolTipsService.php:1299
 msgid ""
 "Download a prefilled debit-mandate form with the name and bank-account of "
 "this person, suitable to be handed to the person in order to be signed. Note "
@@ -10186,20 +10347,20 @@ msgstr ""
 "das Email-Formular kann solche vorausgefüllten Lastschriftmandata\n"
 "automatisch and Serienbriefe anhängen."
 
-#: lib/Service/ToolTipsService.php:1268
+#: lib/Service/ToolTipsService.php:1302
 msgid "Upload a signed hard-copy of the debit-mandate from the computer."
 msgstr ""
 "Das unterschriebene Original bzw. eine elektronische Kopie davon vom Gerät "
 "hochladen."
 
-#: lib/Service/ToolTipsService.php:1269
+#: lib/Service/ToolTipsService.php:1303
 msgid ""
 "Choose a signed hard-copy of the debit-mandate from the cloud file-system."
 msgstr ""
 "Eine Kopie des unterschriebenen Originals aus dem Cloud-Dateisystem "
 "auswählen."
 
-#: lib/Service/ToolTipsService.php:1270
+#: lib/Service/ToolTipsService.php:1304
 msgid ""
 "For your inconvenience you have to check this box if you want skip the "
 "upload-step and store the mandate-data without a signed hard-copy."
@@ -10209,11 +10370,11 @@ msgstr ""
 "unterschriebenes Original abspeichern möchte.<\n"
 "\n"
 
-#: lib/Service/ToolTipsService.php:1275
+#: lib/Service/ToolTipsService.php:1309
 msgid "Folder shared by the orchestra group."
 msgstr "Gemeinsamer Ordner der Orchestergruppe."
 
-#: lib/Service/ToolTipsService.php:1276
+#: lib/Service/ToolTipsService.php:1310
 msgid ""
 "Public upload \"postbox\" folder. Meant for anonymous public uploads of "
 "larger files."
@@ -10221,23 +10382,23 @@ msgstr ""
 "Öffentlicher \"Briefkasten\"-Ordner. Für anonymes Hochladen von größeren "
 "Dateien."
 
-#: lib/Service/ToolTipsService.php:1277
+#: lib/Service/ToolTipsService.php:1311
 msgid "Shared folder for document templates."
 msgstr "Gemeinsamer Ordner für Dokumentenvorlagen."
 
-#: lib/Service/ToolTipsService.php:1278
+#: lib/Service/ToolTipsService.php:1312
 msgid "Shared folder for per-project data."
 msgstr "Gemeinsamer Ordner für Projektdaten."
 
-#: lib/Service/ToolTipsService.php:1279
+#: lib/Service/ToolTipsService.php:1313
 msgid "Shared folder for per-project per-participant data"
 msgstr "Gemeinsamer Ordner für personalisierte Projekt-Mitglieder-Daten."
 
-#: lib/Service/ToolTipsService.php:1280
+#: lib/Service/ToolTipsService.php:1314
 msgid "Shared folder for flyers and posters"
 msgstr "Gemeinsamer Ordner für Werbematerial (Handzettel, Plakate)"
 
-#: lib/Service/ToolTipsService.php:1282
+#: lib/Service/ToolTipsService.php:1316
 msgid ""
 "Link-shared folder for data needed by participants. In particular, this can "
 "be used for music-sheet downloads. The folder is automatically created and "
@@ -10250,7 +10411,7 @@ msgstr ""
 "Rundmails kann man auf den Freigabe-Link mit der Ersetzung\n"
 "${GLOBAL::PROJEKT_DOWNLOAD_FREIGABE} verweisen."
 
-#: lib/Service/ToolTipsService.php:1287
+#: lib/Service/ToolTipsService.php:1321
 msgid ""
 "Shared folder for the financial balances, probably used after the project is "
 "finished."
@@ -10258,7 +10419,7 @@ msgstr ""
 "Gemeinsamer Ordner mit der Gewinn- und Verlustrechnung; vermutlich erst nach "
 "Abschluß des Projekts von Bedeutung."
 
-#: lib/Service/ToolTipsService.php:1292
+#: lib/Service/ToolTipsService.php:1326
 msgid ""
 "Add the name of a dedicated user-group for the people allowed to access the "
 "orchestra-administration app."
@@ -10266,7 +10427,7 @@ msgstr ""
 "Name einer Benutzenden-Gruppe für alle Personen, die Zugriff zur Orchester-"
 "Orga-App bekommen."
 
-#: lib/Service/ToolTipsService.php:1293
+#: lib/Service/ToolTipsService.php:1327
 msgid ""
 "The list of group-admins for the dedicated user-group. You should at least "
 "add one group-admin."
@@ -10274,7 +10435,7 @@ msgstr ""
 "Die Gruppen-Administratoren für die Orchester-Benutzer-Gruppe. Wenigstens "
 "einer muss angegeben werden."
 
-#: lib/Service/ToolTipsService.php:1295
+#: lib/Service/ToolTipsService.php:1329
 msgid ""
 "Add the name of a DokuWiki namespace which will host all wiki-pages of the "
 "orchestra. The namespace should be all lower-case and must not contain any "
@@ -10284,7 +10445,7 @@ msgstr ""
 "gesammelt werden. Der Namensraum sollte nur Kleinbuchstaben und keine\n"
 "Sonder- oder gar Leerzeichen enthalten."
 
-#: lib/Service/ToolTipsService.php:1296
+#: lib/Service/ToolTipsService.php:1330
 msgid ""
 "It is possible to inject cloud-user-accounts for all orchestra club-members "
 "into the ambient cloud-software. This works by granting select access to the "
@@ -10301,7 +10462,7 @@ msgstr ""
 "\"Sharing\"-Einstellungen von einem Gruppen-Adminstrator der\n"
 "Orchester-Gruppe vorgenommen werden."
 
-#: lib/Service/ToolTipsService.php:1301
+#: lib/Service/ToolTipsService.php:1335
 msgid ""
 "Short descriptive name of the orchestra, e.g. use \"camerata\" instead of "
 "\"camerata academica freiburg e.V.\". The short name is used in various "
@@ -10312,7 +10473,7 @@ msgstr ""
 "verschiedenen Stellen verwendet. Er sollte kleingeschrieben,\n"
 "\"handlich\" und ohne Leerzeichen sein."
 
-#: lib/Service/ToolTipsService.php:1302
+#: lib/Service/ToolTipsService.php:1336
 msgid ""
 "The locale of the orchestral organization. In particular, this determines "
 "the currency and the name of some directories in the file-system. Note that "
@@ -10325,7 +10486,7 @@ msgstr ""
 "allerdings immer die Zeitzone des Servers ist in dem die\n"
 "Cloud-Software läuft."
 
-#: lib/Service/ToolTipsService.php:1307
+#: lib/Service/ToolTipsService.php:1341
 #, php-format
 msgid ""
 "Import the orchestra club-members into the ambient cloud as ordinary cloud-"
@@ -10338,7 +10499,7 @@ msgstr ""
 "insbesondere GRANT-Rechte für ihre Datenbank haben. Es sind auch\n"
 "weitere Einstellungen in der \"%s\"-App als Administrator nötig."
 
-#: lib/Service/ToolTipsService.php:1308
+#: lib/Service/ToolTipsService.php:1342
 #, php-format
 msgid ""
 "Recreate all \"%1$s\" views and grant permissions to use them to the cloud "
@@ -10347,7 +10508,7 @@ msgstr ""
 "Alle \"%1$s\"-Ansichten erneut erzeugen und dem Cloud-Datenbank-Account "
 "Leserechte daran geben."
 
-#: lib/Service/ToolTipsService.php:1309
+#: lib/Service/ToolTipsService.php:1343
 msgid ""
 "In order to isolate the SQL-views for the cloud-user-backend from the rest "
 "of the database tables it is possible to put them into their own separate "
@@ -10359,7 +10520,7 @@ msgstr ""
 "werden. Dazu ist es nötig, dass der Datenbank-Account der APP alls -- und "
 "insbesondere: GRANT -- Rechte an dieser separaten Datenbank hat."
 
-#: lib/Service/ToolTipsService.php:1313
+#: lib/Service/ToolTipsService.php:1347
 msgid ""
 "Optionally parts of the data-base and some configuration settings can be "
 "stored encrypted. If you are confronted with error messages about a missing "
@@ -10374,7 +10535,7 @@ msgstr ""
 "zu können, muss man sich außerdem noch mit dem eigenen Passwort\n"
 "authentifizieren."
 
-#: lib/Service/ToolTipsService.php:1314
+#: lib/Service/ToolTipsService.php:1348
 msgid ""
 "Changing the encryption key needs your login-password. Please enter it here "
 "before trying to save the changed encryption key."
@@ -10382,19 +10543,19 @@ msgstr ""
 "Das Setzen des Verschlüsselungs-Schlüssels erfordert das eigenen\n"
 "Cloud-Passwort, das hier eingegeben werden muss."
 
-#: lib/Service/ToolTipsService.php:1319
+#: lib/Service/ToolTipsService.php:1353
 msgid "Personal application settings."
 msgstr "Persönliche Einstellung für die Musizierendne-DB Anwendung."
 
-#: lib/Service/ToolTipsService.php:1321
+#: lib/Service/ToolTipsService.php:1355
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr "Erzwinge die Neuerstellung des gemeinsamen Ordners."
 
-#: lib/Service/ToolTipsService.php:1323
+#: lib/Service/ToolTipsService.php:1357
 msgid "Re-create the share-owner."
 msgstr "Erzeuge eine neue Share-Strohpuppe."
 
-#: lib/Service/ToolTipsService.php:1325
+#: lib/Service/ToolTipsService.php:1359
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -10409,20 +10570,20 @@ msgstr ""
 "unsichtbar ist. Aktivieren dieser Option macht auch solche Datensätze\n"
 "sichtbar."
 
-#: lib/Service/ToolTipsService.php:1331 templates/part.common.header.php:105
+#: lib/Service/ToolTipsService.php:1365 templates/part.common.header.php:105
 #: templates/part.common.header.php:111
 msgid "Toggle Tooltips"
 msgstr "Ballon-Hilfe ein- und ausschalten"
 
-#: lib/Service/ToolTipsService.php:1333
+#: lib/Service/ToolTipsService.php:1367
 msgid "Link to the source-code archives for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/Service/ToolTipsService.php:1335
+#: lib/Service/ToolTipsService.php:1369
 msgid "Link to the source-code documentation for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/Service/ToolTipsService.php:1337
+#: lib/Service/ToolTipsService.php:1371
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -10430,7 +10591,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/Service/ToolTipsService.php:1339
+#: lib/Service/ToolTipsService.php:1373
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
@@ -10439,7 +10600,7 @@ msgstr ""
 "Anfängliche Anzahl von Tabellenzeilen pro Seite. Kann bei den\n"
 "indivuduellen Tabellen später noch einzeln angepasst werden."
 
-#: lib/Service/ToolTipsService.php:1344 lib/Service/ToolTipsService.php:989
+#: lib/Service/ToolTipsService.php:1378 lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
 "An image file with the orchestra logo -- preferably in SVG format. The logo "
@@ -10449,7 +10610,7 @@ msgstr ""
 "Logo kann in Dokumentenvorlagen eingesetzt werden, indem man den\n"
 "\"[LOGO]\"-Platzhalter verwendet."
 
-#: lib/Service/ToolTipsService.php:1345
+#: lib/Service/ToolTipsService.php:1379
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -10466,7 +10627,7 @@ msgstr ""
 "entsprechend erzeugt werden. Vorausgefüllte Mandate können aus der\n"
 "Teilnehmenden- und Musizierenden-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsService.php:1347
+#: lib/Service/ToolTipsService.php:1381
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -10484,7 +10645,7 @@ msgstr ""
 "werden. Vorausgefüllte Mandate können aus der Musizierenden- und\n"
 "Vereinsmitglieds-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsService.php:1349
+#: lib/Service/ToolTipsService.php:1383
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
@@ -10492,7 +10653,7 @@ msgstr ""
 "Ein Formular um Adress-Aktualisierungen zu melden und um Lastschriftmandate "
 "zu erneuern."
 
-#: lib/Service/ToolTipsService.php:1351
+#: lib/Service/ToolTipsService.php:1385
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
@@ -10502,19 +10663,19 @@ msgstr ""
 "im Stil \"[PLATZHALTER]\" um die jährlichen Versicherungsbeiträge an die "
 "betreffenden Personen zu kommunizieren."
 
-#: lib/Service/ToolTipsService.php:1354
+#: lib/Service/ToolTipsService.php:1388
 msgid "Delete this document template from the server"
 msgstr "Diese Dokumentenvorlage vom Server löschen"
 
-#: lib/Service/ToolTipsService.php:1357
+#: lib/Service/ToolTipsService.php:1391
 msgid "Choose a template file from the cloud storage."
 msgstr "Dokumentenvorlage-Datei aus der \"Cloud\" auswählen"
 
-#: lib/Service/ToolTipsService.php:1358
+#: lib/Service/ToolTipsService.php:1392
 msgid "Upload a document template from your computer or mobile."
 msgstr "Eine Dokumentenvorlage von Ihrem Computer oder Mobilgerät laden."
 
-#: lib/Service/ToolTipsService.php:1362
+#: lib/Service/ToolTipsService.php:1396
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
@@ -10522,7 +10683,7 @@ msgstr ""
 "Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-"
 "Datensatz testen. Das Dateiformat bleibt dabei das der Vorlage."
 
-#: lib/Service/ToolTipsService.php:1363
+#: lib/Service/ToolTipsService.php:1397
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
@@ -10533,7 +10694,7 @@ msgstr ""
 "Vorlage ausfüllbare Formularfelder enthält, wird ein ausfüllbares PDF-"
 "Dokument erstellt."
 
-#: lib/Service/ToolTipsService.php:1364
+#: lib/Service/ToolTipsService.php:1398
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
@@ -10541,26 +10702,26 @@ msgstr ""
 "Den Test-Datensatz im JSON herunterladen. Zur Illustration und zur "
 "Fehlersuche."
 
-#: lib/Service/ToolTipsService.php:1368
+#: lib/Service/ToolTipsService.php:1402
 msgid "Select the sender from the members of the executive board."
 msgstr "Den Absender aus dem Orga-Team auswählen."
 
-#: lib/Service/ToolTipsService.php:1370
+#: lib/Service/ToolTipsService.php:1404
 msgid "Select the recipients for the mail-merge."
 msgstr "Die Empfänger*innen für den Serienbrief auswählen."
 
-#: lib/Service/ToolTipsService.php:1371
+#: lib/Service/ToolTipsService.php:1405
 msgid "Select recipients from the one of the cloud's address-books."
 msgstr "Empfänger:innen aus einem der Adressbücherauswählen."
 
-#: lib/Service/ToolTipsService.php:1373
+#: lib/Service/ToolTipsService.php:1407
 msgid ""
 "Optionally select a project to provide more context information for the mail-"
 "merge operation."
 msgstr ""
 "Optional ein Projekt auswählen, um mehr Kontext-Informationen zu erzeugen."
 
-#: lib/Service/ToolTipsService.php:1374
+#: lib/Service/ToolTipsService.php:1408
 msgid ""
 "Preferred for one-time merges or for testing. Just download to your local "
 "computer."
@@ -10568,7 +10729,7 @@ msgstr ""
 "Vorzugsweise für einmalige Vorlagen-Ersetzungen oder zu Testzwecken. Einfach "
 "die ausgefüllte Vorlage herunterladen auf den eigenen Computer."
 
-#: lib/Service/ToolTipsService.php:1375
+#: lib/Service/ToolTipsService.php:1409
 msgid ""
 "Preferred for mass-mail-merges and when the substituted template does not "
 "need to be post-processed."
@@ -10576,7 +10737,7 @@ msgstr ""
 "Vorzugsweise bei \"echten\" Massen-Serien-Briefen und wenn die ausgefüllten "
 "Vorlagen nicht mehr weiter bearbeitet werden müssen."
 
-#: lib/Service/ToolTipsService.php:1376
+#: lib/Service/ToolTipsService.php:1410
 msgid ""
 "Download the data-set which would be substituted into the document. This is "
 "primarily meant for debuggin."
@@ -10585,11 +10746,11 @@ msgstr ""
 "Ggf. nützlich beim Entwurf neuer Vorlagen, oder falls das Ergebnis anders "
 "aussieht als erwartet."
 
-#: lib/Service/ToolTipsService.php:1381
+#: lib/Service/ToolTipsService.php:1415
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/Service/ToolTipsService.php:1383
+#: lib/Service/ToolTipsService.php:1417
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -10599,7 +10760,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/Service/ToolTipsService.php:1387
+#: lib/Service/ToolTipsService.php:1421
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -10607,7 +10768,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/Service/ToolTipsService.php:1389
+#: lib/Service/ToolTipsService.php:1423
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -10616,7 +10777,7 @@ msgstr ""
 "noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: lib/Service/ToolTipsService.php:1391
+#: lib/Service/ToolTipsService.php:1425
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -10625,11 +10786,11 @@ msgstr ""
 "Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden\n"
 "allerdings nicht angepasst."
 
-#: lib/Service/ToolTipsService.php:1393
+#: lib/Service/ToolTipsService.php:1427
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
-#: lib/Service/VCalendarService.php:787
+#: lib/Service/VCalendarService.php:870
 msgid "Default Event Notification"
 msgstr "Termin-Erinnerung (Voreinstellung)"
 
@@ -12143,19 +12304,19 @@ msgstr ""
 "Sichere die zusätzlichen Emails aus dem Eingabefeld im Adressbuch,\n"
 "damit die später wieder verwendet werden können."
 
-#: src/app/events.js:47
+#: src/app/events.js:48
 msgid "Do you really want to delete this event?"
 msgstr "Möchten Sie den Termin wirklich löschen?"
 
-#: src/app/events.js:48
+#: src/app/events.js:49
 msgid "Do you really want to detach this event from the current project?"
 msgstr "Möchten Sie den Termin wirklich vom Projekt lösen?"
 
-#: src/app/events.js:387
+#: src/app/events.js:551
 msgid "Really delete?"
 msgstr "Wirklich löschen?"
 
-#: src/app/events.js:429
+#: src/app/events.js:593
 msgid "Unable to download calendar events."
 msgstr "Kann die Kalender-Einträge nicht laden."
 
@@ -12443,6 +12604,10 @@ msgstr "#Spalten"
 msgid "#rows"
 msgstr "#Zeilen"
 
+#: src/app/pme.js:1375
+msgid "Remove"
+msgstr "Entfernen"
+
 #: src/app/project-participant-fields-display.js:112
 msgid ""
 "Input element is not empty, do your really want to revert it to its default "
@@ -12633,8 +12798,8 @@ msgstr ""
 "erst dann gesperrt werden, wenn alle assoziierten Lastschriftmandate\n"
 "entwertet wurden."
 
-#: src/app/sepa-debit-mandate.js:678 templates/events.php:82
-#: templates/part.common.header.php:64
+#: src/app/sepa-debit-mandate.js:678 templates/part.common.header.php:64
+#: templates/project-events/events.php:73
 msgid "Reload"
 msgstr "Neu laden"
 
@@ -13726,22 +13891,6 @@ msgstr ""
 msgid "Something is wrong, but what?"
 msgstr "Etwas ist schiefgelaufen, aber was?!"
 
-#: templates/events.php:31
-msgid "Events for"
-msgstr "Termine für"
-
-#: templates/events.php:38
-msgid "New Event"
-msgstr "Neuer Termin"
-
-#: templates/events.php:74
-msgid "Download"
-msgstr "Herunterladen"
-
-#: templates/eventslisting.php:58
-msgid "no events"
-msgstr "keine Termine"
-
 #: templates/fragments/instrument-voices.php:46
 #, php-format
 msgid "e.g. %s"
@@ -13883,6 +14032,7 @@ msgid "reopen"
 msgstr "wieder öffnen"
 
 #: templates/fragments/projects/project-mailing-list.php:114
+#: templates/project-events/event-actions-menu.php:83
 msgid "delete"
 msgstr "löschen"
 
@@ -13950,41 +14100,51 @@ msgstr "bis"
 msgid "All Day Event"
 msgstr "Ganztägiger Termin"
 
-#: templates/legacy/calendar/part.eventform.php:57
+#: templates/legacy/calendar/part.eventform.php:58
 #: templates/legacy/calendar/part.showevent.php:81
 msgid "Advanced options"
 msgstr "Erweiterte Einstellungen"
 
-#: templates/legacy/calendar/part.eventform.php:62
+#: templates/legacy/calendar/part.eventform.php:61
+msgid "Open the cloud's calendar app in another tab or window."
+msgstr ""
+"Die Kalender-App der Cloud in einem anderen Tab oder Fenster öffnen. Der "
+"aktuelle Termin kann dort detaillierter angezeigt und verändert werden."
+
+#: templates/legacy/calendar/part.eventform.php:77
+msgid "Calendar App"
+msgstr "Kalender-App"
+
+#: templates/legacy/calendar/part.eventform.php:85
 #: templates/legacy/calendar/part.showevent.php:86
 msgid "Location"
 msgstr "Ort"
 
-#: templates/legacy/calendar/part.eventform.php:65
+#: templates/legacy/calendar/part.eventform.php:88
 #: templates/legacy/calendar/part.showevent.php:92
 msgid "View the current location with Google-Maps"
 msgstr "Ort mit Google-Maps anzeigen"
 
-#: templates/legacy/calendar/part.eventform.php:66
+#: templates/legacy/calendar/part.eventform.php:89
 #: templates/legacy/calendar/part.showevent.php:93
 msgid "Location@Google"
 msgstr "Org@Google"
 
-#: templates/legacy/calendar/part.eventform.php:71
+#: templates/legacy/calendar/part.eventform.php:94
 msgid "Open the cloud's map and location app in another tab or window."
 msgstr "Die Landkarten-App der Cloud in einem anderen Tab bzw. Fenster öffnen."
 
-#: templates/legacy/calendar/part.eventform.php:80
+#: templates/legacy/calendar/part.eventform.php:103
 #: templates/legacy/calendar/part.showevent.php:97
 #: templates/legacy/calendar/part.showevent.php:98
 msgid "View on map"
 msgstr "Auf Karte anzeigen"
 
-#: templates/legacy/calendar/part.eventform.php:90
+#: templates/legacy/calendar/part.eventform.php:113
 msgid "Categories (separate by comma)"
 msgstr "Kategorien (bitte mit Komma trennen)"
 
-#: templates/legacy/calendar/part.eventform.php:92
+#: templates/legacy/calendar/part.eventform.php:115
 msgid ""
 "Event categories. The dedicated per-project events are linked to their "
 "respective project by automatically adding the project name as category. "
@@ -13993,97 +14153,87 @@ msgstr ""
 "Termin-Kategorien. Bei Projekt-Terminen wird automatisch der Projektname und "
 "der Kurzname des Kalenders als Kategorie hinzugefügt."
 
-#: templates/legacy/calendar/part.eventform.php:96
-#: templates/legacy/calendar/part.eventform.php:98
+#: templates/legacy/calendar/part.eventform.php:119
+#: templates/legacy/calendar/part.eventform.php:121
 msgid "Edit categories"
 msgstr "Kategorien bearbeiten"
 
-#: templates/legacy/calendar/part.eventform.php:103
+#: templates/legacy/calendar/part.eventform.php:126
 #: templates/legacy/calendar/part.showevent.php:106
 msgid "Description"
 msgstr "Beschreibung"
 
-#: templates/legacy/calendar/part.eventform.php:111
+#: templates/legacy/calendar/part.eventform.php:133
 msgid "Export event"
 msgstr "Termin exportieren"
 
-#: templates/legacy/calendar/part.eventform.php:112
+#: templates/legacy/calendar/part.eventform.php:134
 msgid "Export this event as ICS file."
 msgstr "Diesen Termin als .ics-Datei exportieren."
 
-#: templates/legacy/calendar/part.eventform.php:116
-msgid "Open the cloud's calendar app in another tab or window."
-msgstr ""
-"Die Kalender-App der Cloud in einem anderen Tab oder Fenster öffnen. Der "
-"aktuelle Termin kann dort detaillierter angezeigt und verändert werden."
-
-#: templates/legacy/calendar/part.eventform.php:132
-msgid "Calendar App"
-msgstr "Kalender-App"
-
-#: templates/legacy/calendar/part.eventform.php:143
+#: templates/legacy/calendar/part.eventform.php:144
 #: templates/legacy/calendar/part.showevent.php:116
 msgid "Repeat"
 msgstr "Wiederholen"
 
-#: templates/legacy/calendar/part.eventform.php:150
+#: templates/legacy/calendar/part.eventform.php:151
 #: templates/legacy/calendar/part.showevent.php:123
 msgid "Advanced"
 msgstr "Erweitert"
 
-#: templates/legacy/calendar/part.eventform.php:197
+#: templates/legacy/calendar/part.eventform.php:198
 #: templates/legacy/calendar/part.showevent.php:167
 msgid "Select weekdays"
 msgstr "Wochentage auswählen"
 
-#: templates/legacy/calendar/part.eventform.php:215
-#: templates/legacy/calendar/part.eventform.php:233
+#: templates/legacy/calendar/part.eventform.php:216
+#: templates/legacy/calendar/part.eventform.php:234
 #: templates/legacy/calendar/part.showevent.php:180
 #: templates/legacy/calendar/part.showevent.php:193
 msgid "Select days"
 msgstr "Tage auswählen"
 
-#: templates/legacy/calendar/part.eventform.php:222
+#: templates/legacy/calendar/part.eventform.php:223
 #: templates/legacy/calendar/part.showevent.php:185
 msgid "and the events day of year."
 msgstr "und der Kalendertag des Termins."
 
-#: templates/legacy/calendar/part.eventform.php:240
+#: templates/legacy/calendar/part.eventform.php:241
 #: templates/legacy/calendar/part.showevent.php:198
 msgid "and the events day of month."
 msgstr "und der Monatstag des Termins."
 
-#: templates/legacy/calendar/part.eventform.php:251
+#: templates/legacy/calendar/part.eventform.php:252
 #: templates/legacy/calendar/part.showevent.php:206
 msgid "Select months"
 msgstr "Monate auswählen"
 
-#: templates/legacy/calendar/part.eventform.php:269
+#: templates/legacy/calendar/part.eventform.php:270
 #: templates/legacy/calendar/part.showevent.php:219
 msgid "Select weeks"
 msgstr "Wochen auswählen"
 
-#: templates/legacy/calendar/part.eventform.php:276
+#: templates/legacy/calendar/part.eventform.php:277
 #: templates/legacy/calendar/part.showevent.php:224
 msgid "and the events week of year."
 msgstr "und die Wochennummer des Termins."
 
-#: templates/legacy/calendar/part.eventform.php:282
+#: templates/legacy/calendar/part.eventform.php:283
 #: templates/legacy/calendar/part.showevent.php:230
 msgid "Interval"
 msgstr "Zeitraum"
 
-#: templates/legacy/calendar/part.eventform.php:288
+#: templates/legacy/calendar/part.eventform.php:289
 #: templates/legacy/calendar/part.showevent.php:236
 msgid "End"
 msgstr "Ende"
 
-#: templates/legacy/calendar/part.eventform.php:301
+#: templates/legacy/calendar/part.eventform.php:302
 #: templates/legacy/calendar/part.showevent.php:249
 msgid "occurrences"
 msgstr "Einzeltermine"
 
-#: templates/legacy/calendar/part.eventform.php:320
+#: templates/legacy/calendar/part.eventform.php:321
 msgid "Visibility to people shared with"
 msgstr "Sichtbarkeit für geteilt-mit-denen"
 
@@ -14380,6 +14530,59 @@ msgstr "Seitenmenü schließen"
 msgid "Renderer failed: %s"
 msgstr "Laden der Seite fehlgeschlagen: %s"
 
+#: templates/project-events/event-actions-menu.php:53
+#: templates/project-events/event-actions-menu.php:61
+msgid "edit in calendar app"
+msgstr "Kalender-App"
+
+#: templates/project-events/event-actions-menu.php:69
+msgid "edit in simple editor"
+msgstr "einfacher Editor"
+
+#: templates/project-events/event-actions-menu.php:76
+msgid "duplicate"
+msgstr "duplizieren"
+
+#: templates/project-events/event-actions-menu.php:86
+msgid "detach from project"
+msgstr "vom Projekt lösen"
+
+#: templates/project-events/event-actions-menu.php:124
+msgid "act only on this event"
+msgstr "nur dieser Termin"
+
+#: templates/project-events/event-actions-menu.php:138
+msgid "act on the event series"
+msgstr "Terminserie"
+
+#: templates/project-events/event-actions-menu.php:152
+msgid "act on all related events"
+msgstr "alle zugehörigen Termine"
+
+#: templates/project-events/event-actions-menu.php:170
+msgid "em@ail / download"
+msgstr "Em@il / Download"
+
+#: templates/project-events/event-actions-menu.php:185
+msgid "absence field"
+msgstr "Abwesenheitsfeld"
+
+#: templates/project-events/events.php:31
+msgid "Events for"
+msgstr "Termine für"
+
+#: templates/project-events/events.php:65
+msgid "Download"
+msgstr "Herunterladen"
+
+#: templates/project-events/eventslisting.php:63
+msgid "no events"
+msgstr "keine Termine"
+
+#: templates/project-events/new-event-menu.php:37
+msgid "New Event"
+msgstr "Neuer Termin"
+
 #: templates/project-web-articles.php:115
 msgid "No public web pages registered for this project"
 msgstr "Für dieses Projekt gibt es leider noch keine öffentlichen Web-Seiten"
@@ -14427,7 +14630,7 @@ msgid "owner of the bank account, probably same as musician"
 msgstr "Kontoinhaber:in, in der Regel identisch mit der Person"
 
 #: templates/sepa-debit-mandate.php:131
-#: templates/settings/orchestra-settings.php:169
+#: templates/settings/orchestra-settings.php:172
 msgid "owner of bank account"
 msgstr "Kontoinhaber:in"
 
@@ -14436,7 +14639,7 @@ msgid "Optional BLZ of the musician's bank account"
 msgstr "Optionale Bankleitzahl des Kontos"
 
 #: templates/sepa-debit-mandate.php:138
-#: templates/settings/orchestra-settings.php:175
+#: templates/settings/orchestra-settings.php:178
 msgid "BLZ of bank account"
 msgstr "Bankleitzahl"
 
@@ -14449,7 +14652,7 @@ msgstr ""
 "angegeben wird, muss die Bankleitzahl zuerst angegeben werden"
 
 #: templates/sepa-debit-mandate.php:145
-#: templates/settings/orchestra-settings.php:181
+#: templates/settings/orchestra-settings.php:184
 msgid "IBAN or no. of bank account"
 msgstr "IBAN oder Kontonummer"
 
@@ -14463,7 +14666,7 @@ msgstr ""
 "lassen."
 
 #: templates/sepa-debit-mandate.php:151
-#: templates/settings/orchestra-settings.php:187
+#: templates/settings/orchestra-settings.php:190
 msgid "BIC of bank account"
 msgstr "BIC der Bankverbindung"
 
@@ -14538,8 +14741,8 @@ msgstr "Allgemeine Einstellungen"
 
 #: templates/settings/app-settings.php:49
 #: templates/settings/app-settings.php:50
-#: templates/settings/orchestra-settings.php:102
-#: templates/settings/orchestra-settings.php:108
+#: templates/settings/orchestra-settings.php:105
+#: templates/settings/orchestra-settings.php:111
 msgid "name of orchestra"
 msgstr "Name des Orchesters"
 
@@ -14927,93 +15130,93 @@ msgstr "Em@il-Test-Adresse"
 msgid "Test address"
 msgstr "Test-Adresse"
 
-#: templates/settings/orchestra-settings.php:74
+#: templates/settings/orchestra-settings.php:77
 msgid "national holidays"
 msgstr "Bundesweite Feiertage"
 
-#: templates/settings/orchestra-settings.php:94
-#: templates/settings/orchestra-settings.php:96
+#: templates/settings/orchestra-settings.php:97
+#: templates/settings/orchestra-settings.php:99
 msgid "Street Address"
 msgstr "Postanschrift"
 
-#: templates/settings/orchestra-settings.php:101
+#: templates/settings/orchestra-settings.php:104
 msgid "The name of the orchestra"
 msgstr "Name des Orchesters"
 
-#: templates/settings/orchestra-settings.php:107
+#: templates/settings/orchestra-settings.php:110
 msgid "The name of the orchestra (line 2)"
 msgstr "Name des Orchesters (Zeile 2)"
 
-#: templates/settings/orchestra-settings.php:113
+#: templates/settings/orchestra-settings.php:116
 msgid "Name of the authority where the orchestra association is registered."
 msgstr "Vereinsregister-Gericht"
 
-#: templates/settings/orchestra-settings.php:114
+#: templates/settings/orchestra-settings.php:117
 msgid "e.g. Local Court Denver"
 msgstr "z.B. Amtsgericht Freiburg"
 
-#: templates/settings/orchestra-settings.php:119
+#: templates/settings/orchestra-settings.php:122
 msgid "Registration number of the orchestra association."
 msgstr "Vereinsregister-Nummer des Orchesters."
 
-#: templates/settings/orchestra-settings.php:120
+#: templates/settings/orchestra-settings.php:123
 msgid "e.g. VR1234"
 msgstr "z.B. VR1234"
 
-#: templates/settings/orchestra-settings.php:126
-#: templates/settings/orchestra-settings.php:127
+#: templates/settings/orchestra-settings.php:129
+#: templates/settings/orchestra-settings.php:130
 msgid "street part of street address of orchestra"
 msgstr "Straßenname der Postanschrift des Orchesters"
 
-#: templates/settings/orchestra-settings.php:132
+#: templates/settings/orchestra-settings.php:135
 msgid "house number part of street address of orchestra"
 msgstr "Hausnummer der Postanschrift des Orchesters"
 
-#: templates/settings/orchestra-settings.php:133
+#: templates/settings/orchestra-settings.php:136
 msgid "Nr"
 msgstr "Nr"
 
-#: templates/settings/orchestra-settings.php:138
+#: templates/settings/orchestra-settings.php:141
 msgid "ZIP part of street address of orchestra"
 msgstr "Postleitzahl der Postanschrift des Orchesters"
 
-#: templates/settings/orchestra-settings.php:139
+#: templates/settings/orchestra-settings.php:142
 msgid "ZIP"
 msgstr "Postleitzahl"
 
-#: templates/settings/orchestra-settings.php:144
+#: templates/settings/orchestra-settings.php:147
 msgid "city part of address of orchestra"
 msgstr "Ort der Orchesteranschrift"
 
-#: templates/settings/orchestra-settings.php:145
+#: templates/settings/orchestra-settings.php:148
 msgid "city"
 msgstr "Ortschaft"
 
-#: templates/settings/orchestra-settings.php:149
+#: templates/settings/orchestra-settings.php:152
 msgid "country part of address of orchestra"
 msgstr "Land der Orchesteranschrift"
 
-#: templates/settings/orchestra-settings.php:150
+#: templates/settings/orchestra-settings.php:153
 msgid "country"
 msgstr "Land"
 
-#: templates/settings/orchestra-settings.php:158
+#: templates/settings/orchestra-settings.php:161
 msgid "Phone number in international format, e.g. +49-761-123456."
 msgstr "Rufnummer in einem internationalen Format, z.B. +49 761 123456."
 
-#: templates/settings/orchestra-settings.php:159
+#: templates/settings/orchestra-settings.php:162
 msgid "phone"
 msgstr "Rufnummer"
 
-#: templates/settings/orchestra-settings.php:168
+#: templates/settings/orchestra-settings.php:171
 msgid "owner of the orchestra's bank account"
 msgstr "Kontoinhaber:in der Orchester-Bankverbindung"
 
-#: templates/settings/orchestra-settings.php:174
+#: templates/settings/orchestra-settings.php:177
 msgid "Optional BLZ of the orchestra's bank account"
 msgstr "Optionale Bankleitzahl des Orchesterkontos"
 
-#: templates/settings/orchestra-settings.php:180
+#: templates/settings/orchestra-settings.php:183
 msgid ""
 "IBAN or number of the orchestra's bank account. If this is a account number,"
 "then please first enter the BLZ"
@@ -15021,51 +15224,51 @@ msgstr ""
 "IBAN oder Kontonummer des Orchesterkontos. Falls eine Kontonummer\n"
 "angegeben wird, muss die Bankleitzahl zuerst angegeben werden"
 
-#: templates/settings/orchestra-settings.php:186
+#: templates/settings/orchestra-settings.php:189
 msgid "Optional BIC of the orchestra's bank account"
 msgstr "Optional die BIC der Bankverbindung"
 
-#: templates/settings/orchestra-settings.php:192
+#: templates/settings/orchestra-settings.php:195
 msgid "Name of the bank holding the orchestra's bank account"
 msgstr "Name der Bank der Orchester-Bankverbindung"
 
-#: templates/settings/orchestra-settings.php:193
+#: templates/settings/orchestra-settings.php:196
 msgid "e.g. Bank of Scotland"
 msgstr "z.B. Sparkasse Tupflingen"
 
-#: templates/settings/orchestra-settings.php:198
+#: templates/settings/orchestra-settings.php:201
 msgid "Creditor identifier of the orchestra"
 msgstr "Gläubiger Identifikationsnummer des Orchesters"
 
-#: templates/settings/orchestra-settings.php:199
+#: templates/settings/orchestra-settings.php:202
 msgid "orchestra's CI"
 msgstr "Orchester CI"
 
-#: templates/settings/orchestra-settings.php:203
+#: templates/settings/orchestra-settings.php:206
 msgid ""
 "Bank-holidays to take into account when generating bulk bank transactions."
 msgstr ""
 "Bank-Feiertage, die berücksichtigt werden müssen, wenn Sammelaufträge für "
 "die Bank erzeugt werden."
 
-#: templates/settings/orchestra-settings.php:208
-#: templates/settings/orchestra-settings.php:210
+#: templates/settings/orchestra-settings.php:211
+#: templates/settings/orchestra-settings.php:213
 msgid "Document templates"
 msgstr "Dokumentenvorlagen"
 
-#: templates/settings/orchestra-settings.php:227
+#: templates/settings/orchestra-settings.php:230
 msgid "Select "
 msgstr "Auswählen "
 
-#: templates/settings/orchestra-settings.php:239
+#: templates/settings/orchestra-settings.php:242
 msgid "drop or click"
 msgstr "Ablegen oder anklicken"
 
-#: templates/settings/orchestra-settings.php:275
+#: templates/settings/orchestra-settings.php:278
 msgid "Executive board and club members"
 msgstr "Vorstands- und Vereinsmitglieder"
 
-#: templates/settings/orchestra-settings.php:283
+#: templates/settings/orchestra-settings.php:286
 msgid ""
 "Ensure that the club-member's project and the necessary infrastructure "
 "exists."
@@ -15073,15 +15276,15 @@ msgstr ""
 "Stelle sicher, dass das Vereinsmitglieder-Projekt existiert und die\n"
 "nötige Infrastruktur besitzt."
 
-#: templates/settings/orchestra-settings.php:290
+#: templates/settings/orchestra-settings.php:293
 msgid "club members project"
 msgstr "Vereinsmitglieder-Pseudo-Projekt"
 
-#: templates/settings/orchestra-settings.php:295
+#: templates/settings/orchestra-settings.php:298
 msgid "Club Member Project"
 msgstr "Vereinsmitglieder-Pseudo-Projekt"
 
-#: templates/settings/orchestra-settings.php:303
+#: templates/settings/orchestra-settings.php:306
 msgid ""
 "Ensure that the executive-board project and the necessary infrastructure "
 "exists."
@@ -15089,111 +15292,111 @@ msgstr ""
 "Stelle sicher, dass das Vorstands-Projekt existiert und die nötige\n"
 "Infrastruktur besitzt."
 
-#: templates/settings/orchestra-settings.php:310
+#: templates/settings/orchestra-settings.php:313
 msgid "executive board project"
 msgstr "Vorstands-Pseudo-Projekt"
 
-#: templates/settings/orchestra-settings.php:315
+#: templates/settings/orchestra-settings.php:318
 msgid "Executive Board Project"
 msgstr "Vorstands-Pseudo-Projekt"
 
-#: templates/settings/orchestra-settings.php:322
+#: templates/settings/orchestra-settings.php:325
 #: templates/settings/orchestra-settings.php:200
 #, php-format
 msgid "President"
 msgstr "Vorsitz"
 
-#: templates/settings/orchestra-settings.php:326
+#: templates/settings/orchestra-settings.php:329
 msgid "Select the President"
 msgstr "Vorsitzende(n) auswählen"
 
-#: templates/settings/orchestra-settings.php:327
+#: templates/settings/orchestra-settings.php:330
 msgid "President of the orchestra"
 msgstr "Vorsitzende(r) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:336
+#: templates/settings/orchestra-settings.php:339
 msgid "Cloud President-User"
 msgstr "Cloud-Benutzer für Vorstandsvorsitz"
 
-#: templates/settings/orchestra-settings.php:337
+#: templates/settings/orchestra-settings.php:340
 msgid "Cloud user-id of the president of the orchestra"
 msgstr "Cloud-Benutzername für den/die Vorsitzende(r) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:346
+#: templates/settings/orchestra-settings.php:349
 msgid "Cloud President-Group"
 msgstr "Cloud Vorstandsvorsitz-Gruppe"
 
-#: templates/settings/orchestra-settings.php:347
+#: templates/settings/orchestra-settings.php:350
 msgid "Cloud group-id of the president of the orchestra"
 msgstr "Cloud-Gruppe für den/die Vorsitzende(r) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:357
+#: templates/settings/orchestra-settings.php:360
 msgid "e.g. president@me.tld"
 msgstr "z.B. praesident@me.tld"
 
-#: templates/settings/orchestra-settings.php:365
+#: templates/settings/orchestra-settings.php:368
 #: templates/settings/orchestra-settings.php:201
 #, php-format
 msgid "Secretary"
 msgstr "Schriftführung"
 
-#: templates/settings/orchestra-settings.php:369
+#: templates/settings/orchestra-settings.php:372
 msgid "Select the Secretary"
 msgstr "Schriftführer(in) auswählen"
 
-#: templates/settings/orchestra-settings.php:370
+#: templates/settings/orchestra-settings.php:373
 msgid "Secretary of the orchestra"
 msgstr "Schriftführer(in) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:379
+#: templates/settings/orchestra-settings.php:382
 msgid "Cloud Secretary-User"
 msgstr "Cloud-Benutzer für Schriftführer"
 
-#: templates/settings/orchestra-settings.php:380
+#: templates/settings/orchestra-settings.php:383
 msgid "Cloud user-id of the secretary of the orchestra"
 msgstr "Cloud-Benutzername für den/die Schriftführer(in) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:389
+#: templates/settings/orchestra-settings.php:392
 msgid "Cloud Secretary-Group"
 msgstr "Cloud Schriftführer-Gruppe"
 
-#: templates/settings/orchestra-settings.php:390
+#: templates/settings/orchestra-settings.php:393
 msgid "Cloud group-id of the secretary of the orchestra"
 msgstr "Cloud-Gruppe für den/die Schriftführer(in) des Orchesters"
 
-#: templates/settings/orchestra-settings.php:400
+#: templates/settings/orchestra-settings.php:403
 msgid "e.g. secretary@me.tld"
 msgstr "z.B. schriftfuehrer@me.tld"
 
-#: templates/settings/orchestra-settings.php:408
+#: templates/settings/orchestra-settings.php:411
 msgid "Treasurer"
 msgstr "Schatzmeister"
 
-#: templates/settings/orchestra-settings.php:412
+#: templates/settings/orchestra-settings.php:415
 msgid "Select the Treasurer"
 msgstr "Schatzmeister(in) auswählen"
 
-#: templates/settings/orchestra-settings.php:413
+#: templates/settings/orchestra-settings.php:416
 msgid "Treasurer of the orchestra"
 msgstr "Schatzmeister des Orchesters"
 
-#: templates/settings/orchestra-settings.php:422
+#: templates/settings/orchestra-settings.php:425
 msgid "Cloud Treasurer-User"
 msgstr "Cloud-Benutzer für Schatzmeister"
 
-#: templates/settings/orchestra-settings.php:423
+#: templates/settings/orchestra-settings.php:426
 msgid "Cloud user-id of the treasurer of the orchestra"
 msgstr "Cloud-Benutzername für den/die Schatzmeister/in des Orchesters"
 
-#: templates/settings/orchestra-settings.php:432
+#: templates/settings/orchestra-settings.php:435
 msgid "Cloud Treasurer-Group"
 msgstr "Cloud Schatzmeister-Gruppe"
 
-#: templates/settings/orchestra-settings.php:433
+#: templates/settings/orchestra-settings.php:436
 msgid "Cloud group-id of the treasurer of the orchestra"
 msgstr "Cloud-Gruppe für den/die Schatzmeister/in des Orchesters"
 
-#: templates/settings/orchestra-settings.php:443
+#: templates/settings/orchestra-settings.php:446
 msgid "e.g. treasurer@me.tld"
 msgstr "z.B. schatzmeister@me.tld"
 
@@ -16255,6 +16458,12 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#~ msgid "selected"
+#~ msgstr "ausgewählt"
+
+#~ msgid "select"
+#~ msgstr "auswählen"
 
 #~ msgid "Member-Status"
 #~ msgstr "Mitgliedsstatus"

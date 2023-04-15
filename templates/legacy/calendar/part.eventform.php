@@ -54,8 +54,31 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
   <input id="allday_checkbox" class="checkbox" type="checkbox"<?php if($_['allday']) {print_unescaped('checked="checked"');} ?> name="allday">
   <label id="event-allday" for="allday_checkbox"><?php p($l->t("All Day Event"));?></label>
 
-  <input id="advanced_options_button" type="button" class="submit options-hidden" value="<?php p($l->t('Advanced options')); ?>">
-
+  <div class="flex-container flex-center flex-justify-full">
+    <input id="advanced_options_button" type="button" class="submit options-hidden no-flex" value="<?php p($l->t('Advanced options')); ?>">
+    <?php if($_['eventuri'] != 'new'){ ?>
+      <span class="button no-flex calendar-app tooltip-auto"
+            title="<?php p($l->t('Open the cloud\'s calendar app in another tab or window.')); ?>"
+      >
+        <a class="calendar-app tooltip-auto"
+           target="<?php p(md5($urlGenerator->linkToRoute('calendar.view.indexdirect.edit', [ 'objectId' =>  $appName ]))); ?>"
+           href="<?php
+                 print_unescaped(
+                   $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
+                     'view' => 'timeGridWeek',
+                     'timeRange' => (new \DateTime($_['startdate']))->format('Y-m-d'),
+                     'mode' => 'sidebar',
+                     'objectId' =>  base64_encode($_['remoteEventUrl']),
+                     'recurrenceId' => $_['starttimestamp'],
+                   ])
+                 );
+                 ?>"
+        >
+          <?php p($l->t('Calendar App')); ?>
+        </a>
+      </span>
+    <?php }?>
+  </div>
   <div id="advanced_options" class="hidden">
     <div class="event-location flex-container flex-center">
       <input id="event-location" type="text" size="100"
@@ -73,7 +96,7 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
          href="<?php
                print_unescaped(
                  $urlGenerator->linkToRoute('maps.page.index')
-                 . '?search=' . urlencode($_['location'])
+                 . '?search=' . urlencode($_['location'] ?? '')
                );
                ?>"
       >
@@ -103,36 +126,14 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
     <textarea id="event-description" placeholder="<?php p($l->t('Description'));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>
 
     <?php if($_['eventuri'] != 'new'){ ?>
-      <div class="flex-container flex-center flex-justify-full">
-        <input type="button"
-               class="submit no-flex"
-               id="editEvent-export"
-               name="export"
-               value="<?php p($l->t('Export event'));?>"
-               title="<?php p($l->t('Export this event as ICS file.')); ?>"
-               data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
-        >
-        <span class="button no-flex calendar-app tooltip-auto"
-              title="<?php p($l->t('Open the cloud\'s calendar app in another tab or window.')); ?>"
-        >
-          <a class="calendar-app tooltip-auto"
-             target="<?php p(md5($urlGenerator->linkToRoute('calendar.view.indexdirect.edit', [ 'objectId' =>  $appName ]))); ?>"
-             href="<?php
-                   print_unescaped(
-                     $urlGenerator->linkToRoute('calendar.view.indexview.timerange.edit', [
-                       'view' => 'timeGridWeek',
-                       'timeRange' => (new \DateTime($_['startdate']))->format('Y-m-d'),
-                       'mode' => 'sidebar',
-                       'objectId' =>  base64_encode($_['remoteEventUrl']),
-                       'recurrenceId' => $_['starttimestamp'],
-                     ])
-                   );
-                   ?>"
-          >
-            <?php p($l->t('Calendar App')); ?>
-          </a>
-        </span>
-      </div>
+      <input type="button"
+             class="submit no-flex"
+             id="editEvent-export"
+             name="export"
+             value="<?php p($l->t('Export event'));?>"
+             title="<?php p($l->t('Export this event as ICS file.')); ?>"
+             data-link="<?php print_unescaped($urlGenerator->linkToRoute('cafevdb.legacy_events.service_switch', ['topic' => 'actions', 'subTopic' => 'export'])); ?>?eventuri=<?php echo urlencode($_['eventuri']); ?>&calendarid=<?php echo $_['calendarid']; ?>"
+      >
     <?php }?>
   </div>
 </div>
@@ -147,10 +148,10 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
 	  print_unescaped(OCP\Template::html_select_options($_['repeat_options'], $_['repeat']));
 	  ?>
 	</select></td>
-      <td><input type="button" style="float:right;" class="submit" value="<?php p($l->t("Advanced")); ?>" id="advanced_options_button_repeat"></td>
+      <td><input type="hidden" style="float:right;" class="submit" value="<?php p($l->t("Advanced")); ?>" id="advanced_options_button_repeat"></td>
     </tr>
   </table>
-  <div id="advanced_options_repeating" style="display:none;">
+  <div id="advanced_options_repeating"> <!-- style="/* display:none; */"> -->
     <table style="width:100%">
       <tr id="advanced_month" style="display:none;">
 	<th width="75px"></th>

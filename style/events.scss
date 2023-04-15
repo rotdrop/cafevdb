@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+@use "sass:list";
+
+@import 'color-palette.scss';
 
 #events {
 
@@ -73,7 +77,7 @@
       min-width:100%;
       padding:0;
       margin:0;
-      overflow:hidden;
+      /* overflow:hidden; ?? */
       border:0;
     }
     table.listing {
@@ -84,38 +88,86 @@
     }
 
     select, input, option, button {
-      border-radius:4px;
-      background-color:#F4F4F4;
+      &:not(.event-actions .action-menu-toggle) {
+        border-radius:4px;
+        &, &:hover {
+          background-color:#F4F4F4 !important;
+        }
+      }
     }
 
-    .cafevdb-menu {
-      &.chosen-container {
-	margin-right:3px;
+    .new-event.dropdown-container {
+      .action-menu-toggle {
+        background-image:url('../../../core/img/actions/add.svg');
+        &:hover {
+          border: 1px solid;
+        }
+        margin: 3px 3px 3px 0;
       }
+    }
 
-      &.chosen-container .chosen-drop {
-	background-color:#F4F4F4 !important;
+    .event-actions.dropdown-container {
+      display: inline-block;
+      max-height: 24px;
+      margin: -3px 0 -3px 0;
+      overflow: visible;
+      .action-menu-toggle {
+        min-height: 0;
+        width: 30px;
+        height: 30px;
       }
-
-      &.chosen-container-single.chosen-with-drop .chosen-single {
-	border-bottom-right-radius:0px;
-	border-bottom-left-radius:0px;
-	background-size:100% auto;
+      .event-action {
+        .menu-item-label {
+          padding-left: 24px;
+          background-position: left center;
+          background-repeat: no-repeat;
+          background-size: 16px;
+        }
+        &.event-action-select {
+          input.email-check:checked ~ label .label-unchecked {
+            display: none !important;
+          }
+          input.email-check:not(:checked) ~ label .label-checked {
+            display: none !important;
+          }
+        }
+        &.event-action-calendar-app {
+          .menu-item-label {
+            background-image: url(../img/calendar-dark.svg);
+          }
+        }
+        &.event-action-edit {
+          .menu-item-label {
+            background-image: url(../img/pme-change.png);
+          }
+        }
+        &.event-action-clone {
+          .menu-item-label {
+            background-image: url(../img/pme-copy.png);
+          }
+        }
+        &.event-action-delete {
+          .menu-item-label {
+            background-image: url(../img/pme-delete.png);
+          }
+        }
+        &.event-action-detach {
+          .menu-item-label {
+            background-image: url(../img/link_break16x16.png);
+          }
+        }
       }
-
-      &.chosen-container a.chosen-single {
-	border-radius:4px;
-	background-color:#F4F4F4 !important;
-	padding-top:5px !important;
-	padding-bottom:5px !important;
-	margin-top:3px !important;
-	margin-bottom:3px !important;
+      label {
+        text-align: left;
+        display: flex;
+        align-items: center;
+        &::before {
+          margin: 0 8px 0 1px;
+        }
       }
-
-      &.chosen-containeru a.chosen-single:hover,
-      &.chosen-container a.chosen-single:focus {
-	background-color:#F4F4F4 !important;
-	color:#333;
+      nav {
+        left:unset;
+        position:fixed;
       }
     }
 
@@ -135,20 +187,13 @@
     input[type="submit"],
     input[type="button"],
     button {
-      height:28px;
-      vertical-align:middle;
+      &:not(.event-actions .action-menu-toggle) {
+        height:28px;
+        vertical-align:middle;
+      }
     }
 
-    td.management {
-      padding-left:1em;
-    }
-
-    td.management input {
-      width:100%;
-      /*background-color:#C6DEFF !important;*/
-    }
-
-    input.image-button {
+    .image-button {
       background-repeat:no-repeat;
       background-position:center;
       width:28px;
@@ -174,6 +219,10 @@
       float:right;
       input.projectevents-reload {
         background-image: url(../img/reload-solid.svg);
+        background-size: 24px;
+        &.loading {
+          background-image:url('../../../core/img/loading.gif');
+        }
       }
     }
 
@@ -182,38 +231,9 @@
       background-image:url('../img/e_mail.png');
       background-repeat:no-repeat;
       background-position:0px;
-      padding-left:24px;
+      padding: 4px 14px 4px 24px;
       min-height:28px;
       vertical-align:middle;
-    }
-
-    input.event-action {
-      background-repeat:no-repeat;
-      background-color:rgba(0,0,0,0) !important;
-      min-width:unset;
-      width:16px;
-      height:15px;
-      border:0;
-      font-size:0;
-      vertical-align:middle;
-      min-height:unset;
-      padding:5px;
-    }
-
-    input.detach {
-      background-image: url(../img/link_break16x16.png);
-    }
-
-    input.edit {
-      background-image: url(../img/pme-change.png);
-    }
-
-    input.delete {
-      background-image: url(../img/pme-delete.png);
-    }
-
-    input.clone {
-      background-image: url(../img/pme-copy.png);
     }
 
     input.email-check[type=checkbox] {
@@ -246,51 +266,138 @@
       /*vertical-align:middle;*/
     }
 
-    td.eventdata, td.eventbuttons, td.eventemail {
-      /*vertical-align:middle;*/
-      border:1px solid #004d9c;
-      padding:3px;
-    }
+    table.listing {
 
-    td.eventbuttons, td.eventemail {
-      text-align:center;
-      width:0.1%;
-      white-space:nowrap;
-    }
+      tr {
+        &[data-action-scope="related"] {
+          &.event-has-cross-series-relations {
+            .scope-related-disabled {
+              &, * {
+                opacity: 0.5;
+                pointer-events: none;
+                cursor: not-allowed;
+              }
+            }
+          }
+          .scope-related-invisible {
+            display:none;
+          }
+        }
+        &[data-action-scope="series"] {
+          .scope-series-invisible {
+            display:none;
+          }
+        }
+        &[data-action-scope="single"] {
+          &.event-is-repeating {
+            .repeating-scope-single-disabled {
+              &, * {
+                opacity: 0.5;
+                pointer-events: none;
+                cursor: not-allowed;
+              }
+            }
+          }
+          .scope-single-invisible {
+            display:none;
+          }
+        }
+        &.event-is-not-repeating .only-repeating {
+          display:none;
+        }
+        &.event-has-no-cross-series-relations .only-cross-series-relations {
+          display:none;
+        }
+        &.event-is-not-repeating.event-has-no-cross-series-relations .only-multi-scope {
+          display:none;
+        }
 
-    td.eventdata {
-      cursor:pointer;
-    }
+        &.step-0, &.step-1 {
+          &[data-absence-field-id="0"] {
+            td.absence-field div.indicator {
+              display:none;
+            }
+          }
+          &[data-absence-field-id] {
+            td.absence-field div.indicator {
+              width:16px;
+              height:16px;
+              margin:-3px;
+              background-image:url('../../../core/img/actions/disabled-users.svg');
+              background-repeat: no-repeat;
+            }
+          }
+          td {
+            /*vertical-align:middle;*/
+            border:1px solid #004d9c;
+            padding:3px;
+            @for $index from 1 through 8 {
+              &.event-series-uid-#{$index - 1}, &.event-uid-#{$index - 1} {
+                color: list.nth($colorPalette, $index);
+                background-color: list.nth($colorPalette, $index);
+              }
+            }
+            &.event-uid, &.event-series-uid {
+              min-width:16px;
+              width:16px;
+              .uid-index, .series-uid-index {
+                filter: invert(100%);
+                background-color: rgba(1, 1, 1, 0);
+              }
+            }
 
-    tr.projectevents:hover td {
-      background-color: #9BAFC8!important;
-    }
+            &.eventbuttons, &.eventemail {
+              text-align:center;
+              width:0.1%;
+              white-space:nowrap;
+            }
 
-    tr.step-0 td {
-      background:#B7CEEC;
-    }
+            &.eventdata {
+              cursor:pointer;
+            }
 
-    tr.step-1 td {
-      background:#C6DEFF;
-    }
+            &.eventdata-date {
+              max-height:1em;
+              width:10.5em !important;
+            }
 
-    td.eventdata-date {
-      max-height:1em;
-      width:10.5em !important;
-    }
+            /* Hide everything but the first line*/
+            &.eventdata-brief {
+              max-width:18.5em;
+              min-width:18.5em;
+              max-height:1em;
+              /* white-space:normal; */
+              overflow:hidden;
+              text-overflow:ellipsis !important;
+              vertical-align:middle;
+            }
+          } // td
 
-    /* Hide everything but the first line*/
-    td.eventdata-brief {
-      max-width:18.5em;
-      min-width:18.5em;
-      max-height:1em;
-      /* white-space:normal; */
-      overflow:hidden;
-      text-overflow:ellipsis !important;
-      vertical-align:middle;
-    }
+          &.event-is-not-repeating:hover td.event-uid, &.event-has-no-cross-series-relations:hover td.event-series-uid {
+            background-color: #9BAFC8!important;
+          }
+
+          &:hover td:not(.event-uid, .event-series-uid) {
+            background-color: #9BAFC8!important;
+          }
+
+          &.event-is-repeating td.event-uid, &.event-has-cross-series-relations td.event-series-uid {
+            &, & * {
+              cursor: pointer;
+            }
+          }
+        }
+
+        &.step-0 td {
+          background:#B7CEEC;
+        }
+
+        &.step-1 td {
+          background:#C6DEFF;
+        }
+      } // tr
+    } // table.listing
   }
-
 }
 
 /* input fields take whole width */
@@ -337,11 +444,11 @@
 	margin: 3px 0;
 }
 /* normal font weight for secondary buttons for less obtrusiveness */
-#advanced_options_button,
-#editEvent-export,
-#editEvent-delete {
-	font-weight: normal;
-}
+/* #advanced_options_button, */
+/* #editEvent-export, */
+/* #editEvent-delete { */
+/* 	font-weight: normal; */
+/* } */
 
 #advanced_options {
   display:none;
@@ -444,12 +551,7 @@ div.google-popup {
     }
     .button.calendar-app {
       margin:3px 0;
+      line-height:1em;
     }
   }
 }
-
-/*
- * LocalVariables: ***
- * css-indent-offset: 2 ***
- * End: ***
- */

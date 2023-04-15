@@ -44,14 +44,9 @@ class PreChangeUserIdSlugListener implements IEventListener
   private $appContainer;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
-  ) {
+  public function __construct(IAppContainer $appContainer)
+  {
     $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 
@@ -66,6 +61,7 @@ class PreChangeUserIdSlugListener implements IEventListener
     $oldSlug = $event->getOldSlug();
     $newSlug = $event->getNewSlug();
 
+    $this->logger = $this->appContainer->get(ILogger::class);
     $this->logInfo('OLD / NEW: ' . $oldSlug . ' / ' . $newSlug);
 
     if ($oldSlug === $newSlug) {

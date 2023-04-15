@@ -1173,12 +1173,46 @@ adding the project-name to its
 categories.'),
 
           'select' => $this->l->t('Mark the respective event for being
-sent by email as ICS-attachment per email.
-Hitting the email button above the form
-will open an Email form suitable for
-sending the marked events to selected
-recipients.'),
+sent by email as ICS-attachment.
 
+Hitting the email button at the top of the dialog
+will open an Email form suitable for sending the
+marked events to selected recipients.
+
+The download button at the top will just download the selected items.'),
+
+          'absence-field' => [
+            'check' => $this->l->t('Optionally augment the instrumenation table by an additional columns which can
+be used to note down absence from events. The default is to automatically
+provide those fields for rehearsals and concerts, however, this checkbox can
+be used to generate or remove such fields as needed. The absence-fields are in
+principle just ordinary extra-fields where the name of the field is the date
+or the event.'),
+            'indicator' => $this->l->t('The instrumentation table can be augmented by additional columns which can be
+used to note down absence from events. This indiciator shows if this is the
+case for this particular event.'),
+          ],
+
+          'calendar-app' => [
+            'default' => $this->l->t('Open the respective event instance in the calendar app in another browser window or tab.'),
+          ],
+
+          'event-series-uid' => $this->l->t('When changing particular events of repeating event series then calendar apps may choose to even split those repeating events into several distinct series. This happens in particular if the user chooses to alter properties for "this and future events". This column is used to visually group such related event series. Events which do not belong to a repeating event will have no label and just show the background color.'),
+
+          'event-uid' => $this->l->t('If this particular event instance belongs to a series of repeating events then all events which belong to this series will show the same letter and color in this column in order to visually group events which belong to the same series. Events which do not belong to a repeating event will have no label and just show the background color.'),
+
+
+          'scope' => [
+//             'default' => $this->l->t('Select the scope of your following operations, whether it shall act on this
+// single event instance, an event series this event maybe belongs to or a family
+// of related events.'),
+            'single' => $this->l->t('Act only on this particular event.'),
+            'series' => $this->l->t('Act on the event series this event belongs to.'),
+            'related' => $this->l->t('Act on the entire family of related events. When changing particular events of
+repeating event series then calendar apps may choose to even split those
+repeating events into several distinct series. This happens in particular if
+the user chooses to alter properties for "this and future events".'),
+          ],
         ],
 
         'all' => [

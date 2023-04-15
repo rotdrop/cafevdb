@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,7 @@ class PreRemoveProjectParticipantFieldListener implements IEventListener
     $this->logger = $this->appContainer->get(ILogger::class);
     $this->l = $this->appContainer->get(IL10N::class);
 
-    $this->logInfo('GOT EVENT ' . HandledEvent::class);
+    // $this->logInfo('GOT EVENT ' . HandledEvent::class);
 
     /** @var ProjectParticipantFieldsService $participantFieldsService */
     $participantFieldsService = $this->appContainer->get(ProjectParticipantFieldsService::class);

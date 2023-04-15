@@ -131,6 +131,7 @@ class ProjectService
       $this->repository = $this->getDatabaseRepository(Entities\Project::class);
     } catch (Throwable $t) {
       $this->logError('HELLO');
+      /** @var \OCP\IRequest $request */
       $request = \OC::$server->query(\OCP\IRequest::class);
       $this->logError('HELLO2');
       $userId = $this->userId();
@@ -139,6 +140,7 @@ class ProjectService
       } else {
         $this->logError('User "'.$userId.'", no request?!');
       }
+
       $this->logError('SERVER '.print_r($_SERVER, true));
       $this->logError('POST '.print_r($_REQUEST, true));
       $this->repository = null;
@@ -386,6 +388,29 @@ class ProjectService
   public function fetchAll():array
   {
     return $this->repository->findAll();
+  }
+
+  /**
+   * Fetch some project matching the specified criteria.
+   *
+   * @param array $criteria
+   *
+   * @param array $orderBy Sorting criteria. Default is to index by project id
+   * and sort descending by type, descending by year, ascending by name.
+   *
+   * @return array<int, Entities\Project>
+   */
+  public function fetch(array $criteria, ?array $orderBy = []):array
+  {
+    if (empty($orderBy)) {
+      $orderBy['type'] = 'DESC';
+      $orderBy['year'] = 'DESC';
+      $orderBy['name'] = 'ASC';
+    }
+    if (!in_array('INDEX', array_values($orderBy))) {
+      $orderBy['id'] = 'INDEX';
+    }
+    return $this->repository->findBy($criteria, $orderBy);
   }
 
   /**

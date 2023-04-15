@@ -637,11 +637,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   const $bulkTransactionId = formData.find('input[name="bulkTransactionid"]');
   const projectId = function(value) {
     if (value === undefined) {
-      return $projectId.val();
+      return +$projectId.val();
     } else {
       $projectId.val(value);
       form.toggleClass('project-mode', +value > 0);
-      return value;
+      return +value;
     }
   };
   const projectName = function(value) {
@@ -1722,7 +1722,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       $this.closest('tr')
         .toggleClass('empty-selection', events.length === 0)
         .toggleClass('no-attachments', $this.find('option').length === 0);
-      events = events.map(item => JSON.parse(item).uri);
+      // events = events.map(item => JSON.parse(item).uri);
       eventDialog.trigger('cafevdb:events_changed', [events]);
       return false;
     });
@@ -2074,13 +2074,15 @@ function emailFormPopup(post, modal, single, afterInit) {
         modalizer(true);
       }
 
+      const position = {
+        my: 'center top',
+        at: 'center bottom+50',
+        of: '#header',
+      };
+
       dialogHolder.cafevDialog({
         title: dlgTitle,
-        position: {
-          my: 'middle top',
-          at: 'middle bottom+50px',
-          of: '#header',
-        },
+        position,
         width: 'auto',
         height: 'auto',
         modal: false, // modal,
@@ -2201,6 +2203,7 @@ function emailFormPopup(post, modal, single, afterInit) {
           emailTabResize(dialogWidget, recipientsPanel);
 
           dialogHolder.dialog('moveToTop');
+          dialogWidget.position(position);
         },
         close() {
           if (Email.autoSaveTimer) {

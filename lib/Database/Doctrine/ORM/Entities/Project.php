@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -105,7 +106,8 @@ class Project implements \ArrayAccess
   private $webPages;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", indexBy="id", fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", indexBy="id")
+   * @todo This does not work well with _AT_Gedmo\Translatable
    * @ORM\OrderBy({"displayOrder" = "DESC"})
    */
   private $participantFields;
@@ -369,7 +371,10 @@ class Project implements \ArrayAccess
    */
   public function getParticipantFields():Collection
   {
-    return $this->participantFields;
+    // trigger load
+    $this->participantFields->count();
+    // sorting during load does not work when using Translatable
+    return $this->participantFields->matching(Criteria::create()->orderBy(['tab' => 'ASC', 'displayOrder' => 'DESC']));
   }
 
   /**

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2022 Claus-Justus Heine
+ * @copyright 2020, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Listener;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCA\DAV\Events\CalendarUpdatedEvent as HandledEvent;
+use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Service\EventsService;
 
@@ -39,13 +40,13 @@ class CalendarUpdatedEventListener implements IEventListener
 {
   const EVENT = HandledEvent::class;
 
-  /** @var EventsService */
-  private $eventsService;
+  /** @var IAppContainer */
+  private $appContainer;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(EventsService $eventsService)
+  public function __construct(IAppContainer $appContainer)
   {
-    $this->eventsService = $eventsService;
+    $this->appContainer = $appContainer;
   }
   // phpcs:enable
 
@@ -55,6 +56,8 @@ class CalendarUpdatedEventListener implements IEventListener
     if (!($event instanceof HandledEvent)) {
       return;
     }
-    $this->eventsService->onCalendarUpdated($event);
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer->get(EventsService::class);
+    $eventsService->onCalendarUpdated($event);
   }
 }
