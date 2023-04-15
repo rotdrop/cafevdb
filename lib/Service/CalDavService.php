@@ -408,6 +408,37 @@ class CalDavService
   }
 
   /**
+   * Move the given object, given by its local URI relative to the old
+   * calendar, to the given new calendar.
+   *
+   * @param int $sourceCalendarId
+   *
+   * @param int $targetCalendarId
+   *
+   * @param array|string $object Either an identifier or an array
+   *
+   * @bug This function used internal APIs.
+   */
+  public function moveCalendarObject(
+    int $sourceCalendarId,
+    int $targetCalendarId,
+    array|string $object
+  ):void {
+    $oldPrincipalUri = $this->calendarPrincipalUri($sourceCalendarId);
+    $newPrincipalUri = $this->calendarPrincipalUri($targetCalendarId);
+    if (!is_array($object)) {
+      $object = $this->getCalendarObject($sourceCalendarId, $object);
+    }
+
+    $this->calDavBackend->moveCalendarObject(
+      $sourceCalendarId,
+      $targetCalendarId,
+      $object['id'],
+      $oldPrincipalUri,
+      $newPrincipalUri);
+  }
+
+  /**
    * Update an entry in the given calendar from either a VCalendar blob or a
    * Sabre VCalendar object.
    *
@@ -426,7 +457,7 @@ class CalDavService
     if (!is_string($object)) {
       $object = $object->serialize();
     }
-    $this->logError("calId: " . $calendarId . " uri " . $localUri);
+    // $this->logInfo("calId: " . $calendarId . " uri " . $localUri);
     $this->calDavBackend->updateCalendarObject($calendarId, $localUri, $object);
   }
 
