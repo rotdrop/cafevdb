@@ -2601,6 +2601,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     // }
     // $id = array_keys($joinInfo['identifier'])[0];
     $lang = $this->l10n()->getLanguageCode();
+    if (strpos($lang, '_') === false) {
+      $lang = $lang . '_' . strtoupper($lang);
+    }
     $l10nJoins = [];
     foreach ($fields as $field) {
       $joinTable = 'jt_'.$field;
