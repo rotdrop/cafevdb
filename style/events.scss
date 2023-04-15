@@ -171,39 +171,6 @@
       }
     }
 
-
-
-    .cafevdb-menu {
-      &.chosen-container {
-	margin-right:3px;
-      }
-
-      &.chosen-container .chosen-drop {
-	background-color:#F4F4F4 !important;
-      }
-
-      &.chosen-container-single.chosen-with-drop .chosen-single {
-	border-bottom-right-radius:0px;
-	border-bottom-left-radius:0px;
-	background-size:100% auto;
-      }
-
-      &.chosen-container a.chosen-single {
-	border-radius:4px;
-	background-color:#F4F4F4 !important;
-	padding-top:5px !important;
-	padding-bottom:5px !important;
-	margin-top:3px !important;
-	margin-bottom:3px !important;
-      }
-
-      &.chosen-containeru a.chosen-single:hover,
-      &.chosen-container a.chosen-single:focus {
-	background-color:#F4F4F4 !important;
-	color:#333;
-      }
-    }
-
     input:active, option:active, button:active {
       background-color:SteelBlue;
     }
@@ -346,6 +313,20 @@
         }
 
         &.step-0, &.step-1 {
+          &[data-absence-field-id="0"] {
+            td.absence-field div.indicator {
+              display:none;
+            }
+          }
+          &[data-absence-field-id] {
+            td.absence-field div.indicator {
+              width:16px;
+              height:16px;
+              margin:-3px;
+              background-image:url('../../../core/img/actions/disabled-users.svg');
+              background-repeat: no-repeat;
+            }
+          }
           td {
             /*vertical-align:middle;*/
             border:1px solid #004d9c;

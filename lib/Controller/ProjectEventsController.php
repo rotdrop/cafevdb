@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
@@ -34,6 +36,8 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+
+use OCA\CAFEVDB\Exceptions;
 
 /** AJAX end-points to manage events linked to projects */
 class ProjectEventsController extends Controller
@@ -135,12 +139,75 @@ class ProjectEventsController extends Controller
         case 'redisplay':
           $template = 'project-events/eventslisting';
           break;
+        case 'absenceField':
+          $template = 'project-events/eventslisting';
+
+          $enable = $this->parameterService->getParam('enableAbsenceField', false);
+          $enable = filter_var($enable, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+
+          $calendarId = $eventIdentifier['calendarId'];
+          $eventUri = $eventIdentifier['uri'];
+          $recurrenceId = $eventIdentifier['recurrenceId'];
+
+          $category = EventsService::getAbsenceCategory($this->appL10n());
+          if ($enable) {
+            $removals = [];
+            $additions = [ $category ];
+          } else {
+            $removals = [ $category ];
+            $additions = [];
+          }
+
+          switch ($scope) {
+            case 'series':
+              $recurrenceId = null;
+              // fall through
+            case 'single':
+              try {
+                $this->eventsService->changeCategories(
+                  $projectId,
+                  $calendarId,
+                  $eventUri,
+                  $recurrenceId,
+                  additions: $additions,
+                  removals: $removals,
+                );
+              } catch (Exceptions\CalendarEntryNotFoundException $e) {
+                // ignore
+              }
+              break;
+            case 'related':
+              $seriesUid = $eventIdentifier['seriesUid'];
+              $candidates = [];
+              foreach ($this->eventsService->events($projectId) as $event) {
+                if ($event['seriesUid'] == $seriesUid) {
+                  $candidates[$event['calendarid']][$event['uri']] = true;
+                }
+              }
+              foreach ($candidates as $calendarId => $uris) {
+                foreach (array_keys($uris) as $eventUri) {
+                  try {
+                    $this->eventsService->changeCategories(
+                      $projectId,
+                      $calendarId,
+                      $eventUri,
+                      recurrenceId: null,
+                      additions: $additions,
+                      removals: $removals,
+                    );
+                  } catch (Exceptions\CalendarEntryNotFoundException $e) {
+                    // ignore
+                  }
+                }
+              }
+              break;
+          }
+          break;
         case 'select':
           $template = 'project-events/eventslisting';
           $events = $this->eventsService->events($projectId);
           $selected = []; // array marking selected events
           foreach ($events as $event) {
-            $this->logInfo('EVENT KEYS ' . print_r(array_keys($event), true));
             $flatIdentifier = EventsService::makeFlatIdentifier($event);
             $selected[$flatIdentifier] = true;
           }
@@ -291,7 +358,7 @@ class ProjectEventsController extends Controller
 
       return $response;
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       return self::grumble($this->exceptionChainData($t));
     }
   }

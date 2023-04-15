@@ -418,11 +418,11 @@ class ProjectEvent implements \ArrayAccess
   /**
    * Set absenceField.
    *
-   * @param ProjectParticipantField $absenceField
+   * @param null|ProjectParticipantField $absenceField
    *
    * @return ProjectEvent
    */
-  public function setAbsenceField(ProjectParticipantField $absenceField):ProjectEvent
+  public function setAbsenceField(?ProjectParticipantField $absenceField):ProjectEvent
   {
     $this->absenceField = $absenceField;
 
@@ -434,7 +434,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @return ProjectParticipantField
    */
-  public function getAbsenceField():ProjectParticipantField
+  public function getAbsenceField():?ProjectParticipantField
   {
     return $this->absenceField;
   }

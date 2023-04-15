@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,6 +45,7 @@ use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\VCalendarService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+use OCA\CAFEVDB\Service\EventsService;
 
 /**Serves the requests issued by the old OC v8 event popups.*/
 class LegacyEventsController extends Controller
@@ -184,7 +185,12 @@ class LegacyEventsController extends Controller
     $end    = $this->parameterService['end'];
     $allday = $this->parameterService['allday'];
 
-    $categories   = $projectName.','.$this->l->t($eventKind);
+    $categories = $projectName . ',' . $this->appL10n()->t($eventKind);
+    if (EventsService::absenceFieldsDefault($eventKind)) {
+      // request generation of absence fields.
+      $categories .= ',' . EventsService::getAbsenceCategory($this->appL10n());
+    }
+
     $protectCategories = $this->parameterService->getParam('protectCategories', self::READONLY_CATEGORIES);
     $calendarUri  = $eventKind.'calendar';
     $calendarName = $this->getConfigValue($calendarUri, ucfirst($this->l->t($eventKind)));

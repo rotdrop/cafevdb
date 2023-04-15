@@ -945,42 +945,77 @@ class ProjectParticipantFieldsService
    */
   public function ensureAbsenceField(Entities\ProjectEvent $projectEvent, bool $flush = false):?Entities\ProjectParticipantField
   {
-    /** @var EventsService $eventsService */
-    $eventsService = $this->appContainer()->get(Service\EventsService::class);
-    $eventData = $eventsService->fetchEvent($projectEvent->getProject(), $projectEvent->getEventUri(), $projectEvent->getRecurrenceId());
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
+    $project = $projectEvent->getProject();
+
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer()->get(EventsService::class);
+    $eventData = $eventsService->fetchEvent($project, $projectEvent->getEventUri(), $projectEvent->getRecurrenceId());
+
+    /** @var Entities\ProjectParticipantField $absenceField */
     $absenceField = $projectEvent->getAbsenceField();
+    $l = $this->appL10n();
     if (empty($absenceField)) {
       $absenceField = (new Entities\ProjectParticipantField)
+        ->setProject($project)
         ->setMultiplicity(Multiplicity::MULTIPLE)
-        ->setDataType(DataType::TEXT);
+        ->setDataType(DataType::TEXT)
+        ->setName($eventsService->briefEventDate($eventData));
+      // in order for the table-field translations to work we need to obtain the key for the field first ...
+      $this->persist($absenceField);
+      $this->flush();
       $options = [
-        (string)$this->l->t('absent') => $this->l->t('This person will not participate in this event.'),
-        (string)$this->l->t('contacted') => $this->l->t('This person has been asked to confirm the participation but did not yet answer.'),
-        (string)$this->l->t('tentative') => $this->l->t('This person does not yet know whether a participation is possible.'),
+        (string)$l->t('absent') => $l->t('This person will not participate in this event.'),
+        (string)$l->t('contacted') => $l->t('This person has been asked to confirm the participation but did not yet answer.'),
+        (string)$l->t('tentative') => $l->t('This person does not yet know whether a participation is possible.'),
       ];
       foreach ($options as $label => $tooltip) {
         /** @var Entities\ProjectParticipantFieldDataOption $option */
         $option = (new Entities\ProjectParticipantFieldDataOption)
           ->setLabel($label)
           ->setTooltip($tooltip)
-          ->setField($absenceField);
-        $absenceField->getDataOptions()->set($option->getKey(), $option);
+          ->setField($absenceField)
+          ->setKey(Uuid::create());
+        $absenceField->getDataOptions()->set((string)$option->getKey(), $option);
       }
       $this->persist($absenceField);
     }
-    $absenceField->setName($eventsService->briefEventDate($eventData))
-      ->setTooltip($eventsService->longEventDate($eventData));
+
+    $brief  = htmlspecialchars(stripslashes($eventData['summary']));
+    $location = htmlspecialchars(stripslashes($eventData['location']));
+    $description = htmlspecialchars(nl2br(stripslashes($eventData['description'])));
+    $longDate = $eventsService->longEventDate($eventData);
+    $description = $longDate
+      . (!empty($brief) ? '<br/>' . $brief  : '')
+      . (!empty($location) ? '<br/>' . $location  : '')
+      . (!empty($description) ? '<br/>' . $description : '');
+    $dateString = $eventsService->briefEventDate($eventData);
+
+    $absenceField->setName($dateString)
+      ->setTooltip($description)
+      ->setDisplayOrder(-$eventData['start']->getTimestamp());
+
+    if (empty($absenceField->getTab())) {
+      // TRANSLATORS: Column heading in table (capital first character)
+      $absenceField->setTab($l->t('Absence'));
+    }
+
+    $projectEvent->setAbsenceField($absenceField);
 
     if ($projectEvent->isDeleted()) {
       $this->remove($absenceField, soft: true);
+    } else {
+      $absenceField->setDeleted(null);
     }
 
     if ($flush) {
       $this->flush();
     }
 
-    return null;
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+
+    return $absenceField;
   }
 
   /**

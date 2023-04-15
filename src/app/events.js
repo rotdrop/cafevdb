@@ -49,6 +49,7 @@ const confirmText = {
   detach: t(appName, 'Do you really want to detach this event from the current project?'),
   select: '',
   deselect: '',
+  absenceField: '',
 };
 
 const accordionList = function(selector, $dialogHolder) {
@@ -84,7 +85,6 @@ const setLoadingIndicator = function(state) {
   pageBusyIcon(state);
   $('#projectevents-reload').toggleClass('loading', state);
   if (!state) {
-    console.trace('CLOSE ACTION MENU');
     closeActionMenus();
   }
 };
@@ -164,7 +164,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
         return false;
       });
 
-      const eventActionSelector = ':button:not(.action-menu-toggle), .event-action:not(.event-action-select, .event-action-scope)';
+      const eventActionSelector = ':button:not(.action-menu-toggle), .event-action:not(.event-action-select, .event-action-scope, .event-action-absence-field)';
       eventForm
         .off('click', eventActionSelector)
         .on('click', eventActionSelector, eventAction);
@@ -244,6 +244,10 @@ const init = function(htmlContent, textStatus, request, afterInit) {
       eventForm
         .off('change', 'input.scope-radio')
         .on('change', 'input.scope-radio', scopeSelection);
+
+      eventForm
+        .off('change', 'input.absence-field-check')
+        .on('change', 'input.absence-field-check', eventAction);
 
       $dialogHolder
         .off('cafevdb:events_changed')
@@ -412,19 +416,19 @@ const emailSelection = function(event) {
     const eventUri = $row.data('uri');
     const recurrenceId = $row.data('recurrenceId');
     const selector = 'tr[data-uri="' + eventUri + '"][data-recurrence-id="' + recurrenceId + '"] input.email-check';
-    $this.closest('table').find(selector).prop('checked', $this.prop('checked'));
+    $row.closest('.event-list-container').find(selector).prop('checked', $this.prop('checked'));
     break;
   }
   case 'series': {
     const eventUri = $row.data('uri');
     const selector = 'tr[data-uri="' + eventUri + '"] input.email-check';
-    $this.closest('table').find(selector).prop('checked', $this.prop('checked'));
+    $row.closest('.event-list-container').find(selector).prop('checked', $this.prop('checked'));
     break;
   }
   case 'related': {
     const seriesUid = $row.data('seriesUid');
     const selector = 'tr[data-series-uid="' + seriesUid + '"] input.email-check';
-    $this.closest('table').find(selector).prop('checked', $this.prop('checked'));
+    $row.closest('.event-list-container').find(selector).prop('checked', $this.prop('checked'));
     break;
   }
   }
@@ -448,7 +452,7 @@ const scopeSelection = function(event) {
   // should just have one set of scope controls, but for now we to it
   // this way.
 
-  $this.closest('table').find('tr.projectevents').each(function() {
+  $row.closest('.event-list-container').find('tr.projectevents').each(function() {
     const $row = $(this);
     const oldScope = $row.find('.scope-radio:checked').val();
     const rowScope = getRowScope($row, scope);
@@ -524,6 +528,9 @@ const eventAction = function(event) {
       });
     break;
   }
+  case 'absenceField':
+    post.push({ name: 'enableAbsenceField', value: $this.prop('checked') });
+    // fallthrough
   case 'select':
   case 'deselect':
   case 'delete':
