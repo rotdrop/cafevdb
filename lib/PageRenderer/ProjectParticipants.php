@@ -339,7 +339,7 @@ class ProjectParticipants extends PMETableViewBase
     $export = $this->pageNavigation->tableExportButton();
     $opts['buttons'] = $this->pageNavigation->prependTableButton($export, true);
 
-    $participantFields = $this->project['participantFields'];
+    $participantFields = $this->project->getParticipantFields();
 
     // count number of finance fields
     $extraFinancial = 0;
