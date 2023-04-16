@@ -174,13 +174,8 @@ class ProjectFolders extends Command
     /** @var ProjectService $projectService */
     $projectService = $this->appContainer->get(ProjectService::class);
 
-    /** @var UserStorage $userStorage */
-    $userStorage = $this->appContainer->get(UserStorage::class);
-
     /** @var Repositories\ProjectsRepository $projectsRepository */
     $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
-
-    $totals = 0;
 
     $projectCriteria = [
       '>=year' => $firstYear,
