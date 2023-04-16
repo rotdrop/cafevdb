@@ -149,7 +149,7 @@ class ProjectEvents extends Command
     $fix = $input->getOption('fix');
     $purge = $input->getOption('purge');
     $onlyUri = $input->getOption('event-uri');
-    if (!$fix) {
+    if ($fix === false) {
       $dry = true;
     }
 
@@ -248,7 +248,7 @@ class ProjectEvents extends Command
     foreach ($projects as $project) {
       $projectName = $project->getName();
 
-      $output->writeln('PROJECT ' . $projectName);
+      $output->writeln('Workgin on project ' . $projectName, OutputInterface::VERBOSITY_VERBOSE);
 
       /** @var Collection $projectEvents */
       $projectEvents = $project->getCalendarEvents();
@@ -284,6 +284,9 @@ class ProjectEvents extends Command
               );
             }
           }
+          continue;
+        }
+        if ($projectEvent->getType() != 'VEVENT') {
           continue;
         }
         $recurrenceId = $projectEvent->getRecurrenceId();
@@ -378,7 +381,7 @@ class ProjectEvents extends Command
 
           // check for non-repeating multi-day events and potentially reattach them
           $hours = ($event['end']->getTimestamp() - $event['start']->getTimestamp()) / 3600;
-          if (empty($event['recurrenceId']) && ($event['allday'] && $hours > 24) || $hours > 48) {
+          if (empty($event['recurrenceId']) && (($event['allday'] && $hours > 36) || $hours > 48)) {
             if ($fix == 'split') {
               ++$split;
               if ($dry) {
@@ -422,10 +425,27 @@ class ProjectEvents extends Command
           if (!empty($onlyUri) && $eventUri != $onlyUri) {
             continue;
           }
-          $projectEvents = $project->getCalendarEvents()->matching(DBUtil::criteriaWhere([
+          // Unfortunately, there is no way to make the search an exact
+          // match. In addition: the search result structure is really by far
+          // too complicated. Instead, fetch the underlying calendar object
+          // and work on it directly.
+          $calendarObject = $calDavService->getCalendarObject($calendarId, $eventUri);
+          $vCalendar = VCalendarService::getVCalendar($calendarObject);
+          $exactMatch = false;
+          foreach (VCalendarService::getAllVObjects($vCalendar) as $vObject) {
+            $categories = VCalendarService::getCategories($vObject);
+            if (in_array($projectName, $categories)) {
+              $exactMatch = true;
+            }
+          }
+          if (!$exactMatch) {
+            continue;
+          }
+          $criteria = [
             'calendarUri' => $calendarUri,
             'eventUri' => $eventUri,
-          ]));
+          ];
+          $projectEvents = $project->getCalendarEvents()->matching(DBUtil::criteriaWhere($criteria));
           if (count($projectEvents) == 0) {
             switch ($fix) {
               case 'category':
@@ -486,8 +506,6 @@ class ProjectEvents extends Command
                     OutputInterface::VERBOSITY_VERBOSE
                   );
                   // "reattach" is performed using a dummy do-nothing update
-                  $calendarObject = $calDavService->getCalendarObject($calendarId, $eventUri);
-                  $vCalendar = VCalendarService::getVCalendar($calendarObject);
                   $calDavService->deleteCalendarObject($calendarId, $eventUri);
                 }
                 break;
