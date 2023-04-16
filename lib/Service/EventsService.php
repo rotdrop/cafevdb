@@ -519,6 +519,7 @@ class EventsService
     $event['summary'] = (string)$vObject->SUMMARY;
     $event['description'] = (string)$vObject->DESCRIPTION;
     $event['location'] = (string)$vObject->LOCATION;
+    $event['categories'] = VCalendarService::getCategories($vObject);
     $recurrenceId = $vObject->{'RECURRENCE-ID'};
     if ($recurrenceId !== null) {
       $event['recurrenceId'] = $recurrenceId->getDateTime()->getTimestamp();
