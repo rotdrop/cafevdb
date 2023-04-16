@@ -1753,7 +1753,7 @@ class EventsService
    * table.
    */
   public function changeCategories(
-    int $projectOrId,
+    int|Entities\Project $projectOrId,
     int $calendarId,
     string $eventUri,
     ?int $recurrenceId = null,
