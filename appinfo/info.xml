@@ -61,9 +61,14 @@
   <background-jobs>
     <job>OCA\CAFEVDB\BackgroundJob\CleanupTemporaryFiles</job>
     <!--
+        Added programmatically on demand
+        <job>OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads</job>
+    -->
+    <!--
         This cannot work as some stuff needs authenticated users.
         <job>OCA\CAFEVDB\BackgroundJob\LazyUpdateGeoCoding</job>
         <job>OCA\CAFEVDB\BackgroundJob\BulkUpdateGeoCoding</job>
+        <job>OCA\CAFEVDB\BackgroundJob\ScanFiles</job>
     -->
   </background-jobs>
   <credits>
