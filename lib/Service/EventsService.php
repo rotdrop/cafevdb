@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use Exception;
+use DateTimeInterface;
 use DateTimeImmutable;
 use DateTimeZone;
 
@@ -1409,6 +1410,40 @@ class EventsService
     $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
 
     return [ 'registered' => $registered, 'unregistered' => $unregistered ];
+  }
+
+  /**
+   * @param int $oldAgeSeconds Hard-delete events which have been soft-deleted
+   * that many seconds in the past, relative to $referenceTime.
+   *
+   * @param null|DateTimeInterface $referenceTime Use this as time-refererence
+   * instead of the current time.
+   *
+   * @return void
+   */
+  public function cleanupProjectEvents(int $oldAgeSeconds = 24 * 60 * 60, ?DateTimeInterface $referenceTime = null):void
+  {
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+    if (empty($referenceTime)) {
+      $referenceTime = new DateTimeImmutable;
+    }
+    $oldAgeStamp = $referenceTime->getTimestamp() - $oldAgeSeconds;
+    $projectEvents = $this->findBy([ '!deleted' => null ]);
+    $removed = 0;
+    /** @var Entities\ProjectEvent $projectEvent */
+    foreach ($projectEvents as $projectEvent) {
+      if ($projectEvent->getDeleted()->getTimestamp() <= $oldAgeStamp && $projectEvent->unused()) {
+        $this->remove($projectEvent, hard: true);
+        ++$removed;
+      }
+    }
+    if ($removed > 0) {
+      $this->logInfo('Removed ' . $removed . ' stale project events.');
+    } else {
+      $this->logInfo('Nothing to cleanup.');
+    }
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
   }
 
   /**

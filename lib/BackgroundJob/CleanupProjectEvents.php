@@ -28,6 +28,8 @@ use OCP\BackgroundJob\TimedJob;
 use OCP\AppFramework\Utility\ITimeFactory;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Service\EventsService;
+
 /**
  * Repeating project events may be split into sevaral series. Here it is
  * neccessary to soft-delete instances in order to transfer attached data to
@@ -38,19 +40,25 @@ class CleanupProjectEvents extends TimedJob
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
+  /** @var EventsService */
+  private $eventsService;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     ITimeFactory $time,
     ILogger $logger,
+    EventsService $eventsService,
   ) {
     parent::__construct($time);
     $this->logger = $logger;
+    $this->eventsService = $eventsService;
   }
   // phpcs:enable
 
   /** {@inheritdoc} */
   public function run($arguments = [])
   {
+    $this->eventsService->cleanupProjectEvents();
   }
 }
