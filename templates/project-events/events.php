@@ -73,6 +73,7 @@ $calendarUris = array_column(ConfigService::CALENDARS, 'uri');
                value="<?php p($l->t('Reload')); ?>"
                title="<?php echo $toolTips['projectevents:all:reload']; ?>"/>
       </span>
+      <?php echo $this->inc('project-events/events-manual', $_); ?>
     </div>
     <div id="eventlistholder" class="container scroller eventlist">
       <?php echo $this->inc('project-events/eventslisting', $_); ?>

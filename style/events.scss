@@ -106,6 +106,20 @@
       }
     }
 
+    .project-event-manual.dropdown-container {
+      display: inline-block;
+      .action-menu-toggle {
+        background-image:url('../img/info-solid.svg');
+        &:hover {
+          border: 1px solid;
+        }
+        margin: 3px 3px 3px 0;
+      }
+      .dropdown-content {
+        right: 3px;
+      }
+    }
+
     .event-actions.dropdown-container {
       display: inline-block;
       max-height: 24px;
