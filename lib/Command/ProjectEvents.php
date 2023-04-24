@@ -32,6 +32,9 @@ use OCP\IUserManager;
 use OCP\AppFramework\IAppContainer;
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\Calendar\ICalendar;
+use OCP\SystemTag\ISystemTagManager;
+use OCP\SystemTag\TagAlreadyExistsException;
+use OCP\SystemTag\TagNotFoundException;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -216,8 +219,14 @@ class ProjectEvents extends Command
     /** @var CalendarManager $calendarManager */
     $calendarManager = $this->appContainer->get(CalendarManager::class);
 
+    /** @var ISystemTagManager $systemTagManager */
+    $systemTagManager = $this->appContainer->get(ISystemTagManager::class);
+
     /** @var Repositories\ProjectsRepository $projectsRepository */
     $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
+
+    /** @var ConfigService $configService */
+    $configService = $this->appContainer->get(ConfigService::class);
 
     $projectCriteria = [
       '>=year' => $firstYear,
@@ -243,12 +252,56 @@ class ProjectEvents extends Command
     $reattach = 0;
     $split = 0;
     $deleted = 0;
+    $systemTags = 0;
+
+    $appL10n = $configService->getAppL10n();
+    $systemCategories = [
+      EventsService::getAbsenceCategory($appL10n),
+    ];
+    foreach ($calendars as $calendarUri) {
+      $systemCategories[] = $appL10n->t($calendarUri);
+    }
+    foreach ($systemCategories as $category) {
+      $output->writeln('Checking for system category "' . $category . '".', OutputInterface::VERBOSITY_VERBOSE);
+      try {
+        $systemTagManager->getTag($category, userVisible: true, userAssignable: true);
+      } catch (TagNotFoundException $e) {
+        try {
+          if (!$dry) {
+            $output->writeln('Adding system category "' . $category . '".', OutputInterface::VERBOSITY_VERBOSE);
+            $systemTagManager->createTag($category, userVisible: true, userAssignable: true);
+          } else {
+            $output->writeln('Would add system category "' . $category . '" (dry-run).', OutputInterface::VERBOSITY_VERBOSE);
+          }
+          ++$systemTags;
+        } catch (TagAlreadyExistsException $e) {
+          // ignore
+        }
+      }
+    }
 
     /** @var Entities\Project $project */
     foreach ($projects as $project) {
       $projectName = $project->getName();
 
-      $output->writeln('Workgin on project ' . $projectName, OutputInterface::VERBOSITY_VERBOSE);
+      $output->writeln('Working on project ' . $projectName, OutputInterface::VERBOSITY_VERBOSE);
+
+      $category = $projectName;
+      try {
+        $systemTagManager->getTag($category, userVisible: true, userAssignable: true);
+      } catch (TagNotFoundException $e) {
+        try {
+          if (!$dry) {
+            $output->writeln('Adding system category "' . $category . '".', OutputInterface::VERBOSITY_VERBOSE);
+            $systemTagManager->createTag($category, userVisible: true, userAssignable: true);
+          } else {
+            $output->writeln('Would add system category "' . $category . '" (dry-run).', OutputInterface::VERBOSITY_VERBOSE);
+          }
+          ++$systemTags;
+        } catch (TagAlreadyExistsException $e) {
+          // ignore
+        }
+      }
 
       /** @var Collection $projectEvents */
       $projectEvents = $project->getCalendarEvents();
@@ -568,7 +621,7 @@ class ProjectEvents extends Command
       if ($dry) {
         $output->writeln($this->l->t('Would have deleted %d unregistered events with set project-name category (dry-run).', $deleted));
       } else {
-        $output->writeln($this->l->t('Deleted %d unregistered events with set project-name category (dry-run).', $deleted));
+        $output->writeln($this->l->t('Deleted %d unregistered events with set project-name category.', $deleted));
       }
     }
 
@@ -576,9 +629,18 @@ class ProjectEvents extends Command
       if ($dry) {
         $output->writeln($this->l->t('Would have splitted %d multi-day events into repeating event series (dry-run).', $split));
       } else {
-        $output->writeln($this->l->t('Splitted %d multi-day events into repeating event series (dry-run).', $split));
+        $output->writeln($this->l->t('Splitted %d multi-day events into repeating event series.', $split));
       }
     }
+
+    if ($systemTags > 0) {
+      if ($dry) {
+        $output->writeln($this->l->t('Would have created %d missing system-tags (dry-run).', $systemTags));
+      } else {
+        $output->writeln($this->l->t('Created %d missing system-tags.', $systemTags));
+      }
+    }
+
     return 0;
   }
 }

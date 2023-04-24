@@ -32,6 +32,10 @@ use DateInterval;
 use DateTimeImmutable;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Share\Exceptions\ShareNotFound;
+use OCP\SystemTag\ISystemTag;
+use OCP\SystemTag\ISystemTagManager;
+use OCP\SystemTag\TagAlreadyExistsException;
+use OCP\SystemTag\TagNotFoundException;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -111,6 +115,9 @@ class ProjectService
   /** @var MusicianService */
   private $musicianService;
 
+  /** @var ISystemTagManager */
+  private $systemTagManager;
+
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
@@ -159,7 +166,7 @@ class ProjectService
   }
 
   /**
-   * Lazy getter for WikiRPC
+   * Lazy getter for WikiRPC.
    *
    * @return WikiRPC
    */
@@ -173,7 +180,7 @@ class ProjectService
   }
 
   /**
-   * Lazy getter for WebPagesRPC
+   * Lazy getter for WebPagesRPC.
    *
    * @return WebPagesRPC
    */
@@ -184,6 +191,19 @@ class ProjectService
       $this->webPagesRPCInstance->errorReporting(WebPagesRPC::ON_ERROR_THROW);
     }
     return $this->webPagesRPCInstance;
+  }
+
+  /**
+   * Lazy getter for ISystemTagManager.
+   *
+   * @return ISystemTagManager
+   */
+  private function systemTagManager():ISystemTagManager
+  {
+    if (empty($this->systemTagManager)) {
+      $this->systemTagManager = $this->di(ISystemTagManager::class);
+    }
+    return $this->systemTagManager;
   }
 
   /**
@@ -2478,7 +2498,27 @@ Whatever.',
         function($listId) use ($project) {
           $this->deleteProjectMailingList($project);
         },
-      ));
+      ))
+      ->register(new Common\GenericUndoable(
+        function() use ($project) {
+          $systemTagManager = $this->systemTagManager();
+          try {
+            $tag = $systemTagManager->createTag($project->getName(), userVisible: true, userAssignable: true);
+          } catch (TagAlreadyExistsException $e) {
+            $tag = $systemTagManager->getTag($project->getName(), userVisible: true, userAssignable: true);
+          }
+          return $tag;
+        },
+        function(ISystemTag $tag) use ($project) {
+          $systemTagManager = $this->systemTagManager();
+          try {
+            $systemTagManager->deleteTags($tag->getId());
+          } catch (TagNotFoundException $e) {
+            // ignore, we tried to delete so ...
+          }
+        },
+      ))
+      ;
 
     try {
       $runQueue->executeActions();
@@ -2647,6 +2687,26 @@ Whatever.',
             $listsService->setListConfig($listId, 'emergency', false);
           }));
       }
+    } else {
+      $this->entityManager->registerPreFlushAction(new Common\GenericUndoable(
+        function() use ($project) {
+          $systemTagManager = $this->systemTagManager();
+          try {
+            $tag = $systemTagManager->getTag($project->getName(), userVisible: true, userAssignable: true);
+            $systemTagManager->deleteTags($tag->getId());
+          } catch (TagNotFoundException $e) {
+            // ignore
+          }
+        },
+        function() use ($project) {
+          $systemTagManager = $this->systemTagManager();
+          try {
+            $systemTagManager->createTag($project->getName(), userVisible: true, userAssignable: true);
+          } catch (TagAlreadyExistsException $e) {
+            // ignore
+          }
+        }
+      ));
     }
 
     $this->entityManager->beginTransaction();
@@ -2871,6 +2931,26 @@ Whatever.',
         function() use ($oldProject, $newProject) {
           $this->nameProjectWebPages($oldProject['id'], $oldProject['name']);
         }
+      ))
+      ->register(new Common\GenericUndoable(
+        function() use ($oldProject, $newProject) {
+          $systemTagManager = $this->systemTagManager();
+          try {
+            $tag = $systemTagManager->getTag($oldProject['name'], userVisible: true, userAssignable: true);
+            $systemTagManager->updateTag($tag->getId(), $newProject['name'], userVisible: true, userAssignable: true);
+          } catch (TagNotFoundException $e) {
+            $tag = $systemTagManager->createTag($newProject['name'], userVisible: true, userAssignable: true);
+          }
+          return $tag;
+        },
+        function(ISystemTag $tag) use ($oldProject, $newProject) {
+          $systemTagManager = $this->systemTagManager();
+          try {
+            $systemTagManager->updateTag($tag->getId(), $oldProject['name'], userVisible: true, userAssignable: true);
+          } catch (Throwable $e) {
+            // ignore
+          }
+        },
       ))
       ->register(new Common\GenericUndoable(
         function() use ($oldProject, $newProject,) {
