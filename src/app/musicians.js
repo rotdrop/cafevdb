@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ import {
   reject as rejectDecryptionPromise,
   promise as decryptionPromise,
 } from './lazy-decryption.js';
+import debounce from './debounce.js';
 
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -818,7 +819,7 @@ const ready = function(container) {
   $form
     .find('input.register-musician')
     .off('click')
-    .on('click', function(event) {
+    .on('click', debounce(function(event) {
       const projectId = $form.find('input[name="projectId"]').val();
       const projectName = $form.find('input[name="projectName"]').val();
       const musicianId = $(this).data('musician-id');
@@ -829,17 +830,17 @@ const ready = function(container) {
         musicianId,
       });
       return false;
-    });
+    }));
 
   $form
     .find(['input', 'bulkcommit', pmeToken('misc'), pmeToken('commit')].join('.'))
     .addClass('pme-custom')
     .prop('disabled', false)
     .off('click')
-    .on('click', function(event) {
+    .on('click', debounce(function(event) {
       addMusicians($form);
       return false;
-    });
+    }));
 
 };
 
@@ -857,8 +858,3 @@ export {
   documentReady,
   contactValidation,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
