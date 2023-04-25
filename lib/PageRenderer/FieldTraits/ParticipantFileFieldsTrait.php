@@ -374,11 +374,15 @@ trait ParticipantFileFieldsTrait
     } else {
       $toolTip = $this->toolTipsService['participant-attachment-open-parent'];
     }
-    list($filesAppLink, $filesAppTarget) = $this->getFilesAppLink($field, $musician, $project, $subFolder);
-    $html = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
+    try {
+      list($filesAppLink, $filesAppTarget) = $this->getFilesAppLink($field, $musician, $project, $subFolder);
+      $html = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
        title="' . $toolTip . '"
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
        ></a>';
+    } catch (\OCP\Files\NotFoundException $e) {
+      $html = '';
+    }
     return $html;
   }
 }

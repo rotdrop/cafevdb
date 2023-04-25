@@ -34,6 +34,7 @@ import { revertRows as revertTableRows } from './table-utils.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 import modalizer from './modalizer.js';
 import { close as closeActionMenus } from './action-menu.js';
+import { handleMenu as handleUserManualMenu } from './user-manual.js';
 
 require('jquery-ui/ui/widgets/accordion');
 
@@ -135,6 +136,13 @@ const init = function(htmlContent, textStatus, request, afterInit) {
 
       $.fn.cafevTooltip.remove();
       CAFEVDB.toolTipsInit('#events');
+
+      eventForm
+        .off('click', '.project-event-manual .action-menu-toggle')
+        .on('click', '.project-event-manual .action-menu-toggle', function(event) {
+          return false;
+        });
+      handleUserManualMenu($dialogHolder);
 
       eventMenu.on('click', '.menu-item', function(event) {
         const $this = $(this);

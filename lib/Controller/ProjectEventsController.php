@@ -345,6 +345,7 @@ class ProjectEventsController extends Controller
         'toolTips' => $this->di(ToolTipsService::class),
         'urlGenerator' => $this->urlGenerator(),
         'requesttoken' => \OCP\Util::callRegister(),
+        'wikinamespace' => $this->getAppValue('wikinamespace'),
       ];
       $response = new TemplateResponse(
         $this->appName(),

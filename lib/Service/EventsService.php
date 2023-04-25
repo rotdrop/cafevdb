@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use Exception;
+use DateTimeInterface;
 use DateTimeImmutable;
 use DateTimeZone;
 
@@ -519,6 +520,7 @@ class EventsService
     $event['summary'] = (string)$vObject->SUMMARY;
     $event['description'] = (string)$vObject->DESCRIPTION;
     $event['location'] = (string)$vObject->LOCATION;
+    $event['categories'] = VCalendarService::getCategories($vObject);
     $recurrenceId = $vObject->{'RECURRENCE-ID'};
     if ($recurrenceId !== null) {
       $event['recurrenceId'] = $recurrenceId->getDateTime()->getTimestamp();
@@ -1411,6 +1413,40 @@ class EventsService
   }
 
   /**
+   * @param int $oldAgeSeconds Hard-delete events which have been soft-deleted
+   * that many seconds in the past, relative to $referenceTime.
+   *
+   * @param null|DateTimeInterface $referenceTime Use this as time-refererence
+   * instead of the current time.
+   *
+   * @return void
+   */
+  public function cleanupProjectEvents(int $oldAgeSeconds = 24 * 60 * 60, ?DateTimeInterface $referenceTime = null):void
+  {
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+    if (empty($referenceTime)) {
+      $referenceTime = new DateTimeImmutable;
+    }
+    $oldAgeStamp = $referenceTime->getTimestamp() - $oldAgeSeconds;
+    $projectEvents = $this->findBy([ '!deleted' => null ]);
+    $removed = 0;
+    /** @var Entities\ProjectEvent $projectEvent */
+    foreach ($projectEvents as $projectEvent) {
+      if ($projectEvent->getDeleted()->getTimestamp() <= $oldAgeStamp && $projectEvent->unused()) {
+        $this->remove($projectEvent, hard: true);
+        ++$removed;
+      }
+    }
+    if ($removed > 0) {
+      $this->logInfo('Removed ' . $removed . ' stale project events.');
+    } else {
+      $this->logInfo('Nothing to cleanup.');
+    }
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+  }
+
+  /**
    * Remove the calendar object from the join table as the calendar
    * object is no more.
    *
@@ -1444,14 +1480,14 @@ class EventsService
     array $relatedEvents,
   ):array {
     $siblings = [];
-    // foreach (($this->projectEventSiblings[$projectId][$calendarId] ?? []) as $recurrenceId => $uidSiblings) {
-    //   foreach ($uidSiblings as $uid => $sibling) {
-    //     if (in_array($uid, $relatedEvents)) {
-    //       $siblings[$recurrenceId][$uid] = $sibling;
-    //       $relatedEvents = array_filter($relatedEvents, fn($value) => $value != $uid);
-    //     }
-    //   }
-    // }
+    foreach (($this->projectEventSiblings[$projectId][$calendarId] ?? []) as $recurrenceId => $uidSiblings) {
+      foreach ($uidSiblings as $uid => $sibling) {
+        if (in_array($uid, $relatedEvents)) {
+          $siblings[$recurrenceId][$uid] = $sibling;
+          $relatedEvents = array_filter($relatedEvents, fn($value) => $value != $uid);
+        }
+      }
+    }
     if (!empty($relatedEvents)) {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       $flatSiblings = $this->findBy(
@@ -1533,7 +1569,7 @@ class EventsService
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     if (empty($relatedEvents)) {
-      $relatedEvents = $eventUID;
+      $relatedEvents = [ $eventUID ];
     }
 
     $projectId = $projectOrId instanceof Entities\Project ? $projectOrId->getId() : $projectOrId;
@@ -1552,12 +1588,24 @@ class EventsService
       }
     }
 
+    $seriesUid = null;
+    foreach ($siblings as $recurrenceIdSiblings) {
+      foreach ($recurrenceIdSiblings as $sibling) {
+        $seriesUid = $sibling->getSeriesUid();
+        if (!empty($seriesUid)) {
+          break;
+        }
+      }
+      if (!empty($seriesUid)) {
+        break;
+      }
+    }
+    if ($isRecurring && $seriesUid == null) {
+      $seriesUid = Uuid::create();
+    }
+
     if (empty($entity)) {
       // $this->logInfo('SIBLINGS FOR REC-ID ' . count($siblings[$recurrenceId] ?? []) . ' || ' . print_r(array_keys($siblings), true) . ' || RELATED ' . print_r($relatedEvents, true));
-      $seriesUid = null;
-      if (!empty($siblings)) {
-        $seriesUid = array_values(array_values($siblings)[0])[0]->getSeriesUid();
-      }
       $entity = new Entities\ProjectEvent();
       $entity->setProject($projectOrId)
         ->setCalendarUri($calendarURI)
@@ -1569,13 +1617,7 @@ class EventsService
       $this->persist($entity);
       $this->projectEventSiblings[$projectId][$calendarId][$recurrenceId][$eventUID] = $entity;
     } else {
-      // $this->logInfo('EXISTING RECURRENCE ID ' . $recurrenceId);
-      $seriesUid = $entity->getSeriesUid();
       $added = false;
-    }
-
-    if ($isRecurring && $seriesUid == null) {
-      $entity->setSeriesUid(Uuid::create());
     }
 
     $entity->setCalendarUri($calendarURI)
@@ -1583,6 +1625,7 @@ class EventsService
       ->setEventUid($eventUID)
       ->setEventUri($eventURI)
       ->setSequence($sequence)
+      ->setSeriesUid($seriesUid)
       ->setDeleted(null);
 
     if ($flush) {
@@ -1752,7 +1795,7 @@ class EventsService
    * table.
    */
   public function changeCategories(
-    int $projectOrId,
+    int|Entities\Project $projectOrId,
     int $calendarId,
     string $eventUri,
     ?int $recurrenceId = null,

@@ -123,11 +123,11 @@ class ConfigService
   const MANAGEMENT_CALENDAR_URI = 'management';
   const FINANCE_CALENDAR_URI = 'finance';
   const CALENDARS = [
-    [ 'uri' => self::CONCERTS_CALENDAR_URI, 'public' => true ],
-    [ 'uri' => self::REHEARSALS_CALENDAR_URI, 'public' => true ],
-    [ 'uri' => self::OTHER_CALENDAR_URI, 'public' => true ],
-    [ 'uri' => self::MANAGEMENT_CALENDAR_URI, 'public' => false ],
-    [ 'uri' => self::FINANCE_CALENDAR_URI, 'public' => false ],
+    self::CONCERTS_CALENDAR_URI => [ 'uri' => self::CONCERTS_CALENDAR_URI, 'public' => true ],
+    self::REHEARSALS_CALENDAR_URI => [ 'uri' => self::REHEARSALS_CALENDAR_URI, 'public' => true ],
+    self::OTHER_CALENDAR_URI => [ 'uri' => self::OTHER_CALENDAR_URI, 'public' => true ],
+    self::MANAGEMENT_CALENDAR_URI => [ 'uri' => self::MANAGEMENT_CALENDAR_URI, 'public' => false ],
+    self::FINANCE_CALENDAR_URI => [ 'uri' => self::FINANCE_CALENDAR_URI, 'public' => false ],
   ];
 
   const BANK_ACCOUNT_OWNER = 'bankAccountOwner';

@@ -986,8 +986,3 @@ export {
   myPersonalRecordDialog as personalRecordDialog,
   myLoadMusicians as loadMusicians,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
