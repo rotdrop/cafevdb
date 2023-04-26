@@ -164,6 +164,16 @@ class OrganizationalRolesService
   }
 
   /**
+   * Return an array with all members of the executive board.
+   *
+   * @return Entities\ProjectParticipant[]
+   */
+  public function executiveBoardMembers():array
+  {
+    return $this->executiveBoardProject()->getParticipants();
+  }
+
+  /**
    * @param string $role
    *
    * @param int $musicianId
@@ -495,8 +505,3 @@ class OrganizationalRolesService
     return $this->inGroup($userId, $clubMembersGid);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
