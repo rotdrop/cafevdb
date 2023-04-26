@@ -1438,6 +1438,7 @@ class EventsService
       }
     }
     if ($removed > 0) {
+      $this->flush();
       $this->logInfo('Removed ' . $removed . ' stale project events.');
     } else {
       $this->logInfo('Nothing to cleanup.');
