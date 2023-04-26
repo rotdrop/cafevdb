@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use IteratorAggregate;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCP\IUserManager;
 use OCP\IGroupManager;
@@ -177,7 +177,7 @@ class OrganizationalRolesService
    *
    * @return Entities\ProjectParticipant[]
    */
-  public function executiveBoardMembers():IteratorAggregate
+  public function executiveBoardMembers():Collection
   {
     return $this->executiveBoardProject()->getParticipants();
   }
