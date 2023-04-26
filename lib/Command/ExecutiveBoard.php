@@ -39,10 +39,12 @@ use OCP\Accounts\IAccountProperty;
 use OCP\Accounts\PropertyDoesNotExistException;
 use OC\Security\SecureRandom;
 
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus;
+use OCA\CAFEVDB\Events\PostPersistMusicianEmail;
 
 /**
  * Sanitize some stuff for the members of the management board:
@@ -110,6 +112,9 @@ class ExecutiveBoard extends Command
     /** @var ConfigService $configService */
     $configService = $this->appContainer->get(ConfigService::class);
 
+    /** @var ProjectService $projectService */
+    $projectService = $this->appContainer->get(ProjectService::class);
+
     $group = $configService->getGroup();
     $groupAdmins = $configService->getGroupSubAdmins();
 
@@ -125,9 +130,6 @@ class ExecutiveBoard extends Command
     }
     $groupAdmins = array_map(fn(IUser $admin) => $admin->getDisplayName() . ' (' . $admin->getUID() . ')', $groupAdmins);
     $output->writeln($this->l->t('Group admins are: %s.', implode(', ', $groupAdmins)));
-
-    /** @var OrganizationalRolesService $orgaRolesService */
-    $orgaRolesService = $this->appContainer->get(OrganizationalRolesService::class);
 
     /** @var IAccountManager $accountManager */
     $accountManager = $this->appContainer->get(IAccountManager::class);
@@ -153,7 +155,23 @@ class ExecutiveBoard extends Command
       $output->writeln($this->l->t('Orchestra email domain is "%1$s".', $emailFromDomain));
     }
 
-    $boardMembers = $orgaRolesService->executiveBoardMembers();
+    $repository = $this->getDatabaseRepository(Entities\Project::class);
+    $executiveBoardProjectId = $configService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY);
+    /** @var Entities\Project $executiveBoardProject */
+    $executiveBoardProject = $repository->find($executiveBoardProjectId);
+
+    $boardMembers = $executiveBoardProject->getParticipants();
+
+    /** @var MailingListsService $listsService */
+    $listsService = $this->appContainer->get(MailingListsService::class);
+    if (!$listsService->isConfigured() || !$listsService->isReachable()) {
+      if ($listsService->isConfigured()) {
+        $output->writeln('<error>' . $this->l->t('The mailing-lists service is configured but not reachable.') . '</error>');
+      }
+      $listsService = null;
+    } else {
+      $listId = $executiveBoardProject->getMailingListId();
+    }
 
     $output->writeln('');
 
@@ -271,13 +289,81 @@ class ExecutiveBoard extends Command
         if ($dry) {
           $output->writeln($indent . $this->l->t('Would add "%s" to the account settings (dry-run).', $personalOrchestraEmail));
         } else {
-          $output->writeln($indent . $this->l->t('Adding "%s" to the account settings (dry-run).', $personalOrchestraEmail));
-          $emailProperty = $cloudFurtherEmails->addPropertyWithDefaults($personalOrchestraEmail);
+          $output->writeln($indent . $this->l->t('Adding "%s" to the account settings.', $personalOrchestraEmail));
+          $cloudFurtherEmails->addPropertyWithDefaults($personalOrchestraEmail);
+          $emailProperty = $cloudFurtherEmails->getPropertyByValue($personalOrchestraEmail);
           $emailProperty->setLocallyVerified(IAccountManager::VERIFIED);
           $emailProperty->setVerified(IAccountManager::VERIFIED);
           $accountManager->updateAccount($account);
         }
         $fixed[] = 'personal email address';
+        $emails[] = $personalOrchestraEmail;
+      }
+      sort($emails);
+
+      $dbEmails = array_map(fn(Entities\MusicianEmailAddress $emailAddress) => $emailAddress->getAddress(), $musician->getEmailAddresses()->toArray());
+      sort($dbEmails);
+
+      $missingDbEmails = array_diff($emails, $dbEmails);
+      if (!empty($missingDbEmails)) {
+        ++$problems;
+        $output->writeln('<error>' . $this->l->t('Cloud emails not present in the data-base: %s', implode(', ', $missingDbEmails)) . '</error>');
+        if ($dry) {
+          $output->writeln($indent . $this->l->t('Would add to the orchestra db: %s (dry-run)', implode(', ', $missingDbEmails)));
+        } else {
+          $output->writeln($indent . $this->l->t('Adding to the orchestra db: %s', implode(', ', $missingDbEmails)));
+          foreach ($missingDbEmails as $cloudEmail) {
+            $musician->addEmailAddress($cloudEmail);
+          }
+          $this->flush();
+        }
+        $fixed[] = 'email addresses';
+      }
+
+      $missingCloudEmails = array_diff($dbEmails, $emails);
+      if (!empty($missingCloudEmails)) {
+        ++$problems;
+        $output->writeln('<error>' . $this->l->t('Db emails not present in the cloud account settings: %s', implode(', ', $missingCloudEmails)) . '</error>');
+        if ($dry) {
+          $output->writeln($indent . $this->l->t('Would add to the account settings: %s (dry-run)', implode(', ', $missingCloudEmails)));
+        } else {
+          $output->writeln($indent . $this->l->t('Adding to the account settings: %s', implode(', ', $missingCloudEmails)));
+          foreach ($missingCloudEmails as $dbEmail) {
+            $cloudFurtherEmails->addPropertyWithDefaults($dbEmail);
+            $emailProperty = $cloudFurtherEmails->getPropertyByValue($dbEmail);
+            $emailProperty->setLocallyVerified(IAccountManager::VERIFIED);
+            $emailProperty->setVerified(IAccountManager::VERIFIED);
+            $accountManager->updateAccount($account);
+            $emails[] = $dbEmail;
+          }
+        }
+        $fixed[] = 'email addresses';
+      }
+
+      // above code in principle should already have configured the mailing-list membership
+      if (!empty($listsService) && !empty($listId)) {
+        foreach ($emails as $email) {
+          $subscription = $listsService->getSubscription($listId, $email);
+          if (empty($subscription)) {
+            ++$problems;
+            $output->writeln('<error>' . $this->l->t('Error: email "%1$s" is not subscribed to the mailing list "%2$s".', [
+              $email, $listId
+            ]) . '</error>');
+            if ($dry) {
+              $output->writeln($indent . $this->l->t('Would subscribe "%1$s" to "%2$s" (dry-run).', [
+                $email, $listId
+              ]));
+            } else {
+              $output->writeln($indent . $this->l->t('Subscribing "%1$s" to "%2$s".', [
+                $email, $listId
+              ]));
+            }
+            $fixed[] = 'mailing list subscription';
+          }
+        }
+        if (!$dry) {
+          $projectService->ensureMailingListSubscription($boardMember);
+        }
       }
 
       try {
@@ -327,7 +413,7 @@ class ExecutiveBoard extends Command
       $output->writeln(
         '<error>' .  $this->l->t('Error: user with uid "%1$s" is not part of the executive board.
 This has to be fixed first by adding that person to the executive board project "%2$s".', [
-            $onlyMember, $orgaRolesService->executiveBoardProject()->getName()
+            $onlyMember, $executiveBoardProject->getName()
           ])
         . '</error>'
       );
