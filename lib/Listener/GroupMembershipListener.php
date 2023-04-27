@@ -39,7 +39,11 @@ use OCP\Accounts\IAccountPropertyCollection;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * Do something special if the membership to the orchestra group changes.
@@ -47,6 +51,7 @@ use OCA\CAFEVDB\Service\EncryptionService;
 class GroupMembershipListener implements IEventListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   const EVENT = [ UserAddedEvent::class, UserRemovedEvent::class ];
 
@@ -99,7 +104,9 @@ class GroupMembershipListener implements IEventListener
       return;
     }
 
-    $personalizedOrchestraEmail = $user->getUID() . '@' . $emailFromDomain;
+    $userId = $user->getUID();
+
+    $personalizedOrchestraEmail = $userId. '@' . $emailFromDomain;
 
     $emailCollection = $account->getPropertyCollection(IAccountManager::COLLECTION_EMAIL);
 
@@ -108,17 +115,55 @@ class GroupMembershipListener implements IEventListener
     try {
       if ($event instanceof UserAddedEvent) {
         if (empty($emailProperty)) {
+          $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY);
+          if ($executiveBoardProjectId >= 0) {
+            return;
+          }
+          $this->entityManager = $this->appContainer->get(EntityManager::class);
+
+          $repository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
+
+          /** @var Entities\ProjectParticipant $boardMember */
+          $boardMember = $repository->findOneBy([
+            'project' => $executiveBoardProjectId,
+            'musician.userIdSlug' => $userId,
+          ]);
+          if (empty($boardMember)) {
+            // only enforce the email-address for executive board members
+            return;
+          }
+
+          // add it to the cloud account s.t. email provisioning may work ...
           $emailCollection->addPropertyWithDefaults($personalizedOrchestraEmail);
           $emailProperty = $emailCollection->getPropertyByValue($personalizedOrchestraEmail);
           $emailProperty->setLocallyVerified(IAccountManager::VERIFIED);
           $emailProperty->setVerified(IAccountManager::VERIFIED);
           $accountManager->updateAccount($account);
+
+          // add it to the database as well
+          $boardMember->getMusician()->addEmailAddress($personalizedOrchestraEmail);
+          $this->flush();
         }
       } else {
+        // remove in any case from the cloud user's emails
         if (!empty($emailProperty)) {
           $emailCollection->removeProperty($emailProperty);
           $accountManager->updateAccount($account);
         }
+
+        /** @var Entities\ProjectParticipant $boardMember */
+        $boardMember = $repository->findOneBy([
+          'project' => $executiveBoardProjectId,
+          'musician.userIdSlug' => $userId,
+        ]);
+        if (empty($boardMember)) {
+          return;
+        }
+
+        // the person must not remain a member of the executive board
+        /** @var ProjectService $projectService */
+        $projectService = $this->appContainer->get(ProjectService::class);
+        $projectService->deleteProjectParticipant($boardMember);
       }
     } catch (Throwable $t) {
       try {
