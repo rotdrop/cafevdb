@@ -188,413 +188,413 @@ $(document).ready(function(){initNavTree('_find_like_trait_8php_source.html','')
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordflow">return</span> $qb;</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  }</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  <span class="keyword">public</span> <span class="keyword">function</span> findBy(</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    array $criteria,</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    ?array $orderBy = <span class="keyword">null</span>,</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    $limit = <span class="keyword">null</span>,</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    $offset = <span class="keyword">null</span>,</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>  ) {</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    $queryParts = $this-&gt;prepareFindBy($criteria, $orderBy);</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="comment">// The stock findBy() / findOneBy() functions do not use query-hints, see</span></div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="comment">// https://github.com/doctrine/orm/issues/6751</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordflow">if</span> (empty($this-&gt;getEntityManager()-&gt;getConfiguration()-&gt;getDefaultQueryHints())</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;joinEntities&#39;</span>])</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;indexBy&#39;</span>])</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;modifiers&#39;</span>])</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;collectionCriteria&#39;</span>])) {</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>      <span class="comment">// vanilla</span></div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>      <span class="keywordflow">return</span> parent::findBy($criteria, $orderBy, $limit, $offset);</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    }</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    $qb = $this-&gt;generateFindBySelect($queryParts);</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keywordflow">if</span> (count($queryParts[<span class="stringliteral">&#39;joinEntities&#39;</span>]) &gt; 0) {</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>      <span class="comment">// joining may produce excessive extra columns, try to group by the primary keys.</span></div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>      <span class="keywordflow">foreach</span> ($this-&gt;getClassMetadata()-&gt;identifier as $field) {</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        $qb-&gt;addGroupBy(<span class="stringliteral">&#39;mainTable.&#39;</span>.$field);</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>      }</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    }</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    $this-&gt;generateFindByWhere($qb, $queryParts, $limit, $offset);</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="comment">// $this-&gt;log(&#39;SQL &#39;.$qb-&gt;getQuery()-&gt;getSql());</span></div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="comment">// $this-&gt;log(&#39;PARAM &#39;.print_r($qb-&gt;getQuery()-&gt;getParameters()-&gt;toArray(), true));</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  <span class="keyword">public</span> <span class="keyword">function</span> findBy(</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    array $criteria,</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    ?array $orderBy = <span class="keyword">null</span>,</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    $limit = <span class="keyword">null</span>,</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    $offset = <span class="keyword">null</span>,</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  ) {</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    $queryParts = $this-&gt;prepareFindBy($criteria, $orderBy);</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    <span class="comment">// The stock findBy() / findOneBy() functions do not use query-hints, see</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="comment">// https://github.com/doctrine/orm/issues/6751</span></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keywordflow">if</span> (empty($this-&gt;getEntityManager()-&gt;getConfiguration()-&gt;getDefaultQueryHints())</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;joinEntities&#39;</span>])</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;indexBy&#39;</span>])</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;modifiers&#39;</span>])</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;collectionCriteria&#39;</span>])) {</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>      <span class="comment">// vanilla</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>      <span class="keywordflow">return</span> parent::findBy($criteria, $orderBy, $limit, $offset);</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    }</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    $qb = $this-&gt;generateFindBySelect($queryParts);</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keywordflow">if</span> (count($queryParts[<span class="stringliteral">&#39;joinEntities&#39;</span>]) &gt; 0) {</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>      <span class="comment">// joining may produce excessive extra columns, try to group by the primary keys.</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>      <span class="keywordflow">foreach</span> ($this-&gt;getClassMetadata()-&gt;identifier as $field) {</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        $qb-&gt;addGroupBy(<span class="stringliteral">&#39;mainTable.&#39;</span>.$field);</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>      }</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    }</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    $this-&gt;generateFindByWhere($qb, $queryParts, $limit, $offset);</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keywordflow">return</span> $qb-&gt;getQuery()-&gt;getResult();</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  }</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="comment">// $this-&gt;log(&#39;SQL &#39;.$qb-&gt;getQuery()-&gt;getSql());</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="comment">// $this-&gt;log(&#39;PARAM &#39;.print_r($qb-&gt;getQuery()-&gt;getParameters()-&gt;toArray(), true));</span></div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>  <span class="keyword">public</span> <span class="keyword">function</span> <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113">count</a>(array $criteria):int</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>  {</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    $queryParts = $this-&gt;prepareFindBy($criteria);</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="comment">// The stock findBy() / findOneBy() functions do not use query-hints, see</span></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="comment">// https://github.com/doctrine/orm/issues/6751</span></div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keywordflow">if</span> (empty($this-&gt;getEntityManager()-&gt;getConfiguration()-&gt;getDefaultQueryHints())</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;joinEntities&#39;</span>])</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;indexBy&#39;</span>])</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;modifiers&#39;</span>])</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;collectionCriteria&#39;</span>])) {</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>      <span class="comment">// vanilla</span></div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>      <span class="keywordflow">return</span> parent::count($criteria);</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    }</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="comment">// using COUNT(DISTINCT) avoids the use of group-by.</span></div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    $qb = $this-&gt;generateFindBySelect($queryParts, [ <span class="stringliteral">&#39;COUNT(DISTINCT mainTable)&#39;</span>, ]);</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keywordflow">return</span> $qb-&gt;getQuery()-&gt;getResult();</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>  }</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span> </div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>  <span class="keyword">public</span> <span class="keyword">function</span> <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113">count</a>(array $criteria):int</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>  {</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    $queryParts = $this-&gt;prepareFindBy($criteria);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="comment">// The stock findBy() / findOneBy() functions do not use query-hints, see</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="comment">// https://github.com/doctrine/orm/issues/6751</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    <span class="keywordflow">if</span> (empty($this-&gt;getEntityManager()-&gt;getConfiguration()-&gt;getDefaultQueryHints())</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;joinEntities&#39;</span>])</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;indexBy&#39;</span>])</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;modifiers&#39;</span>])</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        &amp;&amp; empty($queryParts[<span class="stringliteral">&#39;collectionCriteria&#39;</span>])) {</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>      <span class="comment">// vanilla</span></div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>      <span class="keywordflow">return</span> parent::count($criteria);</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    }</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span> </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    $this-&gt;generateFindByWhere($qb, $queryParts);</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    <span class="keywordflow">return</span> $qb-&gt;getQuery()-&gt;getSingleScalarResult();</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>  }</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    <span class="comment">// using COUNT(DISTINCT) avoids the use of group-by.</span></div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    $qb = $this-&gt;generateFindBySelect($queryParts, [ <span class="stringliteral">&#39;COUNT(DISTINCT mainTable)&#39;</span>, ]);</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    $this-&gt;generateFindByWhere($qb, $queryParts);</div>
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>  <span class="keyword">public</span> <span class="keyword">function</span> <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a25792cc13a33a74c4a8ecc7755fd76bc">findOneBy</a>(array $criteria, ?array $orderBy = <span class="keyword">null</span>)</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>  {</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    $result = $this-&gt;<a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a94c8ff9bcf707932a5c13d04d16a8e7f">findBy</a>($criteria, $orderBy, 1, 0);</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keywordflow">return</span> $result[0] ?? <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>  }</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>  <span class="keyword">protected</span> <span class="keyword">function</span> prepareFindBy(array $criteria, ?array $orderBy = <span class="keyword">null</span>)</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>  {</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    $orderBy = $orderBy?:[];</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span> </div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="comment">// filter out instances of criteria</span></div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    $collectionCriteria = [];</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    <span class="keywordflow">foreach</span> ($criteria as $key =&gt; $value) {</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>      <span class="keywordflow">if</span> ($value instanceof Collections\Criteria) {</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        $collectionCriteria[] = $value;</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        unset($criteria[$key]);</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>      }</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    }</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    $whereCriteria = [];</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    $havingCriteria = [];</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <span class="keywordflow">foreach</span> ($criteria as $key =&gt; $value) {</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>      <span class="comment">// if key is numeric we assume $value is a pair [ EXPR =&gt; VALUE ]</span></div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>      <span class="keywordflow">if</span> (is_numeric($key)) {</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        $key = array_key_first($value);</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        $value = $value[$key];</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>      }</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>      $groupFunction = <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>      $fctPos = strpos($key, <span class="charliteral">&#39;@&#39;</span>);</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>      <span class="keywordflow">if</span> ($fctPos !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        $groupFunction = substr($key, $fctPos + 1);</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        $key = substr($key, 0, $fctPos);</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>      }</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>      $sqlFunction = <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>      $fctPos = strpos($key, <span class="charliteral">&#39;#&#39;</span>);</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>      <span class="keywordflow">if</span> ($fctPos !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        $sqlFunction = substr($key, $fctPos +1);</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        $key = substr($key, 0, $fctPos);</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>      }</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>      $fieldType = <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>      $typePos = strpos($key, <span class="charliteral">&#39;:&#39;</span>);</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>      <span class="keywordflow">if</span> ($typePos !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        $fieldType = substr($key, $typePos + 1);</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        $key = substr($key, 0, $typePos);</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>      }</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>      $criterion = [</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        <span class="stringliteral">&#39;field&#39;</span> =&gt; $key,</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>        <span class="stringliteral">&#39;fieldType&#39;</span> =&gt; $fieldType,</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>        <span class="stringliteral">&#39;value&#39;</span> =&gt; $value,</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>        <span class="stringliteral">&#39;modifiers&#39;</span> =&gt; [],</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        <span class="stringliteral">&#39;junctors&#39;</span> =&gt; [],</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>        <span class="stringliteral">&#39;comparator&#39;</span> =&gt; <span class="keyword">null</span>,</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>        <span class="stringliteral">&#39;literal&#39;</span> =&gt; <span class="keyword">false</span>,</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        <span class="stringliteral">&#39;index&#39;</span> =&gt; <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113">count</a>($whereCriteria) + <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113">count</a>($havingCriteria),</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        <span class="stringliteral">&#39;groupFunction&#39;</span> =&gt; $groupFunction,</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        <span class="stringliteral">&#39;sqlFunction&#39;</span> =&gt; $sqlFunction,</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>      ];</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>      <span class="keywordflow">if</span> (preg_match(<span class="stringliteral">&#39;/^[!=&lt;&gt;&amp;|()]+/&#39;</span>, $key, $matches)) {</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span> </div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        $operators = $matches[0];</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        $key = substr($key, strlen($operators));</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <span class="keywordflow">return</span> $qb-&gt;getQuery()-&gt;getSingleScalarResult();</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>  }</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span> </div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>  <span class="keyword">public</span> <span class="keyword">function</span> <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a25792cc13a33a74c4a8ecc7755fd76bc">findOneBy</a>(array $criteria, ?array $orderBy = <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>  {</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    $result = $this-&gt;<a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a94c8ff9bcf707932a5c13d04d16a8e7f">findBy</a>($criteria, $orderBy, 1, 0);</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <span class="keywordflow">return</span> $result[0] ?? <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>  }</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span> </div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>  <span class="keyword">protected</span> <span class="keyword">function</span> prepareFindBy(array $criteria, ?array $orderBy = <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>  {</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    $orderBy = $orderBy?:[];</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    <span class="comment">// filter out instances of criteria</span></div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    $collectionCriteria = [];</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="keywordflow">foreach</span> ($criteria as $key =&gt; $value) {</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>      <span class="keywordflow">if</span> ($value instanceof Collections\Criteria) {</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        $collectionCriteria[] = $value;</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        unset($criteria[$key]);</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>      }</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    }</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span> </div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    $whereCriteria = [];</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    $havingCriteria = [];</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    <span class="keywordflow">foreach</span> ($criteria as $key =&gt; $value) {</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>      <span class="comment">// if key is numeric we assume $value is a pair [ EXPR =&gt; VALUE ]</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>      <span class="keywordflow">if</span> (is_numeric($key)) {</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        $key = array_key_first($value);</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        $value = $value[$key];</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>      }</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>      $groupFunction = <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>      $fctPos = strpos($key, <span class="charliteral">&#39;@&#39;</span>);</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>      <span class="keywordflow">if</span> ($fctPos !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        $groupFunction = substr($key, $fctPos + 1);</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        $key = substr($key, 0, $fctPos);</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>      }</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>      $sqlFunction = <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>      $fctPos = strpos($key, <span class="charliteral">&#39;#&#39;</span>);</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>      <span class="keywordflow">if</span> ($fctPos !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        $sqlFunction = substr($key, $fctPos +1);</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        $key = substr($key, 0, $fctPos);</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>      }</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>      $fieldType = <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>      $typePos = strpos($key, <span class="charliteral">&#39;:&#39;</span>);</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>      <span class="keywordflow">if</span> ($typePos !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        $fieldType = substr($key, $typePos + 1);</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        $key = substr($key, 0, $typePos);</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>      }</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>      $criterion = [</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>        <span class="stringliteral">&#39;field&#39;</span> =&gt; $key,</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        <span class="stringliteral">&#39;fieldType&#39;</span> =&gt; $fieldType,</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>        <span class="stringliteral">&#39;value&#39;</span> =&gt; $value,</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>        <span class="stringliteral">&#39;modifiers&#39;</span> =&gt; [],</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        <span class="stringliteral">&#39;junctors&#39;</span> =&gt; [],</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        <span class="stringliteral">&#39;comparator&#39;</span> =&gt; <span class="keyword">null</span>,</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        <span class="stringliteral">&#39;literal&#39;</span> =&gt; <span class="keyword">false</span>,</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <span class="stringliteral">&#39;index&#39;</span> =&gt; <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113">count</a>($whereCriteria) + <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113">count</a>($havingCriteria),</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        <span class="stringliteral">&#39;groupFunction&#39;</span> =&gt; $groupFunction,</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        <span class="stringliteral">&#39;sqlFunction&#39;</span> =&gt; $sqlFunction,</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>      ];</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span> </div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>      <span class="keywordflow">if</span> (preg_match(<span class="stringliteral">&#39;/^[!=&lt;&gt;&amp;|()]+/&#39;</span>, $key, $matches)) {</div>
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span> </div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        $criterion[<span class="stringliteral">&#39;field&#39;</span>] = $key;</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        <span class="keywordflow">while</span> (!empty($operators)) {</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>          <span class="comment">// reduce multiple ! signs</span></div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>          <span class="keywordflow">while</span> (strpos($operators, <span class="stringliteral">&#39;!!&#39;</span>) !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            $operators = str_replace(<span class="stringliteral">&#39;!!&#39;</span>, <span class="stringliteral">&#39;&#39;</span>, $operators);</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>          }</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>          <span class="comment">// (&amp;, (|, !(|, !(&amp;</span></div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>          <span class="keywordflow">foreach</span> (self::$junctors as $abbr =&gt; $junctor) {</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>            $pos = strpos($operators, $abbr);</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>            <span class="keywordflow">if</span> ($pos === 0) {</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>              $operators = substr($operators, strlen($abbr));</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>              $criterion[<span class="stringliteral">&#39;junctors&#39;</span>] = array_merge($criterion[<span class="stringliteral">&#39;junctors&#39;</span>], $junctor);</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>            }</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>            <span class="keywordflow">if</span> (empty($operators)) {</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>              <span class="keywordflow">break</span> 2;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        $operators = $matches[0];</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        $key = substr($key, strlen($operators));</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span> </div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        $criterion[<span class="stringliteral">&#39;field&#39;</span>] = $key;</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span> </div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>        <span class="keywordflow">while</span> (!empty($operators)) {</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>          <span class="comment">// reduce multiple ! signs</span></div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>          <span class="keywordflow">while</span> (strpos($operators, <span class="stringliteral">&#39;!!&#39;</span>) !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>            $operators = str_replace(<span class="stringliteral">&#39;!!&#39;</span>, <span class="stringliteral">&#39;&#39;</span>, $operators);</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>          }</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>          <span class="comment">// (&amp;, (|, !(|, !(&amp;</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>          <span class="keywordflow">foreach</span> (self::$junctors as $abbr =&gt; $junctor) {</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>            $pos = strpos($operators, $abbr);</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>            <span class="keywordflow">if</span> ($pos === 0) {</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>              $operators = substr($operators, strlen($abbr));</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>              $criterion[<span class="stringliteral">&#39;junctors&#39;</span>] = array_merge($criterion[<span class="stringliteral">&#39;junctors&#39;</span>], $junctor);</div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>            }</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>          }</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>          <span class="comment">// this is only !</span></div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>          <span class="keywordflow">foreach</span> (self::$modifiers as $abbr =&gt; $modifier) {</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>            $pos = strpos($operators, $abbr);</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>            <span class="keywordflow">if</span> ($pos === 0) {</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>              $operators = substr($operators, strlen($abbr));</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>              $criterion[<span class="stringliteral">&#39;modifiers&#39;</span>][] = $modifier;</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>            }</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>            <span class="keywordflow">if</span> (empty($operators)) {</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>              <span class="keywordflow">break</span> 2;</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>            <span class="keywordflow">if</span> (empty($operators)) {</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>              <span class="keywordflow">break</span> 2;</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>            }</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>          }</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>          <span class="comment">// this is only !</span></div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>          <span class="keywordflow">foreach</span> (self::$modifiers as $abbr =&gt; $modifier) {</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>            $pos = strpos($operators, $abbr);</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>            <span class="keywordflow">if</span> ($pos === 0) {</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>              $operators = substr($operators, strlen($abbr));</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>              $criterion[<span class="stringliteral">&#39;modifiers&#39;</span>][] = $modifier;</div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>            }</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>          }</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>          <span class="keywordflow">foreach</span> (self::$comparisons as $abbr =&gt; $comparator) {</div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>            $pos = strpos($operators, $abbr);</div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>            <span class="keywordflow">if</span> ($pos === 0) {</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>              <span class="keywordflow">if</span> (!empty($criterion[<span class="stringliteral">&#39;comparator&#39;</span>])) {</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>                <span class="keywordflow">throw</span> <span class="keyword">new</span> DatabaseException(<span class="stringliteral">&#39;Comparison for key &quot;&#39;</span> . $key . <span class="stringliteral">&#39;&quot; already set to &quot;&#39;</span> . $criterion[<span class="stringliteral">&#39;comparator&#39;</span>] . <span class="stringliteral">&#39;&quot;.&#39;</span>);</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>              }</div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>              <span class="keywordflow">if</span> ($abbr == <span class="charliteral">&#39;=&#39;</span> &amp;&amp; $value === <span class="keyword">null</span>) {</div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>                <span class="keywordflow">throw</span> <span class="keyword">new</span> DatabaseException(<span class="stringliteral">&#39;Comparison with null is undefined, only equality is allowed.&#39;</span>);</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>            <span class="keywordflow">if</span> (empty($operators)) {</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>              <span class="keywordflow">break</span> 2;</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>            }</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>          }</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>          <span class="keywordflow">foreach</span> (self::$comparisons as $abbr =&gt; $comparator) {</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>            $pos = strpos($operators, $abbr);</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>            <span class="keywordflow">if</span> ($pos === 0) {</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>              <span class="keywordflow">if</span> (!empty($criterion[<span class="stringliteral">&#39;comparator&#39;</span>])) {</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>                <span class="keywordflow">throw</span> <span class="keyword">new</span> DatabaseException(<span class="stringliteral">&#39;Comparison for key &quot;&#39;</span> . $key . <span class="stringliteral">&#39;&quot; already set to &quot;&#39;</span> . $criterion[<span class="stringliteral">&#39;comparator&#39;</span>] . <span class="stringliteral">&#39;&quot;.&#39;</span>);</div>
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>              }</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>              <span class="keywordflow">if</span> (is_array($value)) {</div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>                <span class="keywordflow">throw</span> <span class="keyword">new</span> DatabaseException(<span class="stringliteral">&#39;Array-valued comparisons are not allowed.&#39;</span>);</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>              <span class="keywordflow">if</span> ($abbr == <span class="charliteral">&#39;=&#39;</span> &amp;&amp; $value === <span class="keyword">null</span>) {</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>                <span class="keywordflow">throw</span> <span class="keyword">new</span> DatabaseException(<span class="stringliteral">&#39;Comparison with null is undefined, only equality is allowed.&#39;</span>);</div>
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>              }</div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>              $operators = substr($operators, strlen($abbr));</div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>              $criterion[<span class="stringliteral">&#39;comparator&#39;</span>] = $comparator;</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>            }</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>            <span class="keywordflow">if</span> (empty($operators)) {</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>              <span class="keywordflow">break</span> 2;</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>              <span class="keywordflow">if</span> (is_array($value)) {</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>                <span class="keywordflow">throw</span> <span class="keyword">new</span> DatabaseException(<span class="stringliteral">&#39;Array-valued comparisons are not allowed.&#39;</span>);</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>              }</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>              $operators = substr($operators, strlen($abbr));</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>              $criterion[<span class="stringliteral">&#39;comparator&#39;</span>] = $comparator;</div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>            }</div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>          }</div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>        }</div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>      } <span class="comment">// !empty($operators)</span></div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span> </div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>      <span class="keywordflow">if</span> ($groupFunction === <span class="keyword">null</span>) {</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>        $whereCriteria[] = $criterion;</div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>        $havingCriteria[] = $criterion;</div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>      }</div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    }</div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>    <span class="comment">// walk through criteria and find associations ASSOCIATION.FIELD</span></div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>    $joinEntities = [];</div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>    <span class="keywordflow">foreach</span> (array_merge($whereCriteria, $havingCriteria) as $criterion) {</div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>      $field = $criterion[<span class="stringliteral">&#39;field&#39;</span>];</div>
-<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>      $dotPos = strpos($field, <span class="charliteral">&#39;.&#39;</span>);</div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>      <span class="keywordflow">if</span> ($dotPos !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>        $joinEntities[substr($field, 0, $dotPos)] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>      }</div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>    }</div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>    $indexBy = [];</div>
-<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>    <span class="keywordflow">foreach</span> ($orderBy as $key =&gt; $ordering) {</div>
-<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>      $dotPos = strpos($key, <span class="charliteral">&#39;.&#39;</span>);</div>
-<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>      <span class="keywordflow">if</span> ($dotPos !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>        $tableAlias = substr($key, 0, $dotPos);</div>
-<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>        $field = $key;</div>
-<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        $joinEntities[$tableAlias] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>        $tableAlias = <span class="stringliteral">&#39;mainTable&#39;</span>;</div>
-<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>        $field = $tableAlias.<span class="charliteral">&#39;.&#39;</span>.$key;</div>
-<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>      }</div>
-<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>      <span class="keywordflow">if</span> (strtoupper($ordering) == <span class="stringliteral">&#39;INDEX&#39;</span>) {</div>
-<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>        $indexBy[$tableAlias] = $field;</div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>        unset($orderBy[$key]);</div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>      }</div>
-<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>    }</div>
-<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span> </div>
-<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>    <span class="comment">// modify and also return</span></div>
-<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>    $queryParts = [</div>
-<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>      <span class="stringliteral">&#39;criteria&#39;</span> =&gt; [</div>
-<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>        <span class="stringliteral">&#39;where&#39;</span> =&gt; $whereCriteria,</div>
-<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>        <span class="stringliteral">&#39;having&#39;</span> =&gt; $havingCriteria,</div>
-<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>      ],</div>
-<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>      <span class="stringliteral">&#39;orderBy&#39;</span> =&gt; $orderBy,</div>
-<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>      <span class="stringliteral">&#39;joinEntities&#39;</span> =&gt; $joinEntities,</div>
-<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>      <span class="stringliteral">&#39;indexBy&#39;</span> =&gt; $indexBy,</div>
-<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>      <span class="stringliteral">&#39;collectionCriteria&#39;</span> =&gt; $collectionCriteria,</div>
-<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>    ];</div>
-<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span> </div>
-<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>    <span class="keywordflow">return</span> $queryParts;</div>
-<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>  }</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>            <span class="keywordflow">if</span> (empty($operators)) {</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>              <span class="keywordflow">break</span> 2;</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>            }</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>          }</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>        }</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>      } <span class="comment">// !empty($operators)</span></div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span> </div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>      <span class="keywordflow">if</span> ($groupFunction === <span class="keyword">null</span>) {</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>        $whereCriteria[] = $criterion;</div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>        $havingCriteria[] = $criterion;</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>      }</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>    }</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span> </div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>    <span class="comment">// walk through criteria and find associations ASSOCIATION.FIELD</span></div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>    $joinEntities = [];</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>    <span class="keywordflow">foreach</span> (array_merge($whereCriteria, $havingCriteria) as $criterion) {</div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>      $field = $criterion[<span class="stringliteral">&#39;field&#39;</span>];</div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>      $dotPos = strpos($field, <span class="charliteral">&#39;.&#39;</span>);</div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>      <span class="keywordflow">if</span> ($dotPos !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>        $joinEntities[substr($field, 0, $dotPos)] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>      }</div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>    }</div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>    $indexBy = [];</div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>    <span class="keywordflow">foreach</span> ($orderBy as $key =&gt; $ordering) {</div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>      $dotPos = strpos($key, <span class="charliteral">&#39;.&#39;</span>);</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>      <span class="keywordflow">if</span> ($dotPos !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>        $tableAlias = substr($key, 0, $dotPos);</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>        $field = $key;</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>        $joinEntities[$tableAlias] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>        $tableAlias = <span class="stringliteral">&#39;mainTable&#39;</span>;</div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>        $field = $tableAlias.<span class="charliteral">&#39;.&#39;</span>.$key;</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>      }</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>      <span class="keywordflow">if</span> (strtoupper($ordering) == <span class="stringliteral">&#39;INDEX&#39;</span>) {</div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>        $indexBy[$tableAlias] = $field;</div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>        unset($orderBy[$key]);</div>
+<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>      }</div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>    }</div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span> </div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>    <span class="comment">// modify and also return</span></div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>    $queryParts = [</div>
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>      <span class="stringliteral">&#39;criteria&#39;</span> =&gt; [</div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>        <span class="stringliteral">&#39;where&#39;</span> =&gt; $whereCriteria,</div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>        <span class="stringliteral">&#39;having&#39;</span> =&gt; $havingCriteria,</div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>      ],</div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>      <span class="stringliteral">&#39;orderBy&#39;</span> =&gt; $orderBy,</div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>      <span class="stringliteral">&#39;joinEntities&#39;</span> =&gt; $joinEntities,</div>
+<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>      <span class="stringliteral">&#39;indexBy&#39;</span> =&gt; $indexBy,</div>
+<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>      <span class="stringliteral">&#39;collectionCriteria&#39;</span> =&gt; $collectionCriteria,</div>
+<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>    ];</div>
 <div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span> </div>
-<div class="line"><a id="l00486" name="l00486"></a><span class="lineno">  486</span>  <span class="keyword">protected</span> <span class="keyword">function</span> generateFindBySelect(array $queryParts, ?array $select = <span class="keyword">null</span>)</div>
-<div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span>  {</div>
-<div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span>    $indexBy = $queryParts[<span class="stringliteral">&#39;indexBy&#39;</span>]?:[<span class="stringliteral">&#39;mainTable&#39;</span> =&gt; <span class="keyword">null</span>];</div>
-<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span>    $qb = $this-&gt;createQueryBuilder(<span class="stringliteral">&#39;mainTable&#39;</span>, $indexBy[<span class="stringliteral">&#39;mainTable&#39;</span>]);</div>
-<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span>    <span class="keywordflow">foreach</span> (array_keys($queryParts[<span class="stringliteral">&#39;joinEntities&#39;</span>]) as $association) {</div>
-<div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span>      $qb-&gt;leftJoin(<span class="stringliteral">&#39;mainTable.&#39;</span>.$association, $association, <span class="keyword">null</span>, <span class="keyword">null</span>, $indexBy[$association] ?? <span class="keyword">null</span>);</div>
-<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>    }</div>
-<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>    <span class="keywordflow">if</span> (!empty($select)) {</div>
-<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>      $qb-&gt;select($select);</div>
+<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>    <span class="keywordflow">return</span> $queryParts;</div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>  }</div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span> </div>
+<div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span>  <span class="keyword">protected</span> <span class="keyword">function</span> generateFindBySelect(array $queryParts, ?array $select = <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span>  {</div>
+<div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span>    $indexBy = $queryParts[<span class="stringliteral">&#39;indexBy&#39;</span>]?:[<span class="stringliteral">&#39;mainTable&#39;</span> =&gt; <span class="keyword">null</span>];</div>
+<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>    $qb = $this-&gt;createQueryBuilder(<span class="stringliteral">&#39;mainTable&#39;</span>, $indexBy[<span class="stringliteral">&#39;mainTable&#39;</span>]);</div>
+<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>    <span class="keywordflow">foreach</span> (array_keys($queryParts[<span class="stringliteral">&#39;joinEntities&#39;</span>]) as $association) {</div>
+<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>      $qb-&gt;leftJoin(<span class="stringliteral">&#39;mainTable.&#39;</span>.$association, $association, <span class="keyword">null</span>, <span class="keyword">null</span>, $indexBy[$association] ?? <span class="keyword">null</span>);</div>
 <div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>    }</div>
-<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>    <span class="keywordflow">return</span> $qb;</div>
-<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>  }</div>
-<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span> </div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>  <span class="keyword">protected</span> <span class="keyword">function</span> generateFindByWhere(</div>
-<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>    ORM\QueryBuilder $qb,</div>
-<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>    array $queryParts,</div>
-<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>    ?<span class="keywordtype">int</span> $limit = <span class="keyword">null</span>,</div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>    ?<span class="keywordtype">int</span> $offset = <span class="keyword">null</span>,</div>
-<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>  ):ORM\QueryBuilder {</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span> </div>
-<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>    <span class="comment">// unpack parameter array</span></div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>    <span class="comment">// foreach ($queryParts as $key =&gt; $part) {</span></div>
-<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>    <span class="comment">//   ${$key} = $part;</span></div>
-<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>    <span class="comment">// }</span></div>
-<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>    extract($queryParts);</div>
-<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span> </div>
-<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>    <span class="keywordflow">foreach</span> ([<span class="stringliteral">&#39;where&#39;</span>, <span class="stringliteral">&#39;having&#39;</span>] as $conditionType) {</div>
-<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span> </div>
-<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>      <span class="keywordflow">if</span> (!empty($criteria[$conditionType])) {</div>
-<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>        $groupExpression = [</div>
-<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>          0 =&gt; [</div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>            <span class="stringliteral">&#39;junctor&#39;</span> =&gt; <span class="stringliteral">&#39;andX&#39;</span>,</div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>            <span class="stringliteral">&#39;components&#39;</span> =&gt; [],</div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>          ]</div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>        ];</div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>        $groupLevel = 0;</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span> </div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>        <span class="keywordflow">foreach</span> ($criteria[$conditionType] as &amp;$criterion) {</div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span> </div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>          $field = $criterion[<span class="stringliteral">&#39;field&#39;</span>];</div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>          $value = $criterion[<span class="stringliteral">&#39;value&#39;</span>];</div>
+<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>    <span class="keywordflow">if</span> (!empty($select)) {</div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>      $qb-&gt;select($select);</div>
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>    }</div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>    <span class="keywordflow">return</span> $qb;</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>  }</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span> </div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>  <span class="keyword">protected</span> <span class="keyword">function</span> generateFindByWhere(</div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>    ORM\QueryBuilder $qb,</div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>    array $queryParts,</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>    ?<span class="keywordtype">int</span> $limit = <span class="keyword">null</span>,</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>    ?<span class="keywordtype">int</span> $offset = <span class="keyword">null</span>,</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>  ):ORM\QueryBuilder {</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span> </div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>    <span class="comment">// unpack parameter array</span></div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>    <span class="comment">// foreach ($queryParts as $key =&gt; $part) {</span></div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>    <span class="comment">//   ${$key} = $part;</span></div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>    <span class="comment">// }</span></div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>    extract($queryParts);</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span> </div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>    <span class="keywordflow">foreach</span> ([<span class="stringliteral">&#39;where&#39;</span>, <span class="stringliteral">&#39;having&#39;</span>] as $conditionType) {</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span> </div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>      <span class="keywordflow">if</span> (!empty($criteria[$conditionType])) {</div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>        $groupExpression = [</div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>          0 =&gt; [</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>            <span class="stringliteral">&#39;junctor&#39;</span> =&gt; <span class="stringliteral">&#39;andX&#39;</span>,</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>            <span class="stringliteral">&#39;components&#39;</span> =&gt; [],</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>          ]</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>        ];</div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>        $groupLevel = 0;</div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span> </div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>        <span class="keywordflow">foreach</span> ($criteria[$conditionType] as &amp;$criterion) {</div>
 <div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span> </div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>          <span class="comment">// $this-&gt;log(&#39;FIELD &#39; . $conditionType . &#39;: &#39; . $field);</span></div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span> </div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>          <span class="keywordflow">foreach</span> ($criterion[<span class="stringliteral">&#39;junctors&#39;</span>] as $junctor) {</div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>            <span class="keywordflow">if</span> ($junctor !== <span class="charliteral">&#39;)&#39;</span>) {</div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>              $expression = [</div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>                <span class="stringliteral">&#39;junctor&#39;</span> =&gt; $junctor,</div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>                <span class="stringliteral">&#39;components&#39;</span> =&gt; [],</div>
-<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>              ];</div>
-<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>              $groupExpression[++$groupLevel] = $expression;</div>
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>              $expression = array_pop($groupExpression);</div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>              $groupLevel--;</div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>              $junctor = $expression[<span class="stringliteral">&#39;junctor&#39;</span>];</div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>              $components = $expression[<span class="stringliteral">&#39;components&#39;</span>];</div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>              $compositeExpr = call_user_func_array([ $qb-&gt;expr(), $junctor ], $components);</div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>              $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $compositeExpr;</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>            }</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>          }</div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>          <span class="keywordflow">if</span> (empty($field)) {</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>          $field = $criterion[<span class="stringliteral">&#39;field&#39;</span>];</div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>          $value = $criterion[<span class="stringliteral">&#39;value&#39;</span>];</div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span> </div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>          <span class="comment">// $this-&gt;log(&#39;FIELD &#39; . $conditionType . &#39;: &#39; . $field);</span></div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span> </div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>          <span class="keywordflow">foreach</span> ($criterion[<span class="stringliteral">&#39;junctors&#39;</span>] as $junctor) {</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>            <span class="keywordflow">if</span> ($junctor !== <span class="charliteral">&#39;)&#39;</span>) {</div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>              $expression = [</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>                <span class="stringliteral">&#39;junctor&#39;</span> =&gt; $junctor,</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>                <span class="stringliteral">&#39;components&#39;</span> =&gt; [],</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>              ];</div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>              $groupExpression[++$groupLevel] = $expression;</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>              $expression = array_pop($groupExpression);</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>              $groupLevel--;</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>              $junctor = $expression[<span class="stringliteral">&#39;junctor&#39;</span>];</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>              $components = $expression[<span class="stringliteral">&#39;components&#39;</span>];</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>              $compositeExpr = call_user_func_array([ $qb-&gt;expr(), $junctor ], $components);</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>              $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $compositeExpr;</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>            }</div>
 <div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>          }</div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>          <span class="comment">// $this-&gt;log(&#39;FIELD &#39; . $field);</span></div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>          $dotPos = strpos($field, <span class="charliteral">&#39;.&#39;</span>);</div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>          <span class="keywordflow">if</span> ($dotPos !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>            $tableAlias = substr($field, 0, $dotPos);</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>            $tableAlias = <span class="stringliteral">&#39;mainTable&#39;</span>;</div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>            $field = $tableAlias . <span class="charliteral">&#39;.&#39;</span> . $field;</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>          }</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>          $param = str_replace(<span class="charliteral">&#39;.&#39;</span>, <span class="charliteral">&#39;_&#39;</span>, $field) . <span class="charliteral">&#39;_&#39;</span> . $criterion[<span class="stringliteral">&#39;index&#39;</span>];</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>          <span class="keywordflow">if</span> (!empty($criterion[<span class="stringliteral">&#39;groupFunction&#39;</span>])) {</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>            $field = sprintf($criterion[<span class="stringliteral">&#39;groupFunction&#39;</span>], $field);</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>          } elseif (!empty($criterion[<span class="stringliteral">&#39;sqlFunction&#39;</span>])) {</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>            $field = sprintf($criterion[<span class="stringliteral">&#39;sqlFunction&#39;</span>], $field);</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>          }</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>          $comparator = $criterion[<span class="stringliteral">&#39;comparator&#39;</span>] ?? <span class="stringliteral">&#39;eq&#39;</span>;</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>          <span class="keywordflow">if</span> ($value === <span class="keyword">null</span>) {</div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>            $criterion[<span class="stringliteral">&#39;literal&#39;</span>] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>            $expr = $qb-&gt;expr()-&gt;isNull($field);</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>          } elseif (is_array($value)) {</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>            <span class="comment">// special case empty array:</span></div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>            <span class="comment">// - in principle always FALSE (nothing is in an empty set)</span></div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>            <span class="comment">// - FIELD == NULL ? NULL in any given set would be FALSE, we</span></div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>            <span class="comment">//   keep it that way, even if the set is empty</span></div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>            <span class="keywordflow">if</span> (empty($value)) {</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>              $criterion[<span class="stringliteral">&#39;literal&#39;</span>] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>              <span class="comment">// unfortunately, a literal 0 just cannot be modelled with the query builder</span></div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>              $expr = $qb-&gt;expr()-&gt;eq(1, 0);</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>              <span class="comment">// array values could contain wildcards</span></div>
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>              $value = str_replace(<span class="charliteral">&#39;*&#39;</span>, <span class="charliteral">&#39;%&#39;</span>, $value);</div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>              <span class="keywordflow">if</span> (!empty(array_filter($value, fn($x) =&gt; strpos($x, <span class="charliteral">&#39;%&#39;</span>) !== <span class="keyword">false</span>))) {</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>                $value = implode(<span class="charliteral">&#39;|&#39;</span>, array_map(fn($x) =&gt; str_replace(<span class="charliteral">&#39;%&#39;</span>, <span class="stringliteral">&#39;.*&#39;</span>, preg_quote($x)), $value));</div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>                $value = <span class="charliteral">&#39;^&#39;</span> . $value . <span class="charliteral">&#39;$&#39;</span>;</div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>                $expr = $qb-&gt;expr()-&gt;eq(<span class="keyword">new</span> Expr\Func(<span class="stringliteral">&#39;REGEXP&#39;</span>, [ $field, <span class="charliteral">&#39;:&#39;</span> . $param ]), 1);</div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>                $criterion[<span class="stringliteral">&#39;value&#39;</span>] = $value;</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>              } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>                $expr = $qb-&gt;expr()-&gt;in($field, <span class="charliteral">&#39;:&#39;</span> . $param);</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>              }</div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>            }</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>          } elseif (is_string($value)) {</div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>            $value = str_replace(<span class="charliteral">&#39;*&#39;</span>, <span class="charliteral">&#39;%&#39;</span>, $value);</div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>            <span class="keywordflow">if</span> (strpos($value, <span class="charliteral">&#39;%&#39;</span>) !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>              $expr = $qb-&gt;expr()-&gt;like($field, <span class="charliteral">&#39;:&#39;</span> . $param);</div>
-<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>              $criterion[<span class="stringliteral">&#39;value&#39;</span>] = $value;</div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>              $expr = $qb-&gt;expr()-&gt;$comparator($field, <span class="charliteral">&#39;:&#39;</span> . $param);</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>            }</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>            $expr = $qb-&gt;expr()-&gt;$comparator($field, <span class="charliteral">&#39;:&#39;</span> . $param);</div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>          }</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>          <span class="keywordflow">foreach</span> ($criterion[<span class="stringliteral">&#39;modifiers&#39;</span>] as $modifier) {</div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>            $expr = $qb-&gt;expr()-&gt;$modifier($expr);</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>          <span class="keywordflow">if</span> (empty($field)) {</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>          }</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>          <span class="comment">// $this-&gt;log(&#39;FIELD &#39; . $field);</span></div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>          $dotPos = strpos($field, <span class="charliteral">&#39;.&#39;</span>);</div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>          <span class="keywordflow">if</span> ($dotPos !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>            $tableAlias = substr($field, 0, $dotPos);</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>            $tableAlias = <span class="stringliteral">&#39;mainTable&#39;</span>;</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>            $field = $tableAlias . <span class="charliteral">&#39;.&#39;</span> . $field;</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>          }</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>          $param = str_replace(<span class="charliteral">&#39;.&#39;</span>, <span class="charliteral">&#39;_&#39;</span>, $field) . <span class="charliteral">&#39;_&#39;</span> . $criterion[<span class="stringliteral">&#39;index&#39;</span>];</div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>          <span class="keywordflow">if</span> (!empty($criterion[<span class="stringliteral">&#39;groupFunction&#39;</span>])) {</div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>            $field = sprintf($criterion[<span class="stringliteral">&#39;groupFunction&#39;</span>], $field);</div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>          } elseif (!empty($criterion[<span class="stringliteral">&#39;sqlFunction&#39;</span>])) {</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>            $field = sprintf($criterion[<span class="stringliteral">&#39;sqlFunction&#39;</span>], $field);</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>          }</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>          $comparator = $criterion[<span class="stringliteral">&#39;comparator&#39;</span>] ?? <span class="stringliteral">&#39;eq&#39;</span>;</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>          <span class="keywordflow">if</span> ($value === <span class="keyword">null</span>) {</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>            $criterion[<span class="stringliteral">&#39;literal&#39;</span>] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>            $expr = $qb-&gt;expr()-&gt;isNull($field);</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>          } elseif (is_array($value)) {</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>            <span class="comment">// special case empty array:</span></div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>            <span class="comment">// - in principle always FALSE (nothing is in an empty set)</span></div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>            <span class="comment">// - FIELD == NULL ? NULL in any given set would be FALSE, we</span></div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>            <span class="comment">//   keep it that way, even if the set is empty</span></div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>            <span class="keywordflow">if</span> (empty($value)) {</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>              $criterion[<span class="stringliteral">&#39;literal&#39;</span>] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>              <span class="comment">// unfortunately, a literal 0 just cannot be modelled with the query builder</span></div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>              $expr = $qb-&gt;expr()-&gt;eq(1, 0);</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>              <span class="comment">// array values could contain wildcards</span></div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>              $value = str_replace(<span class="charliteral">&#39;*&#39;</span>, <span class="charliteral">&#39;%&#39;</span>, $value);</div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>              <span class="keywordflow">if</span> (!empty(array_filter($value, fn($x) =&gt; strpos($x, <span class="charliteral">&#39;%&#39;</span>) !== <span class="keyword">false</span>))) {</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>                $value = implode(<span class="charliteral">&#39;|&#39;</span>, array_map(fn($x) =&gt; str_replace(<span class="charliteral">&#39;%&#39;</span>, <span class="stringliteral">&#39;.*&#39;</span>, preg_quote($x)), $value));</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>                $value = <span class="charliteral">&#39;^&#39;</span> . $value . <span class="charliteral">&#39;$&#39;</span>;</div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>                $expr = $qb-&gt;expr()-&gt;eq(<span class="keyword">new</span> Expr\Func(<span class="stringliteral">&#39;REGEXP&#39;</span>, [ $field, <span class="charliteral">&#39;:&#39;</span> . $param ]), 1);</div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>                $criterion[<span class="stringliteral">&#39;value&#39;</span>] = $value;</div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>              } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>                $expr = $qb-&gt;expr()-&gt;in($field, <span class="charliteral">&#39;:&#39;</span> . $param);</div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>              }</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>            }</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>          } elseif (is_string($value)) {</div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>            $value = str_replace(<span class="charliteral">&#39;*&#39;</span>, <span class="charliteral">&#39;%&#39;</span>, $value);</div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>            <span class="keywordflow">if</span> (strpos($value, <span class="charliteral">&#39;%&#39;</span>) !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>              $expr = $qb-&gt;expr()-&gt;like($field, <span class="charliteral">&#39;:&#39;</span> . $param);</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>              $criterion[<span class="stringliteral">&#39;value&#39;</span>] = $value;</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>              $expr = $qb-&gt;expr()-&gt;$comparator($field, <span class="charliteral">&#39;:&#39;</span> . $param);</div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>            }</div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>            $expr = $qb-&gt;expr()-&gt;$comparator($field, <span class="charliteral">&#39;:&#39;</span> . $param);</div>
 <div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>          }</div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>          $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $expr;</div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>        }</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span> </div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>        <span class="comment">// closing parenthesis maybe omitted at end, can be arbitrary many</span></div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>        <span class="keywordflow">while</span> ($groupLevel &gt;= 0) {</div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>          $expression = array_pop($groupExpression);</div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>          $groupLevel--;</div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>          $junctor = $expression[<span class="stringliteral">&#39;junctor&#39;</span>];</div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>          $components = $expression[<span class="stringliteral">&#39;components&#39;</span>];</div>
-<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>          $compositeExpr = call_user_func_array([ $qb-&gt;expr(), $junctor ], $components);</div>
-<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>          <span class="keywordflow">if</span> ($groupLevel &gt;= 0) {</div>
-<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>            $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $compositeExpr;</div>
-<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>            $qb-&gt;{$conditionType}($compositeExpr);</div>
-<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>          }</div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>        }</div>
-<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>        unset($criterion); <span class="comment">// break reference</span></div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>      }</div>
-<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span> </div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>      <span class="keywordflow">foreach</span> ($criteria[$conditionType] as $criterion) {</div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>        <span class="keywordflow">if</span> ($criterion[<span class="stringliteral">&#39;literal&#39;</span>]) {</div>
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>          <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>        }</div>
-<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>        $field = $criterion[<span class="stringliteral">&#39;field&#39;</span>];</div>
-<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>        <span class="keywordflow">if</span> (empty($field)) {</div>
-<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>          <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>        }</div>
-<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>        <span class="comment">// $this-&gt;log(&#39;PARAMETER &#39; . $field);</span></div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>        $dotPos = strpos($field, <span class="charliteral">&#39;.&#39;</span>);</div>
-<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>        <span class="keywordflow">if</span> ($dotPos !== <span class="keyword">false</span>) {</div>
-<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>          $tableAlias = substr($field, 0, $dotPos);</div>
-<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>          $column = substr($field, $dotPos+1);</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>          $tableAlias = <span class="stringliteral">&#39;mainTable&#39;</span>;</div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>          $column = $field;</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>          $field = $tableAlias . <span class="charliteral">&#39;.&#39;</span> . $column;</div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>        }</div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>        $param = str_replace(<span class="charliteral">&#39;.&#39;</span>, <span class="charliteral">&#39;_&#39;</span>, $field) . <span class="charliteral">&#39;_&#39;</span> . $criterion[<span class="stringliteral">&#39;index&#39;</span>];</div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span> </div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>        $value = $criterion[<span class="stringliteral">&#39;value&#39;</span>];</div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>        $fieldType = <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>        <span class="keywordflow">if</span> ($criterion[<span class="stringliteral">&#39;fieldType&#39;</span>] !== <span class="keyword">null</span>) {</div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>          $fieldType = $criterion[<span class="stringliteral">&#39;fieldType&#39;</span>];</div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>        } elseif ($tableAlias == <span class="stringliteral">&#39;mainTable&#39;</span>) {</div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>          <span class="keywordflow">if</span> (!is_array($value)</div>
-<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>              &amp;&amp; empty($criterion[<span class="stringliteral">&#39;groupFunction&#39;</span>])</div>
-<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>              &amp;&amp; empty($criterion[<span class="stringliteral">&#39;sqlFunction&#39;</span>])) {</div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>            <span class="comment">// try to deduce the type as this is NOT done by ORM here</span></div>
-<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>            $fieldType = $this-&gt;getClassMetadata()-&gt;getTypeOfField($column);</div>
-<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>          }</div>
-<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>        }</div>
-<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>        $qb-&gt;setParameter($param, $value, $fieldType);</div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>      }</div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>    }</div>
-<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span> </div>
-<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>    <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a5725afeb9b899e91e6a27e370298271e">self::addOrderBy</a>($qb, $orderBy, $limit, $offset, <span class="stringliteral">&#39;mainTable&#39;</span>);</div>
-<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span> </div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>    <span class="keywordflow">foreach</span> ($collectionCriteria as $selectableCriteria) {</div>
-<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>      $qb-&gt;addCriteria($selectableCriteria);</div>
-<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>    }</div>
-<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span> </div>
-<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>    <span class="keywordflow">return</span> $qb;</div>
-<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>  }</div>
-<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>}</div>
-<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span> </div>
-<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span><span class="comment">// Local Variables: ***</span></div>
-<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span><span class="comment">// c-basic-offset: 2 ***</span></div>
-<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span><span class="comment">// indent-tabs-mode: nil ***</span></div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span><span class="comment">// End: ***</span></div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>          <span class="keywordflow">foreach</span> ($criterion[<span class="stringliteral">&#39;modifiers&#39;</span>] as $modifier) {</div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>            $expr = $qb-&gt;expr()-&gt;$modifier($expr);</div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>          }</div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>          $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $expr;</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>        }</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span> </div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>        <span class="comment">// closing parenthesis maybe omitted at end, can be arbitrary many</span></div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>        <span class="keywordflow">while</span> ($groupLevel &gt;= 0) {</div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>          $expression = array_pop($groupExpression);</div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>          $groupLevel--;</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>          $junctor = $expression[<span class="stringliteral">&#39;junctor&#39;</span>];</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>          $components = $expression[<span class="stringliteral">&#39;components&#39;</span>];</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>          $compositeExpr = call_user_func_array([ $qb-&gt;expr(), $junctor ], $components);</div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>          <span class="keywordflow">if</span> ($groupLevel &gt;= 0) {</div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>            $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $compositeExpr;</div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>            $qb-&gt;{$conditionType}($compositeExpr);</div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>          }</div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>        }</div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>        unset($criterion); <span class="comment">// break reference</span></div>
+<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>      }</div>
+<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span> </div>
+<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>      <span class="keywordflow">foreach</span> ($criteria[$conditionType] as $criterion) {</div>
+<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>        <span class="keywordflow">if</span> ($criterion[<span class="stringliteral">&#39;literal&#39;</span>]) {</div>
+<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>          <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>        }</div>
+<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>        $field = $criterion[<span class="stringliteral">&#39;field&#39;</span>];</div>
+<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>        <span class="keywordflow">if</span> (empty($field)) {</div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>          <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>        }</div>
+<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>        <span class="comment">// $this-&gt;log(&#39;PARAMETER &#39; . $field);</span></div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>        $dotPos = strpos($field, <span class="charliteral">&#39;.&#39;</span>);</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        <span class="keywordflow">if</span> ($dotPos !== <span class="keyword">false</span>) {</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>          $tableAlias = substr($field, 0, $dotPos);</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>          $column = substr($field, $dotPos+1);</div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>          $tableAlias = <span class="stringliteral">&#39;mainTable&#39;</span>;</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>          $column = $field;</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>          $field = $tableAlias . <span class="charliteral">&#39;.&#39;</span> . $column;</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>        }</div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>        $param = str_replace(<span class="charliteral">&#39;.&#39;</span>, <span class="charliteral">&#39;_&#39;</span>, $field) . <span class="charliteral">&#39;_&#39;</span> . $criterion[<span class="stringliteral">&#39;index&#39;</span>];</div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span> </div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>        $value = $criterion[<span class="stringliteral">&#39;value&#39;</span>];</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>        $fieldType = <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>        <span class="keywordflow">if</span> ($criterion[<span class="stringliteral">&#39;fieldType&#39;</span>] !== <span class="keyword">null</span>) {</div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>          $fieldType = $criterion[<span class="stringliteral">&#39;fieldType&#39;</span>];</div>
+<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>        } elseif ($tableAlias == <span class="stringliteral">&#39;mainTable&#39;</span>) {</div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>          <span class="keywordflow">if</span> (!is_array($value)</div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>              &amp;&amp; empty($criterion[<span class="stringliteral">&#39;groupFunction&#39;</span>])</div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>              &amp;&amp; empty($criterion[<span class="stringliteral">&#39;sqlFunction&#39;</span>])) {</div>
+<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>            <span class="comment">// try to deduce the type as this is NOT done by ORM here</span></div>
+<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>            $fieldType = $this-&gt;getClassMetadata()-&gt;getTypeOfField($column);</div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>          }</div>
+<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>        }</div>
+<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>        $qb-&gt;setParameter($param, $value, $fieldType);</div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>      }</div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>    }</div>
+<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span> </div>
+<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>    <a class="code hl_function" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a5725afeb9b899e91e6a27e370298271e">self::addOrderBy</a>($qb, $orderBy, $limit, $offset, <span class="stringliteral">&#39;mainTable&#39;</span>);</div>
+<div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span> </div>
+<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>    <span class="keywordflow">foreach</span> ($collectionCriteria as $selectableCriteria) {</div>
+<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>      $qb-&gt;addCriteria($selectableCriteria);</div>
+<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>    }</div>
+<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span> </div>
+<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>    <span class="keywordflow">return</span> $qb;</div>
+<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>  }</div>
+<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>}</div>
+<div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span> </div>
+<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span><span class="comment">// Local Variables: ***</span></div>
+<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span><span class="comment">// c-basic-offset: 2 ***</span></div>
+<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span><span class="comment">// indent-tabs-mode: nil ***</span></div>
+<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span><span class="comment">// End: ***</span></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html">OCA\CAFEVDB\Exceptions\DatabaseException</a></div><div class="ttdoc">Base-class for database exceptions.</div><div class="ttdef"><b>Definition:</b> <a href="_database_exception_8php_source.html#l00028">DatabaseException.php:29</a></div></div>
 <div class="ttc" id="anamespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_html"><div class="ttname"><a href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html">OCA\CAFEVDB\Database\Doctrine\ORM\Traits</a></div><div class="ttdoc">Orchestra member, musician and project management application.</div><div class="ttdef"><b>Definition:</b> <a href="_array_trait_8php_source.html#l00025">ArrayTrait.php:25</a></div></div>
 <div class="ttc" id="anamespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits_html_a06f67eea0335f8c49d4c9fe997d92f8d"><div class="ttname"><a href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a06f67eea0335f8c49d4c9fe997d92f8d">OCA\CAFEVDB\Database\Doctrine\ORM\Traits\findLike</a></div><div class="ttdeci">findLike(array $criteria, ?array $orderBy=null, ?int $limit=null, ?int $offset=null,)</div><div class="ttdoc">Find entities by given wild-card criteria.</div><div class="ttdef"><b>Definition:</b> <a href="_find_like_trait_8php_source.html#l00069">FindLikeTrait.php:69</a></div></div>
@@ -610,7 +610,7 @@ $(document).ready(function(){initNavTree('_find_like_trait_8php_source.html','')
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_dcdf07e3db1d9451f245332dc8b99070.html">Database</a></li><li class="navelem"><a class="el" href="dir_296430bfc6cb2b71e6f6026478468298.html">Doctrine</a></li><li class="navelem"><a class="el" href="dir_7fa48e8a86d72597a0b256f9c558d191.html">ORM</a></li><li class="navelem"><a class="el" href="dir_e75b0226dd36d379087cfd5fc2d20161.html">Traits</a></li><li class="navelem"><b>FindLikeTrait.php</b></li>
-    <li class="footer">Generated on Wed Mar 22 2023 10:36:18 for CamerataDB by
+    <li class="footer">Generated on Thu Apr 27 2023 09:10:00 for CamerataDB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.9.6 </li>
   </ul>

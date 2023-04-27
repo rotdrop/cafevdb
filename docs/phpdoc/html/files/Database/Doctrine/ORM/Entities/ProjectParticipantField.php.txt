@@ -329,11 +329,17 @@ class ProjectParticipantField implements \ArrayAccess
   {
     // this unfortunately just does not work.
     // return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
-    return $this->dataOptions->filter(function($option) use ($includeDeleted) {
+    $filtered = $this->dataOptions->filter(function($option) use ($includeDeleted) {
       /** @var ProjectParticipantFieldDataOption $option */
       return ($includeDeleted || empty($option->getDeleted()))
         && (string)$option->getKey() != ProjectParticipantFieldDataOption::GENERATOR_KEY;
     });
+    $iterator = $filtered->getIterator();
+    $iterator->uasort(function(ProjectParticipantFieldDataOption $a, ProjectParticipantFieldDataOption $b) {
+      $cmp = strcmp($a->getLabel(), $b->getLabel());
+      return $cmp !== 0 ? $cmp : strcmp($a->getKey(), $b->getKey());
+    });
+    return new ArrayCollection(iterator_to_array($iterator));
   }
 
   /**
@@ -433,7 +439,12 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function usage():int
   {
-    return $this->dataOptions->count();
+    // return $this->dataOptions->count();
+    $usageCounter = 0;
+    foreach ($this->dataOptions as $dataOption) {
+      $usageCounter += $dataOption->usage();
+    }
+    return $usageCounter;
   }
 
   /**

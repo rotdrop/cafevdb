@@ -2,6 +2,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service =
 [
     [ "adminContact", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a1dba95c68ac062b1f4987c3c61dfa0b9", null ],
     [ "cloudAdminContact", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a386b4fb08b4007d0c43c7d337d90990d", null ],
+    [ "executiveBoardMembers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a13cb759047e308ad9b9a05ab45fccddd", null ],
     [ "getGroupAdmins", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a6ad59209699f1ea04a3ce24ab9e112d4", null ],
     [ "getPresident", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a58259e4c7621772baed4e9883b59cc93", null ],
     [ "getSecretary", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a8ada6036f348dbf48c7910c53a774206", null ],

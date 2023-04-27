@@ -67,10 +67,10 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'amount', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'dateOfReceipt', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'subject', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'projectPayments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaTransaction', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaBankAccount', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaDebitMandate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'notificationMessageId', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'musician', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'supportingDocument', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'created', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'updated'];
+            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'amount', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'dateOfReceipt', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'subject', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'projectPayments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaTransaction', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaBankAccount', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaDebitMandate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'notificationMessageId', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'musician', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'projectParticipant', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'supportingDocument', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'balanceDocumentsFolder', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'preUpdateValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'keys', 'created', 'updated', 'appL10n'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'amount', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'dateOfReceipt', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'subject', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'projectPayments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaTransaction', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaBankAccount', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaDebitMandate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'notificationMessageId', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'musician', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'supportingDocument', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'created', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'updated'];
+        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'amount', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'dateOfReceipt', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'subject', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'projectPayments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaTransaction', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaBankAccount', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'sepaDebitMandate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'notificationMessageId', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'musician', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'projectParticipant', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'supportingDocument', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'balanceDocumentsFolder', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'preUpdateValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\CompositePayment' . "\0" . 'keys', 'created', 'updated', 'appL10n'];
     }
 
     /**
@@ -262,12 +262,56 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function getMusician()
+    public function getMusician(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getMusician', []);
 
         return parent::getMusician();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setProject($project): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setProject', [$project]);
+
+        return parent::setProject($project);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getProject(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProject', []);
+
+        return parent::getProject();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setProjectParticipant(?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant $projectParticipant): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setProjectParticipant', [$projectParticipant]);
+
+        return parent::setProjectParticipant($projectParticipant);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getProjectParticipant(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProjectParticipant', []);
+
+        return parent::getProjectParticipant();
     }
 
     /**
@@ -295,7 +339,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function setSubject($subject): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
+    public function setSubject(?string $subject): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSubject', [$subject]);
@@ -306,7 +350,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function getSubject()
+    public function getSubject(): ?string
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSubject', []);
@@ -405,7 +449,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function setNotificationMessageId($notificationMessageId): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
+    public function setNotificationMessageId(?string $notificationMessageId): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setNotificationMessageId', [$notificationMessageId]);
@@ -416,7 +460,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function getNotificationMessageId()
+    public function getNotificationMessageId(): ?string
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getNotificationMessageId', []);
@@ -427,7 +471,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function setSupportingDocument(?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile $supportingDocument): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
+    public function setSupportingDocument(?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile $supportingDocument): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSupportingDocument', [$supportingDocument]);
@@ -438,12 +482,78 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function getSupportingDocument(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile
+    public function getSupportingDocument(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSupportingDocument', []);
 
         return parent::getSupportingDocument();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setBalanceDocumentsFolder(?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder $balanceDocumentsFolder): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setBalanceDocumentsFolder', [$balanceDocumentsFolder]);
+
+        return parent::setBalanceDocumentsFolder($balanceDocumentsFolder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBalanceDocumentsFolder(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getBalanceDocumentsFolder', []);
+
+        return parent::getBalanceDocumentsFolder();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateSubject(\Closure $transliterate = NULL): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'generateSubject', [$transliterate]);
+
+        return parent::generateSubject($transliterate);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateSubject(\Closure $transliterate = NULL): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'updateSubject', [$transliterate]);
+
+        return parent::updateSubject($transliterate);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function preUpdate(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreUpdateEventArgs $event)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'preUpdate', [$event]);
+
+        return parent::preUpdate($event);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function postUpdate(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs $event)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'postUpdate', [$event]);
+
+        return parent::postUpdate($event);
     }
 
     /**
@@ -460,7 +570,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function toArray()
+    public function toArray(): array
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'toArray', []);
@@ -471,7 +581,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'offsetExists', [$offset]);
@@ -482,7 +592,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'offsetGet', [$offset]);
@@ -493,7 +603,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'offsetSet', [$offset, $value]);
@@ -504,7 +614,7 @@ class CompositePayment extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Compo
     /**
      * {@inheritDoc}
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'offsetUnset', [$offset]);

@@ -1,12 +1,6 @@
 <map id="onProjectUpdated" name="onProjectUpdated">
-<area shape="rect" id="node1" title=" " alt="" coords="5,314,132,339"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7b56dda98a141d37413cf9829d8321a1" title="Return the category list for the given object." alt="" coords="180,5,396,45"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#af21741991f3f923a2c6932f3545629bf" title=" " alt="" coords="206,70,370,125"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#a56d8b5b6d841cbdb23634f7a6e19fd64" title=" " alt="" coords="206,149,370,203"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#aa36d0ad33bee7c190d64f0bfcb4ecb79" title=" " alt="" coords="206,227,370,282"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a632c8d7a54bca232cdb9aa714fd5043a" title=" " alt="" coords="183,307,393,347"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d" title=" " alt="" coords="181,371,395,411"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad13d1d67b2cf64476789ff3e3bf2a802" title=" " alt="" coords="237,435,339,461"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7a3802eef217ed05218a72e585acc4fe" title=" " alt="" coords="180,485,396,525"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6520daebf6cd31211b54598419eb8a91" title=" " alt="" coords="183,549,393,589"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,99,132,124"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#af21741991f3f923a2c6932f3545629bf" title=" " alt="" coords="180,5,344,60"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#a56d8b5b6d841cbdb23634f7a6e19fd64" title=" " alt="" coords="180,84,344,139"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#aa36d0ad33bee7c190d64f0bfcb4ecb79" title=" " alt="" coords="180,163,344,217"/>
 </map>

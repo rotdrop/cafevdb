@@ -12,5 +12,6 @@ var searchData=
   ['geostateprovince_9',['GeoStateProvince',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_geo_state_province.html',1,'OCA::CAFEVDB::Database::Doctrine::ORM::Entities']]],
   ['googlemailsanitizer_10',['GoogleMailSanitizer',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html',1,'OCA::CAFEVDB::Maintenance::Sanitizers']]],
   ['groupfoldersservice_11',['GroupFoldersService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html',1,'OCA::CAFEVDB::Toolkit::Service']]],
-  ['groupmembermiddleware_12',['GroupMemberMiddleware',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_group_member_middleware.html',1,'OCA::CAFEVDB::Middleware']]]
+  ['groupmembermiddleware_12',['GroupMemberMiddleware',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_middleware_1_1_group_member_middleware.html',1,'OCA::CAFEVDB::Middleware']]],
+  ['groupmembershiplistener_13',['GroupMembershipListener',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_group_membership_listener.html',1,'OCA::CAFEVDB::Listener']]]
 ];

@@ -139,38 +139,48 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aa25cdcd89ba57212663eaafec422453d"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aa25cdcd89ba57212663eaafec422453d">getVCalendar</a> (mixed $stuff)</td></tr>
 <tr class="separator:aa25cdcd89ba57212663eaafec422453d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dad03f32dc06c2aa1711b0f2243c18d"><td class="memItemLeft" align="right" valign="top">static &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a2dad03f32dc06c2aa1711b0f2243c18d">getVObject</a> (VCalendar &amp;$vCalendar)</td></tr>
-<tr class="memdesc:a2dad03f32dc06c2aa1711b0f2243c18d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a reference to the object contained in a Sabre VCALENDAR object.  <br /></td></tr>
-<tr class="separator:a2dad03f32dc06c2aa1711b0f2243c18d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01da57a5398426d6331c35796d471f07"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a01da57a5398426d6331c35796d471f07">getAllVObjects</a> (VCalendar $vCalendar, string $type=self::VEVENT)</td></tr>
+<tr class="memdesc:a01da57a5398426d6331c35796d471f07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all components of a given type from a VCalendar object and return them as flat array.  <br /></td></tr>
+<tr class="separator:a01da57a5398426d6331c35796d471f07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a304fb17fd89d3a9ab0517d50bb7ab3"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7a304fb17fd89d3a9ab0517d50bb7ab3">getVObject</a> (VCalendar $vCalendar)</td></tr>
+<tr class="memdesc:a7a304fb17fd89d3a9ab0517d50bb7ab3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the "master" wrapped object, where the VCalendar object here is rather not an entire calendar, but one item from the database.  <br /></td></tr>
+<tr class="separator:a7a304fb17fd89d3a9ab0517d50bb7ab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74115b9298d21b9cbf1ef88796d1b1b7"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a74115b9298d21b9cbf1ef88796d1b1b7">getVObjectType</a> (VCalendar $vCalendar)</td></tr>
 <tr class="memdesc:a74115b9298d21b9cbf1ef88796d1b1b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the type of the respective calendar object.  <br /></td></tr>
 <tr class="separator:a74115b9298d21b9cbf1ef88796d1b1b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b56dda98a141d37413cf9829d8321a1"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7b56dda98a141d37413cf9829d8321a1">getCategories</a> (VCalendar $vCalendar)</td></tr>
-<tr class="memdesc:a7b56dda98a141d37413cf9829d8321a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the category list for the given object.  <br /></td></tr>
-<tr class="separator:a7b56dda98a141d37413cf9829d8321a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a3802eef217ed05218a72e585acc4fe"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7a3802eef217ed05218a72e585acc4fe">setCategories</a> (VCalendar &amp;$vCalendar, array $categories)</td></tr>
-<tr class="separator:a7a3802eef217ed05218a72e585acc4fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec5da185922e02ddaa7d9eb7e851fcb0"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aec5da185922e02ddaa7d9eb7e851fcb0">getUid</a> (VCalendar $vCalendar)</td></tr>
-<tr class="separator:aec5da185922e02ddaa7d9eb7e851fcb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb1b6318b17e10feff36a8df718f947b"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#afb1b6318b17e10feff36a8df718f947b">setUid</a> (VCalendar &amp;$vCalendar, string $uid)</td></tr>
-<tr class="separator:afb1b6318b17e10feff36a8df718f947b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a632c8d7a54bca232cdb9aa714fd5043a"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a632c8d7a54bca232cdb9aa714fd5043a">getSummary</a> (VCalendar $vCalendar)</td></tr>
-<tr class="separator:a632c8d7a54bca232cdb9aa714fd5043a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6520daebf6cd31211b54598419eb8a91"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6520daebf6cd31211b54598419eb8a91">setSummary</a> (VCalendar &amp;$vCalendar, ?string $summary)</td></tr>
-<tr class="separator:a6520daebf6cd31211b54598419eb8a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d520e95d147e126734d4a48edbd912b"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7d520e95d147e126734d4a48edbd912b">getDescription</a> (VCalendar $vCalendar)</td></tr>
-<tr class="separator:a7d520e95d147e126734d4a48edbd912b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7958b2ba7fe47d25d6096960f277b854"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7958b2ba7fe47d25d6096960f277b854">setDescription</a> (VCalendar &amp;$vCalendar, ?string $description)</td></tr>
-<tr class="separator:a7958b2ba7fe47d25d6096960f277b854"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20bce1060035becc1a931e3cd65aeecc"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a20bce1060035becc1a931e3cd65aeecc">getDTEnd</a> (VCalendar $vCalendar)</td></tr>
-<tr class="separator:a20bce1060035becc1a931e3cd65aeecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cf53613b1df4a77e0905d0b2f30a969"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a9cf53613b1df4a77e0905d0b2f30a969">isEventRecurring</a> (VComponent $vComponent)</td></tr>
+<tr class="memdesc:a9cf53613b1df4a77e0905d0b2f30a969"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the given event is recurring or not.  <br /></td></tr>
+<tr class="separator:a9cf53613b1df4a77e0905d0b2f30a969"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab280ff38a117e881c18075805c4dd50f"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ab280ff38a117e881c18075805c4dd50f">getCategories</a> (VComponent $vComponent)</td></tr>
+<tr class="memdesc:ab280ff38a117e881c18075805c4dd50f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the category list for the given object.  <br /></td></tr>
+<tr class="separator:ab280ff38a117e881c18075805c4dd50f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72a7419a45e317c5c17d513c0f12fc71"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a72a7419a45e317c5c17d513c0f12fc71">setCategories</a> (VComponent $vComponent, array $categories)</td></tr>
+<tr class="separator:a72a7419a45e317c5c17d513c0f12fc71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea8cff9d53e521f23db7c0b05e49a288"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aea8cff9d53e521f23db7c0b05e49a288">getUid</a> (VComponent $vComponent)</td></tr>
+<tr class="separator:aea8cff9d53e521f23db7c0b05e49a288"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33f3a0a2088e5c9960743a070f5daa15"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a33f3a0a2088e5c9960743a070f5daa15">setUid</a> (VComponent $vComponent, string $uid)</td></tr>
+<tr class="separator:a33f3a0a2088e5c9960743a070f5daa15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f6ea1f79e76a9712fe0dd4dd221e680"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a3f6ea1f79e76a9712fe0dd4dd221e680">getSummary</a> (VComponent $vComponent)</td></tr>
+<tr class="separator:a3f6ea1f79e76a9712fe0dd4dd221e680"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc403f39a368a0b656f85737cb75cf71"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#afc403f39a368a0b656f85737cb75cf71">setSummary</a> (VComponent $vComponent, ?string $summary)</td></tr>
+<tr class="separator:afc403f39a368a0b656f85737cb75cf71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a633c92bf5b48144263408433ed630c44"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a633c92bf5b48144263408433ed630c44">getDescription</a> (VComponent $vComponent)</td></tr>
+<tr class="separator:a633c92bf5b48144263408433ed630c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eadc354fe61d457e2e074427426989e"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a5eadc354fe61d457e2e074427426989e">setDescription</a> (VComponent $vComponent, ?string $description)</td></tr>
+<tr class="separator:a5eadc354fe61d457e2e074427426989e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02cc9832fe0b6ed97c1414bf1be58d48"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a02cc9832fe0b6ed97c1414bf1be58d48">getDTEnd</a> (VComponent $vObject)</td></tr>
+<tr class="separator:a02cc9832fe0b6ed97c1414bf1be58d48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a7023bc4d26f764b499059460d6bb94d3"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7023bc4d26f764b499059460d6bb94d3">VTODO</a> = 'VTODO'</td></tr>
+<tr class="memitem:a7023bc4d26f764b499059460d6bb94d3"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a7023bc4d26f764b499059460d6bb94d3">VTODO</a> = VCalendarType::VTODO</td></tr>
 <tr class="separator:a7023bc4d26f764b499059460d6bb94d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5fc5aca4d8afff8656dab0b48579fee"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ae5fc5aca4d8afff8656dab0b48579fee">VEVENT</a> = 'VEVENT'</td></tr>
+<tr class="memitem:ae5fc5aca4d8afff8656dab0b48579fee"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ae5fc5aca4d8afff8656dab0b48579fee">VEVENT</a> = VCalendarType::VEVENT</td></tr>
 <tr class="separator:ae5fc5aca4d8afff8656dab0b48579fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc31bd127a7195f0ab0aa8c752829b28"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#adc31bd127a7195f0ab0aa8c752829b28">VCARD</a> = VCalendarType::VCARD</td></tr>
+<tr class="separator:adc31bd127a7195f0ab0aa8c752829b28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f07018ff035dc09ba01a0fb82f811dd"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a0f07018ff035dc09ba01a0fb82f811dd">VJOURNAL</a> = VCalendarType::VJOURNAL</td></tr>
+<tr class="separator:a0f07018ff035dc09ba01a0fb82f811dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6462b2cdd2024a88b278a4ca3e953850"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6462b2cdd2024a88b278a4ca3e953850">ALARM_ACTION_DISPLAY</a> = 'DISPLAY'</td></tr>
 <tr class="separator:a6462b2cdd2024a88b278a4ca3e953850"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e9c16c30f42800117dc45c532b82988"><td class="memItemLeft" align="right" valign="top">const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a8e9c16c30f42800117dc45c532b82988">ALARM_ACTION_AUDIO</a> = 'AUDIO'</td></tr>
@@ -215,7 +225,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Operation/Builder for VCalendar objects. </p>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00045">45</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00047">47</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6d7f1257d8169b804bcb8d00394b6fc3" name="a6d7f1257d8169b804bcb8d00394b6fc3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6d7f1257d8169b804bcb8d00394b6fc3">&#9670;&#160;</a></span>__construct()</h2>
@@ -245,7 +255,7 @@ Private Attributes</h2></td></tr>
 
 <p>{} </p>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00068">68</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00072">72</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -307,9 +317,9 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00202">202</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00206">206</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00162">VCalendarService\createVEventFromRequest()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00166">VCalendarService\createVEventFromRequest()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -370,9 +380,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00250">250</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00254">254</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00162">VCalendarService\createVEventFromRequest()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00166">VCalendarService\createVEventFromRequest()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -426,9 +436,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00292">292</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00296">296</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00162">VCalendarService\createVEventFromRequest()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00166">VCalendarService\createVEventFromRequest()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -501,7 +511,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|VAlarm </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00761">761</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00844">844</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -540,9 +550,9 @@ Here is the caller graph for this function:</div>
 <p>$taskData = [ 'summary' =&gt; $title, // required 'related' =&gt; other VComponent's UID // optional 'due' =&gt; date('d-m-Y', $timeStamp), // required 'status' =&gt; 'TASK_NEEDS_ACTION ', // e.g. 'start' =&gt; date('d-m-Y'), // optional 'location' =&gt; 'Cyber-Space', // optional 'categories' =&gt; $categories, // optional 'description' =&gt; $description, // optional 'calendar' =&gt; $calendarId, // required 'allday' =&gt; true, // optional 'alarm' =&gt; $alarm, ]; // optional ```.</p>
 <dl class="section return"><dt>Returns</dt><dd>null|VCalendar </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00145">145</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00149">149</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_v_calendar_service_8php_source.html#l00162">VCalendarService\createVEventFromRequest()</a>, and <a class="el" href="_v_calendar_service_8php_source.html#l00636">VCalendarService\createVTodoFromRequest()</a>.</p>
+<p class="reference">References <a class="el" href="_v_calendar_service_8php_source.html#l00166">VCalendarService\createVEventFromRequest()</a>, and <a class="el" href="_v_calendar_service_8php_source.html#l00719">VCalendarService\createVTodoFromRequest()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -583,11 +593,11 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|VCalendar </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00162">162</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00166">166</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_v_calendar_service_8php_source.html#l00202">VCalendarService\addParticipants()</a>, <a class="el" href="_v_calendar_service_8php_source.html#l00250">VCalendarService\addRelations()</a>, and <a class="el" href="_v_calendar_service_8php_source.html#l00292">VCalendarService\addVAlarmsFromRequest()</a>.</p>
+<p class="reference">References <a class="el" href="_v_calendar_service_8php_source.html#l00206">VCalendarService\addParticipants()</a>, <a class="el" href="_v_calendar_service_8php_source.html#l00254">VCalendarService\addRelations()</a>, and <a class="el" href="_v_calendar_service_8php_source.html#l00296">VCalendarService\addVAlarmsFromRequest()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00145">VCalendarService\createVCalendarFromRequest()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00149">VCalendarService\createVCalendarFromRequest()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -634,9 +644,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>VCalendar|null </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00636">636</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00719">719</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00145">VCalendarService\createVCalendarFromRequest()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00149">VCalendarService\createVCalendarFromRequest()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -646,8 +656,56 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a7b56dda98a141d37413cf9829d8321a1" name="a7b56dda98a141d37413cf9829d8321a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b56dda98a141d37413cf9829d8321a1">&#9670;&#160;</a></span>getCategories()</h2>
+<a id="a01da57a5398426d6331c35796d471f07" name="a01da57a5398426d6331c35796d471f07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01da57a5398426d6331c35796d471f07">&#9670;&#160;</a></span>getAllVObjects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static getAllVObjects </td>
+          <td>(</td>
+          <td class="paramtype">VCalendar&#160;</td>
+          <td class="paramname"><em>$vCalendar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>$type</em> = <code>self::VEVENT</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get all components of a given type from a VCalendar object and return them as flat array. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>VCalendar object.</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$type</td><td>Defaults to 'VEVENT'</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00404">404</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+
+</div>
+</div>
+<a id="ab280ff38a117e881c18075805c4dd50f" name="ab280ff38a117e881c18075805c4dd50f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab280ff38a117e881c18075805c4dd50f">&#9670;&#160;</a></span>getCategories()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -658,8 +716,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static getCategories </td>
           <td>(</td>
-          <td class="paramtype">VCalendar&#160;</td>
-          <td class="paramname"><em>$vCalendar</em></td><td>)</td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -673,26 +731,18 @@ Here is the caller graph for this function:</div>
 <p>Return the category list for the given object. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Sabe vCalendar object.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Sabre VCalendar or VEvent object.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An array with the categories for the object. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00445">445</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l00251">EventsService\onProjectUpdated()</a>, <a class="el" href="_events_service_8php_source.html#l00826">EventsService\syncCalendarObject()</a>, and <a class="el" href="_events_service_8php_source.html#l00973">EventsService\unchain()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_a7b56dda98a141d37413cf9829d8321a1_icgraph.svg" width="647" height="210"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00504">504</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="a7d520e95d147e126734d4a48edbd912b" name="a7d520e95d147e126734d4a48edbd912b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d520e95d147e126734d4a48edbd912b">&#9670;&#160;</a></span>getDescription()</h2>
+<a id="a633c92bf5b48144263408433ed630c44" name="a633c92bf5b48144263408433ed630c44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a633c92bf5b48144263408433ed630c44">&#9670;&#160;</a></span>getDescription()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -703,8 +753,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static getDescription </td>
           <td>(</td>
-          <td class="paramtype">VCalendar&#160;</td>
-          <td class="paramname"><em>$vCalendar</em></td><td>)</td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -716,18 +766,18 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Sabre calendar object.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Sabre calendar object.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|string The summary comment of $vCalendar. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00537">537</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00614">614</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="a20bce1060035becc1a931e3cd65aeecc" name="a20bce1060035becc1a931e3cd65aeecc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20bce1060035becc1a931e3cd65aeecc">&#9670;&#160;</a></span>getDTEnd()</h2>
+<a id="a02cc9832fe0b6ed97c1414bf1be58d48" name="a02cc9832fe0b6ed97c1414bf1be58d48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02cc9832fe0b6ed97c1414bf1be58d48">&#9670;&#160;</a></span>getDTEnd()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -738,8 +788,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static getDTEnd </td>
           <td>(</td>
-          <td class="paramtype">VCalendar&#160;</td>
-          <td class="paramname"><em>$vCalendar</em></td><td>)</td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vObject</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -751,26 +801,21 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Object reference.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vObject</td><td>VEvent or anything else with DTEND or DTSTART<ul>
+<li>DURATION.</li>
+</ul>
+</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>mixed DTEND property if set, otherwise DTSTART + duration. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00567">567</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l00317">EventsService\makeEvent()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_a20bce1060035becc1a931e3cd65aeecc_icgraph.svg" width="100%" height="386"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00653">653</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="a632c8d7a54bca232cdb9aa714fd5043a" name="a632c8d7a54bca232cdb9aa714fd5043a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a632c8d7a54bca232cdb9aa714fd5043a">&#9670;&#160;</a></span>getSummary()</h2>
+<a id="a3f6ea1f79e76a9712fe0dd4dd221e680" name="a3f6ea1f79e76a9712fe0dd4dd221e680"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f6ea1f79e76a9712fe0dd4dd221e680">&#9670;&#160;</a></span>getSummary()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -781,8 +826,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static getSummary </td>
           <td>(</td>
-          <td class="paramtype">VCalendar&#160;</td>
-          <td class="paramname"><em>$vCalendar</em></td><td>)</td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -794,26 +839,18 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Sabre calendar object.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Sabre calendar object.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|string The summary comment of $vCalendar. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00506">506</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l00251">EventsService\onProjectUpdated()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_a632c8d7a54bca232cdb9aa714fd5043a_icgraph.svg" width="374" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00577">577</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="aec5da185922e02ddaa7d9eb7e851fcb0" name="aec5da185922e02ddaa7d9eb7e851fcb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec5da185922e02ddaa7d9eb7e851fcb0">&#9670;&#160;</a></span>getUid()</h2>
+<a id="aea8cff9d53e521f23db7c0b05e49a288" name="aea8cff9d53e521f23db7c0b05e49a288"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea8cff9d53e521f23db7c0b05e49a288">&#9670;&#160;</a></span>getUid()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -824,8 +861,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static getUid </td>
           <td>(</td>
-          <td class="paramtype">VCalendar&#160;</td>
-          <td class="paramname"><em>$vCalendar</em></td><td>)</td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -837,21 +874,13 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Sabre calendar object.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Sabre VCalendar or VEvent object.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|string The UID of $vCalendar. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00475">475</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l01092">EventsService\newEvent()</a>, <a class="el" href="_events_service_8php_source.html#l01040">EventsService\newTask()</a>, and <a class="el" href="_events_service_8php_source.html#l00826">EventsService\syncCalendarObject()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_aec5da185922e02ddaa7d9eb7e851fcb0_icgraph.svg" width="580" height="234"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00540">540</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -886,20 +915,12 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>VCalendar </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00371">371</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l00712">EventsService\exportEvents()</a>, <a class="el" href="_events_service_8php_source.html#l00317">EventsService\makeEvent()</a>, <a class="el" href="_events_service_8php_source.html#l01092">EventsService\newEvent()</a>, <a class="el" href="_events_service_8php_source.html#l01040">EventsService\newTask()</a>, <a class="el" href="_events_service_8php_source.html#l00251">EventsService\onProjectUpdated()</a>, <a class="el" href="_events_service_8php_source.html#l00826">EventsService\syncCalendarObject()</a>, <a class="el" href="_events_service_8php_source.html#l00973">EventsService\unchain()</a>, and <a class="el" href="_events_service_8php_source.html#l01141">EventsService\updateCalendarEntry()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_aa25cdcd89ba57212663eaafec422453d_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00375">375</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="a2dad03f32dc06c2aa1711b0f2243c18d" name="a2dad03f32dc06c2aa1711b0f2243c18d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2dad03f32dc06c2aa1711b0f2243c18d">&#9670;&#160;</a></span>getVObject()</h2>
+<a id="a7a304fb17fd89d3a9ab0517d50bb7ab3" name="a7a304fb17fd89d3a9ab0517d50bb7ab3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a304fb17fd89d3a9ab0517d50bb7ab3">&#9670;&#160;</a></span>getVObject()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -908,9 +929,9 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static &amp; getVObject </td>
+          <td class="memname">static getVObject </td>
           <td>(</td>
-          <td class="paramtype">VCalendar &amp;&#160;</td>
+          <td class="paramtype">VCalendar&#160;</td>
           <td class="paramname"><em>$vCalendar</em></td><td>)</td>
           <td></td>
         </tr>
@@ -922,25 +943,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Return a reference to the object contained in a Sabre VCALENDAR object. </p>
-<p>This is a reference to allow for modification of the $vCalendar object.</p>
+<p>Return the "master" wrapped object, where the VCalendar object here is rather not an entire calendar, but one item from the database. </p>
+<p>Still it may contain more than one Component, e.g. for recurring events. In this case the "master" item is returned.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>VCalendar object.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to the inner object. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The inner object, or one of the inner objects. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00399">399</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l00712">EventsService\exportEvents()</a>, <a class="el" href="_events_service_8php_source.html#l00317">EventsService\makeEvent()</a>, and <a class="el" href="_events_service_8php_source.html#l00826">EventsService\syncCalendarObject()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_a2dad03f32dc06c2aa1711b0f2243c18d_icgraph.svg" width="100%" height="505"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00431">431</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -977,15 +990,44 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string Either VEVENT, VTODO, VJOURNAL or VCARD. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00422">422</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00463">463</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l00826">EventsService\syncCalendarObject()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_a74115b9298d21b9cbf1ef88796d1b1b7_icgraph.svg" width="635" height="144"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
+<a id="a9cf53613b1df4a77e0905d0b2f30a969" name="a9cf53613b1df4a77e0905d0b2f30a969"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cf53613b1df4a77e0905d0b2f30a969">&#9670;&#160;</a></span>isEventRecurring()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static isEventRecurring </td>
+          <td>(</td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determine if the given event is recurring or not. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Sabre VCalendar or VEvent object.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00486">486</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1004,14 +1046,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>OC_Calendar_Object The old Owncloud inherited calendar object.</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000096">Todo:</a></b></dt><dd>Get rid of it. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000100">Todo:</a></b></dt><dd>Get rid of it. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00361">361</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00365">365</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="a7a3802eef217ed05218a72e585acc4fe" name="a7a3802eef217ed05218a72e585acc4fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a3802eef217ed05218a72e585acc4fe">&#9670;&#160;</a></span>setCategories()</h2>
+<a id="a72a7419a45e317c5c17d513c0f12fc71" name="a72a7419a45e317c5c17d513c0f12fc71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72a7419a45e317c5c17d513c0f12fc71">&#9670;&#160;</a></span>setCategories()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1022,8 +1064,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static setCategories </td>
           <td>(</td>
-          <td class="paramtype">VCalendar &amp;&#160;</td>
-          <td class="paramname"><em>$vCalendar</em>, </td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1045,28 +1087,19 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Object reference.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Sabre VCalendar or VEvent object.</td></tr>
     <tr><td class="paramtype">array</td><td class="paramname">$categories</td><td>Array of strings.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>VCalendar Pass through of $vCalendar.</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000097">Todo:</a></b></dt><dd>Check whether we really need a reference here.xy </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>VComponent Pass through of $vComponent. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00462">462</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l00251">EventsService\onProjectUpdated()</a>, and <a class="el" href="_events_service_8php_source.html#l00973">EventsService\unchain()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_a7a3802eef217ed05218a72e585acc4fe_icgraph.svg" width="643" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00522">522</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="a7958b2ba7fe47d25d6096960f277b854" name="a7958b2ba7fe47d25d6096960f277b854"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7958b2ba7fe47d25d6096960f277b854">&#9670;&#160;</a></span>setDescription()</h2>
+<a id="a5eadc354fe61d457e2e074427426989e" name="a5eadc354fe61d457e2e074427426989e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eadc354fe61d457e2e074427426989e">&#9670;&#160;</a></span>setDescription()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1077,8 +1110,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static setDescription </td>
           <td>(</td>
-          <td class="paramtype">VCalendar &amp;&#160;</td>
-          <td class="paramname"><em>$vCalendar</em>, </td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1100,20 +1133,19 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Object reference.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Object reference.</td></tr>
     <tr><td class="paramtype">null&#160;|&#160;string</td><td class="paramname">$description</td><td>The description to set.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>VCalendar Pass through of $vCalendar.</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000100">Todo:</a></b></dt><dd>Check whether we really need a reference here.xy </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>VComponent Pass through of $vComponent. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00554">554</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00633">633</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="a6520daebf6cd31211b54598419eb8a91" name="a6520daebf6cd31211b54598419eb8a91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6520daebf6cd31211b54598419eb8a91">&#9670;&#160;</a></span>setSummary()</h2>
+<a id="afc403f39a368a0b656f85737cb75cf71" name="afc403f39a368a0b656f85737cb75cf71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc403f39a368a0b656f85737cb75cf71">&#9670;&#160;</a></span>setSummary()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1124,8 +1156,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static setSummary </td>
           <td>(</td>
-          <td class="paramtype">VCalendar &amp;&#160;</td>
-          <td class="paramname"><em>$vCalendar</em>, </td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1147,28 +1179,19 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Object reference.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Object reference.</td></tr>
     <tr><td class="paramtype">null&#160;|&#160;string</td><td class="paramname">$summary</td><td>The summary to set.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>VCalendar Pass through of $vCalendar.</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000099">Todo:</a></b></dt><dd>Check whether we really need a reference here.xy </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>VComponent Pass through of $vComponent. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00523">523</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="_events_service_8php_source.html#l00251">EventsService\onProjectUpdated()</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service_a6520daebf6cd31211b54598419eb8a91_icgraph.svg" width="374" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00596">596</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
-<a id="afb1b6318b17e10feff36a8df718f947b" name="afb1b6318b17e10feff36a8df718f947b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb1b6318b17e10feff36a8df718f947b">&#9670;&#160;</a></span>setUid()</h2>
+<a id="a33f3a0a2088e5c9960743a070f5daa15" name="a33f3a0a2088e5c9960743a070f5daa15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33f3a0a2088e5c9960743a070f5daa15">&#9670;&#160;</a></span>setUid()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1179,8 +1202,8 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">static setUid </td>
           <td>(</td>
-          <td class="paramtype">VCalendar &amp;&#160;</td>
-          <td class="paramname"><em>$vCalendar</em>, </td>
+          <td class="paramtype">VComponent&#160;</td>
+          <td class="paramname"><em>$vComponent</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1202,15 +1225,14 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">VCalendar</td><td class="paramname">$vCalendar</td><td>Object reference.</td></tr>
+    <tr><td class="paramtype">VComponent</td><td class="paramname">$vComponent</td><td>Sabre VCalendar or VEvent object.</td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$uid</td><td>The uid to set.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>VCalendar Pass through of $vCalendar.</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000098">Todo:</a></b></dt><dd>Check whether we really need a reference here.xy </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>VCalendar Pass through of $vCalendar. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00492">492</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00559">559</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1255,7 +1277,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|VCalendar </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00324">324</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00328">328</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1301,7 +1323,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>null|VCalendar </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00343">343</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00347">347</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1349,7 +1371,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>VCalendar|null </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00681">681</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00764">764</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1389,9 +1411,9 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array|false Array of error messages or false on success </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00085">85</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00089">89</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">References <a class="el" href="_v_calendar_service_8php_source.html#l00600">VCalendarService\validateVTodoRequest()</a>.</p>
+<p class="reference">References <a class="el" href="_v_calendar_service_8php_source.html#l00683">VCalendarService\validateVTodoRequest()</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1434,9 +1456,9 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array|false Array of error messages or false on success </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00600">600</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00683">683</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00085">VCalendarService\validateRequest()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="_v_calendar_service_8php_source.html#l00089">VCalendarService\validateRequest()</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1467,7 +1489,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00050">50</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00052">52</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1483,7 +1505,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00056">56</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00060">60</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1499,7 +1521,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00055">55</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00059">59</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1515,7 +1537,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00057">57</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00061">61</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1531,7 +1553,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00058">58</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00062">62</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1547,7 +1569,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00061">61</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00065">65</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1563,7 +1585,23 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00060">60</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00064">64</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+
+</div>
+</div>
+<a id="adc31bd127a7195f0ab0aa8c752829b28" name="adc31bd127a7195f0ab0aa8c752829b28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc31bd127a7195f0ab0aa8c752829b28">&#9670;&#160;</a></span>VCARD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const VCARD = VCalendarType::VCARD</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00056">56</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1574,12 +1612,28 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const VEVENT = 'VEVENT'</td>
+          <td class="memname">const VEVENT = VCalendarType::VEVENT</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00053">53</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00055">55</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+
+</div>
+</div>
+<a id="a0f07018ff035dc09ba01a0fb82f811dd" name="a0f07018ff035dc09ba01a0fb82f811dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f07018ff035dc09ba01a0fb82f811dd">&#9670;&#160;</a></span>VJOURNAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const VJOURNAL = VCalendarType::VJOURNAL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00057">57</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1590,12 +1644,12 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const VTODO = 'VTODO'</td>
+          <td class="memname">const VTODO = VCalendarType::VTODO</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00052">52</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00054">54</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1611,7 +1665,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00064">64</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00068">68</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1627,7 +1681,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00063">63</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00067">67</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1643,7 +1697,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00065">65</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_v_calendar_service_8php_source.html#l00069">69</a> of file <a class="el" href="_v_calendar_service_8php_source.html">VCalendarService.php</a>.</p>
 
 </div>
 </div>
@@ -1656,7 +1710,7 @@ Here is the caller graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>OCA</b></li><li class="navelem"><a class="el" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b.html">CAFEVDB</a></li><li class="navelem"><a class="el" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service.html">Service</a></li><li class="navelem"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html">VCalendarService</a></li>
-    <li class="footer">Generated on Wed Mar 22 2023 10:36:50 for CamerataDB by
+    <li class="footer">Generated on Thu Apr 27 2023 09:10:29 for CamerataDB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.9.6 </li>
   </ul>

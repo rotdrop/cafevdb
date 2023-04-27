@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \RuntimeException;
-use \InvalidArgumentException;
+use Throwable;
+use RuntimeException;
+use InvalidArgumentException;
 use GuzzleHttp\Client as RestClient;
 use GuzzleHttp\Exception\ConnectException;
 
@@ -215,6 +216,24 @@ class MailingListsService
       }
     }
     return true;
+  }
+
+  /**
+   * Check whether the mailing-lists server is configured and reachable.
+   *
+   * @return bool
+   */
+  public function isReachable():bool
+  {
+    if (!$this->isConfigured()) {
+      return false;
+    }
+    try {
+      $config = $this->getServerConfig();
+    } catch (Throwable $t) {
+      return false;
+    }
+    return !empty($config);
   }
 
   /**

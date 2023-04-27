@@ -33,7 +33,12 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Events\PreChangeUserIdSlug as HandledEvent;
 use OCA\CAFEVDB\Service\ProjectService;
 
-/** Perform renaming action when the user-id slug changes. */
+/**
+ * Perform renaming action when the user-id slug changes.#
+ *
+ * @todo Changing the slug should perhaps be cancelled if the person already
+ * uses cloud services.
+ */
 class PreChangeUserIdSlugListener implements IEventListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
@@ -44,14 +49,9 @@ class PreChangeUserIdSlugListener implements IEventListener
   private $appContainer;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
-  ) {
+  public function __construct(IAppContainer $appContainer)
+  {
     $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 
@@ -66,6 +66,7 @@ class PreChangeUserIdSlugListener implements IEventListener
     $oldSlug = $event->getOldSlug();
     $newSlug = $event->getNewSlug();
 
+    $this->logger = $this->appContainer->get(ILogger::class);
     $this->logInfo('OLD / NEW: ' . $oldSlug . ' / ' . $newSlug);
 
     if ($oldSlug === $newSlug) {

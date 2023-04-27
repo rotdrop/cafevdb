@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -559,11 +559,21 @@ make sure that the musicians are also automatically added to the
       ],
     ];
 
+    $opts['fdd']['display_name_personal'] = [
+      'name'    => $this->l->t('Display-Name (pers.)'),
+      'tab'     => [ 'id' => [ 'orchestra', 'contact', ], ],
+      'css'     => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', ], ],
+      'options' => 'LF',
+      'input'   => $this->pmeBare ? 'R' : 'HR', // handy for export
+      'sql'     => parent::musicianPublicNameSql(firstNameFirst: true),
+      'maxlen'  => 384,
+    ];
+
     $opts['fdd']['user_id_slug'] = [
       'tab'      => [ 'id' => [ 'orchestra', 'contact', ], ],
       'name'     => $this->l->t('User Id'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
-      'input'    => ($this->expertMode ? 'R' : 'HR'),
+      'input'    => $this->pmeBare ? 'R' : 'HR', // handy for export
       // 'options'  => 'AVCPD',
       'select'   => 'T',
       'maxlen'   => 256,

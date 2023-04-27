@@ -118,77 +118,77 @@ $(document).ready(function(){initNavTree('_database_2_doctrine_2_util_8php_sourc
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordflow">return</span> Collections\Criteria::expr();</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e">   81</a></span>  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">function</span> <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e">criteriaWhere</a>(array $arrayCriteria):Collections\Criteria</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  {</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    $criteria = <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#af2691c40495d429502e48d4824f0b080">self::criteria</a>();</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    $expr = <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#ae987ce50626dd3e4a9b255037433c776">self::criteriaExpr</a>();</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    $groupLevel = -1;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    $groupExpression = [];</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    $expression = <span class="keyword">null</span>;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">foreach</span> ($arrayCriteria as $key =&gt; $value) {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      $junctor = <span class="stringliteral">&#39;andWhere&#39;</span>;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      <span class="keywordflow">if</span> ($key[0] == <span class="charliteral">&#39;|&#39;</span>) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e">   78</a></span>  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">function</span> <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e">criteriaWhere</a>(array $arrayCriteria):Collections\Criteria</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    $criteria = <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#af2691c40495d429502e48d4824f0b080">self::criteria</a>();</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    $expr = <a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#ae987ce50626dd3e4a9b255037433c776">self::criteriaExpr</a>();</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    $groupLevel = -1;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    $groupExpression = [];</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    $expression = <span class="keyword">null</span>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">foreach</span> ($arrayCriteria as $key =&gt; $value) {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      $junctor = <span class="stringliteral">&#39;andWhere&#39;</span>;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      <span class="keywordflow">if</span> ($key[0] == <span class="charliteral">&#39;|&#39;</span>) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        $key = substr($key, 1);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        $junctor = <span class="stringliteral">&#39;orWhere&#39;</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      } elseif ($key[0] == <span class="charliteral">&#39;&amp;&#39;</span>) {</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        $key = substr($key, 1);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        $junctor = <span class="stringliteral">&#39;orWhere&#39;</span>;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      } elseif ($key[0] == <span class="charliteral">&#39;&amp;&#39;</span>) {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      <span class="keywordflow">if</span> ($key[0] == <span class="charliteral">&#39;(&#39;</span>) {</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        $key = substr($key, 1);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>      }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>      <span class="keywordflow">if</span> ($key[0] == <span class="charliteral">&#39;(&#39;</span>) {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        $key = substr($key, 1);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        $expression = [ <span class="stringliteral">&#39;junctor&#39;</span> =&gt; $junctor ];</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        $expression[<span class="stringliteral">&#39;composite&#39;</span>] = <span class="stringliteral">&#39;andX&#39;</span>;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <span class="keywordflow">if</span> ($key[0] == <span class="charliteral">&#39;|&#39;</span>) {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>          $expression[<span class="stringliteral">&#39;composite&#39;</span>] = <span class="stringliteral">&#39;orX&#39;</span>;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>          $key = substr($key, 1);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        } elseif ($key[0] == <span class="charliteral">&#39;&amp;&#39;</span>) {</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>          $key = substr($key, 1);</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        }</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        $expression[<span class="stringliteral">&#39;components&#39;</span>] = [];</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        $groupExpression[++$groupLevel] = $expression;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>      } elseif ($key[0] == <span class="charliteral">&#39;)&#39;</span>) {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        $key = substr($key, 1);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        $expression = array_pop($groupExpression);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        $groupLevel--;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        $junctor = $expression[<span class="stringliteral">&#39;junctor&#39;</span>];</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        $composite = $expression[<span class="stringliteral">&#39;composite&#39;</span>];</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        $components = $expression[<span class="stringliteral">&#39;components&#39;</span>];</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        $compositeExpr = call_user_func_array([ $expr, $composite ], $components);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">if</span> ($groupLevel &gt;= 0) {</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>          $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $compositeExpr;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>          $criteria-&gt;$junctor($compositeExpr);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        }</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>      }</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      <span class="keywordflow">if</span> (strlen($key) == 0) {</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="comment">// control item, e.g. parens</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>      }</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      <span class="keywordflow">if</span> ($key[0] == <span class="charliteral">&#39;!&#39;</span>) {</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        $key = substr($key, 1);</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        $compExpr = is_array($value) ? $expr-&gt;notIn($key, $value) : $expr-&gt;neq($key, $value);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        $compExpr = is_array($value) ? $expr-&gt;in($key, $value) : $expr-&gt;eq($key, $value);</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>      }</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>      <span class="keywordflow">if</span> ($groupLevel &gt;= 0) {</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $compExpr;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        $criteria-&gt;$junctor($compExpr);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      }</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    }</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keywordflow">if</span> ($groupLevel == 0) {</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>      <span class="comment">// omitted closing parenthesis at end</span></div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>      $expression = $groupExpression[0];</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>      $junctor = $expression[<span class="stringliteral">&#39;junctor&#39;</span>];</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>      $composite = $expression[<span class="stringliteral">&#39;composite&#39;</span>];</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>      $components = $expression[<span class="stringliteral">&#39;components&#39;</span>];</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>      $compositeExpr = call_user_func_array([ $expr, $composite ], $components);</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>      $criteria-&gt;$junctor($compositeExpr);</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    }</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keywordflow">return</span> $criteria;</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  }</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>}</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        $expression = [ <span class="stringliteral">&#39;junctor&#39;</span> =&gt; $junctor ];</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        $expression[<span class="stringliteral">&#39;composite&#39;</span>] = <span class="stringliteral">&#39;andX&#39;</span>;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="keywordflow">if</span> ($key[0] == <span class="charliteral">&#39;|&#39;</span>) {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>          $expression[<span class="stringliteral">&#39;composite&#39;</span>] = <span class="stringliteral">&#39;orX&#39;</span>;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>          $key = substr($key, 1);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        } elseif ($key[0] == <span class="charliteral">&#39;&amp;&#39;</span>) {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>          $key = substr($key, 1);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        }</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        $expression[<span class="stringliteral">&#39;components&#39;</span>] = [];</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        $groupExpression[++$groupLevel] = $expression;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      } elseif ($key[0] == <span class="charliteral">&#39;)&#39;</span>) {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        $key = substr($key, 1);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        $expression = array_pop($groupExpression);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        $groupLevel--;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        $junctor = $expression[<span class="stringliteral">&#39;junctor&#39;</span>];</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        $composite = $expression[<span class="stringliteral">&#39;composite&#39;</span>];</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        $components = $expression[<span class="stringliteral">&#39;components&#39;</span>];</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        $compositeExpr = call_user_func_array([ $expr, $composite ], $components);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">if</span> ($groupLevel &gt;= 0) {</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>          $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $compositeExpr;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>          $criteria-&gt;$junctor($compositeExpr);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        }</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>      }</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>      <span class="keywordflow">if</span> (strlen($key) == 0) {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="comment">// control item, e.g. parens</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      }</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>      <span class="keywordflow">if</span> ($key[0] == <span class="charliteral">&#39;!&#39;</span>) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        $key = substr($key, 1);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        $compExpr = is_array($value) ? $expr-&gt;notIn($key, $value) : $expr-&gt;neq($key, $value);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        $compExpr = is_array($value) ? $expr-&gt;in($key, $value) : $expr-&gt;eq($key, $value);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>      }</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      <span class="keywordflow">if</span> ($groupLevel &gt;= 0) {</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        $groupExpression[$groupLevel][<span class="stringliteral">&#39;components&#39;</span>][] = $compExpr;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        $criteria-&gt;$junctor($compExpr);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>      }</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    }</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keywordflow">if</span> ($groupLevel == 0) {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      <span class="comment">// omitted closing parenthesis at end</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>      $expression = $groupExpression[0];</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>      $junctor = $expression[<span class="stringliteral">&#39;junctor&#39;</span>];</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>      $composite = $expression[<span class="stringliteral">&#39;composite&#39;</span>];</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>      $components = $expression[<span class="stringliteral">&#39;components&#39;</span>];</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>      $compositeExpr = call_user_func_array([ $expr, $composite ], $components);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>      $criteria-&gt;$junctor($compositeExpr);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    }</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordflow">return</span> $criteria;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>}</div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util_html"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html">OCA\CAFEVDB\Database\Doctrine\Util</a></div><div class="ttdoc">Some mostly static convenience stuff.</div><div class="ttdef"><b>Definition:</b> <a href="_database_2_doctrine_2_util_8php_source.html#l00032">Util.php:33</a></div></div>
-<div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util_html_aafe8e2082bd107d572aa76086a06b24e"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e">OCA\CAFEVDB\Database\Doctrine\Util\criteriaWhere</a></div><div class="ttdeci">static criteriaWhere(array $arrayCriteria)</div><div class="ttdoc">Convenience function.</div><div class="ttdef"><b>Definition:</b> <a href="_database_2_doctrine_2_util_8php_source.html#l00081">Util.php:81</a></div></div>
+<div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util_html_aafe8e2082bd107d572aa76086a06b24e"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e">OCA\CAFEVDB\Database\Doctrine\Util\criteriaWhere</a></div><div class="ttdeci">static criteriaWhere(array $arrayCriteria)</div><div class="ttdoc">Convenience function.</div><div class="ttdef"><b>Definition:</b> <a href="_database_2_doctrine_2_util_8php_source.html#l00078">Util.php:78</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util_html_ae987ce50626dd3e4a9b255037433c776"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#ae987ce50626dd3e4a9b255037433c776">OCA\CAFEVDB\Database\Doctrine\Util\criteriaExpr</a></div><div class="ttdeci">static criteriaExpr()</div><div class="ttdoc">Convenience function to generate Collections\ExpressionBuilder.</div><div class="ttdef"><b>Definition:</b> <a href="_database_2_doctrine_2_util_8php_source.html#l00049">Util.php:49</a></div></div>
 <div class="ttc" id="aclass_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util_html_af2691c40495d429502e48d4824f0b080"><div class="ttname"><a href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#af2691c40495d429502e48d4824f0b080">OCA\CAFEVDB\Database\Doctrine\Util\criteria</a></div><div class="ttdeci">static criteria()</div><div class="ttdoc">Convenience function to generate Collections\Criteria.</div><div class="ttdef"><b>Definition:</b> <a href="_database_2_doctrine_2_util_8php_source.html#l00039">Util.php:39</a></div></div>
 <div class="ttc" id="anamespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_html"><div class="ttname"><a href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine.html">OCA\CAFEVDB\Database\Doctrine</a></div><div class="ttdoc">Orchestra member, musician and project management application.</div></div>
@@ -198,7 +198,7 @@ $(document).ready(function(){initNavTree('_database_2_doctrine_2_util_8php_sourc
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_dcdf07e3db1d9451f245332dc8b99070.html">Database</a></li><li class="navelem"><a class="el" href="dir_296430bfc6cb2b71e6f6026478468298.html">Doctrine</a></li><li class="navelem"><b>Util.php</b></li>
-    <li class="footer">Generated on Wed Mar 22 2023 10:36:19 for CamerataDB by
+    <li class="footer">Generated on Thu Apr 27 2023 09:10:01 for CamerataDB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.9.6 </li>
   </ul>

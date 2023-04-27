@@ -67,10 +67,10 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'field', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'musician', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'optionKey', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'optionValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'deposit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'dataOption', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'projectParticipant', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'supportingDocument', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'created', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'updated', 'deleted'];
+            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'field', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'musician', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'optionKey', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'optionValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'deposit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'dataOption', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'projectParticipant', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'supportingDocument', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'keys', 'created', 'updated', 'deleted'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'field', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'musician', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'optionKey', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'optionValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'deposit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'dataOption', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'projectParticipant', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'supportingDocument', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'created', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'updated', 'deleted'];
+        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'field', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'musician', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'optionKey', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'optionValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'deposit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'dataOption', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'projectParticipant', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'supportingDocument', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDatum' . "\0" . 'keys', 'created', 'updated', 'deleted'];
     }
 
     /**
@@ -107,7 +107,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * Forces initialization of the proxy
      */
-    public function __load()
+    public function __load(): void
     {
         $this->__initializer__ && $this->__initializer__->__invoke($this, '__load', []);
     }
@@ -116,7 +116,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific loading logic
      */
-    public function __isInitialized()
+    public function __isInitialized(): bool
     {
         return $this->__isInitialized__;
     }
@@ -125,7 +125,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific loading logic
      */
-    public function __setInitialized($initialized)
+    public function __setInitialized($initialized): void
     {
         $this->__isInitialized__ = $initialized;
     }
@@ -134,7 +134,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific loading logic
      */
-    public function __setInitializer(\Closure $initializer = null)
+    public function __setInitializer(\Closure $initializer = null): void
     {
         $this->__initializer__ = $initializer;
     }
@@ -143,7 +143,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific loading logic
      */
-    public function __getInitializer()
+    public function __getInitializer(): ?\Closure
     {
         return $this->__initializer__;
     }
@@ -152,7 +152,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific loading logic
      */
-    public function __setCloner(\Closure $cloner = null)
+    public function __setCloner(\Closure $cloner = null): void
     {
         $this->__cloner__ = $cloner;
     }
@@ -161,7 +161,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific cloning logic
      */
-    public function __getCloner()
+    public function __getCloner(): ?\Closure
     {
         return $this->__cloner__;
     }
@@ -172,7 +172,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
      * @deprecated no longer in use - generated code now relies on internal components rather than generated public API
      * @static
      */
-    public function __getLazyProperties()
+    public function __getLazyProperties(): array
     {
         return self::$lazyPropertiesDefaults;
     }
@@ -225,7 +225,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function setProjectParticipant($projectParticipant): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum
+    public function setProjectParticipant(\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant $projectParticipant): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setProjectParticipant', [$projectParticipant]);
@@ -361,7 +361,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function setSupportingDocument(?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile $supportingDocument): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum
+    public function setSupportingDocument(?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile $supportingDocument): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSupportingDocument', [$supportingDocument]);
@@ -372,12 +372,34 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function getSupportingDocument(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile
+    public function getSupportingDocument(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFile
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSupportingDocument', []);
 
         return parent::getSupportingDocument();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPayments(?\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection $payments): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPayments', [$payments]);
+
+        return parent::setPayments($payments);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPayments(): ?\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPayments', []);
+
+        return parent::getPayments();
     }
 
     /**
@@ -449,18 +471,18 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function getEffectiveDeposit(): ?float
+    public function __toString(): string
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEffectiveDeposit', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, '__toString', []);
 
-        return parent::getEffectiveDeposit();
+        return parent::__toString();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function toArray()
+    public function toArray(): array
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'toArray', []);
@@ -471,7 +493,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'offsetExists', [$offset]);
@@ -482,7 +504,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'offsetGet', [$offset]);
@@ -493,7 +515,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'offsetSet', [$offset, $value]);
@@ -504,7 +526,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'offsetUnset', [$offset]);
@@ -559,7 +581,7 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function setDeleted($deleted = NULL)
+    public function setDeleted(mixed $deleted = NULL): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantFieldDatum
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setDeleted', [$deleted]);
@@ -581,12 +603,23 @@ class ProjectParticipantFieldDatum extends \OCA\CAFEVDB\Database\Doctrine\ORM\En
     /**
      * {@inheritDoc}
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'isDeleted', []);
 
         return parent::isDeleted();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isExpired(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isExpired', []);
+
+        return parent::isExpired();
     }
 
     /**

@@ -118,7 +118,7 @@
     
             <span class="phpdocumentor-element__extends">
             Uses
-                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\ArrayTrait">ArrayTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FactoryTrait">FactoryTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Traits\SoftDeleteableEntity">SoftDeleteableEntity</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait">DateTimeTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -129,9 +129,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ProjectEvent.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/Database/Doctrine/ORM/Entities/ProjectEvent.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">ProjectEvents</p>
@@ -149,7 +149,15 @@
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>(name=&quot;ProjectEvents&quot;, uniqueConstraints=(columns={&quot;project_id&quot;, &quot;event_uid&quot;)})</p>
+                                                 <section class="phpdocumentor-description"><p>(
+name=&quot;ProjectEvents&quot;,
+uniqueConstraints={
+@ORM\UniqueConstraint(columns={&quot;project_id&quot;, &quot;calendar_uri&quot;, &quot;event_uid&quot;, &quot;recurrence_id&quot;}),
+@ORM\UniqueConstraint(columns={&quot;project_id&quot;, &quot;calendar_id&quot;, &quot;event_uid&quot;, &quot;recurrence_id&quot;}),
+@ORM\UniqueConstraint(columns={&quot;project_id&quot;, &quot;calendar_uri&quot;, &quot;event_uri&quot;, &quot;recurrence_id&quot;}),
+@ORM\UniqueConstraint(columns={&quot;project_id&quot;, &quot;calendar_id&quot;, &quot;event_uri&quot;, &quot;recurrence_id&quot;}),
+}
+)</p>
 </section>
 
                                     </dd>
@@ -158,7 +166,18 @@
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                             
+                                                 <section class="phpdocumentor-description"><p>(repositoryClass=&quot;\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectEventsRepository&quot;)</p>
+</section>
+
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">Gedmo\SoftDeleteable</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(fieldName=&quot;deleted&quot;)</p>
+</section>
+
                                     </dd>
                                             </dl>
 
@@ -191,6 +210,18 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted</a>
+    <span>
+                        &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_absenceField">$absenceField</a>
+    <span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a>            </span>
+</dt>
+
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_calendarId">$calendarId</a>
     <span>
@@ -216,6 +247,12 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_id">$id</a>
+    <span>
+                        &nbsp;: int            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys</a>
     <span>
                         &nbsp;: mixed            </span>
@@ -224,7 +261,25 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_project">$project</a>
     <span>
-                        &nbsp;: mixed            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_recurrenceId">$recurrenceId</a>
+    <span>
+                        &nbsp;: int            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_sequence">$sequence</a>
+    <span>
+                        &nbsp;: int            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_seriesUid">$seriesUid</a>
+    <span>
+                        &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface">UuidInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -255,10 +310,38 @@
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a>
+    <span>
+                                &nbsp;: null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Set</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
+</dt>
+<dd>Ensure a valid date.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getAbsenceField">getAbsenceField()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a>    </span>
+</dt>
+<dd>Get absenceField.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getCalendarId">getCalendarId()</a>
@@ -275,6 +358,14 @@
 <dd>Get calendarUri.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null    </span>
+</dt>
+<dd>Get the deleted at timestamp value. Will return null if
+the entity has not been soft deleted.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getEventUid">getEventUid()</a>
     <span>
                                 &nbsp;: string|null    </span>
@@ -289,6 +380,13 @@
 <dd>Get eventUri.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getId">getId()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Get id.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getProject">getProject()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>|null    </span>
@@ -296,11 +394,47 @@
 <dd>Get project.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getRecurrenceId">getRecurrenceId()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Get recurrenceId.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getSequence">getSequence()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Get sequence.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getSeriesUid">getSeriesUid()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface">UuidInterface</abbr>    </span>
+</dt>
+<dd>Get seriesUid.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getType">getType()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumVCalendarType.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType">EnumVCalendarType</abbr></a>|null    </span>
 </dt>
 <dd>Get type.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_isDeleted">isDeleted()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Check if the entity has been soft deleted.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_isExpired">isExpired()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Return whether this object is expired and is about to be deleted on the
+next call to delete.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetExists">offsetExists()</a>
@@ -331,18 +465,32 @@
 <dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setAbsenceField">setAbsenceField()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
+</dt>
+<dd>Set absenceField.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setCalendarId">setCalendarId()</a>
     <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr>    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
 </dt>
 <dd>Set calendarId.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setCalendarUri">setCalendarUri()</a>
     <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr>    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
 </dt>
 <dd>Set calendarUri.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Set or clear the deleted at timestamp.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setEventUid">setEventUid()</a>
@@ -354,21 +502,49 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setEventUri">setEventUri()</a>
     <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr>    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
 </dt>
 <dd>Set eventUri.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setId">setId()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\IdEvent">IdEvent</abbr>    </span>
+</dt>
+<dd>Set id.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setProject">setProject()</a>
     <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr>    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
 </dt>
 <dd>Set projectId.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setRecurrenceId">setRecurrenceId()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
+</dt>
+<dd>Set recurrenceId.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setSequence">setSequence()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
+</dt>
+<dd>Set sequence.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setSeriesUid">setSeriesUid()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
+</dt>
+<dd>Set seriesUid.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setType">setType()</a>
     <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr>    </span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>    </span>
 </dt>
 <dd>Set type.</dd>
 
@@ -416,6 +592,111 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="
             phpdocumentor-element
             -property
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_deleted">
+        $deleted
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">42</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span>
+    <span class="phpdocumentor-signature__name">$deleted</span>
+    </code>
+
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\Column</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;datetime_immutable&quot;, nullable=true)</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_absenceField">
+        $absenceField
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_absenceField" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">160</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a></span>
+    <span class="phpdocumentor-signature__name">$absenceField</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>Linked ProjectParticipantField entities which can be used to record
+asence from rehearsals or other calendar events. As calendar events are
+possibly repeating or we need a list of linked fields in order to record
+the participation for each event instance.</p>
+</section>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_absenceField#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\OneToOne</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(targetEntity=&quot;ProjectParticipantField&quot;, fetch=&quot;EXTRA_LAZY&quot;)</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
             -private
                                                         "
 >
@@ -429,9 +710,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">91</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -479,9 +760,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">98</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -505,7 +786,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>(type=&quot;string&quot;, length=764, nullable=false)</p>
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;string&quot;, length=764, nullable=false, options={&quot;collation&quot;=&quot;ascii_bin&quot;})</p>
 </section>
 
                                     </dd>
@@ -529,9 +810,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">105</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.105" class="phpdocumentor-element-found-in__source" data-line="105" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -555,7 +836,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>(type=&quot;string&quot;, length=764, nullable=false)</p>
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;string&quot;, length=255, nullable=false, options={&quot;collation&quot;=&quot;ascii_general_ci&quot;})</p>
 </section>
 
                                     </dd>
@@ -579,9 +860,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -605,7 +886,65 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>(type=&quot;string&quot;, length=764, nullable=false)</p>
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;string&quot;, length=764, nullable=false, options={&quot;collation&quot;=&quot;ascii_bin&quot;})</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_id">
+        $id
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_id" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">76</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">$id</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>While it would be tempting to just use the calendar URI and event UID and
+perhaps the recurrence id as composite key it turns out that this is
+complicated for repeating events: calendar apps may choose to split
+existing series into two when changing &quot;this event and future&quot; events and
+at that point one needs to match the recurrence ids in order to &quot;find&quot;
+the correct new old event. The event will then be part of a new event
+series with a new UID.</p>
+</section>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_id#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\Column</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;integer&quot;, nullable=false)</p>
 </section>
 
                                     </dd>
@@ -615,6 +954,15 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
                                              
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\GeneratedValue</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(strategy=&quot;IDENTITY&quot;)</p>
+</section>
+
                                     </dd>
                                             </dl>
 
@@ -670,15 +1018,15 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
+        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span>
     <span class="phpdocumentor-signature__name">$project</span>
     </code>
 
@@ -701,11 +1049,173 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">ORM\Id</span>
+                    <span class="phpdocumentor-tag__name">ORM\JoinColumn</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                             
+                                                 <section class="phpdocumentor-description"><p>(nullable=false)</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_recurrenceId">
+        $recurrenceId
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_recurrenceId" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">133</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">$recurrenceId</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>The recurrence-id of the event instance as Unix timestamp. Non-recurring
+events have an id of 0.</p>
+</section>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_recurrenceId#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\Column</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;integer&quot;, nullable=false, options={&quot;default&quot;=0})</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_sequence">
+        $sequence
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_sequence" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">142</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">$sequence</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>The SEQUENCE number tied to the event. We always use the highest
+sequence, but technically this is part of the id.</p>
+</section>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_sequence#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\Column</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;integer&quot;, nullable=false, options={&quot;default&quot;=0})</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_seriesUid">
+        $seriesUid
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_seriesUid" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">116</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface">UuidInterface</abbr></span>
+    <span class="phpdocumentor-signature__name">$seriesUid</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>A unique identifier which links RELATED-TO events. This occurs if
+recurring event series are split but applying changes to &quot;this and
+future&quot; events.</p>
+</section>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_seriesUid#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\Column</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;uuid_binary&quot;, nullable=true)</p>
+</section>
+
                                     </dd>
                                             </dl>
 
@@ -727,9 +1237,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">149</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -753,7 +1263,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>(type=&quot;EnumVCalendarType&quot;, nullable=true)</p>
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;EnumVCalendarType&quot;, nullable=false)</p>
 </section>
 
                                     </dd>
@@ -782,9 +1292,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">163</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -839,6 +1349,123 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                     -static                    "
 >
+    <h4 class="phpdocumentor-element__name" id="method_convertToDateTime">
+        convertToDateTime()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">53</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|int|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$dateTime</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_convertToTimezoneDate">
+        convertToTimezoneDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">90</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToTimezoneDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$date</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$timeZone</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr></span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">todo</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
     <h4 class="phpdocumentor-element__name" id="method_create">
         create()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create" class="headerlink"><i class="fas fa-link"></i></a>
@@ -873,6 +1500,90 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_ensureDate">
+        ensureDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">41</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Ensure a valid date.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">ensureDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$dateTime</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getAbsenceField">
+        getAbsenceField()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getAbsenceField" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">437</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.437" class="phpdocumentor-element-found-in__source" data-line="437" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get absenceField.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getAbsenceField</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_getCalendarId">
@@ -883,9 +1594,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">135</span>
+    <span class="phpdocumentor-element-found-in__line">236</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.236" class="phpdocumentor-element-found-in__source" data-line="236" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get calendarId.</p>
@@ -920,9 +1631,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">159</span>
+    <span class="phpdocumentor-element-found-in__line">260</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.260" class="phpdocumentor-element-found-in__source" data-line="260" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get calendarUri.</p>
@@ -949,6 +1660,44 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getDeleted">
+        getDeleted()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">63</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get the deleted at timestamp value. Will return null if
+the entity has not been soft deleted.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getDeleted</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getEventUid">
         getEventUid()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getEventUid" class="headerlink"><i class="fas fa-link"></i></a>
@@ -957,9 +1706,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">308</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.308" class="phpdocumentor-element-found-in__source" data-line="308" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get eventUid.</p>
@@ -994,9 +1743,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">183</span>
+    <span class="phpdocumentor-element-found-in__line">284</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.183" class="phpdocumentor-element-found-in__source" data-line="183" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.284" class="phpdocumentor-element-found-in__source" data-line="284" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get eventUri.</p>
@@ -1023,6 +1772,43 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getId">
+        getId()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">188</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.188" class="phpdocumentor-element-found-in__source" data-line="188" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get id.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getProject">
         getProject()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getProject" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1031,9 +1817,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">111</span>
+    <span class="phpdocumentor-element-found-in__line">212</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.111" class="phpdocumentor-element-found-in__source" data-line="111" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get project.</p>
@@ -1060,6 +1846,117 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getRecurrenceId">
+        getRecurrenceId()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getRecurrenceId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">385</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.385" class="phpdocumentor-element-found-in__source" data-line="385" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get recurrenceId.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getRecurrenceId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getSequence">
+        getSequence()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getSequence" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">358</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.358" class="phpdocumentor-element-found-in__source" data-line="358" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get sequence.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getSequence</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getSeriesUid">
+        getSeriesUid()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getSeriesUid" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">334</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.334" class="phpdocumentor-element-found-in__source" data-line="334" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get seriesUid.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getSeriesUid</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface">UuidInterface</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Ramsey\Uuid\UuidInterface">UuidInterface</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getType">
         getType()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getType" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1068,9 +1965,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">235</span>
+    <span class="phpdocumentor-element-found-in__line">413</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.235" class="phpdocumentor-element-found-in__source" data-line="235" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.413" class="phpdocumentor-element-found-in__source" data-line="413" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get type.</p>
@@ -1088,6 +1985,81 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumVCalendarType.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType">EnumVCalendarType</abbr></a>|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_isDeleted">
+        isDeleted()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_isDeleted" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">73</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Check if the entity has been soft deleted.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">isDeleted</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_isExpired">
+        isExpired()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_isExpired" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">84</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Return whether this object is expired and is about to be deleted on the
+next call to delete.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">isExpired</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
             </section>
 
 </article>
@@ -1280,6 +2252,53 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setAbsenceField">
+        setAbsenceField()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setAbsenceField" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">425</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.425" class="phpdocumentor-element-found-in__source" data-line="425" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set absenceField.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setAbsenceField</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$absenceField</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$absenceField</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setCalendarId">
         setCalendarId()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setCalendarId" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1288,16 +2307,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">123</span>
+    <span class="phpdocumentor-element-found-in__line">224</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set calendarId.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setCalendarId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$calendarId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">setCalendarId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$calendarId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1317,7 +2336,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
             </section>
 
 </article>
@@ -1335,16 +2354,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">147</span>
+    <span class="phpdocumentor-element-found-in__line">248</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.248" class="phpdocumentor-element-found-in__source" data-line="248" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set calendarUri.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setCalendarUri</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$calendarUri</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">setCalendarUri</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$calendarUri</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1364,7 +2383,54 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setDeleted">
+        setDeleted()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php"><a href="files/database-doctrine-orm-traits-softdeleteableentity.html"><abbr title="Database/Doctrine/ORM/Traits/SoftDeleteableEntity.php">SoftDeleteableEntity.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">51</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set or clear the deleted at timestamp.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setDeleted</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|int|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$deleted</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$deleted</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
             </section>
 
 </article>
@@ -1382,9 +2448,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">195</span>
+    <span class="phpdocumentor-element-found-in__line">296</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.296" class="phpdocumentor-element-found-in__source" data-line="296" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set eventUid.</p>
@@ -1429,16 +2495,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">171</span>
+    <span class="phpdocumentor-element-found-in__line">272</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.171" class="phpdocumentor-element-found-in__source" data-line="171" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.272" class="phpdocumentor-element-found-in__source" data-line="272" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set eventUri.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setEventUri</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$eventUri</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">setEventUri</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$eventUri</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1458,7 +2524,54 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setId">
+        setId()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">176</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set id.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\IdEvent">IdEvent</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$id</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\IdEvent">IdEvent</abbr></span>
             </section>
 
 </article>
@@ -1476,16 +2589,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">99</span>
+    <span class="phpdocumentor-element-found-in__line">200</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set projectId.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setProject</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$project</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">setProject</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$project</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1505,7 +2618,148 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setRecurrenceId">
+        setRecurrenceId()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setRecurrenceId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">370</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.370" class="phpdocumentor-element-found-in__source" data-line="370" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set recurrenceId.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setRecurrenceId</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$recurrenceId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$recurrenceId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setSequence">
+        setSequence()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setSequence" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">346</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.346" class="phpdocumentor-element-found-in__source" data-line="346" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set sequence.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setSequence</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sequence</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$sequence</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setSeriesUid">
+        setSeriesUid()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setSeriesUid" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">320</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.320" class="phpdocumentor-element-found-in__source" data-line="320" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set seriesUid.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setSeriesUid</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$seriesUid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$seriesUid</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
             </section>
 
 </article>
@@ -1523,16 +2777,16 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectEvent.php"><a href="files/database-doctrine-orm-entities-projectevent.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectEvent.php">ProjectEvent.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">219</span>
+    <span class="phpdocumentor-element-found-in__line">397</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.219" class="phpdocumentor-element-found-in__source" data-line="219" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#source-view.397" class="phpdocumentor-element-found-in__source" data-line="397" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set type.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setType</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumVCalendarType.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType">EnumVCalendarType</abbr></a>|null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$type</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">setType</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumVCalendarType.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType">EnumVCalendarType</abbr></a>|null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$type</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1552,7 +2806,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvents">ProjectEvents</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
             </section>
 
 </article>
@@ -1852,12 +3106,18 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#property_deleted">$deleted<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_absenceField">$absenceField<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_calendarId">$calendarId<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_calendarUri">$calendarUri<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_eventUid">$eventUid<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_eventUri">$eventUri<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_id">$id<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_project">$project<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_recurrenceId">$recurrenceId<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_sequence">$sequence<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_seriesUid">$seriesUid<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#property_type">$type<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"></li>
                                             </ul>
                 </li>
@@ -1867,22 +3127,39 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method___construct">__construct()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getAbsenceField">getAbsenceField()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getCalendarId">getCalendarId()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getCalendarUri">getCalendarUri()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_getDeleted">getDeleted()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getEventUid">getEventUid()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getEventUri">getEventUri()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getId">getId()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getProject">getProject()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getRecurrenceId">getRecurrenceId()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getSequence">getSequence()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getSeriesUid">getSeriesUid()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_getType">getType()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_isDeleted">isDeleted()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_isExpired">isExpired()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetExists">offsetExists()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetGet">offsetGet()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetSet">offsetSet()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setAbsenceField">setAbsenceField()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setCalendarId">setCalendarId()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setCalendarUri">setCalendarUri()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-SoftDeleteableEntity.html#method_setDeleted">setDeleted()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setEventUid">setEventUid()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setEventUri">setEventUri()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setId">setId()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setProject">setProject()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setRecurrenceId">setRecurrenceId()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setSequence">setSequence()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setSeriesUid">setSeriesUid()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html#method_setType">setType()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR">arrayCTOR()</a></li>

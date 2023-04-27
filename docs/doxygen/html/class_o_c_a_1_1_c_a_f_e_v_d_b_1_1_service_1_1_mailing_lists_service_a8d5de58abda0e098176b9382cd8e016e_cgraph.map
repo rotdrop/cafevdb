@@ -1,0 +1,5 @@
+<map id="isReachable" name="isReachable">
+<area shape="rect" id="node1" title="Check whether the mailing&#45;lists server is configured and reachable." alt="" coords="5,31,100,56"/>
+<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a021665eed2f119c5beed4adeaebd8f96" title="Obtain the server configuration, this is rather for testing in order to check the basic connectivity." alt="" coords="148,5,264,31"/>
+<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a70860ad31d1b9217e6da0ba4759ad3a3" title=" " alt="" coords="159,55,253,80"/>
+</map>

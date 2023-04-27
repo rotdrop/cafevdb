@@ -14,6 +14,7 @@ var dir_5194e5fea318fda12687127c23f8aba1 =
     [ "cloud-file-picker-dialog.js", "cloud-file-picker-dialog_8js_source.html", null ],
     [ "config.js", "config_8js_source.html", null ],
     [ "configcheck.js", "configcheck_8js_source.html", null ],
+    [ "debounce.js", "debounce_8js_source.html", null ],
     [ "dialog-utils.js", "dialog-utils_8js_source.html", null ],
     [ "dialogs.js", "dialogs_8js_source.html", null ],
     [ "email.js", "email_8js_source.html", null ],

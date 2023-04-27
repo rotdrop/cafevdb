@@ -1,6 +1,5 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a7734910ae381d114bae37db536c335a0", null ],
     [ "addMusicians", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ad7649755ec5bf3198bd8340efd060932", null ],
     [ "attachMatchingWebPages", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a52d4fc47080c37ce1920cfe57464a005", null ],
     [ "attachProjectWebPage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aefe019ca295ffab503f7d0c123063855", null ],
@@ -11,6 +10,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service =
     [ "ensureDownloadsFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aebda225baa42a6bbdc2471374da81df3", null ],
     [ "ensureParticipantFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a2ce95aa0cb561134a544ec80d79e7428", null ],
     [ "ensurePostersFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a85bbc8ea4ca761192764bcc9591d627e", null ],
+    [ "fetch", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ad1eb8115a68850d3ffb2fd75f91b8fad", null ],
     [ "fetchAll", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#af008f367d5ca054454dacc1e8830d7fd", null ],
     [ "fetchName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#af2c501575c51292fb02182cea0ee00fe", null ],
     [ "fetchProjectWebPages", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a6396b9fe3b1cd1c74a3a6d85a0880a35", null ],
@@ -39,6 +39,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service =
     [ "restoreProjectWebPage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a4d86051d150249a2c4285deef7833853", null ],
     [ "restoreProjectWikiPage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5a0eaa8120d33e8127e842e13d1c3a16", null ],
     [ "sanitizeName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#adcf09f5f9731a737ce3461a343ab83d8", null ],
+    [ "systemTagManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a2308081bd24033eb0b67b99ac2a29399", null ],
     [ "webPageCMSURL", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#aa1d1a1a30c10f3bc7f2f4cbf7bbbfce3", null ],
     [ "webPagesRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a5bc5d043588dd30488680d5e78bf67eb", null ],
     [ "wikiRPC", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#af41e3612124ad9e93c88bc039e6584a3", null ],

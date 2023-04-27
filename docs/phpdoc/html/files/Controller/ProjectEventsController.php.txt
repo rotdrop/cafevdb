@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
@@ -34,6 +36,8 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\CalDavService;
 use OCA\CAFEVDB\Service\ToolTipsService;
+
+use OCA\CAFEVDB\Exceptions;
 
 /** AJAX end-points to manage events linked to projects */
 class ProjectEventsController extends Controller
@@ -69,6 +73,24 @@ class ProjectEventsController extends Controller
   // phpcs:enable
 
   /**
+   * Provide a value for an input element (select option, input) which codes
+   * all neccessary info to uniquely identify the event.
+   *
+   * @param array $event
+   *
+   * @return string
+   */
+  public static function makeInputValue(array $event):string
+  {
+    return json_encode([
+      'calendarId' => $event['calendarId'],
+      'uri' => $event['uri'],
+      'recurrenceId' => $event['recurrenceId' ] ?? 0,
+      'seriesUid' => $event['seriesUid'] ?? '',
+    ]);
+  }
+
+  /**
    * @param string $topic
    *
    * @return Http\Response
@@ -89,60 +111,206 @@ class ProjectEventsController extends Controller
               empty($projectName) ? '?' : $projectName ]));
       }
 
-      $selectedEvents = $this->parameterService->getParam('eventSelect', []);
-      $selected = []; // array marking selected events
+      $selectedEvents = array_unique($this->parameterService->getParam('eventSelect', []));
+      $calendarIds = array_unique($this->parameterService->getParam('calendarId', []));
 
-      foreach ($selectedEvents as $eventUri) {
-        $selected[$eventUri] = true;
+      $selected = []; // array marking selected events
+      foreach ($selectedEvents as $eventIdentifier) {
+        $eventIdentifier = json_decode($eventIdentifier, true);
+        $flatIdentifier = EventsService::makeFlatIdentifier($eventIdentifier);
+        $selected[$flatIdentifier] = $eventIdentifier;
       }
 
+      $eventIdentifier = $this->parameterService->getParam('eventIdentifier');
+      if (!empty($eventIdentifier)) {
+        $eventIdentifier = json_decode($eventIdentifier, true);
+        $flatIdentifier = EventsService::makeFlatIdentifier($eventIdentifier);
+        $scope = $this->parameterService->getParam('scope');
+        if (!empty($scope[$flatIdentifier])) {
+          $scope = $scope[$flatIdentifier];
+        }
+      }
+
+      $events = null;
       switch ($topic) {
         case 'dialog': // open
-          $template = 'events';
-          $events = $this->eventsService->events($projectId);
+          $template = 'project-events/events';
           break;
         case 'redisplay':
-          $template = 'eventslisting';
-          $events = $this->eventsService->events($projectId);
+          $template = 'project-events/eventslisting';
+          break;
+        case 'absenceField':
+          $template = 'project-events/eventslisting';
+
+          $enable = $this->parameterService->getParam('enableAbsenceField', false);
+          $enable = filter_var($enable, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
+
+          $calendarId = $eventIdentifier['calendarId'];
+          $eventUri = $eventIdentifier['uri'];
+          $recurrenceId = $eventIdentifier['recurrenceId'];
+
+          $category = EventsService::getAbsenceCategory($this->appL10n());
+          if ($enable) {
+            $removals = [];
+            $additions = [ $category ];
+          } else {
+            $removals = [ $category ];
+            $additions = [];
+          }
+
+          switch ($scope) {
+            case 'series':
+              $recurrenceId = null;
+              // fall through
+            case 'single':
+              try {
+                $this->eventsService->changeCategories(
+                  $projectId,
+                  $calendarId,
+                  $eventUri,
+                  $recurrenceId,
+                  additions: $additions,
+                  removals: $removals,
+                );
+              } catch (Exceptions\CalendarEntryNotFoundException $e) {
+                // ignore
+              }
+              break;
+            case 'related':
+              $seriesUid = $eventIdentifier['seriesUid'];
+              $candidates = [];
+              foreach ($this->eventsService->events($projectId) as $event) {
+                if ($event['seriesUid'] == $seriesUid) {
+                  $candidates[$event['calendarid']][$event['uri']] = true;
+                }
+              }
+              foreach ($candidates as $calendarId => $uris) {
+                foreach (array_keys($uris) as $eventUri) {
+                  try {
+                    $this->eventsService->changeCategories(
+                      $projectId,
+                      $calendarId,
+                      $eventUri,
+                      recurrenceId: null,
+                      additions: $additions,
+                      removals: $removals,
+                    );
+                  } catch (Exceptions\CalendarEntryNotFoundException $e) {
+                    // ignore
+                  }
+                }
+              }
+              break;
+          }
           break;
         case 'select':
-          $template = 'eventslisting';
+          $template = 'project-events/eventslisting';
           $events = $this->eventsService->events($projectId);
           $selected = []; // array marking selected events
           foreach ($events as $event) {
-            $selected[$event['uri']] = true;
+            $flatIdentifier = EventsService::makeFlatIdentifier($event);
+            $selected[$flatIdentifier] = true;
           }
           break;
         case 'deselect':
-          $template = 'eventslisting';
-          $events = $this->eventsService->events($projectId);
+          $template = 'project-events/eventslisting';
           $selected = []; // array marking selected events
           break;
         case 'delete':
-          $template = 'eventslisting';
-          $eventUri = $this->parameterService['EventURI'];
-          $calendarId = $this->parameterService['CalendarId'][$eventUri];
-          $this->calDavService->deleteCalendarObject($calendarId, $eventUri);
-          $this->eventsService->unregister($projectId, $eventUri);
-          $events = $this->eventsService->events($projectId);
-          unset($selected[$eventUri]);
+          $template = 'project-events/eventslisting';
+
+          $calendarId = $eventIdentifier['calendarId'];
+          $eventUri = $eventIdentifier['uri'];
+          $recurrenceId = $eventIdentifier['recurrenceId'];
+
+          switch ($scope) {
+            case 'single':
+              $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, $recurrenceId);
+              $this->eventsService->unregister($projectId, $eventUri, $recurrenceId);
+              unset($selected[$flatIdentifier]);
+              break;
+            case 'series':
+              $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, recurrenceId: null);
+              $this->eventsService->unregister($projectId, $eventUri, recurrenceId: null);
+              $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
+              $selected = array_filter(
+                $selected,
+                fn($flatIdentifier) => !str_starts_with($flatIdentifier, $seriesIdentifier),
+                ARRAY_FILTER_USE_KEY,
+              );
+              break;
+            case 'related':
+              $seriesUid = $eventIdentifier['seriesUid'];
+              $candidates = [];
+              foreach ($this->eventsService->events($projectId) as $event) {
+                if ($event['seriesUid'] == $seriesUid) {
+                  $candidates[$event['calendarid']][$event['uri']] = true;
+                }
+              }
+              foreach ($candidates as $calendarId => $uris) {
+                foreach (array_keys($uris) as $eventUri) {
+                  $this->eventsService->deleteCalendarEntry($calendarId, $eventUri, recurrenceId: null);
+                  $this->eventsService->unregister($projectId, $eventUri, recurrenceId: null);
+                  $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
+                  $selected = array_filter(
+                    $selected,
+                    fn($flatIdentifier) => !str_starts_with($flatIdentifier, $seriesIdentifier),
+                    ARRAY_FILTER_USE_KEY,
+                  );
+                }
+              }
+              break;
+          }
           break;
         case 'detach':
-          $template = 'eventslisting';
-          $eventUri = $this->parameterService['EventURI'];
-          $this->eventsService->unchain($projectId, $eventUri);
-          unset($selected[$eventUri]);
+          $template = 'project-events/eventslisting';
+
+          $calendarId = $eventIdentifier['calendarId'];
+          $eventUri = $eventIdentifier['uri'];
+          $recurrenceId = $eventIdentifier['recurrenceId'];
+
+          switch ($scope) {
+            case 'single':
+              $this->eventsService->unchain($projectId, $calendarId, $eventUri, $recurrenceId);
+              unset($selected[$flatIdentifier]);
+              break;
+            case 'series':
+              $this->eventsService->unchain($projectId, $calendarId, $eventUri, recurrenceId: null);
+              $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
+              $selected = array_filter(
+                $selected,
+                fn($flatIdentifier) => !str_starts_with($flatIdentifier, $seriesIdentifier),
+                ARRAY_FILTER_USE_KEY,
+              );
+              break;
+            case 'related':
+              $seriesUid = $eventIdentifier['seriesUid'];
+              $candidates = [];
+              foreach ($this->eventsService->events($projectId) as $event) {
+                if ($event['seriesUid'] == $seriesUid) {
+                  $candidates[$event['calendarid']][$event['uri']] = true;
+                }
+              }
+              foreach ($candidates as $calendarId => $uris) {
+                foreach (array_keys($uris) as $eventUri) {
+                  $this->eventsService->unchain($projectId, $calendarId, $eventUri, recurrenceId: null);
+                  $seriesIdentifier = implode(':', [ $calendarId, $eventUri ]);
+                  $selected = array_filter(
+                    $selected,
+                    fn($flatIdentifier) => !str_starts_with($flatIdentifier, $seriesIdentifier),
+                    ARRAY_FILTER_USE_KEY,
+                  );
+                }
+              }
+              break;
+          }
           break;
         case 'download':
-          $calendarIds = $this->parameterService['CalendarId'];
-
-          if (count($selected) > 0) {
-            $exports = [];
-            foreach (array_keys($selected) as $eventUri) {
-              $exports[$eventUri] = $calendarIds[$eventUri];
+          $exports = $selected;
+          if (empty($exports)) {
+            foreach ($calendarIds as $eventUri => $calendarId) {
+              $exports[] = [ 'calendarId' => $calendarId, 'uri' => $eventUri ];
             }
-          } else {
-            $exports = $calendarIds;
           }
 
           $fileName = $projectName.'-'.$this->timeStamp().'.ics';
@@ -157,10 +325,14 @@ class ProjectEventsController extends Controller
           return self::grumble($this->l->t('Unknown Request'));
       }
 
+      if ($events === null) {
+        $events = $this->eventsService->events($projectId);
+      }
       $dfltIds = $this->eventsService->defaultCalendars();
       $eventMatrix = $this->eventsService->eventMatrix($events, $dfltIds);
 
       $templateParameters = [
+        'appName' => $this->appName,
         'projectId' => $projectId,
         'projectName' => $projectName,
         'cssClass' => 'projectevents',
@@ -171,7 +343,9 @@ class ProjectEventsController extends Controller
         'selected' => $selected,
         'eventsService' => $this->eventsService,
         'toolTips' => $this->di(ToolTipsService::class),
+        'urlGenerator' => $this->urlGenerator(),
         'requesttoken' => \OCP\Util::callRegister(),
+        'wikinamespace' => $this->getAppValue('wikinamespace'),
       ];
       $response = new TemplateResponse(
         $this->appName(),
@@ -185,7 +359,7 @@ class ProjectEventsController extends Controller
 
       return $response;
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       return self::grumble($this->exceptionChainData($t));
     }
   }

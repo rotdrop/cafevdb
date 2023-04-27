@@ -171,7 +171,7 @@
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Entities/Project.php">Database/Doctrine/ORM/Entities/Project.php</a></td>
-                                <td class="phpdocumentor-cell">1</td>
+                                <td class="phpdocumentor-cell">2</td>
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/ORM/Entities/ProjectParticipantFieldDataOption.php">Database/Doctrine/ORM/Entities/ProjectParticipantFieldDataOption.php</a></td>
@@ -231,7 +231,7 @@
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/Doctrine/Util.php">Database/Doctrine/Util.php</a></td>
-                                <td class="phpdocumentor-cell">2</td>
+                                <td class="phpdocumentor-cell">1</td>
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Database/EntityManager.php">Database/EntityManager.php</a></td>
@@ -262,6 +262,10 @@
                                 <td class="phpdocumentor-cell">1</td>
                             </tr>
                                                                                                 <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/CalendarObjectMovedEventListener.php">Listener/CalendarObjectMovedEventListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/CalendarObjectUpdatedEventListener.php">Listener/CalendarObjectUpdatedEventListener.php</a></td>
                                 <td class="phpdocumentor-cell">1</td>
                             </tr>
@@ -275,6 +279,10 @@
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/ParticipantFieldCloudFolderListener.php">Listener/ParticipantFieldCloudFolderListener.php</a></td>
+                                <td class="phpdocumentor-cell">1</td>
+                            </tr>
+                                                                                                <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#Listener/PreChangeUserIdSlugListener.php">Listener/PreChangeUserIdSlugListener.php</a></td>
                                 <td class="phpdocumentor-cell">1</td>
                             </tr>
                                                                                                 <tr>
@@ -302,6 +310,10 @@
                                 <td class="phpdocumentor-cell">1</td>
                             </tr>
                                                                                                 <tr>
+                                <td class="phpdocumentor-cell"><a href="reports/markers.html#PageRenderer/FieldTraits/ParticipantFieldsTrait.php">PageRenderer/FieldTraits/ParticipantFieldsTrait.php</a></td>
+                                <td class="phpdocumentor-cell">2</td>
+                            </tr>
+                                                                                                <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#PageRenderer/PMETableViewBase.php">PageRenderer/PMETableViewBase.php</a></td>
                                 <td class="phpdocumentor-cell">3</td>
                             </tr>
@@ -327,7 +339,7 @@
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/EventsService.php">Service/EventsService.php</a></td>
-                                <td class="phpdocumentor-cell">2</td>
+                                <td class="phpdocumentor-cell">3</td>
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/Finance/FinanceService.php">Service/Finance/FinanceService.php</a></td>
@@ -375,7 +387,7 @@
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Service/VCalendarService.php">Service/VCalendarService.php</a></td>
-                                <td class="phpdocumentor-cell">5</td>
+                                <td class="phpdocumentor-cell">1</td>
                             </tr>
                                                                                                 <tr>
                                 <td class="phpdocumentor-cell"><a href="reports/markers.html#Settings/Personal.php">Settings/Personal.php</a></td>
@@ -751,8 +763,13 @@ field?</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">105</td>
+                            <td class="phpdocumentor-cell">106</td>
                             <td class="phpdocumentor-cell">this should cascade deletes</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">113</td>
+                            <td class="phpdocumentor-cell">This does not work well with _AT_Gedmo\Translatable</td>
                         </tr>
                                         </tbody>
                 </table>
@@ -1017,7 +1034,7 @@ name. Otherwise we just could use the stock &quot;findAll()&quot;.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">523</td>
+                            <td class="phpdocumentor-cell">526</td>
                             <td class="phpdocumentor-cell">Field-type deduction for set-parameter only works for the
 main-table ATM. This could probably be cured by reading the
 meta-data for all join tables.
@@ -1039,16 +1056,9 @@ PHPMD cannot handle dynamic variable names</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">81</td>
+                            <td class="phpdocumentor-cell">78</td>
                             <td class="phpdocumentor-cell">This could be made more elaborate like
 OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy().</td>
-                        </tr>
-                                            <tr>
-                            <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">81</td>
-                            <td class="phpdocumentor-cell">Teach
-OCA\CAFEVDB\Database\Doctrine\ORM\Traits\FindLikeTrait::findBy()
-to use grouping with parens.</td>
                         </tr>
                                         </tbody>
                 </table>
@@ -1071,25 +1081,25 @@ decorator.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">807</td>
+                            <td class="phpdocumentor-cell">809</td>
                             <td class="phpdocumentor-cell">See that this is not necessary.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">878</td>
+                            <td class="phpdocumentor-cell">880</td>
                             <td class="phpdocumentor-cell">This unfortunately does not hack similar problems with
 cascade=&quot;persist&quot;. There the &quot;stock&quot; persist operation seemingly
 still causes problems.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1231</td>
+                            <td class="phpdocumentor-cell">1233</td>
                             <td class="phpdocumentor-cell">Get rid of this function, the meta-data class is rather an
 internal data structure of Doctrine\ORM.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1441</td>
+                            <td class="phpdocumentor-cell">1443</td>
                             <td class="phpdocumentor-cell">Find out where this function belongs to ...</td>
                         </tr>
                                         </tbody>
@@ -1125,27 +1135,27 @@ internal data structure of Doctrine\ORM.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">3075</td>
+                            <td class="phpdocumentor-cell">3078</td>
                             <td class="phpdocumentor-cell">Fold into composeAndSend</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">3371</td>
+                            <td class="phpdocumentor-cell">3374</td>
                             <td class="phpdocumentor-cell">This really should be folded in to sendMessages()</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">3928</td>
+                            <td class="phpdocumentor-cell">3932</td>
                             <td class="phpdocumentor-cell">unify timezone and date and time formatting.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">4612</td>
+                            <td class="phpdocumentor-cell">4616</td>
                             <td class="phpdocumentor-cell">use cloud storage</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">198</td>
+                            <td class="phpdocumentor-cell">199</td>
                             <td class="phpdocumentor-cell">Make this configurable</td>
                         </tr>
                                         </tbody>
@@ -1181,7 +1191,7 @@ internal data structure of Doctrine\ORM.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">40</td>
                             <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
                         </tr>
                                         </tbody>
@@ -1199,7 +1209,7 @@ internal data structure of Doctrine\ORM.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">41</td>
+                            <td class="phpdocumentor-cell">40</td>
                             <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
                         </tr>
                                         </tbody>
@@ -1217,7 +1227,25 @@ internal data structure of Doctrine\ORM.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">39</td>
+                            <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
+                        </tr>
+                                        </tbody>
+                </table>
+                            <a id="Listener/CalendarObjectMovedEventListener.php"></a>
+                <h3><abbr title="Listener/CalendarObjectMovedEventListener.php">CalendarObjectMovedEventListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">40</td>
                             <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
                         </tr>
                                         </tbody>
@@ -1235,7 +1263,7 @@ internal data structure of Doctrine\ORM.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">40</td>
                             <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
                         </tr>
                                         </tbody>
@@ -1253,7 +1281,7 @@ internal data structure of Doctrine\ORM.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">39</td>
                             <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
                         </tr>
                                         </tbody>
@@ -1300,6 +1328,25 @@ trashbin restore must emit a BeforeNodeRenamedEvent.</td>
                         </tr>
                                         </tbody>
                 </table>
+                            <a id="Listener/PreChangeUserIdSlugListener.php"></a>
+                <h3><abbr title="Listener/PreChangeUserIdSlugListener.php">PreChangeUserIdSlugListener.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">42</td>
+                            <td class="phpdocumentor-cell">Changing the slug should perhaps be cancelled if the person already
+uses cloud services.</td>
+                        </tr>
+                                        </tbody>
+                </table>
                             <a id="Listener/ProjectDeletedEventListener.php"></a>
                 <h3><abbr title="Listener/ProjectDeletedEventListener.php">ProjectDeletedEventListener.php</abbr></h3>
                 <table>
@@ -1313,7 +1360,7 @@ trashbin restore must emit a BeforeNodeRenamedEvent.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">38</td>
+                            <td class="phpdocumentor-cell">39</td>
                             <td class="phpdocumentor-cell">Make the CTOR less expensive.</td>
                         </tr>
                                         </tbody>
@@ -1331,12 +1378,12 @@ trashbin restore must emit a BeforeNodeRenamedEvent.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">40</td>
+                            <td class="phpdocumentor-cell">41</td>
                             <td class="phpdocumentor-cell">Make the CTOR less costly.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">40</td>
+                            <td class="phpdocumentor-cell">41</td>
                             <td class="phpdocumentor-cell">This currently does nothing. Remove?</td>
                         </tr>
                                         </tbody>
@@ -1415,6 +1462,29 @@ to be an automated tool for such code-generation.</td>
                         </tr>
                                         </tbody>
                 </table>
+                            <a id="PageRenderer/FieldTraits/ParticipantFieldsTrait.php"></a>
+                <h3><abbr title="PageRenderer/FieldTraits/ParticipantFieldsTrait.php">ParticipantFieldsTrait.php</abbr></h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="phpdocumentor-heading">Type</th>
+                        <th class="phpdocumentor-heading">Line</th>
+                        <th class="phpdocumentor-heading">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1236</td>
+                            <td class="phpdocumentor-cell">try selectize with sort options for a better user</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">1236</td>
+                            <td class="phpdocumentor-cell">try selectize with sort options for a better user</td>
+                        </tr>
+                                        </tbody>
+                </table>
                             <a id="PageRenderer/PMETableViewBase.php"></a>
                 <h3><abbr title="PageRenderer/PMETableViewBase.php">PMETableViewBase.php</abbr></h3>
                 <table>
@@ -1439,7 +1509,7 @@ $this-&gt;beforeInsertDoInsertAll().</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">2739</td>
+                            <td class="phpdocumentor-cell">2742</td>
                             <td class="phpdocumentor-cell">This would rather belong to some service class.</td>
                         </tr>
                                         </tbody>
@@ -1457,18 +1527,18 @@ $this-&gt;beforeInsertDoInsertAll().</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1360</td>
+                            <td class="phpdocumentor-cell">1361</td>
                             <td class="phpdocumentor-cell">Check whether something needs to be done with the ORM-cascade
 stuff.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1325</td>
+                            <td class="phpdocumentor-cell">1326</td>
                             <td class="phpdocumentor-cell">eliminate empty field-data</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1325</td>
+                            <td class="phpdocumentor-cell">1326</td>
                             <td class="phpdocumentor-cell">eliminate empty field-data</td>
                         </tr>
                                         </tbody>
@@ -1533,7 +1603,7 @@ or CMS unavailable)</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1176</td>
+                            <td class="phpdocumentor-cell">1202</td>
                             <td class="phpdocumentor-cell">We should define a user-independent locale based on the
 location of the orchestra.</td>
                         </tr>
@@ -1571,13 +1641,20 @@ encryption may be costly.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">52</td>
+                            <td class="phpdocumentor-cell">70</td>
                             <td class="phpdocumentor-cell">- cleanup-jobs for orphan events</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">712</td>
-                            <td class="phpdocumentor-cell">Include local timezone.</td>
+                            <td class="phpdocumentor-cell">637</td>
+                            <td class="phpdocumentor-cell">Perhaps convert to DateTime class instead of using strftime().</td>
+                        </tr>
+                                            <tr>
+                            <td class="phpdocumentor-cell">TODO</td>
+                            <td class="phpdocumentor-cell">2017</td>
+                            <td class="phpdocumentor-cell">This is currently not suitable to only delete parts of a recurrence
+sequence attached to a project. Maybe add a filter callback which selects
+the siblings which should be deleted.</td>
                         </tr>
                                         </tbody>
                 </table>
@@ -1778,13 +1855,13 @@ after a couple of years. ATM we just block.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">985</td>
+                            <td class="phpdocumentor-cell">1071</td>
                             <td class="phpdocumentor-cell">We might want to remove &quot;side-effects&quot;, i.e. data-base files and
 cloud files and cloud folders.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1528</td>
+                            <td class="phpdocumentor-cell">1614</td>
                             <td class="phpdocumentor-cell">- perhaps we should do a read-dir instead or additionally
 - handle &quot;soft-deleted&quot; entities</td>
                         </tr>
@@ -1803,29 +1880,29 @@ cloud files and cloud folders.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">635</td>
+                            <td class="phpdocumentor-cell">680</td>
                             <td class="phpdocumentor-cell">It is probably not necessary to remove the sub-folders separately</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1150</td>
+                            <td class="phpdocumentor-cell">1195</td>
                             <td class="phpdocumentor-cell">This alone does not suffice. Wie also have to rename a bunch of
 per-project files.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">1924</td>
+                            <td class="phpdocumentor-cell">1969</td>
                             <td class="phpdocumentor-cell">Perhaps allow project-entities, i.e. &quot;mixed $project&quot;
 instead of &quot;int $projectId&quot;.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">2529</td>
+                            <td class="phpdocumentor-cell">2594</td>
                             <td class="phpdocumentor-cell">Check for proper cascading.</td>
                         </tr>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">2998</td>
+                            <td class="phpdocumentor-cell">3103</td>
                             <td class="phpdocumentor-cell">This is not really implemented yet.</td>
                         </tr>
                                         </tbody>
@@ -1866,28 +1943,8 @@ instead of &quot;int $projectId&quot;.</td>
                     <tbody>
                                             <tr>
                             <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">361</td>
+                            <td class="phpdocumentor-cell">365</td>
                             <td class="phpdocumentor-cell">Get rid of it.</td>
-                        </tr>
-                                            <tr>
-                            <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">462</td>
-                            <td class="phpdocumentor-cell">Check whether we really need a reference here.xy</td>
-                        </tr>
-                                            <tr>
-                            <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">492</td>
-                            <td class="phpdocumentor-cell">Check whether we really need a reference here.xy</td>
-                        </tr>
-                                            <tr>
-                            <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">523</td>
-                            <td class="phpdocumentor-cell">Check whether we really need a reference here.xy</td>
-                        </tr>
-                                            <tr>
-                            <td class="phpdocumentor-cell">TODO</td>
-                            <td class="phpdocumentor-cell">554</td>
-                            <td class="phpdocumentor-cell">Check whether we really need a reference here.xy</td>
                         </tr>
                                         </tbody>
                 </table>

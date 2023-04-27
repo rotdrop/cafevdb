@@ -37,5 +37,6 @@ var searchData=
   ['errorservice_34',['ErrorService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_error_service.html',1,'OCA::CAFEVDB::Service']]],
   ['eventsservice_35',['EventsService',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html',1,'OCA::CAFEVDB::Service']]],
   ['exception_36',['Exception',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html',1,'Exception'],['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_exception.html',1,'Exception']]],
-  ['exportformat_37',['ExportFormat',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_export_1_1_export_format.html',1,'OCA::CAFEVDB::PageRenderer::Export']]]
+  ['executiveboard_37',['ExecutiveBoard',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board.html',1,'OCA::CAFEVDB::Command']]],
+  ['exportformat_38',['ExportFormat',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_export_1_1_export_format.html',1,'OCA::CAFEVDB::PageRenderer::Export']]]
 ];

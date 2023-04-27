@@ -391,24 +391,24 @@ class OC_Calendar_Object
         $errarr['interval'] = 'true';
         $errnum++;
       }
-      if (array_key_exists('repeat', $request) && !array_key_exists($request['repeat'], $this->getRepeatOptions())) {
+      if (isset($request['repeat']) && !isset($this->getRepeatOptions()[$request['repeat']])) {
         $errarr['repeat'] = 'true';
         $errnum++;
       }
-      if (array_key_exists('advanced_month_select', $request) && !array_key_exists($request['advanced_month_select'], $this->getMonthOptions())) {
+      if (isset($request['advanced_month_select']) && !isset($this->getMonthOptions()[$request['advanced_month_select']])) {
         $errarr['advanced_month_select'] = 'true';
         $errnum++;
       }
-      if (array_key_exists('advanced_year_select', $request) && !array_key_exists($request['advanced_year_select'], $this->getYearOptions())) {
+      if (isset($request['advanced_year_select']) && !isset($this->getYearOptions()[$request['advanced_year_select']])) {
         $errarr['advanced_year_select'] = 'true';
         $errnum++;
       }
-      if (array_key_exists('weekofmonthoptions', $request) && !array_key_exists($request['weekofmonthoptions'], $this->getWeekofMonth())) {
+      if (isset($request['weekofmonthoptions']) && !isset($this->getWeekofMonth()[$request['weekofmonthoptions']])) {
         $errarr['weekofmonthoptions'] = 'true';
         $errnum++;
       }
       if ($request['end'] != 'never') {
-        if (!array_key_exists($request['end'], $this->getEndOptions())) {
+        if (!isset($this->getEndOptions()[$request['end']])) {
           $errarr['end'] = 'true';
           $errnum++;
         }
@@ -424,7 +424,7 @@ class OC_Calendar_Object
           }
         }
       }
-      if (array_key_exists('weeklyoptions', $request)) {
+      if (isset($request['weeklyoptions'])) {
         foreach ($request['weeklyoptions'] as $option) {
           if (!in_array($option, $this->getWeeklyOptions())) {
             $errarr['weeklyoptions'] = 'true';
@@ -432,21 +432,21 @@ class OC_Calendar_Object
           }
         }
       }
-      if (array_key_exists('byyearday', $request)) {
+      if (isset($request['byyearday'])) {
         foreach ($request['byyearday'] as $option) {
-          if (!array_key_exists($option, $this->getByYearDayOptions())) {
+          if (!isset($this->getByYearDayOptions()[$option])) {
             $errarr['byyearday'] = 'true';
             $errnum++;
           }
         }
       }
-      if (array_key_exists('weekofmonthoptions', $request)) {
+      if (isset($request['weekofmonthoptions'])) {
         if (is_nan((double)$request['weekofmonthoptions'])) {
           $errarr['weekofmonthoptions'] = 'true';
           $errnum++;
         }
       }
-      if (array_key_exists('bymonth', $request)) {
+      if (isset($request['bymonth'])) {
         foreach ($request['bymonth'] as $option) {
           if (!in_array($option, $this->getByMonthOptions())) {
             $errarr['bymonth'] = 'true';
@@ -454,7 +454,7 @@ class OC_Calendar_Object
           }
         }
       }
-      if (array_key_exists('byweekno', $request)) {
+      if (isset($request['byweekno'])) {
         foreach ($request['byweekno'] as $option) {
           if (!in_array($option, $this->getByWeekNoOptions())) {
             $errarr['byweekno'] = 'true';
@@ -462,9 +462,9 @@ class OC_Calendar_Object
           }
         }
       }
-      if (array_key_exists('bymonthday', $request)) {
+      if (isset($request['bymonthday'])) {
         foreach ($request['bymonthday'] as $option) {
-          if (!array_key_exists($option, $this->getByMonthDayOptions())) {
+          if (!isset($this->getByMonthDayOptions()[$option])) {
             $errarr['bymonthday'] = 'true';
             $errnum++;
           }
@@ -590,7 +590,7 @@ class OC_Calendar_Object
           break;
         case 'weekly':
           $rrule .= 'FREQ=WEEKLY';
-          if (array_key_exists('weeklyoptions', $request)) {
+          if (isset($request['weeklyoptions'])) {
             $byday = '';
             $daystrings = array_flip($this->getWeeklyOptions());
             foreach ($request['weeklyoptions'] as $days) {
@@ -647,7 +647,7 @@ class OC_Calendar_Object
           } elseif ($request['advanced_year_select'] == 'byyearday') {
             list($_day, $_month, $_year) = explode('-', $from);
             $byyearday = date('z', mktime(0, 0, 0, $_month, $_day, $_year)) + 1;
-            if (array_key_exists('byyearday', $request)) {
+            if (isset($request['byyearday'])) {
               foreach ($request['byyearday'] as $yearday) {
                 $byyearday .= ',' . $yearday;
               }
@@ -666,7 +666,7 @@ class OC_Calendar_Object
             }
             $rrule .= ';BYWEEKNO=' . $byweekno;
           } elseif ($request['advanced_year_select'] == 'bydaymonth') {
-            if (array_key_exists('weeklyoptions', $request)) {
+            if (isset($request['weeklyoptions'])) {
               $days = array_flip($this->getWeeklyOptions());
               $byday = '';
               foreach ($request['weeklyoptions'] as $day) {
@@ -678,7 +678,7 @@ class OC_Calendar_Object
               }
               $rrule .= ';BYDAY=' . $byday;
             }
-            if (array_key_exists('bymonth', $request)) {
+            if (isset($request['bymonth'])) {
               $monthes = array_flip($this->getByMonthOptions());
               $bymonth = '';
               foreach ($request['bymonth'] as $month) {
@@ -691,7 +691,7 @@ class OC_Calendar_Object
               $rrule .= ';BYMONTH=' . $bymonth;
 
             }
-            if (array_key_exists('bymonthday', $request)) {
+            if (isset($request['bymonthday'])) {
               $bymonthday = '';
               foreach ($request['bymonthday'] as $monthday) {
                 if ($bymonthday == '') {

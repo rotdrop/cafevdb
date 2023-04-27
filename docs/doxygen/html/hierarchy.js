@@ -87,6 +87,7 @@ var hierarchy =
         [ "Project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404.html", null ]
       ] ],
       [ "ProjectEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_event.html", [
+        [ "ProjectEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ad6d9e1ed13f28abc98f3a95927e3c58.html", null ],
         [ "AfterProjectDeletedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html", null ],
         [ "BeforeProjectDeletedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html", null ],
         [ "ProjectCreatedEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_created_event.html", null ]
@@ -170,6 +171,9 @@ var hierarchy =
     [ "ContactsService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_contacts_service.html", null ],
     [ "CoreException", null, [
       [ "Exception", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html", [
+        [ "CalendarException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_calendar_exception.html", [
+          [ "CalendarEntryNotFoundException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_calendar_entry_not_found_exception.html", null ]
+        ] ],
         [ "ConfigLockedException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_config_locked_exception.html", null ],
         [ "DatabaseException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html", [
           [ "DatabaseCloudConnectorViewException", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html", null ],
@@ -239,6 +243,7 @@ var hierarchy =
         [ "InstrumentsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_instruments_repository.html", null ],
         [ "MusicianPhotosRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_musician_photos_repository.html", null ],
         [ "MusiciansRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_musicians_repository.html", null ],
+        [ "ProjectEventsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_events_repository.html", null ],
         [ "ProjectInstrumentationNumbersRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_ieba037c29b81c783ba29f7b802ae10ff.html", null ],
         [ "ProjectParticipantFieldDataRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_p7b1ebba4b277ad31000ac13bab6e65c6.html", null ],
         [ "ProjectParticipantFieldsRepository", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_project_participant_fields_repository.html", null ],
@@ -301,6 +306,9 @@ var hierarchy =
         ] ],
         [ "ParticipantFieldsAddLiabilities", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_fields_add_liabilities.html", [
           [ "Version20230207133000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230207133000.html", null ]
+        ] ],
+        [ "ProjectEventsAddAbsenceFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_project_events_add_absence_fields.html", [
+          [ "Version20230330110000", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230330110000.html", null ]
         ] ]
       ] ],
       [ "InitialDatabaseSetup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_initial_database_setup.html", [
@@ -420,6 +428,7 @@ var hierarchy =
       [ "Musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html", null ],
       [ "MusicianInstrument", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_fcab19ab1703b7a3ddb5348c0e79b5a0.html", null ],
       [ "Project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404.html", null ],
+      [ "ProjectEvent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ad6d9e1ed13f28abc98f3a95927e3c58.html", null ],
       [ "ProjectInstrumentationNumber", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_5f9b0effdfab28a8315a7a6f368d0601.html", null ],
       [ "ProjectParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html", null ],
       [ "ProjectParticipantField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html", null ],
@@ -502,8 +511,10 @@ var hierarchy =
     [ "Command", null, [
       [ "DatabaseSanitizers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html", null ],
       [ "DatabaseStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_storage.html", null ],
+      [ "ExecutiveBoard", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_executive_board.html", null ],
       [ "HelloWorld", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_hello_world.html", null ],
       [ "ParticipantFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_participant_folders.html", null ],
+      [ "ProjectEvents", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_events.html", null ],
       [ "ProjectFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_project_folders.html", null ],
       [ "TooltipsFind", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_tooltips_find.html", null ],
       [ "TooltipsList", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_tooltips_list.html", null ],
@@ -632,10 +643,12 @@ var hierarchy =
       [ "CalendarDeletedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_deleted_event_listener.html", null ],
       [ "CalendarObjectCreatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_created_event_listener.html", null ],
       [ "CalendarObjectDeletedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_deleted_event_listener.html", null ],
+      [ "CalendarObjectMovedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_moved_event_listener.html", null ],
       [ "CalendarObjectUpdatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_object_updated_event_listener.html", null ],
       [ "CalendarUpdatedEventListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_calendar_updated_event_listener.html", null ],
       [ "FileNodeListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_file_node_listener.html", null ],
       [ "FilesHooksListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_files_hooks_listener.html", null ],
+      [ "GroupMembershipListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_group_membership_listener.html", null ],
       [ "MailingListsAutoResponsesListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_mailing_lists_auto_responses_listener.html", null ],
       [ "MailingListsEmailChangedListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_mailing_lists_email_changed_listener.html", null ],
       [ "MailingListsRegistrationConfirmationListener", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_mailing_lists_registration_confirmation_listener.html", null ],
@@ -735,6 +748,7 @@ var hierarchy =
     ] ],
     [ "TimedJob", null, [
       [ "CleanupExpiredDownloads", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_expired_downloads.html", null ],
+      [ "CleanupProjectEvents", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_project_events.html", null ],
       [ "CleanupTemporaryFiles", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_cleanup_temporary_files.html", null ],
       [ "LazyUpdateGeoCoding", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_lazy_update_geo_coding.html", [
         [ "BulkUpdateGeoCoding", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_bulk_update_geo_coding.html", null ]

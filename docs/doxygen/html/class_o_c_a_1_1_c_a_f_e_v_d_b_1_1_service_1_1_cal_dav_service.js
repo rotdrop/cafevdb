@@ -18,6 +18,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service =
     [ "isGroupSharedCalendar", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a73af2c12aae06cdd9242151cfbdb94be", null ],
     [ "makeCalendar", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a95d471e2ffc087c4a6e55a8416cd7d59", null ],
     [ "makeGroupShare", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ae15d4de248635c80289eb846492d31e2", null ],
+    [ "moveCalendarObject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ad3092c80bf312f1cb05374dad1a9e53b", null ],
     [ "refreshCalendarManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#afedceb6879e8d7585b69081a5851c26a", null ],
     [ "search", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#af6d8adaa4bfba4767da6c7e390f27067", null ],
     [ "updateCalendarObject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#aacb997b1d639326486613ee11127e083", null ]

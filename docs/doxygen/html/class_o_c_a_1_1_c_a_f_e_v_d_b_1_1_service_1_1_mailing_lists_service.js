@@ -22,6 +22,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service =
     [ "handleSubscriptionRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a0fee216c2f18c3e73b3ef43f97bf4329", null ],
     [ "invite", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a", null ],
     [ "isConfigured", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a70860ad31d1b9217e6da0ba4759ad3a3", null ],
+    [ "isReachable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a8d5de58abda0e098176b9382cd8e016e", null ],
     [ "patchMember", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a56dd65a95afc760129f3e87827317339", null ],
     [ "renameList", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a5fcdb839d270408e8d384d4aeba25e34", null ],
     [ "setListConfig", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a244d78e268200be66803a1a2aed8b863", null ],

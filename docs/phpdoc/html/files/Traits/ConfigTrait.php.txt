@@ -573,25 +573,25 @@ trait ConfigTrait
   /** @return int */
   protected function getClubMembersProjectId():int
   {
-    return (int)$this->getConfigValue('memberProjectId', 0);
+    return (int)$this->getConfigValue(ConfigService::CLUB_MEMBER_PROJECT_ID_KEY, 0);
   }
 
   /** @return string */
   protected function getClubMembersProjectName():string
   {
-    return $this->getConfigValue('memberProject', '');
+    return $this->getConfigValue(ConfigService::CLUB_MEMBERS_PROJECT_KEY, '');
   }
 
   /** @return int */
   protected function getExecutiveBoardProjectId():int
   {
-    return (int)$this->getConfigValue('executiveBoardProjectId', 0);
+    return (int)$this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
   }
 
   /** @return string */
   protected function getExcutiveBoardProjectName():string
   {
-    return $this->getConfigValue('executiveBoardProject', '');
+    return $this->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
   }
 
   /** @return null|string */

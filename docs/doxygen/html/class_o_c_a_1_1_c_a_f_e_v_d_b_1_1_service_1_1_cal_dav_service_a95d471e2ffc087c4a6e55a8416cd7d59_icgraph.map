@@ -1,4 +1,4 @@
 <map id="makeCalendar" name="makeCalendar">
-<area shape="rect" id="node1" title="Create a new calendar if the one with the given id does not exist." alt="" coords="193,5,300,31"/>
+<area shape="rect" id="node1" title="Create a new calendar object." alt="" coords="193,5,300,31"/>
 <area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a2e9d51a42cd379a76cf2918a15fe3f37" title="Share the given calendar with a group." alt="" coords="5,5,145,31"/>
 </map>

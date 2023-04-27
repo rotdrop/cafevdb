@@ -365,24 +365,24 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>        $errarr[<span class="stringliteral">&#39;interval&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>        $errnum++;</div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>      }</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;repeat&#39;</span>, $request) &amp;&amp; !array_key_exists($request[<span class="stringliteral">&#39;repeat&#39;</span>], $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a5a3a82140533ddc386e032d5f0c4bf8e">getRepeatOptions</a>())) {</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;repeat&#39;</span>]) &amp;&amp; !isset($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a5a3a82140533ddc386e032d5f0c4bf8e">getRepeatOptions</a>()[$request[<span class="stringliteral">&#39;repeat&#39;</span>]])) {</div>
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>        $errarr[<span class="stringliteral">&#39;repeat&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        $errnum++;</div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>      }</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;advanced_month_select&#39;</span>, $request) &amp;&amp; !array_key_exists($request[<span class="stringliteral">&#39;advanced_month_select&#39;</span>], $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a71290b70247215567d98c13c83b49139">getMonthOptions</a>())) {</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;advanced_month_select&#39;</span>]) &amp;&amp; !isset($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a71290b70247215567d98c13c83b49139">getMonthOptions</a>()[$request[<span class="stringliteral">&#39;advanced_month_select&#39;</span>]])) {</div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        $errarr[<span class="stringliteral">&#39;advanced_month_select&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        $errnum++;</div>
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>      }</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;advanced_year_select&#39;</span>, $request) &amp;&amp; !array_key_exists($request[<span class="stringliteral">&#39;advanced_year_select&#39;</span>], $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a76d665a0a391a70de55effda22b6e5b1">getYearOptions</a>())) {</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;advanced_year_select&#39;</span>]) &amp;&amp; !isset($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a76d665a0a391a70de55effda22b6e5b1">getYearOptions</a>()[$request[<span class="stringliteral">&#39;advanced_year_select&#39;</span>]])) {</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>        $errarr[<span class="stringliteral">&#39;advanced_year_select&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>        $errnum++;</div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>      }</div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>, $request) &amp;&amp; !array_key_exists($request[<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>], $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#acd57de0f923cdbffa3a5b76f50f626df">getWeekofMonth</a>())) {</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>]) &amp;&amp; !isset($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#acd57de0f923cdbffa3a5b76f50f626df">getWeekofMonth</a>()[$request[<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>]])) {</div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>        $errarr[<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>        $errnum++;</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>      }</div>
 <div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>      <span class="keywordflow">if</span> ($request[<span class="stringliteral">&#39;end&#39;</span>] != <span class="stringliteral">&#39;never&#39;</span>) {</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>        <span class="keywordflow">if</span> (!array_key_exists($request[<span class="stringliteral">&#39;end&#39;</span>], $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a3f2dd94aad895517725aaca7fdf87145">getEndOptions</a>())) {</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>        <span class="keywordflow">if</span> (!isset($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a3f2dd94aad895517725aaca7fdf87145">getEndOptions</a>()[$request[<span class="stringliteral">&#39;end&#39;</span>]])) {</div>
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>          $errarr[<span class="stringliteral">&#39;end&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>          $errnum++;</div>
 <div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>        }</div>
@@ -398,7 +398,7 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>          }</div>
 <div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>        }</div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>      }</div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;weeklyoptions&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;weeklyoptions&#39;</span>])) {</div>
 <div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>        <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;weeklyoptions&#39;</span>] as $option) {</div>
 <div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>          <span class="keywordflow">if</span> (!in_array($option, $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#ad515ca85336eabd9bab2062442e733f8">getWeeklyOptions</a>())) {</div>
 <div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>            $errarr[<span class="stringliteral">&#39;weeklyoptions&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
@@ -406,21 +406,21 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>          }</div>
 <div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>        }</div>
 <div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>      }</div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;byyearday&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;byyearday&#39;</span>])) {</div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>        <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;byyearday&#39;</span>] as $option) {</div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>          <span class="keywordflow">if</span> (!array_key_exists($option, $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a3a007ad74bf94bef859f892f815657f3">getByYearDayOptions</a>())) {</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>          <span class="keywordflow">if</span> (!isset($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a3a007ad74bf94bef859f892f815657f3">getByYearDayOptions</a>()[$option])) {</div>
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>            $errarr[<span class="stringliteral">&#39;byyearday&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>            $errnum++;</div>
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>          }</div>
 <div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>        }</div>
 <div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>      }</div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>])) {</div>
 <div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>        <span class="keywordflow">if</span> (is_nan((<span class="keywordtype">double</span>)$request[<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>])) {</div>
 <div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>          $errarr[<span class="stringliteral">&#39;weekofmonthoptions&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>          $errnum++;</div>
 <div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>        }</div>
 <div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>      }</div>
-<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;bymonth&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;bymonth&#39;</span>])) {</div>
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>        <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;bymonth&#39;</span>] as $option) {</div>
 <div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>          <span class="keywordflow">if</span> (!in_array($option, $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#abeb36349d137f59529296be433ce51b4">getByMonthOptions</a>())) {</div>
 <div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>            $errarr[<span class="stringliteral">&#39;bymonth&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
@@ -428,7 +428,7 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>          }</div>
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>        }</div>
 <div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>      }</div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;byweekno&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;byweekno&#39;</span>])) {</div>
 <div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>        <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;byweekno&#39;</span>] as $option) {</div>
 <div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>          <span class="keywordflow">if</span> (!in_array($option, $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#aca5683e00949b587cf8487c26b7bb8bf">getByWeekNoOptions</a>())) {</div>
 <div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span>            $errarr[<span class="stringliteral">&#39;byweekno&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
@@ -436,9 +436,9 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span>          }</div>
 <div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span>        }</div>
 <div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>      }</div>
-<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>      <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;bymonthday&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span>      <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;bymonthday&#39;</span>])) {</div>
 <div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>        <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;bymonthday&#39;</span>] as $option) {</div>
-<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>          <span class="keywordflow">if</span> (!array_key_exists($option, $this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a094045923cf7cb3e8fd5d1dc50c69da2">getByMonthDayOptions</a>())) {</div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>          <span class="keywordflow">if</span> (!isset($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#a094045923cf7cb3e8fd5d1dc50c69da2">getByMonthDayOptions</a>()[$option])) {</div>
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>            $errarr[<span class="stringliteral">&#39;bymonthday&#39;</span>] = <span class="stringliteral">&#39;true&#39;</span>;</div>
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span>            $errnum++;</div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>          }</div>
@@ -538,7 +538,7 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>          <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>        <span class="keywordflow">case</span> <span class="stringliteral">&#39;weekly&#39;</span>:</div>
 <div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>          $rrule .= <span class="stringliteral">&#39;FREQ=WEEKLY&#39;</span>;</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>          <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;weeklyoptions&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>          <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;weeklyoptions&#39;</span>])) {</div>
 <div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>            $byday = <span class="stringliteral">&#39;&#39;</span>;</div>
 <div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>            $daystrings = array_flip($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#ad515ca85336eabd9bab2062442e733f8">getWeeklyOptions</a>());</div>
 <div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>            <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;weeklyoptions&#39;</span>] as $days) {</div>
@@ -595,7 +595,7 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>          } elseif ($request[<span class="stringliteral">&#39;advanced_year_select&#39;</span>] == <span class="stringliteral">&#39;byyearday&#39;</span>) {</div>
 <div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>            list($_day, $_month, $_year) = explode(<span class="charliteral">&#39;-&#39;</span>, $from);</div>
 <div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>            $byyearday = date(<span class="charliteral">&#39;z&#39;</span>, mktime(0, 0, 0, $_month, $_day, $_year)) + 1;</div>
-<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>            <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;byyearday&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>            <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;byyearday&#39;</span>])) {</div>
 <div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>              <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;byyearday&#39;</span>] as $yearday) {</div>
 <div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>                $byyearday .= <span class="charliteral">&#39;,&#39;</span> . $yearday;</div>
 <div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>              }</div>
@@ -614,7 +614,7 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>            }</div>
 <div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>            $rrule .= <span class="stringliteral">&#39;;BYWEEKNO=&#39;</span> . $byweekno;</div>
 <div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>          } elseif ($request[<span class="stringliteral">&#39;advanced_year_select&#39;</span>] == <span class="stringliteral">&#39;bydaymonth&#39;</span>) {</div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>            <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;weeklyoptions&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>            <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;weeklyoptions&#39;</span>])) {</div>
 <div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>              $days = array_flip($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#ad515ca85336eabd9bab2062442e733f8">getWeeklyOptions</a>());</div>
 <div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>              $byday = <span class="stringliteral">&#39;&#39;</span>;</div>
 <div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>              <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;weeklyoptions&#39;</span>] as $day) {</div>
@@ -626,7 +626,7 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>              }</div>
 <div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>              $rrule .= <span class="stringliteral">&#39;;BYDAY=&#39;</span> . $byday;</div>
 <div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>            }</div>
-<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>            <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;bymonth&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>            <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;bymonth&#39;</span>])) {</div>
 <div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>              $monthes = array_flip($this-&gt;<a class="code hl_function" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#abeb36349d137f59529296be433ce51b4">getByMonthOptions</a>());</div>
 <div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>              $bymonth = <span class="stringliteral">&#39;&#39;</span>;</div>
 <div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>              <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;bymonth&#39;</span>] as $month) {</div>
@@ -639,7 +639,7 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>              $rrule .= <span class="stringliteral">&#39;;BYMONTH=&#39;</span> . $bymonth;</div>
 <div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span> </div>
 <div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span>            }</div>
-<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>            <span class="keywordflow">if</span> (array_key_exists(<span class="stringliteral">&#39;bymonthday&#39;</span>, $request)) {</div>
+<div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span>            <span class="keywordflow">if</span> (isset($request[<span class="stringliteral">&#39;bymonthday&#39;</span>])) {</div>
 <div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>              $bymonthday = <span class="stringliteral">&#39;&#39;</span>;</div>
 <div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>              <span class="keywordflow">foreach</span> ($request[<span class="stringliteral">&#39;bymonthday&#39;</span>] as $monthday) {</div>
 <div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>                <span class="keywordflow">if</span> ($bymonthday == <span class="stringliteral">&#39;&#39;</span>) {</div>
@@ -750,7 +750,7 @@ $(document).ready(function(){initNavTree('_o_c___calendar___object_8php_source.h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_335cd68ec51516cd339e2d174e171587.html">Legacy</a></li><li class="navelem"><a class="el" href="dir_6ae4275ba9630a15f4115ebee04d0434.html">Calendar</a></li><li class="navelem"><b>OC_Calendar_Object.php</b></li>
-    <li class="footer">Generated on Wed Mar 22 2023 10:36:25 for CamerataDB by
+    <li class="footer">Generated on Thu Apr 27 2023 09:10:07 for CamerataDB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.9.6 </li>
   </ul>

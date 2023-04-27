@@ -308,6 +308,15 @@ container.</dd>
 type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_ensureAbsenceField">ensureAbsenceField()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a>    </span>
+</dt>
+<dd>Generate an &quot;absence&quot; field for the given project event if such a field
+does not yet exist. Otherwise make sure its title is updated, and
+soft-delete it if the given project event is also soft-deleted.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_explodeDataOptions">explodeDataOptions()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
@@ -1719,9 +1728,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">948</span>
+    <span class="phpdocumentor-element-found-in__line">1034</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.948" class="phpdocumentor-element-found-in__source" data-line="948" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1034" class="phpdocumentor-element-found-in__source" data-line="1034" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a field with given name and type. The field returned is not yet persisted.</p>
@@ -2080,9 +2089,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">985</span>
+    <span class="phpdocumentor-element-found-in__line">1071</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.985" class="phpdocumentor-element-found-in__source" data-line="985" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1071" class="phpdocumentor-element-found-in__source" data-line="1071" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the given field, taking default values and soft-deletion into account.</p>
@@ -2202,6 +2211,64 @@ it does not exist.</p>
 does not refer to a cloud file-system node.</p>
 </section>
 
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_ensureAbsenceField">
+        ensureAbsenceField()
+        <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_ensureAbsenceField" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">946</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.946" class="phpdocumentor-element-found-in__source" data-line="946" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate an &quot;absence&quot; field for the given project event if such a field
+does not yet exist. Otherwise make sure its title is updated, and
+soft-delete it if the given project event is also soft-deleted.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">ensureAbsenceField</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$projectEvent</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$flush</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$projectEvent</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectEvent.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent">ProjectEvent</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$flush</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Whether to flusht the changes to the database.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a></span>
             </section>
 
 </article>
@@ -3209,9 +3276,9 @@ type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1087</span>
+    <span class="phpdocumentor-element-found-in__line">1173</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1087" class="phpdocumentor-element-found-in__source" data-line="1087" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1173" class="phpdocumentor-element-found-in__source" data-line="1173" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the README.md file with a changed tooltip if the field has type CLOUD_FOLDER</p>
@@ -3266,9 +3333,9 @@ type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1133</span>
+    <span class="phpdocumentor-element-found-in__line">1219</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1133" class="phpdocumentor-element-found-in__source" data-line="1133" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1219" class="phpdocumentor-element-found-in__source" data-line="1219" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the README.md file with a changed tooltip if the field has type CLOUD_FOLDER.</p>
@@ -3323,9 +3390,9 @@ type DataType::CLOUD_FOLDER or DataType::CLOUD_FILE.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1037</span>
+    <span class="phpdocumentor-element-found-in__line">1123</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1037" class="phpdocumentor-element-found-in__source" data-line="1037" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1123" class="phpdocumentor-element-found-in__source" data-line="1123" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate all user-folders with an optional README.md if the field has type
@@ -3367,9 +3434,9 @@ CLOUD_FOLDER.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1489</span>
+    <span class="phpdocumentor-element-found-in__line">1575</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1489" class="phpdocumentor-element-found-in__source" data-line="1489" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1575" class="phpdocumentor-element-found-in__source" data-line="1575" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Called via ORM events as pre-remove hook.</p>
@@ -3410,9 +3477,9 @@ CLOUD_FOLDER.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1528</span>
+    <span class="phpdocumentor-element-found-in__line">1614</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1528" class="phpdocumentor-element-found-in__source" data-line="1528" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1614" class="phpdocumentor-element-found-in__source" data-line="1614" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Rename all linked cloud-folders as necessary. This is done by registering
@@ -3489,9 +3556,9 @@ renamed back.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1607</span>
+    <span class="phpdocumentor-element-found-in__line">1693</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1607" class="phpdocumentor-element-found-in__source" data-line="1607" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1693" class="phpdocumentor-element-found-in__source" data-line="1693" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4032,9 +4099,9 @@ negative sign means that the participant earns money.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1384</span>
+    <span class="phpdocumentor-element-found-in__line">1470</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1384" class="phpdocumentor-element-found-in__source" data-line="1384" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1470" class="phpdocumentor-element-found-in__source" data-line="1470" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Populate the field-data for the given field and musician with the
@@ -4111,9 +4178,9 @@ back the need for flush with the return value.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ProjectParticipantFieldsService.php"><a href="files/service-projectparticipantfieldsservice.html"><abbr title="Service/ProjectParticipantFieldsService.php">ProjectParticipantFieldsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1279</span>
+    <span class="phpdocumentor-element-found-in__line">1365</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1279" class="phpdocumentor-element-found-in__source" data-line="1279" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#source-view.1365" class="phpdocumentor-element-found-in__source" data-line="1365" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Populate the field-datum for the given field and musician with the actual
@@ -9661,6 +9728,7 @@ be verified.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_deleteConfigValue">deleteConfigValue()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_deleteField">deleteField()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_doGetFieldFolderPath">doGetFieldFolderPath()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_ensureAbsenceField">ensureAbsenceField()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_explodeDataOptions">explodeDataOptions()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_filterByFieldName">filterByFieldName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ProjectParticipantFieldsService.html#method_find">find()</a></li>

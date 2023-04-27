@@ -100,6 +100,7 @@ $(document).ready(function(){initNavTree('class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_cont
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">ProjectEventsController Class Reference</div></div>
 </div><!--header-->
@@ -127,6 +128,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a51319686a447968ce34307d549bc17b3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html#a51319686a447968ce34307d549bc17b3">serviceSwitch</a> (string $topic)</td></tr>
 <tr class="separator:a51319686a447968ce34307d549bc17b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ab71249c3cd64ecb5267cb2627d8c10f2"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html#ab71249c3cd64ecb5267cb2627d8c10f2">makeInputValue</a> (array $event)</td></tr>
+<tr class="memdesc:ab71249c3cd64ecb5267cb2627d8c10f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provide a value for an input element (select option, input) which codes all neccessary info to uniquely identify the event.  <br /></td></tr>
+<tr class="separator:ab71249c3cd64ecb5267cb2627d8c10f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a429b83ccad1c8e71699a838c13093dde"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html#a429b83ccad1c8e71699a838c13093dde">$parameterService</a></td></tr>
@@ -139,7 +146,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AJAX end-points to manage events linked to projects. </p>
 
-<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00039">39</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00043">43</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afef5d5d322e8f40ecef5db8e3b10df50" name="afef5d5d322e8f40ecef5db8e3b10df50"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afef5d5d322e8f40ecef5db8e3b10df50">&#9670;&#160;</a></span>__construct()</h2>
@@ -191,11 +198,48 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00054">54</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00058">58</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab71249c3cd64ecb5267cb2627d8c10f2" name="ab71249c3cd64ecb5267cb2627d8c10f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab71249c3cd64ecb5267cb2627d8c10f2">&#9670;&#160;</a></span>makeInputValue()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static makeInputValue </td>
+          <td>(</td>
+          <td class="paramtype">array&#160;</td>
+          <td class="paramname"><em>$event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provide a value for an input element (select option, input) which codes all neccessary info to uniquely identify the event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$event</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00083">83</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
+
+</div>
+</div>
 <a id="a51319686a447968ce34307d549bc17b3" name="a51319686a447968ce34307d549bc17b3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a51319686a447968ce34307d549bc17b3">&#9670;&#160;</a></span>serviceSwitch()</h2>
 
@@ -220,7 +264,7 @@ Private Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Http\Response</dd></dl>
 <p>@NoAdminRequired </p>
 
-<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00078">78</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00100">100</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
 
 </div>
 </div>
@@ -245,7 +289,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00051">51</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00055">55</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
 
 </div>
 </div>
@@ -269,7 +313,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00048">48</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00052">52</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
 
 </div>
 </div>
@@ -293,7 +337,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00045">45</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_project_events_controller_8php_source.html#l00049">49</a> of file <a class="el" href="_project_events_controller_8php_source.html">ProjectEventsController.php</a>.</p>
 
 </div>
 </div>
@@ -306,7 +350,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><b>OCA</b></li><li class="navelem"><a class="el" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b.html">CAFEVDB</a></li><li class="navelem"><a class="el" href="namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller.html">Controller</a></li><li class="navelem"><a class="el" href="class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html">ProjectEventsController</a></li>
-    <li class="footer">Generated on Wed Mar 22 2023 10:36:47 for CamerataDB by
+    <li class="footer">Generated on Thu Apr 27 2023 09:10:28 for CamerataDB by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.9.6 </li>
   </ul>

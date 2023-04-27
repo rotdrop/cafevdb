@@ -231,14 +231,20 @@ trait ParticipantFileFieldsTrait
       $downloadLink = $dbFileName = $dbExtension = '';
     }
     if (!empty($participantFolder)) {
-      $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder, subDir: true);
-      $filesAppTarget = md5($filesAppLinkParticipant);
-      $filesAppPath = $participantFolder . $subDirPrefix;
       try {
-        $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
+        $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder, subDir: true);
+        $filesAppTarget = md5($filesAppLinkParticipant);
+        $filesAppPath = $participantFolder . $subDirPrefix;
+        try {
+          $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
+        } catch (\OCP\Files\NotFoundException $e) {
+          $this->logDebug('No file found for ' . $filesAppPath);
+          $filesAppLink = $filesAppLinkParticipant;
+        }
       } catch (\OCP\Files\NotFoundException $e) {
-        $this->logDebug('No file found for ' . $filesAppPath);
-        $filesAppLink = $filesAppLinkParticipant;
+        $this->logDebug('No folder found for ' . $participantFolder);
+        $filesAppPath = '';
+        $filesAppLink = '';
       }
     } else {
       $filesAppPath = '';
@@ -368,11 +374,15 @@ trait ParticipantFileFieldsTrait
     } else {
       $toolTip = $this->toolTipsService['participant-attachment-open-parent'];
     }
-    list($filesAppLink, $filesAppTarget) = $this->getFilesAppLink($field, $musician, $project, $subFolder);
-    $html = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
+    try {
+      list($filesAppLink, $filesAppTarget) = $this->getFilesAppLink($field, $musician, $project, $subFolder);
+      $html = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
        title="' . $toolTip . '"
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
        ></a>';
+    } catch (\OCP\Files\NotFoundException $e) {
+      $html = '';
+    }
     return $html;
   }
 }

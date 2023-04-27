@@ -2,5 +2,5 @@
 <area shape="rect" id="node1" title="Share the given calendar with a group." alt="" coords="5,56,145,81"/>
 <area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a73af2c12aae06cdd9242151cfbdb94be" title="Test if the given calendar is shared with the given group." alt="" coords="193,5,353,31"/>
 <area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ae15d4de248635c80289eb846492d31e2" title=" " alt="" coords="401,31,524,56"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a95d471e2ffc087c4a6e55a8416cd7d59" title="Create a new calendar if the one with the given id does not exist." alt="" coords="220,107,327,132"/>
+<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a95d471e2ffc087c4a6e55a8416cd7d59" title="Create a new calendar object." alt="" coords="220,107,327,132"/>
 </map>
