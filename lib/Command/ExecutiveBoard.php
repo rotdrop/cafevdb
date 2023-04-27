@@ -59,6 +59,36 @@ class ExecutiveBoard extends Command
 
   private const BOARD_USER_BACKEND = 'LDAP';
 
+  private const TWO_FACTOR_PREFERENCES = [
+    // email notification, needed as fallback
+    [
+      'appid' => 'twofactor_email',
+      'phone' => false,
+      'values' => [
+        'verified' => 'true',
+      ],
+    ],
+    // signal messenger
+    [
+      'appid' => 'twofactor_gateway',
+      'phone' => true,
+      'values' => [
+        'signal_identifier' => '{PHONE}',
+        'signal_verified' => 'true',
+        // 'sms_identifier' => '{PHONE}',
+        // 'sms_verified' => 'true',
+      ],
+    ],
+    // notifications
+    [
+      'appid' => 'twofactor_nextcloud_notification',
+      'phone' => false,
+      'values' => [
+        'enable' => '1',
+      ],
+    ],
+  ];
+
     // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
@@ -76,7 +106,7 @@ class ExecutiveBoard extends Command
   }
   // phpcs:enable
 
- /** {@inheritdoc} */
+  /** {@inheritdoc} */
   protected function configure()
   {
     $this
@@ -366,6 +396,8 @@ class ExecutiveBoard extends Command
         }
       }
 
+      // phone number sync
+
       try {
         $phoneProperty = $account->getProperty(IAccountManager::PROPERTY_PHONE);
         $cloudPhone = $phoneProperty->getValue();
@@ -400,6 +432,40 @@ class ExecutiveBoard extends Command
         $fixed[] = 'mobile phone';
       }
       $output->writeln($indent . $this->l->t('Phone number: %s', $dbPhone));
+
+      // enable some standard two-factor things and set them to verified
+      $cloudConfig = $configService->getCloudConfig();
+      foreach (self::TWO_FACTOR_PREFERENCES as $configItem) {
+        $appName = $configItem['appid'];
+        if ($configItem['phone'] && empty($dbPhone)) {
+          continue;
+        }
+        foreach ($configItem['values'] as $configKey => $configValue) {
+          if ($configValue == '{PHONE}') {
+            $configValue = $dbPhone;
+          }
+          $configuredValue = $cloudConfig->getUserValue($userId, $appName, $configKey);
+          if ($configuredValue !== $configValue) {
+            ++$problems;
+            $output->writeln(
+              '<error>'
+              . $this->l->t('User setting "%1$s" (%2$s) is "%3$s" but should be "%4$s".', [
+                $configKey, $appName, $configuredValue, $configValue
+              ])
+              . '</error>'
+            );
+            if ($dry) {
+              $output->writeln($indent . $this->l->t('Would set "%1$s" (%2$s) to "%3$s" (dry-run).', [ $configKey, $appName, $configValue ]));
+            } else {
+              $output->writeln($indent . $this->l->t('Setting "%1$s" (%2$s) to "%3$s".', [ $configKey, $appName, $configValue ]));
+              $cloudConfig->setUserValue($userId, $appName, $configKey, $configValue);
+            }
+            $fixed[] = 'twofactor configuration';
+          } else {
+            $output->writeln($indent . $this->l->t('Configuration "%1$s" (%2$s) is "%3$s".', [ $configKey, $appName, $configValue ]), OutputInterface::VERBOSITY_VERBOSE);
+          }
+        }
+      }
 
       if ($problems > 0) {
         $output->writeln('<error>' . $this->l->n('Error: found %d problem.', 'Error: found %d problems.', $problems, [ $problems ]) . '</error>');
