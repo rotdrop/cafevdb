@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+
 use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\Accounts\IAccountManager;
@@ -81,11 +83,14 @@ class OrganizationalRolesService
    *
    * @param string $role
    *
+   * @param int $musicianId Mandatory musician id if $role ==
+   * BOARD_MEMBER_ROLE, i.e. for board members without special function.
+   *
    * @return null|array
    */
-  public function dedicatedBoardMemberContact(string $role):?array
+  public function dedicatedBoardMemberContact(string $role, int $musicianId = 0):?array
   {
-    $participant = $this->dedicatedBoardMemberParticipant($role);
+    $participant = $this->dedicatedBoardMemberParticipant($role, $musicianId);
     if (empty($participant)) {
       return null;
     }
@@ -155,12 +160,26 @@ class OrganizationalRolesService
     return $data;
   }
 
-  /** @return null|Entities\Project */
-  private function executiveBoardProject():?Entities\Project
+  /**
+   * Return the project entity for the executive board.
+   *
+   * @return null|Entities\Project
+   */
+  public function executiveBoardProject():?Entities\Project
   {
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
     return $projectService->findById($this->getExecutiveBoardProjectId());
+  }
+
+  /**
+   * Return an array with all members of the executive board.
+   *
+   * @return Entities\ProjectParticipant[]
+   */
+  public function executiveBoardMembers():Collection
+  {
+    return $this->executiveBoardProject()->getParticipants();
   }
 
   /**
@@ -495,8 +514,3 @@ class OrganizationalRolesService
     return $this->inGroup($userId, $clubMembersGid);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

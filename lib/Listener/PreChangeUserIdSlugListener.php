@@ -33,7 +33,12 @@ use OCP\IL10N;
 use OCA\CAFEVDB\Events\PreChangeUserIdSlug as HandledEvent;
 use OCA\CAFEVDB\Service\ProjectService;
 
-/** Perform renaming action when the user-id slug changes. */
+/**
+ * Perform renaming action when the user-id slug changes.#
+ *
+ * @todo Changing the slug should perhaps be cancelled if the person already
+ * uses cloud services.
+ */
 class PreChangeUserIdSlugListener implements IEventListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
