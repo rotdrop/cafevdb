@@ -30,6 +30,7 @@ use OCP\IL10N;
 use OCP\App\IAppManager;
 use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Exceptions;
 
@@ -696,6 +697,8 @@ SELECT t.* FROM " . $table . " t
     $memberProjectId = $this->encryptionService->getConfigValue('memberProjectId', -1);
     $executiveBoardProjectId = $this->encryptionService->getConfigValue('executiveBoardProjectId', -1);
 
+    // for the sake of the project-registration page all projects are
+    // exported, they are not so secret BTW.
     $table = 'Projects';
     $column = 'id';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -706,10 +709,8 @@ AS
 SELECT t.*,
   (t.id = " . $memberProjectId . ") AS club_members,
   (t.id = " . $executiveBoardProjectId . ") AS executive_board
-  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipants') . " pppv
-  INNER JOIN " . $table . " t
-    ON t." . $column . " = pppv.project_id
-  GROUP BY t.id";
+  FROM " . $table . " t
+  WHERE t.type = '" . ProjectType::TEMPORARY . "' OR t.type = '" . ProjectType::PERMANENT . "'";
 
     $table = 'ProjectParticipantFieldsData';
     $column = 'musician_id';
