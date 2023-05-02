@@ -339,7 +339,7 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Sets created.
+   * Sets registrationDeadline.
    *
    * @param string|int|DateTimeInterface $registrationDeadline
    *
@@ -356,7 +356,7 @@ class Project implements \ArrayAccess
    *
    * @return DateTimeImmutable
    */
-  public function getRegistrationDeadline():DateTimeInterface
+  public function getRegistrationDeadline():?DateTimeInterface
   {
     return $this->registrationDeadline;
   }
