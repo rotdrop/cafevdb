@@ -146,20 +146,7 @@ WITH CHECK OPTION';
     'EncryptedFileOwners' => 'musician_id',
     'MusicianEmailAddresses' => 'musician_id',
   ];
-  const PARTICIPANT_FIELD_ID_TABLES = [
-    'ProjectParticipantFields' => [
-      'joinField' => 'id',
-      'groupBy' => [
-        'id',
-      ],
-    ],
-    'ProjectParticipantFieldsDataOptions' => [
-      'joinField' => 'field_id',
-      'groupBy' => [
-        'field_id', 'key',
-      ],
-    ],
-  ];
+
   const UNRESTRICTED_TABLES = [
     'Instruments',
     'InstrumentFamilies',
@@ -733,22 +720,32 @@ VIEW " . $viewName . "
 AS
 SELECT t.* FROM " . $table . " t
     INNER JOIN ProjectParticipantFields ppf
-      ON t.field_id = ppf.id AND ppf.participant_access <> 0
+      ON t.field_id = ppf.id AND ppf.participant_access <> 'none'
     WHERE t." . $column . " = " . $accessFunction;
 
-    foreach (self::PARTICIPANT_FIELD_ID_TABLES as $table => $joinInfo) {
-      $viewName = $this->personalizedViewName($dataBaseName, $table);
-      $statement = "CREATE OR REPLACE
+    // Unconditionally add all fields which are configured to be exposed. This
+    // is needed by the project-registration form which exposes those fields
+    // to the participants in spe.
+    $table = 'ProjectParticipantFields';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t
+WHERE t.participant_access <> 'none'";
+
+    $table = 'ProjectParticipantFieldsDataOptions';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
 SELECT t.*
-  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData'). " pppfdv
+  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFields') . " ppf
   INNER JOIN " . $table . " t
-    ON t." . $joinInfo['joinField'] . " = pppfdv.field_id
-  GROUP BY " . implode(', ', array_map(fn($field) => 't.' . $field, $joinInfo['groupBy']));
-      $statements[$viewName] = $statement;
-    }
+    ON t.field_id = ppf.id
+  GROUP BY t.field_id, t.key";
 
     $table = 'InstrumentInsurances';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
