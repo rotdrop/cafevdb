@@ -61,7 +61,7 @@ class ProjectEvents extends Command
 {
   use AuthenticatedCommandTrait;
 
-  /** {@inheritdoc} */
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IL10N $l10n,
@@ -76,6 +76,7 @@ class ProjectEvents extends Command
     $this->userSession = $userSession;
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
   /** {@inheritdoc} */
   protected function configure()

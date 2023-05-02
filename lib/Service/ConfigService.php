@@ -236,6 +236,27 @@ class ConfigService
   /** @var string */
   const CONFIG_LOCK_KEY = EncryptionService::CONFIG_LOCK_KEY;
 
+  /** @var string */
+  public const EMAIL_FORM_ADDRESS_KEY = 'emailfromaddress';
+
+  /** @var string */
+  public const EMAIL_TEST_ADDRESS_KEY = 'emailtestaddress';
+
+  /** @var string */
+  public const ANNOUNCEMENTS_MAILING_LIST_KEY = 'announcementsMailingList';
+
+  /** @var string */
+  public const EXECUTIVE_BOARD_PROJECT_KEY = 'executiveBoardProject';
+
+  /** @var string */
+  public const EXECUTIVE_BOARD_PROJECT_ID_KEY = self::EXECUTIVE_BOARD_PROJECT_KEY . 'Id';
+
+  /** @var string */
+  public const CLUB_MEMBERS_PROJECT_KEY = 'memberProject';
+
+  /** @var string */
+  public const CLUB_MEMBER_PROJECT_ID_KEY = self::CLUB_MEMBERS_PROJECT_KEY . 'Id';
+
   /** @var array */
   protected $encryptionCache;
 

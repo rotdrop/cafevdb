@@ -49,6 +49,7 @@
     <command>OCA\CAFEVDB\Command\HelloWorld</command>
     <command>OCA\CAFEVDB\Command\DatabaseSanitizers</command>
     <command>OCA\CAFEVDB\Command\DatabaseStorage</command>
+    <command>OCA\CAFEVDB\Command\ExecutiveBoard</command>
     <command>OCA\CAFEVDB\Command\FilesScan</command>
     <command>OCA\CAFEVDB\Command\ProjectEvents</command>
     <command>OCA\CAFEVDB\Command\ProjectFolders</command>
