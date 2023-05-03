@@ -748,6 +748,17 @@ SELECT t.*
     ON t.field_id = ppf.id
   GROUP BY t.field_id, t.key";
 
+    // we also need the project events, however, only rehearsals and concerts
+
+    $table = 'ProjectEvents';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t
+WHERE t.calendar_uri IN ('" . ConfigService::CONCERTS_CALENDAR_URI . "','" . ConfigService::REHEARSALS_CALENDAR_URI . "')";
+
     $table = 'InstrumentInsurances';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
     $statements[$viewName] = "CREATE OR REPLACE
