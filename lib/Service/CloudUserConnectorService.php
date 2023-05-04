@@ -30,6 +30,7 @@ use OCP\IL10N;
 use OCP\App\IAppManager;
 use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Exceptions;
 
@@ -146,20 +147,7 @@ WITH CHECK OPTION';
     'EncryptedFileOwners' => 'musician_id',
     'MusicianEmailAddresses' => 'musician_id',
   ];
-  const PARTICIPANT_FIELD_ID_TABLES = [
-    'ProjectParticipantFields' => [
-      'joinField' => 'id',
-      'groupBy' => [
-        'id',
-      ],
-    ],
-    'ProjectParticipantFieldsDataOptions' => [
-      'joinField' => 'field_id',
-      'groupBy' => [
-        'field_id', 'key',
-      ],
-    ],
-  ];
+
   const UNRESTRICTED_TABLES = [
     'Instruments',
     'InstrumentFamilies',
@@ -709,6 +697,8 @@ SELECT t.* FROM " . $table . " t
     $memberProjectId = $this->encryptionService->getConfigValue('memberProjectId', -1);
     $executiveBoardProjectId = $this->encryptionService->getConfigValue('executiveBoardProjectId', -1);
 
+    // for the sake of the project-registration page all projects are
+    // exported, they are not so secret BTW.
     $table = 'Projects';
     $column = 'id';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -719,10 +709,8 @@ AS
 SELECT t.*,
   (t.id = " . $memberProjectId . ") AS club_members,
   (t.id = " . $executiveBoardProjectId . ") AS executive_board
-  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipants') . " pppv
-  INNER JOIN " . $table . " t
-    ON t." . $column . " = pppv.project_id
-  GROUP BY t.id";
+  FROM " . $table . " t
+  WHERE t.type = '" . ProjectType::TEMPORARY . "' OR t.type = '" . ProjectType::PERMANENT . "'";
 
     $table = 'ProjectParticipantFieldsData';
     $column = 'musician_id';
@@ -733,22 +721,43 @@ VIEW " . $viewName . "
 AS
 SELECT t.* FROM " . $table . " t
     INNER JOIN ProjectParticipantFields ppf
-      ON t.field_id = ppf.id AND ppf.participant_access <> 0
+      ON t.field_id = ppf.id AND ppf.participant_access <> 'none'
     WHERE t." . $column . " = " . $accessFunction;
 
-    foreach (self::PARTICIPANT_FIELD_ID_TABLES as $table => $joinInfo) {
-      $viewName = $this->personalizedViewName($dataBaseName, $table);
-      $statement = "CREATE OR REPLACE
+    // Unconditionally add all fields which are configured to be exposed. This
+    // is needed by the project-registration form which exposes those fields
+    // to the participants in spe.
+    $table = 'ProjectParticipantFields';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t
+WHERE t.participant_access <> 'none'";
+
+    $table = 'ProjectParticipantFieldsDataOptions';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
 SELECT t.*
-  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData'). " pppfdv
+  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFields') . " ppf
   INNER JOIN " . $table . " t
-    ON t." . $joinInfo['joinField'] . " = pppfdv.field_id
-  GROUP BY " . implode(', ', array_map(fn($field) => 't.' . $field, $joinInfo['groupBy']));
-      $statements[$viewName] = $statement;
-    }
+    ON t.field_id = ppf.id
+  GROUP BY t.field_id, t.key";
+
+    // we also need the project events, however, only rehearsals and concerts
+
+    $table = 'ProjectEvents';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t
+WHERE t.calendar_uri IN ('" . ConfigService::CONCERTS_CALENDAR_URI . "','" . ConfigService::REHEARSALS_CALENDAR_URI . "')";
 
     $table = 'InstrumentInsurances';
     $viewName = $this->personalizedViewName($dataBaseName, $table);

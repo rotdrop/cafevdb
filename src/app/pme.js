@@ -2011,12 +2011,16 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
       const locked = !$this.prop('checked');
       const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
       $input.prop('readonly', locked);
+      if ($this.hasClass('locked-disabled') || $input.hasClass('locked-disabled')) {
+        $input.prop('disabled', locked);
+      }
       if (locked) {
-        $input.val('');
+        $input.val($input.data('value') || '');
         $input.attr('placeholder', $input.data('lockedPlaceholder'));
       } else {
         $input.attr('placeholder', $input.data('unlockedPlaceholder'));
       }
+      $input.toggleClass('readonly', locked);
       return false;
     });
 
@@ -2024,14 +2028,13 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     'change', 'input[type="checkbox"].' + pmeToken('input-lock') + '.lock-unlock',
     function(event) {
       const $this = $(this);
-      const checked = $this.prop('checked');
+      const locked = $this.prop('checked');
       const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
-      $input.prop('readonly', checked);
-      if (checked) {
-        $input.addClass('readonly');
-      } else {
-        $input.removeClass('readonly');
+      $input.prop('readonly', locked);
+      if ($this.hasClass('locked-disabled') || $input.hasClass('locked-disabled')) {
+        $input.prop('disabled', locked);
       }
+      $input.toggleClass('readonly', locked);
       return false;
     });
 

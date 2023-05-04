@@ -568,6 +568,9 @@ clicking the "recover" button to the left of each deleted entry.'),
             'delete' => $this->l->t('Delete the download share. This will make it impossible to access the data using any previously generated share-link. Note that this of course does not delete the data in the cloud, it just invalidates the public web-link.'),
             'expiration-date' => $this->l->t('Set the expiration date for the link. The default expiration date is the end of the year where the project is performed.'),
           ],
+          'registration' => [
+            'deadline' => $this->l->t('Optional registration deadline. Thje registration deadline is used by the project registration form in order to filter out projects with expired deadline. If left empty then a deadline one day before the first rehearsal or concert is imposed, if those events are present in the cloud calendar. Otherwise no deadline is imposed.'),
+          ],
         ],
         'instrument-insurances' => [
           'instrument-holder' => $this->l->t('The person who actually uses or "has" this instrument or insured object.'),

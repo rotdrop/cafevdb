@@ -30,6 +30,7 @@ use RuntimeException;
 use InvalidArgumentException;
 use DateInterval;
 use DateTimeImmutable;
+use DateTimeInterface;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\SystemTag\ISystemTag;
@@ -66,6 +67,7 @@ class ProjectService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   const DBTABLE = 'Projects';
 
@@ -431,6 +433,49 @@ class ProjectService
       $orderBy['id'] = 'INDEX';
     }
     return $this->repository->findBy($criteria, $orderBy);
+  }
+
+  /**
+   * Compute the effective project registration deadline, that is: if there is
+   * a user-defined deadline, then this is it. Otherwise take minimum date
+   * minus 1 day of the registered rehearsal and concert events for the
+   * project. If neither is defined return null (no deadline is imposed).
+   *
+   * The deadline may be used by the project registration form in order to
+   * limit the project selection menu or to assert a warning if an expired
+   * registration form is submitted.
+   *
+   * @param mixed $projectOrId
+   *
+   * @return null|DateTimeInterface
+   */
+  public function getProjectRegistrationDeadline(mixed $projectOrId):?DateTimeInterface
+  {
+    /** @var Entities\Project $project */
+    $project = $this->repository->ensureProject($projectOrId);
+    $deadline = $project->getRegistrationDeadline();
+    if (!empty($deadline)) {
+      return $deadline;
+    }
+
+    /** @var EventsService $eventsService */
+    $eventsService = $this->di(EventsService::class);
+
+    $events = array_filter(
+      $eventsService->events($project) ?? [],
+      fn(array $event) => $event['calendarUri'] == ConfigService::REHEARSALS_CALENDAR_URI || $event['calendarUri'] == ConfigService::CONCERTS_CALENDAR_URI,
+    );
+
+    if (empty($events)) {
+      return null;
+    }
+
+    $startDates = array_map(fn(array $event) => $event['start'], $events);
+
+    $deadline = min($startDates)->modify('-1 day');
+
+    // strip the time information
+    return self::convertToDateTime($deadline);
   }
 
   /**

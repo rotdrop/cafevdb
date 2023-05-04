@@ -54,6 +54,7 @@ class Project implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var int
@@ -93,6 +94,17 @@ class Project implements \ArrayAccess
    * @ORM\Column(type="string", nullable=true, length="128", options={"collation"="ascii_general_ci"})
    */
   private $mailingListId;
+
+  /**
+   * @var \DateTimeImmutable
+   *
+   * Optional registration deadline. If null then the date one day before the
+   * first rehearsal is used, if set. Otherwise no registration dead-line is
+   * imposed.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationDeadline;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -324,6 +336,29 @@ class Project implements \ArrayAccess
   public function getMailingListId():?string
   {
     return $this->mailingListId;
+  }
+
+  /**
+   * Sets registrationDeadline.
+   *
+   * @param string|int|DateTimeInterface $registrationDeadline
+   *
+   * @return Project
+   */
+  public function setRegistrationDeadline(mixed $registrationDeadline):Project
+  {
+    $this->registrationDeadline = self::convertToDateTime($registrationDeadline);
+    return $this;
+  }
+
+  /**
+   * Returns registrationDeadline.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationDeadline():?DateTimeInterface
+  {
+    return $this->registrationDeadline;
   }
 
   /**

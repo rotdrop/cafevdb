@@ -1,11 +1,11 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,38 +22,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Database\Doctrine\ORM\Traits;
+namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-/** Field $created and setter/getter. */
-trait CreatedAt
+use OCP\ILogger;
+use OCP\IL10N;
+
+use OCA\CAFEVDB\Database\EntityManager;
+
+/**
+ * Change participantAccess field to enum.
+ */
+class AddProjectRegistrationDeadline extends AbstractMigration
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  protected static $sql = [
+    self::STRUCTURAL => [
+      "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS registration_deadline DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)';",
+    ],
+  ];
 
-  /**
-   * @var \DateTimeImmutable
-   */
-  protected $created;
-
-  /**
-   * Sets created.
-   *
-   * @param string|int|\DateTimeInterface $created
-   *
-   * @return self
-   */
-  public function setCreated($created)
+  /** {@inheritdoc} */
+  public function description():string
   {
-    $this->created = self::convertToDateTime($created);
-    return $this;
-  }
-
-  /**
-   * Returns created.
-   *
-   * @return \DateTimeImmutable
-   */
-  public function getCreated()
-  {
-    return $this->created;
+    return $this->l->t('Add an optional project registration deadline.');
   }
 }
