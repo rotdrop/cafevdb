@@ -951,7 +951,7 @@ class ProjectParticipantFieldsService
 
     /** @var EventsService $eventsService */
     $eventsService = $this->appContainer()->get(EventsService::class);
-    $eventData = $eventsService->fetchEvent($project, $projectEvent->getEventUri(), $projectEvent->getRecurrenceId());
+    $eventData = $eventsService->getEventData($projectEvent);
 
     /** @var Entities\ProjectParticipantField $absenceField */
     $absenceField = $projectEvent->getAbsenceField();

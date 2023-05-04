@@ -204,9 +204,18 @@ class ProjectParticipantField implements \ArrayAccess
   private $participantAccess;
 
   /**
+   * @var Collection
+   *
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
    */
   private $fieldData;
+
+  /**
+   * @var null|ProjectEvent
+   *
+   * @ORM\OneToOne(targetEntity="ProjectEvent", mappedBy="absenceField")
+   */
+  private $projectEvent;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -443,6 +452,9 @@ class ProjectParticipantField implements \ArrayAccess
     $usageCounter = 0;
     foreach ($this->dataOptions as $dataOption) {
       $usageCounter += $dataOption->usage();
+    }
+    if (!empty($this->projectEvent)) {
+      ++$usageCounter;
     }
     return $usageCounter;
   }
@@ -757,51 +769,27 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set readers.
+   * Set projectEvent.
    *
-   * @param string|null $readers
+   * @param null|ProjectEvent $projectEvent
    *
    * @return ProjectParticipantField
    */
-  public function setReaders($readers):ProjectParticipantField
+  public function setProjectEvent(?ProjectEvent $projectEvent):ProjectParticipantField
   {
-    $this->readers = $readers;
+    $this->projectEvent = $projectEvent;
 
     return $this;
   }
 
   /**
-   * Get readers.
+   * Get projectEvent.
    *
-   * @return string|null
+   * @return null|ProjectEvent
    */
-  public function getReaders()
+  public function getProjectEvent():?ProjectEvent
   {
-    return $this->readers;
-  }
-
-  /**
-   * Set writers.
-   *
-   * @param string|null $writers
-   *
-   * @return ProjectParticipantField
-   */
-  public function setWriters($writers):ProjectParticipantField
-  {
-    $this->writers = $writers;
-
-    return $this;
-  }
-
-  /**
-   * Get writers.
-   *
-   * @return string|null
-   */
-  public function getWriters()
-  {
-    return $this->writers;
+    return $this->projectEvent;
   }
 
   /** @return bool Whether this field links to the cloud-file-systen. */

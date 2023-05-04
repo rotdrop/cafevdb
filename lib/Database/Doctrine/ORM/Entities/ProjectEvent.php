@@ -155,7 +155,8 @@ class ProjectEvent implements \ArrayAccess
    * possibly repeating or we need a list of linked fields in order to record
    * the participation for each event instance.
    *
-   * @ORM\OneToOne(targetEntity="ProjectParticipantField", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="ProjectParticipantField", inversedBy="projectEvent", cascade={"remove"}, orphanRemoval=true)
+   * @Gedmo\SoftDeleteableCascade(undelete=true)
    */
   private $absenceField;
 
