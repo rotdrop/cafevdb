@@ -619,6 +619,68 @@ class Projects extends PMETableViewBase
         'default' => 0,
       ]);
 
+    $opts['fdd']['registration_deadline'] =
+      array_merge(
+        $this->defaultFDD['date'],
+        [
+          'tab' => ['id' => 'miscinfo'],
+          'name' => $this->l->t('Registration Deadline'),
+          'nowrap' => true,
+          'options' => 'AVCPD',
+          'tooltip' => $this->toolTipsService['page-renderer:projects:registration:deadline'],
+          'php|LFVD' => function($value, $op, $k, $row, $recordId, $pme) {
+            $project = $this->project ?? ($recordId['id'] ?? null);
+            if (!empty($project)) {
+              $value = $this->projectService->getProjectRegistrationDeadline($project)->getTimestamp();
+              $string = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
+              return $string;
+            }
+            return '';
+          },
+          'display|ACP' => [
+            'attributes' => function($op, $k, $row, $pme) {
+              $project = $this->project ?? ($recordId['id'] ?? null);
+              if (!empty($project)) {
+                $value = $this->projectService->getProjectRegistrationDeadline($project)->getTimestamp();
+                $deadlineString = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
+              }
+              $lockedPlaceholder =
+                $op == 'add' || empty($deadlineString) ? $this->l->t('e.g. %s', '01.04.1784') : $deadlineString;
+              $unlockedPlaceholder = $this->l->t('e.g. %s', $deadlineString);
+              if (empty($row['qf'.$k])) {
+                return [
+                  'placeholder' => $lockedPlaceholder,
+                  'readonly' => true,
+                  'data-unlocked-placeholder' => $unlockedPlaceholder,
+                  'data-locked-placeholder' => $lockedPlaceholder,
+                  'disabled' => true,
+                  'size' => 14,
+                ];
+              } else {
+                return [
+                  'placeholder' => $unlockedPlaceholder,
+                  'readonly' => false,
+                  'data-unlocked-placeholder' => $unlockedPlaceholder,
+                  'data-locked-placeholder' => $lockedPlaceholder,
+                  'size' => 14,
+                ];
+              }
+            },
+            'postfix' => function($op, $pos, $k, $row, $pme) {
+              $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+              return '<input id="pme-project-registration-deadline"
+  type="checkbox"
+  '.$checked.'
+  class="pme-input pme-input-lock lock-empty locked-disabled"
+/><label
+    class="pme-input pme-input-lock lock-empty"
+    title="'.$this->toolTipsService['pme:input:lock-empty'].'"
+    for="pme-project-registration-deadline"></label>';
+            },
+          ],
+        ]
+      );
+
     $opts['fdd']['mailing_list_id'] = [
       'name'    => $this->l->t('Mailing List'),
       'css'     => [ 'postfix' => [ 'mailing-list', 'tooltip-auto', ], ],
