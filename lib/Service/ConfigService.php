@@ -87,6 +87,8 @@ class ConfigService
    * Some configuration constants
    *
    */
+  const SHAREOWNER_KEY = 'shareowner';
+
   const SHARED_FOLDER = 'sharedfolder';
   const PROJECTS_FOLDER = 'projectsfolder';
   const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';

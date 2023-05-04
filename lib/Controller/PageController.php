@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2022
+ * @copyright Claus-Justus Heine 2014-2023
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -405,7 +405,7 @@ class PageController extends Controller
       'orchestra' => $this->getConfigValue('orchestra'),
       'wikinamespace' => $this->getAppValue('wikinamespace'),
       'usergroup' => $this->groupId(),
-      'shareowner' => $this->getConfigValue('shareowner'),
+      'shareowner' => $this->getConfigValue(ConfigService::SHAREOWNER_KEY),
       'sharedfolder' => $this->getConfigValue('sharedfolder'),
       'database' => $this->getConfigValue('database'),
       'groupadmin' => $this->isSubAdminOfGroup(),
