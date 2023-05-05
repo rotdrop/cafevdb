@@ -87,12 +87,7 @@ SELECT m.user_id_slug AS uid,
        CONVERT((CONCAT(_ascii "%2$s' . self::GROUP_ID_SEPARATOR . '", p.id) COLLATE ascii_bin) USING utf8mb4) AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
-LEFT JOIN Projects p ON p.id = pp.project_id
-WHERE pp.musician_id in
-    (SELECT pp1.musician_id
-     FROM ProjectParticipants pp1
-     LEFT JOIN Projects p1 ON pp1.project_id = p1.id
-     WHERE p1.type = "permanent")';
+LEFT JOIN Projects p ON p.id = pp.project_id';
   // WITH CHECK OPTION. But view is not updatable. Ok.
 
   /**
@@ -117,16 +112,17 @@ SELECT m.id AS id,
        NULL AS quota,
        NULL AS home,
        COALESCE(m.cloud_account_deactivated, 0) AS inactive,
-       IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1, 1, 0) AS disabled,
+       IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1 OR p.type IS NULL OR NOT GROUP_CONCAT(DISTINCT p.type) LIKE "%%permanent%%", 1, 0) AS disabled,
        0 AS avatar,
        NULL AS salt
 FROM Musicians m
-WHERE m.id in
-    (SELECT pp.musician_id
-     FROM ProjectParticipants pp
-     LEFT JOIN Projects p ON pp.project_id = p.id
-     WHERE p.type = "permanent")
-WITH CHECK OPTION';
+LEFT JOIN ProjectParticipants pp
+ON m.id = pp.musician_id
+LEFT JOIN Projects p
+ON pp.project_id = p.id
+WHERE m.email IS NOT NULL AND m.email <> ""
+GROUP BY m.id';
+// WITH CHECK OPTION. But view is not updatable. Ok.
 
   const USER_SQL_VIEWS = [
     'User' => self::USER_SQL_USER_VIEW,
