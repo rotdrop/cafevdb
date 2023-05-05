@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
@@ -104,7 +104,7 @@ class MusicianCardBackend implements ICardBackend
    */
   public function searchCards(string $pattern, array $properties): array
   {
-    $this->logInfo('PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
+    $this->logDebug('PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
 
     if (empty($pattern)) {
       $musicians = $this->musiciansRepository->findAll();
@@ -145,9 +145,9 @@ class MusicianCardBackend implements ICardBackend
       if ($empty) {
         $musicians = [];
       } else {
-        $this->logInfo('SEARCH CRITS ' . print_r($criteria, true) . ' ' . $pattern);
+        $this->logDebug('SEARCH CRITS ' . print_r($criteria, true) . ' ' . $pattern);
         $musicians = $this->musiciansRepository->findBy($criteria);
-        $this->logInfo('FOUND ' . count($musicians) . ' FOR ' . 'PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
+        $this->logDebug('FOUND ' . count($musicians) . ' FOR ' . 'PAT / PROP ' . $pattern . ' / ' . print_r($properties, true));
       }
     }
     $vCards = [];
