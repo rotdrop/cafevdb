@@ -25,14 +25,22 @@ $off = $_['orchestra'] == '' ? 'disabled' : '';
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 list($appLocale,) = explode('.', $appLocale, 2);
+$displayLocale = $locale;
 $localeOptions = [];
-foreach ($locales as $locale) {
+foreach ($locales as $localeInfo) {
+  $code = $localeInfo['code'];
+  $regionCode = locale_get_region($code);
+  if (empty($regionCode)) {
+    continue;
+  }
+  $name = locale_get_display_name($code, $displayLocale);
   $localeOptions[] = [
-    'value' => $locale['code'],
-    'name' => $locale['name'],
-    'flags' => ($locale['code'] === $appLocale) ? PageNavigation::SELECTED : 0,
+    'value' => $code,
+    'name' => $name,
+    'flags' => ($code === $appLocale) ? PageNavigation::SELECTED : 0,
   ];
 }
+usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
 
 ?>
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock admin">
