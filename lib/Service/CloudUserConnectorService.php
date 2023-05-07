@@ -148,13 +148,14 @@ GROUP BY m.id';
     'Instruments',
     'InstrumentFamilies',
     'instrument_instrument_family',
-    'TableFieldTranslations',
     'GeoContinents',
     'GeoCountries',
     'GeoPostalCodes',
     'GeoPostalCodeTranslations',
     'InsuranceBrokers',
     'InsuranceRates',
+    'ProjectInstrumentationNumbers',
+    'TableFieldTranslations',
   ];
 
   const GRANT_SELECT = 'GRANT SELECT ON %1$s TO %2$s@\'localhost\'';
