@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -89,6 +89,7 @@ class EncryptionService
     'installed_version',
     'types',
     'usergroup', // cloud-admin setting
+    ConfigService::SHAREOWNER_KEY, // needed as calendar principal in the member's app
     'wikinamespace', // cloud-admin setting
     'cspfailuretoken', // for public post route
     'configlock', // better kept open
@@ -596,9 +597,12 @@ class EncryptionService
     }
     $value  = $this->getAppValue($key, $default);
 
-    if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
+    if (!empty($value) && ($value !== $default)) {
       // null is error or uninitialized, string '' means no encryption
       if ($this->appCryptor->getEncryptionKey() === null) {
+        if ($this->appCryptor->isEncrypted($value) === false) {
+          return $value;
+        }
         if (!empty($this->userId)) {
           $message = $this->l->t('Decryption requested for user "%s", but not configured, empty encryption key.', $this->userId);
           throw new Exceptions\EncryptionKeyException($message);
@@ -607,7 +611,7 @@ class EncryptionService
         return false;
       }
       try {
-        $value  = $this->appCryptor->decrypt($value);
+        $value = $this->appCryptor->decrypt($value);
       } catch (\Throwable $t) {
         throw new Exceptions\DecryptionFailedException($this->l->t('Unable to decrypt value "%s" for "%s"', [$value, $key]), $t->getCode(), $t);
       }
@@ -637,7 +641,7 @@ class EncryptionService
       throw new Exceptions\ConfigLockedException('Configuration locked, not storing value for config-key ' . $key);
     }
     $encryptionKey = $this->appCryptor->getEncryptionKey();
-    if (!empty($encryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
+    if (!empty($encryptionKey) && !in_array($key, self::NEVER_ENCRYPT)) {
       if ($encryptionKey === null) {
         // null is error or uninitialized, string '' means no encryption
         if (!empty($this->userId)) {

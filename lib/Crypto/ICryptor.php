@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,4 +46,14 @@ interface ICryptor
 
   /** @return bool */
   public function canDecrypt():bool;
+
+  /**
+   * Determines if the given data has been encrypted by this cryptor
+   * instance. A returned null means "don't know".
+   *
+   * @param null||string $data
+   *
+   * @return null|bool
+   */
+  public function isEncrypted(?string $data):?bool;
 }

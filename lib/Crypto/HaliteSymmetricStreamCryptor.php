@@ -132,7 +132,7 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
   public function decrypt(?string $data):?string
   {
     if (!empty($this->encryptionKey) && !empty($data)) {
-      if (!str_starts_with($data, self::HALITE_MAGIC)) {
+      if (!$this->isEncrypted($data)) {
         // not encrypted hack
         return $data;
       }
@@ -173,5 +173,11 @@ class HaliteSymmetricStreamCryptor implements SymmetricCryptorInterface
   public function canDecrypt():bool
   {
     return $this->encryptionKey !== null;
+  }
+
+  /** {@inheritdoc} */
+  public function isEncrypted(?string $data):?bool
+  {
+    return str_starts_with($data, self::HALITE_MAGIC);
   }
 }

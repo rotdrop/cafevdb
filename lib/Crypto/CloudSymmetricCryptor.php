@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -89,8 +89,7 @@ class CloudSymmetricCryptor implements SymmetricCryptorInterface
   {
     if (!empty($this->encryptionKey) && !empty($data)) {
       // not encrypted hack
-      $version = $data[-1];
-      if ($data[-2] !== '|' || !preg_match('/[0-9a-zA-Z]/', $version)) {
+      if (!$this->isEncrypted($data)) {
         return $data;
       }
       try {
@@ -112,5 +111,18 @@ class CloudSymmetricCryptor implements SymmetricCryptorInterface
   public function canDecrypt():bool
   {
     return $this->encryptionKey !== null;
+  }
+
+  /** {@inheritdoc} */
+  public function isEncrypted(?string $data):?bool
+  {
+    if (empty($data)) {
+      return false;
+    }
+    $version = $data[-1];
+    if ($data[-2] !== '|' || !preg_match('/[0-9a-zA-Z]/', $version)) {
+      return false;
+    }
+    return true;
   }
 }

@@ -136,7 +136,6 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
     return $this->privKey !== null;
   }
 
-
   /** {@inheritdoc} */
   public function canSign():bool
   {
@@ -147,5 +146,11 @@ class OpenSSLAsymmetricCryptor implements AsymmetricCryptorInterface
   public function canVerify():bool
   {
     return $this->canEncrypt();
+  }
+
+  /** {@inheritdoc} */
+  public function isEncrypted(?string $data):?bool
+  {
+    return null;
   }
 }

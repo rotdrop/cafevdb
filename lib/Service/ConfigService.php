@@ -87,6 +87,8 @@ class ConfigService
    * Some configuration constants
    *
    */
+  const SHAREOWNER_KEY = 'shareowner';
+
   const SHARED_FOLDER = 'sharedfolder';
   const PROJECTS_FOLDER = 'projectsfolder';
   const PROJECT_PARTICIPANTS_FOLDER = 'projectparticipantsfolder';
@@ -1139,7 +1141,7 @@ class ConfigService
     if (empty($locale)) {
       $locale = $this->getLocale();
     }
-    $displayLanguage = substr($locale, 0, 2);
+    $displayLanguage = locale_get_primary_language($locale);
     $languages = $this->findAvailableLanguages();
     $result = [];
     if (method_exists($this->l10NFactory, 'getLanguages')) {

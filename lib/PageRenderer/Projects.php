@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use Throwable;
 use RuntimeException;
+use DateTimeImmutable;
 
 use OCP\AppFramework\Http\TemplateResponse;
 
@@ -640,13 +641,21 @@ class Projects extends PMETableViewBase
           'display|ACP' => [
             'attributes' => function($op, $k, $row, $pme) {
               $project = $this->project ?? ($recordId['id'] ?? null);
+              $deadlineString = null;
               if (!empty($project)) {
-                $value = $this->projectService->getProjectRegistrationDeadline($project)->getTimestamp();
-                $deadlineString = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
+                $value = $this->projectService->getProjectRegistrationDeadline($project);
+                if (!empty($value)) {
+                  $value = $value->getTimestamp();
+                  $deadlineString = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
+                }
               }
+              $exampleDate = DateTimeImmutable::createFromFormat('Ymd', '17840401', $this->getDateTimeZone());
+              $this->logInfo('EXAMPLE DATE ' . print_r($exampleDate, true));
+              $exampleDateString = $this->l->l('date', $exampleDate, [ 'width' => 'medium' ]);
+
               $lockedPlaceholder =
-                $op == 'add' || empty($deadlineString) ? $this->l->t('e.g. %s', '01.04.1784') : $deadlineString;
-              $unlockedPlaceholder = $this->l->t('e.g. %s', $deadlineString);
+                $op == 'add' || empty($deadlineString) ? $this->l->t('e.g. %s', $exampleDateString) : $deadlineString;
+              $unlockedPlaceholder = $this->l->t('e.g. %s', $deadlineString ?? $exampleDateString);
               if (empty($row['qf'.$k])) {
                 return [
                   'placeholder' => $lockedPlaceholder,

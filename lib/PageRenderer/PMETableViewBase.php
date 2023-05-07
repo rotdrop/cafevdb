@@ -29,6 +29,8 @@ use Exception;
 use RuntimeException;
 use UnexpectedValueException;
 
+use OCP\IL10N;
+
 use OCA\CAFEVDB\Service;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
