@@ -468,7 +468,7 @@ class ExecutiveBoard extends Command
       }
 
       if ($problems > 0) {
-        $output->writeln('<error>' . $this->l->n('Error: found %d problem.', 'Error: found %d problems.', $problems, [ $problems ]) . '</error>');
+        $output->writeln('<error>' . $this->l->n('Error: found %n problem.', 'Error: found %n problems.', $problems) . '</error>');
       } else {
         $output->writeln($indent . 'OK');
       }
