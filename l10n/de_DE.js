@@ -1268,6 +1268,8 @@ OC.L10N.register(
     "Decryption requested for user \"%s\", but not configured, empty encryption key." : "Entschlüsselung für \"%s\" angefragt aber nicht konfiguriert, leeres Verschlüsselungs-Passwort.",
     "Unable to decrypt value \"%s\" for \"%s\"" : "Kann den Wert \"%s\" für \"%s\" nicht entschlüsseln",
     "Encryption requested but not configured for user \"%s\", empty encryption key." : "Verschlüsselung für \"%s\" angefragt aber nicht konfiguriert, leeres Verschlüsselungs-Passwort.",
+    "Calendar entry \"%1$s\" is in use by the finance sub-system and cannot be moved away from the %2$s calendar." : "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf deshalb nicht aus dem %2$s-Kalender verschoben werden.",
+    "Calendar entry \"%1$s\" is in use by the finance sub-system and must not be deleted." : "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf deshalb nicht gelöscht werden.",
     "till %s" : "bis %s",
     "Unknown Calendar" : "Unbekannter Kalender.",
     "Miscellaneous Calendars" : "Weitere Kalender",

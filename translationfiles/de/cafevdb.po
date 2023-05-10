@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-05-07 19:07+0200\n"
-"PO-Revision-Date: 2023-05-07 19:17+0200\n"
+"POT-Creation-Date: 2023-05-10 09:58+0200\n"
+"PO-Revision-Date: 2023-05-10 10:03+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -3443,25 +3443,25 @@ msgid "Bulk-transaction-id: %d"
 msgstr "Datenbank-Id des Sammelauftrags: %s"
 
 #: lib/Controller/SepaBulkTransactionsController.php:669
-#: lib/Service/Finance/SepaBulkTransactionService.php:224
+#: lib/Service/Finance/SepaBulkTransactionService.php:225
 #, php-format
 msgid "Total amount to receive: %s."
 msgstr "Erwartete Gesamteinnahmen: %s."
 
 #: lib/Controller/SepaBulkTransactionsController.php:674
-#: lib/Service/Finance/SepaBulkTransactionService.php:228
+#: lib/Service/Finance/SepaBulkTransactionService.php:229
 #, php-format
 msgid "%s pays %s."
 msgstr "%1$s zahlt %2$s"
 
 #: lib/Controller/SepaBulkTransactionsController.php:681
-#: lib/Service/Finance/SepaBulkTransactionService.php:238
+#: lib/Service/Finance/SepaBulkTransactionService.php:239
 #, php-format
 msgid "Total amount to pay: %s."
 msgstr "Überweisungssumme: %s."
 
 #: lib/Controller/SepaBulkTransactionsController.php:686
-#: lib/Service/Finance/SepaBulkTransactionService.php:242
+#: lib/Service/Finance/SepaBulkTransactionService.php:243
 #, php-format
 msgid "%s receives %s."
 msgstr "%1$s erhält %2$s."
@@ -6658,7 +6658,7 @@ msgid "announce"
 msgstr "ankündigen"
 
 #: lib/PageRenderer/SepaBulkTransactions.php:766
-#: lib/Service/Finance/SepaBulkTransactionService.php:696
+#: lib/Service/Finance/SepaBulkTransactionService.php:697
 #, php-format
 msgid ""
 "The bulk-transaction with id \"%1$d\" has already been submitted to the "
@@ -6908,7 +6908,7 @@ msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: lib/Service/CalDavService.php:481
+#: lib/Service/CalDavService.php:483
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%1$s\" in calendar with id "
@@ -7044,20 +7044,34 @@ msgstr ""
 "Verschlüsselung für \"%s\" angefragt aber nicht konfiguriert, leeres "
 "Verschlüsselungs-Passwort."
 
-#: lib/Service/EventsService.php:704
+#: lib/Service/EventsService.php:211
+#, php-format
+msgid ""
+"Calendar entry \"%1$s\" is in use by the finance sub-system and cannot be "
+"moved away from the %2$s calendar."
+msgstr "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf deshalb nicht aus dem %2$s-Kalender verschoben werden."
+
+#: lib/Service/EventsService.php:252
+#, php-format
+msgid ""
+"Calendar entry \"%1$s\" is in use by the finance sub-system and must not be "
+"deleted."
+msgstr "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf deshalb nicht gelöscht werden."
+
+#: lib/Service/EventsService.php:745
 #, php-format
 msgid "till %s"
 msgstr "bis %s"
 
-#: lib/Service/EventsService.php:772 lib/Service/EventsService.php:882
+#: lib/Service/EventsService.php:813 lib/Service/EventsService.php:923
 msgid "Unknown Calendar"
 msgstr "Unbekannter Kalender."
 
-#: lib/Service/EventsService.php:785
+#: lib/Service/EventsService.php:826
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
 
-#: lib/Service/EventsService.php:1070
+#: lib/Service/EventsService.php:1111
 msgid "record absence"
 msgstr "Abwesenheit erfassen"
 
@@ -7256,48 +7270,48 @@ msgstr "Options-Markierung sollte \"%s\" sein, gefunden wurde \"%s\"."
 msgid "Unable to construct generator class \"%s\"."
 msgstr "Kann den Generatorklasse \"%s\" nicht erzeugen."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:217
+#: lib/Service/Finance/SepaBulkTransactionService.php:218
 #, php-format
 msgid "Debit-notes submitted for %s"
 msgstr "Lastschriften eingereicht für %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:219
+#: lib/Service/Finance/SepaBulkTransactionService.php:220
 #, php-format
 msgid "Debit-notes have been submitted on %s, due-date is %s."
 msgstr ""
 "Die Lastschriften wurden am %s an die Bank übermittelt, sie sind fällig am "
 "%s."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:234
+#: lib/Service/Finance/SepaBulkTransactionService.php:235
 #, php-format
 msgid "Bank-transfers submitted for %s"
 msgstr "Überweisungen eingereicht für %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:236
+#: lib/Service/Finance/SepaBulkTransactionService.php:237
 #, php-format
 msgid "Bank-transfers have been submitted, due-date is %s."
 msgstr "Überweisungen wurden eingereicht, Fälligkeitsdatum ist %s."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:316
+#: lib/Service/Finance/SepaBulkTransactionService.php:317
 msgid "PRENOTIFICATION HAS BEEN SENT:"
 msgstr "VORANKÜNDIGUNG WURDE VERSENDET:"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:318
+#: lib/Service/Finance/SepaBulkTransactionService.php:319
 #, php-format
 msgid "Person: %s"
 msgstr "Person: %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:320
+#: lib/Service/Finance/SepaBulkTransactionService.php:321
 #, php-format
 msgid "Date: %s"
 msgstr "Datum: %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:322
+#: lib/Service/Finance/SepaBulkTransactionService.php:323
 #, php-format
 msgid "MessageId: %s"
 msgstr "MessageId: %s"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:493
+#: lib/Service/Finance/SepaBulkTransactionService.php:494
 #, php-format
 msgid ""
 "Refusing to generate payments for mismatching projects, current is \"%s\", "
@@ -7307,7 +7321,7 @@ msgstr ""
 "Aktuelles Projekt is \"%s\", die Forderung ist aber an das Projekt \"%s\" "
 "gebunden."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:506
+#: lib/Service/Finance/SepaBulkTransactionService.php:507
 #, php-format
 msgid ""
 "Payable amount \"%f\" and deposit amount \"%f\" should have the compatible "
@@ -7316,28 +7330,28 @@ msgstr ""
 "Der Endbetrag \"%f\" und die Anzahlung \"%f\" sollten das gleiche Vorzeichen "
 "haben."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:729
+#: lib/Service/Finance/SepaBulkTransactionService.php:730
 #, php-format
 msgid "Failed to remove bulk-transaction with id %d"
 msgstr "Kann den Sammelauftrag mit Id %d nicht löschen."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:764
+#: lib/Service/Finance/SepaBulkTransactionService.php:765
 msgid "Unable to update payment subject while generating bank export data."
 msgstr ""
 "Der Zahlungsbetreff konnte nicht aktualisiert werden als versucht wurde, die "
 "Bankdaten für den Sammelauftrag zu exportieren."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:812
+#: lib/Service/Finance/SepaBulkTransactionService.php:813
 #, php-format
 msgid "Unable to find exporter for format \"%s\"."
 msgstr "Export in das Format \"%s\" ist nicht implementiert."
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:829
+#: lib/Service/Finance/SepaBulkTransactionService.php:830
 #, php-format
 msgid "Conflicting projects \"%1$s\" vs. \"%2$s\"."
 msgstr "Wiedersprüchliche Projekt-Angaben, \"%1$s\" versus \"%2$s\".<\n"
 
-#: lib/Service/Finance/SepaBulkTransactionService.php:873
+#: lib/Service/Finance/SepaBulkTransactionService.php:874
 #, php-format
 msgid ""
 "Unable to generate export data for bulk-transaction id %1$d, format \"%2$s\"."
