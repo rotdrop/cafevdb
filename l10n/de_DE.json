@@ -51,7 +51,7 @@
     "Would set the cloud account phone to %s (dry-run)." : "Die Cloud-Account Telefonnummer würde auf \"%s\" gesetzt werden (Trockenübung).",
     "Setting the cloud account phone to %s." : "Setze die Cloud-Account Telefonnummer auf \"%s\".",
     "Phone number: %s" : "Telefonnummer: %s",
-    "User setting \"%1$s\" (%2$s) is \"%3$s\" but should be \"%4$s\"." : "Die Account-Einstellung \"%1$\" (%2$s) ist \"%3$s\", sollte aber \"%4$s\" sein.",
+    "User setting \"%1$s\" (%2$s) is \"%3$s\" but should be \"%4$s\"." : "Die Account-Einstellung \"%1$s\" (%2$s) ist \"%3$s\", sollte aber \"%4$s\" sein.",
     "Would set \"%1$s\" (%2$s) to \"%3$s\" (dry-run)." : "\"%1$s\" (%2$s) würde auf \"%3$s\" gesetzt werden (Trockenübung).",
     "Setting \"%1$s\" (%2$s) to \"%3$s\"." : "Setze \"%1$s\" (%2$s) auf \"%3$s\".",
     "Configuration \"%1$s\" (%2$s) is \"%3$s\"." : "Einstellung \"%1$s\" (%2$s) ist \"%3$s\".",

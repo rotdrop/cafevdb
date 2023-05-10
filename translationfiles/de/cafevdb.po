@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
 "POT-Creation-Date: 2023-05-10 09:58+0200\n"
-"PO-Revision-Date: 2023-05-10 10:03+0200\n"
+"PO-Revision-Date: 2023-05-10 13:26+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -301,9 +301,7 @@ msgstr "Telefonnummer: %s"
 #: lib/Command/ExecutiveBoard.php:452
 #, php-format
 msgid "User setting \"%1$s\" (%2$s) is \"%3$s\" but should be \"%4$s\"."
-msgstr ""
-"Die Account-Einstellung \"%1$\" (%2$s) ist \"%3$s\", sollte aber \"%4$s\" "
-"sein."
+msgstr "Die Account-Einstellung \"%1$s\" (%2$s) ist \"%3$s\", sollte aber \"%4$s\" sein."
 
 #: lib/Command/ExecutiveBoard.php:458
 #, php-format
