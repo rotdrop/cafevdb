@@ -233,22 +233,27 @@ class ExecutiveBoard extends Command
       $userId = $musician->getUserIdSlug();
 
       if (!$boardMember->getRegistration()) {
-        $output->writeln($this->l->t('Skipping user "%1$s" as its participation in the executive board is not confirmed.', [ $userId ]), OutputInterface::VERBOSITY_VERBOSE);
-        $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
+        $output->writeln(
+          '<error>'
+          . $this->l->t('Skipping user "%1$s" as its participation in the executive board is not confirmed.', [ $userId ])
+          . '</error>',
+          OutputInterface::VERBOSITY_VERBOSE,
+        );
         continue;
       }
 
       if (!empty($boardMember->getDeleted())) {
         $output->writeln(
-          $this->l->t(
+          '<error>'
+          . $this->l->t(
             'Skipping user "%1$s" as its participation in the executive board has been deleted on %2$s.', [
               $userId,
               $this->l->l('date', $boardMember->getDeleted(), [ 'width' => 'medium' ]),
             ],
-          ),
+          )
+          . '</error>',
           OutputInterface::VERBOSITY_VERBOSE,
         );
-        $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
         continue;
       }
 
