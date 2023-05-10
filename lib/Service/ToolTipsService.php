@@ -505,6 +505,26 @@ invited to have a look, but please do not change anything unless you know what y
             'default' => $this->l->t('Check in order to mark the section leader. If this instrument is sub devided into voices the musician first has to be assigned to a voice before it can be marked as section leader for its configured voice.'),
             'view' => $this->l->t('Set to "%s" in order to mark the section leader.', [ "&alpha;" ])
           ],
+          'registration' => [
+            'default' => $this->l->t('Set to "%1$s" for participants whose participation is not sure for whatever reason. Set to "%2$s" for participants whose participation is confirmative. "%1$s" may be the result of e.g. doubts of the executive board, missing confirmation of the participant, too many applications, missing signed registration form (if applicable). When the settings is changed from "%1$s" to "%2$s" the person is also subscribed to the project mailing list and an automatic confirmation email is sent out to the person.
+
+This setting is meant to support a project in the planning phase: one may enter persons freely into the instrumentation table and decide later whether they really participate.', [
+              $this->l->t('tentatively'),
+              $this->l->t('confirmed'),
+            ]),
+            'tentatively' => $this->l->t('"%1$s" means that it is not clear whether this person really will participate in the project.  Changing the participation status from "%1$s" to "%2$s" will also subscribe the person to the project mailing list and results in an automated project subscription confirmation email.
+
+This setting is here to support the planning phase of a project: one may freely enter persons to the instrumentation table and decide later about their confirmative participation, e.g. because one is waiting for confirmation from the tentative participant, or a signed application, or simply because there are too many applications which need to be cleaned up later.', [
+              $this->l->t('tentatively'),
+              $this->l->t('confirmed'),
+            ]),
+            'confirmed' => $this->l->t('"%2$s" means that this person definitely will participate in this project. The reason for labeling a person\'s participation status as "%2$s" may vary from project to project, e.g. a signed application may have been received for larger projects which carry a project fee, or maybe the person simply has confirmed its participation after checking its calendar or the like.
+
+This setting is meant to support a project in the planning phase: one may enter persons freely into the instrumentation table, label their participoation as "%1$s" and decide later whether they really participate at which point the person is either deleted or its participation status is set to "%2$s".', [
+              $this->l->t('tentatively'),
+              $this->l->t('confirmed'),
+            ]),
+          ],
         ],
         'participant-fields' => [
           'tabs' => [

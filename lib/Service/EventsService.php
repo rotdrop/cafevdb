@@ -37,6 +37,7 @@ use Sabre\VObject\Recur\MaxInstancesExceededException;
 use Sabre\VObject\Recur\NoInstancesException;
 use Sabre\VObject\Component\VCalendar;
 use Sabre\VObject\Component\VEvent;
+use Sabre\DAV\Exception\Forbidden as DavForbiddenException;
 
 use OCA\DAV\Events\CalendarUpdatedEvent;
 use OCA\DAV\Events\CalendarDeletedEvent;
@@ -187,15 +188,32 @@ class EventsService
   public function onCalendarObjectMoved(CalendarObjectMovedEvent $event):void
   {
     $objectData = $event->getObjectData();
+    $objectUri = $objectData['uri'];
     $calendarIds = $this->defaultCalendars();
     $calendarId = $objectData['calendarid'];
+    $sourceCalendarData = $event->getSourceCalendarData();
+    $sourceCalendarId = $sourceCalendarData['id'];
 
-    if (!in_array($calendarId, $calendarIds)) {
+    if (!in_array($calendarId, $calendarIds) && !in_array($sourceCalendarId, $calendarIds)) {
       // not for us
       return;
     }
+
     $calendarData = $event->getTargetCalendarData();
-    $objectData['calendaruri'] = $calendarData['uri'];
+    $calendarUri = $calendarData['uri'];
+    $objectData['calendaruri'] = $calendarUri;
+
+    $bulkTransactionsRepository = $this->entityManager->getRepository(Entities\SepaBulkTransaction::class);
+    if ($bulkTransactionsRepository->isCalendarObjectUsed($objectUri) && $calendarUri != ConfigService::FINANCE_CALENDAR_URI) {
+      // undo the move
+      $this->calDavService->moveCalendarObject($calendarId, $sourceCalendarId, $objectData);
+
+      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is in use by the finance sub-system and cannot be moved away from the %2$s calendar.', [ $objectUri, ConfigService::FINANCE_CALENDAR_URI ]);
+      $this->logError($errorMessage);
+      throw new DavForbiddenException($errorMessage);
+
+      return;
+    }
 
     $this->syncCalendarObject($objectData, sourceCalendar: $event->getSourceCalendarData());
   }
@@ -208,13 +226,36 @@ class EventsService
   public function onCalendarObjectDeleted(
     CalendarObjectDeletedEvent|CalendarObjectMovedToTrashEvent $event,
   ):void {
+
     $objectData = $event->getObjectData();
     $calendarIds = $this->defaultCalendars();
     $calendarId = $objectData['calendarid'];
+
     if (!in_array($calendarId, $calendarIds)) {
       // not for us
       return;
     }
+
+    $objectUri = $objectData['uri'];
+
+    $bulkTransactionsRepository = $this->entityManager->getRepository(Entities\SepaBulkTransaction::class);
+    if ($bulkTransactionsRepository->isCalendarObjectUsed($objectUri)) {
+      // undelete somehow
+      if ($event instanceof CalendarObjectMovedToTrashEvent) {
+        // just restore from the trashbin
+        $this->calDavService->restoreCalendarObject($calendarId, $objectData);
+      } elseif (!empty($objectData['calendardata'])) {
+        // re-inject with the same uri
+        $this->calDavService->createCalendarObject($calendarId, $objectUri, $objectData['calendardata']);
+      }
+
+      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is in use by the finance sub-system and must not be deleted.', [ $objectUri ]);
+      $this->logError($errorMessage);
+      throw new DavForbiddenException($errorMessage);
+
+      return;
+    }
+
     $this->deleteCalendarObject($objectData);
   }
 

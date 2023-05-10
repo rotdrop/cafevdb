@@ -415,7 +415,9 @@ class CalDavService
    *
    * @param int $targetCalendarId
    *
-   * @param array|string $object Either an identifier or an array
+   * @param array|string $object Either an identifier or an array.
+   *
+   * @return void
    *
    * @bug This function used internal APIs.
    */
@@ -481,6 +483,31 @@ class CalDavService
       throw new Exceptions\CalendarEntryNotFoundException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
     }
     $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
+  }
+
+  /**
+   * Restore the given calendar object from the trashbin.
+   *
+   * @param null|int $calendarId
+   *
+   * @param array|string $object Either an identifier or an array.
+   *
+   * @return void
+   *
+   * @bug This function used internal APIs.
+   */
+  public function restoreCalendarObject(
+    ?int $calendarId,
+    array|string $object
+  ):void {
+    if (!is_array($object)) {
+      $objectUri = $object;
+      if (!str_ends_with($objectUri, '-deleted.ics')) {
+        $objectUri = basename($objectUri, '.ics') . '-deleted.ics';
+      }
+      $object = $this->getCalendarObject($calendarId, $objectUri);
+    }
+    $this->calDavBackend->restoreCalendarObject($object);
   }
 
   /**

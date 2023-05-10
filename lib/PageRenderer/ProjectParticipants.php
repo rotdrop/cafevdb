@@ -868,6 +868,10 @@ class ProjectParticipants extends PMETableViewBase
       'sql'  => 'IFNULL($join_col_fqn, 0)',
       'sqlw' => 'IF($val_qas = "", 0, 1)',
       'values2' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
+      'valueTitles' => [
+        0 => $this->toolTipsService['page-renderer:participants:registration:tentatively'],
+        1 => $this->toolTipsService['page-renderer:participants:registration:confirmed'],
+      ],
       // 'values2|ACP' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
       // 'values2|DV' => [ 0 => $this->l->t('tentatively'), 1 => $this->l->t('confirmed'), ],
       // 'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
@@ -875,12 +879,10 @@ class ProjectParticipants extends PMETableViewBase
       // 0 => '',
       // 1 => '&#10004;'
       // ],
-      'tooltip|LFDV' => $this->l->t(
-        "Set to `%s' in order to mark participants who passed a personally signed registration form to us.", [ "&#10004;" ]),
-      'tooltip|CAP' => $this->l->t("Check in order to mark participants who passed a personally signed registration form to us."),
+      'tooltip' => $this->toolTipsService['page-renderer:participants:registration'],
       'display|LF' => [
         'popup' => function($data) {
-          return $this->toolTipsService['registration-mark'];
+          return $this->toolTipsService['page-renderer:participants:registration'];
         },
       ],
       'css'      => [ 'postfix' => [ 'registration', 'tooltip-top', 'align-center', ], ],
