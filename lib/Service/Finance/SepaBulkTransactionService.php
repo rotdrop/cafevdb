@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use Throwable;
 use RuntimeException;
 use InvalidArgumentException;
 use DateTimeImmutable;
@@ -723,7 +724,7 @@ class SepaBulkTransactionService
       $this->remove($bulkTransaction, flush: true);
       $this->entityManager->commit();
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->entityManager->rollback();
       throw new Exceptions\DatabaseException(
         $this->l->t('Failed to remove bulk-transaction with id %d', $bulkTransaction->getId()),
@@ -757,7 +758,7 @@ class SepaBulkTransactionService
       try {
         $this->flush();
         $this->entityManager->commit();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
         $this->entityManager->rollback();
         throw new Exceptions\DatabaseException(
@@ -866,7 +867,7 @@ class SepaBulkTransactionService
         $bulkTransaction->addTransactionData($document);
         $this->flush();
         $this->entityManager->commit();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->entityManager->rollback();
         throw new Exceptions\DatabaseException(
           $this->l->t(
