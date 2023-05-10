@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,5 +69,32 @@ class SepaBulkTransactionsRepository extends EntityRepository
       ->setParameter('year', $year)
       ->getQuery()
       ->getResult();
+  }
+
+  /**
+   * Test whether the given obrject URI is tied to a SepaBulkTransaction
+   * entity.
+   *
+   * @param string $localObejctUri Base-name of the calendar object URI.
+   *
+   * @return bool
+   */
+  public function isCalendarObjectUsed(string $localObjectUri):bool
+  {
+    $qb = $this->getEntityManager()->createQueryBuilder();
+    $qb->select('COUNT(sbt)')
+      ->from(Entities\SepaBulkTransaction::class, 'sbt')
+      ->leftJoin(Entities\SepaDebitNote::class, 'sdn', 'WITH', 'sbt.id = sdn.id')
+      ->where(
+        $qb->expr()->orX(
+          $qb->expr()->eq('sbt.submissionEventUri', ':uri'),
+          $qb->expr()->eq('sbt.submissionTaskUri', ':uri'),
+          $qb->expr()->eq('sbt.dueEventUri', ':uri'),
+          $qb->expr()->eq('sdn.preNotificationEventUri', ':uri'),
+          $qb->expr()->eq('sdn.preNotificationTaskUri', ':uri'),
+        )
+      )
+      ->setParameter('uri', $localObjectUri);
+    return $qb->getQuery()->getSingleScalarResult() > 0;
   }
 }
