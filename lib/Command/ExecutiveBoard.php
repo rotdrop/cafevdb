@@ -239,6 +239,7 @@ class ExecutiveBoard extends Command
           . '</error>',
           OutputInterface::VERBOSITY_VERBOSE,
         );
+        $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
         continue;
       }
 
@@ -254,6 +255,7 @@ class ExecutiveBoard extends Command
           . '</error>',
           OutputInterface::VERBOSITY_VERBOSE,
         );
+        $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
         continue;
       }
 
@@ -261,6 +263,7 @@ class ExecutiveBoard extends Command
 
       if (!empty($onlyMember) && $onlyMember != $userId) {
         $output->writeln($this->l->t('Skipping user "%1$s" (operation on only "%2$s was requested)".', [ $userId, $onlyMember ]), OutputInterface::VERBOSITY_VERBOSE);
+        $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
         continue;
       }
 
