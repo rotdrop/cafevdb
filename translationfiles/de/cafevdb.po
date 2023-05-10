@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-05-10 13:38+0200\n"
-"PO-Revision-Date: 2023-05-10 13:40+0200\n"
+"POT-Creation-Date: 2023-05-10 17:48+0200\n"
+"PO-Revision-Date: 2023-05-10 18:01+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -56,47 +56,47 @@ msgid "Sanitizer \"%s\" succeeded with no failurs."
 msgstr ""
 "Die Aufräumroutine \"%s\" hat alles erfolgreich ohne Fehler absolviert."
 
-#: lib/Command/ExecutiveBoard.php:152
+#: lib/Command/ExecutiveBoard.php:165
 #, php-format
 msgid "Orchestra group: %1$s (%2$s)"
 msgstr "Orchester-Benutzer-Gruppe: %1$s (%2$s)"
 
-#: lib/Command/ExecutiveBoard.php:154
+#: lib/Command/ExecutiveBoard.php:167
 msgid "Error: The orchestra group is not configured."
 msgstr "Fehler: die Orchester-Benutzer*innen-Gruppe ist nicht festgelegt."
 
-#: lib/Command/ExecutiveBoard.php:158
+#: lib/Command/ExecutiveBoard.php:171
 msgid "Error: The orchestra group has no administrators."
 msgstr ""
 "Fehler: die Orchester-Benutzer*innen-Gruppe hat keine Gruppen-"
 "Administrator*innen."
 
-#: lib/Command/ExecutiveBoard.php:162
+#: lib/Command/ExecutiveBoard.php:175
 #, php-format
 msgid "Group admins are: %s."
 msgstr "Gruppenadministratoren: %s."
 
-#: lib/Command/ExecutiveBoard.php:177
+#: lib/Command/ExecutiveBoard.php:190
 #, php-format
 msgid "\"%s\"-backend is not active, bailing out."
 msgstr "\"%s\"-Backend ist nicht aktiv, ich mach' nichts mehr."
 
-#: lib/Command/ExecutiveBoard.php:183
+#: lib/Command/ExecutiveBoard.php:196
 msgid "Error: Orchestra email contact address is not configured."
 msgstr "Fehler: der Email-Kontakt des Orchesters ist nicht konfiguriert."
 
-#: lib/Command/ExecutiveBoard.php:185
+#: lib/Command/ExecutiveBoard.php:198
 #, php-format
 msgid "Orchestra email domain is \"%1$s\"."
 msgstr "Orchester-Email-Domäne ist \"%1$s\"."
 
-#: lib/Command/ExecutiveBoard.php:199
+#: lib/Command/ExecutiveBoard.php:212
 msgid "The mailing-lists service is configured but not reachable."
 msgstr ""
 "Der Mailing-Listen-Service ist zwar konfiguriert, aber leider nicht "
 "erreichbar."
 
-#: lib/Command/ExecutiveBoard.php:223
+#: lib/Command/ExecutiveBoard.php:238
 #, php-format
 msgid ""
 "Skipping user \"%1$s\" as its participation in the executive board is not "
@@ -105,77 +105,84 @@ msgstr ""
 "Überspringe die Person \"%1$s\", weil deren Teilnahme im Vorstand nicht "
 "bestätigt ist."
 
-#: lib/Command/ExecutiveBoard.php:230
+#: lib/Command/ExecutiveBoard.php:250
+#, php-format
+msgid ""
+"Skipping user \"%1$s\" as its participation in the executive board has been "
+"deleted on %2$s."
+msgstr "Überspringe die Person \"%1$s\", weil diese im Vorstands-Projekt am %2$s gelöscht wurde."
+
+#: lib/Command/ExecutiveBoard.php:265
 #, php-format
 msgid "Skipping user \"%1$s\" (operation on only \"%2$s was requested)\"."
 msgstr ""
 "Überspringe die Person \"%1$s\" (angefordert wurde die Prüfung nur der "
 "Person \"%2$s\")."
 
-#: lib/Command/ExecutiveBoard.php:241
+#: lib/Command/ExecutiveBoard.php:277
 #, php-format
 msgid "Error: \"%1$s\" is not a cloud-user."
 msgstr "Fehler: \"%1$s\" ist nicht in der Cloud registriert."
 
-#: lib/Command/ExecutiveBoard.php:243
+#: lib/Command/ExecutiveBoard.php:279
 #, php-format
 msgid "Would add \"%s\" as cloud-user (dry-run)."
 msgstr "\"%s\" würde als Benutzer*in in der Cloud registriert (Trockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:245
+#: lib/Command/ExecutiveBoard.php:281
 #, php-format
 msgid "Adding \"%s\" as cloud-user."
 msgstr "Registriere \"%s\" als Benutzer*in in der Cloud."
 
-#: lib/Command/ExecutiveBoard.php:248
+#: lib/Command/ExecutiveBoard.php:284
 #, php-format
 msgid "Error: Unable to add \"%1$s\" as cloud-user."
 msgstr "Fehler: kann \"%1$s\" nicht als Cloud-Benutzer*in registrieren."
 
-#: lib/Command/ExecutiveBoard.php:257
+#: lib/Command/ExecutiveBoard.php:293
 #, php-format
 msgid "User backend: %s"
 msgstr "Benutzer-Backend: %s"
 
-#: lib/Command/ExecutiveBoard.php:259
+#: lib/Command/ExecutiveBoard.php:295
 #, php-format
 msgid "User backend should be \"%1$s\", but is \"%2$s\"."
 msgstr "Das Benutzer*innen-Backend sollte \"%1$s\" sein, ist aber \"%2$s\"."
 
-#: lib/Command/ExecutiveBoard.php:264
+#: lib/Command/ExecutiveBoard.php:300
 #, php-format
 msgid "Would add \"%1$s\" to the \"%2$s\" user backend. (dry-run)"
 msgstr ""
 "\"%1$s\" würde zum \"%2$s\"-Benutzer*innen-Backend hinzu gefügt "
 "(Trockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:266
+#: lib/Command/ExecutiveBoard.php:302
 #, php-format
 msgid "Adding \"%1$s\" to the \"%2$s\" user backend."
 msgstr "Füge \"%1$s\" zum \"%2$s\"-Benutzer*innen-Backend hinzu."
 
-#: lib/Command/ExecutiveBoard.php:269
+#: lib/Command/ExecutiveBoard.php:305
 #, php-format
 msgid "Error: Unable to add \"%1$s\" to the \"%2$s\" user backend."
 msgstr ""
 "Fehler: kjann \"%1$s\" nicht zum \"%2$s\"-Benutzer*innen-Backend hinzu fügen."
 
-#: lib/Command/ExecutiveBoard.php:281
+#: lib/Command/ExecutiveBoard.php:317
 #, php-format
 msgid "Error: \"%1$s\" is not a member of the orchestra group \"%2$s\"."
 msgstr "Fehler: \"%1$s\" ist kein Mitglied der Orchestergruppe \"%2$s\"."
 
-#: lib/Command/ExecutiveBoard.php:283
+#: lib/Command/ExecutiveBoard.php:319
 #, php-format
 msgid "Would add \"%1$s\" to \"%2$s\" (dry-run)."
 msgstr "Würde \"%1$s\" zu \"%2$s\" hinzu fügen (Tockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:285
+#: lib/Command/ExecutiveBoard.php:321
 #, php-format
 msgid "Adding \"%1$s\" to \"%2$s\"."
 msgstr "Füge \"%1$s\" zu \"%2$s\" hinzu."
 
-#: lib/Command/ExecutiveBoard.php:293
+#: lib/Command/ExecutiveBoard.php:329
 #, php-format
 msgid ""
 "Error: display-name \"%1$s\" differs from database display name \"%2$s\"."
@@ -183,150 +190,170 @@ msgstr ""
 "Fehler: der Anzeigename \"%1$s\" unterscheidet sich vom Anzeigenamen "
 "\"%2$s\" der Datenbank."
 
-#: lib/Command/ExecutiveBoard.php:295
+#: lib/Command/ExecutiveBoard.php:331
 #, php-format
 msgid "Would set the display-name to \"%s\" (dry-run)."
 msgstr "Der Anzeigename würde auf \"%s\" gesetzt werden (Trockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:297
+#: lib/Command/ExecutiveBoard.php:333
 #, php-format
 msgid "Setting the display-name to \"%s\"."
 msgstr "Der Anzeigename wurde auf \"%s\" gesetzt."
 
-#: lib/Command/ExecutiveBoard.php:314
+#: lib/Command/ExecutiveBoard.php:350
 #, php-format
 msgid "Emails: %s"
 msgstr "Emails: %s"
 
-#: lib/Command/ExecutiveBoard.php:318
+#: lib/Command/ExecutiveBoard.php:354
 #, php-format
 msgid "Error: Personalized orchestra email \"%s\" is not configured."
 msgstr ""
 "Fehler: die personalisierte Orchester-Email \"%s\" ist nicht konfiguriert."
 
-#: lib/Command/ExecutiveBoard.php:320
+#: lib/Command/ExecutiveBoard.php:356
 #, php-format
 msgid "Would add \"%s\" to the account settings (dry-run)."
 msgstr ""
 "\"%s\" würde zu den Account-Einstellungen hinzu gefügt werden (Trockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:322
+#: lib/Command/ExecutiveBoard.php:358
 #, php-format
 msgid "Adding \"%s\" to the account settings."
 msgstr "Füge \"%s\" zu den Account-Einstellungen hinzu."
 
-#: lib/Command/ExecutiveBoard.php:340
+#: lib/Command/ExecutiveBoard.php:376
 #, php-format
 msgid "Cloud emails not present in the data-base: %s"
 msgstr "Cloud-Email-Adressen, die nicht in der Datenbank eingetragen sind: %s"
 
-#: lib/Command/ExecutiveBoard.php:342
+#: lib/Command/ExecutiveBoard.php:378
 #, php-format
 msgid "Would add to the orchestra db: %s (dry-run)"
 msgstr ""
 "Würde die folgenden Emails zur Orchester-Datenbank hinzu fügen: %s "
 "(Trockenübung)"
 
-#: lib/Command/ExecutiveBoard.php:344
+#: lib/Command/ExecutiveBoard.php:380
 #, php-format
 msgid "Adding to the orchestra db: %s"
 msgstr "Die folgenden Emails wurden zur Orchester-Datenbank hinzu gefügt: %s"
 
-#: lib/Command/ExecutiveBoard.php:356
+#: lib/Command/ExecutiveBoard.php:392
 #, php-format
 msgid "Db emails not present in the cloud account settings: %s"
 msgstr ""
 "Datenbank-Email-Adressen, die nicht in den Account-Einstellungen eingetragen "
 "sind: %s"
 
-#: lib/Command/ExecutiveBoard.php:358
+#: lib/Command/ExecutiveBoard.php:394
 #, php-format
 msgid "Would add to the account settings: %s (dry-run)"
 msgstr "Würde \"%s\" zu den Account-Einstellungen hinzu fügen (Trockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:360
+#: lib/Command/ExecutiveBoard.php:396
 #, php-format
 msgid "Adding to the account settings: %s"
 msgstr "Füge \"%s\" zu den Account-Einstellungen hinzu."
 
-#: lib/Command/ExecutiveBoard.php:379
+#: lib/Command/ExecutiveBoard.php:415
 #, php-format
 msgid "Error: email \"%1$s\" is not subscribed to the mailing list \"%2$s\"."
 msgstr ""
 "Fehler: die Email \"%1$s\" ist nicht in die Mailing-Liste \"%2$s\" "
 "eingetragen."
 
-#: lib/Command/ExecutiveBoard.php:383
+#: lib/Command/ExecutiveBoard.php:419
 #, php-format
 msgid "Would subscribe \"%1$s\" to \"%2$s\" (dry-run)."
 msgstr ""
 "\"%1$s\" würde in die Mailing-Liste \"%2$s\" eingetragen werden "
 "(Trockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:387
+#: lib/Command/ExecutiveBoard.php:423
 #, php-format
 msgid "Subscribing \"%1$s\" to \"%2$s\"."
 msgstr "Trage \"%1$s\" in die Mailingliste \"%2$s\" ein."
 
-#: lib/Command/ExecutiveBoard.php:409
+#: lib/Command/ExecutiveBoard.php:445
 msgid "The cloud user account has no phone number configured."
 msgstr "Für Cloud-Benuzter*innen-Account ist keine Telefonnummer konfiguriert."
 
-#: lib/Command/ExecutiveBoard.php:413
+#: lib/Command/ExecutiveBoard.php:449
 msgid "The board member has no mobile phone number configured."
 msgstr "Für das Vorstandsmitglied ist keine Mobilfunknummer eingetragen."
 
-#: lib/Command/ExecutiveBoard.php:417
+#: lib/Command/ExecutiveBoard.php:453
 #, php-format
 msgid "The board member has inconsistent phone numbers: %1$s vs. %2$s."
 msgstr "Das Vorstandsmitglied hat inkonsistente Telefonnummern: %1$s vs. %2$s."
 
-#: lib/Command/ExecutiveBoard.php:422
+#: lib/Command/ExecutiveBoard.php:458
 #, php-format
 msgid "Would set the cloud account phone to %s (dry-run)."
 msgstr ""
 "Die Cloud-Account Telefonnummer würde auf \"%s\" gesetzt werden "
 "(Trockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:424
+#: lib/Command/ExecutiveBoard.php:460
 #, php-format
 msgid "Setting the cloud account phone to %s."
 msgstr "Setze die Cloud-Account Telefonnummer auf \"%s\"."
 
-#: lib/Command/ExecutiveBoard.php:434
+#: lib/Command/ExecutiveBoard.php:470
 #, php-format
 msgid "Phone number: %s"
 msgstr "Telefonnummer: %s"
 
-#: lib/Command/ExecutiveBoard.php:452
+#: lib/Command/ExecutiveBoard.php:494
 #, php-format
 msgid "User setting \"%1$s\" (%2$s) is \"%3$s\" but should be \"%4$s\"."
 msgstr ""
 "Die Account-Einstellung \"%1$s\" (%2$s) ist \"%3$s\", sollte aber \"%4$s\" "
 "sein."
 
-#: lib/Command/ExecutiveBoard.php:458
+#: lib/Command/ExecutiveBoard.php:500
 #, php-format
 msgid "Would set \"%1$s\" (%2$s) to \"%3$s\" (dry-run)."
 msgstr "\"%1$s\" (%2$s) würde auf \"%3$s\" gesetzt werden (Trockenübung)."
 
-#: lib/Command/ExecutiveBoard.php:460
+#: lib/Command/ExecutiveBoard.php:502
 #, php-format
 msgid "Setting \"%1$s\" (%2$s) to \"%3$s\"."
 msgstr "Setze \"%1$s\" (%2$s) auf \"%3$s\"."
 
-#: lib/Command/ExecutiveBoard.php:465
+#: lib/Command/ExecutiveBoard.php:507
 #, php-format
 msgid "Configuration \"%1$s\" (%2$s) is \"%3$s\"."
 msgstr "Einstellung \"%1$s\" (%2$s) ist \"%3$s\"."
 
-#: lib/Command/ExecutiveBoard.php:471
+#: lib/Command/ExecutiveBoard.php:515
+#, php-format
+msgid "TFA-Provider \"%1$s\" is not enabled."
+msgstr "Fehler: der Zwei-Faktor-Mechanismus \"%1$s\" ist nicht aktiviert."
+
+#: lib/Command/ExecutiveBoard.php:519
+#, php-format
+msgid "Would enable TFA-Provider \"%1$s\" (dry-run)."
+msgstr "Der Zwei-Faktor-Mechanismus \"%1$s\" würde aktiviert werden (Trockenübung)."
+
+#: lib/Command/ExecutiveBoard.php:521
+#, php-format
+msgid "Enabling TFA-Provider \"%1$s\"."
+msgstr "Der Zwei-Faktor-Mechanismus \"%1$s\" wird aktiviert."
+
+#: lib/Command/ExecutiveBoard.php:530
+#, php-format
+msgid "TFA-Provider \"%1$s\" is enabled."
+msgstr "Der Zwei-Faktor-Mechanismus \"%1$s\" ist aktiviert."
+
+#: lib/Command/ExecutiveBoard.php:536
 msgid "Error: found %n problem."
 msgid_plural "Error: found %n problems."
 msgstr[0] "Fehler: %n Problem gefunden."
 msgstr[1] "Fehler: %n Probleme gefunden."
 
-#: lib/Command/ExecutiveBoard.php:480
+#: lib/Command/ExecutiveBoard.php:545
 #, php-format
 msgid ""
 "Error: user with uid \"%1$s\" is not part of the executive board.\n"
@@ -4964,7 +4991,7 @@ msgid "Mailing List"
 msgstr "Mailing-Liste"
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:137
-#: lib/PageRenderer/ProjectParticipants.php:1077
+#: lib/PageRenderer/ProjectParticipants.php:1078
 #: templates/emailform/part.emailform.recipients.php:201
 msgid "Project Mailing List"
 msgstr "Projekt-Email-Verteiler"
@@ -5033,7 +5060,7 @@ msgstr "Nicht unterstützte Vielfachheit / Daten-Typ Kombination: %s / %s"
 #: lib/PageRenderer/InstrumentFamilies.php:250
 #: lib/PageRenderer/Instruments.php:302 lib/PageRenderer/Musicians.php:610
 #: lib/PageRenderer/ProjectParticipantFields.php:386
-#: lib/PageRenderer/ProjectParticipants.php:603
+#: lib/PageRenderer/ProjectParticipants.php:558
 #: lib/PageRenderer/Projects.php:320
 msgid "Deleted"
 msgstr "Gelöscht"
@@ -5300,7 +5327,7 @@ msgstr "Veschiedenes"
 #: lib/PageRenderer/InstrumentInsurances.php:238
 #: lib/PageRenderer/Musicians.php:354
 #: lib/PageRenderer/ProjectParticipantFields.php:270
-#: lib/PageRenderer/ProjectParticipants.php:1580
+#: lib/PageRenderer/ProjectParticipants.php:1581
 #: lib/PageRenderer/ProjectPayments.php:452
 #: lib/PageRenderer/SepaBankAccounts.php:1138
 #: lib/PageRenderer/SepaBulkTransactions.php:275
@@ -5503,7 +5530,7 @@ msgid "Instruments and Status"
 msgstr "Instrumente und Status"
 
 #: lib/PageRenderer/Musicians.php:345
-#: lib/PageRenderer/ProjectParticipants.php:1563
+#: lib/PageRenderer/ProjectParticipants.php:1564
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
@@ -5551,88 +5578,88 @@ msgid "e.g. Doe, Cathy"
 msgstr "z.B. Muster, Michi"
 
 #: lib/PageRenderer/Musicians.php:563
-#: lib/PageRenderer/ProjectParticipants.php:556
+#: lib/PageRenderer/ProjectParticipants.php:571
 msgid "Display-Name (pers.)"
 msgstr "Anzeigename (pers.)"
 
 #: lib/PageRenderer/Musicians.php:574
-#: lib/PageRenderer/ProjectParticipants.php:568
+#: lib/PageRenderer/ProjectParticipants.php:583
 #: lib/PageRenderer/ProjectPayments.php:538
 msgid "User Id"
 msgstr "Benutzerkennung"
 
 #: lib/PageRenderer/Musicians.php:666
-#: lib/PageRenderer/ProjectParticipants.php:658
+#: lib/PageRenderer/ProjectParticipants.php:659
 msgid "Instrument Sort Order"
 msgstr "Instrumenten Reihenfolge"
 
 #: lib/PageRenderer/Musicians.php:680
-#: lib/PageRenderer/ProjectParticipants.php:932
+#: lib/PageRenderer/ProjectParticipants.php:933
 msgid "Disabled Instruments"
 msgstr "Gesperrte Instrumente"
 
 #: lib/PageRenderer/Musicians.php:708
-#: lib/PageRenderer/ProjectParticipants.php:962
+#: lib/PageRenderer/ProjectParticipants.php:963
 msgid "Email Status"
 msgstr "Email-Empfang"
 
 #: lib/PageRenderer/Musicians.php:719
-#: lib/PageRenderer/ProjectParticipants.php:987
+#: lib/PageRenderer/ProjectParticipants.php:988
 msgid "Cloud Account Deactivated"
 msgstr "Cloud-Zugang deaktiviert"
 
 #: lib/PageRenderer/Musicians.php:738
-#: lib/PageRenderer/ProjectParticipants.php:1006
+#: lib/PageRenderer/ProjectParticipants.php:1007
 msgid "Hidden from Cloud"
 msgstr "Kein Cloud-Zugang"
 
 #: lib/PageRenderer/Musicians.php:760
-#: lib/PageRenderer/ProjectParticipants.php:1090
+#: lib/PageRenderer/ProjectParticipants.php:1091
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
 #: lib/PageRenderer/Musicians.php:774
-#: lib/PageRenderer/ProjectParticipants.php:1105
+#: lib/PageRenderer/ProjectParticipants.php:1106
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
 #: lib/PageRenderer/Musicians.php:792
-#: lib/PageRenderer/ProjectParticipants.php:1120
+#: lib/PageRenderer/ProjectParticipants.php:1121
 msgid "Address Supplement"
 msgstr "Adresszusatz"
 
 #: lib/PageRenderer/Musicians.php:803
-#: lib/PageRenderer/ProjectParticipants.php:1131
+#: lib/PageRenderer/ProjectParticipants.php:1132
 msgid "Street"
 msgstr "Straße"
 
 #: lib/PageRenderer/Musicians.php:818
-#: lib/PageRenderer/ProjectParticipants.php:1145
+#: lib/PageRenderer/ProjectParticipants.php:1146
 msgid "Street Number"
 msgstr "Hausnummer"
 
 #: lib/PageRenderer/Musicians.php:829
-#: lib/PageRenderer/ProjectParticipants.php:1156
+#: lib/PageRenderer/ProjectParticipants.php:1157
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
 #: lib/PageRenderer/Musicians.php:838
-#: lib/PageRenderer/ProjectParticipants.php:1165
+#: lib/PageRenderer/ProjectParticipants.php:1166
 msgid "City"
 msgstr "Stadt"
 
 #: lib/PageRenderer/Musicians.php:850
-#: lib/PageRenderer/ProjectParticipants.php:1177
+#: lib/PageRenderer/ProjectParticipants.php:1178
 msgid "Country"
 msgstr "Land"
 
 #: lib/PageRenderer/Musicians.php:865
-#: lib/PageRenderer/ProjectParticipants.php:1195
+#: lib/PageRenderer/ProjectParticipants.php:1196
 msgid "Remarks"
 msgstr "Bemerkungen"
 
 #: lib/PageRenderer/Musicians.php:883
-#: lib/PageRenderer/ProjectParticipants.php:1215
+#: lib/PageRenderer/ProjectParticipants.php:1216
 msgid "Language"
 msgstr "Sprache"
 
@@ -5641,18 +5668,18 @@ msgid "Instrument Insurance"
 msgstr "Instrumentenversicherung"
 
 #: lib/PageRenderer/Musicians.php:944
-#: lib/PageRenderer/ProjectParticipants.php:1227
+#: lib/PageRenderer/ProjectParticipants.php:1228
 msgid "Photo"
 msgstr "Foto"
 
 #: lib/PageRenderer/Musicians.php:1006
-#: lib/PageRenderer/ProjectParticipants.php:1286
+#: lib/PageRenderer/ProjectParticipants.php:1287
 #: lib/PageRenderer/Projects.php:951
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
 #: lib/PageRenderer/Musicians.php:1019
-#: lib/PageRenderer/ProjectParticipants.php:1298 src/app/ajax.js:37
+#: lib/PageRenderer/ProjectParticipants.php:1299 src/app/ajax.js:37
 msgid "Created"
 msgstr "Erzeugt"
 
@@ -5862,7 +5889,7 @@ msgid "Orchestral Sorting"
 msgstr "Orchestersortierung"
 
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:284
-#: lib/PageRenderer/ProjectParticipants.php:674
+#: lib/PageRenderer/ProjectParticipants.php:675
 msgid "Voice"
 msgstr "Stimme"
 
@@ -5870,7 +5897,7 @@ msgstr "Stimme"
 #: lib/PageRenderer/ProjectInstrumentationNumbers.php:302
 #: lib/PageRenderer/ProjectParticipantFields.php:705
 #: lib/PageRenderer/ProjectParticipantFields.php:714
-#: lib/PageRenderer/ProjectParticipants.php:778
+#: lib/PageRenderer/ProjectParticipants.php:779
 msgid "n/a"
 msgstr "n/a"
 
@@ -6122,63 +6149,63 @@ msgstr "Musizierenden-Id"
 msgid "First Name"
 msgstr "Vorname"
 
-#: lib/PageRenderer/ProjectParticipants.php:615
+#: lib/PageRenderer/ProjectParticipants.php:616
 msgid "Project Instrument"
 msgstr "Instrument"
 
-#: lib/PageRenderer/ProjectParticipants.php:787
+#: lib/PageRenderer/ProjectParticipants.php:788
 msgid "Section Leader"
 msgstr "Stimmführer"
 
-#: lib/PageRenderer/ProjectParticipants.php:861
+#: lib/PageRenderer/ProjectParticipants.php:862
 msgid "Participation"
 msgstr "Teilnahme"
 
-#: lib/PageRenderer/ProjectParticipants.php:870
+#: lib/PageRenderer/ProjectParticipants.php:871
 #: lib/Service/ToolTipsService.php:512 lib/Service/ToolTipsService.php:518
 #: lib/Service/ToolTipsService.php:524
 msgid "tentatively"
 msgstr "vorläufig"
 
-#: lib/PageRenderer/ProjectParticipants.php:870
+#: lib/PageRenderer/ProjectParticipants.php:871
 #: lib/Service/ToolTipsService.php:513 lib/Service/ToolTipsService.php:519
 #: lib/Service/ToolTipsService.php:525
 msgid "confirmed"
 msgstr "bestätigt"
 
-#: lib/PageRenderer/ProjectParticipants.php:892
+#: lib/PageRenderer/ProjectParticipants.php:893
 msgid "All Instruments"
 msgstr "Alle Instrumente"
 
-#: lib/PageRenderer/ProjectParticipants.php:975
+#: lib/PageRenderer/ProjectParticipants.php:976
 msgid "Musician Deleted"
 msgstr "Person gelöscht"
 
-#: lib/PageRenderer/ProjectParticipants.php:1084
+#: lib/PageRenderer/ProjectParticipants.php:1085
 msgid "Announcements List"
 msgstr "Ankündigungs-Email-Verteiler"
 
-#: lib/PageRenderer/ProjectParticipants.php:1539
+#: lib/PageRenderer/ProjectParticipants.php:1540
 #: lib/Service/InstrumentationService.php:173
 msgid "Instrumentation related data"
 msgstr "Besetzung"
 
-#: lib/PageRenderer/ProjectParticipants.php:1544
+#: lib/PageRenderer/ProjectParticipants.php:1545
 #: lib/Service/InstrumentationService.php:178
 msgid "Project related data"
 msgstr "Projekt-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1551
+#: lib/PageRenderer/ProjectParticipants.php:1552
 #: lib/Service/InstrumentationService.php:185
 msgid "Finance related data"
 msgstr "Finanz-Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1568
+#: lib/PageRenderer/ProjectParticipants.php:1569
 #: lib/Service/InstrumentationService.php:197
 msgid "Personal data"
 msgstr "Persönliche Daten"
 
-#: lib/PageRenderer/ProjectParticipants.php:1575
+#: lib/PageRenderer/ProjectParticipants.php:1576
 #: lib/PageRenderer/SepaBankAccounts.php:1131
 msgid "Miscinfo"
 msgstr "Verschiedenes"
