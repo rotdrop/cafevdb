@@ -551,6 +551,21 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ]);
 
+    if ($this->showDisabled) {
+      // soft-deletion
+      $opts['fdd']['deleted'] = array_merge(
+        $this->defaultFDD['deleted'], [
+          'name' => $this->l->t('Deleted'),
+          'tab'  => [ 'id' => 'tab-all' ],
+          'dateformat' => 'medium',
+          'timeformat' => 'short',
+          'maxlen' => 19,
+        ]
+      );
+      Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
+      $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
+    }
+
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'display_name_personal', [
         'name'     => $this->l->t('Display-Name (pers.)'),
@@ -595,20 +610,6 @@ class ProjectParticipants extends PMETableViewBase
           },
         ],
       ]);
-
-    if ($this->showDisabled) {
-      // soft-deletion
-      $opts['fdd']['deleted'] = array_merge(
-        $this->defaultFDD['deleted'], [
-          'name' => $this->l->t('Deleted'),
-          'dateformat' => 'medium',
-          'timeformat' => 'short',
-          'maxlen' => 19,
-        ]
-      );
-      Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
-      $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
-    }
 
     $fdd = [
       'tab'         => [ 'id' => [ 'instrumentation' ] ],
