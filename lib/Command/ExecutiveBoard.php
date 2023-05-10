@@ -84,7 +84,7 @@ class ExecutiveBoard extends Command
       'appid' => 'twofactor_nextcloud_notification',
       'phone' => false,
       'values' => [
-        'enable' => '1',
+        'enabled' => '1',
       ],
     ],
   ];
