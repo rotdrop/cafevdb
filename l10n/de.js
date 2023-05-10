@@ -57,7 +57,7 @@ OC.L10N.register(
     "Would set \"%1$s\" (%2$s) to \"%3$s\" (dry-run)." : "\"%1$s\" (%2$s) würde auf \"%3$s\" gesetzt werden (Trockenübung).",
     "Setting \"%1$s\" (%2$s) to \"%3$s\"." : "Setze \"%1$s\" (%2$s) auf \"%3$s\".",
     "Configuration \"%1$s\" (%2$s) is \"%3$s\"." : "Einstellung \"%1$s\" (%2$s) ist \"%3$s\".",
-    "_Error: found %d problem._::_Error: found %d problems._" : ["Fehler: %d Problem gefunden.","Fehler: %d Probleme gefunden."],
+    "_Error: found %n problem._::_Error: found %n problems._" : ["Fehler: %n Problem gefunden.","Fehler: %n Probleme gefunden."],
     "Error: user with uid \"%1$s\" is not part of the executive board.\nThis has to be fixed first by adding that person to the executive board project \"%2$s\"." : "Fehler: der Cloud-Account mit UID \"%1%s\" ist kein Mitglied des Vorstandprojekts.\nDas muss zuerst händisch behoben werden, indem die Person in der cafevdb-Cloud-App zum Vorstands-Projekt \"%2$s\" hinzu gefügt wird.",
     "Hello!" : "Hallo!",
     "Hello World!" : "Hallo Welt!",

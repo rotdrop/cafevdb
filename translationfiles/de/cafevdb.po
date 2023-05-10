@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-05-10 09:58+0200\n"
-"PO-Revision-Date: 2023-05-10 13:26+0200\n"
+"POT-Creation-Date: 2023-05-10 13:38+0200\n"
+"PO-Revision-Date: 2023-05-10 13:40+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -301,7 +301,9 @@ msgstr "Telefonnummer: %s"
 #: lib/Command/ExecutiveBoard.php:452
 #, php-format
 msgid "User setting \"%1$s\" (%2$s) is \"%3$s\" but should be \"%4$s\"."
-msgstr "Die Account-Einstellung \"%1$s\" (%2$s) ist \"%3$s\", sollte aber \"%4$s\" sein."
+msgstr ""
+"Die Account-Einstellung \"%1$s\" (%2$s) ist \"%3$s\", sollte aber \"%4$s\" "
+"sein."
 
 #: lib/Command/ExecutiveBoard.php:458
 #, php-format
@@ -319,11 +321,10 @@ msgid "Configuration \"%1$s\" (%2$s) is \"%3$s\"."
 msgstr "Einstellung \"%1$s\" (%2$s) ist \"%3$s\"."
 
 #: lib/Command/ExecutiveBoard.php:471
-#, php-format
-msgid "Error: found %d problem."
-msgid_plural "Error: found %d problems."
-msgstr[0] "Fehler: %d Problem gefunden."
-msgstr[1] "Fehler: %d Probleme gefunden."
+msgid "Error: found %n problem."
+msgid_plural "Error: found %n problems."
+msgstr[0] "Fehler: %n Problem gefunden."
+msgstr[1] "Fehler: %n Probleme gefunden."
 
 #: lib/Command/ExecutiveBoard.php:480
 #, php-format
@@ -7047,14 +7048,18 @@ msgstr ""
 msgid ""
 "Calendar entry \"%1$s\" is in use by the finance sub-system and cannot be "
 "moved away from the %2$s calendar."
-msgstr "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf deshalb nicht aus dem %2$s-Kalender verschoben werden."
+msgstr ""
+"Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf "
+"deshalb nicht aus dem %2$s-Kalender verschoben werden."
 
 #: lib/Service/EventsService.php:252
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is in use by the finance sub-system and must not be "
 "deleted."
-msgstr "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf deshalb nicht gelöscht werden."
+msgstr ""
+"Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf "
+"deshalb nicht gelöscht werden."
 
 #: lib/Service/EventsService.php:745
 #, php-format

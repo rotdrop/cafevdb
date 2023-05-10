@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-05-10 13:28+0200\n"
+"POT-Creation-Date: 2023-05-10 13:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -294,9 +294,8 @@ msgid "Configuration \"%1$s\" (%2$s) is \"%3$s\"."
 msgstr ""
 
 #: lib/Command/ExecutiveBoard.php:471
-#, php-format
-msgid "Error: found %d problem."
-msgid_plural "Error: found %d problems."
+msgid "Error: found %n problem."
+msgid_plural "Error: found %n problems."
 msgstr[0] ""
 msgstr[1] ""
 
