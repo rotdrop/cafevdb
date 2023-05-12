@@ -2259,6 +2259,9 @@ class EventsService
           $eventProperty = 'DT' . strtoupper($key);
           if ($allDay) {
             $date = $changeSet[$key]->setTime(0, 0, 0);
+            if ($key == 'end') {
+              $date = $date->modify('+1 day'); // next day at 00:00:00
+            }
             $vEvent->{$eventProperty} = $date;
             $vEvent->{$eventProperty}['VALUE'] = 'DATE';
           } else {
