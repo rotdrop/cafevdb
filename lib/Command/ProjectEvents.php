@@ -35,6 +35,7 @@ use OCP\Calendar\ICalendar;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -65,6 +66,7 @@ class ProjectEvents extends Command
   public function __construct(
     string $appName,
     IL10N $l10n,
+    ILogger $logger,
     IUserManager $userManager,
     IUserSession $userSession,
     IAppContainer $appContainer,
@@ -72,6 +74,7 @@ class ProjectEvents extends Command
     parent::__construct();
     $this->appName = $appName;
     $this->l = $l10n;
+    $this->logger = $logger;
     $this->userManager = $userManager;
     $this->userSession = $userSession;
     $this->appContainer = $appContainer;
@@ -343,8 +346,27 @@ class ProjectEvents extends Command
         if ($projectEvent->getType() != 'VEVENT') {
           continue;
         }
+
         $recurrenceId = $projectEvent->getRecurrenceId();
         $event = $eventsService->fetchEvent($project, $eventUri, $recurrenceId);
+        if (empty($event)) {
+          // Try to fetch the event directly from the calendar. This can
+          // happen if a repeating event had been added without recording its
+          // siblings.
+          $eventData = $calDavService->getCalendarObject($calendarId, $eventUri);
+          if (!empty($eventData)) {
+            $eventData['calendaruri'] = $calendarUri;
+            $this->logInfo('EVENT DATA ' . print_r($eventData, true));
+            if (!$dry) {
+              $eventsService->syncCalendarObject($eventData);
+              $output->writeln($this->l->t('Synchronizing event "%s".', $eventUri));
+            } else {
+              $output->writeln($this->l->t('Would synchronize event "%s" (dry run).', $eventUri));
+            }
+            continue;
+          }
+        }
+
         if (empty($event)) {
           ++$orphans;
           if (!empty($recurrenceId)) {
