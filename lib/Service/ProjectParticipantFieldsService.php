@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Storage\UserStorage;
@@ -994,7 +995,8 @@ class ProjectParticipantFieldsService
 
     $absenceField->setName($dateString)
       ->setTooltip($description)
-      ->setDisplayOrder(-$eventData['start']->getTimestamp());
+      ->setDisplayOrder(-$eventData['start']->getTimestamp())
+      ->setParticipantAccess(AccessPermission::READ);
 
     if (empty($absenceField->getTab())) {
       // TRANSLATORS: Column heading in table (capital first character)
