@@ -76,6 +76,8 @@
     "CALENDAR \"%1$s\" must be one of \"%2$s\"" : "Für den KALENDER-Parameter \"%1$s\" gibt es nur die folgenden Möglichkeiten: \"%2$s\".",
     "Hard-removing soft-deleted event \"%1$s@%2$s\" from project \"%3$s\"" : "Entferne den als inaktiv markierten Termin \"%1$s@%2$s\" endgültig vom Projekt \"%3$s\".",
     "Would hard-remove soft-deleted event \"%1$s@%2$s\" from project \"%3$s\" (dry-run)" : "Würde den als inaktiv markierten Termin \"%1$s@%2$s\" endgültig vom Projekt \"%2$s\" entfernen (Trockenübung).",
+    "Synchronizing event \"%s\"." : "Synchronisiere den Termin \"%s\".",
+    "Would synchronize event \"%s\" (dry run)." : "Würde den Termin \"%s\" synchronisieren (Trockenübung).",
     "Recurrence-id \"%1$s\" of event \"%2$s\" not found" : "Wiederholdungs-Id \"%1$s\" des Termines \"%2$s\" konnte nicht gefunden werden.",
     "Event \"%1$s\" not found" : "Termin \"%1$s\" wurde nicht gefunden.",
     "Removing orphan event \"%1$s@%2$s\" from project \"%3$s\"" : "Entferne den \"verwaisten\" Termin \"%1$s@%2$s\" vom Projekt \"%3$s\".",

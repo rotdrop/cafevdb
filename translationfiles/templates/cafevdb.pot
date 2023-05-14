@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-05-10 18:03+0200\n"
+"POT-Creation-Date: 2023-05-15 00:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -374,228 +374,238 @@ msgstr ""
 msgid "Ensured existence of folder \"%s\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:161
+#: lib/Command/ProjectEvents.php:164
 msgid ""
 "One of the options \"years=RANGE\", \"--calendar=CALENDAR\", \"--"
 "project=PROJECT\" or \"--all\" has to be specified."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:167
+#: lib/Command/ProjectEvents.php:170
 msgid ""
 "\"--all\" cannot be compbined with \"years=RANGE\", \"--calendar=CALENDAR\" "
 "or \"--project=PROJECT\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:172
+#: lib/Command/ProjectEvents.php:175
 msgid "FIX must be one of \"unregister\", \"reattach\" or \"category\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:185
+#: lib/Command/ProjectEvents.php:188
 #, php-format
 msgid "CALENDAR \"%1$s\" must be one of \"%2$s\""
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:326
+#: lib/Command/ProjectEvents.php:329
 #, php-format
 msgid "Hard-removing soft-deleted event \"%1$s@%2$s\" from project \"%3$s\""
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:334
+#: lib/Command/ProjectEvents.php:337
 #, php-format
 msgid ""
 "Would hard-remove soft-deleted event \"%1$s@%2$s\" from project "
 "\"%3$s\" (dry-run)"
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:352
+#: lib/Command/ProjectEvents.php:362
+#, php-format
+msgid "Synchronizing event \"%s\"."
+msgstr ""
+
+#: lib/Command/ProjectEvents.php:364
+#, php-format
+msgid "Would synchronize event \"%s\" (dry run)."
+msgstr ""
+
+#: lib/Command/ProjectEvents.php:374
 #, php-format
 msgid "Recurrence-id \"%1$s\" of event \"%2$s\" not found"
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:360
+#: lib/Command/ProjectEvents.php:382
 #, php-format
 msgid "Event \"%1$s\" not found"
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:369
+#: lib/Command/ProjectEvents.php:391
 #, php-format
 msgid "Removing orphan event \"%1$s@%2$s\" from project \"%3$s\""
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:377
+#: lib/Command/ProjectEvents.php:399
 #, php-format
 msgid "Would remove orphan event \"%1$s@%2$s\" from project \"%3$s\" (dry-run)"
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:389
+#: lib/Command/ProjectEvents.php:411
 #, php-format
 msgid "Event \"%1$s@%2$s\" is missing the project-category \"%3$s\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:399
+#: lib/Command/ProjectEvents.php:421
 #, php-format
 msgid "Would add the category \"%3$s\" to the event \"%1$s@%2$s\" (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:406
+#: lib/Command/ProjectEvents.php:428
 #, php-format
 msgid "Adding the category \"%3$s\" to the event \"%1$s@%2$s\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:418
+#: lib/Command/ProjectEvents.php:440
 #, php-format
 msgid ""
 "Would remove uncategorized event \"%1$s@%2$s\" from project \"%3$s\" (dry-"
 "run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:425
+#: lib/Command/ProjectEvents.php:447
 #, php-format
 msgid "Removing uncategorized event \"%1$s@%2$s\" from project \"%3$s\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:443
+#: lib/Command/ProjectEvents.php:465
 #, php-format
 msgid ""
 "Would split non-repeating multi-day event \"%1$s@%2$s\" of project "
 "\"%3$s\" (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:450
+#: lib/Command/ProjectEvents.php:472
 #, php-format
 msgid ""
 "Will split non-repeating multi-day event \"%1$s@%2$s\" of project \"%3$s\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:509
+#: lib/Command/ProjectEvents.php:531
 #, php-format
 msgid ""
 "Would remove the category \"%3$s\" from the event \"%1$s@%2$s\" (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:516
+#: lib/Command/ProjectEvents.php:538
 #, php-format
 msgid "Removing the category \"%3$s\" from the event \"%1$s@%2$s\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:528
+#: lib/Command/ProjectEvents.php:550
 #, php-format
 msgid ""
 "Would reattach categorized event \"%1$s@%2$s\" to project \"%3$s\" (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:535
+#: lib/Command/ProjectEvents.php:557
 #, php-format
 msgid "Reattaching categorized event \"%1$s@%2$s\" to project \"%3$s\"."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:550
+#: lib/Command/ProjectEvents.php:572
 #, php-format
 msgid ""
 "Would delete unregistered event \"%1$s@%2$s\" with project-category "
 "\"%3$s\" (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:557
+#: lib/Command/ProjectEvents.php:579
 #, php-format
 msgid ""
 "Will delete unregistered event \"%1$s@%2$s\" with project-category "
 "\"%3$s\" (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:575
+#: lib/Command/ProjectEvents.php:597
 #, php-format
 msgid "Would have hard-removed %d soft-deleted events (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:577
+#: lib/Command/ProjectEvents.php:599
 #, php-format
 msgid "Hard-removed %d soft-deleted events."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:583
+#: lib/Command/ProjectEvents.php:605
 #, php-format
 msgid "Would have removed %d orphaned events (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:585
+#: lib/Command/ProjectEvents.php:607
 #, php-format
 msgid "Removed %d orphaned events."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:591
+#: lib/Command/ProjectEvents.php:613
 #, php-format
 msgid "Would have added %d missing categories (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:593
+#: lib/Command/ProjectEvents.php:615
 #, php-format
 msgid "Added %d missing categories."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:599
+#: lib/Command/ProjectEvents.php:621
 #, php-format
 msgid ""
 "Would have unregistered %d events with missing project-name category (dry-"
 "run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:601
+#: lib/Command/ProjectEvents.php:623
 #, php-format
 msgid "Unregistered %d events with missing project-name category."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:607
+#: lib/Command/ProjectEvents.php:629
 #, php-format
 msgid "Would have removed %d erroneous categories (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:609
+#: lib/Command/ProjectEvents.php:631
 #, php-format
 msgid "Removed %d erroneous categories."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:615
+#: lib/Command/ProjectEvents.php:637
 #, php-format
 msgid ""
 "Would have reattached %d events with set project-name category (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:617
+#: lib/Command/ProjectEvents.php:639
 #, php-format
 msgid "Reattached %d events with set project-name category."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:623
+#: lib/Command/ProjectEvents.php:645
 #, php-format
 msgid ""
 "Would have deleted %d unregistered events with set project-name category "
 "(dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:625
+#: lib/Command/ProjectEvents.php:647
 #, php-format
 msgid "Deleted %d unregistered events with set project-name category."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:631
+#: lib/Command/ProjectEvents.php:653
 #, php-format
 msgid ""
 "Would have splitted %d multi-day events into repeating event series (dry-"
 "run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:633
+#: lib/Command/ProjectEvents.php:655
 #, php-format
 msgid "Splitted %d multi-day events into repeating event series."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:639
+#: lib/Command/ProjectEvents.php:661
 #, php-format
 msgid "Would have created %d missing system-tags (dry-run)."
 msgstr ""
 
-#: lib/Command/ProjectEvents.php:641
+#: lib/Command/ProjectEvents.php:663
 #, php-format
 msgid "Created %d missing system-tags."
 msgstr ""

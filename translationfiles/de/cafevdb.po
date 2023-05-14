@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-05-10 17:48+0200\n"
-"PO-Revision-Date: 2023-05-10 18:01+0200\n"
+"POT-Creation-Date: 2023-05-15 00:15+0200\n"
+"PO-Revision-Date: 2023-05-15 00:18+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -110,7 +110,9 @@ msgstr ""
 msgid ""
 "Skipping user \"%1$s\" as its participation in the executive board has been "
 "deleted on %2$s."
-msgstr "Überspringe die Person \"%1$s\", weil diese im Vorstands-Projekt am %2$s gelöscht wurde."
+msgstr ""
+"Überspringe die Person \"%1$s\", weil diese im Vorstands-Projekt am %2$s "
+"gelöscht wurde."
 
 #: lib/Command/ExecutiveBoard.php:265
 #, php-format
@@ -335,7 +337,8 @@ msgstr "Fehler: der Zwei-Faktor-Mechanismus \"%1$s\" ist nicht aktiviert."
 #: lib/Command/ExecutiveBoard.php:519
 #, php-format
 msgid "Would enable TFA-Provider \"%1$s\" (dry-run)."
-msgstr "Der Zwei-Faktor-Mechanismus \"%1$s\" würde aktiviert werden (Trockenübung)."
+msgstr ""
+"Der Zwei-Faktor-Mechanismus \"%1$s\" würde aktiviert werden (Trockenübung)."
 
 #: lib/Command/ExecutiveBoard.php:521
 #, php-format
@@ -409,7 +412,7 @@ msgstr "Der Datei-Ordner \"%s\" existiert."
 msgid "Ensured existence of folder \"%s\"."
 msgstr "Die Existenz des Dateiordners \"%s\" wurde sicher gestellt."
 
-#: lib/Command/ProjectEvents.php:161
+#: lib/Command/ProjectEvents.php:164
 msgid ""
 "One of the options \"years=RANGE\", \"--calendar=CALENDAR\", \"--"
 "project=PROJECT\" or \"--all\" has to be specified."
@@ -417,7 +420,7 @@ msgstr ""
 "Eine der Optionen \"--years=INTERVALL\", \"--calender=KALENDER\", \"--"
 "project=PROJEKTNAME\" oder \"--all\" muss angegeben werden."
 
-#: lib/Command/ProjectEvents.php:167
+#: lib/Command/ProjectEvents.php:170
 msgid ""
 "\"--all\" cannot be compbined with \"years=RANGE\", \"--calendar=CALENDAR\" "
 "or \"--project=PROJECT\"."
@@ -425,27 +428,27 @@ msgstr ""
 "\"--all\" kann nicht mit \"--years=INTERVALL\", \"--calendar=KALENDER\" oder "
 "\"--project=PROJEKTNAME\" kombiniert werden."
 
-#: lib/Command/ProjectEvents.php:172
+#: lib/Command/ProjectEvents.php:175
 msgid "FIX must be one of \"unregister\", \"reattach\" or \"category\"."
 msgstr ""
 "Der FIX-Parameter muss gleich einer der Optionen \"unregister\", "
 "\"reattach\" oder \"category\" sein."
 
-#: lib/Command/ProjectEvents.php:185
+#: lib/Command/ProjectEvents.php:188
 #, php-format
 msgid "CALENDAR \"%1$s\" must be one of \"%2$s\""
 msgstr ""
 "Für den KALENDER-Parameter \"%1$s\" gibt es nur die folgenden Möglichkeiten: "
 "\"%2$s\"."
 
-#: lib/Command/ProjectEvents.php:326
+#: lib/Command/ProjectEvents.php:329
 #, php-format
 msgid "Hard-removing soft-deleted event \"%1$s@%2$s\" from project \"%3$s\""
 msgstr ""
 "Entferne den als inaktiv markierten Termin \"%1$s@%2$s\" endgültig vom "
 "Projekt \"%3$s\"."
 
-#: lib/Command/ProjectEvents.php:334
+#: lib/Command/ProjectEvents.php:337
 #, php-format
 msgid ""
 "Would hard-remove soft-deleted event \"%1$s@%2$s\" from project "
@@ -454,48 +457,58 @@ msgstr ""
 "Würde den als inaktiv markierten Termin \"%1$s@%2$s\" endgültig vom Projekt "
 "\"%2$s\" entfernen (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:352
+#: lib/Command/ProjectEvents.php:362
+#, php-format
+msgid "Synchronizing event \"%s\"."
+msgstr "Synchronisiere den Termin \"%s\"."
+
+#: lib/Command/ProjectEvents.php:364
+#, php-format
+msgid "Would synchronize event \"%s\" (dry run)."
+msgstr "Würde den Termin \"%s\" synchronisieren (Trockenübung)."
+
+#: lib/Command/ProjectEvents.php:374
 #, php-format
 msgid "Recurrence-id \"%1$s\" of event \"%2$s\" not found"
 msgstr ""
 "Wiederholdungs-Id \"%1$s\" des Termines \"%2$s\" konnte nicht gefunden "
 "werden."
 
-#: lib/Command/ProjectEvents.php:360
+#: lib/Command/ProjectEvents.php:382
 #, php-format
 msgid "Event \"%1$s\" not found"
 msgstr "Termin \"%1$s\" wurde nicht gefunden."
 
-#: lib/Command/ProjectEvents.php:369
+#: lib/Command/ProjectEvents.php:391
 #, php-format
 msgid "Removing orphan event \"%1$s@%2$s\" from project \"%3$s\""
 msgstr "Entferne den \"verwaisten\" Termin \"%1$s@%2$s\" vom Projekt \"%3$s\"."
 
-#: lib/Command/ProjectEvents.php:377
+#: lib/Command/ProjectEvents.php:399
 #, php-format
 msgid "Would remove orphan event \"%1$s@%2$s\" from project \"%3$s\" (dry-run)"
 msgstr ""
 "Würde den \"verwaisten\" Termin \"%1$s@%2$s\" vom Projekt \"%3$s\" entfernen "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:389
+#: lib/Command/ProjectEvents.php:411
 #, php-format
 msgid "Event \"%1$s@%2$s\" is missing the project-category \"%3$s\"."
 msgstr "Dem Termin \"%1$s@%2$s\" fehlt der die Projekt-Kategorie \"%3$s\"."
 
-#: lib/Command/ProjectEvents.php:399
+#: lib/Command/ProjectEvents.php:421
 #, php-format
 msgid "Would add the category \"%3$s\" to the event \"%1$s@%2$s\" (dry-run)."
 msgstr ""
 "Würde die Kategorie \"%3$s\" zum Termin \"%1$s@%2$s\" hinzu fügen "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:406
+#: lib/Command/ProjectEvents.php:428
 #, php-format
 msgid "Adding the category \"%3$s\" to the event \"%1$s@%2$s\"."
 msgstr "Füge ie Kategorie \"%3$s\" zum Termin \"%1$s@%2$s\" hinzu."
 
-#: lib/Command/ProjectEvents.php:418
+#: lib/Command/ProjectEvents.php:440
 #, php-format
 msgid ""
 "Would remove uncategorized event \"%1$s@%2$s\" from project \"%3$s\" (dry-"
@@ -504,14 +517,14 @@ msgstr ""
 "Würde den nicht \"kategorisierten\" Termin \"%1$s@%2$\" vom Projekt \"%3$s\" "
 "entfernen (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:425
+#: lib/Command/ProjectEvents.php:447
 #, php-format
 msgid "Removing uncategorized event \"%1$s@%2$s\" from project \"%3$s\"."
 msgstr ""
 "Entferne den nicht \"kategorisierten\" Termin \"%1$s@%2$\" vom Projekt "
 "\"%3$s\"."
 
-#: lib/Command/ProjectEvents.php:443
+#: lib/Command/ProjectEvents.php:465
 #, php-format
 msgid ""
 "Would split non-repeating multi-day event \"%1$s@%2$s\" of project "
@@ -521,7 +534,7 @@ msgstr ""
 "Projekt \"%3$s\" in einen wiederholenden eintägigen Termin aufteilen "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:450
+#: lib/Command/ProjectEvents.php:472
 #, php-format
 msgid ""
 "Will split non-repeating multi-day event \"%1$s@%2$s\" of project \"%3$s\"."
@@ -529,7 +542,7 @@ msgstr ""
 "Teile den nicht-wiederholenden mehrtägigen Termin \"%1$s@%2$s\" für das "
 "Projekt \"%3$s\" in einen wiederholenden eintägigen Termin auf."
 
-#: lib/Command/ProjectEvents.php:509
+#: lib/Command/ProjectEvents.php:531
 #, php-format
 msgid ""
 "Would remove the category \"%3$s\" from the event \"%1$s@%2$s\" (dry-run)."
@@ -537,12 +550,12 @@ msgstr ""
 "Würde die Kategorie \"%3$s\" vom Termin \"%1$s@%2$s\" entfernen "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:516
+#: lib/Command/ProjectEvents.php:538
 #, php-format
 msgid "Removing the category \"%3$s\" from the event \"%1$s@%2$s\"."
 msgstr "Entferne die Kategorie \"%3$s\" vom Termin \"%1$s@%2$s\"."
 
-#: lib/Command/ProjectEvents.php:528
+#: lib/Command/ProjectEvents.php:550
 #, php-format
 msgid ""
 "Would reattach categorized event \"%1$s@%2$s\" to project \"%3$s\" (dry-run)."
@@ -550,14 +563,14 @@ msgstr ""
 "Würde den \"kategorisierten\" Termin \"\"%1$s@%2$s\" zum Projekt \"%3$s\" "
 "hinzu fügen (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:535
+#: lib/Command/ProjectEvents.php:557
 #, php-format
 msgid "Reattaching categorized event \"%1$s@%2$s\" to project \"%3$s\"."
 msgstr ""
 "Der \"kategorisierte\" Termin \"\"%1$s@%2$s\" wurde zum Projekt \"%3$s\" "
 "hinzu gefügt."
 
-#: lib/Command/ProjectEvents.php:550
+#: lib/Command/ProjectEvents.php:572
 #, php-format
 msgid ""
 "Would delete unregistered event \"%1$s@%2$s\" with project-category "
@@ -566,7 +579,7 @@ msgstr ""
 "Würde den beim Projekt \"%3$s\" nicht-registrieren Termin \"%1$s@%2$s\" mit "
 "Projekt-Kategorie \"%3$s\" löschen (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:557
+#: lib/Command/ProjectEvents.php:579
 #, php-format
 msgid ""
 "Will delete unregistered event \"%1$s@%2$s\" with project-category "
@@ -576,40 +589,40 @@ msgstr ""
 "Projekt-Kategorie \"%3$s\".<\n"
 "\n"
 
-#: lib/Command/ProjectEvents.php:575
+#: lib/Command/ProjectEvents.php:597
 #, php-format
 msgid "Would have hard-removed %d soft-deleted events (dry-run)."
 msgstr ""
 "%d als inaktiv markierte Termine wären endgültig gelöscht worden "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:577
+#: lib/Command/ProjectEvents.php:599
 #, php-format
 msgid "Hard-removed %d soft-deleted events."
 msgstr "%d als inaktiv markierte Termine wurden endgültig gelöscht."
 
-#: lib/Command/ProjectEvents.php:583
+#: lib/Command/ProjectEvents.php:605
 #, php-format
 msgid "Would have removed %d orphaned events (dry-run)."
 msgstr ""
 "%d \"verwaiste\" Termine wären endgültig gelöscht worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:585
+#: lib/Command/ProjectEvents.php:607
 #, php-format
 msgid "Removed %d orphaned events."
 msgstr "%d \"verwaiste\" Termine wurden endgültig gelöscht."
 
-#: lib/Command/ProjectEvents.php:591
+#: lib/Command/ProjectEvents.php:613
 #, php-format
 msgid "Would have added %d missing categories (dry-run)."
 msgstr "%d fehlende Kategorien wären hinzu gefügt worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:593
+#: lib/Command/ProjectEvents.php:615
 #, php-format
 msgid "Added %d missing categories."
 msgstr "%d fehlende Kategorien wurden hinzu gefügt."
 
-#: lib/Command/ProjectEvents.php:599
+#: lib/Command/ProjectEvents.php:621
 #, php-format
 msgid ""
 "Would have unregistered %d events with missing project-name category (dry-"
@@ -618,23 +631,23 @@ msgstr ""
 "%d Termine ohne Projekt-Kategorie wären von den jeweiligen Projekten gelöst "
 "worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:601
+#: lib/Command/ProjectEvents.php:623
 #, php-format
 msgid "Unregistered %d events with missing project-name category."
 msgstr ""
 "%d Termine ohne Projekt-Kategorie wurden von den jeweiligen Projekten gelöst."
 
-#: lib/Command/ProjectEvents.php:607
+#: lib/Command/ProjectEvents.php:629
 #, php-format
 msgid "Would have removed %d erroneous categories (dry-run)."
 msgstr "%d falsch gesetzte Kategorien wären entfernt worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:609
+#: lib/Command/ProjectEvents.php:631
 #, php-format
 msgid "Removed %d erroneous categories."
 msgstr "%d falsch gesetzte Kategorien wurden entfernt."
 
-#: lib/Command/ProjectEvents.php:615
+#: lib/Command/ProjectEvents.php:637
 #, php-format
 msgid ""
 "Would have reattached %d events with set project-name category (dry-run)."
@@ -642,14 +655,14 @@ msgstr ""
 "%d Termine mit gesetzter Projekt-Kategorie wären wieder zu den jeweiligen "
 "Projekten hinzu gefügt worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:617
+#: lib/Command/ProjectEvents.php:639
 #, php-format
 msgid "Reattached %d events with set project-name category."
 msgstr ""
 "%d Termine mit gesetzter Projekt-Kategorie wurden wieder zu den jeweiligen "
 "Projekten hinzu gefügt."
 
-#: lib/Command/ProjectEvents.php:623
+#: lib/Command/ProjectEvents.php:645
 #, php-format
 msgid ""
 "Would have deleted %d unregistered events with set project-name category "
@@ -658,12 +671,12 @@ msgstr ""
 "%d nicht registrierte Termine mit Projekt-Kategorie wären gelöscht worden "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:625
+#: lib/Command/ProjectEvents.php:647
 #, php-format
 msgid "Deleted %d unregistered events with set project-name category."
 msgstr "%d nicht registrierte Termine mit Projekt-Kategorie wurden gelöscht."
 
-#: lib/Command/ProjectEvents.php:631
+#: lib/Command/ProjectEvents.php:653
 #, php-format
 msgid ""
 "Would have splitted %d multi-day events into repeating event series (dry-"
@@ -672,18 +685,18 @@ msgstr ""
 "%d mehrtägige Termine wären zu wiederholenden eintägige Terminen geändert "
 "worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:633
+#: lib/Command/ProjectEvents.php:655
 #, php-format
 msgid "Splitted %d multi-day events into repeating event series."
 msgstr ""
 "%d mehrtägige Termine wurden zu wiederholenden eintägige Terminen geändert."
 
-#: lib/Command/ProjectEvents.php:639
+#: lib/Command/ProjectEvents.php:661
 #, php-format
 msgid "Would have created %d missing system-tags (dry-run)."
 msgstr "%d fehlende System-Marker wären erzeugt worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:641
+#: lib/Command/ProjectEvents.php:663
 #, php-format
 msgid "Created %d missing system-tags."
 msgstr "%d fehlende System-Marker wurden erzeugt."
@@ -17525,9 +17538,6 @@ msgstr "ZUSATZKOSTEN"
 
 #~ msgid "Unable to export insurance overview."
 #~ msgstr "Kann die Versicherungs-Übersicht nicht exportieren."
-
-#~ msgid "Synchronize Events"
-#~ msgstr "Termine zuordnen"
 
 #~ msgid "Recreate Wiki Project TOC"
 #~ msgstr "Projekt-Übersicht im Wiki erzeugen"
