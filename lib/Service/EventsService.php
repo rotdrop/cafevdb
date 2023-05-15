@@ -65,9 +65,6 @@ use OCA\CAFEVDB\Exceptions;
 
 /**
  * Events and tasks handling.
- *
- * @todo
- * - cleanup-jobs for orphan events
  */
 class EventsService
 {
