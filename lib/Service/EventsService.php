@@ -2350,21 +2350,4 @@ class EventsService
 
     return $event;
   }
-
-  /**
-   * @param array $event To be cloned event array obtained form
-   * findCalendarEntry().
-   *
-   * @return array The cloned event.
-   *
-   * @bug The existance of this function is caused by $event not being a class
-   * instance.
-   */
-  public static function cloneCalendarEntry(array $event):array
-  {
-    foreach ($event as $key => $value) {
-      $event[$key] = is_object($value) ? clone($value) : $value;
-    }
-    return $event;
-  }
 }

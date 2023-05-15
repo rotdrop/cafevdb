@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -689,6 +689,27 @@ class Util
       ++$numUnset;
     }
     return $numUnset;
+  }
+
+  /**
+   * Semi deep clone of an array: entries which are objects will be cloned,
+   * entries which are arrays will be recursed into by this function.
+   *
+   * @param array $array To be cloned array.
+   *
+   * @return array The cloned event.
+   */
+  public static function cloneArray(array $array):array
+  {
+    foreach ($array as $key => $value) {
+      if (is_object($value)) {
+        $value = clone($value);
+      } elseif (is_array($value)) {
+        $value = self::cloneArrray($value);
+      }
+      $array[$key] = $value;
+    }
+    return $array;
   }
 
   /**
