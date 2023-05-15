@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use Exception;
+use Throwable;
 use DateTimeInterface;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -484,14 +485,6 @@ class EventsService
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
       $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());
-      if (false) {
-        // clean up orphaned events
-        try {
-          $this->unregister($event['projectid'], $event['uri'], flush: true);
-        } catch (\Throwable $t) {
-          $this->logException($t);
-        }
-      }
       return null;
     }
     $vCalendar = VCalendarService::getVCalendar($calendarObject);
@@ -506,7 +499,6 @@ class EventsService
 
     $vObject = VCalendarService::getVObject($vCalendar);
     $event['seriesStart'] = $vObject->DTSTART->getDateTime();
-
 
     return $event;
   }
@@ -2377,48 +2369,5 @@ class EventsService
       $event[$key] = is_object($value) ? clone($value) : $value;
     }
     return $event;
-  }
-
-  /**
-   * @return void
-   */
-  public function playground():void
-  {
-
-    $eventData = [
-      'summary' => 'Title',
-      'description' => 'Text',
-      'location' => 'Where',
-      'categories' => 'Cat1,Cat2',
-      'priority' => 9,
-      'from' => '01-11-2020',
-      'fromtime' => '10:20:22',
-      'to' => '30-11-2020',
-      'totime' => '00:00:00',
-      'calendar' => 'calendarId',
-      'repeat' => 'doesnotrepeat',
-    ];
-
-    $errors = $this->vCalendarService->validateRequest($eventData, VCalendarService::VEVENT);
-    $this->logError('EventError' . print_r($errors, true));
-    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($eventData, VCalendarService::VEVENT);
-    $this->logError('VEVENT VCalendar entry' . print_r($vCalendar, true));
-
-    $taskData = [
-      'summary' => 'Title',
-      'description' => 'Text',
-      'location' => 'Where',
-      'categories' => 'Cat1,Cat2',
-      'priority' => 9,
-      'due' => '01-11-2020',
-      'start' => '01-11-2020',
-      'calendar' => 'calendarId',
-      'alarm' => 10
-    ];
-
-    $errors = $this->vCalendarService->validateRequest($taskData, VCalendarService::VTODO);
-    $this->logError('TodoError' . print_r($errors, true));
-    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($taskData, VCalendarService::VTODO);
-    $this->logError('VTODO VCalendar entry' . print_r($vCalendar, true));
   }
 }
