@@ -644,7 +644,7 @@ class Projects extends PMETableViewBase
         [
           'tab' => ['id' => 'miscinfo'],
           'name' => $this->l->t('Registration Deadline'),
-          'css' => [ 'postfix' => [ 'regitration-deadline', ], ],
+          'css' => [ 'postfix' => [ 'registration-deadline', ], ],
           'nowrap' => true,
           'options' => 'AVCPD',
           'tooltip' => $this->toolTipsService['page-renderer:projects:registration:deadline'],
@@ -698,10 +698,13 @@ class Projects extends PMETableViewBase
               }
             },
             'postfix' => function($op, $pos, $k, $row, $pme) {
+              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)];
+              $disabled = empty($registrationStart) ? 'disabled' : '';
               $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
               return '<input id="pme-project-registration-deadline"
   type="checkbox"
-  '.$checked.'
+  ' . $checked . '
+  ' . $disabled . '
   class="pme-input pme-input-lock lock-empty locked-disabled"
 /><label
     class="pme-input pme-input-lock lock-empty"

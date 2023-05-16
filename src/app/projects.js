@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,9 @@ import {
   sys as pmeSys,
   classSelector as pmeClassSelector,
   formSelector as pmeFormSelector,
+  inputSelector as pmeInputSelector,
   token as pmeToken,
+  idSelector as pmeIdSelector,
 } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
@@ -347,6 +349,7 @@ const pmeFormInit = function(containerSel) {
     const $name = $container.find(nameSelector);
     const $year = $container.find(yearSelector);
     const $projectType = $container.find(typeSelector);
+    const $registrationStart = $container.find(pmeInputSelector + '.registration-start-date');
 
     let oldProjectYear = SelectUtils.selectedOptions($year).text();
     let oldProjectName = $name.val();
@@ -449,6 +452,13 @@ const pmeFormInit = function(containerSel) {
         return false;
       });
 
+    $registrationStart.on('blur, change', function(event) {
+      const $this = $(this);
+      const empty = $.trim($this.val()) === '';
+
+      $container.find(pmeIdSelector('project-registration-deadline')).prop('disabled', empty);
+    });
+
     // Attach a delegate handler to the form; this gives the
     // possibility to attach another delegate handler to the
     // container element.
@@ -463,7 +473,7 @@ const pmeFormInit = function(containerSel) {
           return true;
         }
       });
-  }
+  } // has form submit controls
 
   const updateLinkShareControls = function($control, data) {
     Notification.messages(data.message);
@@ -1319,8 +1329,3 @@ export {
   projectViewPopup,
   instrumentationNumbersPopup,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
