@@ -99,6 +99,16 @@ class Project implements \ArrayAccess
   /**
    * @var \DateTimeImmutable
    *
+   * Optional registration start date. If not set then the online registration
+   * is NOT available.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationStartDate;
+
+  /**
+   * @var \DateTimeImmutable
+   *
    * Optional registration deadline. If null then the date one day before the
    * first rehearsal is used, if set. Otherwise no registration dead-line is
    * imposed.
@@ -337,6 +347,29 @@ class Project implements \ArrayAccess
   public function getMailingListId():?string
   {
     return $this->mailingListId;
+  }
+
+  /**
+   * Sets registrationStartDate.
+   *
+   * @param string|int|DateTimeInterface $registrationStartDate
+   *
+   * @return Project
+   */
+  public function setRegistrationStartDate(mixed $registrationStartDate):Project
+  {
+    $this->registrationStartDate = self::convertToDateTime($registrationStartDate);
+    return $this;
+  }
+
+  /**
+   * Returns registrationStartDate.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationStartDate():?DateTimeInterface
+  {
+    return $this->registrationStartDate;
   }
 
   /**

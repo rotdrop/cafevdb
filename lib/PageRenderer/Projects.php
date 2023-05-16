@@ -620,16 +620,39 @@ class Projects extends PMETableViewBase
         'default' => 0,
       ]);
 
+    $opts['fdd']['registration_start_date'] =
+      Util::arrayMergeRecursive(
+        $this->defaultFDD['date'],
+        [
+          'tab' => ['id' => 'miscinfo'],
+          'name' => $this->l->t('Registration Start'),
+          'css' => [ 'postfix' => [ 'registration-start-date', 'track-empty-value', ], ],
+          'nowrap' => true,
+          'options' => 'AVCPD',
+          'tooltip' => $this->toolTipsService['page-renderer:projects:registration:start'],
+          'display' => [
+            'popup' => 'tooltip',
+            'attributes' => [
+              'size' => 14,
+            ],
+          ],
+        ]);
+
     $opts['fdd']['registration_deadline'] =
-      array_merge(
+      Util::arrayMergeRecursive(
         $this->defaultFDD['date'],
         [
           'tab' => ['id' => 'miscinfo'],
           'name' => $this->l->t('Registration Deadline'),
+          'css' => [ 'postfix' => [ 'regitration-deadline', ], ],
           'nowrap' => true,
           'options' => 'AVCPD',
           'tooltip' => $this->toolTipsService['page-renderer:projects:registration:deadline'],
           'php|LFVD' => function($value, $op, $k, $row, $recordId, $pme) {
+            $registration_start = $row[$this->queryField('registration_start_date', $pme->fdd)];
+            if (empty($registration_start)) {
+              return '';
+            }
             $project = $this->project ?? ($recordId['id'] ?? null);
             if (!empty($project)) {
               $value = $this->projectService->getProjectRegistrationDeadline($project)->getTimestamp();
@@ -650,7 +673,6 @@ class Projects extends PMETableViewBase
                 }
               }
               $exampleDate = DateTimeImmutable::createFromFormat('Ymd', '17840401', $this->getDateTimeZone());
-              $this->logInfo('EXAMPLE DATE ' . print_r($exampleDate, true));
               $exampleDateString = $this->l->l('date', $exampleDate, [ 'width' => 'medium' ]);
 
               $lockedPlaceholder =
@@ -659,10 +681,10 @@ class Projects extends PMETableViewBase
               if (empty($row['qf'.$k])) {
                 return [
                   'placeholder' => $lockedPlaceholder,
-                  'readonly' => true,
                   'data-unlocked-placeholder' => $unlockedPlaceholder,
                   'data-locked-placeholder' => $lockedPlaceholder,
-                  'disabled' => true,
+                  'readonly' => true,
+                  'disabled' => true, // prevents value to be submitted
                   'size' => 14,
                 ];
               } else {

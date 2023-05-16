@@ -36,6 +36,7 @@ class AddProjectRegistrationDeadline extends AbstractMigration
 {
   protected static $sql = [
     self::STRUCTURAL => [
+      "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS registration_start_date DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)';",
       "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS registration_deadline DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)';",
     ],
   ];
@@ -43,6 +44,6 @@ class AddProjectRegistrationDeadline extends AbstractMigration
   /** {@inheritdoc} */
   public function description():string
   {
-    return $this->l->t('Add an optional project registration deadline.');
+    return $this->l->t('Add an optional project registration start and deadline.');
   }
 }
