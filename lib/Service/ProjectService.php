@@ -447,15 +447,20 @@ class ProjectService
    *
    * @param mixed $projectOrId
    *
+   * @param bool $ignoreExplicit Ignore any explicitly set deadline and just
+   * return the date implied by the rehearsal and concert events.
+   *
    * @return null|DateTimeInterface
    */
-  public function getProjectRegistrationDeadline(mixed $projectOrId):?DateTimeInterface
+  public function getProjectRegistrationDeadline(mixed $projectOrId, bool $ignoreExplicit = false):?DateTimeInterface
   {
     /** @var Entities\Project $project */
     $project = $this->repository->ensureProject($projectOrId);
-    $deadline = $project->getRegistrationDeadline();
-    if (!empty($deadline)) {
-      return $deadline;
+    if (!$ignoreExplicit) {
+      $deadline = $project->getRegistrationDeadline();
+      if (!empty($deadline)) {
+        return $deadline;
+      }
     }
 
     /** @var EventsService $eventsService */
@@ -2499,6 +2504,10 @@ Whatever.',
     if (empty($project)) {
       throw new InvalidArgumentException($this->l->t('Unable to fetch the project for id "%s".', print_r($projectOrId, true)));
     }
+
+    /** @var EventsService $eventsService */
+    $eventsService = $this->appContainer()->get(EventsService::class);
+    $eventsService->ensureSystemCategories();
 
     // not an entity-manager run-queue
     $runQueue = (clone $this->appContainer()->get(Common\UndoableRunQueue::class))

@@ -260,7 +260,8 @@ class ProjectEvents extends Command
 
     $appL10n = $configService->getAppL10n();
     $systemCategories = [
-      EventsService::getAbsenceCategory($appL10n),
+      EventsService::getRecordAbsenceCategory($appL10n),
+      EventsService::getProjectRegistrationCategory($appL10n),
     ];
     foreach ($calendars as $calendarUri) {
       $systemCategories[] = $appL10n->t($calendarUri);
@@ -455,9 +456,12 @@ class ProjectEvents extends Command
             }
           } // categories check
 
+          // the project registration period must not be split
+          $isRegistrationEvent = $eventsService->isProjectRegistrationEvent($categories);
+
           // check for non-repeating multi-day events and potentially reattach them
           $hours = ($event['end']->getTimestamp() - $event['start']->getTimestamp()) / 3600;
-          if (empty($event['recurrenceId']) && (($event['allday'] && $hours > 36) || $hours > 48)) {
+          if (!$isRegistrationEvent && (empty($event['recurrenceId']) && (($event['allday'] && $hours > 36) || $hours > 48))) {
             if ($fix == 'split') {
               ++$split;
               if ($dry) {
