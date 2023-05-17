@@ -57,6 +57,8 @@ class Project implements \ArrayAccess
   use CAFEVDB\Traits\UnusedTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
+  private const DATE_FORMAT = 'Ymd';
+
   /**
    * @var int
    *
@@ -358,7 +360,14 @@ class Project implements \ArrayAccess
    */
   public function setRegistrationStartDate(mixed $registrationStartDate):Project
   {
-    $this->registrationStartDate = self::convertToDateTime($registrationStartDate);
+    if (empty($registrationStartDate)) {
+      $this->registrationStartDate = null;
+    } else {
+      $registrationStartDate = self::convertToDateTime($registrationStartDate);
+      if (empty($this->registrationStartDate) || $this->registrationStartDate->format(self::DATE_FORMAT) != $registrationStartDate->format(self::DATE_FORMAT)) {
+        $this->registrationStartDate = $registrationStartDate;
+      }
+    }
     return $this;
   }
 
@@ -381,7 +390,14 @@ class Project implements \ArrayAccess
    */
   public function setRegistrationDeadline(mixed $registrationDeadline):Project
   {
-    $this->registrationDeadline = self::convertToDateTime($registrationDeadline);
+    if (empty($registrationDeadline)) {
+      $this->registrationDeadline = null;
+    } else {
+      $registrationDeadline = self::convertToDateTime($registrationDeadline);
+      if (empty($this->registrationDeadline) || $this->registrationDeadline->format(self::DATE_FORMAT) != $registrationDeadline->format(self::DATE_FORMAT)) {
+        $this->registrationDeadline = $registrationDeadline;
+      }
+    }
     return $this;
   }
 
