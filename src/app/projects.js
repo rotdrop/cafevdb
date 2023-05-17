@@ -456,7 +456,10 @@ const pmeFormInit = function(containerSel) {
       const $this = $(this);
       const empty = $.trim($this.val()) === '';
 
-      $container.find(pmeIdSelector('project-registration-deadline')).prop('disabled', empty);
+      const $deadlineLock = $container.find(pmeIdSelector('project-registration-deadline'));
+
+      $deadlineLock.prop('checked', true).trigger('change');
+      $deadlineLock.prop('disabled', empty);
     });
 
     // Attach a delegate handler to the form; this gives the

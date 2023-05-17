@@ -664,6 +664,7 @@ class Projects extends PMETableViewBase
           'display|ACP' => [
             'attributes' => function($op, $k, $row, $pme) {
               $project = $this->project ?? ($recordId['id'] ?? null);
+              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)];
               $deadlineString = null;
               if (!empty($project)) {
                 $value = $this->projectService->getProjectRegistrationDeadline($project);
@@ -678,7 +679,7 @@ class Projects extends PMETableViewBase
               $lockedPlaceholder =
                 $op == 'add' || empty($deadlineString) ? $this->l->t('e.g. %s', $exampleDateString) : $deadlineString;
               $unlockedPlaceholder = $this->l->t('e.g. %s', $deadlineString ?? $exampleDateString);
-              if (empty($row['qf'.$k])) {
+              if (empty($row['qf'.$k]) || empty($registrationStart)) {
                 return [
                   'placeholder' => $lockedPlaceholder,
                   'data-unlocked-placeholder' => $unlockedPlaceholder,
