@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use Throwable;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
@@ -215,8 +217,8 @@ trait EntityManagerTrait
    * This effectively synchronizes the in-memory state of managed objects with the
    * database.
    *
-   * If an entity is explicitly passed to this method only this entity and
-   * the cascade-persist semantics + scheduled inserts/removals are synchronized.
+   * If an entity is explicitly passed then it is persisted before the actual
+   * flush is called.
    *
    * @param null|object|array $entity
    *
@@ -226,12 +228,22 @@ trait EntityManagerTrait
    *         makes use of optimistic locking fails.
    * @throws ORMException
    */
-  protected function flush($entity = null):void
+  protected function flush($entity = null, bool $useTransaction = false):void
   {
     if (!empty($entity)) {
       $this->entityManager->persist($entity);
     }
-    $this->entityManager->flush();
+    if ($useTransaction) {
+      $this->entityManager->beginTransaction();
+      try {
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+      } catch (Throwable $t) {
+        $this->entityManager->rollback();
+      }
+    } else {
+      $this->entityManager->flush();
+    }
   }
 
   /**
