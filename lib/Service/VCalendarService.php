@@ -24,12 +24,12 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \DateTimeInterface;
-use \DateTimeZone;
-use \DateInterval;
-use \DateTimeImmutable;
-use \Exception;
-use \InvalidArgumentException;
+use DateTimeInterface;
+use DateTimeZone;
+use DateInterval;
+use DateTimeImmutable;
+use Exception;
+use InvalidArgumentException;
 
 use Sabre\VObject;
 use Sabre\VObject\Component\VCalendar;
@@ -165,6 +165,32 @@ class VCalendarService
    */
   private function createVEventFromRequest(mixed $objectData):?VCalendar
   {
+    if (!isset($objectData['repeat'])) {
+      $objectData['repeat'] = 'doesnotrepeat';
+    }
+    /** @var DateTimeInterface $start */
+    $start = $objectData['start'] ?? null;
+    if ($start instanceof DateTimeInterface) {
+      $timezone = $this->getDateTimeZone($start->getTimestamp());
+      $start = $start->setTimezone($timezone);
+      $objectData['from'] = $objectData['start']->format('d-m-Y');
+      if (!isset($objectData['allday'])) {
+        $objectData['fromtime'] = $start->format('H:i:s');
+      }
+    }
+    /** @var DateTimeInterface $start */
+    $end = $objectData['end'] ?? null;
+    if ($end instanceof DateTimeInterface) {
+      $timezone = $this->getDateTimeZone($end->getTimestamp());
+      $end = $end->setTimezone($timezone);
+      $objectData['to'] = $objectData['end']->format('d-m-Y');
+      if (!isset($objectData['allday'])) {
+        $objectData['totime'] = $end->format('H:i:s');
+      }
+    }
+    if (is_array($objectData['categories'])) {
+      $objectData['categories'] = implode(',', $objectData['categories']);
+    }
     $vObject = $this->legacyCalendarObject->createVCalendarFromRequest($objectData);
     if (empty($vObject) || empty($vObject->VEVENT)) {
       return $vObject;
