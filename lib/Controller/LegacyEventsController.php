@@ -188,7 +188,7 @@ class LegacyEventsController extends Controller
     $categories = $projectName . ',' . $this->appL10n()->t($eventKind);
     if (EventsService::absenceFieldsDefault($eventKind)) {
       // request generation of absence fields.
-      $categories .= ',' . EventsService::getAbsenceCategory($this->appL10n());
+      $categories .= ',' . EventsService::getRecordAbsenceCategory($this->appL10n());
     }
 
     $protectCategories = $this->parameterService->getParam('protectCategories', self::READONLY_CATEGORIES);

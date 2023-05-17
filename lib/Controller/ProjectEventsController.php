@@ -149,7 +149,7 @@ class ProjectEventsController extends Controller
           $eventUri = $eventIdentifier['uri'];
           $recurrenceId = $eventIdentifier['recurrenceId'];
 
-          $category = EventsService::getAbsenceCategory($this->appL10n());
+          $category = EventsService::getRecordAbsenceCategory($this->appL10n());
           if ($enable) {
             $removals = [];
             $additions = [ $category ];
