@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use Throwable;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 use OCP\IL10N;
@@ -34,6 +36,12 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\IUndoable;
 use OCA\CAFEVDB\Common\GenericUndoable;
+
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\EventsService;
+use OCA\CAFEVDB\Service\CalDavService;
+
+use OCA\CAFEVDB\Common\Util;
 
 /**
  * An entity listener. The task is to manage events related to registration
@@ -47,20 +55,30 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 class ProjectEntityListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var IL10N */
   protected $l;
 
+  /** @var IAppContainer */
+  protected $appContainer;
+
+  /** @var EventsService */
+  protected $eventsService;
+
+  /** @var EntityManager */
+  protected $entityManager;
+
+  /** @var IUndoable[] */
+  protected $preCommitActions;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ILogger $logger,
-    IL10N $l10n,
-    EntityManager $entityManager,
     IAppContainer $appContainer,
+    EntityManager $entityManager,
   ) {
-    $this->l = $l10n;
     $this->logger = $logger;
+    $this->appContainer = $appContainer;
     $this->entityManager = $entityManager;
   }
   // phpcs:enable
@@ -68,25 +86,82 @@ class ProjectEntityListener
   /**
    * {@inheritdoc}
    */
-  public function postUpdate(Entities\Project $project, ORMEvent\PostUpdateEventArgs $eventArgs)
+  public function postPersist(Entities\Project $project, ORMEvent\PostPersistEventArgs $eventArgs)
   {
+    $this->registerPreCommitAction($project);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postRemove(Entities\Project $project, ORMEvent\LifecycleEventArgs $eventArgs)
+  public function postUpdate(Entities\Project $project, ORMEvent\PostUpdateEventArgs $eventArgs)
   {
+    $this->registerPreCommitAction($project);
   }
 
   /**
-   * Search for the deadline event of this project. The deadline event is
-   * identified by its attached categories: project-name,
-   * "RegistrationDeadline". The event would be created in the "other"
-   * calendar, but we search for in either of the shared calendars.
+   * {@inheritdoc}
    */
-  private function findRegistrationDeadlineEvent(Entities\Project $project)
+  public function postRemove(Entities\Project $project, ORMEvent\PostRemoveEventArgs $eventArgs)
   {
+    $this->registerPreCommitAction($project);
+ }
 
+  /**
+   * @param Entities\Project $project
+   *
+   * @return void
+   */
+  private function registerPreCommitAction(Entities\Project $project):void
+  {
+    if (!empty($this->preCommitActions[$project->getId()])) {
+      return;
+    }
+    if (empty($this->eventsService)) {
+      $this->eventsService = $this->appContainer->get(EventsService::class);
+    }
+    $this->preCommitActions[$project->getId()] = new GenericUndoable(
+      function() use ($project) {
+        $oldRegistrationEvent = $this->eventsService->findProjectRegistrationEvent($project);
+        if (!empty($oldRegistrationEvent)) {
+          $oldRegistrationEvent = Util::cloneArray($oldRegistrationEvent);
+        }
+        /** @var EventsService $eventsService */
+        $this->eventsService->ensureProjectRegistrationEvent($project);
+        return $oldRegistrationEvent;
+      },
+      function(?array $oldRegistrationEvent) {
+        /** @var CalDavService $calDavService */
+        $calDavService = $this->appContainer->get(CalDavService::class);
+        if (!empty($oldRegistrationEvent)) {
+          try {
+            $calDavService->restoreCalendarObject(object: $oldRegistrationEvent);
+          } catch (Throwable $t) {
+            $this->logException($t, 'Cannot restore ' . $oldRegistrationEvent['uri'] . '.');
+            try {
+              $calendarId = $oldRegistrationEvent['calendarid'];
+              $localUri = $oldRegistrationEvent['uri'];
+              $data = $oldRegistrationEvent['calendardata'];
+              $calDavService->createCalendarObject($calendarId, $localUri, $data);
+            } catch (Throwable $t) {
+              $this->logException($t, 'Cannot recreate ' . $oldRegistrationEvent['uri'] . '.');
+            }
+          }
+        } else {
+          $registrationEvent = $this->eventsService->findProjectRegistrationEvent($project);
+          if (!empty($registrationEvent)) {
+            try {
+              $calDavService->deleteCalendarObject(
+                $registrationEvent['calendarid'],
+                $registrationEvent['uri'],
+              );
+            } catch (Throwable $t) {
+              $this->logException($t, 'Cannot delete ' . $registrationEvent['uri'] . '.');
+            }
+          }
+        }
+      }
+    );
+    $this->entityManager->registerPreCommitAction($this->preCommitActions[$project->getId()]);
   }
 }
