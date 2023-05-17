@@ -1229,8 +1229,6 @@ class EventsService
     $categories = null;
     $isRegistrationEvent = false;
 
-    $this->logInfo('HELLO ' . $eventURI . ' ' . $calId);
-
     if ($type == VCalendarType::VEVENT) {
       // As a temporary hack enforce all events to be public as there is
       // currently no means to share calendars with really full-access. This is
