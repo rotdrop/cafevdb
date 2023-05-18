@@ -778,6 +778,9 @@ class ProjectParticipantField implements \ArrayAccess
   public function setProjectEvent(?ProjectEvent $projectEvent):ProjectParticipantField
   {
     $this->projectEvent = $projectEvent;
+    if (!empty($projectEvent) && $this->participantAccess == Types\EnumAccessPermission::NONE) {
+      $this->setParticipantAccess(Types\EnumAccessPermission::READ);
+    }
 
     return $this;
   }
@@ -822,6 +825,9 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function prePersist(Event\LifecycleEventArgs $event)
   {
+    if (!empty($this->projectEvent) && $this->participantAccess == Types\EnumAccessPermission::NONE) {
+      $this->setParticipantAccess(Types\EnumAccessPermission::READ);
+    }
     /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
     $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PrePersistProjectParticipantField($this));
@@ -875,6 +881,12 @@ class ProjectParticipantField implements \ArrayAccess
    */
   public function preUpdate(Event\PreUpdateEventArgs $event)
   {
+    // make sure that the field is pulicly readable if it has an associated
+    // ProjectEvent
+    if ($this->participantAccess == Types\EnumAccessPermission::NONE && !empty($this->projectEvent)) {
+      $this->setParticipantAccess(Types\EnumAccessPermission::READ);
+    }
+
     $field = 'name';
     $changeSet = $this->getTranslationChangeSet($event, $field);
     if ($changeSet) {

@@ -54,8 +54,8 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Create all participant sub-folder for each project. */
 class ProjectEvents extends Command
@@ -257,6 +257,7 @@ class ProjectEvents extends Command
     $split = 0;
     $deleted = 0;
     $systemTags = 0;
+    $fieldPermissions = 0;
 
     $appL10n = $configService->getAppL10n();
     $systemCategories = [
@@ -486,6 +487,27 @@ class ProjectEvents extends Command
             }
           }
         }
+
+        // if the project-event is still "alive" at this point, then make sure
+        // that any associated ProjectParticipantField entity has public read
+        // access. This is needed by the members app.
+        $absenceField = $projectEvent->getAbsenceField();
+        if (!empty($absenceField) && $absenceField->getParticipantAccess() == AccessPermission::NONE) {
+          ++$fieldPermissions;
+          if ($dry) {
+            $output->writeln(
+              $this->l->t('Would allow public read access for absence-field "%1$s" (dry-run).', $absenceField->getName()),
+              OutputInterface::VERBOSITY_VERBOSE,
+            );
+          } else {
+            $absenceField->setParticipantAccess(AccessPermission::READ);
+            $this->flush();
+            $output->writeln(
+              $this->l->t('Allowing public read access for absence-field "%1$s".', $absenceField->getName()),
+              OutputInterface::VERBOSITY_VERBOSE,
+            );
+          }
+        }
       } // loop over registered events
 
       /** @var ICalendar $calendar */
@@ -665,6 +687,14 @@ class ProjectEvents extends Command
         $output->writeln($this->l->t('Would have created %d missing system-tags (dry-run).', $systemTags));
       } else {
         $output->writeln($this->l->t('Created %d missing system-tags.', $systemTags));
+      }
+    }
+
+    if ($fieldPermissions > 0) {
+      if ($dry) {
+        $output->writeln($this->l->t('Would have allowed read access to %d absence-fields (dry-run).', $fieldPermissions));
+      } else {
+        $output->writeln($this->l->t('Allowed read access to %d absence-fields.', $fieldPermissions));
       }
     }
 
