@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-05-15 00:15+0200\n"
-"PO-Revision-Date: 2023-05-15 00:18+0200\n"
+"POT-Creation-Date: 2023-05-18 10:12+0200\n"
+"PO-Revision-Date: 2023-05-18 10:29+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -441,14 +441,14 @@ msgstr ""
 "Für den KALENDER-Parameter \"%1$s\" gibt es nur die folgenden Möglichkeiten: "
 "\"%2$s\"."
 
-#: lib/Command/ProjectEvents.php:329
+#: lib/Command/ProjectEvents.php:331
 #, php-format
 msgid "Hard-removing soft-deleted event \"%1$s@%2$s\" from project \"%3$s\""
 msgstr ""
 "Entferne den als inaktiv markierten Termin \"%1$s@%2$s\" endgültig vom "
 "Projekt \"%3$s\"."
 
-#: lib/Command/ProjectEvents.php:337
+#: lib/Command/ProjectEvents.php:339
 #, php-format
 msgid ""
 "Would hard-remove soft-deleted event \"%1$s@%2$s\" from project "
@@ -457,58 +457,58 @@ msgstr ""
 "Würde den als inaktiv markierten Termin \"%1$s@%2$s\" endgültig vom Projekt "
 "\"%2$s\" entfernen (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:362
+#: lib/Command/ProjectEvents.php:364
 #, php-format
 msgid "Synchronizing event \"%s\"."
 msgstr "Synchronisiere den Termin \"%s\"."
 
-#: lib/Command/ProjectEvents.php:364
+#: lib/Command/ProjectEvents.php:366
 #, php-format
 msgid "Would synchronize event \"%s\" (dry run)."
 msgstr "Würde den Termin \"%s\" synchronisieren (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:374
+#: lib/Command/ProjectEvents.php:376
 #, php-format
 msgid "Recurrence-id \"%1$s\" of event \"%2$s\" not found"
 msgstr ""
 "Wiederholdungs-Id \"%1$s\" des Termines \"%2$s\" konnte nicht gefunden "
 "werden."
 
-#: lib/Command/ProjectEvents.php:382
+#: lib/Command/ProjectEvents.php:384
 #, php-format
 msgid "Event \"%1$s\" not found"
 msgstr "Termin \"%1$s\" wurde nicht gefunden."
 
-#: lib/Command/ProjectEvents.php:391
+#: lib/Command/ProjectEvents.php:393
 #, php-format
 msgid "Removing orphan event \"%1$s@%2$s\" from project \"%3$s\""
 msgstr "Entferne den \"verwaisten\" Termin \"%1$s@%2$s\" vom Projekt \"%3$s\"."
 
-#: lib/Command/ProjectEvents.php:399
+#: lib/Command/ProjectEvents.php:401
 #, php-format
 msgid "Would remove orphan event \"%1$s@%2$s\" from project \"%3$s\" (dry-run)"
 msgstr ""
 "Würde den \"verwaisten\" Termin \"%1$s@%2$s\" vom Projekt \"%3$s\" entfernen "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:411
+#: lib/Command/ProjectEvents.php:413
 #, php-format
 msgid "Event \"%1$s@%2$s\" is missing the project-category \"%3$s\"."
 msgstr "Dem Termin \"%1$s@%2$s\" fehlt der die Projekt-Kategorie \"%3$s\"."
 
-#: lib/Command/ProjectEvents.php:421
+#: lib/Command/ProjectEvents.php:423
 #, php-format
 msgid "Would add the category \"%3$s\" to the event \"%1$s@%2$s\" (dry-run)."
 msgstr ""
 "Würde die Kategorie \"%3$s\" zum Termin \"%1$s@%2$s\" hinzu fügen "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:428
+#: lib/Command/ProjectEvents.php:430
 #, php-format
 msgid "Adding the category \"%3$s\" to the event \"%1$s@%2$s\"."
 msgstr "Füge ie Kategorie \"%3$s\" zum Termin \"%1$s@%2$s\" hinzu."
 
-#: lib/Command/ProjectEvents.php:440
+#: lib/Command/ProjectEvents.php:442
 #, php-format
 msgid ""
 "Would remove uncategorized event \"%1$s@%2$s\" from project \"%3$s\" (dry-"
@@ -517,14 +517,14 @@ msgstr ""
 "Würde den nicht \"kategorisierten\" Termin \"%1$s@%2$\" vom Projekt \"%3$s\" "
 "entfernen (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:447
+#: lib/Command/ProjectEvents.php:449
 #, php-format
 msgid "Removing uncategorized event \"%1$s@%2$s\" from project \"%3$s\"."
 msgstr ""
 "Entferne den nicht \"kategorisierten\" Termin \"%1$s@%2$\" vom Projekt "
 "\"%3$s\"."
 
-#: lib/Command/ProjectEvents.php:465
+#: lib/Command/ProjectEvents.php:470
 #, php-format
 msgid ""
 "Would split non-repeating multi-day event \"%1$s@%2$s\" of project "
@@ -534,7 +534,7 @@ msgstr ""
 "Projekt \"%3$s\" in einen wiederholenden eintägigen Termin aufteilen "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:472
+#: lib/Command/ProjectEvents.php:477
 #, php-format
 msgid ""
 "Will split non-repeating multi-day event \"%1$s@%2$s\" of project \"%3$s\"."
@@ -542,7 +542,17 @@ msgstr ""
 "Teile den nicht-wiederholenden mehrtägigen Termin \"%1$s@%2$s\" für das "
 "Projekt \"%3$s\" in einen wiederholenden eintägigen Termin auf."
 
-#: lib/Command/ProjectEvents.php:531
+#: lib/Command/ProjectEvents.php:499
+#, php-format
+msgid "Would allow public read access for absence-field \"%1$s\" (dry-run)."
+msgstr "Würde das Abwesenheitsfeld \"%1$s\" öffentlich lesbar machen (Trockenübung)."
+
+#: lib/Command/ProjectEvents.php:506
+#, php-format
+msgid "Allowing public read access for absence-field \"%1$s\"."
+msgstr "Mache das Abwesenheitsfeld \"%1$s\" öffentlich lesbar."
+
+#: lib/Command/ProjectEvents.php:557
 #, php-format
 msgid ""
 "Would remove the category \"%3$s\" from the event \"%1$s@%2$s\" (dry-run)."
@@ -550,12 +560,12 @@ msgstr ""
 "Würde die Kategorie \"%3$s\" vom Termin \"%1$s@%2$s\" entfernen "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:538
+#: lib/Command/ProjectEvents.php:564
 #, php-format
 msgid "Removing the category \"%3$s\" from the event \"%1$s@%2$s\"."
 msgstr "Entferne die Kategorie \"%3$s\" vom Termin \"%1$s@%2$s\"."
 
-#: lib/Command/ProjectEvents.php:550
+#: lib/Command/ProjectEvents.php:576
 #, php-format
 msgid ""
 "Would reattach categorized event \"%1$s@%2$s\" to project \"%3$s\" (dry-run)."
@@ -563,14 +573,14 @@ msgstr ""
 "Würde den \"kategorisierten\" Termin \"\"%1$s@%2$s\" zum Projekt \"%3$s\" "
 "hinzu fügen (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:557
+#: lib/Command/ProjectEvents.php:583
 #, php-format
 msgid "Reattaching categorized event \"%1$s@%2$s\" to project \"%3$s\"."
 msgstr ""
 "Der \"kategorisierte\" Termin \"\"%1$s@%2$s\" wurde zum Projekt \"%3$s\" "
 "hinzu gefügt."
 
-#: lib/Command/ProjectEvents.php:572
+#: lib/Command/ProjectEvents.php:598
 #, php-format
 msgid ""
 "Would delete unregistered event \"%1$s@%2$s\" with project-category "
@@ -579,7 +589,7 @@ msgstr ""
 "Würde den beim Projekt \"%3$s\" nicht-registrieren Termin \"%1$s@%2$s\" mit "
 "Projekt-Kategorie \"%3$s\" löschen (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:579
+#: lib/Command/ProjectEvents.php:605
 #, php-format
 msgid ""
 "Will delete unregistered event \"%1$s@%2$s\" with project-category "
@@ -589,40 +599,40 @@ msgstr ""
 "Projekt-Kategorie \"%3$s\".<\n"
 "\n"
 
-#: lib/Command/ProjectEvents.php:597
+#: lib/Command/ProjectEvents.php:623
 #, php-format
 msgid "Would have hard-removed %d soft-deleted events (dry-run)."
 msgstr ""
 "%d als inaktiv markierte Termine wären endgültig gelöscht worden "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:599
+#: lib/Command/ProjectEvents.php:625
 #, php-format
 msgid "Hard-removed %d soft-deleted events."
 msgstr "%d als inaktiv markierte Termine wurden endgültig gelöscht."
 
-#: lib/Command/ProjectEvents.php:605
+#: lib/Command/ProjectEvents.php:631
 #, php-format
 msgid "Would have removed %d orphaned events (dry-run)."
 msgstr ""
 "%d \"verwaiste\" Termine wären endgültig gelöscht worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:607
+#: lib/Command/ProjectEvents.php:633
 #, php-format
 msgid "Removed %d orphaned events."
 msgstr "%d \"verwaiste\" Termine wurden endgültig gelöscht."
 
-#: lib/Command/ProjectEvents.php:613
+#: lib/Command/ProjectEvents.php:639
 #, php-format
 msgid "Would have added %d missing categories (dry-run)."
 msgstr "%d fehlende Kategorien wären hinzu gefügt worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:615
+#: lib/Command/ProjectEvents.php:641
 #, php-format
 msgid "Added %d missing categories."
 msgstr "%d fehlende Kategorien wurden hinzu gefügt."
 
-#: lib/Command/ProjectEvents.php:621
+#: lib/Command/ProjectEvents.php:647
 #, php-format
 msgid ""
 "Would have unregistered %d events with missing project-name category (dry-"
@@ -631,23 +641,23 @@ msgstr ""
 "%d Termine ohne Projekt-Kategorie wären von den jeweiligen Projekten gelöst "
 "worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:623
+#: lib/Command/ProjectEvents.php:649
 #, php-format
 msgid "Unregistered %d events with missing project-name category."
 msgstr ""
 "%d Termine ohne Projekt-Kategorie wurden von den jeweiligen Projekten gelöst."
 
-#: lib/Command/ProjectEvents.php:629
+#: lib/Command/ProjectEvents.php:655
 #, php-format
 msgid "Would have removed %d erroneous categories (dry-run)."
 msgstr "%d falsch gesetzte Kategorien wären entfernt worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:631
+#: lib/Command/ProjectEvents.php:657
 #, php-format
 msgid "Removed %d erroneous categories."
 msgstr "%d falsch gesetzte Kategorien wurden entfernt."
 
-#: lib/Command/ProjectEvents.php:637
+#: lib/Command/ProjectEvents.php:663
 #, php-format
 msgid ""
 "Would have reattached %d events with set project-name category (dry-run)."
@@ -655,14 +665,14 @@ msgstr ""
 "%d Termine mit gesetzter Projekt-Kategorie wären wieder zu den jeweiligen "
 "Projekten hinzu gefügt worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:639
+#: lib/Command/ProjectEvents.php:665
 #, php-format
 msgid "Reattached %d events with set project-name category."
 msgstr ""
 "%d Termine mit gesetzter Projekt-Kategorie wurden wieder zu den jeweiligen "
 "Projekten hinzu gefügt."
 
-#: lib/Command/ProjectEvents.php:645
+#: lib/Command/ProjectEvents.php:671
 #, php-format
 msgid ""
 "Would have deleted %d unregistered events with set project-name category "
@@ -671,12 +681,12 @@ msgstr ""
 "%d nicht registrierte Termine mit Projekt-Kategorie wären gelöscht worden "
 "(Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:647
+#: lib/Command/ProjectEvents.php:673
 #, php-format
 msgid "Deleted %d unregistered events with set project-name category."
 msgstr "%d nicht registrierte Termine mit Projekt-Kategorie wurden gelöscht."
 
-#: lib/Command/ProjectEvents.php:653
+#: lib/Command/ProjectEvents.php:679
 #, php-format
 msgid ""
 "Would have splitted %d multi-day events into repeating event series (dry-"
@@ -685,21 +695,31 @@ msgstr ""
 "%d mehrtägige Termine wären zu wiederholenden eintägige Terminen geändert "
 "worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:655
+#: lib/Command/ProjectEvents.php:681
 #, php-format
 msgid "Splitted %d multi-day events into repeating event series."
 msgstr ""
 "%d mehrtägige Termine wurden zu wiederholenden eintägige Terminen geändert."
 
-#: lib/Command/ProjectEvents.php:661
+#: lib/Command/ProjectEvents.php:687
 #, php-format
 msgid "Would have created %d missing system-tags (dry-run)."
 msgstr "%d fehlende System-Marker wären erzeugt worden (Trockenübung)."
 
-#: lib/Command/ProjectEvents.php:663
+#: lib/Command/ProjectEvents.php:689
 #, php-format
 msgid "Created %d missing system-tags."
 msgstr "%d fehlende System-Marker wurden erzeugt."
+
+#: lib/Command/ProjectEvents.php:695
+#, php-format
+msgid "Would have allowed read access to %d absence-fields (dry-run)."
+msgstr "Hätte Lesezugriff auf %d Abwesenheitsfelder erlaubt (Trockenübung)."
+
+#: lib/Command/ProjectEvents.php:697
+#, php-format
+msgid "Allowed read access to %d absence-fields."
+msgstr "Lesezugriff für \"%d\" Abwesenheitsfelder eingerichtet."
 
 #: lib/Command/ProjectFolders.php:137
 msgid ""
@@ -804,11 +824,11 @@ msgstr ""
 msgid "The old ``%1$s`` content on %2$s at %3$s was:"
 msgstr "Am \"%2$s um \"%3$s war der Inhalt der alten Datei ``%1$s``:"
 
-#: lib/Common/Util.php:793
+#: lib/Common/Util.php:814
 msgid "There is no error, the file uploaded with success"
 msgstr "Datei erfolgreich hochgeladen."
 
-#: lib/Common/Util.php:796
+#: lib/Common/Util.php:817
 #, php-format
 msgid ""
 "The uploaded file exceeds the upload_max_filesize directive in php.ini: %s"
@@ -816,7 +836,7 @@ msgstr ""
 "Dis Datei ist zu groß und kann deshalb nicht hochgeladen werden (Einstellung "
 "`upload_max_filesize' in `php.ini': %s)"
 
-#: lib/Common/Util.php:799
+#: lib/Common/Util.php:820
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
@@ -824,27 +844,27 @@ msgstr ""
 "Dis Datei ist zu groß und kann deshalb nicht hochgeladen werden (Einstellung "
 "im HTML-Formular)"
 
-#: lib/Common/Util.php:801
+#: lib/Common/Util.php:822
 msgid "The uploaded file was only partially uploaded"
 msgstr "Die Datei konnte nur teilweise hochgeladen werden."
 
-#: lib/Common/Util.php:803
+#: lib/Common/Util.php:824
 msgid "No file was uploaded"
 msgstr "Es wurde keine Datei hochgeladen."
 
-#: lib/Common/Util.php:805
+#: lib/Common/Util.php:826
 msgid "Missing a temporary folder"
 msgstr "Temporäres Verzeichnis nicht vorhanden."
 
-#: lib/Common/Util.php:807
+#: lib/Common/Util.php:828
 msgid "Failed to write to disk"
 msgstr "Kann nicht auf den Massenspeicher schreiben"
 
-#: lib/Common/Util.php:809
+#: lib/Common/Util.php:830
 msgid "A PHP extension stopped the file upload."
 msgstr "Eine PHP-Erweiterung hat das Laden der Datei beendet."
 
-#: lib/Common/Util.php:811
+#: lib/Common/Util.php:832
 msgid "Unknown upload error"
 msgstr "Irgendein Hochlade-Fehler"
 
@@ -1350,8 +1370,8 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/Documents/OpenDocumentFiller.php:381
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:151
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2485
-#: lib/PageRenderer/Instruments.php:384 lib/PageRenderer/Projects.php:744
-#: lib/PageRenderer/Projects.php:752
+#: lib/PageRenderer/Instruments.php:384 lib/PageRenderer/Projects.php:770
+#: lib/PageRenderer/Projects.php:778
 #: lib/Service/Finance/InstrumentInsuranceService.php:621
 #: lib/Service/Finance/InstrumentInsuranceService.php:625
 #: lib/Service/PhoneNumberService.php:155
@@ -2013,7 +2033,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:967
-#: lib/Service/ProjectService.php:2810
+#: lib/Service/ProjectService.php:2819
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -2030,7 +2050,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:1001
-#: lib/Service/ProjectService.php:3072
+#: lib/Service/ProjectService.php:3081
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -3174,12 +3194,12 @@ msgstr ""
 "wählen Sie einen anderen Namen oder ein anderes Jahr."
 
 #: lib/Controller/ProjectsController.php:270
-#: lib/Controller/ProjectsController.php:291 lib/PageRenderer/Projects.php:738
+#: lib/Controller/ProjectsController.php:291 lib/PageRenderer/Projects.php:764
 msgid "closed"
 msgstr "geschlossen"
 
 #: lib/Controller/ProjectsController.php:272
-#: lib/Controller/ProjectsController.php:294 lib/PageRenderer/Projects.php:736
+#: lib/Controller/ProjectsController.php:294 lib/PageRenderer/Projects.php:762
 msgid "active"
 msgstr "aktiv"
 
@@ -3209,7 +3229,7 @@ msgstr ""
 msgid "Successfully deleted \"%s\"."
 msgstr "\"%s\" erfolgreich gelöscht."
 
-#: lib/Controller/ProjectsController.php:319 lib/PageRenderer/Projects.php:727
+#: lib/Controller/ProjectsController.php:319 lib/PageRenderer/Projects.php:753
 msgid "unset"
 msgstr "nicht konfiguriert"
 
@@ -4712,9 +4732,9 @@ msgstr "Die Datenmigration \"%s\" konnte nicht rückgängig gemacht werden."
 msgid "Transactional part of Migration \"%s\" failed."
 msgstr "Der inhaltliche Teil der Datenmigration \"%s\" ist fehlgeschlagen."
 
-#: lib/Maintenance/Migrations/AddProjectRegistrationDeadline.php:46
-msgid "Add an optional project registration deadline."
-msgstr "Füge eine optionale Anmelde-Auschlußfrist hinzu."
+#: lib/Maintenance/Migrations/AddProjectRegistrationDeadline.php:47
+msgid "Add an optional project registration start and deadline."
+msgstr "Füge eine optionale Anmeldefrist hinzu."
 
 #: lib/Maintenance/Migrations/DecryptShareOwner.php:61
 #, php-format
@@ -4975,7 +4995,7 @@ msgstr "ja"
 #: lib/PageRenderer/ProjectParticipantFields.php:717
 #: lib/PageRenderer/ProjectParticipantFields.php:926
 #: lib/PageRenderer/ProjectParticipantFields.php:1775
-#: lib/Service/ProjectParticipantFieldsService.php:640
+#: lib/Service/ProjectParticipantFieldsService.php:641
 msgid "true"
 msgstr "wahr"
 
@@ -4989,7 +5009,7 @@ msgstr "nein"
 #: lib/PageRenderer/ProjectParticipantFields.php:717
 #: lib/PageRenderer/ProjectParticipantFields.php:927
 #: lib/PageRenderer/ProjectParticipantFields.php:1775
-#: lib/Service/ProjectParticipantFieldsService.php:640
+#: lib/Service/ProjectParticipantFieldsService.php:641
 #: templates/pme-table.php:80
 msgid "false"
 msgstr "falsch"
@@ -4999,7 +5019,7 @@ msgid "Projects"
 msgstr "Projekte"
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:75
-#: lib/PageRenderer/Projects.php:694 templates/settings/email-settings.php:127
+#: lib/PageRenderer/Projects.php:720 templates/settings/email-settings.php:127
 msgid "Mailing List"
 msgstr "Mailing-Liste"
 
@@ -5687,7 +5707,7 @@ msgstr "Foto"
 
 #: lib/PageRenderer/Musicians.php:1006
 #: lib/PageRenderer/ProjectParticipants.php:1287
-#: lib/PageRenderer/Projects.php:951
+#: lib/PageRenderer/Projects.php:977
 msgid "Last Updated"
 msgstr "Letzte Aktualisierung"
 
@@ -6352,7 +6372,7 @@ msgid "Instrumentation"
 msgstr "Besetzung"
 
 #: lib/PageRenderer/Projects.php:378 lib/PageRenderer/Projects.php:450
-#: lib/PageRenderer/Projects.php:845 src/app/pme.js:1382
+#: lib/PageRenderer/Projects.php:871 src/app/pme.js:1384
 msgid "Clear"
 msgstr "Leeren"
 
@@ -6370,59 +6390,63 @@ msgid "Quantity"
 msgstr "Anzahl"
 
 #: lib/PageRenderer/Projects.php:628
+msgid "Registration Start"
+msgstr "Anmeldebeginn"
+
+#: lib/PageRenderer/Projects.php:646
 msgid "Registration Deadline"
 msgstr "Anmeldeschluss"
 
-#: lib/PageRenderer/Projects.php:657 lib/PageRenderer/Projects.php:658
+#: lib/PageRenderer/Projects.php:680 lib/PageRenderer/Projects.php:681
 #: templates/fragments/instrument-voices.php:46
 #, php-format
 msgid "e.g. %s"
 msgstr "z.B. %s"
 
-#: lib/PageRenderer/Projects.php:700
+#: lib/PageRenderer/Projects.php:726
 #: templates/fragments/projects/project-mailing-list.php:70
 msgid "create"
 msgstr "erzeugen"
 
-#: lib/PageRenderer/Projects.php:700
+#: lib/PageRenderer/Projects.php:726
 msgid "do not create"
 msgstr "nicht erzeugen"
 
-#: lib/PageRenderer/Projects.php:785
+#: lib/PageRenderer/Projects.php:811
 msgid "Public Downloads"
 msgstr "Öffentliche Freigabe"
 
-#: lib/PageRenderer/Projects.php:819
+#: lib/PageRenderer/Projects.php:845
 msgid "Participant Fields"
 msgstr "Personen-Daten"
 
-#: lib/PageRenderer/Projects.php:882 lib/PageRenderer/Util/Navigation.php:652
+#: lib/PageRenderer/Projects.php:908 lib/PageRenderer/Util/Navigation.php:652
 #: templates/fragments/projects/project-actions.php:119
 msgid "Participants"
 msgstr "Teilnehmende"
 
-#: lib/PageRenderer/Projects.php:889
+#: lib/PageRenderer/Projects.php:915
 msgid "Copy participants"
 msgstr "Teilnehmende kopieren"
 
-#: lib/PageRenderer/Projects.php:890
+#: lib/PageRenderer/Projects.php:916
 msgid "Do not copy participants"
 msgstr "Teilnehmende nicht kopieren"
 
-#: lib/PageRenderer/Projects.php:898
+#: lib/PageRenderer/Projects.php:924
 msgid "Program"
 msgstr "Programm"
 
-#: lib/PageRenderer/Projects.php:915
+#: lib/PageRenderer/Projects.php:941
 msgid "Posters"
 msgstr "Plakate"
 
-#: lib/PageRenderer/Projects.php:990
+#: lib/PageRenderer/Projects.php:1016
 #, php-format
 msgid "Copy of %s"
 msgstr "Kopie von %s"
 
-#: lib/PageRenderer/Projects.php:1047
+#: lib/PageRenderer/Projects.php:1073
 msgid ""
 "Posters can only be added to existing projects, please add the new\n"
 "project without a poster first."
@@ -6430,28 +6454,28 @@ msgstr ""
 "Plakate leider nur zu existierenden Projekten hinzugefügt werden; bitte "
 "zuerst das Projekt ohne Plakate anlegen."
 
-#: lib/PageRenderer/Projects.php:1077
+#: lib/PageRenderer/Projects.php:1103
 #, php-format
 msgid "Drop image to upload (max %s)"
 msgstr "Bild ablegen zum Hochladen (max %s)"
 
-#: lib/PageRenderer/Projects.php:1080
+#: lib/PageRenderer/Projects.php:1106
 msgid "Delete current poster"
 msgstr "Aktuelles Plakat löschen"
 
-#: lib/PageRenderer/Projects.php:1081
+#: lib/PageRenderer/Projects.php:1107
 msgid "Edit current poster"
 msgstr "Aktuelles Plakat editieren"
 
-#: lib/PageRenderer/Projects.php:1082
+#: lib/PageRenderer/Projects.php:1108
 msgid "Upload new poster"
 msgstr "Neues Poster hochladen"
 
-#: lib/PageRenderer/Projects.php:1083
+#: lib/PageRenderer/Projects.php:1109
 msgid "Select image from Cloud"
 msgstr "Bild aus der `Cloud' auswählen"
 
-#: lib/PageRenderer/Projects.php:1089
+#: lib/PageRenderer/Projects.php:1115
 msgid ""
 "Internal error, don't know what to do concerning project-posters in the "
 "given context."
@@ -6459,23 +6483,23 @@ msgstr ""
 "Interner Fehler; keine Ahnung, wie in diesem Kontext mit Projekt-Postern "
 "umgegangen werden sollte."
 
-#: lib/PageRenderer/Projects.php:1118
+#: lib/PageRenderer/Projects.php:1144
 msgid "edit"
 msgstr "bearbeiten"
 
-#: lib/PageRenderer/Projects.php:1412
+#: lib/PageRenderer/Projects.php:1438
 msgid "Copying participants is requested, but the new project id is not given."
 msgstr ""
 "Das Kopieren der alten Teilnehmenden wurde verlangt, aber die Projekt-Id für "
 "das neue Projekt fehlt."
 
-#: lib/PageRenderer/Projects.php:1424
+#: lib/PageRenderer/Projects.php:1450
 msgid "Copying is requested, but the old project id is not given."
 msgstr ""
 "Das Projekt soll kopiert werden, aber die Id vom existierenden Projekt wurde "
 "nicht angegeben."
 
-#: lib/PageRenderer/Projects.php:1578
+#: lib/PageRenderer/Projects.php:1604
 #, php-format
 msgid "%s (deleted)"
 msgstr "%s (gelöscht)"
@@ -6947,7 +6971,7 @@ msgid "Display a table with the insurance brokers."
 msgstr ""
 "Zeigt eine Tabelle mit einer Übersicht über die Versicherungsanbieter an."
 
-#: lib/Service/CalDavService.php:483
+#: lib/Service/CalDavService.php:558
 #, php-format
 msgid ""
 "Unable to find calendar entry with identifier \"%1$s\" in calendar with id "
@@ -7010,14 +7034,14 @@ msgid "\"%s\" configuration may have succeeded."
 msgstr ""
 "Die \"%s\"-Konfiguration wurde möglicherweise erfolgreich durchgeführt."
 
-#: lib/Service/CloudUserConnectorService.php:844
+#: lib/Service/CloudUserConnectorService.php:861
 #, php-format
 msgid "Unable to create or update the personalized view: %s."
 msgstr ""
 "Kann die personalisierten Datenbank-Ansichten nicht erzeugen oder "
 "aktualisieren: %s."
 
-#: lib/Service/CloudUserConnectorService.php:880
+#: lib/Service/CloudUserConnectorService.php:897
 #, php-format
 msgid "Unable to delete personalized view: %s."
 msgstr "Kann die personalisierten Datenbank-Ansichten nicht löschen: %s."
@@ -7083,7 +7107,7 @@ msgstr ""
 "Verschlüsselung für \"%s\" angefragt aber nicht konfiguriert, leeres "
 "Verschlüsselungs-Passwort."
 
-#: lib/Service/EventsService.php:211
+#: lib/Service/EventsService.php:224
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is in use by the finance sub-system and cannot be "
@@ -7092,7 +7116,16 @@ msgstr ""
 "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf "
 "deshalb nicht aus dem %2$s-Kalender verschoben werden."
 
-#: lib/Service/EventsService.php:252
+#: lib/Service/EventsService.php:235
+#, php-format
+msgid ""
+"Calendar entry \"%1$s\" is a project registration event and must not be "
+"moved away from the %2$s calendar."
+msgstr ""
+"Der Kalender-Eintrag \"%1$s\" kennzeichnet den Berwerbungszeitraum für ein "
+"Projekt und darf deshalb nicht aus dem %2$s-Kalender verschoben werden."
+
+#: lib/Service/EventsService.php:274
 #, php-format
 msgid ""
 "Calendar entry \"%1$s\" is in use by the finance sub-system and must not be "
@@ -7101,22 +7134,57 @@ msgstr ""
 "Der Kalender-Eintrag \"%1$s\" wird vom Finanz-Modul verwendet und darf "
 "deshalb nicht gelöscht werden."
 
-#: lib/Service/EventsService.php:745
+#: lib/Service/EventsService.php:759
 #, php-format
 msgid "till %s"
 msgstr "bis %s"
 
-#: lib/Service/EventsService.php:813 lib/Service/EventsService.php:923
+#: lib/Service/EventsService.php:827 lib/Service/EventsService.php:937
 msgid "Unknown Calendar"
 msgstr "Unbekannter Kalender."
 
-#: lib/Service/EventsService.php:826
+#: lib/Service/EventsService.php:840
 msgid "Miscellaneous Calendars"
 msgstr "Weitere Kalender"
 
-#: lib/Service/EventsService.php:1111
+#: lib/Service/EventsService.php:1128
+msgid "project registration"
+msgstr "Projekt-Anmeldung"
+
+#: lib/Service/EventsService.php:1142
 msgid "record absence"
 msgstr "Abwesenheit erfassen"
+
+#: lib/Service/EventsService.php:1182
+#, php-format
+msgid "Unable to ensure the existence of the system tag \"%s\"."
+msgstr "Kann nicht sicherstellen, dass das System-Schlagwort \"%S\" existiert."
+
+#: lib/Service/EventsService.php:2494
+msgid "Found more than one project registration calendar event."
+msgstr "Es wurden mehrere Anmeldetermin im Kalender gefunden."
+
+#: lib/Service/EventsService.php:2527
+msgid "Unsupported argument type."
+msgstr "Nicht unterstützter Argument-Typ"
+
+#: lib/Service/EventsService.php:2576
+#, php-format
+msgid "Registration for %s"
+msgstr "Bewerbungszeitraum für %s"
+
+#: lib/Service/EventsService.php:2582
+#, php-format
+msgid ""
+"Project registation period for the project \"%1$s\". Participants can apply "
+"for participation using the public url %2$s."
+msgstr ""
+"Anmeldezeitraum für das Projekt \"%1$s\". Interessierte können sich während "
+"dieser Zeit über den öffentlichen Link %2$s online bewerben."
+
+#: lib/Service/EventsService.php:2586
+msgid "CyberSpace"
+msgstr "CyberSpace"
 
 #: lib/Service/Finance/AbstractReceivablesGenerator.php:91
 msgid "Recompute all Receivables"
@@ -7618,59 +7686,59 @@ msgstr "Zeitzone: %s"
 msgid "Provider: %s"
 msgstr "Anbieter: %s"
 
-#: lib/Service/ProjectParticipantFieldsService.php:156
+#: lib/Service/ProjectParticipantFieldsService.php:157
 #, php-format
 msgid "Generator \"%s\" does not appear to be valid PHP class name."
 msgstr ""
 "Beim Generator \"%s\" handelt es sich nicht um eine gültige PHP-Klasse."
 
-#: lib/Service/ProjectParticipantFieldsService.php:219
+#: lib/Service/ProjectParticipantFieldsService.php:220
 msgid "One-time Receivables"
 msgstr "Einmalige Forderungen"
 
-#: lib/Service/ProjectParticipantFieldsService.php:263
+#: lib/Service/ProjectParticipantFieldsService.php:264
 #, php-format
 msgid "Recurring \"%s\""
 msgstr "Fortlaufend \"%s\""
 
-#: lib/Service/ProjectParticipantFieldsService.php:725
-#: lib/Service/ProjectParticipantFieldsService.php:770
+#: lib/Service/ProjectParticipantFieldsService.php:726
+#: lib/Service/ProjectParticipantFieldsService.php:771
 #, php-format
 msgid "Option index -1 should not be present here, options: %s"
 msgstr "Options-Index -1 sollte hier nicht auftauchen, Optionen: %s"
 
-#: lib/Service/ProjectParticipantFieldsService.php:737
+#: lib/Service/ProjectParticipantFieldsService.php:738
 #, php-format
 msgid "Prototype keys \"%s\" and options keys \"%s\" differ"
 msgstr ""
 "Die Prototyp-Schlüssel \"%s\" und Option-Schlüssel \"%s\" sind verschieden"
 
-#: lib/Service/ProjectParticipantFieldsService.php:830
-#: lib/Service/ProjectParticipantFieldsService.php:852
+#: lib/Service/ProjectParticipantFieldsService.php:831
+#: lib/Service/ProjectParticipantFieldsService.php:853
 #, php-format
 msgid "Field \"%s\" is not a group of participants field."
 msgstr "Das Datenfeld \"%s\" ist kein Definitionsfeld für Personengruppen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:923
+#: lib/Service/ProjectParticipantFieldsService.php:924
 #, php-format
 msgid "Only \"field\" collections can be filtered, not instances of \"%s\"."
 msgstr ""
 "Nur Sammlungen von Personen-Daten können gefiltert werden, nicht aber \"%s\"-"
 "Instanzen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:969
+#: lib/Service/ProjectParticipantFieldsService.php:970
 msgid "absent"
 msgstr "abwesend"
 
-#: lib/Service/ProjectParticipantFieldsService.php:969
+#: lib/Service/ProjectParticipantFieldsService.php:970
 msgid "This person will not participate in this event."
 msgstr "Diese Person wird an dem Termin nicht teilnehmen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:970
+#: lib/Service/ProjectParticipantFieldsService.php:971
 msgid "contacted"
 msgstr "kontaktiert"
 
-#: lib/Service/ProjectParticipantFieldsService.php:970
+#: lib/Service/ProjectParticipantFieldsService.php:971
 msgid ""
 "This person has been asked to confirm the participation but did not yet "
 "answer."
@@ -7678,47 +7746,47 @@ msgstr ""
 "Die Person wurde nach ihrer Teilnahmedisposition gefragt, hat aber noch  "
 "nicht geantwortet."
 
-#: lib/Service/ProjectParticipantFieldsService.php:971
+#: lib/Service/ProjectParticipantFieldsService.php:972
 msgid "tentative"
 msgstr "vorläufig"
 
-#: lib/Service/ProjectParticipantFieldsService.php:971
+#: lib/Service/ProjectParticipantFieldsService.php:972
 msgid "This person does not yet know whether a participation is possible."
 msgstr "Diese Person weiß noch nicht, ob sie an dem Termin teilnehmen kann."
 
 #. TRANSLATORS: Column heading in table (capital first character)
-#: lib/Service/ProjectParticipantFieldsService.php:1001
+#: lib/Service/ProjectParticipantFieldsService.php:1003
 msgid "Absence"
 msgstr "Abwesenheit"
 
-#: lib/Service/ProjectParticipantFieldsService.php:1076
+#: lib/Service/ProjectParticipantFieldsService.php:1078
 #, php-format
 msgid "Unable to find participant field for id \"%s\""
 msgstr "Kann das Personen-Daten-Feld mit der Id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:500
+#: lib/Service/ProjectService.php:505
 msgid "templates"
 msgstr "Vorlagen"
 
-#: lib/Service/ProjectService.php:585
+#: lib/Service/ProjectService.php:590
 msgid "skeleton"
 msgstr "Skelett"
 
-#: lib/Service/ProjectService.php:592
+#: lib/Service/ProjectService.php:597
 msgid "management"
 msgstr "Verwaltung"
 
 #. TRANSLATORS: this is a placeholder for the login id. It must in particular remain all lowercase.
-#: lib/Service/ProjectService.php:602 lib/Service/ProjectService.php:645
+#: lib/Service/ProjectService.php:607 lib/Service/ProjectService.php:650
 msgid "forename.surname"
 msgstr "vorname.nachname"
 
-#: lib/Service/ProjectService.php:703
+#: lib/Service/ProjectService.php:708
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr "Kann nicht sicherstellen, dass der Ordner \"%s\" existiert."
 
-#: lib/Service/ProjectService.php:964
+#: lib/Service/ProjectService.php:969
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
@@ -7727,19 +7795,19 @@ msgstr ""
 "Das Verfallsdatum für die Projekt-Freigabe \"%1$s\" für das Projekt\n"
 "\"%2$s\" konnte nicht gesetzt werden."
 
-#: lib/Service/ProjectService.php:974
+#: lib/Service/ProjectService.php:979
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 "Konnte den Freigabe-Link für den Teilnehmenden-Download-Ordner für das "
 "Projekt \"%s\" nicht erstellen."
 
-#: lib/Service/ProjectService.php:1390
+#: lib/Service/ProjectService.php:1395
 #, php-format
 msgid "Projects of %s"
 msgstr "Projekte von %s"
 
-#: lib/Service/ProjectService.php:1454
+#: lib/Service/ProjectService.php:1459
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -7798,80 +7866,80 @@ msgstr ""
 "===== Location =====\n"
 "Was auch immer."
 
-#: lib/Service/ProjectService.php:1563
+#: lib/Service/ProjectService.php:1568
 #, php-format
 msgid "%1$s has been renamed to %2$s."
 msgstr "%1$s wurd zu %2$s umbenannt."
 
-#: lib/Service/ProjectService.php:1650
+#: lib/Service/ProjectService.php:1655
 msgid "Preview"
 msgstr "Vorschau"
 
-#: lib/Service/ProjectService.php:1652 lib/Service/ProjectService.php:1707
-#: lib/Service/ProjectService.php:1872 lib/Service/ProjectService.php:1916
-#: lib/Service/ProjectService.php:1976 lib/Settings/PersonalForm.php:352
+#: lib/Service/ProjectService.php:1657 lib/Service/ProjectService.php:1712
+#: lib/Service/ProjectService.php:1877 lib/Service/ProjectService.php:1921
+#: lib/Service/ProjectService.php:1981 lib/Settings/PersonalForm.php:352
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: lib/Service/ProjectService.php:1654
+#: lib/Service/ProjectService.php:1659
 msgid "Archive"
 msgstr "Archiv"
 
-#: lib/Service/ProjectService.php:1656
+#: lib/Service/ProjectService.php:1661
 msgid "Trashbin"
 msgstr "Mülltonne"
 
-#: lib/Service/ProjectService.php:1701
+#: lib/Service/ProjectService.php:1706
 msgid "Empty project."
 msgstr "Fehlendes Projekt."
 
-#: lib/Service/ProjectService.php:1728
+#: lib/Service/ProjectService.php:1733
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr "Kann die Web-Seiten für \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:1751
+#: lib/Service/ProjectService.php:1756
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr "Kann Web-Page %s nicht anlegen."
 
-#: lib/Service/ProjectService.php:1772
+#: lib/Service/ProjectService.php:1777
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr "Kann den Artikel \"%s\" nicht verknüpfen."
 
-#: lib/Service/ProjectService.php:1811
+#: lib/Service/ProjectService.php:1816
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 "Konnte die Web-Seite %d vom Projekt mit der Id %d leider nicht entfernen."
 
-#: lib/Service/ProjectService.php:1854
+#: lib/Service/ProjectService.php:1859
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr "Konnte die Web-Seite %d nicht vom Projekt %d entkoppeln\""
 
-#: lib/Service/ProjectService.php:2018
+#: lib/Service/ProjectService.php:2023
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr "Konnte das Projekt mit der Id %d nicht laden"
 
-#: lib/Service/ProjectService.php:2062
+#: lib/Service/ProjectService.php:2067
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr "Kann die Daten für die Musiker:Innen-Id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2078
+#: lib/Service/ProjectService.php:2083
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr "Die Person %s ist bereits für das Projekt %s registriert."
 
-#: lib/Service/ProjectService.php:2100
+#: lib/Service/ProjectService.php:2105
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr "DiePerson %s scheint kein einziges Instrument zu spielen."
 
-#: lib/Service/ProjectService.php:2152
+#: lib/Service/ProjectService.php:2157
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
@@ -7880,61 +7948,61 @@ msgstr ""
 "Die Person \"%s\" spielt kein einziges Instrument, das in der\n"
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
-#: lib/Service/ProjectService.php:2206
+#: lib/Service/ProjectService.php:2211
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr "Person mit id \"%d\" konnte nicht hinzugefügt werden, Fehler \"%s\""
 
-#: lib/Service/ProjectService.php:2215
+#: lib/Service/ProjectService.php:2220
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr "Die Person %s wurde zum Projekt %s hinzugefügt."
 
-#: lib/Service/ProjectService.php:2271
+#: lib/Service/ProjectService.php:2276
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 "Konnte den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2337
+#: lib/Service/ProjectService.php:2342
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr "Konnte den Email-Verteiler \"%s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2475
+#: lib/Service/ProjectService.php:2480
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr "Kann die Person \"%s\" nicht vom Projekt-Email-Verteiler abmelden."
 
-#: lib/Service/ProjectService.php:2500
+#: lib/Service/ProjectService.php:2505
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr "Kann das Projekt zur id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2573
+#: lib/Service/ProjectService.php:2582
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
 "Projekt mit der Id \"%d\" nicht erzeugen."
 
-#: lib/Service/ProjectService.php:2614
+#: lib/Service/ProjectService.php:2623
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: lib/Service/ProjectService.php:2644
+#: lib/Service/ProjectService.php:2653
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:3152
+#: lib/Service/ProjectService.php:3161
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:3185
+#: lib/Service/ProjectService.php:3194
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -7944,11 +8012,11 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:3191
+#: lib/Service/ProjectService.php:3200
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/ProjectService.php:3237
+#: lib/Service/ProjectService.php:3246
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr "Kann \"%1$s\" nicht vom Projekt austragen."
@@ -11526,7 +11594,7 @@ msgstr ""
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
-#: lib/Service/VCalendarService.php:870
+#: lib/Service/VCalendarService.php:896
 msgid "Default Event Notification"
 msgstr "Termin-Erinnerung (Voreinstellung)"
 
@@ -12028,7 +12096,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:508
 #: specialVueFakeDummyForL10nScript.js:74 src/app/project-participants.js:819
-#: src/app/projects.js:593 src/app/sepa-debit-mandate.js:851
+#: src/app/projects.js:606 src/app/sepa-debit-mandate.js:851
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
 
@@ -13323,7 +13391,7 @@ msgid "Failed copying query to the clipboard: {reason}."
 msgstr ""
 "Die Abfrage konnte nicht in die Zwischenablage kopiert werden: {reason}."
 
-#: src/app/pme.js:644
+#: src/app/pme.js:646
 msgid ""
 "An error occurred. The data has not been saved. Unfortunately, no further "
 "information is available. Sorry for that."
@@ -13332,15 +13400,15 @@ msgstr ""
 "es keine spezifischeren Fehlermeldungen. Tut uns leid."
 
 # #Spalten
-#: src/app/pme.js:1266
+#: src/app/pme.js:1268
 msgid "#columns"
 msgstr "#Spalten"
 
-#: src/app/pme.js:1275
+#: src/app/pme.js:1277
 msgid "#rows"
 msgstr "#Zeilen"
 
-#: src/app/pme.js:1375
+#: src/app/pme.js:1377
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -13396,7 +13464,7 @@ msgstr ""
 "Zu Viele Gruppenmitglieder, erlaubt sind {limit}, Du hast {count}\n"
 "ausgewählt. Die Daten können und werden so nicht gespeichert werden."
 
-#: src/app/project-participants.js:824 src/app/projects.js:598
+#: src/app/project-participants.js:824 src/app/projects.js:611
 msgid "Unconfirmed, doing nothing."
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
@@ -13424,40 +13492,40 @@ msgstr ""
 "Interner Fehler: Buchungsteile von Gesamtbuchungen können nicht zu "
 "verschiedenen Personen gehören ({musicians})."
 
-#: src/app/projects.js:278
+#: src/app/projects.js:280
 msgid "Unknown operation: {operation}"
 msgstr "Unbekannte Operation: {operation}"
 
-#: src/app/projects.js:565
+#: src/app/projects.js:578
 msgid "Share-link has been copied to the clipboard."
 msgstr "Der Link für die Freigabe wurde in die Zwischenablage kopiert."
 
-#: src/app/projects.js:567
+#: src/app/projects.js:580
 msgid "Failed copying share-link to the clipboard: {reason}."
 msgstr ""
 "Der Freigabe-Link konnte nicht in die Zwischenablage kopiert werden: "
 "{reason}."
 
-#: src/app/projects.js:718
+#: src/app/projects.js:731
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 "Soll die Verknüpfung mit der angezeigten Veranstaltungsankündigung wirklich "
 "gelöst werden?"
 
-#: src/app/projects.js:719
+#: src/app/projects.js:732
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: src/app/projects.js:744
+#: src/app/projects.js:757
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 "Soll die angezeigte Veranstaltungsankündigung wirklich entfernt werden?"
 
-#: src/app/projects.js:745
+#: src/app/projects.js:758
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: src/app/projects.js:791
+#: src/app/projects.js:804
 msgid "No values match"
 msgstr "Kein Wert passt."
 
