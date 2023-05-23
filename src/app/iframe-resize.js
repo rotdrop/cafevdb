@@ -30,6 +30,14 @@ require('iframe-resizer');
 
 const iFrameContentScriptData = loadState(appName, 'iFrameContentScript');
 
+/**
+ * Handle iframe resizing based on the size of its contents. The width
+ * is prescribed by CSS, though. Perhaps we would like to resize the
+ * iframe also horizontally if the screen is too small (mobile
+ * devices).
+ *
+ * @param {jQuery} $iframe TBD.
+ */
 const iFrameResize = function($iframe) {
   $iframe = $($iframe);
 
