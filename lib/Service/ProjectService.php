@@ -1642,8 +1642,6 @@ Whatever.',
    */
   public function projectWebPages(int $projectId)
   {
-    $this->logInfo('HELLO');
-
     $project = $this->repository->find($projectId);
     if (empty($project)) {
       return false;
