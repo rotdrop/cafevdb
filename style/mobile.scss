@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,35 +21,42 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'sass:map';
+
+@import 'variables';
+
 /* Special settings for small devices */
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (width < $breakpoint-mobile) {
+
   div.popup-title {
     padding-left: 44px !important;
   }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (width < $breakpoint-mobile-small) {
 
-  body {
-    /* overflow:hidden !important; bad idea */
-  }
-
-  /*Reduce z-index of header in order to allow for full-screen dialogs.*/
-  #body-user #header,
-  #body-settings #header,
-  #body-public #header {
-    z-index:1000;
+  /* Display in full-screen, unless the nav-snapper is activated */
+  #body- {
+    &user, &settings, &public {
+      &:not(.snapjs-left) {
+        #header {
+          z-index:1000;
+        }
+        #content {
+          z-index: 2001;
+          padding-top:0px;
+          margin-top:0px;
+          height: 100vh;
+        }
+      }
+    }
   }
 
   #appsettings_popup {
     z-index:1001;
   }
 
-  /* Display in full-screen, unless the nav-snapper is activated */
-  body:not(.snapjs-left) #content {
-    padding-top:0px;
-  }
 
   #app-content {
     max-width: 100vw;
@@ -133,14 +140,14 @@
   .ui-dialog, .ui-dialog.pme-table-dialog {
     left:0px !important;
     top:0px !important;
-    max-height: 100% !important;
-    max-width: 100% !important;
-    height: 100% !important;
-    width: 100% !important;
-    min-height: 100% !important;
-    min-width: 100% !important;
-    padding: 0 !important;
-    border: 0 !important;
+    max-height: map.get($pme-table-dialog-mobile, "max-height") !important;
+    max-width: map.get($pme-table-dialog-mobile, "max-width") !important;
+    height: map.get($pme-table-dialog-mobile, "max-height") !important;
+    width:  map.get($pme-table-dialog-mobile, "max-width") !important;
+    min-height: map.get($pme-table-dialog-mobile, "max-height") !important;
+    min-width: map.get($pme-table-dialog-mobile, "max-width") !important;
+    padding: map.get($pme-table-dialog-mobile, "vertical-padding") map.get($pme-table-dialog-mobile, "horizontal-padding") !important;
+    border: map.get($pme-table-dialog-mobile, "border-width") !important;
     .fullScreenButton {
       display: none !important;
     }
@@ -150,7 +157,7 @@
   .ui-dialog.pme-table-dialog .ui-dialog-content {
     overflow:auto !important;
     /* padding:0.3em !important; */
-    padding:0 !important;
+    padding: map.get($pme-table-dialog-mobile, "vertical-padding") map.get($pme-table-dialog-mobile, "horizontal-padding") !important;
   }
 
   #emailformcomposer, #emailformrecipients {
