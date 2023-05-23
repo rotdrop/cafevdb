@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+@import 'variables';
 
 #cafevdb-page-header-box.projects {}
 
@@ -127,10 +129,53 @@
       }
     }
 
+    $pme-key-max-width: 150px; // a wild guess
+
+    &.pme- {
+      &view, &delete, &change, &copyadd {
+        td.pme-key {
+          max-width: $pme-key-max-width;
+          width: $pme-key-max-width;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow:ellipsis;
+        }
+      }
+      &view, &delete, &change {
+        td.pme-value {
+          .cmsarticlecontainer {
+            width: 1200px;
+            $articleParentOffsetPx: $pme-key-max-width + 2 * $jquery-ui-widget-border-width + 2 * ($pme-table-cell-padding + $pme-table-cell-border-width);
+            $articleParentOffsetEm: 2 * $jquery-ui-tabs-padding;
+            max-width: calc(
+              var(--cafevdb-pme-table-dialog-max-width)
+              - 2 * var(--cafevdb-pme-table-dialog-horizontal-padding)
+              - 2 * var(--cafevdb-pme-table-dialog-border-width)
+              - $articleParentOffsetEm - $articleParentOffsetPx
+            );
+            height: auto; // set by iframe
+            .cmsarticleframe {
+              width:100%;
+              min-width:100%;
+              max-width:100%;
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * IFrames are seemingly ignorant to width:auto and the
+     * like. Also, the Redaxo v5 tries to style itself according to
+     * the available space, so we have to tell it about how much space
+     * it has.
+     */
     div.cmsarticlecontainer {
       padding: 0 !important;
       /*height:0px;*/
       overflow:hidden;
+      width: 800px;
+      max-width: 100%;
     }
 
     #projectWebArticles {

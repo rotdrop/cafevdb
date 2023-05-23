@@ -21,6 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'sass:map';
+
+@import 'variables';
 @import 'pme-table-tabs.scss';
 
 /* ie8 doesn't support :checked */
@@ -246,8 +249,8 @@ form.pme-form {
  */
 /* make popups scrollable in smaller viewports */
 .ui-dialog.pme-table-dialog {
-  max-height: 90%; /* !important; */
-  max-width: 90%; /* !important; */
+  max-height: map.get($pme-table-dialog, "max-height");
+  max-width: map.get($pme-table-dialog, "max-width");
   overflow: hidden;
   padding: 0;
 
@@ -767,7 +770,7 @@ form.pme-form.pme-view table.pme-main {
 
 table.pme-main {
   background-color:#f2f8ff;
-  border:#004d9c 1px solid;
+  border:#004d9c $pme-table-cell-border-width solid;
   border-collapse:collapse;
   border-spacing:0px;
   width:auto;
@@ -786,7 +789,7 @@ form.pme-form.pme-list table.pme-tab {
 
 td.pme-header, th.pme-header {
   vertical-align:bottom;
-  border:#004d9c 1px solid;
+  border:#004d9c $pme-table-cell-border-width solid;
   padding:4px;
   background:#add8e6;
 }
@@ -881,7 +884,7 @@ td.pme-key, td.pme-value,
 td.pme-help, td.pme-navigation, th.pme-navigation,
 td.pme-cell, td.pme-sortinfo,
 td.pme-filter, th.pme-filter, td.pme-queryinfo {
-  border:#004d9c 1px solid;
+  border:#004d9c $pme-table-cell-border-width solid;
   padding:3px;
   text-align:left;
 }

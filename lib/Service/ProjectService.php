@@ -51,7 +51,7 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Exceptions;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+use OCA\Redaxo\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common;
@@ -105,7 +105,7 @@ class ProjectService
   /** @var WikiRPC */
   private $wikiRPCInstance;
 
-  /** @var OCA\Redaxo4Embedded\Service\RPC */
+  /** @var OCA\Redaxo\Service\RPC */
   private $webPagesRPCInstance;
 
   /** @var ProjectsRepository */
@@ -1588,7 +1588,8 @@ Whatever.',
   }
 
   /**
-   * @param bool|int|string $articleId Article id or \false.
+   * @param mixed $articleId Article id or null or a template string for later
+   * substitution.
    *
    * @param bool $editMode Whether the CMS url refers to the editor for the page.
    *
@@ -1641,6 +1642,8 @@ Whatever.',
    */
   public function projectWebPages(int $projectId)
   {
+    $this->logInfo('HELLO');
+
     $project = $this->repository->find($projectId);
     if (empty($project)) {
       return false;

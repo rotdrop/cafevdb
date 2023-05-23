@@ -47,6 +47,12 @@ import * as ncRouter from '@nextcloud/router';
 import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
+import iFrameResize from './iframe-resize.js';
+
+// eslint-disable-next-line no-unused-vars
+// import iFrameResize from 'iframe-resizer';
+// eslint-disable-next-line
+// import iFrameContentScript from '!!raw-loader!iframe-resizer/js/iframeResizer.contentWindow.js';
 
 require('projects.scss');
 
@@ -836,14 +842,18 @@ const scrollbarAdjust = function(containerContext) {
   containerContext.articleBox.css('margin-right', scrollBarWidth + 'px');
 };
 
-const forceSize = function(containerContext, iframe) {
+/**
+ * Force only the height of the give iframe.
+ *
+ * @param {jQuery} containerContext TBD.
+ *
+ * @param {jQuery} iframe TBD.
+ */
+const forceHeight = function(containerContext, iframe) {
   const domFrame = iframe[0];
   const scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
-  const scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
   iframe.css({
-    width: scrollWidth + 'px',
     height: scrollHeight + 'px',
-    overflow: 'hidden',
   });
   imagePoller(containerContext, function() {
     containerContext.resizeCB();
@@ -941,54 +951,44 @@ const changeArticleLoad = function(containerContext, iframe) {
     // update the src-uri of the iframe.
     // alert('src: '+ self.contentWindow.location.href);
 
-    const wrapper = contents.find('#rex-wrapper');
-    const website = contents.find('#rex-website');
+    const website = contents.find('#rex-start-of-page');
+    const wrapper = contents.find('#rex-js-page-container');
+    const mainPage = contents.find('#rex-js-page-main');
+
     const rexForm = wrapper.find('form#REX_FORM');
 
     // set to auto and fix later for correct size and
     // scrollbars when necessary.
     container.css({
-      height: 'auto',
       width: 'auto',
+      height: 'auto',
     });
 
     // The below lines style the edit window.
-    contents.find('#rex-navi-logout').remove();
-    contents.find('#rex-navi-main').remove();
-    contents.find('#rex-redaxo-link').remove();
-    contents.find('#rex-footer').remove();
-    contents.find('#rex-header').remove();
-    contents.find('#rex-title').remove();
-    contents.find('#rex-a256-searchbar').remove();
-    contents.find('body').css({
-      margin: 0,
-      'background-image': 'none',
-    });
-    contents.find('#rex-output').css({ margin: 0 });
-    contents.find('#rex-navi-path a').removeAttr('href');
+    contents.find('#rex-js-nav-top').remove();
+    contents.find('#rex-js-nav-main').remove();
+    mainPage.find('header.rex-page-header').remove();
+    mainPage.find('.col-lg-8').removeClass('col-lg-8').addClass('col-lg-12');
+    contents.find('#rex-js-structure-breadcrumb').remove();
+    contents.find('#rex-js-main-sidebar').remove();
+    website.find('.rex-global-footer').remove();
+    wrapper.find('.rex-page-main').css({ 'padding-top': 0 });
 
     wrapper.css({
       padding: 0,
       margin: 0,
-      float: 'left',
+      // float: 'left',
     });
     website.css({
       width: '100%', // wrapper.css('width'),
-      'background-image': 'none',
+      // 'background-image': 'none',
     });
-    contents.find('textarea').css({ 'max-width': '720px' });
+    // contents.find('textarea').css({ 'max-width': '720px' });
 
-    const scrollWidth = iframe.contentWindow.document.body.scrollWidth;
+    // the width is set via calc using max-width and a desired width property.
     const scrollHeight = iframe.contentWindow.document.body.scrollHeight;
     $iframe.css({
-      width: scrollWidth + 'px',
       height: scrollHeight + 'px',
-    });
-
-    const articleContainer = $iframe.parent();
-    articleContainer.css({
-      height: 'unset',
-      width: 'unset',
     });
 
     const editArea = rexForm.find('textarea');
@@ -998,16 +998,37 @@ const changeArticleLoad = function(containerContext, iframe) {
       rexForm
         .off('resize', 'textarea')
         .on('resize', 'textarea', function() {
-          forceSize(containerContext, $iframe);
+          forceHeight(containerContext, $iframe);
           return false;
         });
     }
 
     rexForm.off('resize', '.mceEditor');
     rexForm.on('resize', '.mceEditor', function() {
-      forceSize(containerContext, $iframe);
+      forceHeight(containerContext, $iframe);
       return false;
     });
+
+    // The following works very well, but the ResizeObserver API is
+    // quite new.
+    //
+    // if (!$iframe.data('resizeObserver')) {
+    //   $iframe.data('resizeObserver', new ResizeObserver((entries) => {
+    //     if (entries.length === 0) {
+    //       return;
+    //     }
+    //     forceHeight(containerContext, $iframe);
+    //   }));
+    // }
+    // const resizeObeserver = $iframe.data('resizeObserver');
+    // if ($iframe.data('observedObject')) {
+    //   resizeObeserver.unobserve($iframe.data('observedObject'));
+    // }
+    // $iframe.data('observedObject', contents.find('html')[0]);
+    // resizeObeserver.observe($iframe.data('observedObject'));
+
+    // contents.find('head').prepend('<script type="text/javascript">' + iFrameContentScript + '</script>');
+    iFrameResize($iframe);
 
     --containerContext.numChangeFrames;
   }
@@ -1027,7 +1048,7 @@ const changeArticleLoad = function(containerContext, iframe) {
         activate(event, ui) {
           const $iframe = ui.newPanel.find('iframe');
           if ($iframe.length === 1) {
-            forceSize(containerContext, $iframe);
+            forceHeight(containerContext, $iframe);
           } else {
             containerContext.resizeCB();
             scrollbarAdjust(containerContext);
