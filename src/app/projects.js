@@ -866,8 +866,10 @@ const displayArticleLoad = function(containerContext, iframe) {
     const $iframe = $(iframe);
     const contents = $iframe.contents();
 
-    // For the pretty-print version. We remove everything
-    // except the article itself
+    // For the pretty-print version. We remove everything except the
+    // article itself. Note that this is very specific for the
+    // Camerata web-pages, in their current form and would have to be
+    // customized for other web-pages.
     contents.find('div#header').remove();
     contents.find('div#footer').remove();
     contents.find('div.navi').remove();
@@ -1008,24 +1010,6 @@ const changeArticleLoad = function(containerContext, iframe) {
       forceHeight(containerContext, $iframe);
       return false;
     });
-
-    // The following works very well, but the ResizeObserver API is
-    // quite new.
-    //
-    // if (!$iframe.data('resizeObserver')) {
-    //   $iframe.data('resizeObserver', new ResizeObserver((entries) => {
-    //     if (entries.length === 0) {
-    //       return;
-    //     }
-    //     forceHeight(containerContext, $iframe);
-    //   }));
-    // }
-    // const resizeObeserver = $iframe.data('resizeObserver');
-    // if ($iframe.data('observedObject')) {
-    //   resizeObeserver.unobserve($iframe.data('observedObject'));
-    // }
-    // $iframe.data('observedObject', contents.find('html')[0]);
-    // resizeObeserver.observe($iframe.data('observedObject'));
 
     // contents.find('head').prepend('<script type="text/javascript">' + iFrameContentScript + '</script>');
     iFrameResize($iframe);
