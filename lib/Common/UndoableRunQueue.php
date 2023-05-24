@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
+use Throwable;
 
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
@@ -48,10 +49,10 @@ class UndoableRunQueue
   /** @var array|null */
   protected $undoStack = null;
 
-  /** @var array<int,\Throwable> */
+  /** @var array<int, Throwable> */
   protected $runQueueExceptions = [];
 
-  /** @var array<int,\Throwable> */
+  /** @var array<int, Throwable> */
   protected $undoExceptions = [];
 
   /** @var bool */
@@ -133,7 +134,7 @@ class UndoableRunQueue
         $action = array_shift($this->actionQueue); // from front
         $action->do();
         array_unshift($this->undoStack, $action); // at front
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $message = $this->l->t(
           'Exception during execution of run-queue: %1$s. Number of successful actions: %2$d.', [
             $t->getMessage(),
@@ -143,6 +144,7 @@ class UndoableRunQueue
         if ($gracefully) {
           $this->logException($t, $message);
         } else {
+          $this->executing = false;
           throw new UndoableRunQueueException($this, $message, 0, $t);
         }
       }
@@ -170,7 +172,7 @@ class UndoableRunQueue
         if (is_callable([ $action, 'undo' ])) {
           $action->undo();
         }
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->undoExceptions[] = $t;
         $this->logException($t);
       }
@@ -184,7 +186,7 @@ class UndoableRunQueue
    * UndoableRunQueue::executeAction() had been executed with the $gracefully
    * parameter set to \true, otherwise it will contain at most one exception.
    *
-   * @return array<int,\Throwable>
+   * @return array<int, Throwable>
    */
   public function getRunQueueExceptions():array
   {
@@ -197,9 +199,9 @@ class UndoableRunQueue
    * UndoableRunQueue::executeAction() had been executed with the $gracefully
    * parameter set to \false.
    *
-   * @return null|\Throwable
+   * @return null|Throwable
    */
-  public function getRunQueueException():?\Throwable
+  public function getRunQueueException():?Throwable
   {
     if (!empty($this->runQueueExceptions)) {
       return reset($this->runQueueExceptions);
@@ -210,7 +212,7 @@ class UndoableRunQueue
    * Get the list of thrown exceptions during the most recent execution of the
    * undo-queue.
    *
-   * @return array<int,\Throwable>
+   * @return array<int, Throwable>
    */
   public function getUndoExceptions():array
   {
