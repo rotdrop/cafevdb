@@ -11,7 +11,7 @@
       "../../lib",
       "../dav/lib",
       "../dokuwiki/lib",
-      "../redaxo4embedded/lib",
+      "../redaxo/lib",
       "../files_trashbin/lib",
       "../files/lib",
       "../cafevdbmembers/lib",
