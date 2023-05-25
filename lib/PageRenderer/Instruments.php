@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -214,7 +214,7 @@ class Instruments extends PMETableViewBase
     array_walk($this->joinStructure, function(&$joinInfo, $table) {
       switch ($table) {
         case self::TRANSLATIONS_TABLE:
-          $joinInfo['identifier']['locale']['value'] = $this->l10N()->getLocaleCode();
+          $joinInfo['identifier']['locale']['value'] = $this->getTranslationLanguage();
           break;
         case self::INSTRUMENT_FAMILIES_TABLE:
           $joinInfo['sql'] = $this->makeFieldTranslationsJoin($joinInfo, 'family');
@@ -321,7 +321,7 @@ GROUP BY $columns[1]",
       'align'   => 'right',
     ];
 
-    $lang = locale_get_primary_language($this->l->getLocaleCode());
+    $lang = locale_get_primary_language($this->getTranslationLanguage());
 
     // Provide a link to Wikipedia for fun ...
     $opts['fdd']['encyclopedia'] = [
