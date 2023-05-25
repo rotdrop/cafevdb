@@ -1565,24 +1565,7 @@ Whatever.',
     $oldPageName = $this->projectWikiLink($oldName);
     $newPageName = $this->projectWikiLink($newName);
 
-    $oldPage = '  * ' . $this->l->t('%1$s has been renamed to %2$s.', [ $oldPageName, '[['.$newPageName.']]' ])."\n";
-    $newPage = $wikiRPC->getPage($oldPageName);
-
-    $this->logInfo('OLD '.$oldPageName.' / '.$oldPage);
-    $this->logInfo('NEW '.$newPageName.' / '.$newPage);
-
-    // replace the old project name in the old project page
-    $newPage = str_replace($oldName, $newName, $newPage);
-
-    if ($newPage) {
-      $wikiRPC->putPage(
-        $newPageName, $newPage,
-        [ "sum" => "Automatic CAFEVDB page renaming", "minor" => false ]);
-      // Generate stuff if there is an old page
-      $wikiRPC->putPage(
-        $oldPageName, $oldPage,
-        [ "sum" => "Automatic CAFEVDB page renaming", "minor" => false ]);
-    }
+    $wikiRPC->renamePage($oldPageName, $newPageName, fn($oldContent) => str_replace($oldName, $newName, $oldContent));
 
     $this->generateWikiOverview();
   }
@@ -1613,13 +1596,13 @@ Whatever.',
   /**
    * Fetch fetch the article entities from the database
    *
-   * @param int $projectId Entity id.
+   * @param mixed $projectOrId Entity or its id.
    *
    * @return ArrayCollection
    */
-  public function fetchProjectWebPages(int $projectId)
+  public function fetchProjectWebPages(mixed $projectOrId)
   {
-    $project = $this->repository->find($projectId);
+    $project = $this->repository->ensureProject($projectOrId);
     if (empty($project)) {
       return null;
     }
@@ -1630,7 +1613,7 @@ Whatever.',
   /**
    * Fetch all articles known to the system.
    *
-   * @param int $projectId Entity id.
+   * @param mixed $projectOrId Entity or its id.
    *
    * @return bool|array
    * ```
@@ -1640,9 +1623,9 @@ Whatever.',
    * ]
    * ```
    */
-  public function projectWebPages(int $projectId)
+  public function projectWebPages(mixed $projectOrId)
   {
-    $project = $this->repository->find($projectId);
+    $project = $this->repository->ensureProject($projectOrId);
     if (empty($project)) {
       return false;
     }
@@ -1691,7 +1674,7 @@ Whatever.',
    * of the project, subsequent one have a number attached like
    * Tango2014-5.
    *
-   * @param int $projectId Id of the project.
+   * @param mixed $projectOrId The project entity or its id.
    *
    * @param string $kind One of self::WEBPAGE_TYPE_CONCERT or self::WEBPAGE_TYPE_REHEARSALS.
    *
@@ -1699,10 +1682,10 @@ Whatever.',
    *
    * @see WebPagesRPC::addArticle()
    */
-  public function createProjectWebPage(int $projectId, string $kind = self::WEBPAGE_TYPE_CONCERT):array
+  public function createProjectWebPage(mixed $projectOrId, string $kind = self::WEBPAGE_TYPE_CONCERT):array
   {
     $webPagesRPC = $this->webPagesRPC();
-    $project = $this->repository->find($projectId);
+    $project = $this->repository->ensureProject($projectOrId);
     if (empty($project)) {
       throw new Exception($this->l->t('Empty project.'));
     }
@@ -1736,7 +1719,9 @@ Whatever.',
         $t);
     }
 
-    $names = array();
+    $this->logDebug('ARTICLES ' . print_r($articles, true));
+
+    $names = [];
     foreach ($articles as $article) {
       $names[] = $article['articleName'];
     }
@@ -1766,7 +1751,7 @@ Whatever.',
     $this->entityManager->beginTransaction();
     try {
       // insert into the db table to form the link
-      $this->attachProjectWebPage($projectId, $article);
+      $this->attachProjectWebPage($project, $article);
       $webPagesRPC->addArticleBlock($article['articleId'], $module);
 
       $this->flush();
@@ -1787,13 +1772,15 @@ Whatever.',
    * Delete a web page. This is implemented by moving the page to the
    * Trashbin category, leaving the real cleanup to a human being.
    *
-   * @param int $projectId Entity id.
+   * @param mixed $projectOrId Project entity or its id.
    *
    * @param mixed $article Either an array or Entities\ProjectWebPage.
    *
+   * @param bool $hard Whether to really delete the page.
+   *
    * @return void
    */
-  public function deleteProjectWebPage(int $projectId, mixed $article):void
+  public function deleteProjectWebPage(mixed $projectOrId, mixed $article, bool $hard = false):void
   {
     $webPagesRPC = $this->webPagesRPC();
     $articleId = $article['articleId'];
@@ -1801,19 +1788,22 @@ Whatever.',
 
     $this->entityManager->beginTransaction();
     try {
-      $this->detachProjectWebPage($projectId, $articleId);
-      $trashCategory = $this->getConfigValue('redaxoTrashbin');
-
-      // try moving to tash if the article exists in its category.
-      if (!empty($webPagesRPC->articlesById([ $articleId ], $categoryId))) {
-        /* $result = */$webPagesRPC->moveArticle($articleId, $trashCategory);
+      $this->detachProjectWebPage($projectOrId, $articleId);
+      if ($hard) {
+        $webPagesRPC->deleteArticle($articleId, $categoryId);
+      } else {
+        $trashCategory = $this->getConfigValue('redaxoTrashbin');
+        // try moving to tash if the article exists in its category.
+        if (!empty($webPagesRPC->articlesById([ $articleId ], $categoryId))) {
+          /* $result = */$webPagesRPC->moveArticle($articleId, $trashCategory);
+        }
       }
-
       $this->flush();
       $this->entityManager->commit();
     } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
+      $projectId = $projectOrId instanceof Entities\Project ? $projectOrId->getId() : $projectOrId;
       throw new Exception($this->l->t('Failed removing web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
@@ -1821,42 +1811,43 @@ Whatever.',
   /**
    * Restore the web-pages previously deleted by deleteProjectWebPage()
    *
-   * @param int $projectId Entity id.
+   * @param mixed $projectOrId Entity or its id.
    *
    * @param mixed $article Either an array or Entities\ProjectWebPage.
    *
    * @return void
    */
-  public function restoreProjectWebPage(int $projectId, mixed $article):void
+  public function restoreProjectWebPage(mixed $projectOrId, mixed $article):void
   {
     // $trashCategory = $this->getConfigValue('redaxoTrashbin');
     /* $result = */$this->webPagesRPC()->moveArticle($article['articleId'], $article['categoryId']);
     $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebPage::class);
-    /* $projectWebPage = */$webPagesRepository->attachProjectWebPage($projectId, $article);
+    /* $projectWebPage = */$webPagesRepository->attachProjectWebPage($projectOrId, $article);
   }
 
   /**
    * Detach a web page, but do not delete it. Meant as utility routine
    * for the UI (in order to correct wrong associations).
    *
-   * @param int $projectId Entity id.
+   * @param mixed $projectOrId Entity or its id.
    *
    * @param int $articleId CMS article id.
    *
    * @return void
    */
-  public function detachProjectWebPage(int $projectId, int $articleId):void
+  public function detachProjectWebPage(mixed $projectOrId, int $articleId):void
   {
     $this->entityManager->beginTransaction();
     try {
       $this->setDatabaseRepository(Entities\ProjectWebPage::class);
-      $this->remove([ 'project' => $projectId, 'articleId' => $articleId  ]);
+      $this->remove([ 'project' => $projectOrId, 'articleId' => $articleId  ]);
       $this->flush();
 
       $this->entityManager->commit();
     } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
+      $projectId = $projectOrId instanceof Entities\Project ? $projectOrId->getId() : $projectOrId;
       throw new Exception($this->l->t('Failed detaching web-page %d from project %d', [ $articleId, $projectId ]), $t->getCode(), $t);
     }
   }
@@ -1864,13 +1855,13 @@ Whatever.',
   /**
    * Attach an existing web page to the project.
    *
-   * @param int $projectId Project Id.
+   * @param mixed $projectOrId Project entity or its id.
    *
    * @param array $article Article description from CMS system.
    *
    * @return void
    */
-  public function attachProjectWebPage(int $projectId, array $article):void
+  public function attachProjectWebPage(mixed $projectOrId, array $article):void
   {
     // Try to remove from trashbin, if appropriate.
     $trashCategory = $this->getConfigValue('redaxoTrashbin');
@@ -1883,7 +1874,7 @@ Whatever.',
       $articleId = $article['articleId'];
       $result = $this->webPagesRPC()->moveArticle($articleId, $destinationCategory);
       if ($result === false) {
-        $this->logDebug("Failed moving ".$articleId." to ".$destinationCategory);
+        $this->logDebug("Failed moving " . $articleId . " to " . $destinationCategory);
       } else {
         $article['categoryId'] = $destinationCategory;
       }
@@ -1891,9 +1882,10 @@ Whatever.',
 
     $webPagesRepository = $this->entityManager->getRepository(Entities\ProjectWebPage::class);
     try {
-      /* $projectWebPage = */$webPagesRepository->attachProjectWebPage($projectId, $article);
+      /* $projectWebPage = */$webPagesRepository->attachProjectWebPage($projectOrId, $article);
     } catch (Throwable $t) {
-      throw new Exception("Unable to attach web-page ".$articleId." for ".$projectId, $t->getCode(), $t);
+      $projectId = $projectOrId instanceof Entities\Project ? $projectOrId->getId() : $projectOrId;
+      throw new Exception("Unable to attach web-page " . $articleId." for " . $projectId, $t->getCode(), $t);
     }
   }
 
@@ -1901,15 +1893,15 @@ Whatever.',
    * Set the name of all registered web-pages to the canonical name,
    * project name given.
    *
-   * @param int $projectId Database entity id.
+   * @param mixed $projectOrId Database entity or its id.
    *
    * @param null|string $projectName Name of the project.
    *
    * @return bool Execution status.
    */
-  public function nameProjectWebPages(int $projectId, ?string $projectName = null):bool
+  public function nameProjectWebPages(mixed $projectOrId, ?string $projectName = null):bool
   {
-    $project = $this->repository->find($projectId);
+    $project = $this->repository->ensureProject($projectOrId);
     if (empty($project)) {
       return false;
     }
@@ -2534,14 +2526,14 @@ Whatever.',
       ->register(new Common\GenericUndoable(
         function() use ($project) {
           // Generate an empty offline page template in the public web-space
-          $this->createProjectWebPage($project->getId(), self::WEBPAGE_TYPE_CONCERT);
-          $this->createProjectWebPage($project->getId(), self::WEBPAGE_TYPE_REHEARSALS);
+          $this->createProjectWebPage($project, self::WEBPAGE_TYPE_CONCERT);
+          $this->createProjectWebPage($project, self::WEBPAGE_TYPE_REHEARSALS);
         },
         function() use ($project) {
           $webPages = $project->getWebPages();
           foreach ($webPages as $page) {
-            // ignore errors
-            $this->deleteProjectWebPage($project->getId(), $page);
+            // ignore errors and really remove the mess
+            $this->deleteProjectWebPage($project, $page, hard: true);
           }
         }
       ))
