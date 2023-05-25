@@ -664,7 +664,7 @@ class Projects extends PMETableViewBase
           'display|ACP' => [
             'attributes' => function($op, $k, $row, $pme) {
               $project = $this->project ?? ($recordId['id'] ?? null);
-              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)];
+              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
               $deadlineString = null;
               if (!empty($project)) {
                 $value = $this->projectService->getProjectRegistrationDeadline($project);
@@ -699,7 +699,7 @@ class Projects extends PMETableViewBase
               }
             },
             'postfix' => function($op, $pos, $k, $row, $pme) {
-              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)];
+              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
               $disabled = empty($registrationStart) ? 'disabled' : '';
               $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
               return '<input id="pme-project-registration-deadline"
@@ -952,12 +952,12 @@ class Projects extends PMETableViewBase
         if (empty($imageIds) || ($action != PHPMyEdit::OPERATION_DISPLAY)) {
           $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
         }
-        $this->logInfo('IMAGE IDS ' . $action . ' ' . print_r($imageIds, true));
+        $this->logDebug('IMAGE IDS ' . $action . ' ' . print_r($imageIds, true));
         $numImages = count($imageIds);
         $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
         // $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
         $columns = self::MAX_POSTER_COLUMNS;
-        $this->logInfo('R / C ' . $rows . ' / ' . $columns);
+        $this->logDebug('R / C ' . $rows . ' / ' . $columns);
         $html = '';
         for ($i = 0; $i < $numImages; ++$i) {
           $html .= $this->posterImageLink($postersFolder, $action, $columns, $imageIds[$i]);
