@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -94,8 +94,8 @@ class ProjectEventsApiController extends OCSController
     string $indexObject,
     int $objectId,
     string $calendar,
-    string $timezone,
-    string $locale,
+    ?string $timezone,
+    ?string $locale,
   ):DataResponse {
     // OC uses symphony which rawurldecodes the request URL. This
     // implies that in order to pass a slash / we caller must
