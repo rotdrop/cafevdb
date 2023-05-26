@@ -236,9 +236,13 @@ class ProjectParticipantField implements \ArrayAccess
     if (!$this->id) {
       return;
     }
+    $oldProject = $this->project;
+    $oldAccess = $this->participantAccess;
     $oldDataOptions = $this->dataOptions;
     $oldDefaultValue = $this->defaultValue;
     $this->__construct();
+    $this->project = $oldProject;
+    $this->participantAccess = $oldAccess;
     foreach ($oldDataOptions as $oldDataOption) {
       $dataOption = clone $oldDataOption;
       $dataOption->setField($this);
