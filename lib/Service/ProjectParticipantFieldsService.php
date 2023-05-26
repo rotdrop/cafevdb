@@ -945,8 +945,10 @@ class ProjectParticipantFieldsService
    *
    * @return Entities\ProjectParticipantField
    */
-  public function ensureAbsenceField(Entities\ProjectEvent $projectEvent, bool $flush = false):?Entities\ProjectParticipantField
-  {
+  public function ensureAbsenceField(
+    Entities\ProjectEvent $projectEvent,
+    bool $flush = false,
+  ):?Entities\ProjectParticipantField {
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     /** @var Entities\Project $project */
@@ -971,6 +973,7 @@ class ProjectParticipantFieldsService
         $protoType = $protoType->first();
         $absenceField = clone($protoType);
       } else {
+        $protoType = null;
         $absenceField = (new Entities\ProjectParticipantField)
           ->setProject($project)
           ->setName($eventsService->briefEventDate($eventData))
@@ -1012,6 +1015,12 @@ class ProjectParticipantFieldsService
             $absenceField->getDataOptions()->set((string)$option->getKey(), $option);
             break;
         }
+        /** @var Entities\ProjectParticipantField $protoType */
+        $protoType = (clone $absenceField)
+          ->setName($this->l->t('Prototype'))
+          ->setTab($l->t('Absence'))
+          ->setDeleted('now');
+        $this->persist($protoType);
       }
       $this->persist($absenceField);
     }
