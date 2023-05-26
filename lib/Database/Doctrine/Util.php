@@ -84,38 +84,42 @@ class Util
     $expression = null;
     foreach ($arrayCriteria as $key => $value) {
       $junctor = 'andWhere';
-      if ($key[0] == '|') {
-        $key = substr($key, 1);
-        $junctor = 'orWhere';
-      } elseif ($key[0] == '&') {
-        $key = substr($key, 1);
-      }
-      if ($key[0] == '(') {
-        $key = substr($key, 1);
-        $expression = [ 'junctor' => $junctor ];
-        $expression['composite'] = 'andX';
+      while (strpos('&|()', $key[0]) !== false) {
         if ($key[0] == '|') {
-          $expression['composite'] = 'orX';
           $key = substr($key, 1);
+          $junctor = 'orWhere';
         } elseif ($key[0] == '&') {
+          $junctor = 'andWhere';
           $key = substr($key, 1);
         }
-        $expression['components'] = [];
-        $groupExpression[++$groupLevel] = $expression;
-      } elseif ($key[0] == ')') {
-        $key = substr($key, 1);
-        $expression = array_pop($groupExpression);
-        $groupLevel--;
-        $junctor = $expression['junctor'];
-        $composite = $expression['composite'];
-        $components = $expression['components'];
-        $compositeExpr = call_user_func_array([ $expr, $composite ], $components);
-        if ($groupLevel >= 0) {
-          $groupExpression[$groupLevel]['components'][] = $compositeExpr;
-        } else {
-          $criteria->$junctor($compositeExpr);
+        if ($key[0] == '(') {
+          $key = substr($key, 1);
+          $expression = [ 'junctor' => $junctor ];
+          $expression['composite'] = 'andX';
+          if ($key[0] == '|') {
+            $expression['composite'] = 'orX';
+            $key = substr($key, 1);
+          } elseif ($key[0] == '&') {
+            $key = substr($key, 1);
+          }
+          $expression['components'] = [];
+          $groupExpression[++$groupLevel] = $expression;
+        } elseif ($key[0] == ')') {
+          $key = substr($key, 1);
+          $expression = array_pop($groupExpression);
+          $groupLevel--;
+          $junctor = $expression['junctor'];
+          $composite = $expression['composite'];
+          $components = $expression['components'];
+          $compositeExpr = call_user_func_array([ $expr, $composite ], $components);
+          if ($groupLevel >= 0) {
+            $groupExpression[$groupLevel]['components'][] = $compositeExpr;
+          } else {
+            $criteria->$junctor($compositeExpr);
+          }
         }
       }
+
       if (strlen($key) == 0) {
         // control item, e.g. parens
         continue;

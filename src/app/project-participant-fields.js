@@ -220,8 +220,9 @@ const ready = function(selector, resizeCB) {
 
     $container.find('.data-type-html-wysiwyg-editor').each(function() {
       const $this = $(this);
-      WysiwygEditor.removeEditor($this);
-      if (dataType === 'html') {
+      if (dataType !== 'html') {
+        WysiwygEditor.removeEditor($this);
+      } else {
         WysiwygEditor.addEditor($this, resizeCB);
       }
     });

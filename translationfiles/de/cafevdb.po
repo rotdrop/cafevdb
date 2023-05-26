@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-05-18 10:12+0200\n"
-"PO-Revision-Date: 2023-05-18 10:29+0200\n"
+"POT-Creation-Date: 2023-05-25 14:15+0200\n"
+"PO-Revision-Date: 2023-05-25 14:32+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -545,7 +545,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:499
 #, php-format
 msgid "Would allow public read access for absence-field \"%1$s\" (dry-run)."
-msgstr "Würde das Abwesenheitsfeld \"%1$s\" öffentlich lesbar machen (Trockenübung)."
+msgstr ""
+"Würde das Abwesenheitsfeld \"%1$s\" öffentlich lesbar machen (Trockenübung)."
 
 #: lib/Command/ProjectEvents.php:506
 #, php-format
@@ -803,14 +804,14 @@ msgstr "Der Ordner \"%s\" existiert bereits und ist nicht leer."
 msgid "The folder or file \"%s\" exists already."
 msgstr "Der Ordner oder die Datei \"%s\" existiert bereits."
 
-#: lib/Common/UndoableRunQueue.php:90 lib/Database/EntityManager.php:975
+#: lib/Common/UndoableRunQueue.php:91 lib/Database/EntityManager.php:975
 #: lib/Database/EntityManager.php:1026 lib/Database/EntityManager.php:1199
 #, php-format
 msgid "$action must be callable or an instance of \"%s\"."
 msgstr ""
 "$action muss ein PHP-Callable sein oder eine Klasseninstanz von \"%s\"."
 
-#: lib/Common/UndoableRunQueue.php:138
+#: lib/Common/UndoableRunQueue.php:139
 #, php-format
 msgid ""
 "Exception during execution of run-queue: %1$s. Number of successful actions: "
@@ -1605,12 +1606,12 @@ msgstr "Abfragen an die Adresse \"%s\" sind nicht implementiert."
 msgid "Post to base-url of app \"%s\" not allowed."
 msgstr "Abfragen an die Basis-Adresse der App \"%s\" sind nicht erlaubt."
 
-#: lib/Controller/PageController.php:383
+#: lib/Controller/PageController.php:389
 #, php-format
 msgid "Template-renderer for template `%s' is empty."
 msgstr "Inhalts-Erzeuger für Schablone `%s' ist leer."
 
-#: lib/Controller/PageController.php:521
+#: lib/Controller/PageController.php:527
 #, php-format
 msgid "Page `%s\\' not found."
 msgstr "Seite `%s' nicht gefunden."
@@ -2033,7 +2034,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:967
-#: lib/Service/ProjectService.php:2819
+#: lib/Service/ProjectService.php:2812
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -2050,7 +2051,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:1001
-#: lib/Service/ProjectService.php:3081
+#: lib/Service/ProjectService.php:3074
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -4995,7 +4996,7 @@ msgstr "ja"
 #: lib/PageRenderer/ProjectParticipantFields.php:717
 #: lib/PageRenderer/ProjectParticipantFields.php:926
 #: lib/PageRenderer/ProjectParticipantFields.php:1775
-#: lib/Service/ProjectParticipantFieldsService.php:641
+#: lib/Service/ProjectParticipantFieldsService.php:642
 msgid "true"
 msgstr "wahr"
 
@@ -5009,7 +5010,7 @@ msgstr "nein"
 #: lib/PageRenderer/ProjectParticipantFields.php:717
 #: lib/PageRenderer/ProjectParticipantFields.php:927
 #: lib/PageRenderer/ProjectParticipantFields.php:1775
-#: lib/Service/ProjectParticipantFieldsService.php:641
+#: lib/Service/ProjectParticipantFieldsService.php:642
 #: templates/pme-table.php:80
 msgid "false"
 msgstr "falsch"
@@ -7686,59 +7687,69 @@ msgstr "Zeitzone: %s"
 msgid "Provider: %s"
 msgstr "Anbieter: %s"
 
-#: lib/Service/ProjectParticipantFieldsService.php:157
+#: lib/Service/ProjectParticipantFieldsService.php:158
 #, php-format
 msgid "Generator \"%s\" does not appear to be valid PHP class name."
 msgstr ""
 "Beim Generator \"%s\" handelt es sich nicht um eine gültige PHP-Klasse."
 
-#: lib/Service/ProjectParticipantFieldsService.php:220
+#: lib/Service/ProjectParticipantFieldsService.php:221
 msgid "One-time Receivables"
 msgstr "Einmalige Forderungen"
 
-#: lib/Service/ProjectParticipantFieldsService.php:264
+#: lib/Service/ProjectParticipantFieldsService.php:265
 #, php-format
 msgid "Recurring \"%s\""
 msgstr "Fortlaufend \"%s\""
 
-#: lib/Service/ProjectParticipantFieldsService.php:726
-#: lib/Service/ProjectParticipantFieldsService.php:771
+#: lib/Service/ProjectParticipantFieldsService.php:727
+#: lib/Service/ProjectParticipantFieldsService.php:772
 #, php-format
 msgid "Option index -1 should not be present here, options: %s"
 msgstr "Options-Index -1 sollte hier nicht auftauchen, Optionen: %s"
 
-#: lib/Service/ProjectParticipantFieldsService.php:738
+#: lib/Service/ProjectParticipantFieldsService.php:739
 #, php-format
 msgid "Prototype keys \"%s\" and options keys \"%s\" differ"
 msgstr ""
 "Die Prototyp-Schlüssel \"%s\" und Option-Schlüssel \"%s\" sind verschieden"
 
-#: lib/Service/ProjectParticipantFieldsService.php:831
-#: lib/Service/ProjectParticipantFieldsService.php:853
+#: lib/Service/ProjectParticipantFieldsService.php:832
+#: lib/Service/ProjectParticipantFieldsService.php:854
 #, php-format
 msgid "Field \"%s\" is not a group of participants field."
 msgstr "Das Datenfeld \"%s\" ist kein Definitionsfeld für Personengruppen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:924
+#: lib/Service/ProjectParticipantFieldsService.php:925
 #, php-format
 msgid "Only \"field\" collections can be filtered, not instances of \"%s\"."
 msgstr ""
 "Nur Sammlungen von Personen-Daten können gefiltert werden, nicht aber \"%s\"-"
 "Instanzen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:970
+#: lib/Service/ProjectParticipantFieldsService.php:964
+msgid "Prototype"
+msgstr "Prototyp"
+
+#. TRANSLATORS: Column heading in table (capital first character)
+#: lib/Service/ProjectParticipantFieldsService.php:965
+#: lib/Service/ProjectParticipantFieldsService.php:1041
+msgid "Absence"
+msgstr "Abwesenheit"
+
+#: lib/Service/ProjectParticipantFieldsService.php:989
 msgid "absent"
 msgstr "abwesend"
 
-#: lib/Service/ProjectParticipantFieldsService.php:970
+#: lib/Service/ProjectParticipantFieldsService.php:989
 msgid "This person will not participate in this event."
 msgstr "Diese Person wird an dem Termin nicht teilnehmen."
 
-#: lib/Service/ProjectParticipantFieldsService.php:971
+#: lib/Service/ProjectParticipantFieldsService.php:990
 msgid "contacted"
 msgstr "kontaktiert"
 
-#: lib/Service/ProjectParticipantFieldsService.php:971
+#: lib/Service/ProjectParticipantFieldsService.php:990
 msgid ""
 "This person has been asked to confirm the participation but did not yet "
 "answer."
@@ -7746,20 +7757,15 @@ msgstr ""
 "Die Person wurde nach ihrer Teilnahmedisposition gefragt, hat aber noch  "
 "nicht geantwortet."
 
-#: lib/Service/ProjectParticipantFieldsService.php:972
+#: lib/Service/ProjectParticipantFieldsService.php:991
 msgid "tentative"
 msgstr "vorläufig"
 
-#: lib/Service/ProjectParticipantFieldsService.php:972
+#: lib/Service/ProjectParticipantFieldsService.php:991
 msgid "This person does not yet know whether a participation is possible."
 msgstr "Diese Person weiß noch nicht, ob sie an dem Termin teilnehmen kann."
 
-#. TRANSLATORS: Column heading in table (capital first character)
-#: lib/Service/ProjectParticipantFieldsService.php:1003
-msgid "Absence"
-msgstr "Abwesenheit"
-
-#: lib/Service/ProjectParticipantFieldsService.php:1078
+#: lib/Service/ProjectParticipantFieldsService.php:1116
 #, php-format
 msgid "Unable to find participant field for id \"%s\""
 msgstr "Kann das Personen-Daten-Feld mit der Id \"%s\" nicht laden."
@@ -7866,80 +7872,75 @@ msgstr ""
 "===== Location =====\n"
 "Was auch immer."
 
-#: lib/Service/ProjectService.php:1568
-#, php-format
-msgid "%1$s has been renamed to %2$s."
-msgstr "%1$s wurd zu %2$s umbenannt."
-
-#: lib/Service/ProjectService.php:1655
+#: lib/Service/ProjectService.php:1639
 msgid "Preview"
 msgstr "Vorschau"
 
-#: lib/Service/ProjectService.php:1657 lib/Service/ProjectService.php:1712
-#: lib/Service/ProjectService.php:1877 lib/Service/ProjectService.php:1921
-#: lib/Service/ProjectService.php:1981 lib/Settings/PersonalForm.php:352
+#: lib/Service/ProjectService.php:1641 lib/Service/ProjectService.php:1696
+#: lib/Service/ProjectService.php:1869 lib/Service/ProjectService.php:1914
+#: lib/Service/ProjectService.php:1974 lib/Settings/PersonalForm.php:352
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: lib/Service/ProjectService.php:1659
+#: lib/Service/ProjectService.php:1643
 msgid "Archive"
 msgstr "Archiv"
 
-#: lib/Service/ProjectService.php:1661
+#: lib/Service/ProjectService.php:1645
 msgid "Trashbin"
 msgstr "Mülltonne"
 
-#: lib/Service/ProjectService.php:1706
+#: lib/Service/ProjectService.php:1690
 msgid "Empty project."
 msgstr "Fehlendes Projekt."
 
-#: lib/Service/ProjectService.php:1733
+#: lib/Service/ProjectService.php:1717
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr "Kann die Web-Seiten für \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:1756
+#: lib/Service/ProjectService.php:1742
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr "Kann Web-Page %s nicht anlegen."
 
-#: lib/Service/ProjectService.php:1777
+#: lib/Service/ProjectService.php:1763
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr "Kann den Artikel \"%s\" nicht verknüpfen."
 
-#: lib/Service/ProjectService.php:1816
+#: lib/Service/ProjectService.php:1807
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 "Konnte die Web-Seite %d vom Projekt mit der Id %d leider nicht entfernen."
 
-#: lib/Service/ProjectService.php:1859
+#: lib/Service/ProjectService.php:1851
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr "Konnte die Web-Seite %d nicht vom Projekt %d entkoppeln\""
 
-#: lib/Service/ProjectService.php:2023
+#: lib/Service/ProjectService.php:2016
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr "Konnte das Projekt mit der Id %d nicht laden"
 
-#: lib/Service/ProjectService.php:2067
+#: lib/Service/ProjectService.php:2060
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr "Kann die Daten für die Musiker:Innen-Id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2083
+#: lib/Service/ProjectService.php:2076
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr "Die Person %s ist bereits für das Projekt %s registriert."
 
-#: lib/Service/ProjectService.php:2105
+#: lib/Service/ProjectService.php:2098
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr "DiePerson %s scheint kein einziges Instrument zu spielen."
 
-#: lib/Service/ProjectService.php:2157
+#: lib/Service/ProjectService.php:2150
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
@@ -7948,61 +7949,61 @@ msgstr ""
 "Die Person \"%s\" spielt kein einziges Instrument, das in der\n"
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
-#: lib/Service/ProjectService.php:2211
+#: lib/Service/ProjectService.php:2204
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr "Person mit id \"%d\" konnte nicht hinzugefügt werden, Fehler \"%s\""
 
-#: lib/Service/ProjectService.php:2220
+#: lib/Service/ProjectService.php:2213
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr "Die Person %s wurde zum Projekt %s hinzugefügt."
 
-#: lib/Service/ProjectService.php:2276
+#: lib/Service/ProjectService.php:2269
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 "Konnte den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2342
+#: lib/Service/ProjectService.php:2335
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr "Konnte den Email-Verteiler \"%s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2480
+#: lib/Service/ProjectService.php:2473
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr "Kann die Person \"%s\" nicht vom Projekt-Email-Verteiler abmelden."
 
-#: lib/Service/ProjectService.php:2505
+#: lib/Service/ProjectService.php:2498
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr "Kann das Projekt zur id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2582
+#: lib/Service/ProjectService.php:2575
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
 "Projekt mit der Id \"%d\" nicht erzeugen."
 
-#: lib/Service/ProjectService.php:2623
+#: lib/Service/ProjectService.php:2616
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: lib/Service/ProjectService.php:2653
+#: lib/Service/ProjectService.php:2646
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:3161
+#: lib/Service/ProjectService.php:3154
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:3194
+#: lib/Service/ProjectService.php:3187
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -8012,11 +8013,11 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:3200
+#: lib/Service/ProjectService.php:3193
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/ProjectService.php:3246
+#: lib/Service/ProjectService.php:3239
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr "Kann \"%1$s\" nicht vom Projekt austragen."
@@ -12096,7 +12097,7 @@ msgstr ""
 
 #. TRANSLATORS src/components/AdminSettings.vue:508
 #: specialVueFakeDummyForL10nScript.js:74 src/app/project-participants.js:819
-#: src/app/projects.js:606 src/app/sepa-debit-mandate.js:851
+#: src/app/projects.js:612 src/app/sepa-debit-mandate.js:851
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich"
 
@@ -13464,7 +13465,7 @@ msgstr ""
 "Zu Viele Gruppenmitglieder, erlaubt sind {limit}, Du hast {count}\n"
 "ausgewählt. Die Daten können und werden so nicht gespeichert werden."
 
-#: src/app/project-participants.js:824 src/app/projects.js:611
+#: src/app/project-participants.js:824 src/app/projects.js:617
 msgid "Unconfirmed, doing nothing."
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
@@ -13492,40 +13493,40 @@ msgstr ""
 "Interner Fehler: Buchungsteile von Gesamtbuchungen können nicht zu "
 "verschiedenen Personen gehören ({musicians})."
 
-#: src/app/projects.js:280
+#: src/app/projects.js:286
 msgid "Unknown operation: {operation}"
 msgstr "Unbekannte Operation: {operation}"
 
-#: src/app/projects.js:578
+#: src/app/projects.js:584
 msgid "Share-link has been copied to the clipboard."
 msgstr "Der Link für die Freigabe wurde in die Zwischenablage kopiert."
 
-#: src/app/projects.js:580
+#: src/app/projects.js:586
 msgid "Failed copying share-link to the clipboard: {reason}."
 msgstr ""
 "Der Freigabe-Link konnte nicht in die Zwischenablage kopiert werden: "
 "{reason}."
 
-#: src/app/projects.js:731
+#: src/app/projects.js:737
 msgid "Really unlink the displayed event announcement?"
 msgstr ""
 "Soll die Verknüpfung mit der angezeigten Veranstaltungsankündigung wirklich "
 "gelöst werden?"
 
-#: src/app/projects.js:732
+#: src/app/projects.js:738
 msgid "Unlink Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: src/app/projects.js:757
+#: src/app/projects.js:763
 msgid "Really delete the displayed event announcement?"
 msgstr ""
 "Soll die angezeigte Veranstaltungsankündigung wirklich entfernt werden?"
 
-#: src/app/projects.js:758
+#: src/app/projects.js:764
 msgid "Delete Web-Page with Id {ArticleId}?"
 msgstr "Web-Seite mit Id {ArticleId} löschen?"
 
-#: src/app/projects.js:804
+#: src/app/projects.js:810
 msgid "No values match"
 msgstr "Kein Wert passt."
 
@@ -15386,23 +15387,23 @@ msgstr "keine Termine"
 msgid "New Event"
 msgstr "Neuer Termin"
 
-#: templates/project-web-articles.php:115
+#: templates/project-web-articles.php:114
 msgid "No public web pages registered for this project"
 msgstr "Für dieses Projekt gibt es leider noch keine öffentlichen Web-Seiten"
 
-#: templates/project-web-articles.php:123
+#: templates/project-web-articles.php:122
 msgid "Create new public web page for this project."
 msgstr "Erzeuge eine neue öffentliche Web-Seite für dieses Projekt."
 
-#: templates/project-web-articles.php:133
+#: templates/project-web-articles.php:132
 msgid "Attach existing Pages"
 msgstr "Verknüpft vorhandene Ankündigungen."
 
-#: templates/project-web-articles.php:173
+#: templates/project-web-articles.php:172
 msgid "Unlink a web-article."
 msgstr "Verknüpfung mit einer Veranstaltungs-Ankündigung lösen."
 
-#: templates/project-web-articles.php:177
+#: templates/project-web-articles.php:176
 msgid "Delete a web article."
 msgstr "Lösche diese öffentliche Web-Seite."
 
@@ -17261,6 +17262,10 @@ msgstr "NACHNAME"
 #, php-format
 msgid "SURCHARGE"
 msgstr "ZUSATZKOSTEN"
+
+#, php-format
+#~ msgid "%1$s has been renamed to %2$s."
+#~ msgstr "%1$s wurd zu %2$s umbenannt."
 
 #, php-format
 #~ msgid ""

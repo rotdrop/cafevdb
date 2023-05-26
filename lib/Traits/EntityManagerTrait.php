@@ -222,6 +222,8 @@ trait EntityManagerTrait
    *
    * @param null|object|array $entity
    *
+   * @param bool $useTransaction Wrap the flush operation into a transaction or not.
+   *
    * @return void
    *
    * @throws \OCA\CAFEVDB\Wrapped\Doctrine\ORM\OptimisticLockException If a version check on an entity that

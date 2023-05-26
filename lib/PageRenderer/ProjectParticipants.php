@@ -551,20 +551,19 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ]);
 
-    if ($this->showDisabled) {
-      // soft-deletion
-      $opts['fdd']['deleted'] = array_merge(
-        $this->defaultFDD['deleted'], [
-          'name' => $this->l->t('Deleted'),
-          'tab'  => [ 'id' => 'tab-all' ],
-          'dateformat' => 'medium',
-          'timeformat' => 'short',
-          'maxlen' => 19,
-        ]
-      );
-      Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
-      $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
-    }
+    // soft-deletion
+    $opts['fdd']['deleted'] = array_merge(
+      $this->defaultFDD['deleted'], [
+        'name' => $this->l->t('Deleted'),
+        'tab'  => [ 'id' => 'tab-all' ],
+        'dateformat' => 'medium',
+        'timeformat' => 'short',
+        'maxlen' => 19,
+        'input' => ($this->showDisabled ? 'T' : 'RH'),
+      ]
+    );
+    Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
+    $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
 
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'display_name_personal', [
@@ -746,7 +745,7 @@ class ProjectParticipants extends PMETableViewBase
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pi.instrument_id
   LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
-    ON ft.locale = '".($this->l10n()->getLocaleCode())."'
+    ON ft.locale = '".($this->getTranslationLanguage())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
@@ -828,7 +827,7 @@ class ProjectParticipants extends PMETableViewBase
   LEFT JOIN ".self::PROJECT_INSTRUMENTATION_NUMBERS_TABLE." pin
     ON pin.project_id = pi.project_id AND pin.instrument_id = pi.instrument_id
   LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
-    ON ft.locale = '".($this->l10n()->getLocaleCode())."'
+    ON ft.locale = '".($this->getTranslationLanguage())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id

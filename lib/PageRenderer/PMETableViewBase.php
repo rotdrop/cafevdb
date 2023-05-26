@@ -2570,6 +2570,28 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   }
 
   /**
+   * We have this Nextcloud convention that de means "German personal Du" and
+   * de_DE means "German formal Sie". Unfortunately, even
+   * IL10N::getLocaleCode() just returns the language ... This function makes
+   * sure that we have a locale id like de_DE.
+   *
+   * @param null|IL10N $l10n
+   *
+   * @return string
+   */
+  protected function getTranslationLanguage(?IL10N $l10n = null)
+  {
+    if (empty($l10n)) {
+      $l10n = $this->l;
+    }
+    $lang = $this->l10n()->getLocaleCode();
+    if (strpos($lang, '_') === false) {
+      $lang = $lang . '_' . strtoupper($lang);
+    }
+    return $lang;
+  }
+
+  /**
    * Join with an in-database translation table. The following fields are provided:
    *
    * - l10n_FIELD -- translated field will fallback translation to original value
@@ -2602,10 +2624,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     //   throw new RuntimeException($this->l->t('Composite keys are not yet supported for translated database table fields.'));
     // }
     // $id = array_keys($joinInfo['identifier'])[0];
-    $lang = $this->l10n()->getLanguageCode();
-    if (strpos($lang, '_') === false) {
-      $lang = $lang . '_' . strtoupper($lang);
-    }
+    $lang = $this->getTranslationLanguage();
     $l10nJoins = [];
     foreach ($fields as $field) {
       $joinTable = 'jt_'.$field;
@@ -2661,7 +2680,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     } else {
       $id = array_keys($joinInfo['identifier'])[0];
     }
-    $lang = $this->l10n()->getLanguageCode();
+    $lang = $this->getTranslationLanguage();
     return [
       'sql' => 'COALESCE($join_col_fqn, $main_table.$field_name)',
       'values' => [

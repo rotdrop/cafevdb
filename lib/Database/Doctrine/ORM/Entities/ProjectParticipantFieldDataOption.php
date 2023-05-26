@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -172,14 +172,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /** {@inheritdoc} */
   public function __clone()
   {
-    if (empty($this->field) || empty($this->key)) {
-      return;
-    }
     $oldKey = $this->key;
     $this->__construct();
     $this->key = (string)$oldKey == self::GENERATOR_KEY
-               ? $oldKey
-               : Uuid::create();
+      ? $oldKey
+      : Uuid::create();
   }
 
   /** {@inheritdoc} */
@@ -525,5 +522,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     $entityManager = EntityManager::getDecorator($event->getEntityManager());
     $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantFieldOption($this));
     $this->preUpdatePosted = false;
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->label . ':' . $this->key . (empty($this->field) ? '' : '@' . $this->field->getName() . ':' . $this->field->getId());
   }
 }
