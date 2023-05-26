@@ -597,9 +597,8 @@ class EventsService
    *
    * @param string $eventURI CalDAV URI.
    *
-   * @param null|int $recurrenceId If non empty find this
-   * instance. Otherwise just pick one event instance if behind the URI we
-   * have an event series.
+   * @param null|int $recurrenceId If non null find this instance. Otherwise
+   * just pick one event instance if behind the URI we have an event series.
    *
    * @return null|array
    *
@@ -607,18 +606,39 @@ class EventsService
    */
   public function fetchEvent(mixed $projectOrId, string $eventURI, ?int $recurrenceId):?array
   {
+    $projectEvent = $this->getProjectEvent($projectOrId, $eventURI, $recurrenceId);
+    if (empty($projectEvent)) {
+      return null;
+    }
+    if (is_array($projectEvent)) {
+      $projectEvent = reset($projectEvent);
+    }
+    return $this->getEventData($projectEvent);
+  }
+
+  /**
+   * Fetch one specific event and just return the database entity.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @param string $eventURI CalDAV URI.
+   *
+   * @param null|int $recurrenceId If non null find this instance. Otherwise
+   * return all matching entries for the given event-URI.
+   *
+   * @return null|Entities\ProjectEvent|array<int, Entities\ProjectEvent>
+   */
+  public function getProjectEvent(mixed $projectOrId, string $eventURI, ?int $recurrenceId):mixed
+  {
     $criteria = [
       'project' => $projectOrId,
       'eventUri' => $eventURI,
     ];
-    if (!empty($recurrenceId)) {
+    if ($recurrenceId !== null) {
       $criteria['recurrenceId'] = $recurrenceId;
+      return $this->findOneBy($criteria);
     }
-    $projectEvent = $this->findOneBy($criteria);
-    if (empty($projectEvent)) {
-      return null;
-    }
-    return $this->getEventData($projectEvent);
+    return $this->findBy($criteria);
   }
 
   /**
@@ -1119,28 +1139,30 @@ class EventsService
    * A category marking a calendar event which models the project registration
    * period in the calendar.
    *
-   * @param null|IL10N $l
+   * @param bool $translate Translate the category name with the app's IL10N
+   * instance.
    *
    * @return string
    */
-  public static function getProjectRegistrationCategory(?IL10N $l = null):string
+  public function getProjectRegistrationCategory(bool $translate = true):string
   {
     $category = self::t('project registration');
-    return empty($l) ? $category : $l->t($category);
+    return $translate ? $this->appL10n()->t($category) : $category;
   }
 
   /**
    * Category marking an event which should produce a "record absence" field
    * in the project instrumentation table.
    *
-   * @param null|IL10N $l
+   * @param bool $translate Translate the category name with the app's IL10N
+   * instance.
    *
    * @return string
    */
-  public static function getRecordAbsenceCategory(?IL10N $l = null):string
+  public function getRecordAbsenceCategory(bool $translate = true):string
   {
     $category = self::t('record absence');
-    return empty($l) ? $category : $l->t($category);
+    return $translate ? $this->appL10n()->t($category) : $category;
   }
 
   /**
@@ -1158,8 +1180,8 @@ class EventsService
 
     $appL10n = $this->appL10n();
     $systemCategories = [
-      self::getRecordAbsenceCategory($appL10n),
-      self::getProjectRegistrationCategory($appL10n),
+      $this->getRecordAbsenceCategory(),
+      $this->getProjectRegistrationCategory(),
     ];
     foreach (array_keys(ConfigService::CALENDARS) as $calendarUri) {
       $systemCategories[] = $appL10n->t($calendarUri);
@@ -1284,7 +1306,7 @@ class EventsService
               $vEvent->SUMMARY = $summary;
             }
             if (self::absenceFieldsDefault($calendarUri)) {
-              $categories[] = self::getRecordAbsenceCategory($l);
+              $categories[] = $this->getRecordAbsenceCategory();
             }
             VCalendarService::setCategories($vEvent, $categories);
             $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
@@ -1489,26 +1511,9 @@ class EventsService
           if ($status) {
             $registered[] = $projectId;
           }
-          if (in_array(self::getRecordAbsenceCategory(), $categories) || in_array(self::getRecordAbsenceCategory($this->appL10n()), $categories)) {
-            // $this->logInfo('CATEGORIES ' . print_r($categories, true) . ' ' . $recurrenceId);
-            /** @var ProjectParticipantFieldsService $participantFieldsService */
-            $participantFieldsService = $this->appContainer()->get(ProjectParticipantFieldsService::class);
-            $participantFieldsService->ensureAbsenceField($projectEvent, flush: false);
-          } else {
-            $absenceField = $projectEvent->getAbsenceField();
-            if (!empty($absenceField)) {
-              if ($absenceField->unused()) {
-                // $this->logInfo('TRY REMOVE ABSENCE FIELD HARD');
-                // cleanup, unused fields are simply removed
-                $projectEvent->setAbsenceField(null);
-                $this->remove($absenceField, hard: true);
-              } else {
-                // $this->logInfo('TRY REMOVE ABSENCE FIELD SOFT');
-                // soft delete it in case the operator tries to recover it later
-                $this->remove($absenceField, soft: true);
-              }
-            }
-          }
+          $needAbsenceField = in_array($this->getRecordAbsenceCategory(), $categories)
+            || in_array($this->getRecordAbsenceCategory(translate: false), $categories);
+          $this->ensureAbsenceField($projectEvent, remove: !$needAbsenceField, flush: false);
         }
       }
     }
@@ -1941,32 +1946,12 @@ class EventsService
    * table.
    */
   public function changeCategories(
-    int|Entities\Project $projectOrId,
     int $calendarId,
     string $eventUri,
     ?int $recurrenceId = null,
     array $additions = [],
     array $removals = [],
   ):bool {
-    $criteria = [
-      'project' => $projectOrId,
-      'calendarId' => $calendarId,
-      'eventUri' => $eventUri,
-    ];
-    if (!empty($recurrenceId)) {
-      $criteria['recurrenceId'] = $recurrenceId;
-    }
-
-    $projectEvent = $this->findOneBy($criteria);
-
-    if (empty($projectEvent)) {
-      $projectId = $projectOrId instanceof Entities\Project ? $projectOrId->getId() : $projectOrId;
-      throw new Exceptions\CalendarEntryNotFoundException(
-        'Unable to find ' . $eventUri . ' for project ' . $projectId
-        . ' in calendar ' . $calendarId
-        . ' with recurrence id ' . $recurrenceId,
-      );
-    }
 
     $event = $this->calDavService->getCalendarObject($calendarId, $eventUri);
     $vCalendar  = VCalendarService::getVCalendar($event);
@@ -1980,7 +1965,7 @@ class EventsService
         $siblings = $this->getVEventSiblings($calendarId, $vCalendar);
         $sibling = $siblings[$recurrenceId] ?? null;
         if (empty($sibling)) {
-          throw new Exceptions\CalendarEntryNotFoundException('Recurring event ' . $eventUri . ' carries no project event instance with recurrence id ' . $recurrenceId);
+          throw new Exceptions\CalendarEntryNotFoundException('Recurring event ' . $eventUri . ' carries no event instance with recurrence id ' . $recurrenceId);
         }
         if (count($siblings) <= 1) {
           $recurrenceId = null; // recurring with one instance
@@ -2029,6 +2014,41 @@ class EventsService
     }
 
     return $needUpdate;
+  }
+
+  /**
+   * Add or delete the absence field for the given project event.
+   *
+   * @param Entities\ProjectEvent $projectEvent
+   *
+   * @param bool $remove If \true remove the absence field if present. Default
+   * is \false, i.e. add the absence field if not present.
+   *
+   * @param bool $flush Flush the changes to the database or not.
+   *
+   * @return void
+   */
+  public function ensureAbsenceField(Entities\ProjectEvent $projectEvent, bool $remove = false, bool $flush = false):void
+  {
+    if ($remove) {
+      $absenceField = $projectEvent->getAbsenceField();
+      if (!empty($absenceField)) {
+        if ($absenceField->usage() == 1) {
+          // cleanup, unused fields are simply removed
+          $projectEvent->setAbsenceField(null);
+          $absenceField->setProjectEvent(null);
+          $this->remove($absenceField, hard: true, flush: $flush);
+        } else {
+          // $this->logInfo('TRY REMOVE ABSENCE FIELD SOFT');
+          // soft delete it in case the operator tries to recover it later
+          $this->remove($absenceField, soft: true, flush: $flush);
+        }
+      }
+    } else {
+      /** @var ProjectParticipantFieldsService $participantFieldsService */
+      $participantFieldsService = $this->appContainer()->get(ProjectParticipantFieldsService::class);
+      $participantFieldsService->ensureAbsenceField($projectEvent, flush: $flush);
+    }
   }
 
   /**
@@ -2477,7 +2497,7 @@ class EventsService
     }
     $categories = [
       $projectName,
-      $this->getProjectRegistrationCategory($this->appL10n()),
+      $this->getProjectRegistrationCategory(),
     ];
     $shareOwnerId = $this->shareOwnerId();
     $registrationEvents = $this->calDavService->findCalendarObjectByCategories(
@@ -2529,8 +2549,8 @@ class EventsService
 
     return !empty(array_intersect(
       [
-        self::getProjectRegistrationCategory(),
-        self::getProjectRegistrationCategory($this->appL10n()),
+        $this->getProjectRegistrationCategory(translate: false),
+        $this->getProjectRegistrationCategory(),
       ],
       $categories,
     ));
@@ -2575,7 +2595,7 @@ class EventsService
     $registrationEventData = [
       'summary' => $l->t('Registration for %s', $projectName),
       'categories' => [
-        self::getProjectRegistrationCategory($l),
+        $this->getProjectRegistrationCategory(),
         $projectName,
         $this->getCalendarDisplayName(ConfigService::OTHER_CALENDAR_URI),
       ],
@@ -2647,5 +2667,16 @@ class EventsService
       }
     }
     return true;
+  }
+
+  /**
+   * Flush the database. This is a companion to the various public methods
+   * which have a boolean $flush parameter.
+   *
+   * @return void
+   */
+  public function flushDatabase():void
+  {
+    $this->flush(useTransaction: true);
   }
 }

@@ -261,8 +261,8 @@ class ProjectEvents extends Command
 
     $appL10n = $configService->getAppL10n();
     $systemCategories = [
-      EventsService::getRecordAbsenceCategory($appL10n),
-      EventsService::getProjectRegistrationCategory($appL10n),
+      $eventsService->getRecordAbsenceCategory(),
+      $eventsService->getProjectRegistrationCategory(),
     ];
     foreach ($calendars as $calendarUri) {
       $systemCategories[] = $appL10n->t($calendarUri);
@@ -432,7 +432,7 @@ class ProjectEvents extends Command
                     ]),
                     OutputInterface::VERBOSITY_VERBOSE
                   );
-                  $eventsService->changeCategories($project, $calendarId, $eventUri, recurrenceId: null, additions: [ $projectName ]);
+                  $eventsService->changeCategories($calendarId, $eventUri, recurrenceId: null, additions: [ $projectName ]);
                 }
                 break;
               case 'unregister':
@@ -566,7 +566,7 @@ class ProjectEvents extends Command
                     ]),
                     OutputInterface::VERBOSITY_VERBOSE
                   );
-                  $eventsService->changeCategories($project, $calendarId, $eventUri, recurrenceId: null, removals: [ $projectName ]);
+                  $eventsService->changeCategories($calendarId, $eventUri, recurrenceId: null, removals: [ $projectName ]);
                 }
                 break;
               case 'reattach':

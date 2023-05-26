@@ -31,6 +31,7 @@ use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
@@ -149,7 +150,7 @@ class ProjectEventsController extends Controller
           $eventUri = $eventIdentifier['uri'];
           $recurrenceId = $eventIdentifier['recurrenceId'];
 
-          $category = EventsService::getRecordAbsenceCategory($this->appL10n());
+          $category = $this->eventsService->getRecordAbsenceCategory();
           if ($enable) {
             $removals = [];
             $additions = [ $category ];
@@ -158,6 +159,7 @@ class ProjectEventsController extends Controller
             $additions = [];
           }
 
+          $projectEvents = [];
           switch ($scope) {
             case 'series':
               $recurrenceId = null;
@@ -165,13 +167,16 @@ class ProjectEventsController extends Controller
             case 'single':
               try {
                 $this->eventsService->changeCategories(
-                  $projectId,
                   $calendarId,
                   $eventUri,
                   $recurrenceId,
                   additions: $additions,
                   removals: $removals,
                 );
+                $projectEvents = $this->eventsService->getProjectEvent($projectId, $eventUri, $recurrenceId);
+                if (!is_array($projectEvents)) {
+                  $projectEvents = [ $projectEvents ];
+                }
               } catch (Exceptions\CalendarEntryNotFoundException $e) {
                 // ignore
               }
@@ -188,12 +193,15 @@ class ProjectEventsController extends Controller
                 foreach (array_keys($uris) as $eventUri) {
                   try {
                     $this->eventsService->changeCategories(
-                      $projectId,
                       $calendarId,
                       $eventUri,
                       recurrenceId: null,
                       additions: $additions,
                       removals: $removals,
+                    );
+                    $projectEvents = array_merge(
+                      $projectEvents,
+                      $this->eventsService->getProjectEvent($projectId, $eventUri, $recurrenceId),
                     );
                   } catch (Exceptions\CalendarEntryNotFoundException $e) {
                     // ignore
@@ -202,6 +210,11 @@ class ProjectEventsController extends Controller
               }
               break;
           }
+          /** @var Entities\ProjectEvent $projectEvent */
+          foreach ($projectEvents as $projectEvent) {
+            $this->eventsService->ensureAbsenceField($projectEvent, !$enable, flush: false);
+          }
+          $this->eventsService->flushDatabase();
           break;
         case 'select':
           $template = 'project-events/eventslisting';
