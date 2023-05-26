@@ -158,7 +158,7 @@ trait EntityManagerTrait
     if (is_array($entity)) {
       $key = $entity;
       $entity = $this->entityManager->getReference($this->entityClassName, $key);
-      $this->logDebug("Create reference from ".print_r($key, true).' for '.$this->entityClassName);
+      // $this->logDebug("Create reference from " . print_r($key, true) . ' for ' . $this->entityClassName);
     }
     if ($soft && !$hard && method_exists($entity, 'isDeleted') && $entity->isDeleted()) {
       return;
@@ -221,6 +221,8 @@ trait EntityManagerTrait
    * flush is called.
    *
    * @param null|object|array $entity
+   *
+   * @param bool $useTransaction Wrap the flush operation into a transaction or not.
    *
    * @return void
    *

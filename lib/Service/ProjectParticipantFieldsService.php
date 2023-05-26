@@ -31,6 +31,7 @@ use RuntimeException;
 use OCP\Files as CloudFiles;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -944,10 +945,13 @@ class ProjectParticipantFieldsService
    *
    * @return Entities\ProjectParticipantField
    */
-  public function ensureAbsenceField(Entities\ProjectEvent $projectEvent, bool $flush = false):?Entities\ProjectParticipantField
-  {
+  public function ensureAbsenceField(
+    Entities\ProjectEvent $projectEvent,
+    bool $flush = false,
+  ):?Entities\ProjectParticipantField {
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
+    /** @var Entities\Project $project */
     $project = $projectEvent->getProject();
 
     /** @var EventsService $eventsService */
@@ -958,27 +962,65 @@ class ProjectParticipantFieldsService
     $absenceField = $projectEvent->getAbsenceField();
     $l = $this->appL10n();
     if (empty($absenceField)) {
-      $absenceField = (new Entities\ProjectParticipantField)
-        ->setProject($project)
-        ->setMultiplicity(Multiplicity::MULTIPLE)
-        ->setDataType(DataType::TEXT)
-        ->setName($eventsService->briefEventDate($eventData));
-      // in order for the table-field translations to work we need to obtain the key for the field first ...
-      $this->persist($absenceField);
-      $this->flush();
-      $options = [
-        (string)$l->t('absent') => $l->t('This person will not participate in this event.'),
-        (string)$l->t('contacted') => $l->t('This person has been asked to confirm the participation but did not yet answer.'),
-        (string)$l->t('tentative') => $l->t('This person does not yet know whether a participation is possible.'),
-      ];
-      foreach ($options as $label => $tooltip) {
-        /** @var Entities\ProjectParticipantFieldDataOption $option */
-        $option = (new Entities\ProjectParticipantFieldDataOption)
-          ->setLabel($label)
-          ->setTooltip($tooltip)
-          ->setField($absenceField)
-          ->setKey(Uuid::create());
-        $absenceField->getDataOptions()->set((string)$option->getKey(), $option);
+      $protoType = $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
+        '&(|name' => $this->l->t('Prototype'),
+        'name' => 'Prototype',
+        ')(|tab' => $l->t('Absence'),
+        'tab' => 'Absence',
+      ]));
+      if ($protoType->count()) {
+        /** @var Entities\ProjectParticipantField $protoType */
+        $protoType = $protoType->first();
+        $absenceField = clone($protoType);
+      } else {
+        $protoType = null;
+        $absenceField = (new Entities\ProjectParticipantField)
+          ->setProject($project)
+          ->setName($eventsService->briefEventDate($eventData))
+          ;
+        if (false) {
+          $absenceField
+            ->setMultiplicity(Multiplicity::MULTIPLE)
+            ->setDataType(DataType::TEXT);
+        } else {
+          $absenceField
+            ->setMultiplicity(Multiplicity::SIMPLE)
+            ->setDataType(DataType::HTML);
+        }
+        switch ($absenceField->getMultiplicity()) {
+          case Multiplicity::MULTIPLE:
+            $options = [
+              (string)$l->t('absent') => $l->t('This person will not participate in this event.'),
+              (string)$l->t('contacted') => $l->t('This person has been asked to confirm the participation but did not yet answer.'),
+              (string)$l->t('tentative') => $l->t('This person does not yet know whether a participation is possible.'),
+            ];
+            foreach ($options as $label => $tooltip) {
+              /** @var Entities\ProjectParticipantFieldDataOption $option */
+              $option = (new Entities\ProjectParticipantFieldDataOption)
+                ->setLabel($label)
+                ->setTooltip($tooltip)
+                ->setField($absenceField)
+                ->setKey(Uuid::create());
+              $absenceField->getDataOptions()->set((string)$option->getKey(), $option);
+              $this->persist($option);
+            }
+            break;
+          case Multiplicity::SIMPLE:
+            // simple text field still needs one dummy option
+            $option = (new Entities\ProjectParticipantFieldDataOption)
+              ->setLabel($absenceField->getName())
+              ->setKey(Uuid::create())
+              ->setField($absenceField);
+            $this->persist($option);
+            $absenceField->getDataOptions()->set((string)$option->getKey(), $option);
+            break;
+        }
+        /** @var Entities\ProjectParticipantField $protoType */
+        $protoType = (clone $absenceField)
+          ->setName($this->l->t('Prototype'))
+          ->setTab($l->t('Absence'))
+          ->setDeleted('now');
+        $this->persist($protoType);
       }
       $this->persist($absenceField);
     }
@@ -997,6 +1039,13 @@ class ProjectParticipantFieldsService
       ->setTooltip($description)
       ->setDisplayOrder(-$eventData['start']->getTimestamp())
       ->setParticipantAccess(AccessPermission::READ);
+
+    if ($absenceField->getMultiplicity() == Multiplicity::SIMPLE) {
+      $defaultOption = $absenceField->getDataOption();
+      if (empty($defaultOption->getTooltip())) {
+        $defaultOption->setTooltip($description);
+      }
+    }
 
     if (empty($absenceField->getTab())) {
       // TRANSLATORS: Column heading in table (capital first character)
@@ -1070,7 +1119,7 @@ class ProjectParticipantFieldsService
    * @todo We might want to remove "side-effects", i.e. data-base files and
    * cloud files and cloud folders.
    */
-  public function deleteField($fieldOrId)
+  public function deleteField(int|Entities\ProjectParticipantField $fieldOrId)
   {
     if (!($fieldOrId instanceof Entities\ProjectParticipantField)) {
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldOrId);

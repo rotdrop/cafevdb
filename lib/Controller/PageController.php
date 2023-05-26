@@ -345,6 +345,12 @@ class PageController extends Controller
     // Initial state injecton for JS
     $this->publishInitialStateForUser($this->userId());
 
+    $this->initialStateService->provideInitialState(
+      $this->appName,
+      'iFrameContentScript',
+      $this->assetService->getJSAsset('iframe-content-script'),
+    );
+
     // The most important ...
     $encrkey = $this->getAppEncryptionKey();
 

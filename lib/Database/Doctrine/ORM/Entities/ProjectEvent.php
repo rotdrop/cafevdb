@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Common\Uuid;
  *   }
  * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectEventsRepository")
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectEventEntityListener"})
  * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class ProjectEvent implements \ArrayAccess
@@ -438,5 +439,11 @@ class ProjectEvent implements \ArrayAccess
   public function getAbsenceField():?ProjectParticipantField
   {
     return $this->absenceField;
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->eventUri . ':' . $this->recurrenceId . '@' . $this->calendarUri;
   }
 }

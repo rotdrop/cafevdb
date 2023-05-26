@@ -362,10 +362,24 @@ class ProjectParticipantFields extends PMETableViewBase
         'sort' => true,
         'tooltip' => $this->toolTipsService['participant-fields-field-name'],
       ],
-      $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name')
+      $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name') //
     );
 
     $opts['fdd']['name']['sql'] = self::ifFileSystemEntry('$main_table.$field_name', $opts['fdd']['name']['sql']);
+
+    $opts['fdd']['deleted'] = array_merge(
+      $this->defaultFDD['deleted'], [
+        'tab' => [ 'id' => 'tab-all' ],
+        'name' => $this->l->t('Deleted'),
+        'css'      => [ 'postfix' => [ 'participant-field-disabled', ], ],
+        'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
+        'dateformat' => 'medium',
+        'timeformat' => 'short',
+        'maxlen' => 19,
+        'input' => ($this->showDisabled) ? 'T' : 'RH',
+      ]);
+    Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
+    $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
 
     $opts['fdd']['usage'] = [
       'tab' => [ 'id' => [ 'miscinfo' ] ],
@@ -379,15 +393,6 @@ class ProjectParticipantFields extends PMETableViewBase
       'sort' => true,
       'tooltip' => $this->toolTipsService['participant-fields-usage'],
     ];
-
-    $opts['fdd']['deleted'] = array_merge(
-      $this->defaultFDD['deleted'], [
-        'tab' => [ 'id' => 'miscinfo' ],
-        'name' => $this->l->t('Deleted'),
-        'css'      => [ 'postfix' => [ 'participant-field-disabled', ], ],
-        'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
-        'input' => ($this->showDisabled) ? 'T' : 'RH',
-      ]);
 
     $opts['fdd']['multiplicity'] =[
       'name'    => $this->l->t('Multiplicity'),
@@ -1360,9 +1365,24 @@ __EOT__;
    */
   public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
-    $this->participantFieldsService->deleteField($pme->rec);
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    /*** @var Entities\ProjectParticipantField $field */
+    $field = $this->legacyRecordToEntity($pme->rec);
+    /** @var Entities\ProjectEvent $projectEvent */
+    $projectEvent = $field->getProjectEvent();
+    if ($field->usage() == 1 && !empty($field->getProjectEvent())) {
+      // if the logged in user decides to delete this field (again) then we
+      // should not hinder it too much ...
+      $projectEvent->setAbsenceField(null);
+      $field->setProjectEvent(null);
+    }
+
+    $this->participantFieldsService->deleteField($field);
 
     $changed = []; // disable PME delete query
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
 
     return true; // but run further triggers if appropriate
   }

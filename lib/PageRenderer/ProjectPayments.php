@@ -683,21 +683,21 @@ WHERE dsf.id IS NOT NULL',
     ON ppfo.field_id = pp.field_id
       AND ppfo.key = pp.receivable_key
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
+    ON ppfotr.locale = "'.($this->getTranslationLanguage()).'"
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppf.id = pp.field_id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
-    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
+    ON ppftr.locale = "'.($this->getTranslationLanguage()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
       AND ppftr.foreign_key = ppf.id',
           'column' => 'id',
           'description' => [
             'columns' => [
-              'CONCAT_WS(" ", "' . $this->currencySymbol() . '", FORMAT($table.amount, 2, "' . ($this->l10n()->getLocaleCode()) . '"))',
+              'CONCAT_WS(" ", "' . $this->currencySymbol() . '", FORMAT($table.amount, 2, "' . ($this->getTranslationLanguage()) . '"))',
               '$table.receivable_display_label',
             ],
             'divs' => [ ' - ' ],
@@ -760,14 +760,14 @@ WHERE dsf.id IS NOT NULL',
   ppf.multiplicity AS multiplicity
   FROM '.self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE.' ppfo
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppfotr
-    ON ppfotr.locale = "'.($this->l10n()->getLanguageCode()).'"
+    ON ppfotr.locale = "'.($this->getTranslationLanguage()).'"
       AND ppfotr.object_class = "'.addslashes(Entities\ProjectParticipantFieldDataOption::class).'"
       AND ppfotr.field = "label"
       AND ppfotr.foreign_key = CONCAT_WS(" ", ppfo.field_id, BIN2UUID(ppfo.key))
   LEFT JOIN '.self::PROJECT_PARTICIPANT_FIELDS_TABLE.' ppf
     ON ppfo.field_id = ppf.id
   LEFT JOIN '.self::FIELD_TRANSLATIONS_TABLE.' ppftr
-    ON ppftr.locale = "'.($this->l10n()->getLanguageCode()).'"
+    ON ppftr.locale = "'.($this->getTranslationLanguage()).'"
       AND ppftr.object_class = "'.addslashes(Entities\ProjectParticipantField::class).'"
       AND ppftr.field = "name"
       AND ppftr.foreign_key = ppf.id',
