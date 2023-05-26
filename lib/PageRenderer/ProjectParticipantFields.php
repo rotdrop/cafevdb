@@ -1365,14 +1365,24 @@ __EOT__;
    */
   public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
-    /*** @var Entities\ProjectParticipantField $entity */
-    $entity = $this->legacyRecordToEntity($pme->rec);
-    if ($entity->usage() == 1 && !empty($entity->getProjectEvent())) {
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    /*** @var Entities\ProjectParticipantField $field */
+    $field = $this->legacyRecordToEntity($pme->rec);
+    /** @var Entities\ProjectEvent $projectEvent */
+    $projectEvent = $field->getProjectEvent();
+    if ($field->usage() == 1 && !empty($field->getProjectEvent())) {
+      // if the logged in user decides to delete this field (again) then we
+      // should not hinder it too much ...
+      $projectEvent->setAbsenceField(null);
+      $field->setProjectEvent(null);
     }
 
-    $this->participantFieldsService->deleteField($entity);
+    $this->participantFieldsService->deleteField($field);
 
     $changed = []; // disable PME delete query
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
 
     return true; // but run further triggers if appropriate
   }
