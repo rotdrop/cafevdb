@@ -174,6 +174,13 @@ class ProjectFolders extends Command
     /** @var ProjectService $projectService */
     $projectService = $this->appContainer->get(ProjectService::class);
 
+    /** @var UserStorage $userStorage */
+    $userStorage = $this->appContainer->get(UserStorage::class);
+    $skeletonFolders = $projectService->getProjectSkeletonPaths();
+    foreach ($skeletonFolders as $skeletonFolder) {
+      $userStorage->ensureFolder($skeletonFolder);
+    }
+
     /** @var Repositories\ProjectsRepository $projectsRepository */
     $projectsRepository = $this->getDatabaseRepository(Entities\Project::class);
 

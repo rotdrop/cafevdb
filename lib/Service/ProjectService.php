@@ -587,14 +587,14 @@ class ProjectService
       $sharedFolder,
       $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER),
       $projectsFolder,
-      $this->appL10n()->t('skeleton'),
+      $this->appL10n()->t(ConfigService::PROJECT_SKELETON_FOLDER),
     ]);
     $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
     $postersFolder = $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
     $downloadsFolder = $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
     $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
 
-    $managementSkeleton = $skeletonPath . Constants::PATH_SEP . $this->appL10n()->t('management');
+    $managementSkeleton = $skeletonPath . Constants::PATH_SEP . $this->appL10n()->t(ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER);
     $balanceSkeleton = $skeletonPath . Constants::PATH_SEP . $balancesFolder;
 
     $this->skeletonPaths = [
@@ -604,7 +604,10 @@ class ProjectService
       self::FOLDER_TYPE_POSTERS => $managementSkeleton . Constants::PATH_SEP . $postersFolder,
       self::FOLDER_TYPE_DOWNLOADS => $managementSkeleton . Constants::PATH_SEP . $downloadsFolder,
     ];
-    $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS_TEMPLATE] = $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS] . Constants::PATH_SEP . $this->appL10n()->t('forename.surname');
+    $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS_TEMPLATE] =
+      $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS]
+      . Constants::PATH_SEP
+      . $this->appL10n()->t(ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER);
 
     return $this->skeletonPaths;
   }
@@ -647,7 +650,7 @@ class ProjectService
 
     $skeletonPaths = $this->getProjectSkeletonPaths();
     // TRANSLATORS: this is a placeholder for the login id. It must in particular remain all lowercase.
-    $skeletonExclude = '/' . preg_quote($this->appL10n()->t('forename.surname'), '/') . '/';
+    $skeletonExclude = '/' . preg_quote($this->appL10n()->t(ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER), '/') . '/';
 
     $pathPrefix = $this->getProjectPathPrefix($project);
 
