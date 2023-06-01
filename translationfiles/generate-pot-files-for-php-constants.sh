@@ -15,7 +15,7 @@ function extractConstant()
     php "$EXTRACT_CONSTANTS" "$CLASS" "$CONSTANT"
 }
 
-TRANSLATION_RE='\Wt\(self::([^)]+)\)'
+TRANSLATION_RE='\Wt\(([$][0-9a-zA-Z_]+\s*=\s*)?self::([^)]+)\)'
 
 while read -r MATCH; do
     FILE=$(echo "$MATCH"|cut -d: -f 1)
@@ -23,7 +23,7 @@ while read -r MATCH; do
     NAMESPACE='\'$(grep namespace "$FILE"|sed -E 's/^namespace\s+([^;]+);.*$/\1/g')
     CLASS=$NAMESPACE'\'$(basename "$FILE" .php)
     LINE=$(echo "$MATCH"|cut -d: -f 2)
-    CONSTANT=$(echo "$MATCH"|sed -E 's/^.*'"$TRANSLATION_RE"'.*$/\1/g')
+    CONSTANT=$(echo "$MATCH"|sed -E 's/^.*'"$TRANSLATION_RE"'.*$/\2/g')
     VALUE=$(extractConstant "$CLASS" "$CONSTANT")
     cat <<EOF
 #: $SHORT_FILE:$LINE
