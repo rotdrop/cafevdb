@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-06-01 14:00+0200\n"
+"POT-Creation-Date: 2023-06-01 14:10+0200\n"
 "PO-Revision-Date: 2023-06-01 12:17+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -17226,6 +17226,16 @@ msgstr "Inland"
 msgid "Continent"
 msgstr "Kontinent"
 
+#: lib/Service/EventsService.php:1151
+#, php-format
+msgid "project registration"
+msgstr "Projekt-Anmeldung"
+
+#: lib/Service/EventsService.php:1165
+#, php-format
+msgid "record absence"
+msgstr "Abwesenheit erfassen"
+
 #: lib/Service/MailingListsService.php:1129
 #, php-format
 msgid "mailing-lists"
@@ -17250,16 +17260,6 @@ msgstr "eingetragen"
 #, php-format
 msgid "waiting"
 msgstr "abwartend"
-
-#: lib/Service/EventsService.php:1151
-#, php-format
-msgid "project registration"
-msgstr "Projekt-Anmeldung"
-
-#: lib/Service/EventsService.php:1165
-#, php-format
-msgid "record absence"
-msgstr "Abwesenheit erfassen"
 
 #: lib/Service/ProjectService.php:590
 #, php-format
