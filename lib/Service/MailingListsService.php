@@ -787,10 +787,6 @@ class MailingListsService
    */
   public function getSubscriptionStatus(string $listId, string $subscriptionAddress):string
   {
-    self::t('unsubscribed');
-    self::t('subscribed');
-    self::t('invited');
-    self::t('waiting');
     $subscription = $this->getSubscription($listId, $subscriptionAddress);
     if (!empty($subscription[MailingListsService::ROLE_MEMBER])) {
       return self::STATUS_SUBSCRIBED;
@@ -1290,9 +1286,17 @@ class MailingListsService
     }
     return $listId;
   }
-}
 
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+  /**
+   * Just here in order to inject the enum values into the l10n framework.
+   *
+   * @return void
+   */
+  protected static function translationHack():void
+  {
+    self::t(self::STATUS_UNSUBSCRIBED);
+    self::t(self::STATUS_SUBSCRIBED);
+    self::t(self::STATUS_INVITED);
+    self::t(self::STATUS_WAITING);
+  }
+}

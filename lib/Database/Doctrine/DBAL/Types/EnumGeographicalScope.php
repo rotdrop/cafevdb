@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-, 20222022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,12 +52,12 @@ class EnumGeographicalScope extends EnumType
    *
    * @return void
    */
-  protected function translationHack():void
+  protected static function translationHack():void
   {
-    self::t('Domestic');
-    self::t('Continent');
-    self::t('Germany');
-    self::t('Europe');
-    self::t('World');
+    self::t(self::DOMESTIC);
+    self::t(self::CONTINENT);
+    self::t(self::GERMANY);
+    self::t(self::EUROPE);
+    self::t(self::WORLD);
   }
 }

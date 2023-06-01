@@ -76,7 +76,6 @@ class EventsService
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   const VALARM_FROM_START = VCalendarService::VALARM_FROM_START;
   const VALARM_FROM_END = VCalendarService::VALARM_FROM_END;
@@ -84,6 +83,9 @@ class EventsService
   const TASK_IN_PROCESS = VCalendarService::VTODO_STATUS_IN_PROCESS;
   const TASK_COMPLETED = VCalendarService::VTODO_STATUS_COMPLETED;
   const TASK_NEEDS_ACTION = VCalendarService::VTODO_STATUS_NEEDS_ACTION;
+
+  public const PROJECT_REGISTRATION_CATEGORY = 'project registration';
+  public const RECORD_ABSENCE_CATEGORY = 'record absence';
 
   /** @var EntityManager */
   protected $entityManager;
@@ -1146,8 +1148,7 @@ class EventsService
    */
   public function getProjectRegistrationCategory(bool $translate = true):string
   {
-    $category = self::t('project registration');
-    return $translate ? $this->appL10n()->t($category) : $category;
+    return $translate ? $this->appL10n()->t(self::PROJECT_REGISTRATION_CATEGORY) : self::PROJECT_REGISTRATION_CATEGORY;
   }
 
   /**
@@ -1161,8 +1162,7 @@ class EventsService
    */
   public function getRecordAbsenceCategory(bool $translate = true):string
   {
-    $category = self::t('record absence');
-    return $translate ? $this->appL10n()->t($category) : $category;
+    return $translate ? $this->appL10n()->t(self::RECORD_ABSENCE_CATEGORY) : self::RECORD_ABSENCE_CATEGORY;
   }
 
   /**
