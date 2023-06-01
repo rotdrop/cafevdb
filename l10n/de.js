@@ -1394,9 +1394,6 @@ OC.L10N.register(
     "This person does not yet know whether a participation is possible." : "Diese Person weiß noch nicht, ob sie an dem Termin teilnehmen kann.",
     "Unable to find participant field for id \"%s\"" : "Kann das Personen-Daten-Feld mit der Id \"%s\" nicht laden.",
     "templates" : "Vorlagen",
-    "skeleton" : "Skelett",
-    "management" : "Verwaltung",
-    "forename.surname" : "vorname.nachname",
     "Unable to ensure existence of folder \"%s\"." : "Kann nicht sicherstellen, dass der Ordner \"%s\" existiert.",
     "Unable set expiration date for the public download link \"%1$s\" for the project \"%2$s\"." : "Das Verfallsdatum für die Projekt-Freigabe \"%1$s\" für das Projekt\n\"%2$s\" konnte nicht gesetzt werden.",
     "Unable to create the public donwload link for the project \"%s\"." : "Konnte den Freigabe-Link für den Teilnehmenden-Download-Ordner für das Projekt \"%s\" nicht erstellen.",
@@ -2974,6 +2971,9 @@ OC.L10N.register(
     "subscribed" : "eingetragen",
     "waiting" : "abwartend",
     "project registration" : "Projekt-Anmeldung",
-    "record absence" : "Abwesenheit erfassen"
+    "record absence" : "Abwesenheit erfassen",
+    "skeleton" : "Skelett",
+    "management" : "Verwaltung",
+    "forename.surname" : "vorname.nachname"
 },
 "nplurals=2; plural=(n != 1)");

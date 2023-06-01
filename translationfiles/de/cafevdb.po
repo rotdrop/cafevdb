@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-06-01 12:43+0200\n"
+"POT-Creation-Date: 2023-06-01 14:00+0200\n"
 "PO-Revision-Date: 2023-06-01 12:17+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
@@ -955,8 +955,8 @@ msgstr ""
 "Voreinstellung der Schriftart für den Tabellen-Export auf \"%s\" gesetzt."
 
 #: lib/Controller/AdminSettingsController.php:332
-#: lib/Controller/PersonalSettingsController.php:1891
-#: lib/Controller/PersonalSettingsController.php:1946
+#: lib/Controller/PersonalSettingsController.php:1908
+#: lib/Controller/PersonalSettingsController.php:1963
 #: lib/Controller/ProjectParticipantsController.php:939
 #, php-format
 msgid "Unknown Request: \"%s\""
@@ -1006,7 +1006,7 @@ msgstr "Interner Fehler: `%s'."
 
 #: lib/Controller/BlogController.php:203
 #: lib/Controller/PersonalSettingsController.php:207
-#: lib/Controller/PersonalSettingsController.php:1743
+#: lib/Controller/PersonalSettingsController.php:1760
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not convertible to boolean."
 msgstr ""
@@ -1735,13 +1735,13 @@ msgstr ""
 "hochladen!"
 
 #: lib/Controller/PersonalSettingsController.php:211
-#: lib/Controller/PersonalSettingsController.php:1747
+#: lib/Controller/PersonalSettingsController.php:1764
 #, php-format
 msgid "Switching %2$s %1$s"
 msgstr "Schalte %2$s %1$s"
 
 #: lib/Controller/PersonalSettingsController.php:218
-#: lib/Controller/PersonalSettingsController.php:1385
+#: lib/Controller/PersonalSettingsController.php:1402
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not in the allowed range."
 msgstr "Wert \"%1$s\" für \"%2$s\" ist nicht im erlaubten Bereich."
@@ -1871,7 +1871,7 @@ msgstr ""
 "Benutzende verteilt werden."
 
 #: lib/Controller/PersonalSettingsController.php:549
-#: lib/Controller/PersonalSettingsController.php:1863
+#: lib/Controller/PersonalSettingsController.php:1880
 #, php-format
 msgid " \"%s\" set to \"%s\"."
 msgstr "\"%s\" auf \"%s\" eingestellt."
@@ -1920,7 +1920,7 @@ msgstr "Orchester Telefon-Nummer auf %s konfiguriert"
 
 #: lib/Controller/PersonalSettingsController.php:629
 #: lib/Controller/PersonalSettingsController.php:818
-#: lib/Controller/PersonalSettingsController.php:2205
+#: lib/Controller/PersonalSettingsController.php:2222
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr "Einstellung für Parameter \"%s\" gelöscht."
@@ -2034,7 +2034,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:967
-#: lib/Service/ProjectService.php:2812
+#: lib/Service/ProjectService.php:2815
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -2051,7 +2051,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:1001
-#: lib/Service/ProjectService.php:3074
+#: lib/Service/ProjectService.php:3077
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -2136,32 +2136,32 @@ msgid "Folder must not be empty."
 msgstr "Ordner darf nicht leer sein."
 
 #: lib/Controller/PersonalSettingsController.php:1150
-#: lib/Controller/PersonalSettingsController.php:1268
+#: lib/Controller/PersonalSettingsController.php:1276
 #, php-format
 msgid "Created and shared new folder \"%s\"."
 msgstr "Neuen Ordner \"%s\" erzeugt und `geteilt'."
 
 #: lib/Controller/PersonalSettingsController.php:1154
-#: lib/Controller/PersonalSettingsController.php:1272
+#: lib/Controller/PersonalSettingsController.php:1280
 #, php-format
 msgid "Failed to create new shared folder \"%s\"."
 msgstr "Fehler beim Erzeugen des gemeinsamen Ordners \"%s\"."
 
 #: lib/Controller/PersonalSettingsController.php:1166
-#: lib/Controller/PersonalSettingsController.php:1295
+#: lib/Controller/PersonalSettingsController.php:1312
 #, php-format
 msgid "\"%s\" which is configured as \"%s\" exists and is usable."
 msgstr ""
 "\"%s\" -- konfiguriert als \"%s\" -- existiert und kann verwendet werden."
 
 #: lib/Controller/PersonalSettingsController.php:1170
-#: lib/Controller/PersonalSettingsController.php:1299
+#: lib/Controller/PersonalSettingsController.php:1316
 #, php-format
 msgid "\"%s\" does not exist or is unaccessible."
 msgstr "\"%s\" existiert nicht oder ist nicht erreichbar."
 
 #: lib/Controller/PersonalSettingsController.php:1176
-#: lib/Controller/PersonalSettingsController.php:1305
+#: lib/Controller/PersonalSettingsController.php:1322
 #, php-format
 msgid "Failure checking folder \"%s\", caught an exception \"%s\"."
 msgstr ""
@@ -2191,56 +2191,56 @@ msgstr "Teilnehmenden-Download-Order auf \"%s\" eingestellt."
 msgid "\"%s\" has to be defined first before defining \"%s\"."
 msgstr "\"%s\" muss angegeben werden bevor \"%s\" spezifiziert werden kann."
 
-#: lib/Controller/PersonalSettingsController.php:1327
+#: lib/Controller/PersonalSettingsController.php:1344
 #, php-format
 msgid "Created and shared new calendar \"%s\"."
 msgstr "Kalender \"%s\" erzeugt und `geteilt'."
 
-#: lib/Controller/PersonalSettingsController.php:1328
+#: lib/Controller/PersonalSettingsController.php:1345
 #, php-format
 msgid "Validated shared calendar \"%s\"."
 msgstr "Gemeinsamer Kalender \"%s\" erfolgreich validiert."
 
-#: lib/Controller/PersonalSettingsController.php:1331
+#: lib/Controller/PersonalSettingsController.php:1348
 #, php-format
 msgid "Failed to create new shared calendar \"%s\"."
 msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1337
+#: lib/Controller/PersonalSettingsController.php:1354
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" "
 "\"gefangen\"."
 
-#: lib/Controller/PersonalSettingsController.php:1350
+#: lib/Controller/PersonalSettingsController.php:1367
 #, php-format
 msgid "Failed to create new shared address book \"%s\"."
 msgstr "Fehler beim erzeugen des gemeinsamen Adressbuchs \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1356
+#: lib/Controller/PersonalSettingsController.php:1373
 #, php-format
 msgid "Created and shared new address book \"%s\"."
 msgstr "Neues Adressbuch \"%s\" erzeugt und geteilt."
 
-#: lib/Controller/PersonalSettingsController.php:1361
+#: lib/Controller/PersonalSettingsController.php:1378
 #, php-format
 msgid "Failure checking address book \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf das Adressbuch \"%s\", Ausnahme \"%s\" "
 "\"aufgefangen\"."
 
-#: lib/Controller/PersonalSettingsController.php:1372
+#: lib/Controller/PersonalSettingsController.php:1389
 #, php-format
 msgid "Display name of musicians-addressbook reset to \"%s\"."
 msgstr "Anzeigename des Musizierende-Adressbuchs auf \"%s\" zurückgesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1374
+#: lib/Controller/PersonalSettingsController.php:1391
 #, php-format
 msgid "Display name of musicians-addressbook set to \"%s\"."
 msgstr "Anzeigename des Musizierende-Adressbuchs auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1377
+#: lib/Controller/PersonalSettingsController.php:1394
 #, php-format
 msgid ""
 "Unable to set display-name of musicians-addressbook to \"%s\", it remains at "
@@ -2249,81 +2249,81 @@ msgstr ""
 "Kann den Anzeigenamen des Musker-Adressbhuchs nicht auf \"%s\" setzen, es "
 "bleibt bei \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1388
+#: lib/Controller/PersonalSettingsController.php:1405
 #, php-format
 msgid "Setting %2$s to %1$s minutes."
 msgstr "Setze `%2$s' auf `%1$s' Minuten."
 
-#: lib/Controller/PersonalSettingsController.php:1393
-#: lib/Controller/PersonalSettingsController.php:1488
-#: lib/Controller/PersonalSettingsController.php:1642
+#: lib/Controller/PersonalSettingsController.php:1410
+#: lib/Controller/PersonalSettingsController.php:1505
+#: lib/Controller/PersonalSettingsController.php:1659
 #, php-format
 msgid "Value \"%s\" for set \"%s\" is not convertible to boolean."
 msgstr ""
 "Wert \"%s\" für \"%s\" kann nicht als Wahrheitswert interpretiert werden."
 
-#: lib/Controller/PersonalSettingsController.php:1455
+#: lib/Controller/PersonalSettingsController.php:1472
 msgid "Cloud-user-views have been regenerated successfully."
 msgstr "Cloud User-Views wurden erfolgreich erzeugt."
 
-#: lib/Controller/PersonalSettingsController.php:1523
+#: lib/Controller/PersonalSettingsController.php:1540
 msgid ""
 "Personalized single-row database-views have been regenerated successfully."
 msgstr ""
 "Die personalisierten Datenbank-Ansichten wurden erfolgreich regeneriert."
 
-#: lib/Controller/PersonalSettingsController.php:1552
+#: lib/Controller/PersonalSettingsController.php:1569
 #, php-format
 msgid "Successfully distributed the email credentials for %s."
 msgstr "Email-Zugangsdaten erfolgreich an folgende Benutzer verteilt: %s."
 
-#: lib/Controller/PersonalSettingsController.php:1554
+#: lib/Controller/PersonalSettingsController.php:1571
 msgid "Unable to distribute the email credentials to any user."
 msgstr "Konnte die Email-Zugangsdaten an keinen einzigen Benutzer verteilen."
 
-#: lib/Controller/PersonalSettingsController.php:1557
+#: lib/Controller/PersonalSettingsController.php:1574
 #, php-format
 msgid "Email credentials could not be set for %s."
 msgstr "Die Email-Zugangsdaten für %s konnten nicht installiert werden."
 
-#: lib/Controller/PersonalSettingsController.php:1560
-#: lib/Controller/PersonalSettingsController.php:1563
+#: lib/Controller/PersonalSettingsController.php:1577
+#: lib/Controller/PersonalSettingsController.php:1580
 #, php-format
 msgid "Setting the email credentials for %s failed fatally: \"%s\"."
 msgstr ""
 "Setzen der Email-Zugangsdaten für %s ist endgültig fehlgeschlagen: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1583
+#: lib/Controller/PersonalSettingsController.php:1600
 #, php-format
 msgid "%s connection seems functional."
 msgstr "%s Verbindung scheint zu funktionieren."
 
-#: lib/Controller/PersonalSettingsController.php:1584
+#: lib/Controller/PersonalSettingsController.php:1601
 #, php-format
 msgid "Unable to establish %s connection to %s@%s:%d"
 msgstr "Kann keine %s-Verbindung zu %s@%s:%d herstellen."
 
-#: lib/Controller/PersonalSettingsController.php:1604
+#: lib/Controller/PersonalSettingsController.php:1621
 #, php-format
 msgid "Server name \"%s\" has neither an IPV4 nor an IPV6 address"
 msgstr "Der Server-Name \"%s\" hat weder eine IPV4- noch eine IPV6-Adresse."
 
-#: lib/Controller/PersonalSettingsController.php:1617
+#: lib/Controller/PersonalSettingsController.php:1634
 #, php-format
 msgid "\"%s\" is not an integral number in the range [%d, %d]"
 msgstr "\"%s\" ist keine Ganzzahl im Bereicht [%d, %d]."
 
-#: lib/Controller/PersonalSettingsController.php:1625
+#: lib/Controller/PersonalSettingsController.php:1642
 #, php-format
 msgid "Unknown transport security method: \"%s\"."
 msgstr "Unbekannter Transport-Sicherheits-Typ: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1632
+#: lib/Controller/PersonalSettingsController.php:1649
 #, php-format
 msgid "Using transport security \"%s\" for protocol \"%s\"."
 msgstr "Verwende Transport-Verschlüsselung \"%s\" für das Protokoll \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1651
+#: lib/Controller/PersonalSettingsController.php:1668
 msgid ""
 "Please configure the mailing-list address first, otherweise I do not know "
 "which list I have to work on."
@@ -2331,11 +2331,11 @@ msgstr ""
 "Bitte die Listen-Adresse zuerst eingeben, sonst weiß ich ja nicht, was ich "
 "konfigurieren soll."
 
-#: lib/Controller/PersonalSettingsController.php:1664
+#: lib/Controller/PersonalSettingsController.php:1681
 msgid "none"
 msgstr "keine"
 
-#: lib/Controller/PersonalSettingsController.php:1662
+#: lib/Controller/PersonalSettingsController.php:1679
 #, php-format
 msgid ""
 "Autoconfiguration of the mailing list \"%1$s\" successful, owner set to "
@@ -2346,13 +2346,13 @@ msgstr ""
 "wurde erfolgreich vorgenommen. Eigentümer ist \"%2$s\", Moderator und nicht-"
 "moderierter Author ist \"%3$s\", spezialisierte automatische Antworten: %4$s."
 
-#: lib/Controller/PersonalSettingsController.php:1675
+#: lib/Controller/PersonalSettingsController.php:1692
 #, php-format
 msgid "Unable to parse email address \"%1$s\": %2$s"
 msgstr ""
 "Die Email-Adresse \"%1$s\" scheint ein ungültiges Format zu haben: %2$s."
 
-#: lib/Controller/PersonalSettingsController.php:1678
+#: lib/Controller/PersonalSettingsController.php:1695
 #, php-format
 msgid ""
 "\"%s\" seems to contain multiple email address, only a single address is "
@@ -2361,7 +2361,7 @@ msgstr ""
 "\"%s\" scheint mehrere Email-Adressen zu enthalten; hier darf aber nur eine "
 "einzelne Adresse angegeben werden."
 
-#: lib/Controller/PersonalSettingsController.php:1682
+#: lib/Controller/PersonalSettingsController.php:1699
 #, php-format
 msgid ""
 "\"%s\" does not contain the host-part of the email-address, local addresses "
@@ -2370,12 +2370,12 @@ msgstr ""
 "Die Email-Adresse \"%s\" enthält keinen Server-Namen, lokale Adressen dürfen "
 "hier nicht angegeben werden."
 
-#: lib/Controller/PersonalSettingsController.php:1686
+#: lib/Controller/PersonalSettingsController.php:1703
 #, php-format
 msgid "\"%s\" does not seem to be a valid email address"
 msgstr "\"%s\" scheint keine gültige Email-Adresse zu sein."
 
-#: lib/Controller/PersonalSettingsController.php:1719
+#: lib/Controller/PersonalSettingsController.php:1736
 #, php-format
 msgid ""
 "The Mailing list \"%1$s\" does not seem to exist on the configured mailing-"
@@ -2384,13 +2384,13 @@ msgstr ""
 "Die Email-Verteiler-Liste \"%1$s\" scheint auf dem eingetragenen Listen-"
 "Server nicht zu existieren."
 
-#: lib/Controller/PersonalSettingsController.php:1726
-#: lib/Controller/PersonalSettingsController.php:1807
+#: lib/Controller/PersonalSettingsController.php:1743
+#: lib/Controller/PersonalSettingsController.php:1824
 msgid "announcements"
 msgstr "Ankündigungen"
 
-#: lib/Controller/PersonalSettingsController.php:1727
-#: lib/Controller/PersonalSettingsController.php:1808
+#: lib/Controller/PersonalSettingsController.php:1744
+#: lib/Controller/PersonalSettingsController.php:1825
 #, php-format
 msgid ""
 "Link-shared auto-responses directory for the announcements mailing list is "
@@ -2398,43 +2398,43 @@ msgid ""
 msgstr ""
 "Uri für automatische Antworten des Ankündigungs-Email-Verteilers ist \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1759
+#: lib/Controller/PersonalSettingsController.php:1776
 #: lib/Settings/PersonalForm.php:446
 #, php-format
 msgid "%d days"
 msgstr "%d Tage"
 
-#: lib/Controller/PersonalSettingsController.php:1796
-#: lib/Controller/PersonalSettingsController.php:1802
+#: lib/Controller/PersonalSettingsController.php:1813
+#: lib/Controller/PersonalSettingsController.php:1819
 #, php-format
 msgid "Unable to connect to mailing list service at \"%s\""
 msgstr "Kann keine Verbindung zum Mailing-List-Service unter \"%s\" aufnehmen."
 
-#: lib/Controller/PersonalSettingsController.php:1811
+#: lib/Controller/PersonalSettingsController.php:1828
 msgid "projects"
 msgstr "Projekte"
 
-#: lib/Controller/PersonalSettingsController.php:1812
+#: lib/Controller/PersonalSettingsController.php:1829
 #, php-format
 msgid ""
 "Link-shared auto-responses directory for project mailing lists is \"%s\"."
 msgstr ""
 "Uri für automatische Antworten der Projekt-Email-Verteilers ist \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1819
+#: lib/Controller/PersonalSettingsController.php:1836
 msgid "Empty translation phrase or language"
 msgstr "Leere Übersetzung oder Sprache"
 
-#: lib/Controller/PersonalSettingsController.php:1822
+#: lib/Controller/PersonalSettingsController.php:1839
 msgid "Missing translation"
 msgstr "Fehlende Übersetzung"
 
-#: lib/Controller/PersonalSettingsController.php:1826
+#: lib/Controller/PersonalSettingsController.php:1843
 #, php-format
 msgid "Empty translation for phrase \"%s\"."
 msgstr "Leere Übersetzung der Phrase \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:1830
+#: lib/Controller/PersonalSettingsController.php:1847
 #, php-format
 msgid ""
 "Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s"
@@ -2442,84 +2442,84 @@ msgstr ""
 "Sprachkürzel (%s) müsste eine Länge zweischen 2 und 5 Buchstaben haben (e.g. "
 "de or en_US)"
 
-#: lib/Controller/PersonalSettingsController.php:1834
+#: lib/Controller/PersonalSettingsController.php:1851
 msgid "Recording the translation failed"
 msgstr "Speichern der Übersetzung fehlgeschlagen"
 
-#: lib/Controller/PersonalSettingsController.php:1836
+#: lib/Controller/PersonalSettingsController.php:1853
 #, php-format
 msgid "Successfully recorded the given translation for the language \"%s\""
 msgstr "Übersetzung für Sprache \"%s\" erfolgreich gespeichert."
 
-#: lib/Controller/PersonalSettingsController.php:1839
+#: lib/Controller/PersonalSettingsController.php:1856
 msgid "Failed to erase all recorded translations."
 msgstr "Das Löschen aller aufgezeichneter Übersetzungen ist fehlgeschlagen."
 
-#: lib/Controller/PersonalSettingsController.php:1841
+#: lib/Controller/PersonalSettingsController.php:1858
 msgid "All recorded translations have been erased."
 msgstr "Alle aufgezeichneten Übersetzungen wurden gelöscht."
 
-#: lib/Controller/PersonalSettingsController.php:1853
+#: lib/Controller/PersonalSettingsController.php:1870
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not a valid URL."
 msgstr "Wert \"%1$s\" für \"%2$s\" ist keine gültige URL."
 
-#: lib/Controller/PersonalSettingsController.php:1857
+#: lib/Controller/PersonalSettingsController.php:1874
 #, php-format
 msgid "\"%1$s\" must be a http(s) URL, scheme \"%2$s\" not supported."
 msgstr ""
 "\"%1$s\" muss eine http(s)-URL sein, Schema \"%2$s\" nicht unterstützt."
 
-#: lib/Controller/PersonalSettingsController.php:1878
+#: lib/Controller/PersonalSettingsController.php:1895
 #, php-format
 msgid "Unknown configuation key %s"
 msgstr "Unbekannter Konfigurationseintrag `%s'"
 
-#: lib/Controller/PersonalSettingsController.php:1882
+#: lib/Controller/PersonalSettingsController.php:1899
 #, php-format
 msgid "Value \"%s\" for setting \"%s\" is not in the allowed range."
 msgstr "Wert \"%s\" für \"%s\" ist nicht im erlaubten Bereich."
 
-#: lib/Controller/PersonalSettingsController.php:1887
+#: lib/Controller/PersonalSettingsController.php:1904
 #, php-format
 msgid "Redaxo categorie Id for \"%s\" set to \"%s\"."
 msgstr "Redaxo-Kategorie für \"%s\" auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1925
+#: lib/Controller/PersonalSettingsController.php:1942
 #, php-format
 msgid "Unknown link target %s"
 msgstr "Unbekanntes Verknüpfungs-Ziel %s"
 
-#: lib/Controller/PersonalSettingsController.php:1934
+#: lib/Controller/PersonalSettingsController.php:1951
 msgid "Shared folder is not configured."
 msgstr "Gemeinsamer Ordner ist nicht festgelegt."
 
-#: lib/Controller/PersonalSettingsController.php:1938
+#: lib/Controller/PersonalSettingsController.php:1955
 msgid "Document template folder is not configured."
 msgstr "Ort für Vorlagen-Ordner ist nicht konfiguriert."
 
-#: lib/Controller/PersonalSettingsController.php:2003
-#: lib/Controller/PersonalSettingsController.php:2128
+#: lib/Controller/PersonalSettingsController.php:2020
+#: lib/Controller/PersonalSettingsController.php:2145
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr "Unbekannte Serienbrief-Vorlage \"%s\" "
 
-#: lib/Controller/PersonalSettingsController.php:2026
-#: lib/Controller/PersonalSettingsController.php:2052
-#: lib/Controller/PersonalSettingsController.php:2077
-#: lib/Controller/PersonalSettingsController.php:2096
+#: lib/Controller/PersonalSettingsController.php:2043
+#: lib/Controller/PersonalSettingsController.php:2069
+#: lib/Controller/PersonalSettingsController.php:2094
+#: lib/Controller/PersonalSettingsController.php:2113
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr "Es gibt keine Template-Datei für das Template \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:2113
+#: lib/Controller/PersonalSettingsController.php:2130
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 "Serienbrief-Test für die Vorlage \"%s\" ist leider noch nicht implementiert, "
 "tut uns leid."
 
-#: lib/Controller/PersonalSettingsController.php:2157
+#: lib/Controller/PersonalSettingsController.php:2174
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
@@ -2528,7 +2528,7 @@ msgstr ""
 "Download des Test-Datensatz für den Serienbrief \"%s\" ist noch nicht "
 "implementiert."
 
-#: lib/Controller/PersonalSettingsController.php:2173
+#: lib/Controller/PersonalSettingsController.php:2190
 #: lib/Controller/PmeTableController.php:151
 #: lib/Controller/ProjectsController.php:388
 #: lib/Controller/SepaBulkTransactionsController.php:165
@@ -2536,36 +2536,36 @@ msgstr ""
 msgid "Unknown Request: \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:2217
+#: lib/Controller/PersonalSettingsController.php:2234
 #, php-format
 msgid "Value for \"%1$s\" set to \"%2$s\""
 msgstr "Wert für \"%1$s\" auf \"%2$s\" gesetzt"
 
-#: lib/Controller/PersonalSettingsController.php:2236
+#: lib/Controller/PersonalSettingsController.php:2253
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 "Der App-Verschlüsselungs-Schlüssel ist ungültig; er wird nicht verteilt."
 
-#: lib/Controller/PersonalSettingsController.php:2259
+#: lib/Controller/PersonalSettingsController.php:2276
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel erfolgreich an folgende Benutzer verteilt: %s."
 
-#: lib/Controller/PersonalSettingsController.php:2261
+#: lib/Controller/PersonalSettingsController.php:2278
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 "Konnte den App-Verschlüsselungs-Schlüssel an keinen einzigen Benutzer "
 "verteilen."
 
-#: lib/Controller/PersonalSettingsController.php:2264
+#: lib/Controller/PersonalSettingsController.php:2281
 #, php-format
 msgid "Public key missing for %s, key distribution failed."
 msgstr ""
 "Kann den App-Verschlüsselungs-Schlüssel nicht an die Person %s weitergeben, "
 "da deren öffentlicher Verschlüsselungs-Schlüssel fehlt."
 
-#: lib/Controller/PersonalSettingsController.php:2269
+#: lib/Controller/PersonalSettingsController.php:2286
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -7025,7 +7025,7 @@ msgstr "Kann die personalisierten Datenbank-Ansichten nicht löschen: %s."
 msgid "Folder \\`%s' could not be created"
 msgstr "Der Ordner `%s' konnte nicht erzeugt werden."
 
-#: lib/Service/ConfigCheckService.php:1062
+#: lib/Service/ConfigCheckService.php:1063
 #, php-format
 msgid "Unapplied migrations: %s."
 msgstr "Ausstehende Datenmigrationen: %s."
@@ -7714,25 +7714,12 @@ msgstr "Kann das Personen-Daten-Feld mit der Id \"%s\" nicht laden."
 msgid "templates"
 msgstr "Vorlagen"
 
-#: lib/Service/ProjectService.php:590
-msgid "skeleton"
-msgstr "Skelett"
-
-#: lib/Service/ProjectService.php:597
-msgid "management"
-msgstr "Verwaltung"
-
-#. TRANSLATORS: this is a placeholder for the login id. It must in particular remain all lowercase.
-#: lib/Service/ProjectService.php:607 lib/Service/ProjectService.php:650
-msgid "forename.surname"
-msgstr "vorname.nachname"
-
-#: lib/Service/ProjectService.php:708
+#: lib/Service/ProjectService.php:711
 #, php-format
 msgid "Unable to ensure existence of folder \"%s\"."
 msgstr "Kann nicht sicherstellen, dass der Ordner \"%s\" existiert."
 
-#: lib/Service/ProjectService.php:969
+#: lib/Service/ProjectService.php:972
 #, php-format
 msgid ""
 "Unable set expiration date for the public download link \"%1$s\" for the "
@@ -7741,19 +7728,19 @@ msgstr ""
 "Das Verfallsdatum für die Projekt-Freigabe \"%1$s\" für das Projekt\n"
 "\"%2$s\" konnte nicht gesetzt werden."
 
-#: lib/Service/ProjectService.php:979
+#: lib/Service/ProjectService.php:982
 #, php-format
 msgid "Unable to create the public donwload link for the project \"%s\"."
 msgstr ""
 "Konnte den Freigabe-Link für den Teilnehmenden-Download-Ordner für das "
 "Projekt \"%s\" nicht erstellen."
 
-#: lib/Service/ProjectService.php:1395
+#: lib/Service/ProjectService.php:1398
 #, php-format
 msgid "Projects of %s"
 msgstr "Projekte von %s"
 
-#: lib/Service/ProjectService.php:1459
+#: lib/Service/ProjectService.php:1462
 #, php-format
 msgid ""
 "====== Project %s ======\n"
@@ -7812,75 +7799,75 @@ msgstr ""
 "===== Location =====\n"
 "Was auch immer."
 
-#: lib/Service/ProjectService.php:1639
+#: lib/Service/ProjectService.php:1642
 msgid "Preview"
 msgstr "Vorschau"
 
-#: lib/Service/ProjectService.php:1641 lib/Service/ProjectService.php:1696
-#: lib/Service/ProjectService.php:1869 lib/Service/ProjectService.php:1914
-#: lib/Service/ProjectService.php:1974 lib/Settings/PersonalForm.php:352
+#: lib/Service/ProjectService.php:1644 lib/Service/ProjectService.php:1699
+#: lib/Service/ProjectService.php:1872 lib/Service/ProjectService.php:1917
+#: lib/Service/ProjectService.php:1977 lib/Settings/PersonalForm.php:352
 msgid "Rehearsals"
 msgstr "Proben"
 
-#: lib/Service/ProjectService.php:1643
+#: lib/Service/ProjectService.php:1646
 msgid "Archive"
 msgstr "Archiv"
 
-#: lib/Service/ProjectService.php:1645
+#: lib/Service/ProjectService.php:1648
 msgid "Trashbin"
 msgstr "Mülltonne"
 
-#: lib/Service/ProjectService.php:1690
+#: lib/Service/ProjectService.php:1693
 msgid "Empty project."
 msgstr "Fehlendes Projekt."
 
-#: lib/Service/ProjectService.php:1717
+#: lib/Service/ProjectService.php:1720
 #, php-format
 msgid "Unable to fetch web-pages like \"%s\"."
 msgstr "Kann die Web-Seiten für \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:1742
+#: lib/Service/ProjectService.php:1745
 #, php-format
 msgid "Unable to create web-page \"%s\"."
 msgstr "Kann Web-Page %s nicht anlegen."
 
-#: lib/Service/ProjectService.php:1763
+#: lib/Service/ProjectService.php:1766
 #, php-format
 msgid "Unable to attach article \"%s\"."
 msgstr "Kann den Artikel \"%s\" nicht verknüpfen."
 
-#: lib/Service/ProjectService.php:1807
+#: lib/Service/ProjectService.php:1810
 #, php-format
 msgid "Failed removing web-page %d from project %d"
 msgstr ""
 "Konnte die Web-Seite %d vom Projekt mit der Id %d leider nicht entfernen."
 
-#: lib/Service/ProjectService.php:1851
+#: lib/Service/ProjectService.php:1854
 #, php-format
 msgid "Failed detaching web-page %d from project %d"
 msgstr "Konnte die Web-Seite %d nicht vom Projekt %d entkoppeln\""
 
-#: lib/Service/ProjectService.php:2016
+#: lib/Service/ProjectService.php:2019
 #, php-format
 msgid "Unabled to retrieve project with id %d"
 msgstr "Konnte das Projekt mit der Id %d nicht laden"
 
-#: lib/Service/ProjectService.php:2060
+#: lib/Service/ProjectService.php:2063
 #, php-format
 msgid "Unable to fetch the data for the musician-id \"%s\"."
 msgstr "Kann die Daten für die Musiker:Innen-Id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2076
+#: lib/Service/ProjectService.php:2079
 #, php-format
 msgid "The musician %s is already registered with project %s."
 msgstr "Die Person %s ist bereits für das Projekt %s registriert."
 
-#: lib/Service/ProjectService.php:2098
+#: lib/Service/ProjectService.php:2101
 #, php-format
 msgid "The musician %s does not play any instrument."
 msgstr "DiePerson %s scheint kein einziges Instrument zu spielen."
 
-#: lib/Service/ProjectService.php:2150
+#: lib/Service/ProjectService.php:2153
 #, php-format
 msgid ""
 "The musician %s does not play any instrument registered in the "
@@ -7889,61 +7876,61 @@ msgstr ""
 "Die Person \"%s\" spielt kein einziges Instrument, das in der\n"
 "Besetzungstabelle für das Projekt \"%s\" aufgeführt ist."
 
-#: lib/Service/ProjectService.php:2204
+#: lib/Service/ProjectService.php:2207
 #, php-format
 msgid "Adding the musician with id %d failed with exception %s"
 msgstr "Person mit id \"%d\" konnte nicht hinzugefügt werden, Fehler \"%s\""
 
-#: lib/Service/ProjectService.php:2213
+#: lib/Service/ProjectService.php:2216
 #, php-format
 msgid "The musician %s has been added to project %s."
 msgstr "Die Person %s wurde zum Projekt %s hinzugefügt."
 
-#: lib/Service/ProjectService.php:2269
+#: lib/Service/ProjectService.php:2272
 #, php-format
 msgid "Unable to create project-mailing list \"%1$s\" for project \"%1$s\"."
 msgstr ""
 "Konnte den Email-Verteiler \"%1$s\" für das Projekt \"%2$s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2335
+#: lib/Service/ProjectService.php:2338
 #, php-format
 msgid "Unable to create mailing list \"%s\"."
 msgstr "Konnte den Email-Verteiler \"%s\" nicht anlegen."
 
-#: lib/Service/ProjectService.php:2473
+#: lib/Service/ProjectService.php:2476
 #, php-format
 msgid ""
 "Unable to unsubscribe the confirmed paticipant \"%s\" from the project "
 "mailing list."
 msgstr "Kann die Person \"%s\" nicht vom Projekt-Email-Verteiler abmelden."
 
-#: lib/Service/ProjectService.php:2498
+#: lib/Service/ProjectService.php:2501
 #, php-format
 msgid "Unable to fetch the project for id \"%s\"."
 msgstr "Kann das Projekt zur id \"%s\" nicht laden."
 
-#: lib/Service/ProjectService.php:2575
+#: lib/Service/ProjectService.php:2578
 #, php-format
 msgid "Unable to create the project-infrastructure for project id \"%d\"."
 msgstr ""
 "Konnte die Daten-Infrastruktur (Dateiordner, Wiki, Web-Seiten) für das "
 "Projekt mit der Id \"%d\" nicht erzeugen."
 
-#: lib/Service/ProjectService.php:2616
+#: lib/Service/ProjectService.php:2619
 #, php-format
 msgid "Unable to create new project with name \"%s\"."
 msgstr "Konnte kein Projekt \"%s\" erzeugen."
 
-#: lib/Service/ProjectService.php:2646
+#: lib/Service/ProjectService.php:2649
 #, php-format
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:3154
+#: lib/Service/ProjectService.php:3157
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:3187
+#: lib/Service/ProjectService.php:3190
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -7953,11 +7940,11 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:3193
+#: lib/Service/ProjectService.php:3196
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/ProjectService.php:3239
+#: lib/Service/ProjectService.php:3242
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr "Kann \"%1$s\" nicht vom Projekt austragen."
@@ -16706,7 +16693,7 @@ msgstr "Proben"
 msgid "sub-page"
 msgstr "Unterseite"
 
-#: lib/PageRenderer/PMETableViewBase.php:230
+#: lib/PageRenderer/PMETableViewBase.php:230 lib/PageRenderer/Projects.php:990
 #, php-format
 msgid "template"
 msgstr "Vorlage"
@@ -17273,6 +17260,21 @@ msgstr "Projekt-Anmeldung"
 #, php-format
 msgid "record absence"
 msgstr "Abwesenheit erfassen"
+
+#: lib/Service/ProjectService.php:590
+#, php-format
+msgid "skeleton"
+msgstr "Skelett"
+
+#: lib/Service/ProjectService.php:597
+#, php-format
+msgid "management"
+msgstr "Verwaltung"
+
+#: lib/Service/ProjectService.php:610 lib/Service/ProjectService.php:653
+#, php-format
+msgid "forename.surname"
+msgstr "vorname.nachname"
 
 #, php-format
 #~ msgid "%1$s has been renamed to %2$s."
