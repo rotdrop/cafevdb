@@ -24,6 +24,8 @@ cp "${TEMPLATE}" "${TMPFILE}"
 for f in "${APPDIR}"/translationfiles/additions/*.pot ; do
     cat "$f" >> "${TMPFILE}"
 done
+
+bash "$APPDIR"/translationfiles/generate-pot-files-for-php-constants.sh >> "${TMPFILE}"
 if msguniq "${TMPFILE}" > /dev/null 2>&1 ; then
     msguniq -o "${TEMPLATE}" "${TMPFILE}"
 else
