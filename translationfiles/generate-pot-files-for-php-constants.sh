@@ -57,4 +57,4 @@ msgstr ""
 
 EOF
 
-done < <(grep -E -n -H -r "$TRANSLATION_RE" "$APPDIR"/lib)
+done < <(grep -E -n -H -r "$TRANSLATION_RE" "$APPDIR"/lib|sort)
