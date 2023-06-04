@@ -145,13 +145,21 @@ trait EntityManagerTrait
    * first check if this entity is already tagged as "soft deleted"
    * and if so do nothing.
    *
+   * @param bool $useTransaction Wrap the remove operation into a transaction
+   * or not. This parameter is ignored if $flush is false.
+   *
    * @return void
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  protected function remove(mixed $entity, bool $flush = false, bool $hard = false, bool $soft = false):void
-  {
+  protected function remove(
+    mixed $entity,
+    bool $flush = false,
+    bool $hard = false,
+    bool $soft = false,
+    bool $useTransaction = false,
+  ):void {
     if (filter_var($entity, FILTER_VALIDATE_INT, ['min_range' => 1])) {
       $entity = [ 'id' => $entity ];
     }
@@ -163,14 +171,27 @@ trait EntityManagerTrait
     if ($soft && !$hard && method_exists($entity, 'isDeleted') && $entity->isDeleted()) {
       return;
     }
-    $this->entityManager->remove($entity);
-    if ($hard && (!method_exists($entity, 'isDeleted') || !$entity->isDeleted())) {
-      $this->flush();
+    try {
+      if ($useTransaction && $flush) {
+        $this->entityManager->beginTransaction();
+      }
       $this->entityManager->remove($entity);
-    }
+      if ($hard && (!method_exists($entity, 'isDeleted') || !$entity->isDeleted())) {
+        $this->flush();
+        $this->entityManager->remove($entity);
+      }
 
-    if ($flush) {
-      $this->flush();
+      if ($flush) {
+        $this->flush();
+        if ($useTransaction) {
+          $this->entityManager->commit();
+        }
+      }
+    } catch (Throwable $t) {
+      if ($useTransaction) {
+        $this->entityManager->rollback();
+      }
+      throw $t;
     }
   }
 
