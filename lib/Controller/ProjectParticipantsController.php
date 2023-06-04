@@ -238,13 +238,20 @@ class ProjectParticipantsController extends Controller
           ));
         }
 
+        /** @var Entities\ProjectParticipant $projectParticipant */
         $projectParticipant = $this->find([ 'project' => $recordId['projectId'], 'musician' => $recordId['musicianId'] ]);
         if (empty($projectParticipant)) {
           return self::grumble($this->l->t("Unable to fetch project-participant with given key %s", print_r($recordId, true)));
         }
 
         $musicianInstruments = [];
-        foreach ($projectParticipant['musician']['instruments'] as $musicianInstrument) {
+        /** @var Entities\MusicianInstrument $musicianInstrument */
+        foreach ($projectParticipant->getMusician()->getInstruments() as $musicianInstrument) {
+          if ($musicianInstrument->isDeleted()) {
+            // already deleted instruments must be omitted here, otherwise the
+            // checks below hinder the undeletion.
+            continue;
+          }
           $musicianInstruments[$musicianInstrument['instrument']['id']] = $musicianInstrument;
         }
         // sort by musician's instrument ranking
@@ -266,10 +273,6 @@ class ProjectParticipantsController extends Controller
         foreach ($this->getDatabaseRepository(Entities\Instrument::class)->findAll() as $instrument) {
           $allInstruments[$instrument['id']] = $instrument;
         }
-
-        $this->logInfo('PRJ INST '.print_r(array_keys($projectInstruments), true));
-        $this->logInfo('MUS INST '.print_r(array_keys($musicianInstruments), true));
-        $this->logInfo('AJX INST '.print_r($instrumentValues, true));
 
         switch ($context) {
           case 'musician':
