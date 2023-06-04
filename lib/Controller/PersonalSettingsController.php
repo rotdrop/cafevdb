@@ -68,7 +68,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+use OCA\Redaxo\Service\RPC as WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
 /** AJAX end-points for personal settings. */
