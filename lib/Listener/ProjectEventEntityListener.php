@@ -40,6 +40,7 @@ use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\CalDavService;
+use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -106,7 +107,7 @@ class ProjectEventEntityListener
   /**
    * {@inheritdoc}
    */
-  public function postRemove(Entities\ProjectEvent $project, ORMEvent\PostRemoveEventArgs $eventArgs)
+  public function preRemove(Entities\ProjectEvent $project, ORMEvent\PreRemoveEventArgs $eventArgs)
   {
     $this->registerPreCommitAction($project);
   }
@@ -134,13 +135,18 @@ class ProjectEventEntityListener
           $additions[] = $recordAbsenceCategory;
           $removals = [];
         }
-        $changed = $this->eventsService->changeCategories(
-          $projectEvent->getCalendarId(),
-          $projectEvent->getEventUri(),
-          $projectEvent->getRecurrenceId(),
-          $additions,
-          $removals,
-        );
+        try {
+          $changed = $this->eventsService->changeCategories(
+            $projectEvent->getCalendarId(),
+            $projectEvent->getEventUri(),
+            $projectEvent->getRecurrenceId(),
+            $additions,
+            $removals,
+          );
+        } catch (Exceptions\CalendarEntryNotFoundException $e) {
+          // this can happen if the project events table got out of sync
+          $changed = false;
+        }
         return $changed;
       },
       function(bool $changed) use ($projectEvent, $recordAbsenceCategory) {
