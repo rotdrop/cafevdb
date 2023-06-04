@@ -1710,7 +1710,7 @@ Whatever.',
     }
 
     // General page template
-    $pageTemplate = $this->getConfigValue('redaxoTemplate');
+    $pageTemplate = $this->getConfigValue('redaxoSubPageTemplate');
 
     $pageName = $prefix.$projectName;
     try {
