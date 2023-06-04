@@ -1372,15 +1372,15 @@ const installFilterChosen = function(containerSel) {
 };
 
 const removeButtonPlugin = {
-  // eslint-disable-next-line camelcase
-  remove_button: {
+  name: 'remove_button',
+  options: {
     title: t(appName, 'Remove'),
   },
 };
 
 const clearButtonPlugin = {
-  // eslint-disable-next-line camelcase
-  clear_button: {
+  name: 'clear_button',
+  options: {
     title: t(appName, 'Clear'),
   },
 };
@@ -1404,7 +1404,7 @@ function installInputSelectize(containerSel, onlyClass) {
     const $self = $(this);
     const selectizeOptions = mergician({ appendArrays: true, dedupArrays: true })(
       {
-        plugins: $self.prop('multiple') ? removeButtonPlugin : clearButtonPlugin,
+        plugins: [$self.prop('multiple') ? removeButtonPlugin : clearButtonPlugin],
         delimiter: ',',
         persist: false,
         hideSelected: false,
