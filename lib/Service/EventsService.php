@@ -1455,98 +1455,112 @@ class EventsService
 
     $projectRecurrenceIds = [];
 
-    // register current events and record which recurrence-ids are there
+    $this->entityManager->beginTransaction();
+    try {
 
-    /** @var VEvent $sibling */
-    foreach ($siblings as $recurrenceId => $sibling) {
+      // register current events and record which recurrence-ids are there
 
-      // recurring events can have exceptions, so we need to fetch the
-      // categories for all siblings separately.
-      $categories = VCalendarService::getCategories($sibling);
+      /** @var VEvent $sibling */
+      foreach ($siblings as $recurrenceId => $sibling) {
 
-      /** @var Entities\Project $project */
-      foreach ($projects as $project) {
+        // recurring events can have exceptions, so we need to fetch the
+        // categories for all siblings separately.
+        $categories = VCalendarService::getCategories($sibling);
 
-        if (in_array($project->getName(), $categories)) {
+        /** @var Entities\Project $project */
+        foreach ($projects as $project) {
 
-          $projectId = $project->getId();
-          $projectRecurrenceIds[$projectId][] = $recurrenceId;
+          if (in_array($project->getName(), $categories)) {
 
-          if ($isRegistrationEvent) {
-            $dtStart = $sibling->DTSTART;
-            $start = $dtStart->getDateTime();
-            $project->setRegistrationStartDate($start);
+            $projectId = $project->getId();
+            $projectRecurrenceIds[$projectId][] = $recurrenceId;
 
-            $dtEnd = VCalendarService::getDTEnd($sibling);
-            $end = $dtEnd->getDateTime()->modify('-1 day');
+            if ($isRegistrationEvent) {
+              $dtStart = $sibling->DTSTART;
+              $start = $dtStart->getDateTime();
+              $project->setRegistrationStartDate($start);
 
-            $implicitDeadline = $this->projectService->getProjectRegistrationDeadline($project, ignoreExplicit: true);
+              $dtEnd = VCalendarService::getDTEnd($sibling);
+              $end = $dtEnd->getDateTime()->modify('-1 day');
 
-            if (!empty($project->getRegistrationDeadline())) {
-              $this->logInfo('DEADLINES I E P ' . $implicitDeadline->format('Ymd') . ' / ' . $end->format('Ymd') . ' / ' . $project->getRegistrationDeadline()->format('Ymd'));
+              $implicitDeadline = $this->projectService->getProjectRegistrationDeadline($project, ignoreExplicit: true);
+
+              if (!empty($project->getRegistrationDeadline())) {
+                $this->logInfo('DEADLINES I E P ' . $implicitDeadline->format('Ymd') . ' / ' . $end->format('Ymd') . ' / ' . $project->getRegistrationDeadline()->format('Ymd'));
+              }
+
+              if (empty($implicitDeadline) || $end->format('Ymd') != $implicitDeadline->format('Ymd')) {
+                $project->setRegistrationDeadline($end);
+              } elseif (!empty($implicitDeadline) && $end->format('Ymd') == $implicitDeadline->format('Ymd')) {
+                $project->setRegistrationDeadline(null);
+              }
             }
 
-            if (empty($implicitDeadline) || $end->format('Ymd') != $implicitDeadline->format('Ymd')) {
-              $project->setRegistrationDeadline($end);
-            } elseif (!empty($implicitDeadline) && $end->format('Ymd') == $implicitDeadline->format('Ymd')) {
-              $project->setRegistrationDeadline(null);
+            // register or update the event in the ProjectEvents table.
+            /** @var Entities\ProjectEvent $projectEvent */
+            list('isNew' => $status, 'entity' => $projectEvent) = $this->register(
+              $project,
+              calendarURI: $calURI,
+              eventUID: $eventUID,
+              sequence: (int)(string)($sibling->SEQUENCE ?? 0),
+              recurrenceId: $recurrenceId,
+              eventURI: $eventURI,
+              calendarId: $calId,
+              type: $type,
+              relatedEvents: $relatedEvents,
+              isRecurring: $isRecurring,
+              flush: false,
+            );
+            $this->flush();
+            if ($status) {
+              $registered[] = $projectId;
             }
+            $needAbsenceField = in_array($this->getRecordAbsenceCategory(), $categories)
+              || in_array($this->getRecordAbsenceCategory(translate: false), $categories);
+            $this->ensureAbsenceField($projectEvent, remove: !$needAbsenceField, flush: false);
           }
-
-          // register or update the event in the ProjectEvents table.
-          /** @var Entities\ProjectEvent $projectEvent */
-          list('isNew' => $status, 'entity' => $projectEvent) = $this->register(
-            $project,
-            calendarURI: $calURI,
-            eventUID: $eventUID,
-            sequence: (int)(string)($sibling->SEQUENCE ?? 0),
-            recurrenceId: $recurrenceId,
-            eventURI: $eventURI,
-            calendarId: $calId,
-            type: $type,
-            relatedEvents: $relatedEvents,
-            isRecurring: $isRecurring,
-            flush: false,
-          );
-          if ($status) {
-            $registered[] = $projectId;
-          }
-          $needAbsenceField = in_array($this->getRecordAbsenceCategory(), $categories)
-            || in_array($this->getRecordAbsenceCategory(translate: false), $categories);
-          $this->ensureAbsenceField($projectEvent, remove: !$needAbsenceField, flush: false);
         }
       }
+
+      // now select all stale project events for all projects.
+
+      $criteria = [
+        [ 'eventUid' => $eventUID ],
+        [ '(&' =>  true ],
+        [ '(|' => true ],
+        [ '!project' => array_keys($projectRecurrenceIds) ], // untagged projects
+      ];
+
+      // tagged events with potentially excluded event siblings
+      foreach ($projectRecurrenceIds as $projectId => $recurrenceIds) {
+        $criteria[] = [ '(&project' => $projectId ];
+        $criteria[] = [ '!recurrenceId' => $recurrenceIds ];
+        $criteria[] = [ ')' => true ];
+      }
+
+      // parentheses should be closed automatically, otherwise:
+      $criteria[] = [ ')' => true ]; // inner or
+      $criteria[] = [ ')' => true ]; // outer and
+
+      $staleProjectEvents = $this->findBy($criteria);
+
+      $this->flush();
+
+      /** @var Entities\ProjectEvent $projectEvent */
+      foreach ($staleProjectEvents as $projectEvent) {
+        if (!empty($projectEvent->getAbsenceField())) {
+          $projectEvent->getAbsenceField()->setProjectEvent(null);
+        }
+        $this->remove($projectEvent, flush: false, soft: true, hard: false);
+        $unregistered[] = $projectEvent->getProject()->getId();
+      }
+
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      $this->entityManager->rollback();
+      $this->logException($t);
     }
-
-    // now select all stale project events for all projects.
-
-    $criteria = [
-      [ 'eventUid' => $eventUID ],
-      [ '(&' =>  true ],
-      [ '(|' => true ],
-      [ '!project' => array_keys($projectRecurrenceIds) ], // untagged projects
-    ];
-
-    // tagged events with potentially excluded event siblings
-    foreach ($projectRecurrenceIds as $projectId => $recurrenceIds) {
-      $criteria[] = [ '(&project' => $projectId ];
-      $criteria[] = [ '!recurrenceId' => $recurrenceIds ];
-      $criteria[] = [ ')' => true ];
-    }
-
-    // parentheses should be closed automatically, otherwise:
-    $criteria[] = [ ')' => true ]; // inner or
-    $criteria[] = [ ')' => true ]; // outer and
-
-    $staleProjectEvents = $this->findBy($criteria);
-
-    /** @var Entities\ProjectEvent $projectEvent */
-    foreach ($staleProjectEvents as $projectEvent) {
-      $this->remove($projectEvent, flush: false, soft: true, hard: false);
-      $unregistered[] = $projectEvent->getProject()->getId();
-    }
-
-    $this->flush(useTransaction: true);
 
     $registered = array_unique($registered);
     $unregistered = array_unique($unregistered);
@@ -1631,16 +1645,23 @@ class EventsService
     array $relatedEvents,
   ):array {
     $siblings = [];
+    $handledUids = [];
     foreach (($this->projectEventSiblings[$projectId][$calendarId] ?? []) as $recurrenceId => $uidSiblings) {
       foreach ($uidSiblings as $uid => $sibling) {
         if (in_array($uid, $relatedEvents)) {
           $siblings[$recurrenceId][$uid] = $sibling;
-          $relatedEvents = array_filter($relatedEvents, fn($value) => $value != $uid);
         }
+        $handledUids[$uid] = true;
       }
     }
+    $relatedEvents = array_diff($relatedEvents, array_keys($handledUids));
     if (!empty($relatedEvents)) {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+      $criteria = [
+        'project' => $projectId,
+        // 'calendarId' => $calendarId,
+        'eventUid' => $relatedEvents,
+      ];
       $flatSiblings = $this->findBy(
         criteria: [
           'project' => $projectId,
@@ -1955,6 +1976,9 @@ class EventsService
 
     $event = $this->calDavService->getCalendarObject($calendarId, $eventUri);
     $vCalendar  = VCalendarService::getVCalendar($event);
+    if (empty($event) || empty($vCalendar)) {
+      throw new Exceptions\CalendarEntryNotFoundException('Event ' . $eventUri . ' could not be found.');
+    }
     $masterEvent = VCalendarService::getVObject($vCalendar);
 
     if (!empty($recurrenceId)) {
