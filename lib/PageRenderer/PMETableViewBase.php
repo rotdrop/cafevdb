@@ -143,7 +143,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const MASTER_FIELD_SUFFIX = '__master_key_';
 
   /**
-   * MySQL/MariaDB column quote.
+   * @var string MySQL/MariaDB column quote.
    */
   const COL_QUOTE = '`';
 
@@ -1048,9 +1048,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             'old' => Util::explode(self::VALUES_SEP, Util::removeSpaces($oldValues[$keyField])),
             'new' => Util::explode(self::VALUES_SEP, Util::removeSpaces($newValues[$keyField])),
           ];
-          // handle "deleted" information if present. This is meant for disabled instruments and the like
+          // Handle "deleted" information if present. This is meant for
+          // disabled instruments and the like. This stems from split-inputs
+          // where one select hold the deleted items and another one the active items.
+          //
+          // Unfortunaley this conflicts with the usual KEY:VALUE convention
+          // in other tables where KEY would be the ID of the database entity
+          // and VALUE in this case the deleted timestamp.
+          //
+          // We try to copy with this problem by checking for the colon syntax
+          // and not doing this hack if we find a usual
+          // KEY1:VALUE1,KEY2:VALUE2,... field.
           $deletedField = $this->joinTableFieldName($joinInfo, 'deleted');
-          if (!empty($oldValues[$deletedField]) && !preg_match('/^\\d+:/', $oldValues[$deletedField])) {
+          if (!empty($oldValues[$deletedField]) && !str_contains($oldValues[$deletedField], self::JOIN_KEY_SEP)) {
             $deletedKeys = Util::explode(self::VALUES_SEP, $oldValues[$deletedField]);
             foreach (array_intersect($deletedKeys, $identifier[$key]['new']) as $deletedKey) {
               $identifier[$key]['old'][] = $deletedKey;
@@ -1331,8 +1341,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
             $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
             $this->debug('Usage is '.$usage);
-            $softDeleteable = method_exists($entity, 'isDeleted')
-                            && method_exists($entity, 'setDeleted');
+            $softDeleteable = method_exists($entity, 'isDeleted') && method_exists($entity, 'setDeleted');
 
             $this->debug('SOFT-DELETEABLE '.(int)$softDeleteable.' HAS USAGE '.(int)method_exists($entity, 'usage'));
 
