@@ -333,7 +333,10 @@ class ProjectEvents extends Command
                 ]),
                 OutputInterface::VERBOSITY_VERBOSE
               );
-              $this->remove($projectEvent, hard: true, flush: true);
+              if (!empty($projectEvent->getAbsenceField())) {
+                $projectEvent->getAbsenceField()->setProjectEvent(null);
+              }
+              $this->remove($projectEvent, hard: true, flush: true, useTransaction: true);
             } else {
               $output->writeln(
                 $this->l->t('Would hard-remove soft-deleted event "%1$s@%2$s" from project "%3$s" (dry-run)', [
@@ -350,7 +353,8 @@ class ProjectEvents extends Command
         }
 
         $recurrenceId = $projectEvent->getRecurrenceId();
-        $event = $eventsService->fetchEvent($project, $eventUri, $recurrenceId);
+        $event = $eventsService->getEventData($projectEvent);
+
         if (empty($event)) {
           // Try to fetch the event directly from the calendar. This can
           // happen if a repeating event had been added without recording its
@@ -358,8 +362,9 @@ class ProjectEvents extends Command
           $eventData = $calDavService->getCalendarObject($calendarId, $eventUri);
           if (!empty($eventData)) {
             $eventData['calendaruri'] = $calendarUri;
-            $this->logInfo('EVENT DATA ' . print_r($eventData, true));
+            // $this->logInfo('EVENT DATA ' . print_r($eventData, true));
             if (!$dry) {
+              $this->logInfo('SYNC');
               $eventsService->syncCalendarObject($eventData);
               $output->writeln($this->l->t('Synchronizing event "%s".', $eventUri));
             } else {
@@ -395,7 +400,10 @@ class ProjectEvents extends Command
                 ]),
                 OutputInterface::VERBOSITY_VERBOSE
               );
-              $this->remove($projectEvent, hard: true, flush: true);
+              if (!empty($projectEvent->getAbsenceField())) {
+                $projectEvent->getAbsenceField()->setProjectEvent(null);
+              }
+              $this->remove($projectEvent, hard: true, flush: true, useTransaction: true);
             } else {
               $output->writeln(
                 $this->l->t('Would remove orphan event "%1$s@%2$s" from project "%3$s" (dry-run)', [
@@ -451,7 +459,10 @@ class ProjectEvents extends Command
                     ]),
                     OutputInterface::VERBOSITY_VERBOSE
                   );
-                  $this->remove($projectEvent, hard: true, flush: true);
+                  if (!empty($projectEvent->getAbsenceField())) {
+                    $projectEvent->getAbsenceField()->setProjectEvent(null);
+                  }
+                  $this->remove($projectEvent, hard: true, flush: true, useTransaction: true);
                 }
                 break;
             }
