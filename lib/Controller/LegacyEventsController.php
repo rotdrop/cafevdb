@@ -349,7 +349,7 @@ class LegacyEventsController extends Controller
     if ($data['calendarid'] != $calendarId) {
       return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
     }
-    $object = \Sabre\VObject\Reader::read($data['calendardata']);
+    $object = VCalendarService::getVCalendar($data);
     $calendar = $this->calDavService->calendarById($calendarId);
     if (empty($calendar)) {
       return self::grumble($this->l->t("Unable to access calendar with id `%s'.", [$calendarId]));
