@@ -56,6 +56,8 @@ require('../legacy/nextcloud/jquery/octemplate.js');
 require('project-participant-fields-display.scss');
 require('project-participants.scss');
 
+const selectedOptionsKey = '_pp_selectedOptions';
+
 /**
  * Open a dialog in order to edit the personal reccords of one
  * musician.
@@ -375,8 +377,8 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   const musicianId = pmeRecordValue(form, 'musicianId');
   const projectId = pmeRecordValue(form, 'projectId');
 
-  const selectedVoices = selectVoices.val();
-  selectVoices.data('selected', selectedVoices || []);
+  const selectedVoices = SelectUtils.selected(selectVoices);
+  selectVoices.data(selectedOptionsKey, selectedVoices);
 
   container.find('.pme-value li.nav.instrumentation-voices a.nav')
     .off('click')
@@ -406,7 +408,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
       selected = [];
     }
 
-    const prevSelected = $self.data('selected');
+    const prevSelected = $self.data(selectedOptionsKey);
     const instruments = SelectUtils.selected(selectProjectInstruments);
 
     const prevVoices = {};
@@ -460,7 +462,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
       }
     }
     SelectUtils.selected($self, selected);
-    $self.data('selected', selected);
+    $self.data(selectedOptionsKey, selected);
 
     lockOther(false);
 
@@ -535,13 +537,15 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   });
 
   selectProjectInstruments.data(
-    'selected',
-    selectProjectInstruments.val()
-      ? selectProjectInstruments.val()
-      : []);
+    selectedOptionsKey,
+    SelectUtils.selected(selectProjectInstruments)
+  );
+  console.info('SELECTED PROJECT INSTRUMENTS', selectProjectInstruments.data(selectedOptionsKey));
 
   selectProjectInstruments.on('change', function(event) {
     const $self = $(this);
+
+    console.info('SELECTED PROJECT INSTRUMENTS', $self.data(selectedOptionsKey));
 
     PHPMyEdit.tableDialogLock(container, true);
     PHPMyEdit.tableDialogLoadIndicator(container, true);
@@ -552,22 +556,25 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     };
     lockOther(true);
 
+    console.info('SELECTED INSTRUMENTS', $self.data(selectedOptionsKey));
     validateInstrumentChoices({
       container,
       selectElement: selectProjectInstruments,
       validationUrl: generateUrl('projects/participants/change-instruments/project'),
       done() {
+        console.info('SELECTED PROJECT INSTRUMENTS', $self.data(selectedOptionsKey));
         // Reenable, otherwise the value will not be submitted
         lockOther(false);
 
         // save current instruments
-        $self.data('selected', $self.val() ? $self.val() : []);
+        $self.data(selectedOptionsKey, SelectUtils.selected($self));
 
         // selected project instruments affect voices and section-leader:
         PHPMyEdit.submitOuterForm(selector);
       },
       fail(data) {
-        const oldInstruments = data.oldInstruments || $self.data('selected');
+        console.info('SELECTED INSTRUMENTS', $self.data(selectedOptionsKey));
+        const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
 
         // failure case
         SelectUtils.selected($self, oldInstruments);
@@ -584,11 +591,15 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   });
 
   selectMusicianInstruments.data(
-    'selected',
-    SelectUtils.selected(selectMusicianInstruments));
+    selectedOptionsKey,
+    SelectUtils.selected(selectMusicianInstruments)
+  );
+  console.info('SELECTED MUSICIAN INSTRUMENTS', selectMusicianInstruments.data(selectedOptionsKey));
 
   selectMusicianInstruments.on('change', function(event) {
     const $self = $(this);
+
+    console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
 
     PHPMyEdit.tableDialogLock(container, true);
     PHPMyEdit.tableDialogLoadIndicator(container, true);
@@ -599,6 +610,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     };
     lockOther(true);
 
+    console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
     validateInstrumentChoices({
       container,
       selectElement: selectMusicianInstruments,
@@ -607,8 +619,10 @@ const myReady = function(selector, dialogParameters, resizeCB) {
         // Reenable, otherwise the value will not be submitted
         lockOther(false);
 
+        console.info('IN DONE HOOK', $self.data(selectedOptionsKey));
         // save current instruments
-        $self.data('selected', SelectUtils.selected($self));
+        $self.data(selectedOptionsKey, SelectUtils.selected($self));
+        console.info('IN DONE HOOK', $self.data(selectedOptionsKey));
 
         // submit the form with the "right" button,
         // i.e. save any possible changes already
@@ -620,7 +634,10 @@ const myReady = function(selector, dialogParameters, resizeCB) {
       fail(data) {
         // failure case
 
-        const oldInstruments = data.oldInstruments || $self.data('selected');
+        const oldInstruments = data.oldInstruments || $self.data(selectedOptionsKey);
+
+        console.info('SELECTED MUSICIAN INSTRUMENTS', $self.data(selectedOptionsKey));
+
         SelectUtils.selected($self, oldInstruments);
 
         // Reenable, otherwise the value will not be submitted
@@ -663,10 +680,10 @@ const myReady = function(selector, dialogParameters, resizeCB) {
   // foreach group remember the current selection of people and the
   // group
   selectGroupOfPeople.each(function(idx) {
-    const self = $(this);
-    const curSelected = self.val() || [];
-    self.data('selected', curSelected);
-    const name = self.attr('name');
+    const $self = $(this);
+    const curSelected = SelectUtils.selected($self);
+    $self.data(selectedOptionsKey, curSelected);
+    const name = $self.attr('name');
     const nameParts = name.split(/[@:]/);
     console.log('NAME PARTS', nameParts);
     const label = nameParts[0];
@@ -676,16 +693,16 @@ const myReady = function(selector, dialogParameters, resizeCB) {
           + pageRenderer.valuesTableSep + fieldId
           + pageRenderer.joinFieldNameSeparator + 'option_key';
     console.log('group id name', groupFieldName);
-    self.data('groupField', form.find('[name="' + groupFieldName + '"]'));
-    self.data('fieldId', fieldId);
-    self.data('groups', self.closest('td').data('groups'));
-    self.data('groupField')
-      .data('membersField', self)
+    $self.data('groupField', form.find('[name="' + groupFieldName + '"]'));
+    $self.data('fieldId', fieldId);
+    $self.data('groups', $self.closest('td').data('groups'));
+    $self.data('groupField')
+      .data('membersField', $self)
       .data('fieldId', fieldId);
 
-    if (self.hasClass('predefined') && curSelected.indexOf(String(musicianId)) < 0) {
-      maskUngrouped(self, true);
-      self.trigger('chosen:updated');
+    if ($self.hasClass('predefined') && curSelected.indexOf(String(musicianId)) < 0) {
+      maskUngrouped($self, true);
+      $self.trigger('chosen:updated');
     }
   });
 
@@ -698,7 +715,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     const $self = $(this); // just the current one
 
     let curSelected = $self.val() || [];
-    const prevSelected = $self.data('selected');
+    const prevSelected = $self.data(selectedOptionsKey);
 
     const added = curSelected.filter(x => prevSelected.indexOf(x) < 0);
     // const removed = prevSelected.filter(x => curSelected.indexOf(x) < 0);
@@ -757,8 +774,8 @@ const myReady = function(selector, dialogParameters, resizeCB) {
       }
     });
 
-    curSelected = $self.val() || [];
-    $self.data('selected', curSelected);
+    curSelected = SelectUtils.selected($self);
+    $self.data(selectedOptionsKey, curSelected);
 
     console.debug('DATA', $self.data());
 
