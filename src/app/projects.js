@@ -735,7 +735,7 @@ const projectWebPageTabHandler = function(event, ui, container) {
     }
     Dialogs.confirm(
       t(appName, 'Really unlink the displayed event announcement?'),
-      t(appName, 'Unlink Web-Page with Id {ArticleId}?', { articleId }),
+      t(appName, 'Unlink Web-Page with Id {articleId}?', { articleId }),
       function(answer) {
         if (!answer) {
           return;
@@ -761,7 +761,7 @@ const projectWebPageTabHandler = function(event, ui, container) {
     }
     Dialogs.confirm(
       t(appName, 'Really delete the displayed event announcement?'),
-      t(appName, 'Delete Web-Page with Id {ArticleId}?', { articleId }),
+      t(appName, 'Delete Web-Page with Id {articleId}?', { articleId }),
       function(answer) {
         if (!answer) {
           return;
