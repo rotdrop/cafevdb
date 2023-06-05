@@ -518,9 +518,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     if (!$this->preUpdatePosted) {
       return;
     }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = EntityManager::getDecorator($event->getEntityManager());
-    $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantFieldOption($this));
     $this->preUpdatePosted = false;
   }
 

@@ -1420,7 +1420,7 @@ class ProjectParticipantFieldsService
       return;
     }
 
-    if ($field->usage() > 0 && empty($field->getProjectEvent() || $field->usage() > 0)) {
+    if ($field->usage() > 0 && empty($field->getProjectEvent() || $field->usage() > 1)) {
       throw new Exceptions\EnduserNotificationException($this->l->t('NOPE, FIELD IN USE'));
     }
   }
