@@ -28,6 +28,7 @@ use ArrayObject;
 use Exception;
 use RuntimeException;
 use UnexpectedValueException;
+use Throwable;
 
 use OCP\IL10N;
 
@@ -489,7 +490,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     try {
       $this->pme->execute($opts);
       $this->pme->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, 'Rolling back SQL transaction ...');
       $this->pme->rollBack();
       throw new Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), (int)$t->getCode(), $t);
@@ -2857,7 +2858,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             case 'email':
               try {
                 $musician->setEmail($value, $musician);
-              } catch (\Throwable $t) {
+              } catch (Throwable $t) {
                 $this->logException($t);
                 /** @var Service\MusicianService $musicianService */
                 $musicianService = $this->di(Service\MusicianService::class);
@@ -2872,7 +2873,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               try {
                 $musician[$column] = $value;
                 break;
-              } catch (\Throwable $t) {
+              } catch (Throwable $t) {
                 // Don't care, we know virtual stuff is not there
               }
           }
