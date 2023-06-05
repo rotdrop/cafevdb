@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
 use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
+use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Constants;
@@ -1399,6 +1400,32 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Try to gracefully change the field-type.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param null|DataMultiplicity $oldMultiplicity
+   *
+   * @param null|DataMultiplicity $newMultiplicity
+   *
+   * @return void
+   */
+  public function handleChangeFieldMultiplicity(
+    Entities\ProjectParticipantField $field,
+    ?DataMultiplicity $oldMultiplicity,
+    ?DataMultiplicity $newMultiplicity,
+  ):void {
+
+    if ($newMultiplicity == $oldMultiplicity) {
+      return;
+    }
+
+    if ($field->usage() > 0 && empty($field->getProjectEvent() || $field->usage() > 0)) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('NOPE, FIELD IN USE'));
+    }
+  }
+
+  /**
    * Populate the field-datum for the given field and musician with the actual
    * folder contents.
    *
@@ -1691,6 +1718,10 @@ class ProjectParticipantFieldsService
         }
         break;
       default:
+        // @TODO DB-file must also be renamed, this was probably different in
+        // earlier versions. As the DB-FS meanwhile is able to do rename, we
+        // probably can just handle it the same way as for the CLOUD_FILE
+        // case.
         return;
     }
 
