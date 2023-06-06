@@ -618,6 +618,7 @@ input.register-musician {
   height:28px;
   min-height:unset;
   margin:0px;
+  padding: 0 14px;
 }
 
 .pme-navigation .pme-buttons {
@@ -1470,6 +1471,39 @@ form.pme-form {
     }
     &:disabled + label.pme-input-lock {
       display:none;
+    }
+  }
+
+  /* Style checkbox with label and lock icon */
+  input[type="checkbox"].pme-input.pme-select-lock {
+    + label.pme-select-lock {
+      display: inline-block;
+      vertical-align: middle;
+      height: 16px;
+      width: 24px;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.8;
+      text-indent: -10000em;
+      &.lock-empty {
+        background-image: url('../img/lock.svg');
+      }
+      &.lock-unlock {
+        background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
+      }
+    }
+
+    &:checked + label.pme-select-lock {
+      opacity: 0.8;
+      &.lock-empty {
+        background-image: url('../img/cafevdb-delete.svg');
+      }
+      &.lock-unlock {
+        background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
+      }
+    }
+    &:disabled + label.pme-select-lock {
+      /* display:none; */
     }
   }
 

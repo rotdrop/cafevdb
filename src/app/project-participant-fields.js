@@ -36,6 +36,7 @@ import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';
 import { textInputSelector, nonTextInputSelector, textElementSelector } from '../util/css-selectors.js';
+require('./jquery-readonly.js');
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -159,6 +160,9 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, sing
 
 const ready = function(selector, resizeCB) {
   const $container = $(selector);
+
+  // @todo Most of the stuff below is a no-op in list-view. We should
+  // bail-out early.
 
   const $tableTab = $container.find('select.tab');
   const $newTab = $container.find('input.new-tab');
@@ -335,6 +339,8 @@ const ready = function(selector, resizeCB) {
       'select.data-type',
       'input.deposit-due-date',
     ].join(), function(event) {
+      const $this = $(this);
+
       const depositDueDateInput = $container.find('input.deposit-due-date');
       const multiplicitySelect = $container.find('select.multiplicity');
       const dataTypeSelect = $container.find('select.data-type');
@@ -374,7 +380,19 @@ const ready = function(selector, resizeCB) {
 
       return false;
     });
-  $container.find('select.multiplicity:not(.pme-filter)').trigger('change');
+
+  const $multiplicitySelect = $container.find('select.multiplicity.pme-input');
+  $multiplicitySelect.trigger('change');
+  const usage = $multiplicitySelect.data('fieldUsage');
+  console.info('FIELD USAGE', usage);
+  if (usage > 0) {
+    $multiplicitySelect.readonly(true);
+  }
+  $container.on('change', '#pme-field-multiplicity-lock', function(event) {
+    const $this = $(this);
+    const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
+    $multiplicitySelect.readonly($this.prop('checked'));
+  });
 
   $container.on('keypress', 'tr.data-options input' + textInputSelector, function(event) {
     let pressedKey;

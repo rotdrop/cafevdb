@@ -99,6 +99,9 @@ class ProjectParticipantFields extends PMETableViewBase
     DataType::DATETIME => 12,
   ];
 
+  /** @var string */
+  protected static $toolTipsPrefix = 'page-renderer:participant-fields:definition';
+
   /**
    * @var string
    * SQL sub-query in order to join with   self::FIELD_TRANSLATIONS_TABLE
@@ -382,7 +385,7 @@ class ProjectParticipantFields extends PMETableViewBase
     $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
 
     $opts['fdd']['usage'] = [
-      'tab' => [ 'id' => [ 'miscinfo' ] ],
+      'tab' => [ 'id' => [ 'miscinfo', 'definition' ] ],
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
       'css' => [ 'postfix' => [ 'participant-fields-usage', ], ],
@@ -400,7 +403,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
-      'css'     => [ 'postfix' => [ 'multiplicity', ], ],
+      'css'     => [ 'postfix' => [ 'multiplicity', 'select-lockable', 'jquery-readonly', ], ],
       'default' => Multiplicity::SIMPLE,
       'values2' => $this->participantFieldMultiplicityNames(),
       'valueTitles' => Util::arrayMapAssoc(function($key, $tag) {
@@ -408,6 +411,28 @@ class ProjectParticipantFields extends PMETableViewBase
       }, Multiplicity::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-multiplicity'],
       'valueData' => array_map('json_encode', $this->participantFieldsService->multiplicityTypeMask()),
+      'display|ACP' => [
+        'attributes' => function($op, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return [
+            'data-field-usage' => $usage,
+          ];
+        },
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          if ($usage > 0) {
+            return '<input id="pme-field-multiplicity-lock"
+       checked
+       type="checkbox"
+       class="pme-input pme-select-lock"
+/>
+<label for="pme-field-multiplicity-lock"
+       class="pme-input pme-select-lock lock-unlock tooltip-auto"
+       title="' . $this->toolTipsService[self::$toolTipsPrefix . ':multiplicity:lock'] . '"
+></label>';
+          }
+        },
+      ],
     ];
 
     // $dataTypeIndex = count($opts['fdd']);
