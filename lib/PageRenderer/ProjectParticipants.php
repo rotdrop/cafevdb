@@ -501,7 +501,7 @@ class ProjectParticipants extends PMETableViewBase
   type="checkbox"
   class="pme-input pme-input-lock lock-empty"/>
 <label class="pme-input pme-input-lock lock-empty"
-       title="'.$this->toolTipsService['pme:input:lock-empty'].'"
+       title="'.$this->toolTipsService['pme:input:lock:empty'].'"
        for="pme-musician-nickname"></label>';
           },
         ],
@@ -545,7 +545,7 @@ class ProjectParticipants extends PMETableViewBase
   '.$checked.'
   class="pme-input pme-input-lock lock-empty"
 /><label class="pme-input pme-input-lock lock-empty"
-         title="'.$this->toolTipsService['pme:input:lock-empty'].'"
+         title="'.$this->toolTipsService['pme:input:lock:empty'].'"
          for="pme-musician-displayname"></label>';
           },
         ],
@@ -604,7 +604,7 @@ class ProjectParticipants extends PMETableViewBase
   '.$checked.'
   class="pme-input pme-input-lock lock-unlock"
 /><label class="pme-input pme-input-lock lock-unlock"
-         title="'.$this->toolTipsService['pme:input:lock-unlock'].'"
+         title="'.$this->toolTipsService['pme:input:lock:unlock'].'"
          for="pme-musician-user-id-slug"></label>';
           },
         ],

@@ -709,7 +709,7 @@ class Projects extends PMETableViewBase
   class="pme-input pme-input-lock lock-empty locked-disabled"
 /><label
     class="pme-input pme-input-lock lock-empty"
-    title="'.$this->toolTipsService['pme:input:lock-empty'].'"
+    title="'.$this->toolTipsService['pme:input:lock:empty'].'"
     for="pme-project-registration-deadline"></label>';
             },
           ],

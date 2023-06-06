@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -570,7 +570,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   class="pme-input pme-input-lock lock-unlock"
 /><label
     class="pme-input pme-input-lock lock-unlock"
-    title="'.$this->toolTipsService['pme:input:lock-unlock'].'"
+    title="'.$this->toolTipsService['pme:input:lock:unlock'].'"
     for="pme-submit-date-lock"></label>';
           },
         ],
