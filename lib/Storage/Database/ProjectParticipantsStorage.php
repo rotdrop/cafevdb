@@ -353,6 +353,8 @@ class ProjectParticipantsStorage extends Storage
    * FieldType::DB_FILE or for the optional supporting document of fields of
    * type FieldType:RECEIVABLES, FieldType::LIABILITIES.
    *
+   * Missing sub-folders will be created.
+   *
    * @param Entities\ProjectParticipantFieldDatum $fieldDatum
    *
    * @param Entities\EncryptedFile $file
@@ -401,7 +403,7 @@ class ProjectParticipantsStorage extends Storage
       }
 
     } catch (Throwable $t) {
-      if ($this->entityManager->isTransactionActive()) {
+      if ($flush && $this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
       }
       throw new Exceptions\DatabaseException($this->l->t('Unable to add file for field-datum "%s".', [
@@ -416,6 +418,8 @@ class ProjectParticipantsStorage extends Storage
    * Remove all directory entries for a ProjectParticipantFieldDatum of type
    * FieldType::DB_FILE or for the optional supporting document of fields of
    * type FieldType:RECEIVABLES, FieldType::LIABILITIES.
+   *
+   * Empty sub-folders will be deleted.
    *
    * @param Entities\ProjectParticipantFieldDatum $fieldDatum
    *
@@ -452,6 +456,7 @@ class ProjectParticipantsStorage extends Storage
         throw new UnexpectedValueException($this->l->t('Root-folder does not exist.'));
       }
 
+      /** @var Entities\DatabaseStorageFolder $folderEntity */
       foreach ($components as $component) {
         $folderEntity = $folderEntity->getFolderByName($component);
         if (empty($folderEntity)) {
@@ -462,8 +467,17 @@ class ProjectParticipantsStorage extends Storage
       /** @var Entities\DatabaseStorageFile $dirEntry */
       foreach ($folderEntity->getDocuments() as $dirEntry) {
         if ($dirEntry->getFile()->getId() == $file->getId()) {
+          $dirEntry->unlink();
           $this->entityManager->remove($dirEntry);
         }
+      }
+
+      /** Remove empty parents up to the root. */
+      while (!$folderEntity->isRootFolder() && $folderEntity->isEmpty()) {
+        $parentFolder = $folderEntity->getParent();
+        $folderEntity->unlink();
+        $this->entityManager->remove($folderEntity);
+        $folderEntity = $parentFolder;
       }
 
       if ($flush) {
@@ -472,12 +486,81 @@ class ProjectParticipantsStorage extends Storage
       }
 
     } catch (Throwable $t) {
-      if ($this->entityManager->isTransactionActive()) {
+      if ($flush && $this->entityManager->isTransactionActive()) {
         $this->entityManager->rollback();
       }
       throw new Exceptions\DatabaseException($this->l->t('Unable to remove file for field-datum "%s".', [
         (string)$fieldDatum->getProjectParticipant()
       ]));
     }
+  }
+
+  /**
+   * Update an existing directory entry for a ProjectParticipantFieldDatum of
+   * type FieldType::DB_FILE or for the optional supporting document of fields
+   * of type FieldType:RECEIVABLES, FieldType::LIABILITIES.
+   *
+   * As the complete path is determined by the name of the fields and its
+   * options the function also renames all parent directory entries.
+   *
+   * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @param bool $flush
+   *
+   * @return bool \true if anything has changed.
+   */
+  public function updateFieldDatumDocument(Entities\ProjectParticipantFieldDatum $fieldDatum, bool $flush = true):bool
+  {
+    // fetch the current file information based on the existing directory structure
+    $currentFileInfo = $this->projectService->participantFileInfo($fieldDatum, newFile: null, includeDeleted: true);
+
+    // fetch the target file information pretending it would be a new file
+    $targetFileInfo = $this->projectService->participantFileInfo($fieldDatum, newFile: $currentFileInfo['file'], includeDeleted: true);
+
+    $currentComponents = Util::explode(self::PATH_SEPARATOR, $currentFileInfo['pathName']);
+    $targetComponents = Util::explode(self::PATH_SEPARATOR, $targetFileInfo['pathName']);
+
+    $needsFlush = false;
+    if ($flush) {
+      $this->entityManager->beginTransaction();
+    }
+    try {
+
+      if (count($currentComponents) != count($targetComponents)) {
+        // two possibilities: remove and add or throw
+        $this->logWarn('Current path "' . $currentFileInfo['pathName'] . '" and target path "' . $targetFileInfo['pathName'] . '" have different numbers of components.');
+        // Use add-remove in order to first increase the number of links. As
+        // the paths have different numbers of components source and target
+        // directory entries must reside in different directories.
+        $this->addFieldDatumDocument($fieldDatum, $currentFileInfo['file'], flush: false);
+        $this->removeFieldDatumDocument($fieldDatum, flush: false);
+        $needsFlush = true;
+      } else {
+        /** @var Entities\DatabaseStorageDirEntry $dirEntry */
+        $dirEntry = $currentFileInfo['dirEntry'];
+        while (!$dirEntry->isRootFolder()) {
+          $targetName = array_pop($targetComponents);
+          if ($dirEntry->getName() != $targetName) {
+            $needsFlush = true;
+            $dirEntry->setName($targetName);
+          }
+          $dirEntry = $dirEntry->getParent();
+        }
+      }
+
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+    } catch (Throwable $t) {
+      if ($flush && $this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\DatabaseException($this->l->t('Unable to update file-name for field-datum "%s".', [
+        (string)$fieldDatum->getProjectParticipant()
+      ]));
+    }
+
+    return $needsFlush;
   }
 }

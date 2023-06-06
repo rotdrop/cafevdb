@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermi
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Storage\Database\Factory as DatabaseStorageFactory;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Functions;
 
@@ -1404,23 +1405,25 @@ class ProjectParticipantFieldsService
    *
    * @param Entities\ProjectParticipantField $field
    *
-   * @param null|DataMultiplicity $oldMultiplicity
+   * @param null|Multiplicity $oldMultiplicity
    *
-   * @param null|DataMultiplicity $newMultiplicity
+   * @param null|Multiplicity $newMultiplicity
    *
    * @return void
    */
   public function handleChangeFieldMultiplicity(
     Entities\ProjectParticipantField $field,
-    ?DataMultiplicity $oldMultiplicity,
-    ?DataMultiplicity $newMultiplicity,
+    ?Multiplicity $oldMultiplicity,
+    ?Multiplicity $newMultiplicity,
   ):void {
+
+    $this->logInfo('OLD / NEW ' . $oldMultiplicity . ' / ' . $newMultiplicity);
 
     if ($newMultiplicity == $oldMultiplicity) {
       return;
     }
 
-    if ($field->usage() > 0 && empty($field->getProjectEvent() || $field->usage() > 1)) {
+    if ($field->usage() > 0 && (empty($field->getProjectEvent()) || $field->usage() > 1)) {
       throw new Exceptions\EnduserNotificationException($this->l->t('NOPE, FIELD IN USE'));
     }
   }
@@ -1695,33 +1698,30 @@ class ProjectParticipantFieldsService
       return;
     }
 
-    switch ($field->getDataType()) {
+    $type = $field->getDataType();
+    switch ($type) {
       case DataType::CLOUD_FOLDER:
         // We have to rename the folder which is just named after the
         // field-name.
-        $type = 'folder';
         $mkdir = true;
         break;
       case DataType::CLOUD_FILE:
         switch ($field->getMultiplicity()) {
           case Multiplicity::SIMPLE:
             // The file is name after the field, so we have to rename the file.
-            $type = 'file';
             break;
           default:
             // should be Multiplicity::PARALLEL ...  the individual files are
             // named after the option and stored in a sub-folder which is just
-            // the field-name, so we have to rename to folder
-            $type = 'folder';
+            // the field-name, so we have to rename the folder
+            $type = DataType::CLOUD_FOLDER;
             $mkdir = false;
             break;
         }
         break;
+      case DataType::DB_FILE:
+        break;
       default:
-        // @TODO DB-file must also be renamed, this was probably different in
-        // earlier versions. As the DB-FS meanwhile is able to do rename, we
-        // probably can just handle it the same way as for the CLOUD_FILE
-        // case.
         return;
     }
 
@@ -1735,29 +1735,54 @@ class ProjectParticipantFieldsService
     foreach ($field->getProject()->getParticipants() as $participant) {
       $musician = $participant->getMusician();
       $participantsFolder = $projectService->ensureParticipantFolder($project, $musician, true);
-      if ($type == 'folder') {
-        $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
-        $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
-        $this->entityManager->registerPreCommitAction(
-          new Common\UndoableFolderRename($oldPath, $newPath, gracefully: true, mkdir: $mkdir)
-        );
-      } else { // 'file'
-        /** @var Entities\ProjectParticipantFieldDataOption $option */
-        foreach ($field->getSelectableOptions(true) as $option) {
-          /** @var Entities\ProjectParticipantFieldDatum $datum */
-          $datum = $participant->getParticipantFieldsDatum($option->getKey());
-          if (!empty($datum)) {
-            $extension = pathinfo($datum->getOptionValue(), PATHINFO_EXTENSION);
-            $oldBaseName = $projectService->participantFilename($oldName, $musician) . '.' . $extension;
-            $newBaseName = $projectService->participantFilename($newName, $musician) . '.' . $extension;
-            $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
-            $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
-            $this->entityManager->registerPreCommitAction(
-              new Common\UndoableFileRename($oldPath, $newPath, gracefully: true)
-            );
+      switch ($type) {
+        case DataType::CLOUD_FOLDER:
+          $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
+          $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
+          $this->entityManager->registerPreCommitAction(
+            new Common\UndoableFolderRename($oldPath, $newPath, gracefully: true, mkdir: $mkdir)
+          );
+          break;
+        case DataType::CLOUD_FILE:
+          /** @var Entities\ProjectParticipantFieldDataOption $option */
+          foreach ($field->getSelectableOptions(true) as $option) {
+            /** @var Entities\ProjectParticipantFieldDatum $datum */
+            $datum = $participant->getParticipantFieldsDatum($option->getKey());
+            if (!empty($datum)) {
+              $extension = pathinfo($datum->getOptionValue(), PATHINFO_EXTENSION);
+              $oldBaseName = $projectService->participantFilename($oldName, $musician) . '.' . $extension;
+              $newBaseName = $projectService->participantFilename($newName, $musician) . '.' . $extension;
+              $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
+              $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
+              $this->entityManager->registerPreCommitAction(
+                new Common\UndoableFileRename($oldPath, $newPath, gracefully: true)
+              );
+            }
           }
-        }
+          break;
+        case DataType::DB_FILE:
+          break;
       }
+    }
+    if ($type == DataType::DB_FILE) {
+      $this->entityManager->registerPreCommitAction(
+        new Common\GenericUndoable(function() use ($field) {
+          $needsFlush = false;
+          /** @var DatabaseStorageFactory $storageFactory */
+          $storageFactory = $this->di(DatabaseStorageFactory::class);
+          // it is enough to loop over the actually existing entries
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          foreach ($field->getFieldData() as $fieldDatum) {
+            /** @var ProjectParticipantsStorage $participantsStorage */
+            $participantsStorage = $storageFactory->getProjectParticipantsStorage($fieldDatum->getProjectParticipant());
+            // a surrounding transaction should be active ...
+            if ($participantsStorage->updateFieldDatumDocument($fieldDatum, flush: false)) {
+              $needsFlush = true;
+            }
+          }
+          $needsFlush && $this->flush();
+        })
+      );
     }
 
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
