@@ -84,7 +84,7 @@ class Util
     $expression = null;
     foreach ($arrayCriteria as $key => $value) {
       $junctor = 'andWhere';
-      while (strpos('&|()', $key[0]) !== false) {
+      while (!empty($key) && strpos('&|()', $key[0]) !== false) {
         if ($key[0] == '|') {
           $key = substr($key, 1);
           $junctor = 'orWhere';
@@ -92,15 +92,20 @@ class Util
           $junctor = 'andWhere';
           $key = substr($key, 1);
         }
+        if (empty($key)) {
+          continue;
+        }
         if ($key[0] == '(') {
           $key = substr($key, 1);
           $expression = [ 'junctor' => $junctor ];
           $expression['composite'] = 'andX';
-          if ($key[0] == '|') {
-            $expression['composite'] = 'orX';
-            $key = substr($key, 1);
-          } elseif ($key[0] == '&') {
-            $key = substr($key, 1);
+          if (!empty($key)) {
+            if ($key[0] == '|') {
+              $expression['composite'] = 'orX';
+              $key = substr($key, 1);
+            } elseif ($key[0] == '&') {
+              $key = substr($key, 1);
+            }
           }
           $expression['components'] = [];
           $groupExpression[++$groupLevel] = $expression;
