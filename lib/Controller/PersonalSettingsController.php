@@ -68,7 +68,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+use OCA\Redaxo\Service\RPC as WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
 /** AJAX end-points for personal settings. */
@@ -1252,15 +1252,23 @@ class PersonalSettingsController extends Controller
                 // don't care
                 $this->logException($t);
               }
-              if ($parameter == ConfigService::POSTBOX_FOLDER) {
-                try {
-                  $url = $this->configCheckService->checkLinkSharedFolder(
-                    $sharedFolder . $prefixFolder . $real
-                  );
-                  $this->setConfigValue($parameter . 'ShareLink', $url);
-                } catch (Throwable $t) {
-                  $this->logException($t);
-                }
+              switch ($parameter) {
+                case ConfigService::POSTBOX_FOLDER:
+                  try {
+                    $url = $this->configCheckService->checkLinkSharedFolder(
+                      $sharedFolder . $prefixFolder . $real
+                    );
+                    $this->setConfigValue($parameter . 'ShareLink', $url);
+                  } catch (Throwable $t) {
+                    $this->logException($t);
+                  }
+                  break;
+                case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
+                  $skeletonPaths = $this->projectService->getProjectSkeletonPaths();
+                  foreach ($skeletonPaths as $skeletonPath) {
+                    $this->configCheckService->checkProjectFolder($skeletonPath);
+                  }
+                  break;
               }
               return self::dataResponse([
                 'value' => $real,
@@ -1279,15 +1287,24 @@ class PersonalSettingsController extends Controller
             } catch (Throwable $t) {
               // don't care
             }
-            if ($parameter == ConfigService::POSTBOX_FOLDER) {
-              try {
-                $url = $this->configCheckService->checkLinkSharedFolder(
-                  $sharedFolder . UserStorage::PATH_SEP . $prefixFolder . $real
-                );
-                $this->setConfigValue($parameter . 'ShareLink', $url);
-              } catch (Throwable $t) {
-                $this->logException($t);
-              }
+
+            switch ($parameter) {
+              case ConfigService::POSTBOX_FOLDER:
+                try {
+                  $url = $this->configCheckService->checkLinkSharedFolder(
+                    $sharedFolder . UserStorage::PATH_SEP . $prefixFolder . $real
+                  );
+                  $this->setConfigValue($parameter . 'ShareLink', $url);
+                } catch (Throwable $t) {
+                  $this->logException($t);
+                }
+                break;
+              case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
+                $skeletonPaths = $this->projectService->getProjectSkeletonPaths();
+                foreach ($skeletonPaths as $skeletonPath) {
+                  $this->configCheckService->checkProjectFolder($skeletonPath);
+                }
+                break;
             }
             return self::dataResponse([
               'value' => $actual,

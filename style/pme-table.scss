@@ -21,6 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use 'sass:map';
+
+@import 'variables';
 @import 'pme-table-tabs.scss';
 
 /* ie8 doesn't support :checked */
@@ -246,8 +249,8 @@ form.pme-form {
  */
 /* make popups scrollable in smaller viewports */
 .ui-dialog.pme-table-dialog {
-  max-height: 90%; /* !important; */
-  max-width: 90%; /* !important; */
+  max-height: map.get($pme-table-dialog, "max-height");
+  max-width: map.get($pme-table-dialog, "max-width");
   overflow: hidden;
   padding: 0;
 
@@ -304,6 +307,7 @@ form.pme-form {
     right: 0px;
     width: 34px;
     height: 34px;
+    min-height: unset;
     background-size: 24px 24px;
     margin: 0px;
   }
@@ -614,6 +618,7 @@ input.register-musician {
   height:28px;
   min-height:unset;
   margin:0px;
+  padding: 0 14px;
 }
 
 .pme-navigation .pme-buttons {
@@ -766,7 +771,7 @@ form.pme-form.pme-view table.pme-main {
 
 table.pme-main {
   background-color:#f2f8ff;
-  border:#004d9c 1px solid;
+  border:#004d9c $pme-table-cell-border-width solid;
   border-collapse:collapse;
   border-spacing:0px;
   width:auto;
@@ -785,7 +790,7 @@ form.pme-form.pme-list table.pme-tab {
 
 td.pme-header, th.pme-header {
   vertical-align:bottom;
-  border:#004d9c 1px solid;
+  border:#004d9c $pme-table-cell-border-width solid;
   padding:4px;
   background:#add8e6;
 }
@@ -880,7 +885,7 @@ td.pme-key, td.pme-value,
 td.pme-help, td.pme-navigation, th.pme-navigation,
 td.pme-cell, td.pme-sortinfo,
 td.pme-filter, th.pme-filter, td.pme-queryinfo {
-  border:#004d9c 1px solid;
+  border:#004d9c $pme-table-cell-border-width solid;
   padding:3px;
   text-align:left;
 }
@@ -1466,6 +1471,39 @@ form.pme-form {
     }
     &:disabled + label.pme-input-lock {
       display:none;
+    }
+  }
+
+  /* Style checkbox with label and lock icon */
+  input[type="checkbox"].pme-input.pme-select-lock {
+    + label.pme-select-lock {
+      display: inline-block;
+      vertical-align: middle;
+      height: 16px;
+      width: 24px;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.8;
+      text-indent: -10000em;
+      &.lock-empty {
+        background-image: url('../img/lock.svg');
+      }
+      &.lock-unlock {
+        background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/unlock.svg');
+      }
+    }
+
+    &:checked + label.pme-select-lock {
+      opacity: 0.8;
+      &.lock-empty {
+        background-image: url('../img/cafevdb-delete.svg');
+      }
+      &.lock-unlock {
+        background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
+      }
+    }
+    &:disabled + label.pme-select-lock {
+      /* display:none; */
     }
   }
 

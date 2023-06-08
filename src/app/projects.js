@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,13 +38,21 @@ import {
   sys as pmeSys,
   classSelector as pmeClassSelector,
   formSelector as pmeFormSelector,
+  inputSelector as pmeInputSelector,
   token as pmeToken,
+  idSelector as pmeIdSelector,
 } from './pme-selectors.js';
 import * as PHPMyEdit from './pme.js';
 import * as ncRouter from '@nextcloud/router';
 import * as SelectUtils from './select-utils.js';
 import wikiPopup from './wiki-popup.js';
 import setBusyIndicators from './busy-indicators.js';
+import iFrameResize from './iframe-resize.js';
+
+// eslint-disable-next-line no-unused-vars
+// import iFrameResize from 'iframe-resizer';
+// eslint-disable-next-line
+// import iFrameContentScript from '!!raw-loader!iframe-resizer/js/iframeResizer.contentWindow.js';
 
 require('projects.scss');
 
@@ -347,6 +355,7 @@ const pmeFormInit = function(containerSel) {
     const $name = $container.find(nameSelector);
     const $year = $container.find(yearSelector);
     const $projectType = $container.find(typeSelector);
+    const $registrationStart = $container.find(pmeInputSelector + '.registration-start-date');
 
     let oldProjectYear = SelectUtils.selectedOptions($year).text();
     let oldProjectName = $name.val();
@@ -449,6 +458,16 @@ const pmeFormInit = function(containerSel) {
         return false;
       });
 
+    $registrationStart.on('blur, change', function(event) {
+      const $this = $(this);
+      const empty = $.trim($this.val()) === '';
+
+      const $deadlineLock = $container.find(pmeIdSelector('project-registration-deadline'));
+
+      $deadlineLock.prop('checked', true).trigger('change');
+      $deadlineLock.prop('disabled', empty);
+    });
+
     // Attach a delegate handler to the form; this gives the
     // possibility to attach another delegate handler to the
     // container element.
@@ -463,7 +482,7 @@ const pmeFormInit = function(containerSel) {
           return true;
         }
       });
-  }
+  } // has form submit controls
 
   const updateLinkShareControls = function($control, data) {
     Notification.messages(data.message);
@@ -716,7 +735,7 @@ const projectWebPageTabHandler = function(event, ui, container) {
     }
     Dialogs.confirm(
       t(appName, 'Really unlink the displayed event announcement?'),
-      t(appName, 'Unlink Web-Page with Id {ArticleId}?', { articleId }),
+      t(appName, 'Unlink Web-Page with Id {articleId}?', { articleId }),
       function(answer) {
         if (!answer) {
           return;
@@ -742,7 +761,7 @@ const projectWebPageTabHandler = function(event, ui, container) {
     }
     Dialogs.confirm(
       t(appName, 'Really delete the displayed event announcement?'),
-      t(appName, 'Delete Web-Page with Id {ArticleId}?', { articleId }),
+      t(appName, 'Delete Web-Page with Id {articleId}?', { articleId }),
       function(answer) {
         if (!answer) {
           return;
@@ -823,14 +842,18 @@ const scrollbarAdjust = function(containerContext) {
   containerContext.articleBox.css('margin-right', scrollBarWidth + 'px');
 };
 
-const forceSize = function(containerContext, iframe) {
+/**
+ * Force only the height of the give iframe.
+ *
+ * @param {jQuery} containerContext TBD.
+ *
+ * @param {jQuery} iframe TBD.
+ */
+const forceHeight = function(containerContext, iframe) {
   const domFrame = iframe[0];
   const scrollHeight = domFrame.contentWindow.document.body.scrollHeight;
-  const scrollWidth = domFrame.contentWindow.document.body.scrollWidth;
   iframe.css({
-    width: scrollWidth + 'px',
     height: scrollHeight + 'px',
-    overflow: 'hidden',
   });
   imagePoller(containerContext, function() {
     containerContext.resizeCB();
@@ -843,8 +866,10 @@ const displayArticleLoad = function(containerContext, iframe) {
     const $iframe = $(iframe);
     const contents = $iframe.contents();
 
-    // For the pretty-print version. We remove everything
-    // except the article itself
+    // For the pretty-print version. We remove everything except the
+    // article itself. Note that this is very specific for the
+    // Camerata web-pages, in their current form and would have to be
+    // customized for other web-pages.
     contents.find('div#header').remove();
     contents.find('div#footer').remove();
     contents.find('div.navi').remove();
@@ -928,54 +953,44 @@ const changeArticleLoad = function(containerContext, iframe) {
     // update the src-uri of the iframe.
     // alert('src: '+ self.contentWindow.location.href);
 
-    const wrapper = contents.find('#rex-wrapper');
-    const website = contents.find('#rex-website');
+    const website = contents.find('#rex-start-of-page');
+    const wrapper = contents.find('#rex-js-page-container');
+    const mainPage = contents.find('#rex-js-page-main');
+
     const rexForm = wrapper.find('form#REX_FORM');
 
     // set to auto and fix later for correct size and
     // scrollbars when necessary.
     container.css({
-      height: 'auto',
       width: 'auto',
+      height: 'auto',
     });
 
     // The below lines style the edit window.
-    contents.find('#rex-navi-logout').remove();
-    contents.find('#rex-navi-main').remove();
-    contents.find('#rex-redaxo-link').remove();
-    contents.find('#rex-footer').remove();
-    contents.find('#rex-header').remove();
-    contents.find('#rex-title').remove();
-    contents.find('#rex-a256-searchbar').remove();
-    contents.find('body').css({
-      margin: 0,
-      'background-image': 'none',
-    });
-    contents.find('#rex-output').css({ margin: 0 });
-    contents.find('#rex-navi-path a').removeAttr('href');
+    contents.find('#rex-js-nav-top').remove();
+    contents.find('#rex-js-nav-main').remove();
+    mainPage.find('header.rex-page-header').remove();
+    mainPage.find('.col-lg-8').removeClass('col-lg-8').addClass('col-lg-12');
+    contents.find('#rex-js-structure-breadcrumb').remove();
+    contents.find('#rex-js-main-sidebar').remove();
+    website.find('.rex-global-footer').remove();
+    wrapper.find('.rex-page-main').css({ 'padding-top': 0 });
 
     wrapper.css({
       padding: 0,
       margin: 0,
-      float: 'left',
+      // float: 'left',
     });
     website.css({
       width: '100%', // wrapper.css('width'),
-      'background-image': 'none',
+      // 'background-image': 'none',
     });
-    contents.find('textarea').css({ 'max-width': '720px' });
+    // contents.find('textarea').css({ 'max-width': '720px' });
 
-    const scrollWidth = iframe.contentWindow.document.body.scrollWidth;
+    // the width is set via calc using max-width and a desired width property.
     const scrollHeight = iframe.contentWindow.document.body.scrollHeight;
     $iframe.css({
-      width: scrollWidth + 'px',
       height: scrollHeight + 'px',
-    });
-
-    const articleContainer = $iframe.parent();
-    articleContainer.css({
-      height: 'unset',
-      width: 'unset',
     });
 
     const editArea = rexForm.find('textarea');
@@ -985,16 +1000,19 @@ const changeArticleLoad = function(containerContext, iframe) {
       rexForm
         .off('resize', 'textarea')
         .on('resize', 'textarea', function() {
-          forceSize(containerContext, $iframe);
+          forceHeight(containerContext, $iframe);
           return false;
         });
     }
 
     rexForm.off('resize', '.mceEditor');
     rexForm.on('resize', '.mceEditor', function() {
-      forceSize(containerContext, $iframe);
+      forceHeight(containerContext, $iframe);
       return false;
     });
+
+    // contents.find('head').prepend('<script type="text/javascript">' + iFrameContentScript + '</script>');
+    iFrameResize($iframe);
 
     --containerContext.numChangeFrames;
   }
@@ -1014,7 +1032,7 @@ const changeArticleLoad = function(containerContext, iframe) {
         activate(event, ui) {
           const $iframe = ui.newPanel.find('iframe');
           if ($iframe.length === 1) {
-            forceSize(containerContext, $iframe);
+            forceHeight(containerContext, $iframe);
           } else {
             containerContext.resizeCB();
             scrollbarAdjust(containerContext);
@@ -1319,8 +1337,3 @@ export {
   projectViewPopup,
   instrumentationNumbersPopup,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

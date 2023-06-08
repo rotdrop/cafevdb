@@ -51,6 +51,8 @@ import {
   data as pmeData,
   token as pmeToken,
   idSelector as pmeIdSelector,
+  inputSelector as pmeInputSelector,
+  valueSelector as pmeValueSelector,
   classSelector as pmeClassSelector,
   classSelectors as pmeClassSelectors,
   sysNameSelector as pmeSysNameSelector,
@@ -1370,15 +1372,15 @@ const installFilterChosen = function(containerSel) {
 };
 
 const removeButtonPlugin = {
-  // eslint-disable-next-line camelcase
-  remove_button: {
+  name: 'remove_button',
+  options: {
     title: t(appName, 'Remove'),
   },
 };
 
 const clearButtonPlugin = {
-  // eslint-disable-next-line camelcase
-  clear_button: {
+  name: 'clear_button',
+  options: {
     title: t(appName, 'Clear'),
   },
 };
@@ -1402,7 +1404,7 @@ function installInputSelectize(containerSel, onlyClass) {
     const $self = $(this);
     const selectizeOptions = mergician({ appendArrays: true, dedupArrays: true })(
       {
-        plugins: $self.prop('multiple') ? removeButtonPlugin : clearButtonPlugin,
+        plugins: [$self.prop('multiple') ? removeButtonPlugin : clearButtonPlugin],
         delimiter: ',',
         persist: false,
         hideSelected: false,
@@ -1990,17 +1992,29 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     ensureDropdownVisibility(container);
   });
 
-  // container.on('chosen:before_hiding_dropdown', tableContainerId + ' select', function(event) {
-  //   return true;
-  // });
-
-  // container.on('chosen:showing_dropdown', tableContainerId + ' select', function(event) {
-  //   console.info('chosen:showing_dropdown');
-  //   return true;
-  // });
-
   container.on('chosen:hiding_dropdown', tableContainerId + ' select', function(event) {
     resetDropdownVisibility(container);
+  });
+
+  const trackEmptyValueClass = 'track-empty-value';
+  const emptyValueClass = 'value-is-empty';
+  const nonEmptyValueClass = 'value-is-non-empty';
+
+  console.info('WOULD INIT EMPTY VALUE TRACKER');
+  container.find(pmeValueSelector + '.' + trackEmptyValueClass).each(function() {
+    const $this = $(this);
+    const $row = $this.closest('tr');
+    const empty = $.trim($this.html()) === '' || $this.find(pmeInputSelector).val() === '';
+    $row.toggleClass(emptyValueClass, empty);
+    $row.toggleClass(nonEmptyValueClass, !empty);
+  });
+
+  container.on('blur, change', pmeInputSelector + '.' + trackEmptyValueClass, function(event) {
+    const $input = $(this);
+    const $row = $input.closest('tr');
+    const empty = $input.val() === '';
+    $row.toggleClass(emptyValueClass, empty);
+    $row.toggleClass(nonEmptyValueClass, !empty);
   });
 
   // Handle some special check-boxes disabling text-input fields

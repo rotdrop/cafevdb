@@ -38,6 +38,10 @@ use OCP\Accounts\IAccountManager;
 use OCP\Accounts\IAccountProperty;
 use OCP\Accounts\PropertyDoesNotExistException;
 use OC\Security\SecureRandom;
+use OC\Authentication\TwoFactorAuth\ProviderLoader as TFAProviderLoader;
+use OCP\Authentication\TwoFactorAuth\IProvider as ITFAProvider;
+use OCP\Authentication\TwoFactorAuth\IRegistry as ITFARegistry;
+use OCP\Authentication\TwoFactorAuth\IActivatableByAdmin as ITFAActivatableByAdmin;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -63,6 +67,7 @@ class ExecutiveBoard extends Command
     // email notification, needed as fallback
     [
       'appid' => 'twofactor_email',
+      'providers' => [ 'email', ],
       'phone' => false,
       'values' => [
         'verified' => 'true',
@@ -71,6 +76,7 @@ class ExecutiveBoard extends Command
     // signal messenger
     [
       'appid' => 'twofactor_gateway',
+      'providers' => [ 'gateway_signal', /* 'gateway_sms', */ ],
       'phone' => true,
       'values' => [
         'signal_identifier' => '{PHONE}',
@@ -82,9 +88,10 @@ class ExecutiveBoard extends Command
     // notifications
     [
       'appid' => 'twofactor_nextcloud_notification',
+      'providers' => [ 'twofactor_nextcloud_notification', ],
       'phone' => false,
       'values' => [
-        'enable' => '1',
+        'enabled' => '1',
       ],
     ],
   ];
@@ -138,6 +145,12 @@ class ExecutiveBoard extends Command
     if ($result != 0) {
       return $result;
     }
+
+    /** @var TFAProviderLoader $tfaProviderLoader */
+    $tfaProviderLoader = $this->appContainer->get(TFAProviderLoader::class);
+
+    /**@var ITFARegistry $tfaRegistry */
+    $tfaRegistry = $this->appContainer->get(ITFARegistry::class);
 
     /** @var ConfigService $configService */
     $configService = $this->appContainer->get(ConfigService::class);
@@ -220,7 +233,29 @@ class ExecutiveBoard extends Command
       $userId = $musician->getUserIdSlug();
 
       if (!$boardMember->getRegistration()) {
-        $output->writeln($this->l->t('Skipping user "%1$s" as its participation in the executive board is not confirmed.', [ $userId ]), OutputInterface::VERBOSITY_VERBOSE);
+        $output->writeln(
+          '<error>'
+          . $this->l->t('Skipping user "%1$s" as its participation in the executive board is not confirmed.', [ $userId ])
+          . '</error>',
+          OutputInterface::VERBOSITY_VERBOSE,
+        );
+        $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
+        continue;
+      }
+
+      if (!empty($boardMember->getDeleted())) {
+        $output->writeln(
+          '<error>'
+          . $this->l->t(
+            'Skipping user "%1$s" as its participation in the executive board has been deleted on %2$s.', [
+              $userId,
+              $this->l->l('date', $boardMember->getDeleted(), [ 'width' => 'medium' ]),
+            ],
+          )
+          . '</error>',
+          OutputInterface::VERBOSITY_VERBOSE,
+        );
+        $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
         continue;
       }
 
@@ -228,6 +263,7 @@ class ExecutiveBoard extends Command
 
       if (!empty($onlyMember) && $onlyMember != $userId) {
         $output->writeln($this->l->t('Skipping user "%1$s" (operation on only "%2$s was requested)".', [ $userId, $onlyMember ]), OutputInterface::VERBOSITY_VERBOSE);
+        $output->writeln('', OutputInterface::VERBOSITY_VERBOSE);
         continue;
       }
 
@@ -433,6 +469,12 @@ class ExecutiveBoard extends Command
       }
       $output->writeln($indent . $this->l->t('Phone number: %s', $dbPhone));
 
+      // fetch all TFA provider states.
+      $tfaRegistryStates = $tfaRegistry->getProviderStates($boardUser);
+
+      // fetch all TFA providers
+      $tfaProviders = $tfaProviderLoader->getProviders($boardUser);
+
       // enable some standard two-factor things and set them to verified
       $cloudConfig = $configService->getCloudConfig();
       foreach (self::TWO_FACTOR_PREFERENCES as $configItem) {
@@ -465,10 +507,33 @@ class ExecutiveBoard extends Command
             $output->writeln($indent . $this->l->t('Configuration "%1$s" (%2$s) is "%3$s".', [ $configKey, $appName, $configValue ]), OutputInterface::VERBOSITY_VERBOSE);
           }
         }
+        foreach ($configItem['providers'] as $providerId) {
+          if (empty($tfaRegistryStates[$providerId])) {
+            ++$problems;
+            $output->writeln(
+              '<error>'
+              . $this->l->t('TFA-Provider "%1$s" is not enabled.', $providerId)
+              . '</error>'
+            );
+            if ($dry) {
+              $output->writeln($indent . $this->l->t('Would enable TFA-Provider "%1$s" (dry-run).', $providerId));
+            } else {
+              $output->writeln($indent . $this->l->t('Enabling TFA-Provider "%1$s".', $providerId));
+              /** @var ITFAProvider $provider */
+              $provider = $tfaProviders[$providerId];
+              if (!$provider->isTwoFactorAuthEnabledForUser($boardUser) && $provider instanceof ITFAActivatableByAdmin) {
+                $provider->enableFor($boardUser);
+              }
+              $tfaRegistry->enableProviderFor($provider, $boardUser);
+            }
+          } else {
+            $output->writeln($indent . $this->l->t('TFA-Provider "%1$s" is enabled.', $providerId), OutputInterface::VERBOSITY_VERBOSE);
+          }
+        }
       }
 
       if ($problems > 0) {
-        $output->writeln('<error>' . $this->l->n('Error: found %d problem.', 'Error: found %d problems.', $problems, [ $problems ]) . '</error>');
+        $output->writeln('<error>' . $this->l->n('Error: found %n problem.', 'Error: found %n problems.', $problems) . '</error>');
       } else {
         $output->writeln($indent . 'OK');
       }

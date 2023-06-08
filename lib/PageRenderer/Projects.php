@@ -512,7 +512,7 @@ class Projects extends PMETableViewBase
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pin.instrument_id
   LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
-    ON ft.locale = '".($this->l10n()->getLocaleCode())."'
+    ON ft.locale = '".($this->getTranslationLanguage())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
@@ -557,7 +557,7 @@ class Projects extends PMETableViewBase
   LEFT JOIN ".self::INSTRUMENTS_TABLE." i
     ON i.id = pin.instrument_id
   LEFT JOIN ".self::FIELD_TRANSLATIONS_TABLE." ft
-    ON ft.locale = '".($this->l10n()->getLocaleCode())."'
+    ON ft.locale = '".($this->getTranslationLanguage())."'
       AND ft.object_class = '".addslashes(Entities\Instrument::class)."'
       AND ft.field = 'name'
       AND ft.foreign_key = i.id
@@ -620,16 +620,39 @@ class Projects extends PMETableViewBase
         'default' => 0,
       ]);
 
+    $opts['fdd']['registration_start_date'] =
+      Util::arrayMergeRecursive(
+        $this->defaultFDD['date'],
+        [
+          'tab' => ['id' => 'miscinfo'],
+          'name' => $this->l->t('Registration Start'),
+          'css' => [ 'postfix' => [ 'registration-start-date', 'track-empty-value', ], ],
+          'nowrap' => true,
+          'options' => 'AVCPD',
+          'tooltip' => $this->toolTipsService['page-renderer:projects:registration:start'],
+          'display' => [
+            'popup' => 'tooltip',
+            'attributes' => [
+              'size' => 14,
+            ],
+          ],
+        ]);
+
     $opts['fdd']['registration_deadline'] =
-      array_merge(
+      Util::arrayMergeRecursive(
         $this->defaultFDD['date'],
         [
           'tab' => ['id' => 'miscinfo'],
           'name' => $this->l->t('Registration Deadline'),
+          'css' => [ 'postfix' => [ 'registration-deadline', ], ],
           'nowrap' => true,
           'options' => 'AVCPD',
           'tooltip' => $this->toolTipsService['page-renderer:projects:registration:deadline'],
           'php|LFVD' => function($value, $op, $k, $row, $recordId, $pme) {
+            $registration_start = $row[$this->queryField('registration_start_date', $pme->fdd)];
+            if (empty($registration_start)) {
+              return '';
+            }
             $project = $this->project ?? ($recordId['id'] ?? null);
             if (!empty($project)) {
               $value = $this->projectService->getProjectRegistrationDeadline($project)->getTimestamp();
@@ -641,6 +664,7 @@ class Projects extends PMETableViewBase
           'display|ACP' => [
             'attributes' => function($op, $k, $row, $pme) {
               $project = $this->project ?? ($recordId['id'] ?? null);
+              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
               $deadlineString = null;
               if (!empty($project)) {
                 $value = $this->projectService->getProjectRegistrationDeadline($project);
@@ -650,19 +674,18 @@ class Projects extends PMETableViewBase
                 }
               }
               $exampleDate = DateTimeImmutable::createFromFormat('Ymd', '17840401', $this->getDateTimeZone());
-              $this->logInfo('EXAMPLE DATE ' . print_r($exampleDate, true));
               $exampleDateString = $this->l->l('date', $exampleDate, [ 'width' => 'medium' ]);
 
               $lockedPlaceholder =
                 $op == 'add' || empty($deadlineString) ? $this->l->t('e.g. %s', $exampleDateString) : $deadlineString;
               $unlockedPlaceholder = $this->l->t('e.g. %s', $deadlineString ?? $exampleDateString);
-              if (empty($row['qf'.$k])) {
+              if (empty($row['qf'.$k]) || empty($registrationStart)) {
                 return [
                   'placeholder' => $lockedPlaceholder,
-                  'readonly' => true,
                   'data-unlocked-placeholder' => $unlockedPlaceholder,
                   'data-locked-placeholder' => $lockedPlaceholder,
-                  'disabled' => true,
+                  'readonly' => true,
+                  'disabled' => true, // prevents value to be submitted
                   'size' => 14,
                 ];
               } else {
@@ -676,14 +699,17 @@ class Projects extends PMETableViewBase
               }
             },
             'postfix' => function($op, $pos, $k, $row, $pme) {
+              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
+              $disabled = empty($registrationStart) ? 'disabled' : '';
               $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
               return '<input id="pme-project-registration-deadline"
   type="checkbox"
-  '.$checked.'
+  ' . $checked . '
+  ' . $disabled . '
   class="pme-input pme-input-lock lock-empty locked-disabled"
 /><label
     class="pme-input pme-input-lock lock-empty"
-    title="'.$this->toolTipsService['pme:input:lock-empty'].'"
+    title="'.$this->toolTipsService['pme:input:lock:empty'].'"
     for="pme-project-registration-deadline"></label>';
             },
           ],
@@ -926,12 +952,12 @@ class Projects extends PMETableViewBase
         if (empty($imageIds) || ($action != PHPMyEdit::OPERATION_DISPLAY)) {
           $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
         }
-        $this->logInfo('IMAGE IDS ' . $action . ' ' . print_r($imageIds, true));
+        $this->logDebug('IMAGE IDS ' . $action . ' ' . print_r($imageIds, true));
         $numImages = count($imageIds);
         $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
         // $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
         $columns = self::MAX_POSTER_COLUMNS;
-        $this->logInfo('R / C ' . $rows . ' / ' . $columns);
+        $this->logDebug('R / C ' . $rows . ' / ' . $columns);
         $html = '';
         for ($i = 0; $i < $numImages; ++$i) {
           $html .= $this->posterImageLink($postersFolder, $action, $columns, $imageIds[$i]);

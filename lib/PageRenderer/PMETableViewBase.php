@@ -28,6 +28,7 @@ use ArrayObject;
 use Exception;
 use RuntimeException;
 use UnexpectedValueException;
+use Throwable;
 
 use OCP\IL10N;
 
@@ -143,7 +144,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const MASTER_FIELD_SUFFIX = '__master_key_';
 
   /**
-   * MySQL/MariaDB column quote.
+   * @var string MySQL/MariaDB column quote.
    */
   const COL_QUOTE = '`';
 
@@ -489,7 +490,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     try {
       $this->pme->execute($opts);
       $this->pme->commit();
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t, 'Rolling back SQL transaction ...');
       $this->pme->rollBack();
       throw new Exception($this->l->t('SQL Transaction failed: %s', $t->getMessage()), (int)$t->getCode(), $t);
@@ -1048,9 +1049,19 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             'old' => Util::explode(self::VALUES_SEP, Util::removeSpaces($oldValues[$keyField])),
             'new' => Util::explode(self::VALUES_SEP, Util::removeSpaces($newValues[$keyField])),
           ];
-          // handle "deleted" information if present. This is meant for disabled instruments and the like
+          // Handle "deleted" information if present. This is meant for
+          // disabled instruments and the like. This stems from split-inputs
+          // where one select hold the deleted items and another one the active items.
+          //
+          // Unfortunaley this conflicts with the usual KEY:VALUE convention
+          // in other tables where KEY would be the ID of the database entity
+          // and VALUE in this case the deleted timestamp.
+          //
+          // We try to copy with this problem by checking for the colon syntax
+          // and not doing this hack if we find a usual
+          // KEY1:VALUE1,KEY2:VALUE2,... field.
           $deletedField = $this->joinTableFieldName($joinInfo, 'deleted');
-          if (!empty($oldValues[$deletedField]) && !preg_match('/^\\d+:/', $oldValues[$deletedField])) {
+          if (!empty($oldValues[$deletedField]) && !str_contains($oldValues[$deletedField], self::JOIN_KEY_SEP)) {
             $deletedKeys = Util::explode(self::VALUES_SEP, $oldValues[$deletedField]);
             foreach (array_intersect($deletedKeys, $identifier[$key]['new']) as $deletedKey) {
               $identifier[$key]['old'][] = $deletedKey;
@@ -1331,8 +1342,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             }
             $usage  = method_exists($entity, 'usage') ? $entity->usage() : 0;
             $this->debug('Usage is '.$usage);
-            $softDeleteable = method_exists($entity, 'isDeleted')
-                            && method_exists($entity, 'setDeleted');
+            $softDeleteable = method_exists($entity, 'isDeleted') && method_exists($entity, 'setDeleted');
 
             $this->debug('SOFT-DELETEABLE '.(int)$softDeleteable.' HAS USAGE '.(int)method_exists($entity, 'usage'));
 
@@ -2570,6 +2580,28 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   }
 
   /**
+   * We have this Nextcloud convention that de means "German personal Du" and
+   * de_DE means "German formal Sie". Unfortunately, even
+   * IL10N::getLocaleCode() just returns the language ... This function makes
+   * sure that we have a locale id like de_DE.
+   *
+   * @param null|IL10N $l10n
+   *
+   * @return string
+   */
+  protected function getTranslationLanguage(?IL10N $l10n = null)
+  {
+    if (empty($l10n)) {
+      $l10n = $this->l;
+    }
+    $lang = $this->l10n()->getLocaleCode();
+    if (strpos($lang, '_') === false) {
+      $lang = $lang . '_' . strtoupper($lang);
+    }
+    return $lang;
+  }
+
+  /**
    * Join with an in-database translation table. The following fields are provided:
    *
    * - l10n_FIELD -- translated field will fallback translation to original value
@@ -2602,10 +2634,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     //   throw new RuntimeException($this->l->t('Composite keys are not yet supported for translated database table fields.'));
     // }
     // $id = array_keys($joinInfo['identifier'])[0];
-    $lang = $this->l10n()->getLanguageCode();
-    if (strpos($lang, '_') === false) {
-      $lang = $lang . '_' . strtoupper($lang);
-    }
+    $lang = $this->getTranslationLanguage();
     $l10nJoins = [];
     foreach ($fields as $field) {
       $joinTable = 'jt_'.$field;
@@ -2661,7 +2690,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     } else {
       $id = array_keys($joinInfo['identifier'])[0];
     }
-    $lang = $this->l10n()->getLanguageCode();
+    $lang = $this->getTranslationLanguage();
     return [
       'sql' => 'COALESCE($join_col_fqn, $main_table.$field_name)',
       'values' => [
@@ -2829,7 +2858,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
             case 'email':
               try {
                 $musician->setEmail($value, $musician);
-              } catch (\Throwable $t) {
+              } catch (Throwable $t) {
                 $this->logException($t);
                 /** @var Service\MusicianService $musicianService */
                 $musicianService = $this->di(Service\MusicianService::class);
@@ -2844,7 +2873,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
               try {
                 $musician[$column] = $value;
                 break;
-              } catch (\Throwable $t) {
+              } catch (Throwable $t) {
                 // Don't care, we know virtual stuff is not there
               }
           }

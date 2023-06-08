@@ -58,8 +58,8 @@ class MailingListsService
     self::ROLE => self::ROLE_MEMBER,
   ];
 
-  const TEMPLATE_DIR_MAILING_LISTS = 'mailing lists';
-  const TEMPLATE_DIR_AUTO_RESPONSES = 'auto responses';
+  const TEMPLATE_DIR_MAILING_LISTS = 'mailing-lists';
+  const TEMPLATE_DIR_AUTO_RESPONSES = 'auto-responses';
   const TEMPLATE_TYPE_UNSPECIFIC = '';
   const TEMPLATE_TYPE_ANNOUNCEMENTS = 'announcements';
   const TEMPLATE_TYPE_PROJECTS = 'projects';
@@ -787,10 +787,6 @@ class MailingListsService
    */
   public function getSubscriptionStatus(string $listId, string $subscriptionAddress):string
   {
-    self::t('unsubscribed');
-    self::t('subscribed');
-    self::t('invited');
-    self::t('waiting');
     $subscription = $this->getSubscription($listId, $subscriptionAddress);
     if (!empty($subscription[MailingListsService::ROLE_MEMBER])) {
       return self::STATUS_SUBSCRIBED;
@@ -1130,8 +1126,8 @@ class MailingListsService
     $components = array_map(function($path) {
       return Util::dashesToCamelCase($this->transliterate($path), capitalizeFirstCharacter: true, dashes: '_- ');
     }, array_filter([
-      $l->t('mailing lists'),
-      $l->t('auto-responses'),
+      $l->t(self::TEMPLATE_DIR_MAILING_LISTS),
+      $l->t(self::TEMPLATE_DIR_AUTO_RESPONSES),
       $l->t($leafDirectory),
     ]));
     array_unshift($components, $this->getDocumentTemplatesPath());
@@ -1290,9 +1286,17 @@ class MailingListsService
     }
     return $listId;
   }
-}
 
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
+  /**
+   * Just here in order to inject the enum values into the l10n framework.
+   *
+   * @return void
+   */
+  protected static function translationHack():void
+  {
+    self::t(self::STATUS_UNSUBSCRIBED);
+    self::t(self::STATUS_SUBSCRIBED);
+    self::t(self::STATUS_INVITED);
+    self::t(self::STATUS_WAITING);
+  }
+}

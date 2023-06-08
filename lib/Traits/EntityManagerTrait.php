@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Traits;
 
+use Throwable;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
@@ -143,32 +145,53 @@ trait EntityManagerTrait
    * first check if this entity is already tagged as "soft deleted"
    * and if so do nothing.
    *
+   * @param bool $useTransaction Wrap the remove operation into a transaction
+   * or not. This parameter is ignored if $flush is false.
+   *
    * @return void
    *
    * @throws ORMInvalidArgumentException
    * @throws ORMException
    */
-  protected function remove(mixed $entity, bool $flush = false, bool $hard = false, bool $soft = false):void
-  {
+  protected function remove(
+    mixed $entity,
+    bool $flush = false,
+    bool $hard = false,
+    bool $soft = false,
+    bool $useTransaction = false,
+  ):void {
     if (filter_var($entity, FILTER_VALIDATE_INT, ['min_range' => 1])) {
       $entity = [ 'id' => $entity ];
     }
     if (is_array($entity)) {
       $key = $entity;
       $entity = $this->entityManager->getReference($this->entityClassName, $key);
-      $this->logDebug("Create reference from ".print_r($key, true).' for '.$this->entityClassName);
+      // $this->logDebug("Create reference from " . print_r($key, true) . ' for ' . $this->entityClassName);
     }
     if ($soft && !$hard && method_exists($entity, 'isDeleted') && $entity->isDeleted()) {
       return;
     }
-    $this->entityManager->remove($entity);
-    if ($hard && (!method_exists($entity, 'isDeleted') || !$entity->isDeleted())) {
-      $this->flush();
+    try {
+      if ($useTransaction && $flush) {
+        $this->entityManager->beginTransaction();
+      }
       $this->entityManager->remove($entity);
-    }
+      if ($hard && (!method_exists($entity, 'isDeleted') || !$entity->isDeleted())) {
+        $this->flush();
+        $this->entityManager->remove($entity);
+      }
 
-    if ($flush) {
-      $this->flush();
+      if ($flush) {
+        $this->flush();
+        if ($useTransaction) {
+          $this->entityManager->commit();
+        }
+      }
+    } catch (Throwable $t) {
+      if ($useTransaction) {
+        $this->entityManager->rollback();
+      }
+      throw $t;
     }
   }
 
@@ -215,10 +238,12 @@ trait EntityManagerTrait
    * This effectively synchronizes the in-memory state of managed objects with the
    * database.
    *
-   * If an entity is explicitly passed to this method only this entity and
-   * the cascade-persist semantics + scheduled inserts/removals are synchronized.
+   * If an entity is explicitly passed then it is persisted before the actual
+   * flush is called.
    *
    * @param null|object|array $entity
+   *
+   * @param bool $useTransaction Wrap the flush operation into a transaction or not.
    *
    * @return void
    *
@@ -226,12 +251,22 @@ trait EntityManagerTrait
    *         makes use of optimistic locking fails.
    * @throws ORMException
    */
-  protected function flush($entity = null):void
+  protected function flush($entity = null, bool $useTransaction = false):void
   {
     if (!empty($entity)) {
       $this->entityManager->persist($entity);
     }
-    $this->entityManager->flush();
+    if ($useTransaction) {
+      $this->entityManager->beginTransaction();
+      try {
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+      } catch (Throwable $t) {
+        $this->entityManager->rollback();
+      }
+    } else {
+      $this->entityManager->flush();
+    }
   }
 
   /**

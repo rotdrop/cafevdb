@@ -1,11 +1,10 @@
-<?php
 /**
  * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2023 Claus-Justus Heine
+ * @author Claus-Justus Heine
+ * @copyright 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,28 +21,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Maintenance\Migrations;
+$pme-table-cell-padding: 3px;
+$pme-table-cell-border-width: 1px;
 
-use OCP\ILogger;
-use OCP\IL10N;
+// From jquery-ui:
+$jquery-ui-dialog-horizontal-padding: 1em;
+$jquery-ui-dialog-vertical-padding: 0.5em;
+$jquery-ui-dialog-titlebar-height: 39px;
+$jquery-ui-tabs-padding: 0.2em;
+$jquery-ui-widget-border-width: 1px;
 
-use OCA\CAFEVDB\Database\EntityManager;
+$breakpoint-mobile: 1024px;
+$breakpoint-mobile-small: 768px;
 
-/**
- * Change participantAccess field to enum.
- */
-class AddProjectRegistrationDeadline extends AbstractMigration
-{
-  protected static $sql = [
-    self::STRUCTURAL => [
-      "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS registration_start_date DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)';",
-      "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS registration_deadline DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)';",
-    ],
-  ];
+$pme-table-dialog: (
+  max-height: 90vh,
+  max-width: 90vw,
+  horizontal-padding: 1em,
+  vertical-padding: 0.5em,
+  border-width: 1px,
+);
 
-  /** {@inheritdoc} */
-  public function description():string
-  {
-    return $this->l->t('Add an optional project registration start and deadline.');
-  }
-}
+$pme-table-dialog-mobile: (
+  max-height: 100vh,
+  max-width: 100vw,
+  horizontal-padding: 0px,
+  vertical-padding: 0px,
+  border-width: 0px,
+);

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -71,23 +71,20 @@ const confirm = function(text, title, options, modal, allowHtml) {
 
   options = $.extend({}, defaultOptions, options);
 
-  if (options.default === 'cancel') {
-    if (!options.buttons || options.buttons === OC.dialogs.YES_NO_BUTTONS) {
-      options.buttons = {
-        type: OC.dialogs.YES_NO_BUTTONS,
-        confirm: t('core', 'No'),
-        cancel: t('core', 'Yes'),
-      };
-    } else {
-      const cancel = options.buttons.cancel;
-      options.buttons.cancel = options.buttons.confirm;
-      options.buttons.confirm = cancel;
-    }
-    const userCallback = options.callback;
-    options.callback = choice => userCallback(!choice);
-  } else {
-    options.buttons = options.buttons || OC.dialogs.YES_NO_BUTTONS;
+  if (!options.buttons || options.buttons === OC.dialogs.YES_NO_BUTTONS) {
+    options.buttons = {
+      type: OC.dialogs.YES_NO_BUTTONS,
+    };
   }
+  const classes = [appName, 'default-' + options.default];
+  if (options.buttons.confirmClasses) {
+    if (Array.isArray(options.buttons.confirmClasses)) {
+      classes.splice(classes.length, ...options.buttons.confirmClasses);
+    } else {
+      classes.push(options.buttons.confirmClasses);
+    }
+  }
+  options.buttons.confirmClasses = classes;
 
   return OC.dialogs.message(
     text,
@@ -97,7 +94,17 @@ const confirm = function(text, title, options, modal, allowHtml) {
     options.callback,
     options.modal,
     options.allowHtml
-  );
+  ).then(() => {
+    $('body').find('.oc-dialog-buttonrow.twobuttons').each(function() {
+      const $buttonRow = $(this);
+      const $confirmButton = $buttonRow.find('button.primary.' + appName);
+      if ($confirmButton.hasClass('default-cancel')) {
+        const $cancelButton = $buttonRow.find('button:not(.primary)');
+        $confirmButton.removeClass('primary');
+        $cancelButton.addClass('primary');
+      }
+    });
+  });
 };
 
 /**

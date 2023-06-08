@@ -1,11 +1,10 @@
-<?php
 /**
  * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2023 Claus-Justus Heine
+ * @author Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,28 +21,4 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Maintenance\Migrations;
-
-use OCP\ILogger;
-use OCP\IL10N;
-
-use OCA\CAFEVDB\Database\EntityManager;
-
-/**
- * Change participantAccess field to enum.
- */
-class AddProjectRegistrationDeadline extends AbstractMigration
-{
-  protected static $sql = [
-    self::STRUCTURAL => [
-      "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS registration_start_date DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)';",
-      "ALTER TABLE Projects ADD COLUMN IF NOT EXISTS registration_deadline DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)';",
-    ],
-  ];
-
-  /** {@inheritdoc} */
-  public function description():string
-  {
-    return $this->l->t('Add an optional project registration start and deadline.');
-  }
-}
+require('iframe-resizer/js/iframeResizer.contentWindow.js');

@@ -772,10 +772,11 @@ class ConfigCheckService
 
     $projectFolder = trim(preg_replace('|[/]+|', '/', $projectFolder), "/");
     $projectFolder = Util::explode('/', $projectFolder);
+    if (count($projectFolder) > 0 && $projectFolder[0] == $sharedFolder) {
+      array_shift($projectFolder);
+    }
 
     $path = '/'.$sharedFolder;
-
-    //trigger_error("Path: ".print_r($projectFolder, true), E_USER_NOTICE);
 
     foreach ($projectFolder as $pathComponent) {
       $path .= '/'.$pathComponent;

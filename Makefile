@@ -260,6 +260,7 @@ $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCD
 
 CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
 JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue")
+L10N_FILES = $(shell find $(ABSSRCDIR)/l10n -name "*.js")
 
 SELECTIZE_DIST =\
  $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js\
@@ -280,7 +281,7 @@ WEBPACK_DEPS =\
  $(NPM_INIT_DEPS)\
  $(TINYMCE_DIST)\
  $(CHOSEN_DIST)\
- $(CSS_FILES) $(JS_FILES)
+ $(CSS_FILES) $(JS_FILES) $(L10N_FILES)
 
 # CSS_TARGETS = app.css settings.css admin-settings.css
 # JS_TARGETS = app.js settings.js admin-settings.js

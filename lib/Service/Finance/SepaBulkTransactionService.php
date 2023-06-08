@@ -189,7 +189,7 @@ class SepaBulkTransactionService
         $submissionTaskUri = $bulkTransaction->getSubmissionTaskUri();
         $submissionTask = $this->financeService->findFinanceCalendarEntry($submissionTaskUri);
         if (!empty($submissionTask)) {
-          $stash = [ self::SUBMISSION_TASK => $this->eventsService->cloneCalendarEntry($submissionTask) ];
+          $stash = [ self::SUBMISSION_TASK => Util::cloneArray($submissionTask) ];
           if (empty($submitDate) || $submitDate > $now) {
             $this->eventsService->setCalendarTaskStatus($submissionTask, percentComplete: 0);
           } else {
@@ -206,7 +206,7 @@ class SepaBulkTransactionService
         $submissionEventUri = $bulkTransaction->getSubmissionEventUri();
         $submissionEvent = $this->financeService->findFinanceCalendarEntry($submissionEventUri);
         if (!empty($submissionEvent)) {
-          $stash = [ self::SUBMISSION_EVENT => $this->eventsService->cloneCalendarEntry($submissionEvent) ];
+          $stash = [ self::SUBMISSION_EVENT => Util::cloneArray($submissionEvent) ];
           if (empty($submitDate) || $submitDate > $now) {
             $this->logInfo('SUBMIT > NOW ' . print_r($submitDate, true) . ' ' . print_r($now, true));
             // leave as is for the moment
@@ -653,7 +653,7 @@ class SepaBulkTransactionService
         foreach (array_filter($objectIds) as $objectId) {
           $calendarObject = $this->financeService->findFinanceCalendarEntry($objectId);
           if (!empty($calendarObject)) {
-            $calendarObjects[$eventKind][$objectType] = $this->eventsService->cloneCalendarEntry($calendarObject);
+            $calendarObjects[$eventKind][$objectType] = Util::cloneArray($calendarObject);
             break;
           }
         }

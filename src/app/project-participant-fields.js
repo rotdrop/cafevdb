@@ -36,6 +36,7 @@ import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';
 import { textInputSelector, nonTextInputSelector, textElementSelector } from '../util/css-selectors.js';
+require('./jquery-readonly.js');
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -160,6 +161,9 @@ const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, sing
 const ready = function(selector, resizeCB) {
   const $container = $(selector);
 
+  // @todo Most of the stuff below is a no-op in list-view. We should
+  // bail-out early.
+
   const $tableTab = $container.find('select.tab');
   const $newTab = $container.find('input.new-tab');
   $newTab.prop('readonly', !!SelectUtils.selected($tableTab));
@@ -220,8 +224,9 @@ const ready = function(selector, resizeCB) {
 
     $container.find('.data-type-html-wysiwyg-editor').each(function() {
       const $this = $(this);
-      WysiwygEditor.removeEditor($this);
-      if (dataType === 'html') {
+      if (dataType !== 'html') {
+        WysiwygEditor.removeEditor($this);
+      } else {
         WysiwygEditor.addEditor($this, resizeCB);
       }
     });
@@ -373,7 +378,64 @@ const ready = function(selector, resizeCB) {
 
       return false;
     });
-  $container.find('select.multiplicity:not(.pme-filter)').trigger('change');
+
+  const $multiplicitySelect = $container.find('select.multiplicity.pme-input');
+  const $multiplicityLock = $container.find('#pme-field-multiplicity-lock');
+  const $dataTypeSelect = $container.find('select.data-type.pme-input');
+  const $dataTypeLock = $container.find('#pme-field-data-type-lock');
+
+  $multiplicitySelect.trigger('change');
+  const usage = $multiplicitySelect.data('fieldUsage');
+
+  $multiplicitySelect.readonly(usage > 0);
+  $multiplicityLock.prop('checked', usage > 0);
+
+  $dataTypeSelect.readonly(usage > 0);
+  $dataTypeLock.prop('checked', usage > 0);
+
+  $container.on('change', '#pme-field-multiplicity-lock', function(event) {
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    if (!checked) {
+      Dialogs.confirm(
+        t(appName, 'This field already is filled out for some participants. Changing the multiplicity is still possible in some cases, but generally irrevertible. The app will allow changes from checkboxes and multiple-choice fields to general "simple" free-form content and disallow any other changes. Selected choices will then be collected into the remaining free-form field. Mostly probably the outcome will be broken unless the data type is "text" or "HTML-text".'),
+        t(appName, 'Really allow changing the multiplicity?'), {
+          default: 'cancel',
+          callback(answer) {
+            const checked = !answer;
+            $this.prop('checked', checked);
+            const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
+            $multiplicitySelect.readonly(checked);
+          },
+        }
+      );
+    } else {
+      const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
+      $multiplicitySelect.readonly(checked);
+    }
+  });
+
+  $container.on('change', '#pme-field-data-type-lock', function(event) {
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    if (!checked) {
+      Dialogs.confirm(
+        t(appName, 'This field already is filled out for some participants. Changing the data-type is still possible in some cases, but does not always make sense. The app will allow changes between data-types and try to be smart, but please be prepared that the results might look unexpected.'),
+        t(appName, 'Really allow changing the data-type?'), {
+          default: 'cancel',
+          callback(answer) {
+            const checked = !answer;
+            $this.prop('checked', checked);
+            const $dataTypeSelect = $this.closest('td').find('select.data-type.pme-input');
+            $dataTypeSelect.readonly(checked);
+          },
+        }
+      );
+    } else {
+      const $dataTypeSelect = $this.closest('td').find('select.data-type.pme-input');
+      $dataTypeSelect.readonly(checked);
+    }
+  });
 
   $container.on('keypress', 'tr.data-options input' + textInputSelector, function(event) {
     let pressedKey;

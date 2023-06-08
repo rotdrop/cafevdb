@@ -31,15 +31,18 @@ use RuntimeException;
 use OCP\Files as CloudFiles;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as DataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Storage\Database\Factory as DatabaseStorageFactory;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Functions;
 
@@ -49,6 +52,7 @@ use OCA\CAFEVDB\Service\Finance\PeriodicReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\MembershipFeesReceivablesGenerator;
 use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
+use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Common;
 use OCA\CAFEVDB\Constants;
@@ -105,6 +109,28 @@ class ProjectParticipantFieldsService
       DataType::DB_FILE,
       DataType::CLOUD_FOLDER,
     ],
+  ];
+
+  private const ALLOWED_TRANSITIONS = [
+    Multiplicity::SIMPLE => [],
+    Multiplicity::SINGLE => [
+      Multiplicity::SIMPLE,
+      Multiplicity::MULTIPLE,
+      Multiplicity::PARALLEL,
+    ],
+    Multiplicity::MULTIPLE => [
+      Multiplicity::SIMPLE,
+      Multiplicity::PARALLEL,
+    ],
+    Multiplicity::PARALLEL => [
+      Multiplicity::SIMPLE,
+    ],
+    Multiplicity::RECURRING => [
+      // we could allow to change to PARALLEL, too.
+      Multiplicity::SIMPLE,
+    ],
+    Multiplicity::GROUPOFPEOPLE => [],
+    Multiplicity::GROUPSOFPEOPLE => [],
   ];
 
   /** @var EntityManager */
@@ -420,7 +446,8 @@ class ProjectParticipantFieldsService
    */
   public static function isSupportedType(string $multiplicity, string $type):bool
   {
-    return isset(self::UNSUPPORTED[$multiplicity]) && empty(self::UNSUPPORTED[$multiplicity][$type]);
+    $unsupported = self::UNSUPPORTED[$multiplicity] ?? [];
+    return !in_array($type, $unsupported);
   }
 
   /**
@@ -943,10 +970,13 @@ class ProjectParticipantFieldsService
    *
    * @return Entities\ProjectParticipantField
    */
-  public function ensureAbsenceField(Entities\ProjectEvent $projectEvent, bool $flush = false):?Entities\ProjectParticipantField
-  {
+  public function ensureAbsenceField(
+    Entities\ProjectEvent $projectEvent,
+    bool $flush = false,
+  ):?Entities\ProjectParticipantField {
     $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
+    /** @var Entities\Project $project */
     $project = $projectEvent->getProject();
 
     /** @var EventsService $eventsService */
@@ -957,27 +987,65 @@ class ProjectParticipantFieldsService
     $absenceField = $projectEvent->getAbsenceField();
     $l = $this->appL10n();
     if (empty($absenceField)) {
-      $absenceField = (new Entities\ProjectParticipantField)
-        ->setProject($project)
-        ->setMultiplicity(Multiplicity::MULTIPLE)
-        ->setDataType(DataType::TEXT)
-        ->setName($eventsService->briefEventDate($eventData));
-      // in order for the table-field translations to work we need to obtain the key for the field first ...
-      $this->persist($absenceField);
-      $this->flush();
-      $options = [
-        (string)$l->t('absent') => $l->t('This person will not participate in this event.'),
-        (string)$l->t('contacted') => $l->t('This person has been asked to confirm the participation but did not yet answer.'),
-        (string)$l->t('tentative') => $l->t('This person does not yet know whether a participation is possible.'),
-      ];
-      foreach ($options as $label => $tooltip) {
-        /** @var Entities\ProjectParticipantFieldDataOption $option */
-        $option = (new Entities\ProjectParticipantFieldDataOption)
-          ->setLabel($label)
-          ->setTooltip($tooltip)
-          ->setField($absenceField)
-          ->setKey(Uuid::create());
-        $absenceField->getDataOptions()->set((string)$option->getKey(), $option);
+      $protoType = $project->getParticipantFields()->matching(DBUtil::criteriaWhere([
+        '&(|name' => $this->l->t('Prototype'),
+        'name' => 'Prototype',
+        ')(|tab' => $l->t('Absence'),
+        'tab' => 'Absence',
+      ]));
+      if ($protoType->count()) {
+        /** @var Entities\ProjectParticipantField $protoType */
+        $protoType = $protoType->first();
+        $absenceField = clone($protoType);
+      } else {
+        $protoType = null;
+        $absenceField = (new Entities\ProjectParticipantField)
+          ->setProject($project)
+          ->setName($eventsService->briefEventDate($eventData))
+          ;
+        if (false) {
+          $absenceField
+            ->setMultiplicity(Multiplicity::MULTIPLE)
+            ->setDataType(DataType::TEXT);
+        } else {
+          $absenceField
+            ->setMultiplicity(Multiplicity::SIMPLE)
+            ->setDataType(DataType::HTML);
+        }
+        switch ($absenceField->getMultiplicity()) {
+          case Multiplicity::MULTIPLE:
+            $options = [
+              (string)$l->t('absent') => $l->t('This person will not participate in this event.'),
+              (string)$l->t('contacted') => $l->t('This person has been asked to confirm the participation but did not yet answer.'),
+              (string)$l->t('tentative') => $l->t('This person does not yet know whether a participation is possible.'),
+            ];
+            foreach ($options as $label => $tooltip) {
+              /** @var Entities\ProjectParticipantFieldDataOption $option */
+              $option = (new Entities\ProjectParticipantFieldDataOption)
+                ->setLabel($label)
+                ->setTooltip($tooltip)
+                ->setField($absenceField)
+                ->setKey(Uuid::create());
+              $absenceField->getDataOptions()->set((string)$option->getKey(), $option);
+              $this->persist($option);
+            }
+            break;
+          case Multiplicity::SIMPLE:
+            // simple text field still needs one dummy option
+            $option = (new Entities\ProjectParticipantFieldDataOption)
+              ->setLabel($absenceField->getName())
+              ->setKey(Uuid::create())
+              ->setField($absenceField);
+            $this->persist($option);
+            $absenceField->getDataOptions()->set((string)$option->getKey(), $option);
+            break;
+        }
+        /** @var Entities\ProjectParticipantField $protoType */
+        $protoType = (clone $absenceField)
+          ->setName($this->l->t('Prototype'))
+          ->setTab($l->t('Absence'))
+          ->setDeleted('now');
+        $this->persist($protoType);
       }
       $this->persist($absenceField);
     }
@@ -994,7 +1062,15 @@ class ProjectParticipantFieldsService
 
     $absenceField->setName($dateString)
       ->setTooltip($description)
-      ->setDisplayOrder(-$eventData['start']->getTimestamp());
+      ->setDisplayOrder(-$eventData['start']->getTimestamp())
+      ->setParticipantAccess(AccessPermission::READ);
+
+    if ($absenceField->getMultiplicity() == Multiplicity::SIMPLE) {
+      $defaultOption = $absenceField->getDataOption();
+      if (empty($defaultOption->getTooltip())) {
+        $defaultOption->setTooltip($description);
+      }
+    }
 
     if (empty($absenceField->getTab())) {
       // TRANSLATORS: Column heading in table (capital first character)
@@ -1068,7 +1144,7 @@ class ProjectParticipantFieldsService
    * @todo We might want to remove "side-effects", i.e. data-base files and
    * cloud files and cloud folders.
    */
-  public function deleteField($fieldOrId)
+  public function deleteField(int|Entities\ProjectParticipantField $fieldOrId)
   {
     if (!($fieldOrId instanceof Entities\ProjectParticipantField)) {
       $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldOrId);
@@ -1348,6 +1424,169 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Check if the transistion from $old to $new is implemented.
+   *
+   * @param Multiplicity $oldMultiplicity
+   *
+   * @param Multiplicity $newMultiplicity
+   *
+   * @return bool
+   */
+  private function isSupportedMultiplicityTransition(Multiplicity $oldMultiplicity, Multiplicity $newMultiplicity):bool
+  {
+    $allowed = self::ALLOWED_TRANSITIONS[(string)$oldMultiplicity];
+    return in_array((string)$newMultiplicity, $allowed);
+  }
+
+  /**
+   * Try to gracefully change the field-type.
+   *
+   * @param Entities\ProjectParticipantField $field
+   *
+   * @param null|Multiplicity $oldMultiplicity
+   *
+   * @param null|Multiplicity $newMultiplicity
+   *
+   * @return void
+   */
+  public function handleChangeFieldMultiplicity(
+    Entities\ProjectParticipantField $field,
+    ?Multiplicity $oldMultiplicity,
+    ?Multiplicity $newMultiplicity,
+  ):void {
+
+    if ($oldMultiplicity === null || $newMultiplicity == $oldMultiplicity) {
+      return;
+    }
+
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    $dataType = $field->getDataType();
+
+    if (!$this->isSupportedType($newMultiplicity, $dataType)) {
+      $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+      throw new Exceptions\EnduserNotificationException($this->l->t('Changing the multiplicity from "%1$s" to "%2$s" is not possible as the new multiplicity does not support the field data-type "%3$s".', [
+        $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
+      ]));
+    }
+
+    if ($field->usage() <= 0 || (!empty($field->getProjectEvent()) && $field->usage() < 1)) {
+      return;
+    }
+
+    if (!$this->isSupportedMultiplicityTransition($oldMultiplicity, $newMultiplicity)) {
+      $allowedTransitions = self::ALLOWED_TRANSITIONS[(string)$oldMultiplicity] ?? [];
+      if (empty($allowedTransitions)) {
+        $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The field is already in use, therefore the multiplicity may no longer be changed from "%1$s" to "%2$s".', [
+              $this->l->t($oldMultiplicity),
+              $this->l->t($newMultiplicity),
+            ]));
+      } else {
+        $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The field is already in use, therefore the multiplicity may only be changed from "%1$s" to "%2$s", but not to "%3$s".', [
+              $this->l->t($oldMultiplicity),
+              implode(', ', array_map(fn($value) => $this->l->t($value), $allowedTransitions)),
+              $this->l->t($newMultiplicity),
+            ]));
+      }
+    }
+
+    $needsFlush = false;
+
+    switch ($newMultiplicity) {
+      case Multiplicity::SIMPLE:
+        if ($dataType != DataType::TEXT && $dataType != DataType::HTML) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'The field is already in use, therefore changing the multiplicity from "%1$s" to "%2$s" is only supported for text or HTML fields, but the actual data-type is "%3$s".', [
+                $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
+              ]));
+        }
+        /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
+        foreach ($field->getSelectableOptions() as $dataOption) {
+          if (!$dataOption->isDeleted()) {
+            break;
+          }
+        }
+        $tooltips = [];
+        $participantData = [];
+        $field->setMultiplicity($oldMultiplicity);
+        /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+        foreach ($field->getFieldData() as $fieldDatum) {
+          /** @var Entities\ProjectParticipant $participant */
+          $participant = $fieldDatum->getProjectParticipant();
+          $musicianId = $participant->getMusician()->getId();
+          if (empty($participantData[$musicianId])) {
+            $participantData[$musicianId] = [
+              'data' => [],
+              'activeDatum' => $participant->getParticipantFieldsDatum($dataOption->getKey()),
+              'tooltips' => [],
+              'participant' => $participant,
+            ];
+          }
+          $participantData[$musicianId]['data'][] = $fieldDatum;
+          $tooltip = trim($fieldDatum->getDataOption()->getTooltip());
+          if (!empty($tooltip)) {
+            $tooltips[(string)$fieldDatum->getDataOption()->getKey()] = $tooltip;
+          }
+        }
+        if (!empty($tooltips)) {
+          $needsFlush = true;
+          $dataOption->setTooltip(implode('<br/>', $tooltips));
+        }
+        foreach ($participantData as $musicianId => $dataInfo) {
+          $values = [];
+          foreach ($dataInfo['data'] as $fieldDatum) {
+            $value = $fieldDatum->getDataOption()->getLabel();
+            $effectiveData = $this->printEffectiveFieldDatum($fieldDatum);
+            if (!empty($effectiveData)) {
+              $value .= ':' . $effectiveData;
+            }
+            $values[] = $value;
+          }
+          $value = implode(',', $values);
+          $participant = $dataInfo['participant'];
+          /** @var Entities\ProjectParticipantFieldDatum $activeDatum */
+          $activeDatum = $dataInfo['activeDatum'];
+          if (empty($activeDatum)) {
+            $activeDatum = (new Entities\ProjectParticipantFieldDatum)
+              ->setProjectParticipant($participant)
+              ->setField($field)
+              ->setDataOption($dataOption);
+            $dataOption->getFieldData()->set($musicianId, $activeDatum);
+            $field->getFieldData()->add($activeDatum);
+            $this->persist($activeDatum);
+          }
+          $activeDatum->setOptionValue($value);
+          $needsFlush = true;
+        }
+        $field->setMultiplicity($newMultiplicity);
+        $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+        break;
+      case Multiplicity::PARALLEL:
+        // nothing to do
+        break;
+      case Multiplicity::MULTIPLE:
+        // nothing to do;
+        break;
+      default:
+        // errors already checked
+        break;
+    }
+
+    if ($needsFlush) {
+      $this->entityManager->registerPreCommitAction(new Common\GenericUndoable(fn() => $this->flush()));
+    }
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+  }
+
+  /**
    * Populate the field-datum for the given field and musician with the actual
    * folder contents.
    *
@@ -1617,27 +1856,28 @@ class ProjectParticipantFieldsService
       return;
     }
 
-    switch ($field->getDataType()) {
+    $type = $field->getDataType();
+    switch ($type) {
       case DataType::CLOUD_FOLDER:
         // We have to rename the folder which is just named after the
         // field-name.
-        $type = 'folder';
         $mkdir = true;
         break;
       case DataType::CLOUD_FILE:
         switch ($field->getMultiplicity()) {
           case Multiplicity::SIMPLE:
             // The file is name after the field, so we have to rename the file.
-            $type = 'file';
             break;
           default:
             // should be Multiplicity::PARALLEL ...  the individual files are
             // named after the option and stored in a sub-folder which is just
-            // the field-name, so we have to rename to folder
-            $type = 'folder';
+            // the field-name, so we have to rename the folder
+            $type = DataType::CLOUD_FOLDER;
             $mkdir = false;
             break;
         }
+        break;
+      case DataType::DB_FILE:
         break;
       default:
         return;
@@ -1653,29 +1893,54 @@ class ProjectParticipantFieldsService
     foreach ($field->getProject()->getParticipants() as $participant) {
       $musician = $participant->getMusician();
       $participantsFolder = $projectService->ensureParticipantFolder($project, $musician, true);
-      if ($type == 'folder') {
-        $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
-        $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
-        $this->entityManager->registerPreCommitAction(
-          new Common\UndoableFolderRename($oldPath, $newPath, gracefully: true, mkdir: $mkdir)
-        );
-      } else { // 'file'
-        /** @var Entities\ProjectParticipantFieldDataOption $option */
-        foreach ($field->getSelectableOptions(true) as $option) {
-          /** @var Entities\ProjectParticipantFieldDatum $datum */
-          $datum = $participant->getParticipantFieldsDatum($option->getKey());
-          if (!empty($datum)) {
-            $extension = pathinfo($datum->getOptionValue(), PATHINFO_EXTENSION);
-            $oldBaseName = $projectService->participantFilename($oldName, $musician) . '.' . $extension;
-            $newBaseName = $projectService->participantFilename($newName, $musician) . '.' . $extension;
-            $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
-            $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
-            $this->entityManager->registerPreCommitAction(
-              new Common\UndoableFileRename($oldPath, $newPath, gracefully: true)
-            );
+      switch ($type) {
+        case DataType::CLOUD_FOLDER:
+          $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldName;
+          $newPath = $participantsFolder . UserStorage::PATH_SEP . $newName;
+          $this->entityManager->registerPreCommitAction(
+            new Common\UndoableFolderRename($oldPath, $newPath, gracefully: true, mkdir: $mkdir)
+          );
+          break;
+        case DataType::CLOUD_FILE:
+          /** @var Entities\ProjectParticipantFieldDataOption $option */
+          foreach ($field->getSelectableOptions(true) as $option) {
+            /** @var Entities\ProjectParticipantFieldDatum $datum */
+            $datum = $participant->getParticipantFieldsDatum($option->getKey());
+            if (!empty($datum)) {
+              $extension = pathinfo($datum->getOptionValue(), PATHINFO_EXTENSION);
+              $oldBaseName = $projectService->participantFilename($oldName, $musician) . '.' . $extension;
+              $newBaseName = $projectService->participantFilename($newName, $musician) . '.' . $extension;
+              $oldPath = $participantsFolder . UserStorage::PATH_SEP . $oldBaseName;
+              $newPath = $participantsFolder . UserStorage::PATH_SEP . $newBaseName;
+              $this->entityManager->registerPreCommitAction(
+                new Common\UndoableFileRename($oldPath, $newPath, gracefully: true)
+              );
+            }
           }
-        }
+          break;
+        case DataType::DB_FILE:
+          break;
       }
+    }
+    if ($type == DataType::DB_FILE) {
+      $this->entityManager->registerPreCommitAction(
+        new Common\GenericUndoable(function() use ($field) {
+          $needsFlush = false;
+          /** @var DatabaseStorageFactory $storageFactory */
+          $storageFactory = $this->di(DatabaseStorageFactory::class);
+          // it is enough to loop over the actually existing entries
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          foreach ($field->getFieldData() as $fieldDatum) {
+            /** @var ProjectParticipantsStorage $participantsStorage */
+            $participantsStorage = $storageFactory->getProjectParticipantsStorage($fieldDatum->getProjectParticipant());
+            // a surrounding transaction should be active ...
+            if ($participantsStorage->updateFieldDatumDocument($fieldDatum, flush: false)) {
+              $needsFlush = true;
+            }
+          }
+          $needsFlush && $this->flush();
+        })
+      );
     }
 
     $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);

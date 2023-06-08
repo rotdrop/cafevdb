@@ -100,6 +100,9 @@ class ConfigService
   const DOCUMENT_TEMPLATES_FOLDER = 'documenttemplatesfolder';
   const POSTBOX_FOLDER = 'postboxfolder';
   const OUTBOX_FOLDER = 'outboxfolder';
+  const PROJECT_SKELETON_FOLDER = 'skeleton';
+  const PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
+  const PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
 
   const CMS_CATEGORIES = [
     'preview',

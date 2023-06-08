@@ -103,8 +103,7 @@ foreach ($projectPages as $nr => $webPage) {
           src="'.$url.'"
           class="cmsarticleframe '.$_['action'].'"
           id="cmsarticle-'.$nr.'"
-          name="cmsarticle-'.$nr.'"
-          style="width:auto;height:auto;overflow:hidden;"></iframe>
+          name="cmsarticle-'.$nr.'"></iframe>
   </div>';
 }
 if ($cnt == 0) {

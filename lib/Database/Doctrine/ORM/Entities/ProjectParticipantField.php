@@ -62,7 +62,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
- * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectParticipantFieldEntityListener"})
  */
 class ProjectParticipantField implements \ArrayAccess
 {
@@ -233,16 +233,17 @@ class ProjectParticipantField implements \ArrayAccess
   /** {@inheritdoc} */
   public function __clone()
   {
-    if (!$this->id) {
-      return;
-    }
+    $oldProject = $this->project;
+    $oldAccess = $this->participantAccess;
     $oldDataOptions = $this->dataOptions;
     $oldDefaultValue = $this->defaultValue;
     $this->__construct();
+    $this->project = $oldProject;
+    $this->participantAccess = $oldAccess;
     foreach ($oldDataOptions as $oldDataOption) {
       $dataOption = clone $oldDataOption;
       $dataOption->setField($this);
-      $this->dataOptions->add($dataOption);
+      $this->dataOptions->set((string)$dataOption->getKey(), $dataOption);
       if ($oldDataOption == $oldDefaultValue) {
         $this->defaultValue = $dataOption;
       }
@@ -778,6 +779,9 @@ class ProjectParticipantField implements \ArrayAccess
   public function setProjectEvent(?ProjectEvent $projectEvent):ProjectParticipantField
   {
     $this->projectEvent = $projectEvent;
+    if (!empty($projectEvent) && $this->participantAccess == Types\EnumAccessPermission::NONE) {
+      $this->setParticipantAccess(Types\EnumAccessPermission::READ);
+    }
 
     return $this;
   }
@@ -813,118 +817,6 @@ class ProjectParticipantField implements \ArrayAccess
       return array_filter($fields, fn($field) => $field !== 'name');
     }
     return $fields;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PrePersist
-   */
-  public function prePersist(Event\LifecycleEventArgs $event)
-  {
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = EntityManager::getDecorator($event->getEntityManager());
-    $entityManager->dispatchEvent(new Events\PrePersistProjectParticipantField($this));
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PreRemove
-   */
-  public function preRemove(Event\LifecycleEventArgs $event)
-  {
-    if (!$this->isExpired()) {
-      return;
-    }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = EntityManager::getDecorator($event->getEntityManager());
-    $entityManager->dispatchEvent(new Events\PreRemoveProjectParticipantField($this));
-  }
-
-  /** @var bool */
-  private $preUpdatePosted = [];
-
-  /**
-   * Gedmo\Translatable hack-around: the actual change set sometimes
-   * has to be cleared. The work around is to provide the translated
-   * changeset in an extra field which is populated on request by
-   * Gedmo\Translatable\TranslatableListener.
-   *
-   * If the field is not present in the translation changeset, then
-   * fallback to the changes provided by the ORM event, so
-   * this function can also be used for non-translatable fields at the
-   * cost of a failing array lookup.
-   *
-   * @param Event\PreUpdateEventArgs $event
-   *
-   * @param string $field
-   *
-   * @return null|array
-   */
-  private function getTranslationChangeSet(Event\PreUpdateEventArgs $event, string $field):?array
-  {
-    return ($this->translationChangeSet[$field]
-            ?? ($event->hasChangedField($field) ? [ $event->getOldValue($field), $event->getNewValue($field) ] : null));
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PreUpdate
-   */
-  public function preUpdate(Event\PreUpdateEventArgs $event)
-  {
-    $field = 'name';
-    $changeSet = $this->getTranslationChangeSet($event, $field);
-    if ($changeSet) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantField($this, $changeSet[0], $changeSet[1]));
-      $this->preUpdatePosted[$field] = $changeSet[0];
-    }
-    $field = 'tooltip';
-    $changeSet = $this->getTranslationChangeSet($event, $field);
-    if ($changeSet) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PreChangeProjectParticipantFieldTooltip($this, $changeSet[0], $changeSet[1]));
-      $this->preUpdatePosted[$field] = $changeSet[0];
-    }
-    $field = 'dataType';
-    $changeSet = $this->getTranslationChangeSet($event, $field);
-    if ($changeSet) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PreChangeProjectParticipantFieldType($this, $changeSet[0], $changeSet[1]));
-      $this->preUpdatePosted[$field] = $changeSet[0];
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PostUpdate
-   */
-  public function postUpdate(Event\LifecycleEventArgs $event)
-  {
-    $field = 'name';
-    if (isset($this->preUpdatePosted[$field])) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostRenameProjectParticipantField($this));
-      unset($this->preUpdatePosted[$field]);
-    }
-    $field = 'tooltip';
-    if (isset($this->preUpdatePosted[$field])) {
-      // 'post' event is not needed ATM.
-      unset($this->preUpdatePosted[$field]);
-    }
-    $field = 'dataType';
-    if (isset($this->preUpdatePosted[$field])) {
-      // 'post' event is not needed ATM.
-      unset($this->preUpdatePosted[$field]);
-    }
   }
 
   /** {@inheritdoc} */

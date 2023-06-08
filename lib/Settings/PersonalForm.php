@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\AssetService;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+use OCA\Redaxo\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
@@ -75,7 +75,7 @@ class PersonalForm
   /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
   private $wikiRPC;
 
-  /** @var OCA\Redaxo4Embedded\Service\RPC */
+  /** @var WebPagesRPC */
   private $webPagesRPC;
 
   /** @var AddressBookProvider */

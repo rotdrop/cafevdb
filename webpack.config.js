@@ -31,6 +31,7 @@ module.exports = {
     settings: './src/settings.js',
     'background-jobs': './src/background-jobs.js',
     'files-hooks': './src/files-hooks.js',
+    'iframe-content-script': './src/iframe-content-script.js',
   },
   output: {
     // path: path.resolve(__dirname, 'js'),

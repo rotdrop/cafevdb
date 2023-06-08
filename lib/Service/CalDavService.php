@@ -30,6 +30,8 @@ use Sabre\DAV;
 
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\Calendar\ICalendar;
+use OCP\Calendar\ICalendarQuery;
+use OCP\Cache\CappedMemoryCache;
 use OCP\Constants;
 
 use OCA\DAV\CalDAV\CalDavBackend;
@@ -64,6 +66,9 @@ class CalDavService
   /** @var int */
   private $calendarUserId;
 
+  /** @var CappedMemoryCache */
+  private $calendarObjectCache;
+
   /** {@inheritdoc} */
   public function __construct(
     ConfigService $configService,
@@ -75,6 +80,7 @@ class CalDavService
     $this->calDavBackend = $calDavBackend;
     $this->calendarUserId = $this->userId();
     $this->l = $this->l10n();
+    $this->calendarObjectCache = new CappedMemoryCache;
   }
 
   /**
@@ -339,7 +345,7 @@ class CalDavService
         : $calendarInfo['uri'];
       return [
         'principaluri' => $calendarInfo['principaluri'],
-        'owernuri' => $calendarInfo['uri'],
+        'owneruri' => $calendarInfo['uri'],
         'shareuri' => $userUri,
         'ownerid' => $ownerId,
         'userid' => $this->calendarUserId,
@@ -380,6 +386,68 @@ class CalDavService
   }
 
   /**
+   * Generate the cache key for the calendar object cache
+   *
+   * @param int $calendarId
+   *
+   * @param string $localUri
+   *
+   * @return string
+   */
+  private static function objectCacheKey(int $calendarId, string $localUri):string
+  {
+    return $calendarId . ':' . $localUri;
+  }
+
+  /**
+   * Clear the data for the given object ids.
+   *
+   * @param array|int $calendarId
+   *
+   * @param null|string $localUri
+   *
+   * @return void
+   */
+  private function removeFromCache(array|int $calendarId, ?string $localUri = null):void
+  {
+    if (is_array($calendarId)) {
+      $object = $calendarId;
+      $calendarId = $object['calendarid'];
+      $localUri = str_replace('-deleted.ics', '.ics', $object['uri']);
+    }
+    $this->calendarObjectCache->remove(self::objectCacheKey($calendarId, $localUri));
+  }
+
+  /**
+   * Adds the given calendar data to the cache
+   *
+   * @param array $calendarObject
+   *
+   * @return void
+   */
+  private function addToCache(array $calendarObject):void
+  {
+    $calendarId = $calendarObject['calendarid'];
+    $localUri = $calendarObject['uri'];
+
+    $this->calendarObjectCache->set(self::objectCacheKey($calendarId, $localUri), $calendarObject);
+  }
+
+  /**
+   * Fetch an object from the calendar object cache.
+   *
+   * @param int $calendarId
+   *
+   * @param string $localUri
+   *
+   * @return null|array
+   */
+  private function getFromCache(int $calendarId, string $localUri):?array
+  {
+    return $this->calendarObjectCache->get(self::objectCacheKey($calendarId, $localUri));
+  }
+
+  /**
    * Create an entry in the given calendar from either a VCalendar
    * blob or a Sabre VCalendar object.
    *
@@ -404,6 +472,9 @@ class CalDavService
       $localUri = strtoupper(Uuid::create()->toString()).'.ics';
     }
     $this->calDavBackend->createCalendarObject($calendarId, $localUri, $object);
+
+    $this->removeFromCache($calendarId, $localUri);
+
     return $localUri;
   }
 
@@ -438,6 +509,8 @@ class CalDavService
       $object['id'],
       $oldPrincipalUri,
       $newPrincipalUri);
+
+    $this->removeFromCache($sourceCalendarId, $object['uri']);
   }
 
   /**
@@ -461,6 +534,8 @@ class CalDavService
     }
     // $this->logInfo("calId: " . $calendarId . " uri " . $localUri);
     $this->calDavBackend->updateCalendarObject($calendarId, $localUri, $object);
+
+    $this->removeFromCache($calendarId, $localUri);
   }
 
   /**
@@ -483,6 +558,8 @@ class CalDavService
       throw new Exceptions\CalendarEntryNotFoundException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
     }
     $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
+
+    $this->removeFromCache($calendarId, $localUri);
   }
 
   /**
@@ -508,6 +585,8 @@ class CalDavService
       $object = $this->getCalendarObject($calendarId, $objectUri);
     }
     $this->calDavBackend->restoreCalendarObject($object);
+
+    $this->removeFromCache($object);
   }
 
   /**
@@ -547,9 +626,78 @@ class CalDavService
     if (empty($localUri)) {
       return null;
     }
-    $result = $this->calDavBackend->getCalendarObject($calendarId, $localUri);
+
+    $result = $this->getFromCache($calendarId, $localUri);
+
     if (!empty($result)) {
-      $result['calendarid'] = $calendarId;
+      return $result;
+    }
+
+    $result = $this->calDavBackend->getCalendarObject($calendarId, $localUri);
+
+    if ($result) {
+      $result['calendardata'] = VCalendarService::getVCalendar($result);
+      $this->addToCache($result);
+    }
+
+    return $result;
+  }
+
+  /**
+   * Find a calendar object matching ALL of the specified categories. This is
+   * different from the NC provided search functions where one can only do a
+   * wildcard search.
+   *
+   * @param array $categories
+   *
+   * @param null|string $userId
+   *
+   * @param array $calendarUris
+   *
+   * @param null|string $type
+   *
+   * @return array The result array contains objects as generated by
+   * getCalendarObject().
+   */
+  public function findCalendarObjectByCategories(
+    array $categories,
+    ?string $userId = null,
+    array $calendarUris = [],
+    ?string $type = null,
+  ):array {
+    $principalUri = 'principals/users/' . ($userId ?? $this->userId());
+    $query = $this->calendarManager->newQuery($principalUri);
+    foreach ($calendarUris as $calendarUri) {
+      $query->addSearchCalendar($calendarUri);
+    }
+    $categories = array_values($categories);
+    if (!empty($categories)) {
+      $firstCategory = $categories[0];
+      $query->addSearchProperty(ICalendarQuery::SEARCH_PROPERTY_CATEGORIES);
+      $query->setSearchPattern($firstCategory);
+    }
+    if (!empty($type)) {
+      $query->addType($type);
+    }
+    $calendarObjects = $this->calendarManager->searchForPrincipal($query);
+    $result = [];
+    foreach ($calendarObjects as $objectInfo) {
+      if (!empty($categories)) {
+        $match = false;
+        foreach ($objectInfo['objects'] as $calendarObject) {
+          if (isset($calendarObject['CATEGORIES'])) {
+            $objectCategories = explode(',', $calendarObject['CATEGORIES'][0][0]);
+            if (empty(array_diff($categories, $objectCategories))) {
+              $match = true;
+              break;
+            }
+          }
+        }
+        if (!$match) {
+          continue;
+        }
+      }
+      $result[] = $this->getCalendarObject($objectInfo['calendar-key'], $objectInfo['uri']);
     }
     return $result;
   }

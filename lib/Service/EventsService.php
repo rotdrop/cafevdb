@@ -25,11 +25,16 @@
 namespace OCA\CAFEVDB\Service;
 
 use Exception;
+use InvalidArgumentException;
+use Throwable;
 use DateTimeInterface;
 use DateTimeImmutable;
 use DateTimeZone;
 
 use OCP\IL10N;
+use OCP\SystemTag\ISystemTagManager;
+use OCP\SystemTag\TagAlreadyExistsException;
+use OCP\SystemTag\TagNotFoundException;
 
 use Sabre\VObject;
 use Sabre\VObject\Recur\EventIterator;
@@ -37,6 +42,7 @@ use Sabre\VObject\Recur\MaxInstancesExceededException;
 use Sabre\VObject\Recur\NoInstancesException;
 use Sabre\VObject\Component\VCalendar;
 use Sabre\VObject\Component\VEvent;
+use Sabre\VObject\Component as VComponent;
 use Sabre\DAV\Exception\Forbidden as DavForbiddenException;
 
 use OCA\DAV\Events\CalendarUpdatedEvent;
@@ -64,16 +70,12 @@ use OCA\CAFEVDB\Exceptions;
 
 /**
  * Events and tasks handling.
- *
- * @todo
- * - cleanup-jobs for orphan events
  */
 class EventsService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   const VALARM_FROM_START = VCalendarService::VALARM_FROM_START;
   const VALARM_FROM_END = VCalendarService::VALARM_FROM_END;
@@ -81,6 +83,9 @@ class EventsService
   const TASK_IN_PROCESS = VCalendarService::VTODO_STATUS_IN_PROCESS;
   const TASK_COMPLETED = VCalendarService::VTODO_STATUS_COMPLETED;
   const TASK_NEEDS_ACTION = VCalendarService::VTODO_STATUS_NEEDS_ACTION;
+
+  public const PROJECT_REGISTRATION_CATEGORY = 'project registration';
+  public const RECORD_ABSENCE_CATEGORY = 'record absence';
 
   /** @var EntityManager */
   protected $entityManager;
@@ -107,6 +112,12 @@ class EventsService
    * entities.
    */
   private $projectEventSiblings;
+
+  /**
+   * @var array
+   * Cached project registration events by project name.
+   */
+  private $projectRegistrationEvents;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -194,7 +205,10 @@ class EventsService
     $sourceCalendarData = $event->getSourceCalendarData();
     $sourceCalendarId = $sourceCalendarData['id'];
 
-    if (!in_array($calendarId, $calendarIds) && !in_array($sourceCalendarId, $calendarIds)) {
+    $orchestraTarget = in_array($calendarId, $calendarIds);
+    $orchestraSource = in_array($sourceCalendarId, $calendarIds);
+
+    if (!$orchestraSource && !$orchestraTarget) {
       // not for us
       return;
     }
@@ -206,13 +220,23 @@ class EventsService
     $bulkTransactionsRepository = $this->entityManager->getRepository(Entities\SepaBulkTransaction::class);
     if ($bulkTransactionsRepository->isCalendarObjectUsed($objectUri) && $calendarUri != ConfigService::FINANCE_CALENDAR_URI) {
       // undo the move
-      $this->calDavService->moveCalendarObject($calendarId, $sourceCalendarId, $objectData);
+      $forcedCalendarId = $this->getCalendarId(ConfigService::FINANCE_CALENDAR_URI);
+      $this->calDavService->moveCalendarObject($calendarId, $forcedCalendarId, $objectData);
 
       $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is in use by the finance sub-system and cannot be moved away from the %2$s calendar.', [ $objectUri, ConfigService::FINANCE_CALENDAR_URI ]);
       $this->logError($errorMessage);
       throw new DavForbiddenException($errorMessage);
+    }
 
-      return;
+    $objectData['calendardata'] = VCalendarService::getVCalendar($objectData['calendardata']);
+    if ($this->isProjectRegistrationEvent($objectData['calendardata']) && $calendarUri != ConfigService::OTHER_CALENDAR_URI) {
+      // undo the move
+      $forcedCalendarId = $this->getCalendarId(ConfigService::OTHER_CALENDAR_URI);
+      $this->calDavService->moveCalendarObject($calendarId, $forcedCalendarId, $objectData);
+
+      $errorMessage = $this->appL10n()->t('Calendar entry "%1$s" is a project registration event and must not be moved away from the %2$s calendar.', [ $objectUri, ConfigService::OTHER_CALENDAR_URI ]);
+      $this->logError($errorMessage);
+      throw new DavForbiddenException($errorMessage);
     }
 
     $this->syncCalendarObject($objectData, sourceCalendar: $event->getSourceCalendarData());
@@ -484,17 +508,10 @@ class EventsService
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
       $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());
-      if (false) {
-        // clean up orphaned events
-        try {
-          $this->unregister($event['projectid'], $event['uri'], flush: true);
-        } catch (\Throwable $t) {
-          $this->logException($t);
-        }
-      }
       return null;
     }
-    $vCalendar = VCalendarService::getVCalendar($calendarObject);
+    $event['calendarObject'] = $calendarObject;
+    $vCalendar = $calendarObject['calendardata'];
     // /** @var VEvent $sibling */
     $siblings = $this->getVEventSiblings($event['calendarid'], $vCalendar);
     $vEvent = $siblings[$event['recurrenceId']] ?? null;
@@ -506,7 +523,6 @@ class EventsService
 
     $vObject = VCalendarService::getVObject($vCalendar);
     $event['seriesStart'] = $vObject->DTSTART->getDateTime();
-
 
     return $event;
   }
@@ -583,9 +599,8 @@ class EventsService
    *
    * @param string $eventURI CalDAV URI.
    *
-   * @param null|int $recurrenceId If non empty find this
-   * instance. Otherwise just pick one event instance if behind the URI we
-   * have an event series.
+   * @param null|int $recurrenceId If non null find this instance. Otherwise
+   * just pick one event instance if behind the URI we have an event series.
    *
    * @return null|array
    *
@@ -593,18 +608,39 @@ class EventsService
    */
   public function fetchEvent(mixed $projectOrId, string $eventURI, ?int $recurrenceId):?array
   {
+    $projectEvent = $this->getProjectEvent($projectOrId, $eventURI, $recurrenceId);
+    if (empty($projectEvent)) {
+      return null;
+    }
+    if (is_array($projectEvent)) {
+      $projectEvent = reset($projectEvent);
+    }
+    return $this->getEventData($projectEvent);
+  }
+
+  /**
+   * Fetch one specific event and just return the database entity.
+   *
+   * @param int|Entities\Project $projectOrId
+   *
+   * @param string $eventURI CalDAV URI.
+   *
+   * @param null|int $recurrenceId If non null find this instance. Otherwise
+   * return all matching entries for the given event-URI.
+   *
+   * @return null|Entities\ProjectEvent|array<int, Entities\ProjectEvent>
+   */
+  public function getProjectEvent(mixed $projectOrId, string $eventURI, ?int $recurrenceId):mixed
+  {
     $criteria = [
       'project' => $projectOrId,
       'eventUri' => $eventURI,
     ];
-    if (!empty($recurrenceId)) {
+    if ($recurrenceId !== null) {
       $criteria['recurrenceId'] = $recurrenceId;
+      return $this->findOneBy($criteria);
     }
-    $projectEvent = $this->findOneBy($criteria);
-    if (empty($projectEvent)) {
-      return null;
-    }
-    return $this->getEventData($projectEvent);
+    return $this->findBy($criteria);
   }
 
   /**
@@ -1102,14 +1138,72 @@ class EventsService
   }
 
   /**
-   * @param null|IL10N $l
+   * A category marking a calendar event which models the project registration
+   * period in the calendar.
+   *
+   * @param bool $translate Translate the category name with the app's IL10N
+   * instance.
    *
    * @return string
    */
-  public static function getAbsenceCategory(?IL10N $l = null):string
+  public function getProjectRegistrationCategory(bool $translate = true):string
   {
-    $category = self::t('record absence');
-    return empty($l) ? $category : $l->t($category);
+    return $translate ? $this->appL10n()->t(self::PROJECT_REGISTRATION_CATEGORY) : self::PROJECT_REGISTRATION_CATEGORY;
+  }
+
+  /**
+   * Category marking an event which should produce a "record absence" field
+   * in the project instrumentation table.
+   *
+   * @param bool $translate Translate the category name with the app's IL10N
+   * instance.
+   *
+   * @return string
+   */
+  public function getRecordAbsenceCategory(bool $translate = true):string
+  {
+    return $translate ? $this->appL10n()->t(self::RECORD_ABSENCE_CATEGORY) : self::RECORD_ABSENCE_CATEGORY;
+  }
+
+  /**
+   * Make sure that some basic system-tags exist. Note that also the project
+   * names are added as system-categories, but these are not handled here.
+   *
+   * @return void
+   *
+   * @throws Exceptions\CalendarException
+   */
+  public function ensureSystemCategories():void
+  {
+    /** @var ISystemTagManager $systemTagManager */
+    $systemTagManager = $this->appContainer()->get(ISystemTagManager::class);
+
+    $appL10n = $this->appL10n();
+    $systemCategories = [
+      $this->getRecordAbsenceCategory(),
+      $this->getProjectRegistrationCategory(),
+    ];
+    foreach (array_keys(ConfigService::CALENDARS) as $calendarUri) {
+      $systemCategories[] = $appL10n->t($calendarUri);
+    }
+    foreach ($systemCategories as $category) {
+      try {
+        $systemTagManager->getTag($category, userVisible: true, userAssignable: true);
+      } catch (TagNotFoundException $e) {
+        try {
+          $systemTagManager->createTag($category, userVisible: true, userAssignable: true);
+        } catch (TagAlreadyExistsException $e) {
+          // ignore
+        }
+      }
+    }
+    foreach ($systemCategories as $category) {
+      try {
+        $systemTagManager->getTag($category, userVisible: true, userAssignable: true);
+      } catch (TagNotFoundException $e) {
+        throw new Exceptions\CalendarException($this->l->t('Unable to ensure the existence of the system tag "%s".', $category), 0, $e);
+      }
+    }
   }
 
   /**
@@ -1154,6 +1248,8 @@ class EventsService
     $calId = $objectData['calendarid'];
     $vCalendar = VCalendarService::getVCalendar($objectData);
     $type = VCalendarService::getVObjectType($vCalendar);
+    $categories = null;
+    $isRegistrationEvent = false;
 
     if ($type == VCalendarType::VEVENT) {
       // As a temporary hack enforce all events to be public as there is
@@ -1210,7 +1306,7 @@ class EventsService
               $vEvent->SUMMARY = $summary;
             }
             if (self::absenceFieldsDefault($calendarUri)) {
-              $categories[] = self::getAbsenceCategory($l);
+              $categories[] = $this->getRecordAbsenceCategory();
             }
             VCalendarService::setCategories($vEvent, $categories);
             $vEvent->{'LAST-MODIFIED'} = new DateTimeImmutable('now', new DateTimeZone('UTC'));
@@ -1238,7 +1334,10 @@ class EventsService
 
       /** @var VEvent $vEvent */
       $vEvent = VCalendarService::getVObject($vCalendar);
-      if (!VCalendarService::isEventRecurring($vEvent)) {
+      $categories = VCalendarService::getCategories($vEvent);
+      $isRegistrationEvent = $this->isProjectRegistrationEvent($categories);
+
+      if (!$isRegistrationEvent && !VCalendarService::isEventRecurring($vEvent)) {
         $dtStart = $vEvent->DTSTART;
         $dtEnd = VCalendarService::getDTEnd($vEvent);
         $start = $dtStart->getDateTime();
@@ -1340,7 +1439,6 @@ class EventsService
     $registered = [];
     $unregistered = [];
 
-    $categories = VCalendarService::getCategories($vEvent);
     $projects = $this->projectService->fetchAll(); // @todo: limit by project year + threshold
 
     $eventUID   = (string)$vEvent->UID;
@@ -1357,94 +1455,112 @@ class EventsService
 
     $projectRecurrenceIds = [];
 
-    // register current events and record which recurrence-ids are there
+    $this->entityManager->beginTransaction();
+    try {
 
-    /** @var VEvent $sibling */
-    foreach ($siblings as $recurrenceId => $sibling) {
+      // register current events and record which recurrence-ids are there
 
-      // recurring events can have exceptions, so we need to fetch the
-      // categories for all siblings separately.
-      $categories = VCalendarService::getCategories($sibling);
+      /** @var VEvent $sibling */
+      foreach ($siblings as $recurrenceId => $sibling) {
 
-      /** @var Entities\Project $project */
-      foreach ($projects as $project) {
+        // recurring events can have exceptions, so we need to fetch the
+        // categories for all siblings separately.
+        $categories = VCalendarService::getCategories($sibling);
 
-        if (in_array($project->getName(), $categories)) {
+        /** @var Entities\Project $project */
+        foreach ($projects as $project) {
 
-          $projectId = $project->getId();
-          $projectRecurrenceIds[$projectId][] = $recurrenceId;
+          if (in_array($project->getName(), $categories)) {
 
-          // register or update the event in the ProjectEvents table.
-          /** @var Entities\ProjectEvent $projectEvent */
-          list('isNew' => $status, 'entity' => $projectEvent) = $this->register(
-            $project,
-            calendarURI: $calURI,
-            eventUID: $eventUID,
-            sequence: (int)(string)($sibling->SEQUENCE ?? 0),
-            recurrenceId: $recurrenceId,
-            eventURI: $eventURI,
-            calendarId: $calId,
-            type: $type,
-            relatedEvents: $relatedEvents,
-            isRecurring: $isRecurring,
-            flush: false,
-          );
-          if ($status) {
-            $registered[] = $projectId;
-          }
-          if (in_array(self::getAbsenceCategory(), $categories) || in_array(self::getAbsenceCategory($this->appL10n()), $categories)) {
-            // $this->logInfo('CATEGORIES ' . print_r($categories, true) . ' ' . $recurrenceId);
-            /** @var ProjectParticipantFieldsService $participantFieldsService */
-            $participantFieldsService = $this->appContainer()->get(ProjectParticipantFieldsService::class);
-            $participantFieldsService->ensureAbsenceField($projectEvent, flush: false);
-          } else {
-            $absenceField = $projectEvent->getAbsenceField();
-            if (!empty($absenceField)) {
-              if ($absenceField->unused()) {
-                // $this->logInfo('TRY REMOVE ABSENCE FIELD HARD');
-                // cleanup, unused fields are simply removed
-                $projectEvent->setAbsenceField(null);
-                $this->remove($absenceField, hard: true);
-              } else {
-                // $this->logInfo('TRY REMOVE ABSENCE FIELD SOFT');
-                // soft delete it in case the operator tries to recover it later
-                $this->remove($absenceField, soft: true);
+            $projectId = $project->getId();
+            $projectRecurrenceIds[$projectId][] = $recurrenceId;
+
+            if ($isRegistrationEvent) {
+              $dtStart = $sibling->DTSTART;
+              $start = $dtStart->getDateTime();
+              $project->setRegistrationStartDate($start);
+
+              $dtEnd = VCalendarService::getDTEnd($sibling);
+              $end = $dtEnd->getDateTime()->modify('-1 day');
+
+              $implicitDeadline = $this->projectService->getProjectRegistrationDeadline($project, ignoreExplicit: true);
+
+              if (!empty($project->getRegistrationDeadline())) {
+                $this->logInfo('DEADLINES I E P ' . $implicitDeadline->format('Ymd') . ' / ' . $end->format('Ymd') . ' / ' . $project->getRegistrationDeadline()->format('Ymd'));
+              }
+
+              if (empty($implicitDeadline) || $end->format('Ymd') != $implicitDeadline->format('Ymd')) {
+                $project->setRegistrationDeadline($end);
+              } elseif (!empty($implicitDeadline) && $end->format('Ymd') == $implicitDeadline->format('Ymd')) {
+                $project->setRegistrationDeadline(null);
               }
             }
+
+            // register or update the event in the ProjectEvents table.
+            /** @var Entities\ProjectEvent $projectEvent */
+            list('isNew' => $status, 'entity' => $projectEvent) = $this->register(
+              $project,
+              calendarURI: $calURI,
+              eventUID: $eventUID,
+              sequence: (int)(string)($sibling->SEQUENCE ?? 0),
+              recurrenceId: $recurrenceId,
+              eventURI: $eventURI,
+              calendarId: $calId,
+              type: $type,
+              relatedEvents: $relatedEvents,
+              isRecurring: $isRecurring,
+              flush: false,
+            );
+            $this->flush();
+            if ($status) {
+              $registered[] = $projectId;
+            }
+            $needAbsenceField = in_array($this->getRecordAbsenceCategory(), $categories)
+              || in_array($this->getRecordAbsenceCategory(translate: false), $categories);
+            $this->ensureAbsenceField($projectEvent, remove: !$needAbsenceField, flush: false);
           }
         }
       }
+
+      // now select all stale project events for all projects.
+
+      $criteria = [
+        [ 'eventUid' => $eventUID ],
+        [ '(&' =>  true ],
+        [ '(|' => true ],
+        [ '!project' => array_keys($projectRecurrenceIds) ], // untagged projects
+      ];
+
+      // tagged events with potentially excluded event siblings
+      foreach ($projectRecurrenceIds as $projectId => $recurrenceIds) {
+        $criteria[] = [ '(&project' => $projectId ];
+        $criteria[] = [ '!recurrenceId' => $recurrenceIds ];
+        $criteria[] = [ ')' => true ];
+      }
+
+      // parentheses should be closed automatically, otherwise:
+      $criteria[] = [ ')' => true ]; // inner or
+      $criteria[] = [ ')' => true ]; // outer and
+
+      $staleProjectEvents = $this->findBy($criteria);
+
+      $this->flush();
+
+      /** @var Entities\ProjectEvent $projectEvent */
+      foreach ($staleProjectEvents as $projectEvent) {
+        if (!empty($projectEvent->getAbsenceField())) {
+          $projectEvent->getAbsenceField()->setProjectEvent(null);
+        }
+        $this->remove($projectEvent, flush: false, soft: true, hard: false);
+        $unregistered[] = $projectEvent->getProject()->getId();
+      }
+
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      $this->entityManager->rollback();
+      $this->logException($t);
     }
-
-    // now select all stale project events for all projects.
-
-    $criteria = [
-      [ 'eventUid' => $eventUID ],
-      [ '(&' =>  true ],
-      [ '(|' => true ],
-      [ '!project' => array_keys($projectRecurrenceIds) ], // untagged projects
-    ];
-
-    // tagged events with potentially excluded event siblings
-    foreach ($projectRecurrenceIds as $projectId => $recurrenceIds) {
-      $criteria[] = [ '(&project' => $projectId ];
-      $criteria[] = [ '!recurrenceId' => $recurrenceIds ];
-      $criteria[] = [ ')' => true ];
-    }
-
-    // parentheses should be closed automatically, otherwise:
-    $criteria[] = [ ')' => true ]; // inner or
-    $criteria[] = [ ')' => true ]; // outer and
-
-    $staleProjectEvents = $this->findBy($criteria);
-
-    /** @var Entities\ProjectEvent $projectEvent */
-    foreach ($staleProjectEvents as $projectEvent) {
-      $this->remove($projectEvent, flush: false, soft: true, hard: false);
-      $unregistered[] = $projectEvent->getProject()->getId();
-    }
-
-    $this->flush();
 
     $registered = array_unique($registered);
     $unregistered = array_unique($unregistered);
@@ -1499,10 +1615,29 @@ class EventsService
    */
   private function deleteCalendarObject(array $objectData):void
   {
+    $vCalendar = VCalendarService::getVCalendar($objectData['calendardata']);
     $eventURI = $objectData['uri'];
-    /** @var Entities\ProjectEvent $projectEvent */
-    foreach ($this->eventProjects($eventURI) as $projectEvent) {
-      $this->unregister($projectEvent->getProject()->getId(), $eventURI);
+    try {
+      $this->entityManager->beginTransaction();
+      /** @var Entities\ProjectEvent $projectEvent */
+      foreach ($this->eventProjects($eventURI) as $projectEvent) {
+        $project = $projectEvent->getProject();
+        if ($this->isProjectRegistrationEvent($vCalendar)) {
+          $project->setRegistrationStartDate(null);
+        }
+        $this->unregister($project->getId(), $eventURI, flush: false);
+      }
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\CalendarException(
+        $this->l->t('Unable to unregister the deleted calendar event with uri "%s".', $eventURI),
+        0,
+        $t,
+      );
     }
   }
 
@@ -1523,16 +1658,23 @@ class EventsService
     array $relatedEvents,
   ):array {
     $siblings = [];
+    $handledUids = [];
     foreach (($this->projectEventSiblings[$projectId][$calendarId] ?? []) as $recurrenceId => $uidSiblings) {
       foreach ($uidSiblings as $uid => $sibling) {
         if (in_array($uid, $relatedEvents)) {
           $siblings[$recurrenceId][$uid] = $sibling;
-          $relatedEvents = array_filter($relatedEvents, fn($value) => $value != $uid);
         }
+        $handledUids[$uid] = true;
       }
     }
+    $relatedEvents = array_diff($relatedEvents, array_keys($handledUids));
     if (!empty($relatedEvents)) {
       $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+      $criteria = [
+        'project' => $projectId,
+        // 'calendarId' => $calendarId,
+        'eventUid' => $relatedEvents,
+      ];
       $flatSiblings = $this->findBy(
         criteria: [
           'project' => $projectId,
@@ -1683,7 +1825,7 @@ class EventsService
   /**
    * Unconditionally unregister the given event with the given project.
    *
-   * @param int $projectId The project key.
+   * @param int|Entities\Project $projectOrId The project key.
    *
    * @param string $eventURI The event key (external key).
    *
@@ -1695,20 +1837,36 @@ class EventsService
    * @return bool true if the event has been removed, false if it was
    * not registered.
    */
-  public function unregister(int $projectId, string $eventURI, mixed $recurrenceId = null, bool $flush = true):bool
+  public function unregister(int|Entities\Project $projectOrId, string $eventURI, mixed $recurrenceId = null, bool $flush = true):bool
   {
-    $criteria = ['project' => $projectId, 'eventUri' => $eventURI];
+    $criteria = ['project' => $projectOrId, 'eventUri' => $eventURI];
     if (!empty($recurrenceId)) {
       $criteria['recurrenceId'] = $recurrenceId;
     }
-    $projectEvents = $this->findBy($criteria);
-    $needFlush = false;
-    foreach ($projectEvents as $projectEvent) {
-      $this->remove($projectEvent, flush: false, hard: false, soft: true);
-      $needFlush = true;
-    }
-    if ($flush && $needFlush) {
-      $this->flush();
+    try {
+      if ($flush) {
+        $this->entityManager->beginTransaction();
+      }
+      $projectEvents = $this->findBy($criteria);
+      foreach ($projectEvents as $projectEvent) {
+        if (!empty($projectEvent->getAbsenceField())) {
+          $projectEvent->getAbsenceField()->setProjectEvent(null);
+        }
+        $this->remove($projectEvent, flush: false, hard: false, soft: true);
+      }
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+    } catch (Throwable $t) {
+      if ($flush && $this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\CalendarException(
+        $this->l->t('Unable to unregister the deleted calendar event with uri "%s".', $eventURI),
+        0,
+        $t,
+      );
     }
     return true;
   }
@@ -1838,35 +1996,18 @@ class EventsService
    * table.
    */
   public function changeCategories(
-    int|Entities\Project $projectOrId,
     int $calendarId,
     string $eventUri,
     ?int $recurrenceId = null,
     array $additions = [],
     array $removals = [],
   ):bool {
-    $criteria = [
-      'project' => $projectOrId,
-      'calendarId' => $calendarId,
-      'eventUri' => $eventUri,
-    ];
-    if (!empty($recurrenceId)) {
-      $criteria['recurrenceId'] = $recurrenceId;
-    }
-
-    $projectEvent = $this->findOneBy($criteria);
-
-    if (empty($projectEvent)) {
-      $projectId = $projectOrId instanceof Entities\Project ? $projectOrId->getId() : $projectOrId;
-      throw new Exceptions\CalendarEntryNotFoundException(
-        'Unable to find ' . $eventUri . ' for project ' . $projectId
-        . ' in calendar ' . $calendarId
-        . ' with recurrence id ' . $recurrenceId,
-      );
-    }
 
     $event = $this->calDavService->getCalendarObject($calendarId, $eventUri);
     $vCalendar  = VCalendarService::getVCalendar($event);
+    if (empty($event) || empty($vCalendar)) {
+      throw new Exceptions\CalendarEntryNotFoundException('Event ' . $eventUri . ' could not be found.');
+    }
     $masterEvent = VCalendarService::getVObject($vCalendar);
 
     if (!empty($recurrenceId)) {
@@ -1877,7 +2018,7 @@ class EventsService
         $siblings = $this->getVEventSiblings($calendarId, $vCalendar);
         $sibling = $siblings[$recurrenceId] ?? null;
         if (empty($sibling)) {
-          throw new Exceptions\CalendarEntryNotFoundException('Recurring event ' . $eventUri . ' carries no project event instance with recurrence id ' . $recurrenceId);
+          throw new Exceptions\CalendarEntryNotFoundException('Recurring event ' . $eventUri . ' carries no event instance with recurrence id ' . $recurrenceId);
         }
         if (count($siblings) <= 1) {
           $recurrenceId = null; // recurring with one instance
@@ -1929,6 +2070,41 @@ class EventsService
   }
 
   /**
+   * Add or delete the absence field for the given project event.
+   *
+   * @param Entities\ProjectEvent $projectEvent
+   *
+   * @param bool $remove If \true remove the absence field if present. Default
+   * is \false, i.e. add the absence field if not present.
+   *
+   * @param bool $flush Flush the changes to the database or not.
+   *
+   * @return void
+   */
+  public function ensureAbsenceField(Entities\ProjectEvent $projectEvent, bool $remove = false, bool $flush = false):void
+  {
+    if ($remove) {
+      $absenceField = $projectEvent->getAbsenceField();
+      if (!empty($absenceField)) {
+        if ($absenceField->usage() == 1) {
+          // cleanup, unused fields are simply removed
+          $projectEvent->setAbsenceField(null);
+          $absenceField->setProjectEvent(null);
+          $this->remove($absenceField, hard: true, flush: $flush);
+        } else {
+          // $this->logInfo('TRY REMOVE ABSENCE FIELD SOFT');
+          // soft delete it in case the operator tries to recover it later
+          $this->remove($absenceField, soft: true, flush: $flush);
+        }
+      }
+    } else {
+      /** @var ProjectParticipantFieldsService $participantFieldsService */
+      $participantFieldsService = $this->appContainer()->get(ProjectParticipantFieldsService::class);
+      $participantFieldsService->ensureAbsenceField($projectEvent, flush: $flush);
+    }
+  }
+
+  /**
    * Inject a new task into the given calendar. This function calls
    * $request is a post-array. One example, in order to create a
    * simple task:
@@ -1974,8 +2150,7 @@ class EventsService
     if (!empty($taskUri)) {
       $taskObject = $this->calDavService->getCalendarObject($taskData['calendar'], $taskUri);
       if (!empty($taskObject)) {
-        $vCalendar  = VCalendarService::getVCalendar($taskObject);
-        $taskObject['calendardata'] = $vCalendar;
+        $vCalendar  = $taskObject['calendardata'];
         $taskUid   = VCalendarService::getUid($vCalendar);
         return [ 'uri' => $taskUri, 'uid' => $taskUid, 'task' => $taskObject ];
       }
@@ -2026,9 +2201,8 @@ class EventsService
     if (!empty($eventUri)) {
       $eventObject = $this->calDavService->getCalendarObject($eventData['calendar'], $eventUri);
       if (!empty($eventObject)) {
-        $vCalendar  = VCalendarService::getVCalendar($eventObject);
+        $vCalendar  = $eventObject['calendardata'];
         $eventUid   = VCalendarService::getUid($vCalendar);
-        $eventObject['calendardata'] = $vCalendar;
         return [ 'uri' => $eventUri, 'uid' => $eventUid, 'event' => $eventObject ];
       }
     }
@@ -2259,6 +2433,9 @@ class EventsService
           $eventProperty = 'DT' . strtoupper($key);
           if ($allDay) {
             $date = $changeSet[$key]->setTime(0, 0, 0);
+            if ($key == 'end') {
+              $date = $date->modify('+1 day'); // next day at 00:00:00
+            }
             $vEvent->{$eventProperty} = $date;
             $vEvent->{$eventProperty}['VALUE'] = 'DATE';
           } else {
@@ -2353,69 +2530,206 @@ class EventsService
   {
     $event = $this->calDavService->getCalendarObject($calId, $objectIdentifier);
 
-    $vCalendar = VCalendarService::getVCalendar($event);
-    $event['calendardata'] = $vCalendar;
-
     return $event;
   }
 
   /**
-   * @param array $event To be cloned event array obtained form
-   * findCalendarEntry().
+   * Find the project registration event if it exists and generate the same
+   * array structure as returned by findCalendarEntry().
    *
-   * @return array The cloned event.
+   * @param string|Entities\Project $project Either the project name or the project
+   * entity.
    *
-   * @bug The existance of this function is caused by $event not being a class
-   * instance.
+   * @return null|array
    */
-  public static function cloneCalendarEntry(array $event):array
+  public function findProjectRegistrationEvent(string|Entities\Project $project):?array
   {
-    foreach ($event as $key => $value) {
-      $event[$key] = is_object($value) ? clone($value) : $value;
+    $projectName = is_string($project) ? $project : $project->getName();
+    if (!empty($this->projectRegistrationEvents[$projectName])) {
+      return $this->projectRegistrationEvents[$projectName];
     }
-    return $event;
+    $categories = [
+      $projectName,
+      $this->getProjectRegistrationCategory(),
+    ];
+    $shareOwnerId = $this->shareOwnerId();
+    $registrationEvents = $this->calDavService->findCalendarObjectByCategories(
+      $categories,
+      $shareOwnerId,
+      [
+        ConfigService::OTHER_CALENDAR_URI,
+        ConfigService::MANAGEMENT_CALENDAR_URI,
+        ConfigService::CONCERTS_CALENDAR_URI,
+        ConfigService::REHEARSALS_CALENDAR_URI,
+      ],
+    );
+    if (count($registrationEvents) > 1) {
+      throw new Exceptions\CalendarException($this->l->t('Found more than one project registration calendar event.'));
+    } elseif (empty($registrationEvents)) {
+      return null;
+    }
+
+    $this->projectRegistrationEvents[$projectName] = $registrationEvents[0];
+
+    return $this->projectRegistrationEvents[$projectName];
   }
 
   /**
+   * Check whether the given object referes to a project registration event.
+   *
+   * @param mixed $eventData
+   *
+   * @return bool
+   */
+  public function isProjectRegistrationEvent(mixed $eventData):bool
+  {
+    $categories = null;
+    if (is_array($eventData)) {
+      if (isset($eventData['categories'])) {
+        $categories = $eventData['categories'];
+      } elseif (isset($eventData['calendardata'])) {
+        $categories = VCalendarService::getCategories($eventData['calendardata']);
+      } elseif (is_array($eventData)) {
+        $categories = $eventData;
+      }
+    } elseif ($eventData instanceof VComponent) {
+      $categories = VCalendarService::getCategories($eventData);
+    }
+
+    if ($categories === null) {
+      throw new InvalidArgumentException($this->l->t('Unsupported argument type.'));
+    }
+
+    return !empty(array_intersect(
+      [
+        $this->getProjectRegistrationCategory(translate: false),
+        $this->getProjectRegistrationCategory(),
+      ],
+      $categories,
+    ));
+  }
+
+  /**
+   * Ensure that the "other" calendar contains a project registration event if
+   * and only if the registration start date is set in the project
+   * entity. Existing events will be modified to reflect to current settings
+   * and moved to the "other" calendar if necessary.
+   *
+   * @param Entities\Project $project
+   *
+   * @return bool Retrun \true if the registration event exists, \false
+   * otherwise.
+   */
+  public function ensureProjectRegistrationEvent(Entities\Project $project):bool
+  {
+    $projectName = $project->getName();
+    $registrationEvent = $this->findProjectRegistrationEvent($projectName);
+    $registrationStartDate = $project->getRegistrationStartDate();
+    if (empty($registrationStartDate)) {
+      if (!empty($registrationEvent)) {
+        try {
+          $this->calDavService->deleteCalendarObject($registrationEvent['calendarid'], $registrationEvent['uri']);
+          unset($this->projectRegistrationEvents[$projectName]);
+        } catch (Exceptions\CalendarEntryNotFoundException $e) {
+          $this->logException($e, 'Ignoring exception');
+        }
+      }
+      return false;
+    }
+    $l = $this->appL10n();
+    $registrationDeadline = $this->projectService->getProjectRegistrationDeadline($project);
+
+    // The members app needs to be manually loaded for the routes to be loaded
+    \OC_App::loadApp('cafevdbmembers');
+    $registrationUrl  = $this->urlGenerator()->linkToRouteAbsolute(
+      'cafevdbmembers.project_registration.page', [
+        'projectName' => $projectName,
+      ]);
+    $registrationEventData = [
+      'summary' => $l->t('Registration for %s', $projectName),
+      'categories' => [
+        $this->getProjectRegistrationCategory(),
+        $projectName,
+        $this->getCalendarDisplayName(ConfigService::OTHER_CALENDAR_URI),
+      ],
+      'description' => $l->t('Project registation period for the project "%1$s". Participants can apply for participation using the public url %2$s.', [
+        $projectName,
+        $registrationUrl,
+      ]),
+      'location' => $l->t('CyberSpace'),
+      'calendar' => $this->getCalendarId(ConfigService::OTHER_CALENDAR_URI),
+      'allday' => true,
+      'start' => $registrationStartDate,
+      'end' => $registrationDeadline,
+    ];
+    if (empty($registrationEvent)) {
+      $this->newEvent($registrationEventData);
+    } else {
+      // check if we need an update
+      $needsUpdate = false;
+      $vObject = VCalendarService::getVObject($registrationEvent['calendardata']);
+      if (strpos($vObject->SUMMARY, $projectName) === false) {
+        $vObject->SUMMARY = $registrationEventData['summary'];
+        $needsUpdate = true;
+      }
+      $description = trim($vObject->DESCRIPTION);
+      if (strpos($vObject->DESCRIPTION, $registrationUrl) === false) {
+        if (!empty($description)) {
+          $description .= "\n\n";
+        }
+        $vObject->DESCRIPTION = $description . $registrationEventData['description'];
+        $needsUpdate = true;
+      }
+      $dtStart = $vObject->DTSTART;
+      $start = $dtStart->getDateTime();
+      if ($dtStart->hasTime() || $start->format('Ymd') != $registrationStartDate->format('Ymd')) {
+        $vObject->DTSTART = $registrationStartDate;
+        $vObject->DTSTART['VALUE'] = 'DATE';
+        $needsUpdate = true;
+      }
+      $dtEnd = VCalendarService::getDTEnd($vObject);
+      $end = $dtEnd->getDateTime();
+      $registrationDeadline = $registrationDeadline->modify('+1 day');
+      if ($dtEnd->hasTime() || $end->format('Ymd') != $registrationDeadline->format('Ymd')) {
+        unset($vObject->DURATION);
+        $vObject->DTEND = $registrationDeadline;
+        $vObject->DTEND['VALUE'] = 'DATE';
+        $needsUpdate = true;
+      }
+      foreach (['RRULE', 'RDATE'] as $property) {
+        if (isset($vObject->{$property})) {
+          unset($vObject->{$property});
+          $needsUpdate = true;
+        }
+      }
+      if ($needsUpdate) {
+        $this->calDavService->updateCalendarObject(
+          $registrationEvent['calendarid'],
+          $registrationEvent['uri'],
+          $registrationEvent['calendardata'],
+        );
+        unset($this->projectRegistrationEvents[$projectName]);
+      }
+      if ($registrationEvent['calendarid'] != $registrationEventData['calendar']) {
+        $this->calDavService->moveCalendarObject(
+          $registrationEvent['calendarid'],
+          $registrationEventData['calendar'],
+          $registrationEvent,
+        );
+        unset($this->projectRegistrationEvents[$projectName]);
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Flush the database. This is a companion to the various public methods
+   * which have a boolean $flush parameter.
+   *
    * @return void
    */
-  public function playground():void
+  public function flushDatabase():void
   {
-
-    $eventData = [
-      'summary' => 'Title',
-      'description' => 'Text',
-      'location' => 'Where',
-      'categories' => 'Cat1,Cat2',
-      'priority' => 9,
-      'from' => '01-11-2020',
-      'fromtime' => '10:20:22',
-      'to' => '30-11-2020',
-      'totime' => '00:00:00',
-      'calendar' => 'calendarId',
-      'repeat' => 'doesnotrepeat',
-    ];
-
-    $errors = $this->vCalendarService->validateRequest($eventData, VCalendarService::VEVENT);
-    $this->logError('EventError' . print_r($errors, true));
-    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($eventData, VCalendarService::VEVENT);
-    $this->logError('VEVENT VCalendar entry' . print_r($vCalendar, true));
-
-    $taskData = [
-      'summary' => 'Title',
-      'description' => 'Text',
-      'location' => 'Where',
-      'categories' => 'Cat1,Cat2',
-      'priority' => 9,
-      'due' => '01-11-2020',
-      'start' => '01-11-2020',
-      'calendar' => 'calendarId',
-      'alarm' => 10
-    ];
-
-    $errors = $this->vCalendarService->validateRequest($taskData, VCalendarService::VTODO);
-    $this->logError('TodoError' . print_r($errors, true));
-    $vCalendar = $this->vCalendarService->createVCalendarFromRequest($taskData, VCalendarService::VTODO);
-    $this->logError('VTODO VCalendar entry' . print_r($vCalendar, true));
+    $this->flush(useTransaction: true);
   }
 }

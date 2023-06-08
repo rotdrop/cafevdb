@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -80,5 +80,17 @@ trait TranslatableTrait
   public function filterTranslatableFields(array $fields):array
   {
     return $fields;
+  }
+
+  /**
+   * Give access to the translation change-set.
+   *
+   * @param string $fields
+   *
+   * @return null|array
+   */
+  public function getTranslationChangeSet(string $field):?array
+  {
+    return $this->translationChangeSet[$field] ?? null;
   }
 }

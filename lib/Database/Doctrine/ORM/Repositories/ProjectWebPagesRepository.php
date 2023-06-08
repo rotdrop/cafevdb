@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,8 +63,10 @@ class ProjectWebPagesRepository extends EntityRepository
     $articleId = $webArticle['articleId'];
 
     $entityManager = $this->getEntityManager();
-    $projectWebPage = $this->find([ 'project' => $projectId,
-                                    'articleId' => $articleId, ]);
+    $projectWebPage = $this->find([
+      'project' => $projectId,
+      'articleId' => $articleId,
+    ]);
     if (empty($projectWebPage)) {
       if (empty($project)) {
         $project = $entityManager->getReference(Entities\Project::class, $projectId);

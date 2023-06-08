@@ -697,7 +697,6 @@ SELECT t.* FROM " . $table . " t
     // for the sake of the project-registration page all projects are
     // exported, they are not so secret BTW.
     $table = 'Projects';
-    $column = 'id';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
     $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
@@ -708,6 +707,35 @@ SELECT t.*,
   (t.id = " . $executiveBoardProjectId . ") AS executive_board
   FROM " . $table . " t
   WHERE t.type = '" . ProjectType::TEMPORARY . "' OR t.type = '" . ProjectType::PERMANENT . "'";
+
+    // Export also the mapping to the web-pages maintained in the CMS.
+    $table = 'ProjectWebPages';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " .  $this->personalizedViewName($dataBaseName, 'Projects') . " p
+  INNER JOIN " . $table . " t
+    ON  t.project_id = p.id
+  GROUP BY t.project_id, t.article_id";
+
+    // Unconditionally add all fields which are configured to be exposed. This
+    // is needed by the project-registration form which exposes those fields
+    // to the participants in spe.
+    $table = 'ProjectParticipantFields';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " .  $this->personalizedViewName($dataBaseName, 'Projects') . " p
+  INNER JOIN " . $table . " t
+    ON  t.project_id = p.id
+  WHERE t.participant_access <> 'none'
+  GROUP BY t.id";
 
     $table = 'ProjectParticipantFieldsData';
     $column = 'musician_id';
@@ -720,18 +748,6 @@ SELECT t.* FROM " . $table . " t
     INNER JOIN ProjectParticipantFields ppf
       ON t.field_id = ppf.id AND ppf.participant_access <> 'none'
     WHERE t." . $column . " = " . $accessFunction;
-
-    // Unconditionally add all fields which are configured to be exposed. This
-    // is needed by the project-registration form which exposes those fields
-    // to the participants in spe.
-    $table = 'ProjectParticipantFields';
-    $viewName = $this->personalizedViewName($dataBaseName, $table);
-    $statements[$viewName] = "CREATE OR REPLACE
-SQL SECURITY DEFINER
-VIEW " . $viewName . "
-AS
-SELECT t.* FROM " . $table . " t
-WHERE t.participant_access <> 'none'";
 
     $table = 'ProjectParticipantFieldsDataOptions';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -748,13 +764,14 @@ SELECT t.*
     // we also need the project events, however, only rehearsals and concerts
 
     $table = 'ProjectEvents';
+    $calendarUris = array_keys(array_filter(ConfigService::CALENDARS, fn($info) => $info['public'] == true));
     $viewName = $this->personalizedViewName($dataBaseName, $table);
     $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
 SELECT t.* FROM " . $table . " t
-WHERE t.calendar_uri IN ('" . ConfigService::CONCERTS_CALENDAR_URI . "','" . ConfigService::REHEARSALS_CALENDAR_URI . "')";
+WHERE t.calendar_uri IN ('" . implode("','", $calendarUris) . "')";
 
     $table = 'InstrumentInsurances';
     $viewName = $this->personalizedViewName($dataBaseName, $table);

@@ -551,7 +551,7 @@ class ProjectParticipantFieldsController extends Controller
               $options[] = [ 'name' => $item['label'],
                              'value' => $key,
                              'flags' => ($default === $key ? PageNavigation::SELECTED : 0) ];
-              $input = $this->renderer->dataOptionInputRowHtml($item, $index, $used, $data['data-type']);
+              $input = $this->renderer->dataOptionInputRowHtml($item, $index, $used, $data['dataType']);
             }
             $options = PageNavigation::selectOptions($options);
 

@@ -174,7 +174,9 @@ $.fn.readonly = function(state) {
       $this.removeAttr('readonly');
     }
     if ($this.is('select')) {
-      // single-select can be handled like radio buttons
+      // Single-select can be handled like radio buttons, that is, we
+      // disable all options safe the selected one. This essentially
+      // makes for a read-only single-select element.
       if (!vanillaProp.call($this, 'multiple')) {
         $this.find('option').each(function() {
           const $option = $(this);
@@ -234,6 +236,9 @@ $.fn.readonly = function(state) {
         selectWidget($this).toggleClass(elementReadonlyClass, state).find('*').toggleClass(elementReadonlyClass, state);
       }
     } else if ($this.is(':radio')) {
+      // Here the strategy is to just disable all radios safe the
+      // selected one. As all other radios of the group are disabled,
+      // the value is then read-only.
       let $container = $this.closest('fieldset');
       if (!$container) {
         $container = $this.closest('form');

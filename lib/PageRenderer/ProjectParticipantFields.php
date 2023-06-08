@@ -99,6 +99,9 @@ class ProjectParticipantFields extends PMETableViewBase
     DataType::DATETIME => 12,
   ];
 
+  /** @var string */
+  protected static $toolTipsPrefix = 'page-renderer:participant-fields:definition';
+
   /**
    * @var string
    * SQL sub-query in order to join with   self::FIELD_TRANSLATIONS_TABLE
@@ -362,13 +365,27 @@ class ProjectParticipantFields extends PMETableViewBase
         'sort' => true,
         'tooltip' => $this->toolTipsService['participant-fields-field-name'],
       ],
-      $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name')
+      $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name') //
     );
 
     $opts['fdd']['name']['sql'] = self::ifFileSystemEntry('$main_table.$field_name', $opts['fdd']['name']['sql']);
 
+    $opts['fdd']['deleted'] = array_merge(
+      $this->defaultFDD['deleted'], [
+        'tab' => [ 'id' => 'tab-all' ],
+        'name' => $this->l->t('Deleted'),
+        'css'      => [ 'postfix' => [ 'participant-field-disabled', ], ],
+        'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
+        'dateformat' => 'medium',
+        'timeformat' => 'short',
+        'maxlen' => 19,
+        'input' => ($this->showDisabled) ? 'T' : 'RH',
+      ]);
+    Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
+    $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
+
     $opts['fdd']['usage'] = [
-      'tab' => [ 'id' => [ 'miscinfo' ] ],
+      'tab' => [ 'id' => [ 'miscinfo', 'definition' ] ],
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
       'css' => [ 'postfix' => [ 'participant-fields-usage', ], ],
@@ -380,16 +397,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['participant-fields-usage'],
     ];
 
-    $opts['fdd']['deleted'] = array_merge(
-      $this->defaultFDD['deleted'], [
-        'tab' => [ 'id' => 'miscinfo' ],
-        'name' => $this->l->t('Deleted'),
-        'css'      => [ 'postfix' => [ 'participant-field-disabled', ], ],
-        'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
-        'input' => ($this->showDisabled) ? 'T' : 'RH',
-      ]);
-
-    $opts['fdd']['multiplicity'] =[
+    $opts['fdd']['multiplicity'] = [
       'name'    => $this->l->t('Multiplicity'),
       'tab' => [ 'id' => 'definition' ],
       'select'  => 'D',
@@ -403,6 +411,26 @@ class ProjectParticipantFields extends PMETableViewBase
       }, Multiplicity::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-multiplicity'],
       'valueData' => array_map('json_encode', $this->participantFieldsService->multiplicityTypeMask()),
+      'display|ACP' => [
+        'attributes' => function($op, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return [
+            'data-field-usage' => $usage,
+          ];
+        },
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return '<input id="pme-field-multiplicity-lock"
+' . ($usage > 0 ? 'checked' : '') . '
+       type="checkbox"
+       class="pme-input pme-select-lock"
+/>
+<label for="pme-field-multiplicity-lock"
+       class="pme-input pme-select-lock lock-unlock tooltip-auto"
+       title="' . $this->toolTipsService[self::$toolTipsPrefix . ':multiplicity:lock'] . '"
+></label>';
+        },
+      ],
     ];
 
     // $dataTypeIndex = count($opts['fdd']);
@@ -419,6 +447,26 @@ class ProjectParticipantFields extends PMETableViewBase
         return [ $tag, $this->toolTipsService['participant-field-data-type' . ':' . $tag] ];
       }, DataType::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
+      'display|ACP' => [
+        'attributes' => function($op, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return [
+            'data-field-usage' => $usage,
+          ];
+        },
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return '<input id="pme-field-data-type-lock"
+' . ($usage > 0 ? 'checked' : '') . '
+       type="checkbox"
+       class="pme-input pme-select-lock"
+/>
+<label for="pme-field-data-type-lock"
+       class="pme-input pme-select-lock lock-unlock tooltip-auto"
+       title="' . $this->toolTipsService[self::$toolTipsPrefix . ':data-type:lock'] . '"
+></label>';
+        },
+      ],
     ];
 
     $opts['fdd']['due_date'] = Util::arrayMergeRecursive(
@@ -1360,9 +1408,24 @@ __EOT__;
    */
   public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
-    $this->participantFieldsService->deleteField($pme->rec);
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    /*** @var Entities\ProjectParticipantField $field */
+    $field = $this->legacyRecordToEntity($pme->rec);
+    /** @var Entities\ProjectEvent $projectEvent */
+    $projectEvent = $field->getProjectEvent();
+    if ($field->usage() == 1 && !empty($field->getProjectEvent())) {
+      // if the logged in user decides to delete this field (again) then we
+      // should not hinder it too much ...
+      $projectEvent->setAbsenceField(null);
+      $field->setProjectEvent(null);
+    }
+
+    $this->participantFieldsService->deleteField($field);
 
     $changed = []; // disable PME delete query
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
 
     return true; // but run further triggers if appropriate
   }

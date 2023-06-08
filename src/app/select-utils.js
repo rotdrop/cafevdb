@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -221,7 +221,7 @@ const selectedValues = function($select, values, trigger) {
   if (values === undefined) {
     let result;
     if (selectizeActive($select)) {
-      result = $select[0].selectize.items;
+      result = [...$select[0].selectize.items];
     } else {
       result = $select.val() || [];
       if (!Array.isArray(result)) {

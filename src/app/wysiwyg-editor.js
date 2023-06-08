@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,6 @@ const addEditor = function(selector, initCallback) {
     initCallback();
     return;
   }
-  console.info('GLOBALSTATE', globalState);
   switch (globalState.wysiwygEditor) {
   case 'ckeditor':
     console.debug('attach ckeditor');
@@ -96,7 +95,12 @@ const addEditor = function(selector, initCallback) {
             $,
             $editorElements.map(function(index, editorElement) {
               const $editorElement = $(editorElement);
-              const mceDeferred = $.Deferred();
+              let mceDeferred = $editorElement.data('mceDeferred');
+              if (mceDeferred) {
+                console.error('RACE CONDITION ADDING TINYMCE TOO FAST TOO OFTEN');
+                return $.Deferred().resolveWith(this, ['race']);
+              }
+              mceDeferred = $.Deferred();
               $editorElement.data('mceDeferred', mceDeferred);
               const elementConfig = $editorElement.hasClass('external-documents')
               // eslint-disable-next-line camelcase
@@ -106,26 +110,38 @@ const addEditor = function(selector, initCallback) {
                 elementConfig.inline = true;
               }
               $editorElement.tinymce({ ...mceConfig, ...elementConfig });
-              const mceDeferredTimer = setTimeout(function() { console.info('MCE Deferred Timeout'); mceDeferred.reject(); }, mceDeferredTimeout);
+              const mceDeferredTimer = setTimeout(function() { mceDeferred.reject('timeout'); }, mceDeferredTimeout);
+              $editorElement.data('mceDeferredTimer', mceDeferredTimer);
               return mceDeferred.then(
                 id => {
                   $editorElement.next().css('height', '');
+                  $editorElement.removeData('mceDeferredTimer');
                   clearTimeout(mceDeferredTimer);
                   console.debug('MCE deferred resolved for id ' + id);
+                  return id;
                 },
-                error => {
-                  console.error('There was a problem initializing the editor.', error);
-                  try {
-                    $editorElement.tinymce().remove();
-                  } catch (e) {
-                    console.error('EXCEPTION', e);
+                function(error) {
+                  switch (error) {
+                  case 'timeout':
+                    console.error('There was a problem initializing the editor:', error);
+                    try {
+                      $editorElement.tinymce().remove();
+                    } catch (e) {
+                      console.error('EXCEPTION', e);
+                    }
+                    break;
+                  case 'removed':
+                    console.error('Editor has been removed');
+                    $editorElement.removeData('mceDeferredTimer');
+                    clearTimeout(mceDeferredTimer);
+                    break;
                   }
                   return $.Deferred().resolveWith(this, arguments);
                 });
             }).get()
           )
-          .then(() => {
-            console.debug('tinyMCE promise(s) settled.');
+          .then(function() {
+            console.debug('tinyMCE promise(s) settled.', arguments);
             initCallback();
           });
       });
@@ -159,7 +175,12 @@ const removeEditor = function(selector) {
       console.debug('EXCEPTION', e);
     }
     try {
-      if ($editorElement.tinymce) {
+      const mceDeferred = $editorElement.data('mceDeferred');
+      if (mceDeferred) {
+        mceDeferred.reject('removed');
+        $editorElement.removeData('mceDeferred');
+      }
+      if ($editorElement.tinymce && $editorElement.tinymce()) {
         $editorElement.tinymce().remove();
       }
     } catch (e) {

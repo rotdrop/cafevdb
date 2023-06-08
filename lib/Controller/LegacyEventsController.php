@@ -82,6 +82,9 @@ class LegacyEventsController extends Controller
   /** @var VCalendarService */
   private $vCalendarService;
 
+  /** @var EventsService */
+  private $eventsService;
+
   /** @var OC_Calendar_Object */
   private $ocCalendarObject;
 
@@ -98,6 +101,7 @@ class LegacyEventsController extends Controller
     ProjectService $projectService,
     CalDavService $calDavService,
     VCalendarService $vCalendarService,
+    EventsService $eventsService,
     ToolTipsService $toolTipsService,
     ISession $session,
   ) {
@@ -109,6 +113,7 @@ class LegacyEventsController extends Controller
     $this->projectService = $projectService;
     $this->calDavService = $calDavService;
     $this->vCalendarService = $vCalendarService;
+    $this->eventsService = $eventsService;
     $this->ocCalendarObject = $vCalendarService->legacyEventObject();
     $this->toolTipsService = $toolTipsService;
     $this->session = $session;
@@ -188,7 +193,7 @@ class LegacyEventsController extends Controller
     $categories = $projectName . ',' . $this->appL10n()->t($eventKind);
     if (EventsService::absenceFieldsDefault($eventKind)) {
       // request generation of absence fields.
-      $categories .= ',' . EventsService::getAbsenceCategory($this->appL10n());
+      $categories .= ',' . $this->eventsService->getRecordAbsenceCategory();
     }
 
     $protectCategories = $this->parameterService->getParam('protectCategories', self::READONLY_CATEGORIES);
@@ -344,7 +349,7 @@ class LegacyEventsController extends Controller
     if ($data['calendarid'] != $calendarId) {
       return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
     }
-    $object = \Sabre\VObject\Reader::read($data['calendardata']);
+    $object = VCalendarService::getVCalendar($data);
     $calendar = $this->calDavService->calendarById($calendarId);
     if (empty($calendar)) {
       return self::grumble($this->l->t("Unable to access calendar with id `%s'.", [$calendarId]));
