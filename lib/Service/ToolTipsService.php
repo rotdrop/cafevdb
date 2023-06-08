@@ -553,12 +553,29 @@ clicking the "recover" button to the left of each deleted entry.'),
 
           'definition' => [
             'multiplicity' => [
-              'lock' => $this->l->t('Changing the multiplicity of an extra-field after per-participant data has already been recorded is dangerous and may result in data-loss. Therefore changing the multiplicity is pro-forma disabled in this case and the control for changing the multiplicity has to be explicitly enable by the user.
+              'lock' => $this->l->t('Changing the multiplicity of an extra-field after per-participant
+data has already been recorded is dangerous and may result in
+data-loss. Therefore changing the multiplicity is pro-forma disabled
+in this case and the control for changing the multiplicity has to be
+explicitly enable by the user.
 
-Please be prepared that chaning the multiplicity may still fail. If you insist
-on changing the multiplicity then the app will try to cope with some easy
-cases and for example transfer multiple choice data to plain text fields,
-however, this is an irreversible operation.'),
+Please be prepared that changing the multiplicity may still fail. If
+you insist on changing the multiplicity then the app will try to cope
+with some easy cases and for example transfer multiple choice data to
+plain text fields, however, this is an irreversible operation.'),
+            ],
+            'data-type' => [
+              'lock' => $this->l->t('Changing the data-type of an extra-field after per-participant data
+has already been recorded is dangerous and may result in
+data-loss. Therefore changing the data-type is pro-forma disabled in
+this case and the control for changing the multiplicity has to be
+explicitly enable by you.
+
+Please be perpared that changing the data-type may still fail. If you
+insist on changing the data-type then the app will try to cope with
+some easy cases like changing between liabilities and receivables and
+treating dates as text. Depending on the already filled data the
+results may be unexpected.'),
             ],
           ],
 

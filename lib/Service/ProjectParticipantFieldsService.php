@@ -111,6 +111,28 @@ class ProjectParticipantFieldsService
     ],
   ];
 
+  private const ALLOWED_TRANSITIONS = [
+    Multiplicity::SIMPLE => [],
+    Multiplicity::SINGLE => [
+      Multiplicity::SIMPLE,
+      Multiplicity::MULTIPLE,
+      Multiplicity::PARALLEL,
+    ],
+    Multiplicity::MULTIPLE => [
+      Multiplicity::SIMPLE,
+      Multiplicity::PARALLEL,
+    ],
+    Multiplicity::PARALLEL => [
+      Multiplicity::SIMPLE,
+    ],
+    Multiplicity::RECURRING => [
+      // we could allow to change to PARALLEL, too.
+      Multiplicity::SIMPLE,
+    ],
+    Multiplicity::GROUPOFPEOPLE => [],
+    Multiplicity::GROUPSOFPEOPLE => [],
+  ];
+
   /** @var EntityManager */
   protected $entityManager;
 
@@ -424,7 +446,8 @@ class ProjectParticipantFieldsService
    */
   public static function isSupportedType(string $multiplicity, string $type):bool
   {
-    return isset(self::UNSUPPORTED[$multiplicity]) && empty(self::UNSUPPORTED[$multiplicity][$type]);
+    $unsupported = self::UNSUPPORTED[$multiplicity] ?? [];
+    return !in_array($type, $unsupported);
   }
 
   /**
@@ -1401,6 +1424,21 @@ class ProjectParticipantFieldsService
   }
 
   /**
+   * Check if the transistion from $old to $new is implemented.
+   *
+   * @param Multiplicity $oldMultiplicity
+   *
+   * @param Multiplicity $newMultiplicity
+   *
+   * @return bool
+   */
+  private function isSupportedMultiplicityTransition(Multiplicity $oldMultiplicity, Multiplicity $newMultiplicity):bool
+  {
+    $allowed = self::ALLOWED_TRANSITIONS[(string)$oldMultiplicity];
+    return in_array((string)$newMultiplicity, $allowed);
+  }
+
+  /**
    * Try to gracefully change the field-type.
    *
    * @param Entities\ProjectParticipantField $field
@@ -1417,15 +1455,135 @@ class ProjectParticipantFieldsService
     ?Multiplicity $newMultiplicity,
   ):void {
 
-    $this->logInfo('OLD / NEW ' . $oldMultiplicity . ' / ' . $newMultiplicity);
-
-    if ($newMultiplicity == $oldMultiplicity) {
+    if ($oldMultiplicity === null || $newMultiplicity == $oldMultiplicity) {
       return;
     }
 
-    if ($field->usage() > 0 && (empty($field->getProjectEvent()) || $field->usage() > 1)) {
-      throw new Exceptions\EnduserNotificationException($this->l->t('NOPE, FIELD IN USE'));
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    $dataType = $field->getDataType();
+
+    if (!$this->isSupportedType($newMultiplicity, $dataType)) {
+      $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+      throw new Exceptions\EnduserNotificationException($this->l->t('Changing the multiplicity from "%1$s" to "%2$s" is not possible as the new multiplicity does not support the field data-type "%3$s".', [
+        $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
+      ]));
     }
+
+    if ($field->usage() <= 0 || (!empty($field->getProjectEvent()) && $field->usage() < 1)) {
+      return;
+    }
+
+    if (!$this->isSupportedMultiplicityTransition($oldMultiplicity, $newMultiplicity)) {
+      $allowedTransitions = self::ALLOWED_TRANSITIONS[(string)$oldMultiplicity] ?? [];
+      if (empty($allowedTransitions)) {
+        $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The field is already in use, therefore the multiplicity may no longer be changed to "%2$s".', [
+              $this->l->t($oldMultiplicity),
+              $this->l->t($newMultiplicity),
+            ]));
+      } else {
+        $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+        throw new Exceptions\EnduserNotificationException(
+          $this->l->t(
+            'The field is already in use, therefore the multiplicity may only be changed from "%1$s" to "%2$s", but not to "%3$s".', [
+              $this->l->t($oldMultiplicity),
+              implode(', ', array_map(fn($value) => $this->l->t($value), $allowedTransitions)),
+              $this->l->t($newMultiplicity),
+            ]));
+      }
+    }
+
+    $needsFlush = false;
+
+    switch ($newMultiplicity) {
+      case Multiplicity::SIMPLE:
+        if ($dataType != DataType::TEXT && $dataType != DataType::HTML) {
+          throw new Exceptions\EnduserNotificationException(
+            $this->l->t(
+              'The field is already in use, therefore changing the multiplicity from "%1$s" to "%2$s" is only supported for text or HTML fields, but the actual data-type is "%3$s".', [
+                $this->l->t($oldMultiplicity), $this->l->t($newMultiplicity), $this->l->t($dataType),
+              ]));
+        }
+        /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
+        foreach ($field->getSelectableOptions() as $dataOption) {
+          if (!$dataOption->isDeleted()) {
+            break;
+          }
+        }
+        $tooltips = [];
+        $participantData = [];
+        $field->setMultiplicity($oldMultiplicity);
+        /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+        foreach ($field->getFieldData() as $fieldDatum) {
+          /** @var Entities\ProjectParticipant $participant */
+          $participant = $fieldDatum->getProjectParticipant();
+          $musicianId = $participant->getMusician()->getId();
+          if (empty($participantData[$musicianId])) {
+            $participantData[$musicianId] = [
+              'data' => [],
+              'activeDatum' => $participant->getParticipantFieldsDatum($dataOption->getKey()),
+              'tooltips' => [],
+              'participant' => $participant,
+            ];
+          }
+          $participantData[$musicianId]['data'][] = $fieldDatum;
+          $tooltip = trim($fieldDatum->getDataOption()->getTooltip());
+          if (!empty($tooltip)) {
+            $tooltips[(string)$fieldDatum->getDataOption()->getKey()] = $tooltip;
+          }
+        }
+        if (!empty($tooltips)) {
+          $needsFlush = true;
+          $dataOption->setTooltip(implode('<br/>', $tooltips));
+        }
+        foreach ($participantData as $musicianId => $dataInfo) {
+          $values = [];
+          foreach ($dataInfo['data'] as $fieldDatum) {
+            $value = $fieldDatum->getDataOption()->getLabel();
+            $effectiveData = $this->printEffectiveFieldDatum($fieldDatum);
+            if (!empty($effectiveData)) {
+              $value .= ':' . $effectiveData;
+            }
+            $values[] = $value;
+          }
+          $value = implode(',', $values);
+          $participant = $dataInfo['participant'];
+          /** @var Entities\ProjectParticipantFieldDatum $activeDatum */
+          $activeDatum = $dataInfo['activeDatum'];
+          if (empty($activeDatum)) {
+            $activeDatum = (new Entities\ProjectParticipantFieldDatum)
+              ->setProjectParticipant($participant)
+              ->setField($field)
+              ->setDataOption($dataOption);
+            $dataOption->getFieldData()->set($musicianId, $activeDatum);
+            $field->getFieldData()->add($activeDatum);
+            $this->persist($activeDatum);
+          }
+          $activeDatum->setOptionValue($value);
+          $needsFlush = true;
+        }
+        $field->setMultiplicity($newMultiplicity);
+        $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+        break;
+      case Multiplicity::PARALLEL:
+        // nothing to do
+        break;
+      case Multiplicity::MULTIPLE:
+        // nothing to do;
+        break;
+      default:
+        // errors already checked
+        break;
+    }
+
+    if ($needsFlush) {
+      $this->entityManager->registerPreCommitAction(new Common\GenericUndoable(fn() => $this->flush()));
+    }
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
   }
 
   /**

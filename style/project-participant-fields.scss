@@ -362,24 +362,33 @@
         textarea.participant-field-tooltip {
           overflow-x:hidden; /* fix FF extra-line bug */
         }
-        tr.multiplicity {
-          @each $multiplicity in groupofpeople, single, simple {
-            @include defaultHiddenElement(
-              "tr td.pme-value.data-options-#{$multiplicity} .active-value .pme-input",
-            );
-            @each $dataType in html {
-              @include elementShownIf(
-                "data-type-#{$dataType}",
+        tr {
+          &.multiplicity {
+            @each $multiplicity in groupofpeople, single, simple {
+              @include defaultHiddenElement(
                 "tr td.pme-value.data-options-#{$multiplicity} .active-value .pme-input",
               );
-              @include elementHiddenIf(
-                "data-type-#{$dataType}",
-                "tr td.pme-value.data-options-#{$multiplicity} .active-value .pme-input",
-              );
+              @each $dataType in html {
+                @include elementShownIf(
+                  "data-type-#{$dataType}",
+                  "tr td.pme-value.data-options-#{$multiplicity} .active-value .pme-input",
+                );
+                @include elementHiddenIf(
+                  "data-type-#{$dataType}",
+                  "tr td.pme-value.data-options-#{$multiplicity} .active-value .pme-input",
+                );
+              }
+            }
+            @include showAlternateDataType("receivables", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
+            @include showAlternateDataType("liabilities", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
+          }
+          &.multiplicity, &.data-type {
+            select[data-field-usage="0"] ~ .pme-select-lock:not(:checked) ~ label {
+              display:none;
             }
           }
-          @include showAlternateDataType("receivables", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
-          @include showAlternateDataType("liabilities", $prefix: "&", $middle: "~ tr td .service-fee-alternatives", $postfix: span);
+        }
+        tr.data-type {
         }
         td.pme-value {
           .chosen-container {

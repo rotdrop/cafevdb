@@ -339,8 +339,6 @@ const ready = function(selector, resizeCB) {
       'select.data-type',
       'input.deposit-due-date',
     ].join(), function(event) {
-      const $this = $(this);
-
       const depositDueDateInput = $container.find('input.deposit-due-date');
       const multiplicitySelect = $container.find('select.multiplicity');
       const dataTypeSelect = $container.find('select.data-type');
@@ -382,16 +380,61 @@ const ready = function(selector, resizeCB) {
     });
 
   const $multiplicitySelect = $container.find('select.multiplicity.pme-input');
+  const $multiplicityLock = $container.find('#pme-field-multiplicity-lock');
+  const $dataTypeSelect = $container.find('select.data-type.pme-input');
+  const $dataTypeLock = $container.find('#pme-field-data-type-lock');
+
   $multiplicitySelect.trigger('change');
   const usage = $multiplicitySelect.data('fieldUsage');
-  console.info('FIELD USAGE', usage);
-  if (usage > 0) {
-    $multiplicitySelect.readonly(true);
-  }
+
+  $multiplicitySelect.readonly(usage > 0);
+  $multiplicityLock.prop('checked', usage > 0);
+
+  $dataTypeSelect.readonly(usage > 0);
+  $dataTypeLock.prop('checked', usage > 0);
+
   $container.on('change', '#pme-field-multiplicity-lock', function(event) {
     const $this = $(this);
-    const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
-    $multiplicitySelect.readonly($this.prop('checked'));
+    const checked = $this.prop('checked');
+    if (!checked) {
+      Dialogs.confirm(
+        t(appName, 'This field already is filled out for some participants. Changing the multiplicity is still possible in some cases, but generally irrevertible. The app will allow changes from checkboxes and multiple-choice fields to general "simple" free-form content and disallow any other changes. Selected choices will then be collected into the remaining free-form field. Mostly probably the outcome will be broken unless the data type is "text" or "HTML-text".'),
+        t(appName, 'Really allow changing the multiplicity?'), {
+          default: 'cancel',
+          callback(answer) {
+            const checked = !answer;
+            $this.prop('checked', checked);
+            const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
+            $multiplicitySelect.readonly(checked);
+          },
+        }
+      );
+    } else {
+      const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
+      $multiplicitySelect.readonly(checked);
+    }
+  });
+
+  $container.on('change', '#pme-field-data-type-lock', function(event) {
+    const $this = $(this);
+    const checked = $this.prop('checked');
+    if (!checked) {
+      Dialogs.confirm(
+        t(appName, 'This field already is filled out for some participants. Changing the data-type is still possible in some cases, but does not always make sense. The app will allow changes between data-types and try to be smart, but please be prepared that the results might look unexpected.'),
+        t(appName, 'Really allow changing the data-type?'), {
+          default: 'cancel',
+          callback(answer) {
+            const checked = !answer;
+            $this.prop('checked', checked);
+            const $dataTypeSelect = $this.closest('td').find('select.data-type.pme-input');
+            $dataTypeSelect.readonly(checked);
+          },
+        }
+      );
+    } else {
+      const $dataTypeSelect = $this.closest('td').find('select.data-type.pme-input');
+      $dataTypeSelect.readonly(checked);
+    }
   });
 
   $container.on('keypress', 'tr.data-options input' + textInputSelector, function(event) {

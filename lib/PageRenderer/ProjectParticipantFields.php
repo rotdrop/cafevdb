@@ -397,13 +397,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['participant-fields-usage'],
     ];
 
-    $opts['fdd']['multiplicity'] =[
+    $opts['fdd']['multiplicity'] = [
       'name'    => $this->l->t('Multiplicity'),
       'tab' => [ 'id' => 'definition' ],
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
-      'css'     => [ 'postfix' => [ 'multiplicity', 'select-lockable', 'jquery-readonly', ], ],
+      'css'     => [ 'postfix' => [ 'multiplicity', ], ],
       'default' => Multiplicity::SIMPLE,
       'values2' => $this->participantFieldMultiplicityNames(),
       'valueTitles' => Util::arrayMapAssoc(function($key, $tag) {
@@ -420,9 +420,8 @@ class ProjectParticipantFields extends PMETableViewBase
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
           $usage = $row[$this->queryField('usage', $pme->fdd)];
-          if ($usage > 0) {
-            return '<input id="pme-field-multiplicity-lock"
-       checked
+          return '<input id="pme-field-multiplicity-lock"
+' . ($usage > 0 ? 'checked' : '') . '
        type="checkbox"
        class="pme-input pme-select-lock"
 />
@@ -430,7 +429,6 @@ class ProjectParticipantFields extends PMETableViewBase
        class="pme-input pme-select-lock lock-unlock tooltip-auto"
        title="' . $this->toolTipsService[self::$toolTipsPrefix . ':multiplicity:lock'] . '"
 ></label>';
-          }
         },
       ],
     ];
@@ -449,6 +447,26 @@ class ProjectParticipantFields extends PMETableViewBase
         return [ $tag, $this->toolTipsService['participant-field-data-type' . ':' . $tag] ];
       }, DataType::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
+      'display|ACP' => [
+        'attributes' => function($op, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return [
+            'data-field-usage' => $usage,
+          ];
+        },
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return '<input id="pme-field-data-type-lock"
+' . ($usage > 0 ? 'checked' : '') . '
+       type="checkbox"
+       class="pme-input pme-select-lock"
+/>
+<label for="pme-field-data-type-lock"
+       class="pme-input pme-select-lock lock-unlock tooltip-auto"
+       title="' . $this->toolTipsService[self::$toolTipsPrefix . ':data-type:lock'] . '"
+></label>';
+        },
+      ],
     ];
 
     $opts['fdd']['due_date'] = Util::arrayMergeRecursive(
