@@ -24,6 +24,8 @@
   /* pointer-events: none; */
   opacity: 0.5;
 }
-.chosen-disabled .__jquery-readonly-active__ {
-  opacity: unset;
+.chosen-container.__jquery-readonly-active__ {
+  .__jquery-readonly-active__ {
+    opacity: unset;
+  }
 }
