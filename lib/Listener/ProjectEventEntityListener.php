@@ -126,8 +126,11 @@ class ProjectEventEntityListener
       $this->eventsService = $this->appContainer->get(EventsService::class);
     }
     $recordAbsenceCategory = $this->eventsService->getRecordAbsenceCategory();
+    $calendarId = $projectEvent->getCalendarId();
+    $eventUri = $projectEvent->getEventUri();
+    $recurrenceId = $projectEvent->getRecurrenceId();
     $this->preCommitActions[$projectEvent->getId()] = new GenericUndoable(
-      function() use ($projectEvent, $recordAbsenceCategory) {
+      function() use ($projectEvent, $recordAbsenceCategory, $calendarId, $eventUri, $recurrenceId) {
         if (empty($projectEvent->getAbsenceField())) {
           $additions = [];
           $removals[] = $recordAbsenceCategory;
@@ -137,9 +140,9 @@ class ProjectEventEntityListener
         }
         try {
           $changed = $this->eventsService->changeCategories(
-            $projectEvent->getCalendarId(),
-            $projectEvent->getEventUri(),
-            $projectEvent->getRecurrenceId(),
+            $calendarId,
+            $eventUri,
+            $recurrenceId,
             $additions,
             $removals,
           );
@@ -149,7 +152,7 @@ class ProjectEventEntityListener
         }
         return $changed;
       },
-      function(bool $changed) use ($projectEvent, $recordAbsenceCategory) {
+      function(bool $changed) use ($projectEvent, $recordAbsenceCategory, $calendarId, $eventUri, $recurrenceId) {
         if (!$changed) {
           return;
         }
@@ -162,9 +165,9 @@ class ProjectEventEntityListener
           $removals = [];
         }
         $this->eventsService->changeCategories(
-          $projectEvent->getCalendarId(),
-          $projectEvent->getEventUri(),
-          $projectEvent->getRecurrenceId(),
+          $calendarId,
+          $eventUri,
+          $recurrenceId,
           $additions,
           $removals,
         );

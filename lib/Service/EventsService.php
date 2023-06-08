@@ -1617,15 +1617,28 @@ class EventsService
   {
     $vCalendar = VCalendarService::getVCalendar($objectData['calendardata']);
     $eventURI = $objectData['uri'];
-    /** @var Entities\ProjectEvent $projectEvent */
-    foreach ($this->eventProjects($eventURI) as $projectEvent) {
-      $project = $projectEvent->getProject();
-      if ($this->isProjectRegistrationEvent($vCalendar)) {
-        $project->setRegistrationStartDate(null);
+    try {
+      $this->entityManager->beginTransaction();
+      /** @var Entities\ProjectEvent $projectEvent */
+      foreach ($this->eventProjects($eventURI) as $projectEvent) {
+        $project = $projectEvent->getProject();
+        if ($this->isProjectRegistrationEvent($vCalendar)) {
+          $project->setRegistrationStartDate(null);
+        }
+        $this->unregister($project->getId(), $eventURI, flush: false);
       }
-      $this->unregister($project->getId(), $eventURI, flush: false);
+      $this->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\CalendarException(
+        $this->l->t('Unable to unregister the deleted calendar event with uri "%s".', $eventURI),
+        0,
+        $t,
+      );
     }
-    $this->flush(useTransaction: true);
   }
 
   /**
@@ -1830,14 +1843,30 @@ class EventsService
     if (!empty($recurrenceId)) {
       $criteria['recurrenceId'] = $recurrenceId;
     }
-    $projectEvents = $this->findBy($criteria);
-    $needFlush = false;
-    foreach ($projectEvents as $projectEvent) {
-      $this->remove($projectEvent, flush: false, hard: false, soft: true);
-      $needFlush = true;
-    }
-    if ($flush && $needFlush) {
-      $this->flush();
+    try {
+      if ($flush) {
+        $this->entityManager->beginTransaction();
+      }
+      $projectEvents = $this->findBy($criteria);
+      foreach ($projectEvents as $projectEvent) {
+        if (!empty($projectEvent->getAbsenceField())) {
+          $projectEvent->getAbsenceField()->setProjectEvent(null);
+        }
+        $this->remove($projectEvent, flush: false, hard: false, soft: true);
+      }
+      if ($flush) {
+        $this->flush();
+        $this->entityManager->commit();
+      }
+    } catch (Throwable $t) {
+      if ($flush && $this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      throw new Exceptions\CalendarException(
+        $this->l->t('Unable to unregister the deleted calendar event with uri "%s".', $eventURI),
+        0,
+        $t,
+      );
     }
     return true;
   }
