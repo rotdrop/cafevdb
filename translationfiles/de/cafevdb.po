@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-06-08 14:19+0200\n"
-"PO-Revision-Date: 2023-06-08 14:21+0200\n"
+"POT-Creation-Date: 2023-06-09 17:23+0200\n"
+"PO-Revision-Date: 2023-06-09 23:24+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1212,21 +1212,21 @@ msgstr "Zugriff verweigert für fremde Benutzerkennung \"%s\"."
 msgid "Recryption-request for user \"%s\" not found."
 msgstr "Neu-Verschlüsselungs-Anfrage für Benutzer \"%s\" nicht gefunden."
 
-#: lib/Controller/EncryptionController.php:347
+#: lib/Controller/EncryptionController.php:348
 #, php-format
 msgid "Unable to set row access-token for user \"%s\"."
 msgstr "Kann den Zugriffsschlüssel für die Person \"%s\" nicht setzen."
 
-#: lib/Controller/EncryptionController.php:361
+#: lib/Controller/EncryptionController.php:362
 #, php-format
 msgid "Unable to recrypt encrypted data for user \"%s\"."
 msgstr "Kann die Daten für die Person \"%s\" nicht neu verschlüsseln."
 
-#: lib/Controller/EncryptionController.php:374
+#: lib/Controller/EncryptionController.php:375
 msgid "Encryption key is invalid"
 msgstr "Der Verschlüsselungs-Schlüssel ist ungültig."
 
-#: lib/Controller/EncryptionController.php:380
+#: lib/Controller/EncryptionController.php:381
 #, php-format
 msgid "Unable to set app-encryption-key for user \"%s\"."
 msgstr ""
@@ -7124,20 +7124,25 @@ msgstr "Weitere Kalender"
 msgid "Unable to ensure the existence of the system tag \"%s\"."
 msgstr "Kann nicht sicherstellen, dass das System-Schlagwort \"%S\" existiert."
 
-#: lib/Service/EventsService.php:2538
+#: lib/Service/EventsService.php:1637 lib/Service/EventsService.php:1866
+#, php-format
+msgid "Unable to unregister the deleted calendar event with uri \"%s\"."
+msgstr "Kann der Kalender-Eintrag mit URI \"%s\" nicht vom Projekt lösen."
+
+#: lib/Service/EventsService.php:2567
 msgid "Found more than one project registration calendar event."
 msgstr "Es wurden mehrere Anmeldetermin im Kalender gefunden."
 
-#: lib/Service/EventsService.php:2571
+#: lib/Service/EventsService.php:2600
 msgid "Unsupported argument type."
 msgstr "Nicht unterstützter Argument-Typ"
 
-#: lib/Service/EventsService.php:2620
+#: lib/Service/EventsService.php:2649
 #, php-format
 msgid "Registration for %s"
 msgstr "Bewerbungszeitraum für %s"
 
-#: lib/Service/EventsService.php:2626
+#: lib/Service/EventsService.php:2655
 #, php-format
 msgid ""
 "Project registation period for the project \"%1$s\". Participants can apply "
@@ -7146,7 +7151,7 @@ msgstr ""
 "Anmeldezeitraum für das Projekt \"%1$s\". Interessierte können sich während "
 "dieser Zeit über den öffentlichen Link %2$s online bewerben."
 
-#: lib/Service/EventsService.php:2630
+#: lib/Service/EventsService.php:2659
 msgid "CyberSpace"
 msgstr "CyberSpace"
 
@@ -12906,15 +12911,7 @@ msgstr ""
 "es in diesem Fenster außerdem noch einen `Zurück'-Knopf gibt, dann\n"
 "sollte der eigentlich das gleiche bewirken."
 
-#: src/app/dialogs.js:78
-msgid "No"
-msgstr "Nein"
-
-#: src/app/dialogs.js:79
-msgid "Yes"
-msgstr "Ja"
-
-#: src/app/dialogs.js:119
+#: src/app/dialogs.js:126
 msgid "Debug Information"
 msgstr "Debug Informationen"
 
@@ -17410,6 +17407,12 @@ msgstr "Verwaltung"
 #, php-format
 msgid "forename.surname"
 msgstr "vorname.nachname"
+
+#~ msgid "No"
+#~ msgstr "Nein"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
 
 #, php-format
 #~ msgid "%1$s has been renamed to %2$s."
