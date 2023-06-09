@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\MusicianEntityListener"})
  * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
@@ -763,11 +764,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function getEmail():?string
   {
-    if ($this->email === null) {
-      return $this->email;
-    } else {
-      return strtolower($this->email);
-    }
+    return $this->email === null ? null : strtolower($this->email);
   }
 
   /**
@@ -1464,68 +1461,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * {@inheritdoc}
    *
    * @ORM\PrePersist
+   *
+   * @todo This should no longer be necessary.
    */
   public function prePersist(Event\LifecycleEventArgs $event)
   {
     $this->email = strtolower($this->email);
-  }
-
-  /**
-   * @var null|array
-   *
-   * The array of changed field values.
-   */
-  private $preUpdateValue = [];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PreUpdate
-   */
-  public function preUpdate(Event\PreUpdateEventArgs $event)
-  {
-    $field = 'userIdSlug';
-    if ($event->hasChangedField($field)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $oldValue = $event->getOldValue($field);
-      $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($this, $oldValue, $event->getNewValue($field)));
-      $this->preUpdateValue[$field] = $oldValue;
-    }
-    $field = 'email';
-    if ($event->hasChangedField($field)) {
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $oldValue = $event->getOldValue($field);
-      // The event still needs the email as address entity, so fake one.
-      $oldValue = new MusicianEmailAddress($oldValue, $this);
-      $newValue = $this->getPrincipalEmailAddress();
-      $entityManager->dispatchEvent(new Events\PreChangeMusicianEmail($oldValue, $newValue));
-      $this->preUpdateValue[$field] = $oldValue;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PostUpdate
-   */
-  public function postUpdate(Event\LifecycleEventArgs $event)
-  {
-    $field = 'userIdSlug';
-    if (array_key_exists($field, $this->preUpdateValue)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostChangeUserIdSlug($this, $this->preUpdateValue[$field]));
-      unset($this->preUpdateValue[$field]);
-    }
-    $field = 'email';
-    if (array_key_exists($field, $this->preUpdateValue)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $currentValue= $this->getPrincipalEmailAddress();
-      $entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->preUpdateValue[$field], $currentValue));
-      unset($this->preUpdateValue[$field]);
-    }
   }
 
   /** {@inheritdoc} */

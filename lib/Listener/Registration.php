@@ -55,7 +55,6 @@ class Registration
     self::registerListener($context, UserLoggedOutEventListener::class);
     self::registerListener($context, TranslationNotFoundListener::class);
     self::registerListener($context, FileNodeListener::class);
-    self::registerListener($context, PreChangeUserIdSlugListener::class);
     self::registerListener($context, PreRenameProjectParticipantFieldOptionListener::class);
     self::registerListener($context, ParticipantFieldCloudFolderListener::class);
     self::registerListener($context, BeforeEncryptionKeyPairChangedListener::class);
