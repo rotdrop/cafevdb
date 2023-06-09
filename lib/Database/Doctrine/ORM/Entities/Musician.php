@@ -51,8 +51,8 @@ use OCA\CAFEVDB\Database\EntityManager;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\MusicianEntityListener"})
  * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\MusicianEntityListener"})
  *
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
@@ -1467,6 +1467,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function prePersist(Event\LifecycleEventArgs $event)
   {
     $this->email = strtolower($this->email);
+    $this->prePersistUuid();
   }
 
   /** {@inheritdoc} */
