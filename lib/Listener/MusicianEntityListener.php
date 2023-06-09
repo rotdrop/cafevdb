@@ -128,7 +128,7 @@ class MusicianEntityListener
   {
     $musicianId = $musician->getId();
     $field = 'email';
-    if (array_key_exists($field, $this->preUpdateValues[$musicianId])) {
+    if (array_key_exists($field, $this->preUpdateValues[$musicianId] ?? [])) {
       $currentValue= $musician->getPrincipalEmailAddress();
       $this->entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($this->preUpdateValues[$musicianId][$field], $currentValue));
       unset($this->preUpdateValues[$musicianId][$field]);
