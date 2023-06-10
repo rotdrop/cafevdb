@@ -573,7 +573,7 @@ make sure that the musicians are also automatically added to the
       'tab'      => [ 'id' => [ 'orchestra', 'contact', ], ],
       'name'     => $this->l->t('User Id'),
       'css'      => [ 'postfix' => [ 'musician-name', $addCSS, ], ],
-      'input'    => $this->pmeBare ? 'R' : 'HR', // handy for export
+      'input|LF'    => $this->pmeBare ? 'R' : 'HR', // handy for export
       // 'options'  => 'AVCPD',
       'select'   => 'T',
       'maxlen'   => 256,

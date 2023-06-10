@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-06-08 14:22+0200\n"
+"POT-Creation-Date: 2023-06-10 23:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1081,21 +1081,21 @@ msgstr ""
 msgid "Recryption-request for user \"%s\" not found."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:347
+#: lib/Controller/EncryptionController.php:348
 #, php-format
 msgid "Unable to set row access-token for user \"%s\"."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:361
+#: lib/Controller/EncryptionController.php:362
 #, php-format
 msgid "Unable to recrypt encrypted data for user \"%s\"."
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:374
+#: lib/Controller/EncryptionController.php:375
 msgid "Encryption key is invalid"
 msgstr ""
 
-#: lib/Controller/EncryptionController.php:380
+#: lib/Controller/EncryptionController.php:381
 #, php-format
 msgid "Unable to set app-encryption-key for user \"%s\"."
 msgstr ""
@@ -6564,27 +6564,33 @@ msgstr ""
 msgid "Unable to ensure the existence of the system tag \"%s\"."
 msgstr ""
 
-#: lib/Service/EventsService.php:2538
+#: lib/Service/EventsService.php:1637
+#: lib/Service/EventsService.php:1866
+#, php-format
+msgid "Unable to unregister the deleted calendar event with uri \"%s\"."
+msgstr ""
+
+#: lib/Service/EventsService.php:2567
 msgid "Found more than one project registration calendar event."
 msgstr ""
 
-#: lib/Service/EventsService.php:2571
+#: lib/Service/EventsService.php:2600
 msgid "Unsupported argument type."
 msgstr ""
 
-#: lib/Service/EventsService.php:2620
+#: lib/Service/EventsService.php:2649
 #, php-format
 msgid "Registration for %s"
 msgstr ""
 
-#: lib/Service/EventsService.php:2626
+#: lib/Service/EventsService.php:2655
 #, php-format
 msgid ""
 "Project registation period for the project \"%1$s\". Participants can apply "
 "for participation using the public url %2$s."
 msgstr ""
 
-#: lib/Service/EventsService.php:2630
+#: lib/Service/EventsService.php:2659
 msgid "CyberSpace"
 msgstr ""
 
@@ -11179,15 +11185,7 @@ msgid ""
 "equivalent to clicking the `Back' button"
 msgstr ""
 
-#: src/app/dialogs.js:78
-msgid "No"
-msgstr ""
-
-#: src/app/dialogs.js:79
-msgid "Yes"
-msgstr ""
-
-#: src/app/dialogs.js:119
+#: src/app/dialogs.js:126
 msgid "Debug Information"
 msgstr ""
 
