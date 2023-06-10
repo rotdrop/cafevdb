@@ -34,8 +34,6 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IConfig as ICloudConfig;
 use OCP\Accounts\IAccount;
 use OCP\Accounts\IAccountManager;
-use OCP\Accounts\IAccountProperty;
-use OCP\Accounts\IAccountPropertyCollection;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -144,6 +142,12 @@ class GroupMembershipListener implements IEventListener
           $boardMember->getMusician()->addEmailAddress($personalizedOrchestraEmail);
           $this->flush();
         }
+
+        // message tagging on shared email accounts is really really
+        // annoying as it troubles also all other users. Would be nice if
+        // this could be a per-account setting.
+        $cloudConfig->setUserValue($userId, 'mail', 'tag-classified-messages', 'false');
+
       } else {
         // remove in any case from the cloud user's emails
         if (!empty($emailProperty)) {
