@@ -32,6 +32,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 
 use OCP\IL10N;
+use OCP\IUserSession;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
@@ -87,6 +88,9 @@ class EventsService
   public const PROJECT_REGISTRATION_CATEGORY = 'project registration';
   public const RECORD_ABSENCE_CATEGORY = 'record absence';
 
+  /** @var IUserSession */
+  protected $userSession;
+
   /** @var EntityManager */
   protected $entityManager;
 
@@ -121,12 +125,14 @@ class EventsService
 
   /** {@inheritdoc} */
   public function __construct(
+    IUserSession $userSession,
     ConfigService $configService,
     EntityManager $entityManager,
     ProjectService $projectService,
     CalDavService $calDavService,
     VCalendarService $vCalendarService,
   ) {
+    $this->userSession = $userSession;
     $this->configService = $configService;
     $this->entityManager = $entityManager;
     $this->projectService = $projectService;
@@ -251,6 +257,12 @@ class EventsService
     CalendarObjectDeletedEvent|CalendarObjectMovedToTrashEvent $event,
   ):void {
 
+    if (empty($this->userSession->getUser())) {
+      // we need an authenticated user, there is in particular a cron job
+      // which cleans out expired events from the trashbin.
+      return;
+    }
+
     $objectData = $event->getObjectData();
     $calendarIds = $this->defaultCalendars();
     $calendarId = $objectData['calendarid'];
@@ -291,6 +303,7 @@ class EventsService
   public function onCalendarDeleted(
     CalendarDeletedEvent|CalendarMovedToTrashEvent $event
   ):void {
+
     if (!$this->inGroup()) {
       return;
     }
