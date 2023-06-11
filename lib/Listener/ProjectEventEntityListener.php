@@ -173,6 +173,12 @@ class ProjectEventEntityListener
         );
       },
     );
-    $this->entityManager->registerPreCommitAction($this->preCommitActions[$projectEvent->getId()]);
+    $action = $this->preCommitActions[$projectEvent->getId()];
+    if ($this->entityManager->isTransactionActive()) {
+      // preferable
+      $this->entityManager->registerPreCommitAction($action);
+    } else {
+      $this->entityManager->registerPreFlushAction($action);
+    }
   }
 }

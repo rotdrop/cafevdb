@@ -1282,7 +1282,7 @@ OC.L10N.register(
     "Unknown Calendar" : "Unbekannter Kalender.",
     "Miscellaneous Calendars" : "Weitere Kalender",
     "Unable to ensure the existence of the system tag \"%s\"." : "Kann nicht sicherstellen, dass das System-Schlagwort \"%S\" existiert.",
-    "Unable to unregister the deleted calendar event with uri \"%s\"." : "Kann den Kalender-Eintrag \"%1$s\" im Kalender mit der Id \"\"%2$s\" nicht finden.",
+    "Unable to unregister the deleted calendar event with uri \"%s\"." : "Kann der Kalender-Eintrag mit URI \"%s\" nicht vom Projekt lösen.",
     "Found more than one project registration calendar event." : "Es wurden mehrere Anmeldetermin im Kalender gefunden.",
     "Unsupported argument type." : "Nicht unterstützter Argument-Typ",
     "Registration for %s" : "Bewerbungszeitraum für %s",
