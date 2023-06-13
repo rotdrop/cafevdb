@@ -205,11 +205,12 @@ module.exports = {
   },
   resolve: {
     modules: [
-      path.resolve(__dirname, 'node_modules'),
+      // path.resolve(__dirname, 'node_modules'),
       path.resolve(__dirname, 'style'),
       path.resolve(__dirname, 'src'),
       path.resolve(__dirname, '3rdparty'),
       path.resolve(__dirname, '.'),
+      'node_modules',
     ],
     alias: {
       core: path.resolve(__dirname, '../../core/src'),
