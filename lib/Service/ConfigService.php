@@ -383,7 +383,7 @@ class ConfigService
     $this->timeFactory = $timeFactory;
     $this->l = $l;
 
-    if (defined('OC_CONSOLE') && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
+    if (\OC::$CLI && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
       $this->setUserId($GLOBALS['cafevdb-user']);
     } else {
       // The user may be empty at login. This is lazily corrected later.
