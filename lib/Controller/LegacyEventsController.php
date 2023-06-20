@@ -35,7 +35,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
-use OCP\ISession;
 use OCP\Constants;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -63,9 +62,6 @@ class LegacyEventsController extends Controller
   const SUBTOPIC_EDIT = 'edit';
   const SUBTOPIC_DELETE = 'delete';
   const SUBTOPIC_EXPORT = 'export';
-
-  /** @var ISession */
-  private $session;
 
   /** @var RequestParameterService */
   private $parameterService;
@@ -103,7 +99,6 @@ class LegacyEventsController extends Controller
     VCalendarService $vCalendarService,
     EventsService $eventsService,
     ToolTipsService $toolTipsService,
-    ISession $session,
   ) {
     parent::__construct($appName, $request);
 
@@ -116,7 +111,6 @@ class LegacyEventsController extends Controller
     $this->eventsService = $eventsService;
     $this->ocCalendarObject = $vCalendarService->legacyEventObject();
     $this->toolTipsService = $toolTipsService;
-    $this->session = $session;
 
     $this->l = $this->l10N();
   }
@@ -130,7 +124,6 @@ class LegacyEventsController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function serviceSwitch(string $topic, string $subTopic):Http\Response
   {
@@ -140,7 +133,6 @@ class LegacyEventsController extends Controller
           case self::SUBTOPIC_NEW:
             return $this->newEventForm();
           case self::SUBTOPIC_EDIT:
-            $this->session->close();
             return $this->editEventForm($subTopic);
           case self::SUBTOPIC_CLONE:
             return $this->editEventForm($subTopic);
@@ -149,7 +141,6 @@ class LegacyEventsController extends Controller
         }
         break;
       case 'actions':
-        $this->session->close();
         switch ($subTopic) {
           case self::SUBTOPIC_NEW:
             return $this->newEvent();
@@ -164,7 +155,6 @@ class LegacyEventsController extends Controller
         }
         break;
       default:
-        $this->session->close();
         break;
     }
     return self::grumble($this->l->t("unknown service requested: `%s/%s'.", [$topic, $subTopic]));
@@ -206,7 +196,6 @@ class LegacyEventsController extends Controller
 
     // make sure that the calendar exists and is writable
     $newId = $this->configCheckService->checkSharedCalendar($calendarUri, $calendarName, $calendarId);
-    $this->session->close();
 
     if ($newId == false) {
       return self::grumble($this->l->t('Cannot access calendar: `%s\'', [$calendarUri]));
