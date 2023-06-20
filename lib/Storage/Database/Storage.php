@@ -498,7 +498,7 @@ class Storage extends AbstractStorage
   /** {@inheritdoc} */
   public function is_dir($path)
   {
-    if ($path === '' || $path == self::PATH_SEPARATOR) {
+    if ($path === '' || $path == self::PATH_SEPARATOR || $path === '.') {
       return true;
     }
     $dirEntry = $this->fileFromFileName($path);
