@@ -29,7 +29,6 @@ use \Mail_RFC822;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
-use OCP\ISession;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
@@ -62,9 +61,6 @@ class EmailFormController extends Controller
 
   const TOPIC_UNSPECIFIC = 'general';
 
-  /** @var ISession */
-  private $session;
-
   /** @var RequestParameterService */
   private $parameterService;
 
@@ -87,7 +83,6 @@ class EmailFormController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    ISession $session,
     IAppContainer $appContainer,
     IURLGenerator $urlGenerator,
     RequestParameterService $parameterService,
@@ -97,7 +92,6 @@ class EmailFormController extends Controller
     PHPMyEdit $pme
   ) {
     parent::__construct($appName, $request);
-    $this->session = $session;
     $this->appContainer = $appContainer;
     $this->urlGenerator = $urlGenerator;
     $this->parameterService = $parameterService;
@@ -128,7 +122,6 @@ class EmailFormController extends Controller
    * @return DataResponse
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function webForm(
     ?int $projectId = null,
@@ -210,7 +203,7 @@ class EmailFormController extends Controller
       'composerFormData' => $composer->formData(),
       // Needed for the recipient selection
       'recipientsFormData' => $recipientsFilter->formData(),
-      'filterHistory' => $recipientsFilter->filterHistory(), // Session Usage!
+      'filterHistory' => $recipientsFilter->filterHistory(),
       'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
       'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
       'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
@@ -222,9 +215,6 @@ class EmailFormController extends Controller
 
       'toolTips' => $this->toolTipsService(),
     ];
-
-    // Close the session ONLY AFTER fetching the filter history
-    $this->session->close();
 
     $html = (new TemplateResponse(
       $this->appName,
@@ -301,12 +291,9 @@ class EmailFormController extends Controller
    *
    * @param null|string $projectName Name of a linked project, if any.
    *
-   * @todo Close the PHP session if no longer needed.
-   *
    * @return DataResponse
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function composer(
     string $operation,
@@ -332,10 +319,6 @@ class EmailFormController extends Controller
     /** @var Composer $composer */
     $composer = $this->appContainer->get(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
-
-    if ($operation != 'load') {
-      $this->session->close();
-    }
 
     if (isset($requestData['singleItem'])) {
       $requestData['errorStatus'] = false;
@@ -617,8 +600,6 @@ class EmailFormController extends Controller
             // "reload" the composer and recipients filter
             $composer->bind($this->parameterService);
 
-            $this->session->close();
-
             $requestData['errorStatus'] = $composer->errorStatus();
             $requestData['diagnostics'] = $composer->statusDiagnostics();
 
@@ -827,10 +808,7 @@ class EmailFormController extends Controller
    *
    * @return DataResponse
    *
-   * @todo Close the PHP session if no longer needed.
-   *
    * @NoAdminRequired
-   * @UseSession
    */
   public function recipientsFilter(
     ?int $projectId,
@@ -838,8 +816,6 @@ class EmailFormController extends Controller
     ?int $bulkTransactionId,
   ):DataResponse {
     $recipientsFilter = $this->appContainer->query(RecipientsFilter::class);
-
-    $this->session->close();
 
     $filterHistory = $recipientsFilter->filterHistory();
 
@@ -1075,7 +1051,6 @@ class EmailFormController extends Controller
    * @return DataResponse
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function attachment(string $source):DataResponse
   {
@@ -1084,8 +1059,6 @@ class EmailFormController extends Controller
     $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
-
-    $this->session->close();
 
     switch ($source) {
       case AttachmentOrigin::CLOUD:

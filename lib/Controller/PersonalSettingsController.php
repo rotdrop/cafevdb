@@ -311,10 +311,8 @@ class PersonalSettingsController extends Controller
    *
    * @NoAdminRequired
    * @SubAdminRequired
-   * _AT_UseSession
    *
    * @bug This function is too big.
-   * @todo decrease usage of session. Where is it needed?
    */
   public function setApp(string $parameter, mixed $value):Http\Response
   {

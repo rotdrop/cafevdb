@@ -163,12 +163,6 @@ class Projects extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function needPhpSession():bool
-  {
-    return !$this->listOperation();
-  }
-
-  /** {@inheritdoc} */
   public function shortTitle()
   {
     if (!empty($this->projectName)) {

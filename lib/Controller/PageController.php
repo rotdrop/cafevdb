@@ -25,10 +25,10 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
 use OutOfBoundsException;
 
 use OCP\IRequest;
-use OCP\ISession;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
@@ -53,7 +53,6 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
-use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 
 /** Main UI entry point providing the front pages. */
 class PageController extends Controller
@@ -66,9 +65,6 @@ class PageController extends Controller
 
   public const HISTORY_ACTION_LOAD = 'load';
   public const HISTORY_ACTION_PUSH = 'push';
-
-  /** @var ISession */
-  private $session;
 
   /** @var IL10N */
   protected $l;
@@ -110,7 +106,6 @@ class PageController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ISession $session,
     IAppContainer $appContainer,
     AssetService $assetService,
     ConfigService $configService,
@@ -126,7 +121,6 @@ class PageController extends Controller
 
     parent::__construct($appName, $request);
 
-    $this->session = $session;
     $this->appContainer = $appContainer;
     $this->assetService = $assetService;
     $this->configService = $configService;
@@ -153,14 +147,12 @@ class PageController extends Controller
    * @NoAdminRequired
    * @NoGroupMemberRequired
    * @NoCSRFRequired
-   * @UseSession
    */
   public function index():Http\Response
   {
     if ($this->parameterService->getParam('history', '') == 'discard') {
       $this->historyService->push([]);
       $this->historyService->store();
-      $this->session->close();
       return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
     }
     if ($this->shouldLoadHistory()) {
@@ -245,7 +237,6 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function history(int $level = 0, string $renderAs = 'blank'):Http\Response
   {
@@ -279,7 +270,6 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function remember(string $renderAs = 'user'):Http\Response
   {
@@ -299,7 +289,6 @@ class PageController extends Controller
    *
    * @NoAdminRequired
    * @NoCSRFRequired
-   * @UseSession
    */
   public function debug():Http\Response
   {
@@ -331,7 +320,6 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function loader(
     string $renderAs,
@@ -442,7 +430,7 @@ class PageController extends Controller
 
     // renderAs = admin, user, blank
     // $renderAs = 'user';
-    $response = new PreRenderedTemplateResponse($this->appName, $template, $templateParameters, $renderAs);
+    $response = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
 
     // @todo: we need this only for some site like DokuWiki and CMS
     $policy = new ContentSecurityPolicy();
@@ -452,18 +440,9 @@ class PageController extends Controller
 
     $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
 
-    if ($renderer->needPhpSession() && $renderAs !== 'user') {
-      $response->preRender();
-    }
-
-    // ok no exception, so flush the history to the session, when we
-    // got so far.
     try {
       $this->historyService->store();
-      if (!$renderer->needPhpSession() || $renderAs !== 'user') {
-        $this->session->close();
-      }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       // log, but ignore otherwise
       $this->logException($t);
     }
