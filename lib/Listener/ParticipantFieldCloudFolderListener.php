@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright , 2021, 2022,  Claus-Justus Heine
+ * @copyright 2021-2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,8 +86,8 @@ use OCA\CAFEVDB\Constants;
 class ParticipantFieldCloudFolderListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  // use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait;
 
   const EVENT = [
     NodeRenamedEvent::class,
@@ -120,7 +120,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $user;
 
   /** @var string */
-  private $appName;
+  protected $appName;
 
   /** @var IAppContainer */
   private $appContainer;
@@ -159,7 +159,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $musicians = [];
 
   /** @var IRootFolder */
-  private $rootFolder;
+  protected $rootFolder;
 
   /**
    * @var string
@@ -265,7 +265,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       return; // something went wrong
     }
 
-    $userFolder = $this->rootFolder->getUserFolderPath($this->user->getUID());
+    $userFolder = Constants::PATH_SEPARATOR . $this->getUserFolderPath($this->user->getUID());
 
     // Bail out if the folder being worked on is actually the
     // top-level user-folder
