@@ -1,8 +1,4 @@
 module.exports = {
-  parserOptions: {
-    sourceType: 'module',
-    ecmaVersion: 2015,
-  },
   globals: {
     __webpack_nonce__: true,
     __webpack_public_path__: true,
@@ -24,16 +20,6 @@ module.exports = {
       tagNamePreference: {
         returns: 'returns',
       },
-    },
-    node: {
-      resolvePaths: [
-        './src',
-        './style',
-        './3rdparty',
-        './',
-      ],
-      tryExtensions: ['.js', '.json', '.node', '.css', '.vue'],
-      // 'allowModules': [],
     },
   },
   // plugins: ['jsdoc'], already contained in @nextcloud/eslint-config
@@ -100,6 +86,16 @@ module.exports = {
     'n/no-missing-import': [
       'error',
     ],
+    'n/no-missing-require': [
+      'error', {
+        resolvePaths: [
+          './src',
+          './style',
+          './3rdparty',
+          './',
+        ],
+      },
+    ],
     'operator-linebreak': [
       'error',
       'before',
@@ -110,9 +106,6 @@ module.exports = {
           '-=': 'after',
         },
       },
-    ],
-    'n/no-missing-require': [
-      'error',
     ],
   }, // rules
   overrides: [

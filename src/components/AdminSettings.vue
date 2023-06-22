@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,7 @@
     >
       <div v-if="config.isAdmin">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <p class="info" v-html="forword">
-          {{ forword }}
-        </p>
+        <p class="info" v-html="forword" />
         <hr>
       </div>
       <div v-if="config.isAdmin">
@@ -240,7 +238,7 @@ import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import ProgressBar from '@nextcloud/vue/dist/Components/ProgressBar'
 // import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import Multiselect from './Multiselect'
+import Multiselect from './Multiselect.vue'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
@@ -249,11 +247,11 @@ import { showError, showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANEN
 
 import { appName } from '../app/app-info.js'
 
-import SelectMusicians from './SelectMusicians'
-import SelectProjects from './SelectProjects'
-import SettingsInputText from './SettingsInputText'
-import SettingsSelectGroup from './SettingsSelectGroup'
-import SettingsSelectUsers from './SettingsSelectUsers'
+import SelectMusicians from './SelectMusicians.vue'
+import SelectProjects from './SelectProjects.vue'
+import SettingsInputText from './SettingsInputText.vue'
+import SettingsSelectGroup from './SettingsSelectGroup.vue'
+import SettingsSelectUsers from './SettingsSelectUsers.vue'
 import tooltip from '../mixins/tooltips.js'
 import formatDate from '../mixins/formatDate.js'
 

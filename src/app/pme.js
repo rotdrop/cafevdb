@@ -63,8 +63,8 @@ import {
   selector as pmeSelector,
   container as pmeContainer,
 } from './pme-selectors.js';
-import 'jquery-ui/ui/effects/effect-highlight';
-import 'jquery-ui/ui/widgets/sortable';
+import 'jquery-ui/ui/effects/effect-highlight.js';
+import 'jquery-ui/ui/widgets/sortable.js';
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
 import mergician from 'mergician';

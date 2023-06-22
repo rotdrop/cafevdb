@@ -30,6 +30,13 @@
   </div>
 </template>
 <script>
+import { set as vueSet } from 'vue'
+import { appName } from '../app/app-info.js'
+import axios from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import { getInitialState } from '../services/initial-state-service.js'
+
 import NextcloudMultiselect from '@nextcloud/vue/dist/Components/Multiselect'
 
 export default {

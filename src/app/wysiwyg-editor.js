@@ -87,7 +87,7 @@ const addEditor = function(selector, initCallback) {
     const plusConfig = {
     };
     const mceDeferredTimeout = 10 * 1000;
-    import('./tinymceinit')
+    import('./tinymceinit.js')
       .then((myTinyMCE) => {
         const mceConfig = myTinyMCE.getConfig(plusConfig);
         $.when
