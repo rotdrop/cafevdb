@@ -1,8 +1,4 @@
 module.exports = {
-  parserOptions: {
-    sourceType: 'module',
-    ecmaVersion: 2015,
-  },
   globals: {
     __webpack_nonce__: true,
     __webpack_public_path__: true,
@@ -99,6 +95,16 @@ module.exports = {
         tryExtensions: ['.js', '.json', '.node', '.css', '.vue'],
       },
     ],
+    'n/no-missing-require': [
+      'error', {
+        resolvePaths: [
+          './src',
+          './style',
+          './3rdparty',
+          './',
+        ],
+      },
+    ],
     'operator-linebreak': [
       'error',
       'before',
@@ -108,18 +114,6 @@ module.exports = {
           '+=': 'after',
           '-=': 'after',
         },
-      },
-    ],
-    'node/no-missing-require': [
-      'error', {
-        // 'allowModules': [],
-        resolvePaths: [
-          './src',
-          './style',
-          './3rdparty',
-          './',
-        ],
-        tryExtensions: ['.js', '.json', '.node', '.css', '.xml'],
       },
     ],
   }, // rules

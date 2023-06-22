@@ -29,9 +29,7 @@
     >
       <div v-if="config.isAdmin">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <p class="info" v-html="forword">
-          {{ forword }}
-        </p>
+        <p class="info" v-html="forword" />
         <hr>
       </div>
       <div v-if="config.isAdmin">
@@ -249,11 +247,11 @@ import { showError, showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANEN
 
 import { appName } from '../app/app-info.js'
 
-import SelectMusicians from './SelectMusicians'
-import SelectProjects from './SelectProjects'
-import SettingsInputText from './SettingsInputText'
-import SettingsSelectGroup from './SettingsSelectGroup'
-import SettingsSelectUsers from './SettingsSelectUsers'
+import SelectMusicians from './SelectMusicians.vue'
+import SelectProjects from './SelectProjects.vue'
+import SettingsInputText from './SettingsInputText.vue'
+import SettingsSelectGroup from './SettingsSelectGroup.vue'
+import SettingsSelectUsers from './SettingsSelectUsers.vue'
 import tooltip from '../mixins/tooltips.js'
 import formatDate from '../mixins/formatDate.js'
 
