@@ -25,6 +25,16 @@ module.exports = {
         returns: 'returns',
       },
     },
+    node: {
+      resolvePaths: [
+        './src',
+        './style',
+        './3rdparty',
+        './',
+      ],
+      tryExtensions: ['.js', '.json', '.node', '.css', '.vue'],
+      // 'allowModules': [],
+    },
   },
   // plugins: ['jsdoc'], already contained in @nextcloud/eslint-config
   rules: {
@@ -83,21 +93,12 @@ module.exports = {
       },
     ],
     'import/extensions': 'off',
-    'node/no-unpublished-import': 'off',
-    'node/no-unpublished-require': 'off',
+    'n/no-unpublished-import': 'off',
+    'n/no-unpublished-require': 'off',
     'no-console': 'off',
     semi: ['error', 'always'],
-    'node/no-missing-import': [
-      'error', {
-        // 'allowModules': [],
-        resolvePaths: [
-          './src',
-          './style',
-          './3rdparty',
-          './',
-        ],
-        tryExtensions: ['.js', '.json', '.node', '.css', '.vue'],
-      },
+    'n/no-missing-import': [
+      'error',
     ],
     'operator-linebreak': [
       'error',
@@ -110,17 +111,8 @@ module.exports = {
         },
       },
     ],
-    'node/no-missing-require': [
-      'error', {
-        // 'allowModules': [],
-        resolvePaths: [
-          './src',
-          './style',
-          './3rdparty',
-          './',
-        ],
-        tryExtensions: ['.js', '.json', '.node', '.css', '.xml'],
-      },
+    'n/no-missing-require': [
+      'error',
     ],
   }, // rules
   overrides: [
