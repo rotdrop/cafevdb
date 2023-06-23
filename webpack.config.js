@@ -91,6 +91,7 @@ module.exports = {
       jquery: 'jquery',
       'window.$': 'jquery',
       'window.jQuery': 'jquery',
+      process: 'process/browser',
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name]-[contenthash].css',
