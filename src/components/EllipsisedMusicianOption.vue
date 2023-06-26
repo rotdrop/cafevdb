@@ -1,5 +1,5 @@
 <!--
-  - @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
+  - @copyright Copyright (c) 2018, 2023 John Molakvoæ <skjnldsv@protonmail.com>
   - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
   -
   - @author John Molakvoæ <skjnldsv@protonmail.com>
@@ -40,9 +40,9 @@
   </div>
 </template>
 <script>
-import Highlight from '@nextcloud/vue/dist/Components/Highlight'
-import FindRanges from '../utils/FindRanges'
-import addressPopup from '../mixins/address-popup'
+import Highlight from '@nextcloud/vue/dist/Components/NcHighlight'
+import FindRanges from '../utils/FindRanges.js'
+import addressPopup from '../mixins/address-popup.js'
 
 export default {
   name: 'EllipsisedMusicianOption',

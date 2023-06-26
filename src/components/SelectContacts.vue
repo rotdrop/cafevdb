@@ -1,5 +1,5 @@
 <!--
-  - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+  - @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
   - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
   -
   - @author Julius Härtl <jus@bitgrid.net>
@@ -91,8 +91,8 @@ import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import EllipsisedContactOption from './EllipsisedContactOption'
+import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import EllipsisedContactOption from './EllipsisedContactOption.vue'
 import qs from 'qs'
 import addressPopup from '../mixins/address-popup'
 

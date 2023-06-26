@@ -1,5 +1,5 @@
 <!--
-  - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+  - @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
   - @copyright Copyright (c) 2019 Julius Härtl <jus@bitgrid.net>
   -
   - @author Julius Härtl <jus@bitgrid.net>
@@ -85,9 +85,9 @@
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import userInfoPopup from '../mixins/user-info-popup'
-import EllipsisedCloudUserOption from './EllipsisedCloudUserOption'
+import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import userInfoPopup from '../mixins/user-info-popup.js'
+import EllipsisedCloudUserOption from './EllipsisedCloudUserOption.vue'
 
 let uuid = 0
 export default {

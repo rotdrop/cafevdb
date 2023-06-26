@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -235,13 +235,13 @@
 <script>
 import { set as vueSet, del as vueDelete, nextTick as vueNextTick } from 'vue'
 
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ProgressBar from '@nextcloud/vue/dist/Components/ProgressBar'
-// import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import Multiselect from './Multiselect'
-import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
+import Actions from '@nextcloud/vue/dist/Components/NcActions'
+import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import ProgressBar from '@nextcloud/vue/dist/Components/NcProgressBar'
+// import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import Multiselect from './Multiselect.vue'
+import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
 import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'

@@ -1,5 +1,5 @@
 <!--
-  - @copyright Copyright (c) 2018, 2022 John Molakvoæ <skjnldsv@protonmail.com>
+  - @copyright Copyright (c) 2018, 2022, 2023 John Molakvoæ <skjnldsv@protonmail.com>
   -
   - @author John Molakvoæ <skjnldsv@protonmail.com>
   -
@@ -38,9 +38,9 @@
   </div>
 </template>
 <script>
-import Highlight from '@nextcloud/vue/dist/Components/Highlight'
-import FindRanges from '../utils/FindRanges'
-import addressPopup from '../mixins/address-popup'
+import Highlight from '@nextcloud/vue/dist/Components/NcHighlight'
+import FindRanges from '../utils/FindRanges.js'
+import addressPopup from '../mixins/address-popup.js'
 
 export default {
   name: 'EllipsisedContactOption',
