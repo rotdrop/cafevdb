@@ -1,31 +1,28 @@
 {
   "name": "cafevdb",
   "version": "8.0.1",
-  "description": "Orchestra-Management App",
-  "author": "Claus-Justus Heine <himself@claus-justus-heine.de>",
   "private": true,
-  "scripts": {
-    "build": "NODE_ENV=production webpack --progress --mode production --config webpack.config.js",
-    "dev": "NODE_ENV=development webpack --progress --mode development --config webpack.config.js",
-    "generate-docs": "node_modules/.bin/jsdoc -c doc/jsdoc/jsdoc.json"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rotdrop/cafevdb.git"
-  },
+  "description": "Orchestra-Management App",
   "keywords": [
     "orchestra",
     "project",
     "management",
     "instrumentation"
   ],
-  "license": "agpl",
+  "homepage": "https://github.com/rotdrop/cafevdb#readme",
   "bugs": {
     "url": "https://github.com/rotdrop/cafevdb/issues"
   },
-  "homepage": "https://github.com/rotdrop/cafevdb#readme",
-  "engines": {
-    "node": ">=12.0.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rotdrop/cafevdb.git"
+  },
+  "license": "agpl",
+  "author": "Claus-Justus Heine <himself@claus-justus-heine.de>",
+  "scripts": {
+    "build": "NODE_ENV=production webpack --progress --mode production --config webpack.config.js",
+    "dev": "NODE_ENV=development webpack --progress --mode development --config webpack.config.js",
+    "generate-docs": "node_modules/.bin/jsdoc -c doc/jsdoc/jsdoc.json"
   },
   "browserslist": [
     "extends @nextcloud/browserslist-config"
@@ -43,7 +40,7 @@
     "@nextcloud/l10n": "^1.6.0",
     "@nextcloud/moment": "*",
     "@nextcloud/router": "^2.0.0",
-    "@nextcloud/vue": "^5.0.0",
+    "@nextcloud/vue": "^7.0.0",
     "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
     "blueimp-file-upload": "^10.31.0",
     "blueimp-md5": "^2.18.0",
@@ -68,6 +65,7 @@
     "eslint-webpack-plugin": "^3.1.1",
     "file-saver": "^2.0.5",
     "html-webpack-plugin": "^5.5.0",
+    "iframe-resizer": "^4.3.6",
     "imagesloaded": "^4.1.4",
     "is-plain-object": "^5.0.0",
     "jquery": "^3.6.0",
@@ -107,7 +105,7 @@
     "xml-reader": "^2.4.3",
     "xml2js": "*"
   },
-  "dependencies": {
-    "iframe-resizer": "^4.3.6"
+  "engines": {
+    "node": ">=12.0.0"
   }
 }

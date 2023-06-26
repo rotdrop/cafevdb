@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -176,12 +176,12 @@
 
 import { appName } from '../app/app-info.js'
 import { getCurrentUser as getCloudUser } from '@nextcloud/auth/dist/user'
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionRadio from '@nextcloud/vue/dist/Components/ActionRadio'
-// import ActionRadio from '../components/action-radio/ActionRadio'
-import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
-import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
+import Actions from '@nextcloud/vue/dist/Components/NcActions'
+import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
+import ActionRadio from '@nextcloud/vue/dist/Components/NcActionRadio'
+// import ActionRadio from '../components/action-radio/NcActionRadio'
+import AppSidebar from '@nextcloud/vue/dist/Components/NcAppSidebar'
+import AppSidebarTab from '@nextcloud/vue/dist/Components/NcAppSidebarTab'
 import CloudIcon from 'vue-material-design-icons/Cloud'
 import CodeJsonIcon from 'vue-material-design-icons/CodeJson'
 import DatabaseIcon from 'vue-material-design-icons/Database'

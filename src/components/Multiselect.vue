@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,10 +34,10 @@ import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
 import { getInitialState } from '../services/initial-state-service.js'
 
-import NextcloudMultiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import NextcloudMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
 
 export default {
   name: 'MultiSelectWrapper',

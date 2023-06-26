@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import Highlight from '@nextcloud/vue/dist/Components/Highlight'
+import Highlight from '@nextcloud/vue/dist/Components/NcHighlight'
 import FindRanges from '../utils/FindRanges.js'
 import userInfoPopup from '../mixins/user-info-popup.js'
 
