@@ -804,16 +804,12 @@ const ready = function(container) {
   // musicians.
   $form
     .find('input.add-musician.duplicates-indicator')
-    .off('blur')
     .on('blur', function(event) {
-      if (nameValidationActive || $(this).val() === '') {
-        event.stopImmediatePropagation();
-        return false;
+      if ($(this).val() === '') {
+        return;
       }
 
       checkForDuplicateMusicians($container);
-
-      return false;
     });
 
   $form
