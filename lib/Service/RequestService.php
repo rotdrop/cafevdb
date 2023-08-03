@@ -42,12 +42,10 @@ class RequestService extends ToolkitService
   public function __construct(
     IRequest $request,
     IURLGenerator $urlGenerator,
-    ISession $session,
     ILogger $logger,
     IL10N $l10n,
-    bool $closeSession = true,
   ) {
-    parent::__construct($request, $urlGenerator, $session, $logger, $l10n, $closeSession);
+    parent::__construct($request, $urlGenerator, $logger, $l10n);
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
 }
