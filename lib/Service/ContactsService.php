@@ -394,20 +394,20 @@ class ContactsService
         $address = explode(';', $address);
 
         $poBox = $address[0]; // or so it seems ...
-        $this->logInfo('POBOX ' . $poBox);
+        // $this->logInfo('POBOX ' . $poBox);
         $entity['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
         // if the first word or the last word of the street start with a
         // digit, then we treat it as the street-number. This should hack most
         // of the cases for _us_ ...
-        $this->logInfo('STREET IS ' . $street);
+        // $this->logInfo('STREET IS "' . $street . '"');
         $lastWord = substr($street, strrpos($street, ' ') + 1);
         $firstWord = substr($street, 0, strpos($street, ' '));
-        $this->logInfo('LAST FIRST' . $lastWord . ' / ' . $firstWord);
-        if (ctype_digit($lastWord[0])) {
+        // $this->logInfo('LAST FIRST' . $lastWord . ' / ' . $firstWord);
+        if (!empty($lastWord) && ctype_digit($lastWord[0])) {
           $streetNumber = $lastWord;
           $street = substr($street, 0, -strlen($lastWord)-1);
-        } elseif (ctype_digit($firstWord[0])) {
+        } elseif (!empty($firstWord) && ctype_digit($firstWord[0])) {
           $streetNumber = $firstWord;
           $street = substr($street, strlen($firstWord) + 1);
         } else {
@@ -488,7 +488,7 @@ class ContactsService
       // fetch the image data, we only support data-uri ATM
       if (preg_match('|^(VALUE=uri:)?data:(image/[^;]+);base64\\\?,|', $value, $matches)) {
         // $mimeType = $matches[1];
-        $imageData = base64_decode(substr($entity['photo'], strlen($matches[0])));
+        $imageData = base64_decode(substr($value, strlen($matches[0])));
         $havePhoto = true;
       } elseif (str_starts_with($value, 'VALUE=uri:')) {
         $url = substr($value, strlen('VALUE=uri:'));
