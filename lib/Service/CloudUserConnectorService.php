@@ -798,7 +798,7 @@ VIEW " . $viewName . "
 AS
 SELECT t.*
   FROM " . $table . " t
-  WHERE t.id in (
+  WHERE t.id IN (
     SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
       UNION
     SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
@@ -813,6 +813,19 @@ SELECT t.*
   FROM " . $this->personalizedViewName($dataBaseName, 'Files'). " fv
   INNER JOIN " . $table . " t
     ON t.file_id = fv.id";
+
+    $table = 'DatabaseStorageDirEntries';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $table . " t
+  WHERE t.file_id IS NULL OR t.file_id IN (
+    SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
+      UNION
+    SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
 
     foreach (self::UNRESTRICTED_TABLES as $table) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
