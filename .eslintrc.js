@@ -79,21 +79,12 @@ module.exports = {
       },
     ],
     'import/extensions': 'off',
-    'node/no-unpublished-import': 'off',
-    'node/no-unpublished-require': 'off',
+    'n/no-unpublished-import': 'off',
+    'n/no-unpublished-require': 'off',
     'no-console': 'off',
     semi: ['error', 'always'],
-    'node/no-missing-import': [
-      'error', {
-        // 'allowModules': [],
-        resolvePaths: [
-          './src',
-          './style',
-          './3rdparty',
-          './',
-        ],
-        tryExtensions: ['.js', '.json', '.node', '.css', '.vue'],
-      },
+    'n/no-missing-import': [
+      'error',
     ],
     'n/no-missing-require': [
       'error', {
