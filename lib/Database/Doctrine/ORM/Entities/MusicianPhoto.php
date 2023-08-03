@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,9 +57,11 @@ class MusicianPhoto implements \ArrayAccess
    *
    * @ORM\Column(type="integer", nullable=false)
    */
-  private $ownerId;
+  protected $ownerId;
 
   /**
+   * @var Musician
+   *
    * @ORM\OneToOne(targetEntity="Musician", cascade={"persist"}, inversedBy="photo", fetch="EXTRA_LAZY")
    */
   private $owner;
@@ -117,31 +119,6 @@ class MusicianPhoto implements \ArrayAccess
     return $this->id;
   }
 
-
-  /**
-   * Set ownerId.
-   *
-   * @param int $ownerId
-   *
-   * @return MusicianPhoto
-   */
-  public function setOwnerId(?int $ownerId):MusicianPhoto
-  {
-    $this->ownerId = $ownerId;
-
-    return $this;
-  }
-
-  /**
-   * Get ownerId.
-   *
-   * @return int
-   */
-  public function getOwnerId():?int
-  {
-    return $this->ownerId;
-  }
-
   /**
    * Set imageId.
    *
@@ -169,11 +146,11 @@ class MusicianPhoto implements \ArrayAccess
   /**
    * Set owner.
    *
-   * @param int $owner
+   * @param null|int|Musician $owner
    *
    * @return OwnerPhoto
    */
-  public function setOwner(?int $owner):MusicianPhoto
+  public function setOwner(mixed $owner):MusicianPhoto
   {
     $this->owner = $owner;
 
@@ -183,9 +160,9 @@ class MusicianPhoto implements \ArrayAccess
   /**
    * Get owner.
    *
-   * @return Muscian
+   * @return null|Muscian
    */
-  public function getOwner():Owner
+  public function getOwner():?Musician
   {
     return $this->owner;
   }
