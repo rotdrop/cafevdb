@@ -71,7 +71,7 @@ class MusicianEmailAddress implements \ArrayAccess
    *
    * @param null|Musician $musician
    */
-  public function __construct(string $address = null, Musician $musician = null)
+  public function __construct(?string $address = null, Musician $musician = null)
   {
     $this->arrayCTOR();
     $this->musician = $musician;
