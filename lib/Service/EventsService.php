@@ -1498,7 +1498,7 @@ class EventsService
 
               $implicitDeadline = $this->projectService->getProjectRegistrationDeadline($project, ignoreExplicit: true);
 
-              if (!empty($project->getRegistrationDeadline())) {
+              if (!empty($project->getRegistrationDeadline()) && !empty($implicitDeadline)) {
                 $this->logInfo('DEADLINES I E P ' . $implicitDeadline->format('Ymd') . ' / ' . $end->format('Ymd') . ' / ' . $project->getRegistrationDeadline()->format('Ymd'));
               }
 
