@@ -28,7 +28,7 @@ APPSTORE_PACKAGE_NAME = $(APPSTORE_BUILD_DIR)/$(APP_NAME)
 BASH=$(shell which bash 2> /dev/null)
 SHELL := $(BASH)
 PHP = $(shell which php 2> /dev/null) # allow override
-PHP_SCOPER_VERSION = 0.18.1
+PHP_SCOPER_VERSION = 0.18.2
 PHP_SCOPER = $(BUILD_TOOLS_DIR)/php-scoper.phar
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
