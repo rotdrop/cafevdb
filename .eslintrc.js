@@ -79,6 +79,8 @@ module.exports = {
       },
     ],
     'import/extensions': 'off',
+    'node/no-unpublished-import': 'off',
+    'node/no-unpublished-require': 'off',
     'n/no-unpublished-import': 'off',
     'n/no-unpublished-require': 'off',
     'no-console': 'off',
@@ -86,7 +88,20 @@ module.exports = {
     'n/no-missing-import': [
       'error',
     ],
+    'node/no-missing-import': [
+      'error',
+    ],
     'n/no-missing-require': [
+      'error', {
+        resolvePaths: [
+          './src',
+          './style',
+          './3rdparty',
+          './',
+        ],
+      },
+    ],
+    'node/no-missing-require': [
       'error', {
         resolvePaths: [
           './src',
