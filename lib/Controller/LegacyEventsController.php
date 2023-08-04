@@ -737,8 +737,7 @@ class LegacyEventsController extends Controller
     if (empty($data)) {
       return self::grumble($this->l->t("Could not fetch object `%s' from calendar `%s'.", [$uri, $calendarId]));
     }
-    $this->logError(print_r($data, true));
-    $vCalendar = \Sabre\VObject\Reader::read($data['calendardata']);
+    $vCalendar = $data['calendardata'];
     $lastModifiedSubmitted = $this->parameterService['lastmodified'];
     $lastModified = $vCalendar->VEVENT->__get('LAST-MODIFIED');
     if ($lastModified && $lastModifiedSubmitted != $lastModified->getDateTime()->format('U')) {
@@ -783,7 +782,7 @@ class LegacyEventsController extends Controller
     if ($data['calendarid'] != $calendarId) {
       return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
     }
-    $object = \Sabre\VObject\Reader::read($data['calendardata']);
+    $object = $data['calendardata'];
     $calendar = $this->calDavService->calendarById($calendarId);
     if (empty($calendar)) {
       return self::grumble(
