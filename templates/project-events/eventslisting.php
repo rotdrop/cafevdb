@@ -104,7 +104,7 @@ foreach ($eventMatrix as $key => $eventGroup) {
 
     $brief  = htmlspecialchars(stripslashes($event['summary']));
     $location = htmlspecialchars(stripslashes($event['location']));
-    $description = htmlspecialchars(nl2br(stripslashes($event['description'])));
+    $description = nl2br(htmlspecialchars(stripslashes($event['description'])));
 
     $dateString = $eventsService->briefEventDate($event, $timezone, $locale);
     $longDate = $eventsService->longEventDate($event, $timezone, $locale);
