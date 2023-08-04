@@ -365,7 +365,7 @@ export default {
     accessActionFinished() {
       const totals = this.access.action.totals
       const done = this.access.action.done
-      return (done > 0 && done >= totals) || this.access.action.failure
+      return totals === 0 || (done > 0 && done >= totals) || this.access.action.failure
     },
     accessActionLabel() {
       return this.access.action.label
@@ -716,7 +716,7 @@ export default {
       let failedUsers = 0
       try {
         const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption?format=json')
-        const response = await axios.post(url + '?format=json', {
+        const response = await axios.post(url, {
           grantAccess: action === 'grant' ? true : false,
           includeDisabled: this.access.includeDisabled,
           includeDeactivated: this.access.includeDeactivated,
