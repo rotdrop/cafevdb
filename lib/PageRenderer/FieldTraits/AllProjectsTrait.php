@@ -32,7 +32,11 @@ use OCA\CAFEVDB\Common\Util;
 /** Add for fun a field with all projects the musician already participated in. */
 trait AllProjectsTrait
 {
+  /** @var string */
   protected static $allProjectsTable = BaseRenderer::PROJECT_PARTICIPANTS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'allProjects';
+
+  /** @var ToolTipsService */
+  protected $toolTipsService;
 
   /**
    * @param string $musicianIdField The field name of the column with the
@@ -93,7 +97,13 @@ trait AllProjectsTrait
               'tooltip-top',
             ], $css),
           ],
-          'display|LDCVF' => ['popup' => 'data'],
+          'display|CDV' => [
+            'popup' => 'data',
+            'prefix' => '<input type="button" class="projects-expand" value="" title="' . $this->toolTipsService['page-renderer:musicians:all-projects:expand'] . '"/>'
+          ],
+          'display|LF' => [
+            'popup' => 'data',
+          ],
           'sql' => $this->joinTables[self::$allProjectsTable] . '.projects',
           'sql|CDV' => "REPLACE(" . $this->joinTables[self::$allProjectsTable] . '.projects' . ", ',', ', ')",
           'filter' => [
@@ -107,6 +117,10 @@ trait AllProjectsTrait
             'groups' => 'year',
             'join' => false,
           ],
+          'php' => function($value, $action, $k, $row, $recordId, PHPMyEdit $pme) {
+            $projects = Util::explode(BaseRenderer::VALUES_SEP, $value, Util::TRIM);
+            return implode(', ', array_map(fn($projectName) => '<a target="_blank" href="?template=project-participants&projectName=' . $projectName . '">' . $projectName . '</a>', $projects));
+          },
         ]);
       $fdd[$fieldName]['values|LF'] = array_merge(
         $fdd[$fieldName]['values'], [
