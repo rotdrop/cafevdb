@@ -246,8 +246,13 @@ class ProjectParticipants extends PMETableViewBase
     $this->projectService = $projectService;
     $this->userStorage = $userStorage;
 
-    $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-    $this->projectName = $this->project->getName();
+    if ($this->projectId > 0) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
+      $this->projectName = $this->project->getName();
+    } elseif (!empty($this->projectName)) {
+      $this->project = $this->getDatabaseRepository(Entities\Project::class)->findOneBy([ 'name' => $this->projectName ]);
+      $this->projectId = $this->project->getId();
+    }
 
     $this->pme->overrideLabel('Add', $this->l->t('Add Musician'));
   }

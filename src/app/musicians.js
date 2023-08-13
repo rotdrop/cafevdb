@@ -118,6 +118,19 @@ const contactValidation = function(container) {
 
   const $form = $container.find('form.' + pmeToken('form'));
 
+  if (!$form.hasClass(pmeToken('list'))) {
+    const $expandProjectList = $form.find('input.projects-expand');
+    console.info('EXPAND', $expandProjectList);
+    $expandProjectList
+      .off('click')
+      .on('click', function(event) {
+        console.info('HELLO');
+        const $this = $(this);
+        $this.closest('td').toggleClass('expanded');
+        return false;
+      });
+  }
+
   // "read-only" forms do not need contact validation handlers
   if ($form.hasClass(pmeToken('list'))
       || $form.hasClass(pmeToken('view'))
