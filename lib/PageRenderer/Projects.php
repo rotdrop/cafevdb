@@ -321,11 +321,18 @@ class Projects extends PMETableViewBase
       'select'   => 'D',
       'options'  => 'LFAVCPD', // auto increment
       'maxlen'   => 11,
-      'css'      => ['postfix' => [ 'tooltip-right', ], ],
+      'css'      => ['postfix' => [ 'tooltip-right', 'selectize', 'no-chosen', 'not-empty' ], ],
       'values2'  => $this->projectTypeNames,
       'default'  => ProjectType::TEMPORARY,
       'sort'     => true,
       'align'    => 'center',
+      'display' => [
+        'attributes' => [
+          'data-selectize-options' => [
+            'lockOptgroupOrder' => true,
+          ],
+        ],
+      ],
     ];
     $this->addSlug('type', $opts['fdd']['type']);
 
@@ -345,7 +352,12 @@ class Projects extends PMETableViewBase
         'display|A'  => [
           'popup' => false,
           'prefix' => '<div class="cell-wrapper">',
-          'postfix' => '</div>'
+          'postfix' => '</div>',
+          'attributes' => [
+            'data-selectize-options' => [
+              'lockOptgroupOrder' => true,
+            ],
+          ],
         ],
         'display|C'  => [
           'popup' => false,
@@ -357,10 +369,15 @@ class Projects extends PMETableViewBase
               'project-instrumentation-numbers'
             );
 
-            return '<div class="cell-wrapper">' . $html;
+            return '<div class="cell-wrapper flex-container flex-center">' . $html;
           }
           ,
-          'postfix' => '</div>'
+          'postfix' => '</div>',
+          'attributes' => [
+            'data-selectize-options' => [
+              'lockOptgroupOrder' => true,
+            ],
+          ],
         ],
         'display|P' => [
           'popup' => false,
@@ -372,9 +389,14 @@ class Projects extends PMETableViewBase
        value="'.$this->l->t('Clear').'"
 />
 </div>',
+          'attributes' => [
+            'data-selectize-options' => [
+              'lockOptgroupOrder' => true,
+            ],
+          ],
         ],
         'tooltip' => $this->toolTipsService[$this->tooltipSlug('instrumentation')],
-        'css'         => ['postfix' => [ 'tooltip-top', ], ],
+        'css'         => ['postfix' => [ 'tooltip-top', 'selectize', 'no-chosen' ], ],
         'sql'         => 'GROUP_CONCAT(DISTINCT $join_col_fqn ORDER BY $order_by)',
         'select'      => 'M',
         'values|ACP' => [

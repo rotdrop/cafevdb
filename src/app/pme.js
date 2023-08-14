@@ -1402,9 +1402,12 @@ function installInputSelectize(containerSel, onlyClass) {
 
   container.find('select.' + pmeInput + '.' + onlyClass).each(function(index) {
     const $self = $(this);
+    const plugins = $self.hasClass('not-empty')
+      ? []
+      : [$self.prop('multiple') ? removeButtonPlugin : clearButtonPlugin];
     const selectizeOptions = mergician({ appendArrays: true, dedupArrays: true })(
       {
-        plugins: [$self.prop('multiple') ? removeButtonPlugin : clearButtonPlugin],
+        plugins,
         delimiter: ',',
         persist: false,
         hideSelected: false,
