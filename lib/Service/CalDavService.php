@@ -240,6 +240,8 @@ class CalDavService
   }
 
   /**
+   * Just forward to the wrapped calendar manager.
+   *
    * @param string $pattern which should match within the $searchProperties.
    *
    * @param array $searchProperties defines the properties within the query pattern should match.
@@ -365,7 +367,8 @@ class CalDavService
     return ($perms & self::WRITE_PERMISSIONS) == self::WRITE_PERMISSIONS;
   }
 
-  /** Get the list of all calendars
+  /**
+   * Get the list of all calendars
    *
    * @param bool $writable If true return only calendars with write access.
    *
