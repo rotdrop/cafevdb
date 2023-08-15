@@ -365,11 +365,11 @@ class EventsService
     foreach ($projectEvents as $projectEvent) {
       $eventUri = $projectEvent->getEventUri();
 
-      // remove project link from join table
+      // Remove project link from join table
       $this->remove($event);
 
-      // still used?
-      if (count($this->eventProjects($eventUri)) === 0) {
+      // Still used? We compare against <= 1 to avoid flush
+      if (count($this->eventProjects($eventUri)) <= 1) {
         $calId = $event->getCalendarId();
         $this->calDavService->deleteCalendarObject($calId, $eventUri);
       } else {
