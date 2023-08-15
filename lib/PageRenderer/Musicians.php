@@ -908,33 +908,38 @@ make sure that the musicians are also automatically added to the
 
     $this->makeJoinTableField(
       $opts['fdd'], self::INSTRUMENT_INSURANCES_TABLE, 'insurance_amount', [
-       'tab' => ['id' => 'finance'],
-       'input' => 'V',
-       'name' => $this->l->t('Instrument Insurance'),
-       'select' => 'T',
-       'options' => 'LFCDV',
-       'sql' => 'SUM($join_col_fqn)',
-       'escape' => false,
-       'nowrap' => true,
-       'sort' => false,
-       'css' => [ 'postfix' => [ 'restrict-height', ], ],
-       'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
-         $musicianId = $recordId['id'];
-         $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
-         $bval = $this->l->t(
-           'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
-         $tip = $this->toolTipsService['musician-instrument-insurance'];
-         $button = "<div class=\"pme-cell-wrapper restrict-height musician-instrument-insurance\">"
-                 ."<input type=\"button\" "
-                 ."value=\"$bval\" "
-                 ."title=\"$tip\" "
-                 ."name=\""
-                 ."Template=instrument-insurance&amp;"
-                 ."MusicianId=".$musicianId."\" "
-                 ."class=\"musician-instrument-insurance\" />"
-                 ."</div>";
-         return $button;
-       }
+        'tab' => ['id' => 'finance'],
+        'input' => 'V' . ($this->financeMode ? '' : 'H'),
+        'name' => $this->l->t('Instrument Insurance'),
+        'select' => 'N',
+        'options' => 'LFCDV',
+        'sql' => 'SUM($join_col_fqn) * COUNT(DISTINCT $join_table.id) / COUNT($join_table.id)',
+        'escape' => false,
+        'nowrap' => true,
+        'sort' => true,
+        'css' => [ 'postfix' => [ 'restrict-height', ], ],
+        'filter' => [
+          'having' => true,
+        ],
+        'php' => function($totalAmount, $action, $k, $row, $recordId, PHPMyEdit $pme) {
+          $musicianId = $recordId['id'];
+          $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
+          if ($totalAmount == 0.0) {
+            return '';
+          }
+          $bval = $this->l->t(
+            'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
+          $tip = $this->toolTipsService['musician-instrument-insurance'];
+          $urlParameters = [
+            'template' => 'instrument-insurance',
+            $pme->cgiSysName('qfinstrument_holder_id_idx[]') => $musicianId,
+          ];
+          $link = '<div class="pme-cell-wrapper restrict-height musician-instrument-insurance">
+  <a href="' . $this->urlGenerator()->linkToRoute($this->appName() . '.page.index', $urlParameters) . '"
+     class="musician-instrument-insurance">' . $bval . '</a>
+</div>';
+          return $link;
+        }
       ]);
 
     $this->makeJoinTableField(

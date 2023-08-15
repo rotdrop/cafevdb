@@ -25,6 +25,7 @@ import $ from './jquery.js';
 import { appName } from './app-info.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
+import * as Page from './page.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
 import * as ProjectParticipants from './project-participants.js';
@@ -851,6 +852,15 @@ const ready = function(container) {
       return false;
     }));
 
+  $form
+    .find('a.musician-instrument-insurance')
+    .off('click')
+    .on('click', function(event) {
+      const href = $(this).attr('href');
+      const queryString = href.split('?')[1];
+      Page.loadPage(queryString);
+      return false;
+    });
 };
 
 const documentReady = function() {
