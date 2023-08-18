@@ -77,7 +77,7 @@ SELECT CONVERT((CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE asc
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
-WHERE p.type IN ("temporary", "permanent") AND p.deleted IS NULL
+WHERE p.type IN ("temporary", "permanent") AND (p.deleted IS NULL OR p.deleted >= NOW())
 WITH CHECK OPTION';
 
   const USER_SQL_USER_GROUP_VIEW = 'CREATE OR REPLACE
@@ -87,7 +87,8 @@ SELECT m.user_id_slug AS uid,
        CONVERT((CONCAT(_ascii "%2$s' . self::GROUP_ID_SEPARATOR . '", p.id) COLLATE ascii_bin) USING utf8mb4) AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
-LEFT JOIN Projects p ON p.id = pp.project_id';
+LEFT JOIN Projects p ON p.id = pp.project_id
+WHERE pp.deleted IS NULL OR pp.deleted >= NOW()';
   // WITH CHECK OPTION. But view is not updatable. Ok.
 
   /**
@@ -120,7 +121,7 @@ LEFT JOIN ProjectParticipants pp
 ON m.id = pp.musician_id
 LEFT JOIN Projects p
 ON pp.project_id = p.id
-WHERE m.email IS NOT NULL AND m.email <> ""
+WHERE m.email IS NOT NULL AND m.email <> "" AND (m.deleted IS NULL OR m.deleted >= NOW())
 GROUP BY m.id';
 // WITH CHECK OPTION. But view is not updatable. Ok.
 
