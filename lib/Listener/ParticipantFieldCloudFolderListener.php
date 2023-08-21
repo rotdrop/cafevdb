@@ -266,23 +266,24 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     }
 
     $userFolder = Constants::PATH_SEPARATOR . $this->getUserFolderPath($this->user->getUID());
-
-    // Bail out if the folder being worked on is actually the
-    // top-level user-folder
-    foreach ($nodes as $key => $nodeInfo) {
-      if ($nodeInfo[self::NODE_FULL_PATH] == $userFolder) {
-        return;
-      }
-    }
-
+    $sharedFolderPath = $this->getSharedFolderPath();
     $projectsPath = $this->getProjectsFolderPath();
 
     // strip the user-folder and match with the projects path
     foreach ($nodes as $key => &$nodeInfo) {
+      if ($nodeInfo[self::NODE_FULL_PATH] == $userFolder) {
+        unset($nodes[$key]);
+        continue;
+      }
       $nodePath = self::matchPrefixDirectory($nodeInfo[self::NODE_FULL_PATH], $userFolder);
+      if (self::matchPrefixDirectory($nodePath, $sharedFolderPath) === null) {
+        unset($nodes[$key]);
+        continue;
+      }
       $postFixPath = self::matchPrefixDirectory($nodePath, $projectsPath);
       if ($postFixPath === null) {
         unset($nodes[$key]);
+        continue;
       }
       $nodeInfo[self::NODE_FULL_PATH] = $nodePath;
       $nodeInfo[self::NODE_PARTIAL_PATH] = $postFixPath;
@@ -340,6 +341,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     unset($nodeInfo); // break reference
 
     $this->initializeDatabaseAccess();
+    if (!$this->entityManager->connected()) {
+      return;
+    }
     if ($this->entityManager->isOwnTransactionActive()) {
       return; // perhaps move this more to the top ...
     }
@@ -584,7 +588,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    * @param string $folderPrefix The folder-prefix to compare the
    * first part of the string to.
    *
-   * @return null|string The sub-string after remove the $folderPrefix
+   * @return null|string The sub-string after removing the $folderPrefix
    * or null if $folderPrefix is not the first part of the string.
    */
   private static function matchPrefixDirectory(?string $path, string $folderPrefix)
@@ -731,6 +735,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       return;
     }
     $this->entityManager = $this->appContainer->get(EntityManager::class);
+    if (!$this->entityManager->connected()) {
+      return;
+    }
     $this->fieldsRepository = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
     $this->fieldDataRepository = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class);
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
