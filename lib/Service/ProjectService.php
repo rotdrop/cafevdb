@@ -2055,6 +2055,7 @@ Whatever.',
 
     $status = [];
 
+    /** @var Entities\Musician $musician */
     $musician = $musiciansRepository->find($id);
     if (empty($musician)) {
       $status[] = [
@@ -2066,11 +2067,11 @@ Whatever.',
       return false;
     }
 
-    $musicianName = $musician['firstName'].' '.$musician['surName'];
+    $musicianName = $musician->getPublicName(firstNameFirst: true);
 
     // check for already registered
-    $exists = $project['participants']->exists(function($key, $participant) use ($musician) {
-      return $participant['musician']['id'] == $musician['id'];
+    $exists = $project->getParticipants()->exists(function($key, Entities\ProjectParticipant $participant) use ($musician) {
+      return $participant->getMusician()->getId() == $musician->getId();
     });
     if ($exists) {
       $status[$id][] = [
@@ -2087,15 +2088,14 @@ Whatever.',
     try {
 
       // The musician exists and is not already registered, so add it.
-      $participant = Entities\ProjectParticipant::create();
-      $participant['project'] = $project;
-      $participant['musician'] = $musician;
+      $participant = new Entities\ProjectParticipant(musician: $musician, project: $project);
       $this->persist($participant);
 
       // Try to make a likely default choice for the project instrument.
-      $instrumentationNumbers = $project['instrumentationNumbers'];
+      $instrumentationNumbers = $project->getInstrumentationNumbers();
 
-      if ($musician['instruments']->isEmpty()) {
+      $musicianInstruments = $musician->getInstruments();
+      if ($musicianInstruments->isEmpty()) {
         $status[] = [
           'id' => $id,
           'notice' => $this->l->t('The musician %s does not play any instrument.', $musicianName),
@@ -2105,18 +2105,20 @@ Whatever.',
         // first find one instrument with best ranking
         $bestInstrument = null;
         $ranking = PHP_INT_MIN;
-        foreach ($musician['instruments'] as $musicianInstrument) {
-          $instrumentId = $musicianInstrument['instrument']['id'];
-          $numbers =  $instrumentationNumbers->filter(function($number) use ($instrumentId) {
-            return $number['instrument']['id'] == $instrumentId;
+        /** @var Entities\MusicianInstrument $musicianInstrument */
+        foreach ($musicianInstruments as $musicianInstrument) {
+          $instrumentId = $musicianInstrument->getInstrument()->getId();
+          $numbers =  $instrumentationNumbers->filter(function(Entities\ProjectInstrumentationNumber $number) use ($instrumentId) {
+            return $number->getInstrument()->getId() == $instrumentId;
           });
           if ($numbers->isEmpty()) {
             continue;
           }
-          if ($musicianInstrument['ranking'] <= $ranking) {
+          $thisRanking = $musicianInstrument->getRanking();
+          if ($thisRanking <= $ranking) {
             continue;
           }
-          $ranking = $musicianInstrument['ranking'];
+          $ranking = $thisRanking;
 
           // if voice == UNVOICED exist and has a quantity > 0, use it (no
           // voice), otherwise use the one with the least registerd musicians
@@ -2132,16 +2134,16 @@ Whatever.',
               }
               continue;
             }
-            $needed = $number['quantity'] - count($number['instruments']);
+            $needed = $number->getQuantity() - count($number->getInstruments());
             if ($needed > $neededMost ||
-                ($needed == $neededMost &&  $number['voice'] > $voice)) {
+                ($needed == $neededMost &&  $number->getVoice() > $voice)) {
               $neededMost = $needed;
-              $voice = $number['voice'];
+              $voice = $number->getVoice();
             }
           }
 
           $bestInstrument = [
-            'instrument' => $musicianInstrument['instrument'],
+            'instrument' => $musicianInstrument->getInstrument(),
             'voice' => $voice,
           ];
         }
@@ -2151,19 +2153,24 @@ Whatever.',
             'id' => $id,
             'notice' => $this->l->t(
               'The musician %s does not play any instrument registered in the instrumentation list for the project %s.',
-              [ $musicianName, $project['name'], ]),
+              [ $musicianName, $project->getName(), ]),
           ];
         } else {
-          $projectInstrument = Entities\ProjectInstrument::create();
-          $projectInstrument['project'] = $project;
-          $projectInstrument['musician'] = $musician;
-          $projectInstrument['instrument'] = $bestInstrument['instrument'];
-          $projectInstrument['voice'] = $bestInstrument['voice'];
+          $projectInstrument = new Entities\ProjectInstrument(
+            $project, $musician, $bestInstrument['instrument'], $bestInstrument['voice'],
+          );
           $this->persist($projectInstrument);
         }
       }
 
-      $musician['updated'] = $project['updated'] = new DateTimeImmutable;
+      // $now = new DateTimeImmutable;
+      // $musician->setUpdated($now); // should we?
+      // $project->setUpdated($now); // should we?
+
+      // Enable the cloud account when adding to the club-members or management project
+      if ($project->getType() == ProjectType::PERMANENT) {
+        $musician->setCloudAccountDisabled(null);
+      }
 
       $this->flush();
 

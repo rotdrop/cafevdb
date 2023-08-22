@@ -35,6 +35,7 @@ use OCP\AppFramework\IAppContainer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Events;
 
@@ -120,6 +121,20 @@ class MusicianEntityListener
         [ $field => $event->getOldValue($field) ],
       );
     }
+    $field = 'cloudAccountDeactivated';
+    if ($event->hasChangedField($field)) {
+      $this->preUpdateValues[$musicianId] = array_merge(
+        $this->preUpdateValues[$musicianId] ?? [],
+        [ $field => $event->getOldValue($field) ],
+      );
+    }
+    $field = 'cloudAccountDisabled';
+    if ($event->hasChangedField($field)) {
+      $this->preUpdateValues[$musicianId] = array_merge(
+        $this->preUpdateValues[$musicianId] ?? [],
+        [ $field => $event->getOldValue($field) ],
+      );
+    }
   }
 
   /**
@@ -133,6 +148,20 @@ class MusicianEntityListener
       $currentValue = $musician->getPrincipalEmailAddress();
       $oldValue = new Entities\MusicianEmailAddress($this->preUpdateValues[$musicianId][$field], $musician);
       $this->entityManager->dispatchEvent(new Events\PostChangeMusicianEmail($oldValue, $currentValue));
+      unset($this->preUpdateValues[$musicianId][$field]);
+    }
+    $field = 'cloudAccountDeactivated';
+    if (array_key_exists($field, $this->preUpdateValues[$musicianId] ?? [])) {
+      /** @var CloudUserConnectorService $cloudConnectorService */
+      $cloudConnectorService = $this->appContainer->get(CloudUserConnectorService::class);
+      $cloudConnectorService->synchronizeCloud();
+      unset($this->preUpdateValues[$musicianId][$field]);
+    }
+    $field = 'cloudAccountDisabled';
+    if (array_key_exists($field, $this->preUpdateValues[$musicianId] ?? [])) {
+      /** @var CloudUserConnectorService $cloudConnectorService */
+      $cloudConnectorService = $this->appContainer->get(CloudUserConnectorService::class);
+      $cloudConnectorService->synchronizeCloud();
       unset($this->preUpdateValues[$musicianId][$field]);
     }
   }
