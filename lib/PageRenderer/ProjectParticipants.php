@@ -29,6 +29,7 @@ use InvalidArgumentException;
 use chillerlan\QRCode\QRCode;
 
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IAvatarManager;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -60,7 +61,7 @@ class ProjectParticipants extends PMETableViewBase
 {
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\ParticipantFieldsTrait;
-  use FieldTraits\MusicianPhotoTrait;
+  use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianEmailsTrait;
@@ -131,15 +132,6 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ],
       'column' => 'id',
-    ],
-    self::MUSICIAN_PHOTO_JOIN_TABLE => [
-      'entity' => Entities\MusicianPhoto::class,
-      'flags' => self::JOIN_READONLY,
-      'identifier' => [
-        'owner_id' => 'musician_id',
-        'image_id' => false,
-      ],
-      'column' => 'image_id',
     ],
     self::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
@@ -221,6 +213,7 @@ class ProjectParticipants extends PMETableViewBase
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
+    IAvatarManager $avatarManager,
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
@@ -237,6 +230,7 @@ class ProjectParticipants extends PMETableViewBase
     UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
+    $this->avatarManager = $avatarManager;
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
@@ -367,6 +361,12 @@ class ProjectParticipants extends PMETableViewBase
       css: [],
     );
     $this->joinStructure = array_merge($this->joinStructure, $allProjectsJoin);
+
+    list($musicanAvatarJoin, $musicianAvatarFieldGenerator) = $this->renderMusicianAvatarField(
+      tableTab: 'musician',
+      css: [],
+    );
+    $this->joinStructure = array_merge($this->joinStructure, $musicanAvatarJoin);
 
     list($emailJoin, $emailFieldGenerator) = $this->renderMusicianEmailFields(
       musicianIdField: 'musician_id',
@@ -1225,21 +1225,7 @@ class ProjectParticipants extends PMETableViewBase
         'values2'  => $this->localeLanguageNames(),
       ]);
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_PHOTO_JOIN_TABLE, 'image_id', [
-        'tab'      => ['id' => 'miscinfo'],
-        'input' => 'VRS',
-        'name' => $this->l->t('Photo'),
-        'select' => 'T',
-        'options' => 'APVCD',
-        'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
-          $musicianId = $recordId['musician_id'] ?? 0;
-          return $this->photoImageLink($musicianId, $action, $imageId);
-        },
-        'css' => ['postfix' => [ 'photo', ], ],
-        'default' => '',
-        'sort' => false
-      ]);
+    $musicianAvatarFieldGenerator($opts['fdd']);
 
     $opts['fdd']['vcard'] = [
       'tab' => ['id' => 'miscinfo'],

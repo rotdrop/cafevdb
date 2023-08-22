@@ -469,6 +469,7 @@ invited to have a look, but please do not change anything unless you know what y
       'page-renderer' => [
         'miscinfo-tab' => $this->l->t('Further "not so important" data of the participant.'),
         'musicians' => [
+          'avatar' => $this->l->t('An optional avatar image provide by the person itself. This is part of the public self-expression of the respective user and thus read-only and only provided here for reference.'),
           'cloud-account-deactivated' => $this->l->t('Expert-setting. "Deactivating the cloud account" means that this musician will show up in the user list of the cloud but will not be able to log-in.'),
           'cloud-account-disabled' => $this->l->t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
           'mailing-list' => [

@@ -26,6 +26,8 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
 
+use OCP\IAvatarManager;
+
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -53,7 +55,7 @@ use OCA\CAFEVDB\Common\Uuid;
 class Musicians extends PMETableViewBase
 {
   use FieldTraits\SepaAccountsTrait;
-  use FieldTraits\MusicianPhotoTrait;
+  use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianEmailsTrait;
   use FieldTraits\AllProjectsTrait;
@@ -122,15 +124,15 @@ class Musicians extends PMETableViewBase
       'column' => 'bill_to_party_id',
       'flags' => self::JOIN_READONLY,
     ],
-    self::MUSICIAN_PHOTO_JOIN_TABLE => [
-      'entity' => Entities\MusicianPhoto::class,
-      'flags' => self::JOIN_READONLY,
-      'identifier' => [
-        'owner_id' => 'id',
-        'image_id' => false,
-      ],
-      'column' => 'image_id',
-    ],
+    // self::MUSICIAN_PHOTO_JOIN_TABLE => [
+    //   'entity' => Entities\MusicianPhoto::class,
+    //   'flags' => self::JOIN_READONLY,
+    //   'identifier' => [
+    //     'owner_id' => 'id',
+    //     'image_id' => false,
+    //   ],
+    //   'column' => 'image_id',
+    // ],
     self::PROJECT_PARTICIPANTS_TABLE => [
       'entity' => Entities\ProjectParticipant::class,
       'identifier' => [
@@ -147,6 +149,7 @@ class Musicians extends PMETableViewBase
 
   /** {@inheritdoc} */
   public function __construct(
+    protected IAvatarManager $avatarManager,
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
@@ -385,11 +388,17 @@ make sure that the musicians are also automatically added to the
 
     // Tweak the join-structure with dynamic data.
     list($allProjectsJoin, $allProjectsFieldGenerator) = $this->renderAllProjectsField(
-      musicianIdField: 'id',
+      musiciansTable: null,
       tableTab: 'orchestra',
       css: [],
     );
     $this->joinStructure = array_merge($this->joinStructure, $allProjectsJoin);
+
+    list($musicanAvatarJoin, $musicianAvatarFieldGenerator) = $this->renderMusicianAvatarField(
+      tableTab: 'miscinfo',
+      css: [],
+    );
+    $this->joinStructure = array_merge($this->joinStructure, $musicanAvatarJoin);
 
     list($emailJoin, $emailFieldGenerator) = $this->renderMusicianEmailFields(css: [ $addCSS ]);
     $this->joinStructure = array_merge($this->joinStructure, $emailJoin);
@@ -741,7 +750,7 @@ make sure that the musicians are also automatically added to the
       'select' => 'C',
       'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
       'sort' => true,
-      'default' => null,
+      'default' => true,
       'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
       'values2|LVDF' => [
         0 => '',
@@ -942,23 +951,7 @@ make sure that the musicians are also automatically added to the
         }
       ]);
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_PHOTO_JOIN_TABLE, 'image_id', [
-        'tab'      => ['id' => 'miscinfo'],
-        'input' => 'VRS',
-        'name' => $this->l->t('Photo'),
-        'select' => 'T',
-        'options' => 'VCD',
-        'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
-          $musicianId = $recordId['id'] ?? 0;
-          return $this->photoImageLink($musicianId, $action, $imageId);
-        },
-        'css' => ['postfix' => [ 'photo', ], ],
-        'default' => '',
-        'sort' => false
-      ]);
-
-//     ///////////////////// Test
+    $musicianAvatarFieldGenerator($opts['fdd']);
 
     $opts['fdd']['vcard'] = [
       'tab' => ['id' => 'miscinfo'],
