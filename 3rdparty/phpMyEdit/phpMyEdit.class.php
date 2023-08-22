@@ -2917,7 +2917,7 @@ class phpMyEdit
 			echo $this->call_display_closure($k, $value, $operation, $row, $this->rec);
 		} elseif ($vals !== false && (stristr("MCOD", $select) !== false || $multiValues)) {
 			$multiple = $this->col_has_multiple($k);
-			$readonly = $this->disabledTag($k) || count($vals) == 0;
+			$readonly = $this->disabledTag($k); // || count($vals) == 0;
 			$mandatory = $this->mandatory($k);
 			$selected = $row["qf$k"] ?? null;
 			if ($selected === null) {
@@ -3394,7 +3394,7 @@ class phpMyEdit
 			if (isset($row['qf'.$k.'_idx'])) {
 				$value = $row['qf'.$k.'_idx'];
 			} else if (isset($row["qf${k}_encrypted"])) {
-				$value = $row["qf${k}_encrypted"];
+				$value = $row["qf{$k}_encrypted"];
 			} else {
 				$value = $row["qf$k"];
 			}
