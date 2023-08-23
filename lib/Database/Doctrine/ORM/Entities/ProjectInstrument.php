@@ -115,7 +115,7 @@ class ProjectInstrument implements \ArrayAccess
   private $instrumentationNumber;
 
   /** {@inheritdoc} */
-  public function __construct(?Project $project = null, ?Musician $musician = null, ?Instrument $instrument = null, ?int $voice = null)
+  public function __construct(?Project $project = null, ?Musician $musician = null, ?Instrument $instrument = null, int $voice = self::UNVOICED)
   {
     $this->arrayCTOR();
     $this->project = $project;
