@@ -284,7 +284,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * Not that deleted users are also not exported to the cloud.
    *
-   * @ORM\Column(type="boolean", nullable=false, options={"default"=1})
+   * @ORM\Column(type="boolean", nullable=true, options={"default"=1})
    */
   private $cloudAccountDisabled;
 
