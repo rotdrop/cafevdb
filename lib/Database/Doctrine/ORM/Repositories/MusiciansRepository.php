@@ -202,14 +202,12 @@ class MusiciansRepository extends EntityRepository
     $selects[]  = "GREATEST(
   MAX(COALESCE(m.updated, '')),
   MAX(COALESCE(pp.updated, '')),
-  COALESCE(photo.updated, ''),
   MAX(COALESCE(mi.updated, '')))
   AS lastModified";
 
     $qb = $this->createQueryBuilder('m', 'm.'.$indexBy);
     $qb->select($selects)
        ->leftJoin('m.projectParticipation', 'pp')
-       ->leftJoin('m.photo', 'photo')
        ->leftJoin('m.instruments', 'mi');
 
     if (!empty($criteria)) {

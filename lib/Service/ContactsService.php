@@ -498,7 +498,8 @@ class ContactsService
         $havePhoto = true;
       }
 
-      if ($havePhoto) {
+      if (false && $havePhoto) {
+        // @todo Perhaps import as cloud avatar image, keep the code until this is decided.
         $image = new Image;
         $image->loadFromData($imageData);
 
@@ -590,6 +591,7 @@ class ContactsService
 
     $photo = null;
     if (!empty($musician['photo'])) {
+      // @todo Now always empty, perhaps use the cloud avatar
       if ($musician['photo'] instanceof Entities\MusicianPhoto) {
         $image = $musician['photo']->getImage(); //  ['image'];
         $photo = [
