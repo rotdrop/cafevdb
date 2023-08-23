@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Throwable;
 use Exception;
 use DateTimeImmutable;
 
@@ -39,10 +40,11 @@ use OCP\IAddressBook;
 use OCP\Constants;
 use OCP\Image;
 use OCP\IL10N;
+use OCP\IAvatarManager;
+use OCP\IAvatar;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\Util;
 
@@ -54,21 +56,28 @@ class ContactsService
 
   const VCARD_VERSION = '4.0';
 
+  const AVATAR_SIZE = 256;
+
   /** @var IAppContainer */
   private $appContainer;
 
   /** @var IContactsManager */
   private $contactsManager;
 
+  /** @var IAvatarManager */
+  private $avatarManager;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     IContactsManager $contactsManager,
+    IAvatarManager $avatarManager,
     IAppContainer $appContainer,
     EntityManager $entityManager,
   ) {
     $this->configService = $configService;
     $this->contactsManager = $contactsManager;
+    $this->avatarManager = $avatarManager;
     $this->appContainer = $appContainer;
     $this->entityManager = $entityManager;
     $this->l = $this->configService->getAppL10n();
@@ -307,7 +316,7 @@ class ContactsService
   public function importCardData(array $cardData, bool $preferWork = true):?Entities\Musician
   {
     // $version = $cardData['VERSION'];
-    $entity = new Musician();
+    $entity = new Entities\Musician();
     if (!empty($cardData['N'])) {
         // we honour only surname and prename, and give a damn in
         // particular on title madness.
@@ -517,7 +526,7 @@ class ContactsService
   /**
    * Export the stored data for one musician as vCard.
    *
-   * @param Musician $musician One row from the musician table.
+   * @param Entities\Musician $musician One row from the musician table.
    *
    * @param string $version vCard version -- which must be one
    * supported by \\Sabre\\VObject. Defaults to 3.0 for compatibility
@@ -526,7 +535,7 @@ class ContactsService
    *
    * @return VCard
    */
-  public function export(Musician $musician, string $version = self::VCARD_VERSION):?VCard
+  public function export(Entities\Musician $musician, string $version = self::VCARD_VERSION):?VCard
   {
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
     $uuid = (string)(isset($musician['uuid']) ? $musician['uuid'] : $this->generateUUID());
@@ -589,34 +598,21 @@ class ContactsService
       ],
       [ 'TYPE' => 'home' ]);
 
-    $photo = null;
-    if (!empty($musician['photo'])) {
-      // @todo Now always empty, perhaps use the cloud avatar
-      if ($musician['photo'] instanceof Entities\MusicianPhoto) {
-        $image = $musician['photo']->getImage(); //  ['image'];
-        $photo = [
-          'data' => $image->getFileData()->getData('base64'),
-          'mimeType' => $image->getMimeType(), //['mimeType'],
-        ];
-
-      } elseif (is_string($musician['photo'])
-                 && preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['photo'], $matches)) {
-        // data uri
-        $mimeType = $matches[1];
-        $imageData = substr($musician['photo'], strlen($matches[0]));
-        $photo = [
-          'mimeType' => $mimeType,
-          'data' => $imageData,
-        ];
-      } else {
-        throw new Exception('Strange photo value');
+    if (!$musician->getCloudAccountDeactivated()) {
+      /** @var IAvatar $avatar */
+      try {
+        $avatar = $this->avatarManager->getAvatar($musician->getUserIdSlug());
+      } catch (Throwable $t) {
+        $avatar = null;
       }
 
-      if (!empty($photo['data'])) {
-        $mimeType = $photo['mimeType'];
-        $data = $photo['data'];
+      if ($avatar) {
+        /** @var \OCP\IImage $image */
+        $image = $avatar->get(self::AVATAR_SIZE);
+        $mimeType = $image->mimeType();
+        $data = $image->data();
         if ($version == '4.0') {
-          $vcard->add('PHOTO', 'data:'.$mimeType.';base64,'.$data);
+          $vcard->add('PHOTO', 'data:' . $mimeType . ';base64,' . base64_encode($data));
         } else {
           $type = Util::explode('/', $mimeType);
           $type = strtoupper(array_pop($type));
