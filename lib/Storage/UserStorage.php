@@ -269,10 +269,7 @@ class UserStorage
     $parentsToStrip = min($parentsToStrip, count(Util::explode(self::PATH_SEP, $folder->getPath())));
 
     $dataStream = fopen("php://memory", 'w');
-    $zipStreamOptions = new ArchiveOptions;
-    $zipStreamOptions->setOutputStream($dataStream);
-
-    $zipStream = new ZipStream(opt: $zipStreamOptions);
+    $zipStream = new ZipStream(outputStream: $dataStream);
 
     $this->archiveFolderRecursively($folder, $parentsToStrip, $zipStream);
 
