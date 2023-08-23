@@ -21,7 +21,7 @@
 
 import $ from 'jquery'
 
-import { getToken } from '../OC/requesttoken'
+import { getRequestToken as getToken } from '@nextcloud/auth'
 
 $(document).on('ajaxSend', function(elm, xhr, settings) {
 	if (settings.crossDomain === false) {

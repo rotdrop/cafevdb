@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { onRequestTokenUpdate } from '@nextcloud/auth';
+import { onRequestTokenUpdate, getRequestToken } from '@nextcloud/auth';
 import { initialState, appName, cloudWebRoot, webRoot, cloudUser, appPrefix } from './config.js';
 import jQuery from './jquery.js';
 import globalState from './globalstate.js';
@@ -38,6 +38,7 @@ ImagesLoaded.makeJQueryPlugin(jQuery);
 
 // some nextcloud hacks
 
+// still needed for jquery
 require('../legacy/nextcloud/jquery/requesttoken.js');
 require('@nextcloud/dialogs/styles/toast.scss');
 
@@ -53,7 +54,7 @@ require('config-check.scss');
 if (!globalState.initialized) {
   jQuery.extend(globalState, initialState.CAFEVDB);
   // @TODO the nonce in principle could go to the initial-state
-  globalState.nonce = btoa(OC.requestToken);
+  globalState.nonce = btoa(getRequestToken());
   globalState.initialNonce = globalState.nonce;
   globalState.initialized = true;
 }

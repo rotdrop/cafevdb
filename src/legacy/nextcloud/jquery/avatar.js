@@ -1,9 +1,10 @@
-/*
+/**
  * @copyright 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
  *
- * @author 2018 Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author John Molakvoæ <skjnldsv@protonmail.com>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16,14 +17,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 import $ from 'jquery'
-
 import './placeholder.js'
-
-import OC from '../OC'
+import { generateUrl } from '@nextcloud/router'
+import { getCurrentUser } from '@nextcloud/auth'
 
 /**
  * This plugin inserts the right avatar for the user, depending on, whether a
@@ -108,8 +109,8 @@ $.fn.avatar = function(user, size, ie8fix, hidedefault, callback, displayname) {
 	let url
 
 	// If this is our own avatar we have to use the version attribute
-	if (user === OC.getCurrentUser().uid) {
-		url = OC.generateUrl(
+	if (user === getCurrentUser().uid) {
+		url = generateUrl(
 			'/avatar/{user}/{size}?v={version}',
 			{
 				user,
@@ -117,7 +118,7 @@ $.fn.avatar = function(user, size, ie8fix, hidedefault, callback, displayname) {
 				version: oc_userconfig.avatar.version,
 			})
 	} else {
-		url = OC.generateUrl(
+		url = generateUrl(
 			'/avatar/{user}/{size}',
 			{
 				user,
