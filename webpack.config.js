@@ -10,6 +10,7 @@ const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const DeadCodePlugin = require('webpack-deadcode-plugin')
 const Visualizer = require('webpack-visualizer-plugin2');
 const xml2js = require('xml2js');
 
@@ -122,6 +123,14 @@ module.exports = {
       ],
     }),
     new VueLoaderPlugin(),
+    new DeadCodePlugin({
+      patterns: [
+        'src/**/*.(vue|js|jsx|css)',
+        'style/**/*.scss',
+      ],
+      exclude: [
+      ],
+    }),
   ],
   module: {
     noParse: /(ckeditor.js|tinymce.min.js)/,

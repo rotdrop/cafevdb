@@ -122,12 +122,14 @@ class ProjectParticipant implements \ArrayAccess
   private $databaseDocuments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct()
+  public function __construct(?Musician $musician = null, ?Project $project = null)
   {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
+    $this->musician = $musician;
+    $this->project = $project;
   }
   // phpcs:enable
 

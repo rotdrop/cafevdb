@@ -60,7 +60,7 @@ class ProjectParticipants extends PMETableViewBase
 {
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\ParticipantFieldsTrait;
-  use FieldTraits\MusicianPhotoTrait;
+  use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianEmailsTrait;
@@ -131,15 +131,6 @@ class ProjectParticipants extends PMETableViewBase
         ],
       ],
       'column' => 'id',
-    ],
-    self::MUSICIAN_PHOTO_JOIN_TABLE => [
-      'entity' => Entities\MusicianPhoto::class,
-      'flags' => self::JOIN_READONLY,
-      'identifier' => [
-        'owner_id' => 'musician_id',
-        'image_id' => false,
-      ],
-      'column' => 'image_id',
     ],
     self::PROJECT_PAYMENTS_TABLE => [
       'entity' => Entities\ProjectPayment::class,
@@ -367,6 +358,12 @@ class ProjectParticipants extends PMETableViewBase
       css: [],
     );
     $this->joinStructure = array_merge($this->joinStructure, $allProjectsJoin);
+
+    list($musicanAvatarJoin, $musicianAvatarFieldGenerator) = $this->renderMusicianAvatarField(
+      tableTab: 'miscinfo',
+      css: [],
+    );
+    $this->joinStructure = array_merge($this->joinStructure, $musicanAvatarJoin);
 
     list($emailJoin, $emailFieldGenerator) = $this->renderMusicianEmailFields(
       musicianIdField: 'musician_id',
@@ -990,7 +987,8 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_deactivated', [
         'name' => $this->l->t('Cloud Account Deactivated'),
-        'input' => ($this->expertMode ? null : 'HR'),
+        'tab'     => [ 'id' => [ 'miscinfo' ] ],
+        'input' => null,
         'select' => 'C',
         'css' => [ 'postfix' => [ 'cloud-account-deactivated', ], ],
         'sort' => true,
@@ -1009,7 +1007,8 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_disabled', [
         'name' => $this->l->t('Hidden from Cloud'),
-        'input' => ($this->expertMode ? null : 'HR'),
+        'tab'     => [ 'id' => [ 'miscinfo' ] ],
+        'input' => null,
         'select' => 'C',
         'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
         'sort' => true,
@@ -1225,21 +1224,7 @@ class ProjectParticipants extends PMETableViewBase
         'values2'  => $this->localeLanguageNames(),
       ]);
 
-    $this->makeJoinTableField(
-      $opts['fdd'], self::MUSICIAN_PHOTO_JOIN_TABLE, 'image_id', [
-        'tab'      => ['id' => 'miscinfo'],
-        'input' => 'VRS',
-        'name' => $this->l->t('Photo'),
-        'select' => 'T',
-        'options' => 'APVCD',
-        'php' => function($imageId, $action, $k, $row, $recordId, $pme) {
-          $musicianId = $recordId['musician_id'] ?? 0;
-          return $this->photoImageLink($musicianId, $action, $imageId);
-        },
-        'css' => ['postfix' => [ 'photo', ], ],
-        'default' => '',
-        'sort' => false
-      ]);
+    $musicianAvatarFieldGenerator($opts['fdd']);
 
     $opts['fdd']['vcard'] = [
       'tab' => ['id' => 'miscinfo'],

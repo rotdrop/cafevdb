@@ -102,9 +102,7 @@ LEFT JOIN Projects p ON p.id = pp.project_id';
   const USER_SQL_USER_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT m.id AS id,
-       CONVERT(m.user_id_slug USING utf8mb4) AS uid,
-       CONVERT(m.user_id_slug USING utf8mb4) AS username,
+SELECT CONVERT(m.user_id_slug USING utf8mb4) AS uid,
        m.user_passphrase AS password,
        CONCAT_WS(" ", IF(m.nick_name IS NULL
                          OR m.nick_name = "", m.first_name, m.nick_name), m.sur_name) AS name,
@@ -112,17 +110,12 @@ SELECT m.id AS id,
        NULL AS quota,
        NULL AS home,
        COALESCE(m.cloud_account_deactivated, 0) AS inactive,
-       IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1 OR p.type IS NULL OR NOT GROUP_CONCAT(DISTINCT p.type) LIKE "%%permanent%%", 1, 0) AS disabled,
-       0 AS avatar,
+       IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1, 1, 0) AS disabled,
+       1 AS avatar,
        NULL AS salt
 FROM Musicians m
-LEFT JOIN ProjectParticipants pp
-ON m.id = pp.musician_id
-LEFT JOIN Projects p
-ON pp.project_id = p.id
 WHERE m.email IS NOT NULL AND m.email <> ""
-GROUP BY m.id';
-// WITH CHECK OPTION. But view is not updatable. Ok.
+WITH CHECK OPTION'; // But view is not updatable. Ok.
 
   const USER_SQL_VIEWS = [
     'User' => self::USER_SQL_USER_VIEW,
@@ -438,7 +431,7 @@ GROUP BY m.id';
       'db.table.user' => $this->viewName(null, self::USER_SQL_PREFIX, 'User'),
       'db.table.user.column.active' => 'inactive',
       'opt.reverse_active' => true,
-      'db.table.user.column.avatar' => null,
+      'db.table.user.column.avatar' => 'avatar',
       'db.table.user.column.disabled' => 'disabled',
       'db.table.user.column.email' => 'email',
       'db.table.user.column.home' => 'home',
@@ -447,7 +440,7 @@ GROUP BY m.id';
       'db.table.user.column.quota' => 'quota',
       'db.table.user.column.salt' => null,
       'db.table.user.column.uid' => 'uid',
-      'db.table.user.column.username' => 'username',
+      'db.table.user.column.username' => null,
       'db.table.user_group' => $this->viewName(null, self::USER_SQL_PREFIX, 'UserGroup'),
       'db.table.user_group.column.gid' => 'gid',
       'db.table.user_group.column.uid' => 'uid',
@@ -533,13 +526,13 @@ GROUP BY m.id';
     }
     $this->logInfo('USER SQL POST PARAMS ' . print_r($cloudUserBackendParams, true));
 
+    // try also to clear the cache after and before changing the configuration
+    $this->clearUserBackendCache();
+
     $messages = [];
 
     /** @var RequestService $requestService */
     $requestService = $this->appContainer->get(RequestService::class);
-
-    // try also to clear the cache after and before changing the configuration
-    $this->clearUserBackendCache($requestService, $messages);
 
     $route = implode('.', [
       self::CLOUD_USER_BACKEND,
@@ -547,10 +540,10 @@ GROUP BY m.id';
       'saveProperties',
     ]);
     $result = $requestService->postToRoute($route, requestData: $cloudUserBackendParams, postType: RequestService::URL_ENCODED);
-    $messages[] = $result['message']??$this->l->t('"%s" configuration may have succeeded.', self::CLOUD_USER_BACKEND);
+    $messages[] = $result['message'] ?? $this->l->t('"%s" configuration may have succeeded.', self::CLOUD_USER_BACKEND);
 
     // try also to clear the cache after and before changing the configuration
-    $this->clearUserBackendCache($requestService, $messages);
+    $this->clearUserBackendCache();
 
     return $messages;
   }
@@ -564,27 +557,8 @@ GROUP BY m.id';
    *
    * @return void
    */
-  private function clearUserBackendCache(?RequestService $requestService = null, ?array &$messages = null):void
+  private function clearUserBackendCache():void
   {
-    // /** @var RequestService $requestService */
-    // $requestService = $this->appContainer->get(RequestService::class);
-    // $route = implode('.', [
-    //   self::CLOUD_USER_BACKEND,
-    //   'settings',
-    //   'clearCache',
-    // ]);
-    // try {
-    //   $result = $requestService->postToRoute($route);
-    //   $messages[] = $result['message']??$this->l->t('Clearing "%s"\'s cache may have succeeded.', self::CLOUD_USER_BACKEND);
-    // } catch (\Throwable $t) {
-    //   // essentially ignore ...
-    //   $this->logError($t);
-    //   $messages[] = $this->l->t('An attempt to clear the cache of the "%1$s"-app has failed: %2$s.', [
-    //     self::CLOUD_USER_BACKEND,
-    //     $t->getMessage(),
-    //   ]);
-    // }
-    $messages = $messages ?? [];
     /** @var \OCA\UserSQL\Cache $userBackendCache */
     $userBackendCache = $this->appContainer->get(\OCA\UserSQL\Cache::class);
     $userBackendCache->clear();

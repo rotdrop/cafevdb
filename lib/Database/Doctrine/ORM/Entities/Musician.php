@@ -260,6 +260,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var bool|null
    *
+   * The effect of setting this to true is that the user can no longer login
+   * in the cloud but remains visible as cloud user-account.
+   *
    * Set to true if for whatever reason the user remains undeleted in the
    * musician-database but its cloud-account needs to be deactivated, for
    * instance to prevent abuse after a password breach or things like that.
@@ -281,7 +284,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * Not that deleted users are also not exported to the cloud.
    *
-   * @ORM\Column(type="boolean", nullable=true)
+   * @ORM\Column(type="boolean", nullable=true, options={"default"=1})
    */
   private $cloudAccountDisabled;
 
@@ -290,13 +293,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * @Gedmo\SoftDeleteableCascade(delete=true, undelete=true)
    */
   private $instruments;
-
-  /**
-   * Inverse side.
-   *
-   * @ORM\OneToOne(targetEntity="MusicianPhoto", mappedBy="owner", cascade={"remove"}, orphanRemoval=true)
-   */
-  private $photo;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", indexBy="project_id", orphanRemoval=true, fetch="EXTRA_LAZY")
@@ -354,7 +350,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var \DateTimeImmutable
    *
-   * @Gedmo\Timestampable(on={"update","change"}, field={"photo.updated"})
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */
   protected $updated;
@@ -974,30 +969,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getInstruments():Collection
   {
     return $this->instruments;
-  }
-
-  /**
-   * Set photo.
-   *
-   * @param MusicianPhoto|null $photo
-   *
-   * @return Musician
-   */
-  public function setPhoto(?MusicianPhoto $photo = null):Musician
-  {
-    $this->photo = $photo;
-
-    return $this;
-  }
-
-  /**
-   * Get photo.
-   *
-   * @return MusicianPhoto|null
-   */
-  public function getPhoto():?MusicianPhoto
-  {
-    return $this->photo;
   }
 
   /**

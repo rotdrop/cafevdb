@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\EmailForm;
 
 use \DateTimeImmutable;
 use \DateTimeInterface;
-use ZipStream\ZipStream;
 use \stdClass;
 use \Net_IMAP;
 use \Mail_RFC822;

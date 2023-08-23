@@ -30,7 +30,6 @@ import * as Musicians from './musicians.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
-import * as Photo from './inlineimage.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import participantFieldsHandlers from './project-participant-fields-display.js';
 import { instrumentationNumbersPopup } from './projects.js';
@@ -956,14 +955,6 @@ const myDocumentReady = function() {
 
       myReady(selector, parameters, resizeCB);
 
-      container.find('div.photo, .cafevdb_inline_image_wrapper')
-        .off('click', 'img.zoomable')
-        .on('click', 'img.zoomable', function(event) {
-          event.preventDefault();
-          Photo.popup(this);
-          return false;
-        });
-
       $(':button.musician-instrument-insurance')
         .off('click')
         .on('click', function(event) {
@@ -975,14 +966,7 @@ const myDocumentReady = function() {
           return false;
         });
 
-      const photoContainer = container.find('.musician-portrait');
-      if (photoContainer.length > 0) {
-        photoContainer.each(function(index) {
-          Photo.ready($(this), resizeCB);
-        });
-      } else {
-        container.find('div.photo, span.photo').imagesLoaded(resizeCB);
-      }
+      container.find('.cloud-avatar').imagesLoaded(resizeCB);
     },
     context: {},
     parameters: [],

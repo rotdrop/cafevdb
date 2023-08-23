@@ -90,6 +90,8 @@ class EncryptionService
     'types',
     'usergroup', // cloud-admin setting
     ConfigService::SHAREOWNER_KEY, // needed as calendar principal in the member's app
+    ConfigService::SHARED_FOLDER, // needed by some listeners in order to bail out early
+    ConfigService::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
     'wikinamespace', // cloud-admin setting
     'cspfailuretoken', // for public post route
     'configlock', // better kept open

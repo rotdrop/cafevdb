@@ -21,7 +21,7 @@
     "guzzlehttp/guzzle": "^7.0",
     "html2text/html2text": "^4.3",
     "league/html-to-markdown": "^5.1",
-    "maennchen/zipstream-php": "*",
+    "maennchen/zipstream-php": "^3.0.0",
     "mpdf/mpdf": "^8.0",
     "paragonie/halite": "^5",
     "pear/auth_sasl": "dev-master",
