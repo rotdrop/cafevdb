@@ -1125,9 +1125,6 @@ class ProjectParticipantsController extends Controller
         $subscription = $listsService->getSubscription($listId, $email);
         $preferences = $listsService->getSubscriptionPreferences($listId, $email);
 
-        // \OCP\Util::writeLog('cafevdb', 'SUBSCRIPTION ' . print_r($subscription, true), \OCP\Util::INFO);
-        \OCP\Util::writeLog('cafevdb', 'PREFERENCES ' . print_r($preferences, true), \OCP\Util::INFO);
-
         switch ($preferences[MailingListsService::MEMBER_DELIVERY_STATUS]) {
           case MailingListsService::DELIVERY_STATUS_ENABLED:
             $deliveryMode = $subscription[MailingListsService::ROLE_MEMBER][MailingListsService::MEMBER_DELIVERY_MODE];
