@@ -24,7 +24,6 @@ import { globalState, $, appName } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 // import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
-import * as Photo from './inlineimage.js';
 import * as ProjectExtra from './project-participant-fields.js';
 import * as SepaBulkTransactions from './sepa-bulk-transactions.js';
 import * as SepaDebitMandate from './sepa-debit-mandate.js';
@@ -250,25 +249,9 @@ const documentReady = function() {
         return false;
       });
 
-      container.find('div.photo, .cafevdb_inline_image_wrapper')
-        .off('click', 'img.zoomable')
-        .on('click', 'img.zoomable', function(event) {
-          event.preventDefault();
-          Photo.popup(this);
-          return false;
-        });
-
       Musicians.ready(container);
 
-      const photoContainer = container.find('.musician-portrait');
-      if (photoContainer.length > 0) {
-        photoContainer.each(function(index) {
-          console.info('CALL PHOTO READY');
-          Photo.ready($(this), resizeCB);
-        });
-      } else {
-        container.find('div.photo, span.photo').imagesLoaded(resizeCB);
-      }
+      container.find('.cloud-avatar').imagesLoaded(resizeCB);
     },
     context: CAFEVDB,
     parameters: [],

@@ -28,7 +28,6 @@ import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
 import * as Dialogs from './dialogs.js';
-import * as Photo from './inlineimage.js';
 import * as Notification from './notification.js';
 import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import * as Events from './events.js';
@@ -823,19 +822,6 @@ const attachArticleSelectHandlers = function(containerContext) {
   });
 };
 
-const imagePoller = function(containerContext, callback) {
-  if (!containerContext.imagesReady) {
-    const poller = setInterval(function() {
-      if (containerContext.imagesReady) {
-        clearInterval(poller);
-        callback();
-      }
-    }, 100);
-  } else {
-    callback();
-  }
-};
-
 const scrollbarAdjust = function(containerContext) {
   const containerNode = containerContext.container[0];
   const scrollBarWidth = containerNode.offsetWidth - containerNode.clientWidth;
@@ -855,10 +841,8 @@ const forceHeight = function(containerContext, iframe) {
   iframe.css({
     height: scrollHeight + 'px',
   });
-  imagePoller(containerContext, function() {
-    containerContext.resizeCB();
-    scrollbarAdjust(containerContext);
-  });
+  containerContext.resizeCB();
+  scrollbarAdjust(containerContext);
 };
 
 const displayArticleLoad = function(containerContext, iframe) {
@@ -920,10 +904,8 @@ const displayArticleLoad = function(containerContext, iframe) {
 
           containerContext.allDisplayFrames.width(forcedWidth).height(forcedHeight);
 
-          imagePoller(containerContext, function() {
-            containerContext.resizeCB();
-            scrollbarAdjust(containerContext);
-          });
+          containerContext.resizeCB();
+          scrollbarAdjust(containerContext);
         },
         beforeActivate(event, ui) {
           return projectWebPageTabHandler(event, ui, containerContext.container);
@@ -1024,10 +1006,8 @@ const changeArticleLoad = function(containerContext, iframe) {
         active: 0,
         create(event, ui) {
           articleBox.height('auto');
-          imagePoller(containerContext, function() {
-            containerContext.resizeCB();
-            scrollbarAdjust(containerContext);
-          });
+          containerContext.resizeCB();
+          scrollbarAdjust(containerContext);
         },
         activate(event, ui) {
           const $iframe = ui.newPanel.find('iframe');
@@ -1047,11 +1027,9 @@ const changeArticleLoad = function(containerContext, iframe) {
   } else if (containerContext.numChangeFrames < 0) {
     // < 0 happens when inside the frame a reload
     // is triggered, after the initial loading of all frames.
-    imagePoller(containerContext, function() {
-      containerContext.resizeCB();
-      scrollbarAdjust(containerContext);
-      $('#projectWebArticles').css({ opacity: 1.0 });
-    });
+    containerContext.resizeCB();
+    scrollbarAdjust(containerContext);
+    $('#projectWebArticles').css({ opacity: 1.0 });
   }
 };
 
@@ -1083,7 +1061,6 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
   const containerContext = {
     container,
     resizeCB,
-    imagesReady: false,
     articleBox,
     displayFrames,
     numDisplayFrames: displayFrames.length,
@@ -1154,24 +1131,8 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
     }
   } else {
     // Just execute the resize callback:
-    imagePoller(containerContext, function() {
-      resizeCB();
-      scrollbarAdjust(containerContext);
-    });
-  }
-
-  const posterContainer = container.find('.project-poster');
-  if (posterContainer.length > 0) {
-    let readyCountDown = posterContainer.length;
-    posterContainer.each(function(index) {
-      Photo.ready($(this), function() {
-        containerContext.imagesReady = --readyCountDown <= 0;
-      });
-    });
-  } else {
-    container.find('div.photo, span.photo').imagesLoaded(function() {
-      containerContext.imagesReady = true;
-    });
+    resizeCB();
+    scrollbarAdjust(containerContext);
   }
 
   // Intercept app-navigation events here and redirect to the page
@@ -1184,12 +1145,6 @@ const tableLoadCallback = function(selector, parameters, resizeCB) {
   });
 
   attachArticleSelectHandlers(containerContext);
-
-  container.find('div.photo, .cafevdb_inline_image_wrapper').on('click', 'img', function(event) {
-    event.preventDefault();
-    Photo.popup(this);
-    return false;
-  });
 
   const linkPopups = {
     'projects--participant-fields': participantFieldsPopup,

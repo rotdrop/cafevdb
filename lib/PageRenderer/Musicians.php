@@ -26,8 +26,6 @@ namespace OCA\CAFEVDB\PageRenderer;
 
 use chillerlan\QRCode\QRCode;
 
-use OCP\IAvatarManager;
-
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -149,7 +147,6 @@ class Musicians extends PMETableViewBase
 
   /** {@inheritdoc} */
   public function __construct(
-    protected IAvatarManager $avatarManager,
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
@@ -388,7 +385,7 @@ make sure that the musicians are also automatically added to the
 
     // Tweak the join-structure with dynamic data.
     list($allProjectsJoin, $allProjectsFieldGenerator) = $this->renderAllProjectsField(
-      musiciansTable: null,
+      musicianIdField: 'id',
       tableTab: 'orchestra',
       css: [],
     );
@@ -726,8 +723,8 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['cloud_account_deactivated'] = [
       'name' => $this->l->t('Cloud Account Deactivated'),
-      'tab' => [ 'id' => [ 'orchestra' ] ],
-      'input' => ($this->expertMode ? null : 'HR'),
+      'tab' => [ 'id' => [ 'miscinfo' ] ],
+      'input' => null,
       'select' => 'C',
       'css' => [ 'postfix' => [ 'cloud-account-deactivated', ], ],
       'sort' => true,
@@ -745,8 +742,8 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['cloud_account_disabled'] = [
       'name' => $this->l->t('Hidden from Cloud'),
-      'tab' => [ 'id' => [ 'orchestra' ] ],
-      'input' => ($this->expertMode ? null : 'HR'),
+      'tab' => [ 'id' => [ 'miscinfo' ] ],
+      'input' => null,
       'select' => 'C',
       'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
       'sort' => true,

@@ -964,21 +964,17 @@ class Projects extends PMETableViewBase
       'php|' . $posterDisplay => function($value, $action, $field, $row, $recordId, $pme) {
         $projectId = $recordId['id'];
         $postersFolder = $this->projectService->ensurePostersFolder($projectId);
-        $imageIds = $this->imagesService->getImageIds(ImagesService::USER_STORAGE, $postersFolder);
-        if (empty($imageIds) || ($action != PHPMyEdit::OPERATION_DISPLAY)) {
-          $imageIds[] = ImagesService::IMAGE_ID_PLACEHOLDER;
-        }
-        $this->logDebug('IMAGE IDS ' . $action . ' ' . print_r($imageIds, true));
-        $numImages = count($imageIds);
-        $rows = ($numImages + self::MAX_POSTER_COLUMNS - 1) / self::MAX_POSTER_COLUMNS;
-        // $columns = min(($numImages + $rows - 1)/ $rows, self::MAX_POSTER_COLUMNS);
-        $columns = self::MAX_POSTER_COLUMNS;
-        $this->logDebug('R / C ' . $rows . ' / ' . $columns);
-        $html = '';
-        for ($i = 0; $i < $numImages; ++$i) {
-          $html .= $this->posterImageLink($postersFolder, $action, $columns, $imageIds[$i]);
-        }
-        return $html;
+        $filesAppLink = empty($postersFolder)
+          ? null
+          : $this->userStorage->getFilesAppLink($postersFolder, subDir: true);
+        $templateParameters = [
+          'folder' => $postersFolder,
+          'filesAppLink' => $filesAppLink,
+          'toolTips' => $this->toolTipsService,
+          'operation' => $this->listOperation() ? 'list' : $op,
+        ];
+        $template = new TemplateResponse($this->appName(), 'fragments/projects/project-posters', $templateParameters, 'blank');
+        return $template->render();
       },
       'default' => '',
       'sort'     => false,

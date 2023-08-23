@@ -29,7 +29,6 @@ use InvalidArgumentException;
 use chillerlan\QRCode\QRCode;
 
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IAvatarManager;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
@@ -213,7 +212,6 @@ class ProjectParticipants extends PMETableViewBase
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IAvatarManager $avatarManager,
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
@@ -230,7 +228,6 @@ class ProjectParticipants extends PMETableViewBase
     UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->avatarManager = $avatarManager;
     $this->geoCodingService = $geoCodingService;
     $this->contactsService = $contactsService;
     $this->phoneNumberService = $phoneNumberService;
@@ -363,7 +360,7 @@ class ProjectParticipants extends PMETableViewBase
     $this->joinStructure = array_merge($this->joinStructure, $allProjectsJoin);
 
     list($musicanAvatarJoin, $musicianAvatarFieldGenerator) = $this->renderMusicianAvatarField(
-      tableTab: 'musician',
+      tableTab: 'miscinfo',
       css: [],
     );
     $this->joinStructure = array_merge($this->joinStructure, $musicanAvatarJoin);
@@ -990,7 +987,8 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_deactivated', [
         'name' => $this->l->t('Cloud Account Deactivated'),
-        'input' => ($this->expertMode ? null : 'HR'),
+        'tab'     => [ 'id' => [ 'miscinfo' ] ],
+        'input' => null,
         'select' => 'C',
         'css' => [ 'postfix' => [ 'cloud-account-deactivated', ], ],
         'sort' => true,
@@ -1009,7 +1007,8 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'cloud_account_disabled', [
         'name' => $this->l->t('Hidden from Cloud'),
-        'input' => ($this->expertMode ? null : 'HR'),
+        'tab'     => [ 'id' => [ 'miscinfo' ] ],
+        'input' => null,
         'select' => 'C',
         'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
         'sort' => true,
