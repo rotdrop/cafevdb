@@ -2003,7 +2003,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
   const emptyValueClass = 'value-is-empty';
   const nonEmptyValueClass = 'value-is-non-empty';
 
-  console.info('WOULD INIT EMPTY VALUE TRACKER');
+  console.info('MARKING EMPTY INPUTS');
   container.find(pmeValueSelector + '.' + trackEmptyValueClass).each(function() {
     const $this = $(this);
     const $row = $this.closest('tr');
