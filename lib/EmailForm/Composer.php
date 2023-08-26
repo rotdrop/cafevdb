@@ -2771,7 +2771,7 @@ Störung.';
     }
 
     /** @var Entities\SentEmail $sentEmail */
-    $sentEmail = $this->sentEmail($logMessage, allowDuplicates: $allowDuplicates);
+    $sentEmail = $this->sentEmail($logMessage, messageId: $messageId, allowDuplicates: $allowDuplicates);
     if (!$sentEmail) {
       return false;
     }
@@ -2781,18 +2781,18 @@ Störung.';
       $phpMailer->MessageID = $messageId;
     }
     if (!empty($references)) {
-      if (is_string($references)) {
-        // the id of the master-copy
-        $sentEmail->setReferencing($this->getReference(Entities\SentEmail::class, $references));
-      } else {
+      if (is_array($references)) {
+        // install the bidirectional "reference" relationships into the
+        // SentEmail entities.
         $references = array_merge($references, $this->referencing);
         sort($references);
+        $referencedBy = $sentEmail->getReferencedBy();
         foreach ($references as $reference) {
-          // Adding references unfortunately is not enough, ORM does not match
-          // "un-flushed" newly persisted objects with reference
-          // objects. However, find() does work and obtains the managed object.
           $referencing = $this->getDatabaseRepository(Entities\SentEmail::class)->find($reference);
-          $sentEmail->getReferencedBy()->set($reference, $referencing);
+          if (empty($referencing)) {
+            continue;
+          }
+          $referencedBy->set($reference, $referencing);
           $referencing->setReferencing($sentEmail);
         }
       }
@@ -2971,17 +2971,41 @@ Störung.';
    * Log the sent message to the data base if it is new. Return false
    * if this is a duplicate, true otherwise.
    *
-   * @param SentEmailDTO $logMessage The email-message to record in the DB.
+   * @param null|SentEmailDTO $logMessage The email-message to record in the DB.
+   *
+   * @param null|string $messageId Mesage id if known. If given the entity
+   * manager is queried for an existing managed entity, otherwise a new entity
+   * is generated.
    *
    * @param bool $allowDuplicates Whether or not to check for
    * duplicates. This is currently never set to true.
    *
    * @return bool|Entities\SentEmail
    */
-  private function sentEmail(SentEmailDTO $logMessage, bool $allowDuplicates = false)
-  {
-    /** @var Entities\SentEmail $sentEmail */
-    $sentEmail = new Entities\SentEmail;
+  private function sentEmail(
+    ?SentEmailDTO $logMessage,
+    ?string $messageId = null,
+    bool $allowDuplicates = false,
+  ) {
+    if (empty($messageId) && empty($logMessage)) {
+      return false;
+    }
+
+    if (!empty($messageId)) {
+      $sentEmail = $this->getDatabaseRepository(Entities\SentEmail::class)->find($messageId);
+    }
+    if (empty($sentEmail)) {
+      /** @var Entities\SentEmail $sentEmail */
+      $sentEmail = new Entities\SentEmail;
+      if (!empty($messageId)) {
+        $sentEmail->setMessageId($messageId);
+        $this->persist($sentEmail);
+      }
+    }
+
+    if (empty($logMessage)) {
+      return $sentEmail;
+    }
 
     // Construct one MD5 for recipients subject and html-text
     $bulkRecipients = array_map(function($pair) {
