@@ -696,12 +696,8 @@ const ready = function(selector, resizeCB) {
     const generated = $row.find('input' + textInputSelector + ', textarea');
     generated.each(function(index) {
       const $this = $(this);
-      if (!$this.hasClass('expert-mode-only') && !$this.hasClass('not-expert-mode-hidden')) {
-        $this.lockUnlock({
-          locked: $this.val().trim() !== '',
-        });
-      }
-      if (!$this.hasClass('finance-mode-only') && !$this.hasClass('not-finance-mode-hidden')) {
+      if ((!$this.hasClass('expert-mode-only') && !$this.hasClass('not-expert-mode-hidden'))
+          || (!$this.hasClass('finance-mode-only') && !$this.hasClass('not-finance-mode-hidden'))) {
         $this.lockUnlock({
           locked: $this.val().trim() !== '',
         });

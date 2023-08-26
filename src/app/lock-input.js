@@ -60,6 +60,10 @@ $.fn.lockUnlock = function(argument) {
     const locked = options.locked;
     const disabled = options.hardLocked;
     $(this).each(function(index) {
+      const $input = $(this);
+      if ($input.data(appName + 'LockUnlockId')) {
+        $input.lockUnlock('destroy');
+      }
       const id = generateId();
       $(this).prop('readonly', locked)
         .after(
@@ -85,8 +89,12 @@ $.fn.lockUnlock = function(argument) {
         .data('options', options);
     });
   } else {
-    const $self = $(this);
-    const id = $self.data(appName + 'LockUnlockId');
+    const $input = $(this);
+    const id = $input.data(appName + 'LockUnlockId');
+    if (!id) {
+      console.info('LockInput: no lock widget is attached');
+      return this;
+    }
     const command = arguments[0];
     switch (arguments[0]) {
     case 'disable': {
@@ -121,12 +129,12 @@ $.fn.lockUnlock = function(argument) {
       }
       const parameter = !!arguments[1];
       // don't trigger change, we just hard-lock the controls.
-      $self.prop('readonly', parameter);
+      $input.prop('readonly', parameter);
       $('#' + id).prop('disabled', parameter);
       break;
     }
     case 'destroy':
-      $self
+      $input
         .removeData(appName + 'LockUnlockId')
         .removeClass(appName + '-lock-unlock-victim');
       $('#' + id).remove();
@@ -142,8 +150,3 @@ $.fn.lockUnlock = function(argument) {
   }
   return this;
 };
-
-// Local Variables: ***
-// indent-tabs-mode: nil ***
-// js-indent-level: 2 ***
-// End: ***
