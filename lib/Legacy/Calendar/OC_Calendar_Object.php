@@ -576,7 +576,7 @@ class OC_Calendar_Object
       $totime = $request['totime'];
     }
     $vevent = $vcalendar->VEVENT;
-    $this->logInfo(get_class($vcalendar));
+    // $this->logInfo(get_class($vcalendar));
     $description = $request["description"];
     $repeat = $request["repeat"];
     if ($repeat != 'doesnotrepeat') {

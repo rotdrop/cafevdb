@@ -326,7 +326,7 @@ class VCalendarService
       return;
     }
     $alarmData = is_array($objectData['alarm']) ? $objectData['alarm'] : [ $objectData['alarm'] ?? null ];
-    $this->logInfo('ALRAM DATA ' . print_r($alarmData, true));
+    $this->logDebug('ALARM DATA ' . print_r($alarmData, true));
     foreach ($alarmData as $alarmDatum) {
       if (is_array($alarmDatum)) {
         foreach ($alarmDatum as $related => $seconds) {

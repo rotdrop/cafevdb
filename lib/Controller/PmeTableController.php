@@ -149,7 +149,7 @@ class PmeTableController extends Controller
    */
   private function load():Http\Response
   {
-    $this->logInfo('Start');
+    $this->logDebug('Start');
     try {
       $templateRenderer = $this->parameterService->getParam('templateRenderer');
       $template = $this->parameterService->getParam('template');

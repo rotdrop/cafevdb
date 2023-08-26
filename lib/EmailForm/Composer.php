@@ -5478,7 +5478,9 @@ Störung.';
       $flatIdentifier = EventsService::makeFlatIdentifier($event);
       $events[$flatIdentifier] = $event;
     }
-    $this->logInfo('EVENTS ' . print_r($events, true));
+    if (count($events) > 0) {
+      $this->logInfo('EVENTS ' . print_r($events, true));
+    }
 
     return $events;
   }
