@@ -65,9 +65,27 @@ class ProjectParticipantFieldsController extends Controller
 
   const REQUEST_TOPIC_GENERATOR = 'generator';
   const REQUEST_TOPIC_OPTION = 'option';
+
+  /**
+   * @var string Resolve a receivables generator with the given user input.
+   */
   const REQUEST_SUB_TOPIC_DEFINE = 'define';
+
+  /**
+   * @var string Generate (missing) fields.
+   */
   const REQUEST_SUB_TOPIC_RUN = 'run';
+
+  /**
+   * @var string For the given project (re-)generate all generated
+   * receivables. The other operations refer to one specific receivable.
+   */
   const REQUEST_SUB_TOPIC_RUN_ALL = 'run-all';
+
+  /**
+   * Recompute one or all receivables, given on the request parameters
+   * provided.
+   */
   const REQUEST_SUB_TOPIC_REGENERATE = 'regenerate';
 
   const REQUEST_TOPIC_PROPERTY = 'property';
