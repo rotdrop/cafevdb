@@ -73,6 +73,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Logging\CloudLogger;
+use OCA\CAFEVDB\Database\Doctrine\DeprecationLogger;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Hydrators\ColumnHydrator;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Listeners;
@@ -233,6 +234,7 @@ class EntityManager extends EntityManagerDecorator
     EncryptionService $encryptionService,
     IAppContainer $appContainer,
     CloudLogger $sqlLogger,
+    DeprecationLogger $deprecationLogger,
     IRequest $request,
     ILogger $logger,
     IL10N $l10n,
@@ -250,6 +252,10 @@ class EntityManager extends EntityManagerDecorator
 
     $this->transactionNestingLevel = 0;
     $this->reopenAterRollback = true;
+
+    $deprecationLogger = clone $deprecationLogger;
+    $deprecationLogger->setLogLevel(\OCP\ILogger::DEBUG);
+    Doctrine\Deprecations\Deprecation::enableWithPsrLogger($deprecationLogger);
 
     $this->bind();
     if (!$this->bound()) {
