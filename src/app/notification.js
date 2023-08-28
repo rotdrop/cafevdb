@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020 - 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,34 +22,39 @@
  */
 
 import globalState from './globalstate.js';
-import $ from './jquery.js';
+import {
+  showMessage,
+  TOAST_PERMANENT_TIMEOUT,
+  TOAST_DEFAULT_TIMEOUT,
+  TOAST_UNDO_TIMEOUT,
+} from '@nextcloud/dialogs';
 
 const Notification = globalState.Notification;
 if (Notification === undefined) {
   globalState.Notification = {
-    rows: [],
+    toasts: [],
   };
 }
 
-const rows = globalState.Notification.rows;
+const toasts = globalState.Notification.toasts;
 
-const hide = function($row, callback) {
-  if (_.isFunction($row)) {
-    // first arg is the callback
-    callback = $row;
-    $row = undefined;
+const hide = function(callback) {
+  for (const toast of toasts) {
+    toast.hideToast();
   }
-  if (!$row) {
-    for (const row of rows) {
-      OC.Notification.hide(row);
-    }
-    rows.length = 0;
-    if (callback) {
-      callback.call();
-    }
-  } else {
-    OC.Notification.hide($row, callback);
+  toasts.length = 0;
+  if (callback) {
+    callback.call();
   }
+};
+
+const escapeHTML = function(text) {
+  return text.toString()
+    .split('&').join('&amp;')
+    .split('<').join('&lt;')
+    .split('>').join('&gt;')
+    .split('"').join('&quot;')
+    .split('\'').join('&#039;');
 };
 
 const tweakTimeout = function(options) {
@@ -61,25 +66,29 @@ const tweakTimeout = function(options) {
 const show = function(text, options) {
   console.info(text);
   tweakTimeout(options);
-  const row = OC.Notification.show(text, options);
-  rows.push(row);
-  return row;
+  options.timeout = options.timeout || TOAST_PERMANENT_TIMEOUT;
+  const toast = showMessage(escapeHTML(text), options);
+  toasts.push(toast);
+  return toast;
 };
 
 const showHtml = function(text, options) {
   console.info(text);
+  options.isHTML = true;
   tweakTimeout(options);
-  const row = OC.Notification.showHtml(text, options);
-  rows.push(row);
-  return row;
+  options.timeout = options.timeout || TOAST_PERMANENT_TIMEOUT;
+  const toast = showMessage(text, options);
+  toasts.push(toast);
+  return toast;
 };
 
 const showTemporary = function(text, options) {
   console.info(text);
   tweakTimeout(options);
-  const row = OC.Notification.showTemporary(text, options);
-  rows.push(row);
-  return row;
+  options.timeout = options.timeout || TOAST_DEFAULT_TIMEOUT;
+  const toast = OC.Notification.showTemporary(text, options);
+  toasts.push(toast);
+  return toast;
 };
 
 /**
@@ -94,9 +103,9 @@ const showTemporary = function(text, options) {
  */
 function messages(messages, options) {
   const defaultOptions = {
-    timeout: 10,
+    timeout: TOAST_UNDO_TIMEOUT,
   };
-  options = $.extend({}, defaultOptions, options);
+  options = { ...defaultOptions, ...options };
   if (messages !== undefined) {
     if (!Array.isArray(messages)) {
       messages = [messages];
@@ -117,8 +126,3 @@ export {
   showTemporary,
   messages,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

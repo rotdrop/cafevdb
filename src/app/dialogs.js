@@ -86,25 +86,31 @@ const confirm = function(text, title, options, modal, allowHtml) {
   }
   options.buttons.confirmClasses = classes;
 
-  return OC.dialogs.message(
-    text,
-    title,
-    'notice',
-    options.buttons,
-    options.callback,
-    options.modal,
-    options.allowHtml
-  ).then(() => {
-    $('body').find('.oc-dialog-buttonrow.twobuttons').each(function() {
-      const $buttonRow = $(this);
-      const $confirmButton = $buttonRow.find('button.primary.' + appName);
-      if ($confirmButton.hasClass('default-cancel')) {
-        const $cancelButton = $buttonRow.find('button:not(.primary)');
-        $confirmButton.removeClass('primary');
-        $cancelButton.addClass('primary');
-      }
-    });
-  });
+  return new Promise((resolve, reject) =>
+    OC.dialogs.message(
+      text,
+      title,
+      'notice',
+      options.buttons,
+      (answer) => {
+        options.callback(answer);
+        // do not reject, as this triggers an exception
+        resolve(answer);
+      },
+      options.modal,
+      options.allowHtml
+    ).then(() => {
+      $('body').find('.oc-dialog-buttonrow.twobuttons').each(function() {
+        const $buttonRow = $(this);
+        const $confirmButton = $buttonRow.find('button.primary.' + appName);
+        if ($confirmButton.hasClass('default-cancel')) {
+          const $cancelButton = $buttonRow.find('button:not(.primary)');
+          $confirmButton.removeClass('primary');
+          $cancelButton.addClass('primary');
+        }
+      });
+    })
+  );
 };
 
 /**
