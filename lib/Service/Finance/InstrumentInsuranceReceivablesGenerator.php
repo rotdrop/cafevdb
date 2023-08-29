@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -280,7 +280,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         }
       }
       if (!$skipped) {
-        if ($fee == 0.0) {
+        if (!$openingBalance && $fee == 0.0) {
           // remove current option
           $this->remove($datum);
           $this->remove($datum);
@@ -290,27 +290,29 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           $project->getParticipantFieldsData()->removeElement($datum);
           $removed = true;
         } else {
-          /** @var Entities\DatabaseStorageFile $supportingDocument */
-          $supportingDocument = $datum->getSupportingDocument();
-          if (empty($supportingDocument)) {
-            // create overview letter
-            $supportingDocumentFile = new Entities\EncryptedFile(
-              fileName: $overviewFilename,
-              data: $overviewLetter,
-              mimeType: 'application/pdf',
-              owner: $musician
-            );
-            $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
-            $datum->setSupportingDocument($supportingDocument);
-          } elseif (true || $fee != $datum->getOptionValue()) {
-            // @todo only update letter if fee changes?
-            $supportingDocument
-              ->setName($overviewFilename)
-              ->getFile()
-              ->setFileName($overviewFilename)
-              ->setMimeType('application/pdf')
-              ->setSize(strlen($overviewLetter))
-              ->getFileData()->setData($overviewLetter);
+          if (!$openingBalance) {
+            /** @var Entities\DatabaseStorageFile $supportingDocument */
+            $supportingDocument = $datum->getSupportingDocument();
+            if (empty($supportingDocument)) {
+              // create overview letter
+              $supportingDocumentFile = new Entities\EncryptedFile(
+                fileName: $overviewFilename,
+                data: $overviewLetter,
+                mimeType: 'application/pdf',
+                owner: $musician
+              );
+              $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
+              $datum->setSupportingDocument($supportingDocument);
+            } elseif (true || $fee != $datum->getOptionValue()) {
+              // @todo only update letter if fee changes?
+              $supportingDocument
+                ->setName($overviewFilename)
+                ->getFile()
+                ->setFileName($overviewFilename)
+                ->setMimeType('application/pdf')
+                ->setSize(strlen($overviewLetter))
+                ->getFileData()->setData($overviewLetter);
+            }
           }
           // just update current data to the computed value
           if ($datum->isDeleted()) {
