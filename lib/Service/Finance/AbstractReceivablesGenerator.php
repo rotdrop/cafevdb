@@ -122,6 +122,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     ignore_user_abort(false);
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
+    $progressStatus = [];
     $receivables = $this->serviceFeeField->getSelectableOptions();
     $participants = $this->serviceFeeField->getProject()->getParticipants();
     $totals = $receivables->count() * $participants->count();
@@ -133,13 +134,18 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         'removed' => $r,
         'changed' => $c,
         'skipped' => $s,
-        'notices' => $n
+        'notices' => $n,
+        'musicians' => $musicians,
       ) = $this->updateReceivable($receivable, null, $updateStrategy);
       $added += $a;
       $removed += $r;
       $changed += $c;
       $skipped += $s;
       $notices = array_merge($notices, $n);
+      $progressStatus[(string)$receivable->getKey()] = [
+        'label' => $receivable->getLabel(),
+        'musicians' => $musicians,
+      ];
     }
     return [
       'added' => $added,
@@ -147,6 +153,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       'changed' => $changed,
       'skipped' => $skipped,
       'notices' => $notices,
+      'status' => $progressStatus,
     ];
   }
 
@@ -184,8 +191,13 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
     $this->progressData['receivable'] = $receivable->getLabel();
+    $musicians = [];
     if (!empty($participant)) {
-      $this->progressData['musician'] = $participant->getMusician()->getPublicName(true);
+      $musician = $participant->getMusician();
+      $musicianId = $musician->getId();
+      $musicianName = $musician->getPublicName(firstNameFirst: true);
+      $musicians[$musicianId] = $musicianName;
+      $this->progressData['musician'] = $musicianName;
       $this->progressStatus->update(0, 1, $this->progressData);
       list(
         'added' => $added,
@@ -208,7 +220,11 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       }
       /** @var Entities\ProjectParticipant $participant */
       foreach ($participants as $participant) {
-        $this->progressData['musician'] = $participant->getMusician()->getPublicName(true);
+        $musician = $participant->getMusician();
+        $musicianId = $musician->getId();
+        $musicianName = $musician->getPublicName(firstNameFirst: true);
+        $musicians[$musicianId] = $musicianName;
+        $this->progressData['musician'] = $musicianName;
         $this->progressStatus->setData($this->progressData);
         list(
           'added' => $a,
@@ -236,6 +252,10 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       'changed' => $changed,
       'skipped' => $skipped,
       'notices' => $notices,
+      'receivables' => [
+        (string)$receivable->getKey() => $receivable->getLabel(),
+      ],
+      'muscians' => $musicians,
     ];
   }
 
@@ -245,11 +265,18 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
     ?Entities\ProjectParticipantFieldDataOption $receivable,
     string $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION,
   ):array {
-    $this->progressData['musician'] = $participant->getMusician()->getPublicName(true);
+    $musician = $participant->getMusician();
+    $musicianId = $musician->getId();
+    $musicianName = $musician->getPublicName(firstNameFirst: true);
+    $this->progressData['musician'] = $musicianName;
     $added = $removed = $changed = $skipped = 0;
     $notices = [];
+    $receivables = [];
     if (!empty($receivable)) {
-      $this->progressData['receivable'] = $receivable->getLabel();
+      $receivableKey = (string)$receivable->getKey();
+      $receivableLabel = $receivable->getLabel();
+      $receivables[$receivableKey] = $receivableLabel;
+      $this->progressData['receivable'] = $receivableLabel;
       $this->progressStatus->update(0, 1, $this->progressData);
       list(
         'added' => $added,
@@ -260,7 +287,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       if ($this->progressStatus->increment() === false) {
         throw new Exceptions\EnduserNotificationException($this->l->t(
           'Operation has been cancelled by user, last processed data was %s / %s.', [
-            $receivable->getLabel(), $participant->getMusician()->getPublicName(true),
+            $receivableLabel, $musicianName,
           ]));
       }
     } else {
@@ -270,7 +297,10 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         $this->progressStatus->update(0, $receivables->count());
       }
       foreach ($receivables as $receivable) {
-        $this->progressData['receivable'] = $receivable->getLabel();
+        $receivableKey = (string)$receivable->getKey();
+        $receivableLabel = $receivable->getLabel();
+        $receivables[$receivableKey] = $receivableLabel;
+        $this->progressData['receivable'] = $receivableLabel;
         $this->progressStatus->setData($this->progressData);
         list(
           'added' => $a,
@@ -282,7 +312,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         if ($this->progressStatus->increment() === false) {
           throw new Exceptions\EnduserNotificationException($this->l->t(
             'Operation has been cancelled by user, last processed data was %s / %s.', [
-              $receivable->getLabel(), $participant->getMusician()->getPublicName(true),
+              $receivableLabel, $musicianName,
             ]));
         }
         $added += $a;
@@ -298,6 +328,10 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       'changed' => $changed,
       'skipped' => $skipped,
       'notices' => $notices,
+      'musicians' => [
+        $musicianId => $musicianName,
+      ],
+      'receivables' => $receivables,
     ];
   }
 

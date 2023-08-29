@@ -415,16 +415,18 @@
                 td {
                   input, textarea {
                     vertical-align:middle;
+                    height:36px;
                   }
                   &.operations {
                     input.operation {
                       background-repeat:no-repeat;
-                      background-size: 24px 24px;
+                      background-size: 28px 28px;
                       background-position: center;
-                      width:28px;
-                      height:28px;
+                      width:36px;
+                      height:36px;
+                      min-height:unset;
                       vertical-align:middle;
-                      margin-right:1em;
+                      margin-right:0.5em;
                       &.regenerate {
                         /* background-image:url('../img/reload-solid.svg'); */
                         background-image:url('../img/actions/compute-red.svg');

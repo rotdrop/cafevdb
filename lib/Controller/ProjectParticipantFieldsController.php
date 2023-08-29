@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use DateTime;
 use RuntimeException;
 
 use OCP\AppFramework\Controller;
@@ -579,6 +580,7 @@ class ProjectParticipantFieldsController extends Controller
               'dataOptionSelectOption' => $options,
             ]);
           case self::REQUEST_SUB_TOPIC_REGENERATE:
+            // either musicianId or key may be missing
             $missing = [];
             foreach (['fieldId', 'updateStrategy'] as $parameter) {
               if (empty($data[$parameter])) {
@@ -625,8 +627,8 @@ class ProjectParticipantFieldsController extends Controller
               }
             }
 
-            // id for progress-bar
-            $progressToken = $data['progressToken'];
+            // id for progress-bar, maybe missing as checked above
+            $progressToken = $data['progressToken'] ?? null;
 
             /** @var Entities\ProjectParticipantFieldDataOption $receivable */
             $receivable = null;
@@ -655,6 +657,7 @@ class ProjectParticipantFieldsController extends Controller
                   'changed' => $changed,
                   'skipped' => $skipped,
                   'notices' => $notices,
+                  'receivables' => $receivables,
                 ) = $generator->updateReceivable($receivable, $participant, $updateStrategy);
                 foreach ($receivable->getFieldData() as $receivableDatum) {
                   // unfortunately cascade does not work with multiple
@@ -668,6 +671,7 @@ class ProjectParticipantFieldsController extends Controller
                   'changed' => $changed,
                   'skipped' => $skipped,
                   'notices' => $notices,
+                  'receivables' => $receivables,
                 ) = $generator->updateParticipant($participant, null /* $receivable */, $updateStrategy);
                 /** @var Entities\ProjectParticipantFieldDatum $datum */
                 foreach ($participant->getParticipantFieldsData() as $datum) {
@@ -685,23 +689,28 @@ class ProjectParticipantFieldsController extends Controller
               return self::grumble($this->exceptionChainData($t));
             }
 
+            $musician = $participant->getMusician();
+            $musicianId = $musician->getId();
+            $musicianName = $musician->getPublicName(firstNameFirst: true);
             $receivableAmounts = [];
             if (!empty($receivable)) {
               if (!empty($participant)) {
-                /** @var Entities\ProjectParticipantFieldDatum $receivableDatum */
-                $receivableDatum = $participant
+                $fieldData = $participant
                   ->getParticipantFieldsData()
-                  ->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]))
-                  ->first();
-                $receivableAmounts[$participant->getMusician()->getId()] = $receivableDatum->getOptionValue();
-                if (!empty($receivableDatum->getSupportingDocument())) {
-                  $projectService = $this->di(ProjectService::class);
-                  $projectService->ensureParticipantFolder($participant->getProject(), $participant->getMusician());
+                  ->matching(self::criteriaWhere(['optionKey' => $receivable->getKey()]));
+                if (count($fieldData) > 0) {
+                  /** @var Entities\ProjectParticipantFieldDatum $receivableDatum */
+                  $receivableDatum = $fieldData->first();
+                  $receivableAmounts[$musicianId] = $receivableDatum->getOptionValue();
+                  if (!empty($receivableDatum->getSupportingDocument())) {
+                    $projectService = $this->di(ProjectService::class);
+                    $projectService->ensureParticipantFolder($participant->getProject(), $musician);
+                  }
                 }
               } else {
                 /** @var Entities\ProjectParticipantFieldDatum $datum */
                 foreach ($receivable->getFieldData() as $datum) {
-                  $receivableAmounts[$datum->getMusician()->getId()] = $datum->getOptionValue();
+                  $receivableAmounts[$musicianId] = $datum->getOptionValue();
                 }
               }
             }
@@ -710,6 +719,15 @@ class ProjectParticipantFieldsController extends Controller
             return self::dataResponse([
               'message' => $messages,
               'amounts' => $receivableAmounts,
+              'added' => $added,
+              'removed' => $removed,
+              'changed' => $changed,
+              'skipped' => $skipped,
+              'musician' => [
+                'id' => $musicianId,
+                'name' => $musicianName,
+              ],
+              'receivables' => $receivables,
             ]);
           default:
             break;
@@ -720,6 +738,50 @@ class ProjectParticipantFieldsController extends Controller
     }
     return self::grumble($this->l->t('Unknown Request "%s/%s"', [ $topic, $subTopic ]));
   }
+
+  public const GET_OPTIONS = 'options';
+
+  /**
+   * Request information about a field given its id.
+   *
+   * @param int $fieldId
+   *
+   * @param string $topic Major topic.
+   *
+   * @param string $subTopic Minor topic.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
+   */
+  public function get(int $fieldId, string $topic = '', string $subTopic = ''):DataResponse
+  {
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->find($fieldId);
+    if (empty($field)) {
+      return self::grumble($this->l->t('Unable to fetch field with id "%d".', $fieldId));
+    }
+    switch ($topic) {
+      case self::GET_OPTIONS:
+        $data = [];
+        /** @var Entities\ProjectParticipantFieldDataOption $dataOption */
+        foreach ($field->getSelectableOptions() as $dataOption) {
+          $data[] = [
+            'key' => (string)$dataOption->getKey(),
+            'label' => $dataOption->getLabel(),
+            'data' => $dataOption->getData(),
+            'limit' => $dataOption->getLimit(),
+            'untranslatedLabel' => $dataOption->getUntranslatedLabel(),
+            'deleted' => $dataOption->getDeleted() === null ? null : $dataOption->getDeleted()->format(DateTime::W3C),
+          ];
+        }
+        return self::dataResponse($data);
+      default:
+        break;
+    }
+    return self::grumble($this->l->t('Unknown request: "%1$s / %2$s".', [ $topic, $subTopic ]));
+  }
+
 
   /**
    * @param string $topic The kind of object to patch. Currently only

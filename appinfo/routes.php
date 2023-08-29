@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -382,6 +382,18 @@ $routes = [
       'name' => 'project_participant_fields#service_switch',
       'url' => '/projects/participant-fields/{topic}/{subTopic}',
       'verb' => 'POST',
+    ],
+    [
+      'name' => 'project_participant_fields#get',
+      'verb' => 'GET',
+      'url' => '/projects/participant-fields/{fieldId}/{topic}/{subTopic}',
+      'defaults' => [
+        'topic' => '',
+        'subTopic' => ''
+      ],
+      'requirements' => [
+        'fieldId' => '^\d+$',
+      ],
     ],
     /**
      * Project events

@@ -28,6 +28,7 @@ import * as Dialogs from './dialogs.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as Page from './page.js';
 // import * as Email from './email.js';
+import { showError } from '@nextcloud/dialogs';
 import * as Notification from './notification.js';
 import checkInvalidInputs from './check-invalid-inputs.js';
 import * as PHPMyEdit from './pme.js';
@@ -39,7 +40,13 @@ import pmeExportMenu from './pme-export.js';
 import * as SelectUtils from './select-utils.js';
 import modalizer from './modalizer.js';
 // import { recordValue as pmeRecordValue } from './pme-record-id.js';
-import { confirmedReceivablesUpdate } from './project-participant-fields.js';
+import {
+  confirmedReceivablesUpdate,
+  getProjectParticipants,
+  getProjectParticipantFields,
+  getProjectParticipantFieldOptions,
+  receivablesStatisticsKeys,
+} from './project-participant-fields.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import cloudFilePickerDialog from './cloud-file-picker-dialog.js';
 import './lock-input.js';
@@ -1429,58 +1436,61 @@ const mandateReady = function(selector, parameters, resizeCB) {
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
-
-      const updateStrategy = $recurringReceivablesUpdateStrategy.filter(':checked').val();
-
-      const requestHandler = function(progressToken, progressCleanup) {
-        const cleanup = function() {
-          progressCleanup();
+      (async function() {
+        const projectId = $this.data('projectId');
+        const cleanup = () => {
           Page.busyIcon(false);
-          // modalizer(false);
           $this.removeClass('busy');
         };
-
-        const request = 'generator/run-all';
-        const projectId = $this.data('projectId');
-
         Page.busyIcon(true);
-        // modalizer(true);
         $this.addClass('busy');
-
-        return $.post(
-          generateUrl('projects/participant-fields/' + request), {
-            request,
-            data: {
-              projectId,
-              updateStrategy,
-              progressToken,
-            },
-          })
-          .fail(function(xhr, status, errorThrown) {
-            Ajax.handleError(xhr, status, errorThrown, cleanup);
-          })
-          .done(function(data) {
-            if (!Ajax.validateResponse(
-              data,
-              ['fieldsAffected'],
-              cleanup)) {
-              return;
+        const updateStrategy = $recurringReceivablesUpdateStrategy.filter(':checked').val();
+        const participants = await getProjectParticipants(projectId);
+        if (!participants) {
+          cleanup();
+          return;
+        }
+        const participantFields = await getProjectParticipantFields(projectId, 'recurring');
+        if (!participantFields) {
+          cleanup();
+          return;
+        }
+        const statistics = {};
+        for (const key of receivablesStatisticsKeys) {
+          statistics[key] = 0;
+        }
+        for (const field of participantFields) {
+          const receivables = await getProjectParticipantFieldOptions(field.id);
+          if (!receivables) {
+            continue;
+          }
+          try {
+            const data = await confirmedReceivablesUpdate(field, receivables, participants, updateStrategy);
+            if (data.cancel) {
+              showError(t(appName, 'Update canceled by user'));
+              break;
+            }
+            for (const key of receivablesStatisticsKeys) {
+              statistics[key] += data[key];
             }
 
-            Notification.messages(data.message);
-            cleanup();
+          } catch (e) {
+            console.info('ERROR', e);
+            const xhr = e.cause;
+            await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+            break;
+          }
+        }
 
-            if (data.fieldsAffected > 0) {
-              // reload surrounding form
-              if (pmeReload.length > 0) {
-                pmeReload.trigger('click');
-              }
-            }
-          });
-      };
+        cleanup();
 
-      confirmedReceivablesUpdate(updateStrategy, requestHandler);
-
+        if (statistics.added + statistics.removed + statistics.changed > 0) {
+          // reload surrounding form
+          if (pmeReload.length > 0) {
+            pmeReload.trigger('click');
+          }
+        }
+      })();
       return false;
     });
 

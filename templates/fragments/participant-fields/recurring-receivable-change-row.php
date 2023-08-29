@@ -45,7 +45,9 @@ use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
  * @param string $toolTipsPrefix
  */
 
+/** @var Entities\ProjectParticipantField $field */
 $fieldId = $field->getId();
+$fieldName = $field->getName();
 $dataType = $field->getDataType();
 $optionKey = $fieldOption->getKey();
 $optionLabel = $fieldOption->getLabel();
@@ -86,6 +88,7 @@ $rowClasses = implode(' ', $rowClasses);
 
 <tr class="<?php p($rowClasses); ?>"
     data-field-id="<?php p($fieldId); ?>"
+    data-field-name="<?php p($fieldName); ?>"
     data-option-key="<?php p($optionKey); ?>"
 >
   <td class="operations">

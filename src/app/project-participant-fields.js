@@ -29,13 +29,16 @@ import * as Notification from './notification.js';
 import * as SelectUtils from './select-utils.js';
 import * as Dialogs from './dialogs.js';
 import * as DialogUtils from './dialog-utils.js';
-import * as ProgressStatus from './progress-status.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import generateUrl from './generate-url.js';
 import textareaResize from './textarea-resize.js';
 import { rec as pmeRec } from './pme-record-id.js';
 import './lock-input.js';
 import { textInputSelector, nonTextInputSelector, textElementSelector } from '../util/css-selectors.js';
+import {
+  data as pmeData,
+} from './pme-selectors.js';
+import { showSuccess } from '@nextcloud/dialogs';
 require('./jquery-readonly.js');
 require('../legacy/nextcloud/jquery/octemplate.js');
 require('jquery-ui/ui/widgets/autocomplete');
@@ -48,114 +51,212 @@ require('./jquery-datetimepicker.js');
 // input is shown for which multiplicity.
 require('project-participant-fields.scss');
 
-const confirmedReceivablesUpdate = function(updateStrategy, requestHandler, single) {
-  const handlerWithProgress = function() {
-    ProgressStatus.create(-1, 0, { field: null, musician: '', receivable: '' })
-      .fail(Ajax.handleError)
-      .done(function(data) {
-        if (!Ajax.validateResponse(data, ['id'])) {
-          return;
-        }
-        const progressToken = data.id;
-        const progressWrapperTemplate = $('#progressWrapperTemplate');
-        const progressWrapperId = 'project-participant-fields-progress';
-        const progressWrapper = progressWrapperTemplate.octemplate({
-          wrapperId: progressWrapperId,
-          caption: '',
-          label: '',
-        });
-        const oldProgressWrapper = $('#' + progressWrapperId);
-        if (oldProgressWrapper.length === 0) {
-          $('body').append(progressWrapper);
-        } else {
-          oldProgressWrapper.replaceWith(progressWrapper);
-        }
-        progressWrapper.find('span.progressbar').progressbar({ value: 0, max: 100 });
-        let progressOpen = false;
-        progressWrapper.cafevDialog({
-          title: t(appName, 'Updating recurring receivables'),
-          width: 'auto',
-          height: 'auto',
-          modal: true,
-          closeOnEscape: false,
-          resizable: false,
-          dialogClass: 'progress-status progress',
-          buttons: [
-            {
-              text: t(appName, 'cancel'),
-              title: t(appName, 'Cancel the operation in progress.'),
-              class: 'cancel',
-              click() {
-                // if (ajaxRequest) {
-                //   ajaxRequest.abort('cancelled');
-                //   ajaxRequest = null;
-                // }
-                $(this).dialog('close');
-              },
-            },
-          ],
-          open() {
-            const dialogHolder = $(this);
-            DialogUtils.toBackButton(dialogHolder);
-            DialogUtils.customCloseButton(dialogHolder, function(event, container) {
-              dialogHolder.dialog('widget').find('.cancel.ui-button').trigger('click');
-              return false;
-            });
-            progressOpen = true;
-            ProgressStatus.poll(progressToken, {
-              update(id, current, target, data) {
-                if (data.field) {
-                  try {
-                    dialogHolder.dialog(
-                      'option', 'title',
-                      t(appName, 'Updating receivables for {field}, {receivable}, {musician}',
-                        { field: data.field || '', receivable: data.receivable || '', musician: data.musician || '' })
-                    );
-                  } catch (e) {
-                    // don't care
-                  }
-                }
-                if (current >= 0 && target > 0) {
-                  progressWrapper.find('.progressbar .label').text(
-                    t(appName, '{current} of {target}', { current, target }));
-                }
-                progressWrapper.find('.progressbar').progressbar('option', 'value', current / target * 100.0);
-                return current < 0 || current !== target;
-              },
-              fail(xhr, status, errorThrown) { Ajax.handleError(xhr, status, errorThrown); },
-              interval: 500,
-            });
-          },
-          close() {
-            progressOpen = false;
-            ProgressStatus.poll.stop();
-            ProgressStatus.delete(progressToken);
-            progressWrapper.dialog('destroy');
-            progressWrapper.hide();
-          },
-        });
-        requestHandler(progressToken, function() {
-          if (progressOpen) {
-            try {
-              progressWrapper.dialog('close');
-            } catch (e) {
-              // don't care
-            }
-          }
-        });
-      });
-  };
-  const handler = single
-    ? function() { requestHandler(null, function() {}); }
-    : handlerWithProgress;
-  if (updateStrategy === 'replace') {
-    Dialogs.confirm(
-      t(appName, 'Update strategy "{updateStrategy}" replaces the value of existing receivables, please confirm that you want to continue.', { updateStrategy }),
-      t(appName, 'Overwrite Existing Records?'),
-      (answer) => (answer && handler()));
-  } else {
-    handler();
+/**
+ * @param {number} projectId The id of the project.
+ *
+ * @param {string} multiplicity If given restrict to the given multiplicity.
+ *
+ * @param {string} type If given restrict to the given data-type.
+ *
+ * @returns {(Array|null)}
+ */
+const getProjectParticipantFields = async function(projectId, multiplicity, type) {
+  try {
+    return await $.get(generateUrl('projects/' + projectId + '/participant-fields'), {
+      multiplicity,
+      type,
+    }).promise();
+  } catch (xhr) {
+    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+    return null;
   }
+};
+
+/**
+ * @param {number} fieldId The id of the project.
+ *
+ * @returns {(Array|null)}
+ */
+const getProjectParticipantFieldOptions = async function(fieldId) {
+  try {
+    return await $.get(generateUrl('projects/participant-fields/' + fieldId + '/options')).promise();
+  } catch (xhr) {
+    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+    return null;
+  }
+};
+
+/**
+ * @param {number} projectId The id of the project.
+ *
+ * @returns {(Array|null)}
+ */
+const getProjectParticipants = async function(projectId) {
+  try {
+    return await $.get(generateUrl('projects/' + projectId + '/participants')).promise();
+  } catch (xhr) {
+    await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+    return null;
+  }
+};
+
+const receivablesStatisticsKeys = ['added', 'removed', 'changed', 'skipped', 'amounts'];
+
+/**
+ * Update the given receivables, display a progress bar, handle errors
+ * and user cancel.
+ *
+ * @param {object} field The database id of the field to update.
+ *
+ * @param {Array} receivables Array of receivables to update.
+ *
+ * @param {Array} participants Arrray of participants to update.
+ *
+ * @param {string} updateStrategy The conflict resolution strategy.
+ *
+ * @returns {boolean}
+ */
+const confirmedReceivablesUpdate = async function(field, receivables, participants, updateStrategy) {
+  console.info('RECEIVABLES', receivables);
+  let confirmed = true;
+  if (updateStrategy === 'replace') {
+    confirmed = await Dialogs.confirm(
+      t(appName, 'Update strategy "{updateStrategy}" replaces the value of existing receivables, please confirm that you want to continue.', {
+        updateStrategy: t(appName, updateStrategy),
+      }),
+      t(appName, 'Overwrite Existing Records?')
+    );
+  }
+  if (!confirmed) {
+    return false;
+  }
+
+  const single = receivables.length === 1 && participants.length === 1;
+
+  const progressWrapperTemplate = $('#progressWrapperTemplate');
+  const progressWrapperId = 'project-participant-fields-progress';
+  const $progressWrapper = progressWrapperTemplate.octemplate({
+    wrapperId: progressWrapperId,
+    caption: '',
+    label: '',
+  });
+  const $oldProgressWrapper = $('#' + progressWrapperId);
+  if ($oldProgressWrapper.length === 0) {
+    $('body').append($progressWrapper);
+  } else {
+    $oldProgressWrapper.replaceWith($progressWrapper);
+  }
+  const $progressBar = $progressWrapper.find('span.progressbar');
+  $progressBar.progressbar({ value: 0, max: 100 });
+  const $label = $progressBar.find('.label');
+  let cancel = null;
+  if (!single) {
+    await new Promise((resolve) => {
+      $progressWrapper.cafevDialog({
+        title: t(appName, 'Updating recurring receivables'),
+        width: 'auto',
+        height: 'auto',
+        modal: true,
+        closeOnEscape: false,
+        resizable: false,
+        dialogClass: 'progress-status progress',
+        buttons: [
+          {
+            text: t(appName, 'cancel'),
+            title: t(appName, 'Cancel the operation in progress.'),
+            class: 'cancel',
+            click() {
+              cancel = t(appName, 'Cancelled by User');
+              $progressWrapper.dialog('close');
+            },
+          },
+        ],
+        open() {
+          const dialogHolder = $(this);
+          DialogUtils.toBackButton(dialogHolder);
+          DialogUtils.customCloseButton(dialogHolder, function(event, container) {
+            $progressWrapper.dialog('widget').find('.cancel.ui-button').trigger('click');
+            return false;
+          });
+          resolve();
+        },
+        close() {
+          $progressWrapper.dialog('destroy');
+          $progressWrapper.hide();
+        },
+      });
+    });
+  }
+
+  const fieldName = field.name;
+  const fieldId = field.id;
+  const totals = receivables.length * participants.length;
+  let current = 0;
+  const statistics = {};
+  for (const key of receivablesStatisticsKeys) {
+    statistics[key] = 0;
+  }
+  statistics.cancel = false;
+  for (const receivable of receivables) {
+    if (cancel) {
+      break;
+    }
+    const key = receivable.key;
+    const receivableLabel = receivable.label;
+    console.info('RECEIVABLE', key, receivableLabel);
+    for (const participant of participants) {
+      if (cancel) {
+        break;
+      }
+      const musicianId = participant.musicianId;
+      const musicianName = participant.personalPublicName;
+      console.info('MUSICIAN', musicianId, musicianName);
+
+      single || $progressWrapper.dialog(
+        'option',
+        'title',
+        t(appName, 'Updating receivables for {fieldName}, {receivableLabel}, {musicianName}',
+          { fieldName, receivableLabel, musicianName })
+      );
+
+      const request = 'option/regenerate';
+      try {
+        const data = await $.post(
+          generateUrl('projects/participant-fields/' + request), {
+            data: {
+              fieldId,
+              key,
+              musicianId,
+              updateStrategy,
+            },
+          }).promise();
+        console.info(data);
+        for (const key of receivablesStatisticsKeys) {
+          statistics[key] += data[key];
+        }
+        ++current;
+        const currentPercentage = current / totals * 100.0;
+        single || $progressBar.progressbar('option', 'value', currentPercentage);
+        single || $label.html(currentPercentage.toFixed(1) + '%');
+        showSuccess(
+          t(appName, 'BLAH {musicianName}, {receivableLabel}: "{message}".', {
+            musicianName, receivableLabel, message: data.message.join('; '),
+          })
+        );
+      } catch (xhr) {
+        const failData = await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
+        cancel = t(appName, 'Error');
+        single || $progressWrapper.dialog('close');
+        console.info('FAIL DATA', failData);
+        throw new Error(failData.error, { cause: failData.xhr });
+      }
+    }
+  }
+  statistics.cancel = cancel;
+  if (!cancel) {
+    single || $progressWrapper.dialog('close');
+  }
+  return statistics;
 };
 
 const ready = function(selector, resizeCB) {
@@ -494,72 +595,82 @@ const ready = function(selector, resizeCB) {
   $container.on('click', 'tr.data-options input.regenerate', function(event) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
-    const fieldId = pmeRec($container);
-    const key = $row.find('input.field-key').val();
-    const updateStrategy = $self.closest('table').find('select.recurring-receivables-update-strategy').val();
-    const requestHandler = function(progressToken, progressCleanup) {
-      const cleanup = function() {
-        progressCleanup();
-        $self.removeClass('busy');
-      };
-      const request = 'option/regenerate';
-      $self.addClass('busy');
-      return $.post(
-        generateUrl('projects/participant-fields/' + request), {
-          data: {
-            fieldId,
-            key,
-            updateStrategy,
-            progressToken,
-          },
-        })
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, cleanup);
-        })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, [], cleanup)) {
-            return;
-          }
-          cleanup();
-          Notification.messages(data.message);
-        });
+    const field = {
+      id: pmeRec($container),
+      name: $container.find('input[name="' + pmeData('name') + '"]').val(),
     };
-    confirmedReceivablesUpdate(updateStrategy, requestHandler);
+    const receivable = {
+      key: $row.find('input.field-key').val(),
+      label: $row.find('input.field-label').val(),
+      data: $row.find('input.field-data').val(),
+      limit: $row.find('input.field-limit').val(),
+    };
+    const projectId = $container.find('input[name="' + pmeData('project_id') + '"]').val();
+    (async () => {
+      const participants = await getProjectParticipants(projectId);
+      if (!participants) {
+        return;
+      }
+      const updateStrategy = $self.closest('table').find('select.recurring-receivables-update-strategy').val();
+
+      $self.addClass('busy');
+      confirmedReceivablesUpdate(field, [receivable], participants, updateStrategy)
+        .then(
+          function() {
+            console.info('SUCCESS', ...arguments);
+          },
+          function() {
+            console.info('ERROR', ...arguments);
+          }
+        )
+        .finally(() => $self.removeClass('busy'));
+    })();
     return false;
   });
 
-  $container.on('click', 'tr.data-options input.regenerate-all', function(event) {
+  $container.on('click', 'tr.data-options input.regenerate-all', async function(event) {
     const $self = $(this);
     const $row = $self.closest('tr.data-options');
-    const fieldId = $row.data('fieldId');
-    const updateStrategy = $row.find('select.recurring-receivables-update-strategy').val();
-    const requestHandler = function(progressToken, progressCleanup) {
-      const cleanup = function() {
-        progressCleanup();
-        $self.removeClass('busy');
-      };
-      const request = 'generator/regenerate';
-      $self.addClass('busy');
-      return $.post(
-        generateUrl('projects/participant-fields/' + request), {
-          data: {
-            fieldId,
-            updateStrategy,
-            progressToken,
-          },
-        })
-        .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, cleanup);
-        })
-        .done(function(data) {
-          if (!Ajax.validateResponse(data, ['fieldsAffected'], cleanup)) {
-            return;
-          }
-          Notification.messages(data.message);
-          cleanup();
-        });
+    const field = {
+      id: $row.data('fieldId'),
+      name: $container.find('input[name="' + pmeData('name') + '"]').val(),
     };
-    confirmedReceivablesUpdate(updateStrategy, requestHandler);
+    const updateStrategy = $row.find('select.recurring-receivables-update-strategy').val();
+    const projectId = $container.find('input[name="' + pmeData('project_id') + '"]').val();
+    const participants = await getProjectParticipants(projectId);
+    if (!participants) {
+      return false;
+    }
+    console.info('PARTICIPANTS', participants);
+
+    // let options = await $.get(generateUrl('projects/participant-fields/' + fieldId + '/options'));
+    // console.info('OPTIONS', options);
+
+    // or parse the Dom:
+    const receivables = [];
+    $row.closest('table').find('tr.data-option-row.active').each(function() {
+      const $row = $(this);
+      console.info('ROW', $row);
+      const receivable = {
+        key: $row.find('input.field-key').val(),
+        label: $row.find('input.field-label').val(),
+        data: $row.find('input.field-data').val(),
+        limit: $row.find('input.field-limit').val(),
+      };
+      receivables.push(receivable);
+    });
+
+    $self.addClass('busy');
+    confirmedReceivablesUpdate(field, receivables, participants, updateStrategy)
+      .then(
+        function() {
+          console.info('SUCCESS', ...arguments);
+        },
+        function() {
+          console.info('ERROR', ...arguments);
+        }
+      )
+      .finally(() => $self.removeClass('busy'));
     return false;
   });
 
@@ -1055,9 +1166,8 @@ export {
   ready,
   documentReady,
   confirmedReceivablesUpdate,
+  getProjectParticipants,
+  getProjectParticipantFields,
+  getProjectParticipantFieldOptions,
+  receivablesStatisticsKeys,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -39,7 +39,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as Dat
 
 $deleted = !empty($rowData['deleted']);
 ?>
-<tr class="data-line data-options data-option-row<?php $deleted && p(' deleted') ?>"
+<tr class="data-line data-options data-option-row <?=($deleted ? 'deleted' : 'active')?>"
     data-index="<?= $index ?>"
     data-used="<?= ($used ? 'used' : 'unused') ?>"
     data-deleted="<?= $rowData['deleted'] ?>"

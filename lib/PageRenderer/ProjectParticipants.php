@@ -513,7 +513,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'display_name', [
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
-        'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', ], ],
+        'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-public-name' ], ],
         'sql|LFVD' => parent::musicianPublicNameSql(),
         'maxlen'   => 384,
         'display|ACP' => [
@@ -571,8 +571,8 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'display_name_personal', [
         'name'     => $this->l->t('Display-Name (pers.)'),
         'tab'      => [ 'id' => 'musician' ],
-        'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', ], ],
-        'options'  => 'LF',
+        'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-personal-public-name' ], ],
+        'options'  => 'LFAVCPD',
         'input' => $this->pmeBare ? 'R' : 'HR', // handy for export
         'sql' => parent::musicianPublicNameSql(firstNameFirst: true),
         'maxlen'   => 384,

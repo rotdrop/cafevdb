@@ -515,6 +515,7 @@ make sure that the musicians are also automatically added to the
       'css'      => [
         'postfix' => [
           'musician-name',
+          'musician-public-name',
           'default-readonly',
           'tab-contact-readwrite',
           'tab-all-readwrite',
@@ -568,8 +569,8 @@ make sure that the musicians are also automatically added to the
     $opts['fdd']['display_name_personal'] = [
       'name'    => $this->l->t('Display-Name (pers.)'),
       'tab'     => [ 'id' => [ 'orchestra', 'contact', ], ],
-      'css'     => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', ], ],
-      'options' => 'LF',
+      'css'     => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-personal-public-name' ], ],
+      'options' => 'LFAVCPD',
       'input'   => $this->pmeBare ? 'R' : 'HR', // handy for export
       'sql'     => parent::musicianPublicNameSql(firstNameFirst: true),
       'maxlen'  => 384,

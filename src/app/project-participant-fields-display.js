@@ -24,8 +24,6 @@
 import $ from './jquery.js';
 import { appName } from './app-info.js';
 import * as Ajax from './ajax.js';
-import * as Notification from './notification.js';
-import { TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as Dialogs from './dialogs.js';
 import { submitOuterForm, tableDialogLoadIndicator } from './pme.js';
@@ -170,43 +168,34 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
-      const row = $this.closest('tr');
-      const fieldId = row.data('fieldId');
-      const optionKey = row.data('optionKey');
-      const updateStrategy = $this.closest('table').find('select.recurring-receivables-update-strategy').val();
-      const requestHandler = function(progressToken, progressCleanup) {
-        const cleanup = function() {
-          progressCleanup();
-          $this.removeClass('busy');
-        };
-        const request = 'option/regenerate';
-        $this.addClass('busy');
-        return $.post(
-          generateUrl('projects/participant-fields/' + request), {
-            data: {
-              fieldId,
-              key: optionKey,
-              musicianId,
-              updateStrategy,
-              progressToken,
-            },
-          })
-          .fail(function(xhr, status, errorThrown) {
-            Ajax.handleError(xhr, status, errorThrown, cleanup);
-          })
-          .done(function(data) {
-            if (!Ajax.validateResponse(data, ['amounts'], cleanup)) {
-              return;
-            }
-            if (data.amounts[musicianId]) {
-              row.find('input.pme-input.receivables, input.pme-input.liabilities').val(data.amounts[musicianId]);
-            }
-            Notification.messages(data.message, { timeout: TOAST_PERMANENT_TIMEOUT });
-            cleanup();
-          });
+      const $row = $this.closest('tr');
+      const field = {
+        id: $row.data('fieldId'),
+        name: $row.data('fieldName'),
       };
+      const receivable = {
+        key: $row.data('optionKey'),
+        label: $row.find('td.label input.pme-input[type="text"]').val(),
+      };
+      const participant = {
+        musicianId,
+        publicName: $pmeForm.find('input.pme-input.musician-public-name').val(),
+        personalPublicName: $pmeForm.find('input.pme-input.musician-personal-public-name').val(),
+      };
+      const updateStrategy = $this.closest('table').find('select.recurring-receivables-update-strategy').val();
 
-      confirmedReceivablesUpdate(updateStrategy, requestHandler, 'single');
+      $this.addClass('busy');
+      confirmedReceivablesUpdate(field, [receivable], [participant], updateStrategy)
+        .then(
+          function(data) {
+            console.info('SUCCESS', ...arguments);
+            $row.find('input.pme-input.receivables, input.pme-input.liabilities').val(data.amounts[musicianId]);
+          },
+          function() {
+            console.info('ERROR', ...arguments);
+          }
+        )
+        .finally(() => $this.removeClass('busy'));
 
       return false;
     });
@@ -216,21 +205,21 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
-      const row = $this.closest('tr');
-      // const fieldId = row.data('fieldId');
-      const optionKey = row.data('optionKey');
+      const $row = $this.closest('tr');
+      // const fieldId = $row.data('fieldId');
+      const optionKey = $row.data('optionKey');
 
       // could also search for name with field-id
       const inputs = $container
         .find('input[value="' + optionKey + '"]')
-        .add(row.find('.pme-input, .operation.regenerate'));
+        .add($row.find('.pme-input, .operation.regenerate'));
 
-      if (row.hasClass('deleted')) {
+      if ($row.hasClass('deleted')) {
         inputs.prop('disabled', false);
-        row.removeClass('deleted');
+        $row.removeClass('deleted');
       } else {
         inputs.prop('disabled', true);
-        row.addClass('deleted');
+        $row.addClass('deleted');
       }
 
       return false;
@@ -241,39 +230,40 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
     .off('click')
     .on('click', function(event) {
       const $this = $(this);
-      const row = $this.closest('tr');
-      const fieldId = row.data('fieldId');
       const updateStrategy = $this.closest('table').find('select.recurring-receivables-update-strategy').val();
-      const requestHandler = function(progressToken, progressCleanup) {
-        const cleanup = function() {
-          progressCleanup();
-          $this.removeClass('busy');
-        };
-        const request = 'option/regenerate';
-        $this.addClass('busy');
-        return $.post(
-          generateUrl('projects/participant-fields/' + request), {
-            data: {
-              fieldId,
-              musicianId,
-              updateStrategy,
-              progressToken,
-            },
-          })
-          .fail(function(xhr, status, errorThrown) {
-            Ajax.handleError(xhr, status, errorThrown, cleanup);
-          })
-          .done(function(data) {
-            if (!Ajax.validateResponse(data, [], cleanup)) {
-              return;
-            }
-            // just trigger reload
-            $container.find('form.pme-form input.pme-reload').first().trigger('click');
-            cleanup();
-            Notification.messages(data.message, { timeout: TOAST_PERMANENT_TIMEOUT });
-          });
+      const $row = $this.closest('tr');
+      const field = {
+        id: $row.data('fieldId'),
+        name: $row.data('fieldName'),
       };
-      confirmedReceivablesUpdate(updateStrategy, requestHandler);
+      const participant = {
+        musicianId,
+        publicName: $pmeForm.find('input.pme-input.musician-public-name').val(),
+        personalPublicName: $pmeForm.find('input.pme-input.musician-personal-public-name').val(),
+      };
+      // or parse the Dom:
+      const receivables = [];
+      $row.closest('table').find('tr.field-datum').each(function() {
+        const $row = $(this);
+        const receivable = {
+          key: $row.data('optionKey'),
+          label: $row.find('td.label input.pme-input[type="text"]').val(),
+        };
+        receivables.push(receivable);
+      });
+
+      $this.addClass('busy');
+      confirmedReceivablesUpdate(field, receivables, [participant], updateStrategy)
+        .then(
+          function() {
+            console.info('SUCCESS', ...arguments);
+          },
+          function() {
+            console.info('ERROR', ...arguments);
+          }
+        )
+        .finally(() => $this.removeClass('busy'));
+
       return false;
     });
 
@@ -293,8 +283,3 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
 };
 
 export default participantOptionHandlers;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

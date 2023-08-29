@@ -37,7 +37,9 @@ use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
  * @param string $toolTipsPrefix
  */
 
+/** @var Entities\ProjectParticipantField $field */
 $fieldId = $field->getId();
+$fieldName = $field->getName();
 
 foreach ($updateStrategyChoices as $tag) {
   $option = [
@@ -52,7 +54,10 @@ $updateStrategyOptions = PageNavigation::selectOptions($updateStrategyOptions);
 
 ?>
 
-<tr class="generator" data-field-id="<?php p($fieldId); ?>">
+<tr class="generator"
+    data-field-id="<?php p($fieldId); ?>"
+    data-field-name="<?php p($fieldName); ?>"
+>
   <td class="operations" colspan="4">
     <div class="flex-container">
       <input class="operation regenerate-all"

@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use DateTime;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -403,6 +405,18 @@ class ProjectsController extends Controller
   ];
 
   /**
+   * Return a list of musician ids and their registration.
+   */
+  const GET_PARTICIPANTS = 'participants';
+
+  /**
+   * Return a list of generated fields, optionally filtered by multiplicity or data-type
+   *
+   * APP_URL/PROJECT_ID/participant-fields?multiplicity=MULT&type=TYPE
+   */
+  const GET_PARTICIPANT_FIELDS = 'participant-fields';
+
+  /**
    * @param int $projectId Entity id.
    *
    * @param string $topic Major topic.
@@ -417,6 +431,7 @@ class ProjectsController extends Controller
   {
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
+    /** @var Entities\Project $project */
     $project = $projectService->findById($projectId);
     if (empty($project)) {
       return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
@@ -424,6 +439,46 @@ class ProjectsController extends Controller
     switch ($topic) {
       case '':
         return self::dataResponse($this->flattenProject($project));
+      case self::GET_PARTICIPANT_FIELDS:
+        $multiplicity = $this->parameterService->getParam('multiplicity');
+        $type = $this->parameterService->getParam('type');
+        $data = [];
+        /** @var Entities\ProjectParticipantField $field */
+        foreach ($project->getParticipantFields() as $field) {
+          $fieldType = $field->getDataType();
+          $fieldMultiplicity = $field->getMultiplicity();
+          if (!empty($type) && $fieldType != $type) {
+            continue;
+          }
+          if (!empty($multiplicity) && $fieldMultiplicity != $multiplicity) {
+            continue;
+          }
+          $data[] = [
+            'id' => $field->getId(),
+            'name' => $field->getName(),
+            'untranslatedName' => $field->getUntranslatedName(),
+            'type' => $fieldType,
+            'multiplicity' => $fieldMultiplicity,
+            // more added later when needed
+          ];
+        }
+        usort($data, fn($a, $b) => strcmp($a['name'], $b['name']));
+        return self::dataResponse($data);
+      case self::GET_PARTICIPANTS:
+        $data = [];
+        /** @var Entities\ProjectParticipant $participant */
+        foreach ($project->getParticipants() as $participant) {
+          $musician = $participant->getMusician();
+          $data[] = [
+            'musicianId' => $musician->getId(),
+            'publicName' => $musician->getPublicName(),
+            'personalPublicName' => $musician->getPublicName(firstNameFirst: true),
+            'registration' => $participant->getRegistration(),
+            'deleted' => $participant->getDeleted() === null ? null : $participant->getDeleted()->format(DateTime::W3C),
+          ];
+        }
+        usort($data, fn($a, $b) => strcmp($a['publicName'], $b['publicName']));
+        return self::dataResponse($data);
       case self::GET_PROJECT_SHARE:
         switch ($subTopic) {
           case ProjectService::FOLDER_TYPE_DOWNLOADS:
