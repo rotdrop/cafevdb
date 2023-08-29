@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Controller;
+
+use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -83,7 +85,7 @@ class ProgressStatusController extends Controller
   {
     try {
       $progress = $this->progressStatusService->get($id);
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logger->logException($t);
       return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
     }
@@ -111,7 +113,7 @@ class ProgressStatusController extends Controller
             $this->request['data']
           );
           return self::progressResponse($progress);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logger->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
@@ -119,7 +121,7 @@ class ProgressStatusController extends Controller
       case 'update':
         try {
           $progress = $this->progressStatusService->get($this->request['id']);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logger->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
@@ -129,7 +131,7 @@ class ProgressStatusController extends Controller
           }
           $progress->update($current, $target, $data);
           return self::progressResponse($progress);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logger->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
@@ -137,14 +139,14 @@ class ProgressStatusController extends Controller
       case 'delete':
         try {
           $progress = $this->progressStatusService->get($this->request['id']);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logger->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
         try {
           $progress->delete();
           return self::response($this->l->t('Progress "%s" successfully deleted.', $this->request['id']));
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logger->logException($t);
           return self::grumble($this->l->t('Exception "%s"', [$t->getMessage()]), Http::STATUS_BAD_REQUEST);
         }
