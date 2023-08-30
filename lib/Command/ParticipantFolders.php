@@ -67,36 +67,36 @@ class ParticipantFolders extends Command
   {
     $this
       ->setName('cafevdb:projects:participants:generate-folders')
-      ->setDescription('Ensure all or selected participant-folders exist.')
+      ->setDescription($this->l->t('Ensure all or selected participant-folders exist.'))
       ->addOption(
         'user',
         'u',
         InputOption::VALUE_REQUIRED,
-        'Restrict the operation to the given user-id',
+        $this->l->t('Restrict the operation to the given user-id'),
       )
       ->addOption(
         'all',
         'a',
         InputOption::VALUE_NONE,
-        'Work on all folders of all participants',
+        $this->l->t('Work on all folders of all participants'),
       )
       ->addOption(
         'project',
         'p',
         InputOption::VALUE_REQUIRED,
-        'Restrict the operation to the given project. Can be combined with --user=USER',
+        $this->l->t('Restrict the operation to the given project. Can be combined with --user=USER'),
       )
       ->addOption(
         'dry',
         null,
         InputOption::VALUE_NONE,
-        'Just simulate, do not generate any folders.',
+        $this->l->t('Just simulate, do not generate any folders.'),
       )
       ->addOption(
         'check',
         'c',
         InputOption::VALUE_NONE,
-        'Check if the folders exist, exit with non-zero status if any is missing, print warnings.',
+        $this->l->t('Check if the folders exist, exit with non-zero status if any is missing, print warnings.'),
       )
       ;
   }
