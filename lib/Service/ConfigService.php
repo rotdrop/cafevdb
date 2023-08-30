@@ -326,9 +326,6 @@ class ConfigService
   /** @var ISecureRandom */
   private $secureRandom;
 
-  /** @var ILogger */
-  protected $logger;
-
   /** @var IDateTimeFormatter */
   protected $dateTimeFormatter;
 

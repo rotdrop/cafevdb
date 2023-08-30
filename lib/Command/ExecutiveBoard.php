@@ -98,18 +98,13 @@ class ExecutiveBoard extends Command
 
     // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IL10N $l10n,
-    IUserManager $userManager,
-    IUserSession $userSession,
-    IAppContainer $appContainer,
+    protected string $appName,
+    protected IL10N $l,
+    protected IUserManager $userManager,
+    protected IUserSession $userSession,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct();
-    $this->appName = $appName;
-    $this->l = $l10n;
-    $this->userManager = $userManager;
-    $this->userSession = $userSession;
-    $this->appContainer = $appContainer;
   }
   // phpcs:enable
 

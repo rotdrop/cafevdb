@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,18 +44,13 @@ class HelloWorld extends Command
 
   /** {@inheritdoc} */
   public function __construct(
-    string $appName,
-    IL10N $l10n,
-    IUserManager $userManager,
-    IUserSession $userSession,
-    IAppContainer $appContainer,
+    protected string $appName,
+    protected IL10N $l,
+    protected IUserManager $userManager,
+    protected IUserSession $userSession,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct();
-    $this->l = $l10n;
-    $this->userManager = $userManager;
-    $this->userSession = $userSession;
-    $this->appName = $appName;
-    $this->appContainer = $appContainer;
   }
 
   /** {@inheritdoc} */
@@ -63,18 +58,18 @@ class HelloWorld extends Command
   {
     $this
       ->setName('cafevdb:hello-world')
-      ->setDescription('Say "Hello!" to the world!')
+      ->setDescription($this->l->t('Say "Hello!" to the world!'))
       ->addOption(
         'only-hello',
         'o',
         InputOption::VALUE_NONE,
-        'outputs hello, not world',
+        $this->l->t('Outputs only hello, not world.'),
       )
       ->addOption(
         'authenticated',
         'a',
         InputOption::VALUE_NONE,
-        'authenticate with the database',
+        $this->l->t('Try to authenticate with the cloud.'),
       )
       ;
   }
