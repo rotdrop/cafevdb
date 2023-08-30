@@ -35,7 +35,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 
-use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 
 /** Test-command in order to see if the abstract framework is functional. */
 class RecurringReceivables extends Command
@@ -75,7 +78,7 @@ class RecurringReceivables extends Command
         'instance',
         'i',
         InputOption::VALUE_REQUIRED,
-        $this->l->t('Restrict the operation to the given instance (e.g. for the a specific year).'),
+        $this->l->t('Restrict the operation to the given instance (e.g. for the a specific year). The instance name may be given incomplete (e.g. "2018" instead of "Instrument Insurance 2018").'),
       )
       ->addOption(
         'user',
@@ -133,6 +136,62 @@ class RecurringReceivables extends Command
     $result = $this->authenticate($input, $output);
     if ($result != 0) {
       return $result;
+    }
+
+    /** @var Entities\Project $project */
+    $project = $this->getDatabaseRepository(Entities\Project::class)->findOneBy([ 'name' => $projectName ]);
+    if (empty($project)) {
+      if (empty($project)) {
+        $output->writeln('<error>' . $this->l->t('Unable to find the project with name "%s".', $projectName) . '</error>');
+        return 1;
+      }
+    }
+
+    if (empty($memberUserId)) {
+      $participants = $project->getParticipants();
+    } else {
+      $participants = $project->getParticipants()->matching(DBUtil::criteriaWhere([ 'musician.userIdSlug' => $memberUserId ]));
+      if (count($participants) == 0) {
+        $output->writeln('<error>' . $this->l->t('Unable to find the participant with user-id "%s".', $memberUserId) . '</error>');
+        return 1;
+      }
+    }
+
+    /** @var Entities\ProjectParticipantField $field */
+    $field = $this->getDatabaseRepository(Entities\ProjectParticipantField::class)->findOneBy([ 'name' => $fieldName ]);
+    if (empty($field)) {
+      if (empty($field)) {
+        $output->writeln('<error>' . $this->l->t('Unable to find the receivable field with name "%s".', $fieldName) . '</error>');
+        $fieldNames = $project->getParticipantFields()
+          ->filter(
+            fn(Entities\ProjectParticipantField $entity) => $entity->getDataType() == FieldType::RECEIVABLES && $entity->getMultiplicity() == FieldMultiplicity::RECURRING
+          )
+          ->map(fn(Entities\ProjectParticipantField $entity) => $entity->getName())
+          ->toArray();
+        if (count($fieldNames) == 0) {
+          $output->writeln('<error>' . $this->l->t('Project "%s" has no recurring receivables.', $projectName) . '</error>');
+        } else {
+          $output->writeln('<error>' . $this->l->t('Project "%1$s" has only the following recurring receivables: %2$s', [
+            $projectName, implode(', ', $fieldNames)
+          ]) . '</error>');
+        }
+        return 1;
+      }
+    }
+
+    $receivables = $field->getSelectableOptions();
+    if (!empty($receivableLabel)) {
+      $receivables = $receivables->filter(
+        fn(Entities\ProjectParticipantFieldDataOption $entity) => str_contains($entity->getLabel(), $receivableLabel)
+      );
+      if (count($receivables) == 0) {
+        $output->writeln('<error>' . $this->l->t('Field "%1$s" has no receivable instance with label "%2$s", only the following options are available: %3$s.', [
+          $fieldName, $receivableLabel, implode(
+            ', ',
+            $field->getSelectableOptions()->map(fn(Entities\ProjectParticipantFieldDataOption $entity) => $entity->getLabel())->toArray()
+          )
+        ]) . '</error>');
+      }
     }
 
     if ($generate) {
