@@ -239,7 +239,7 @@ const confirmedReceivablesUpdate = async function(field, receivables, participan
         single || $progressBar.progressbar('option', 'value', currentPercentage);
         single || $label.html(currentPercentage.toFixed(1) + '%');
         showSuccess(
-          t(appName, 'BLAH {musicianName}, {receivableLabel}: "{message}".', {
+          t(appName, '{musicianName}, {receivableLabel}: "{message}".', {
             musicianName, receivableLabel, message: data.message.join('; '),
           })
         );
