@@ -61,9 +61,9 @@ trait AuthenticatedCommandTrait
   protected function authenticate(InputInterface $input, OutputInterface $output):int
   {
     $helper = $this->getHelper('question');
-    $question = new Question($this->l->t('User: '), '');
+    $question = new Question($this->l->t('User') . ': ', '');
     $userId = $helper->ask($input, $output, $question);
-    $question = (new Question($this->l->t('Password: '), ''))->setHidden(true);
+    $question = (new Question($this->l->t('Password') . ': ', ''))->setHidden(true);
     $password = $helper->ask($input, $output, $question);
 
     // $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $userId, $password ]));
