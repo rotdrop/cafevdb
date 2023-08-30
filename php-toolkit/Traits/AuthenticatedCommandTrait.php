@@ -39,13 +39,13 @@ trait AuthenticatedCommandTrait
   use LoggerTrait;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var IUserManager */
-  protected $userManager;
+  protected IUserManager $userManager;
 
   /** @var IUserSession */
-  protected $userSession;
+  protected IUserSession $userSession;
 
   /** @var string */
   protected string $userId;
