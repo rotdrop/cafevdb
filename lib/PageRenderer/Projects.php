@@ -636,89 +636,90 @@ class Projects extends PMETableViewBase
         'default' => 0,
       ]);
 
-    $opts['fdd']['registration_start_date'] =
-      Util::arrayMergeRecursive(
-        $this->defaultFDD['date'],
-        [
-          'tab' => ['id' => 'miscinfo'],
-          'name' => $this->l->t('Registration Start'),
-          'css' => [ 'postfix' => [ 'registration-start-date', 'track-empty-value', ], ],
-          'nowrap' => true,
-          'options' => 'AVCPD',
-          'tooltip' => $this->toolTipsService['page-renderer:projects:registration:start'],
-          'display' => [
-            'popup' => 'tooltip',
-            'attributes' => [
-              'size' => 14,
+    if (empty($this->project) || $this->project->getType() == ProjectType::TEMPORARY) {
+      $opts['fdd']['registration_start_date'] =
+        Util::arrayMergeRecursive(
+          $this->defaultFDD['date'],
+          [
+            'tab' => ['id' => 'miscinfo'],
+            'name' => $this->l->t('Registration Start'),
+            'css' => [ 'postfix' => [ 'registration-start-date', 'track-empty-value', ], ],
+            'nowrap' => true,
+            'options' => 'AVCPD',
+            'tooltip' => $this->toolTipsService['page-renderer:projects:registration:start'],
+            'display' => [
+              'popup' => 'tooltip',
+              'attributes' => [
+                'size' => 14,
+              ],
             ],
-          ],
-        ]);
+          ]);
 
-    $opts['fdd']['registration_deadline'] =
-      Util::arrayMergeRecursive(
-        $this->defaultFDD['date'],
-        [
-          'tab' => ['id' => 'miscinfo'],
-          'name' => $this->l->t('Registration Deadline'),
-          'css' => [ 'postfix' => [ 'registration-deadline', ], ],
-          'nowrap' => true,
-          'options' => 'AVCPD',
-          'tooltip' => $this->toolTipsService['page-renderer:projects:registration:deadline'],
-          'php|LFVD' => function($value, $op, $k, $row, $recordId, $pme) {
-            $registration_start = $row[$this->queryField('registration_start_date', $pme->fdd)];
-            if (empty($registration_start)) {
-              return '';
-            }
-            $project = $this->project ?? ($recordId['id'] ?? null);
-            if (!empty($project)) {
-              $value = $this->projectService->getProjectRegistrationDeadline($project)->getTimestamp();
-              $string = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
-              return $string;
-            }
-            return '';
-          },
-          'display|ACP' => [
-            'attributes' => function($op, $k, $row, $pme) {
+      $opts['fdd']['registration_deadline'] =
+        Util::arrayMergeRecursive(
+          $this->defaultFDD['date'],
+          [
+            'tab' => ['id' => 'miscinfo'],
+            'name' => $this->l->t('Registration Deadline'),
+            'css' => [ 'postfix' => [ 'registration-deadline', ], ],
+            'nowrap' => true,
+            'options' => 'AVCPD',
+            'tooltip' => $this->toolTipsService['page-renderer:projects:registration:deadline'],
+            'php|LFVD' => function($value, $op, $k, $row, $recordId, $pme) {
+              $registration_start = $row[$this->queryField('registration_start_date', $pme->fdd)];
+              if (empty($registration_start)) {
+                return '';
+              }
               $project = $this->project ?? ($recordId['id'] ?? null);
-              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
-              $deadlineString = null;
               if (!empty($project)) {
-                $value = $this->projectService->getProjectRegistrationDeadline($project);
-                if (!empty($value)) {
-                  $value = $value->getTimestamp();
-                  $deadlineString = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
-                }
+                $value = $this->projectService->getProjectRegistrationDeadline($project)->getTimestamp();
+                $string = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
+                return $string;
               }
-              $exampleDate = DateTimeImmutable::createFromFormat('Ymd', '17840401', $this->getDateTimeZone());
-              $exampleDateString = $this->l->l('date', $exampleDate, [ 'width' => 'medium' ]);
-
-              $lockedPlaceholder =
-                $op == 'add' || empty($deadlineString) ? $this->l->t('e.g. %s', $exampleDateString) : $deadlineString;
-              $unlockedPlaceholder = $this->l->t('e.g. %s', $deadlineString ?? $exampleDateString);
-              if (empty($row['qf'.$k]) || empty($registrationStart)) {
-                return [
-                  'placeholder' => $lockedPlaceholder,
-                  'data-unlocked-placeholder' => $unlockedPlaceholder,
-                  'data-locked-placeholder' => $lockedPlaceholder,
-                  'readonly' => true,
-                  'disabled' => true, // prevents value to be submitted
-                  'size' => 14,
-                ];
-              } else {
-                return [
-                  'placeholder' => $unlockedPlaceholder,
-                  'readonly' => false,
-                  'data-unlocked-placeholder' => $unlockedPlaceholder,
-                  'data-locked-placeholder' => $lockedPlaceholder,
-                  'size' => 14,
-                ];
-              }
+              return '';
             },
-            'postfix' => function($op, $pos, $k, $row, $pme) {
-              $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
-              $disabled = empty($registrationStart) ? 'disabled' : '';
-              $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
-              return '<input id="pme-project-registration-deadline"
+            'display|ACP' => [
+              'attributes' => function($op, $k, $row, $pme) {
+                $project = $this->project ?? ($recordId['id'] ?? null);
+                $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
+                $deadlineString = null;
+                if (!empty($project)) {
+                  $value = $this->projectService->getProjectRegistrationDeadline($project);
+                  if (!empty($value)) {
+                    $value = $value->getTimestamp();
+                    $deadlineString = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
+                  }
+                }
+                $exampleDate = DateTimeImmutable::createFromFormat('Ymd', '17840401', $this->getDateTimeZone());
+                $exampleDateString = $this->l->l('date', $exampleDate, [ 'width' => 'medium' ]);
+
+                $lockedPlaceholder =
+                  $op == 'add' || empty($deadlineString) ? $this->l->t('e.g. %s', $exampleDateString) : $deadlineString;
+                $unlockedPlaceholder = $this->l->t('e.g. %s', $deadlineString ?? $exampleDateString);
+                if (empty($row['qf'.$k]) || empty($registrationStart)) {
+                  return [
+                    'placeholder' => $lockedPlaceholder,
+                    'data-unlocked-placeholder' => $unlockedPlaceholder,
+                    'data-locked-placeholder' => $lockedPlaceholder,
+                    'readonly' => true,
+                    'disabled' => true, // prevents value to be submitted
+                    'size' => 14,
+                  ];
+                } else {
+                  return [
+                    'placeholder' => $unlockedPlaceholder,
+                    'readonly' => false,
+                    'data-unlocked-placeholder' => $unlockedPlaceholder,
+                    'data-locked-placeholder' => $lockedPlaceholder,
+                    'size' => 14,
+                  ];
+                }
+              },
+              'postfix' => function($op, $pos, $k, $row, $pme) {
+                $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
+                $disabled = empty($registrationStart) ? 'disabled' : '';
+                $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+                return '<input id="pme-project-registration-deadline"
   type="checkbox"
   ' . $checked . '
   ' . $disabled . '
@@ -727,10 +728,11 @@ class Projects extends PMETableViewBase
     class="pme-input pme-input-lock lock-empty"
     title="'.$this->toolTipsService['pme:input:lock:empty'].'"
     for="pme-project-registration-deadline"></label>';
-            },
-          ],
-        ]
-      );
+              },
+            ],
+          ]
+        );
+    }
 
     $opts['fdd']['mailing_list_id'] = [
       'name'    => $this->l->t('Mailing List'),
