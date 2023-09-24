@@ -155,11 +155,10 @@ class DatabaseSanitizers extends Command
       if (count($sanitizers) > 1) {
         $section0 = $output->section();
         $progress0 = new ProgressBar($section0);
-        $progress2 = new ProgressBar($section2);
         $section2 = $output->section();
+        $progress2 = new ProgressBar($section2);
       }
       $section1 = $output->section();
-
       $progress1 = new ProgressBar($section1);
 
       $repository = $this->getDatabaseRepository($entityClass);
