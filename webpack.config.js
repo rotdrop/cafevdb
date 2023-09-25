@@ -231,8 +231,11 @@ module.exports = {
       // 'load-image': 'blueimp-load-image',
     },
     fallback: {
-      path: require.resolve('path-browserify'),
       buffer: require.resolve('buffer'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      path: require.resolve('path-browserify'),
+      stream: require.resolve('stream-browserify'),
     },
     extensions: ['*', '.js', '.vue'],
   },
