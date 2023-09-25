@@ -207,10 +207,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       $fee = $this->insuranceService->insuranceFee($musician, $referenceDate, $dueInterval);
 
       // Generate the overview letter as supporting document
-      // @todo: use new OpenDocument stuff
       $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
-      $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
-      $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
     } else {
       if (0 == count($this->insuranceService->billableInsurances($musician))) {
         // bail out early, DO NOT ADD an opening balance
@@ -240,6 +237,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
         if (!$openingBalance) {
           // store overview letter
+          $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
+          $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
           $supportingDocumentFile = new Entities\EncryptedFile(
             $overviewFilename, $overviewLetter, 'application/pdf', $musician);
           $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
@@ -291,6 +290,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           $removed = true;
         } else {
           if (!$openingBalance) {
+            $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
+            $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
             /** @var Entities\DatabaseStorageFile $supportingDocument */
             $supportingDocument = $datum->getSupportingDocument();
             if (empty($supportingDocument)) {
