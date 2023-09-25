@@ -78,7 +78,7 @@ foreach ($availableUpdateStrategies as $tag) {
     'value' => $tag,
     'name' => $l->t($tag),
     'flags' => $flags,
-    'title' => $this->toolTipsService['participant-fields-recurring-data:update-strategy:'.$tag],
+    'title' => $toolTips['participant-fields-recurring-data:update-strategy:'.$tag],
   ];
   $updateStrategies[] = $option;
 }

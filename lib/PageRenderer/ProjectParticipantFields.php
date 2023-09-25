@@ -1460,7 +1460,7 @@ __EOT__;
    *
    * @return string HTML data for one row.
    */
-  public function dataOptionInputRowHtml(mixed $value, int $index, bool $used, ?string $dataType = null):string
+  public function dataOptionInputRowHtml(mixed $value, int $index, bool $used, ?string $dataType):string
   {
     return (new TemplateResponse(
       $this->appName(),
@@ -1468,6 +1468,7 @@ __EOT__;
         'rowData' => $value,
         'index' => $index,
         'used' => $used,
+        'dataType' => $dataType,
         'inputName' => $this->pme->cgiDataName('data_options'),
         'toolTips' => $this->toolTipsService,
       ],
