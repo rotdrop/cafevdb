@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Common\IProgressStatus;
 
 /** Factory for receivables generators. */
 class ReceivablesGeneratorFactory
@@ -76,8 +77,8 @@ class ReceivablesGeneratorFactory
    *
    * @param Entities\ProjectParticipantField $serviceFeeField
    *
-   * @param null|mixed $progressToken Optional id for communicating
-   * progress-status to the frontend.
+   * @param null|IProgressStatus $progressStatus Optional progress
+   * status class in order to give feedback during long running updates.
    *
    * @return IRecurringReceivablesGenerator
    *
@@ -85,7 +86,7 @@ class ReceivablesGeneratorFactory
    */
   public function getGenerator(
     Entities\ProjectParticipantField $serviceFeeField,
-    $progressToken = null,
+    ?IProgressStatus $progressStatus = null,
   ):IRecurringReceivablesGenerator {
     $multiplicity = $serviceFeeField->getMultiplicity();
     $dataType = $serviceFeeField->getDataType();
@@ -117,7 +118,7 @@ class ReceivablesGeneratorFactory
       throw new RuntimeException($this->l->t('Unable to construct generator class "%s".', $class));
     }
 
-    $generatorInstance->bind($serviceFeeField, $progressToken);
+    $generatorInstance->bind($serviceFeeField, $progressStatus);
 
     return $generatorInstance;
   }

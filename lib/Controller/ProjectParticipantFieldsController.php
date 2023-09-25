@@ -47,6 +47,7 @@ use OCA\CAFEVDB\PageRenderer\ProjectParticipantFields as Renderer;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
+use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as ReceivablesGenerator;
@@ -304,8 +305,10 @@ class ProjectParticipantFieldsController extends Controller
               $managementOption->setLimit($managementDate->getTimestamp());
             }
 
+            $progressStatus = $this->di(ProgressStatusService::class)->get($progressToken);
+
             /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
+            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressStatus);
             if (empty($generator)) {
               return self::grumble(
                 $this->l->t(
@@ -374,8 +377,10 @@ class ProjectParticipantFieldsController extends Controller
             $messages = [];
             $this->entityManager->beginTransaction();
             try {
+              $progressStatus = $this->di(ProgressStatusService::class)->get($progressToken);
+
               /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-              $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
+              $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressStatus);
               if (empty($generator)) {
                 throw new RuntimeException($this->l->t(
                     'Unable to load generator for recurring receivables "%s".',
@@ -450,10 +455,12 @@ class ProjectParticipantFieldsController extends Controller
             $messages = [];
             $this->entityManager->beginTransaction();
             try {
+              $progressStatusService = $this->di(ProgressStatusService::class);
               foreach ($generatedFields as $field) {
+                $progressStatus = $progressStatusService->get($progressToken);
 
                 /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-                $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
+                $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressStatus);
                 if (empty($generator)) {
                   throw new RuntimeException($this->l->t(
                     'Unable to load generator for recurring receivables "%s".',
@@ -639,8 +646,10 @@ class ProjectParticipantFieldsController extends Controller
               }
             }
 
+            $progressStatus = $this->di(ProgressStatusService::class)->get($progressToken);
+
             /** @var OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator $generator */
-            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressToken);
+            $generator = $this->di(ReceivablesGeneratorFactory::class)->getGenerator($field, $progressStatus);
             if (empty($generator)) {
               return self::grumble($this->l->t(
                 'Unable to load generator for recurring receivables "%s".',

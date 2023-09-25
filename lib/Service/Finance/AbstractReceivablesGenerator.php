@@ -68,6 +68,18 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   }
   // phpcs:enable
 
+  /**
+   * Inject some translations of constants into the machinery.
+   *
+   * @return void
+   */
+  protected static function translationDummy():void
+  {
+    self::t(self::UPDATE_STRATEGY_EXCEPTION);
+    self::t(self::UPDATE_STRATEGY_REPLACE);
+    self::t(self::UPDATE_STRATEGY_SKIP);
+  }
+
   /** {@inheritdoc} */
   public static function uiFlags():int
   {
@@ -102,14 +114,11 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
   }
 
   /** {@inheritdoc} */
-  public function bind(Entities\ProjectParticipantField $serviceFeeField, $progressToken = null):void
+  public function bind(Entities\ProjectParticipantField $serviceFeeField, ?IProgressStatus $progressStatus = null):void
   {
     $this->serviceFeeField = $serviceFeeField;
-    $this->progressStatus = null;
-    if (!empty($progressToken)) {
-      $this->progressStatus = $this->progressStatusService->get($progressToken);
-    }
-    if (empty($this->progressStatus)) { // handles also invalid token
+    $this->progressStatus = $progressStatus;
+    if (empty($this->progressStatus)) {
       $this->progressStatus = new DoNothingProgressStatus;
     }
     $this->progressData['field'] = $serviceFeeField->getName();
@@ -209,7 +218,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
       if ($this->progressStatus->increment() === false) {
         throw new Exceptions\EnduserNotificationException(
           $this->l->t('Operation has been cancelled by user, last processed data was %s / %s.', [
-            $receivable->getLabel(), $participant->getMusician()->getPublicName(true),
+            $receivable->getLabel(), $participant->getPublicName(true),
           ]));
       }
     } else {
@@ -236,7 +245,7 @@ abstract class AbstractReceivablesGenerator implements IRecurringReceivablesGene
         if ($this->progressStatus->increment() === false) {
           throw new Exceptions\EnduserNotificationException($this->l->t(
             'Operation has been cancelled by user, last processed data was %s / %s.', [
-              $receivable->getLabel(), $participant->getMusician()->getPublicName(true),
+              $receivable->getLabel(), $participant->getPublicName(true),
             ]));
         }
         $added += $a;
