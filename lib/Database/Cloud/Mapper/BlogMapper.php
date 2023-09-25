@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,14 +59,14 @@ class BlogMapper extends Mapper
    * @param string $author The author of this mess.
    *
    * @param int $inReply The id of a previous note this one refers
-   * to. If $blogId >= 0 then this parameter is ignored; only the
+   * to. If $blogId > 0 then this parameter is ignored; only the
    * message text is affected.
    *
    * @param string $content The message text.
    *
    * @param int $priority The priority, should be between 0 and
-   * 255. Only top-level notes may carry a priority (so if $inReplay
-   * >= 0, then $priority is ignored).
+   * 255. Only top-level notes may carry a priority (so if $inReply
+   * > 0, then $priority is ignored).
    *
    * @param bool $popup if @c true then the note will appear as one-time popup.
    *            We remeber the user-id of the reader in the db, after the user
@@ -77,12 +77,12 @@ class BlogMapper extends Mapper
    */
   public function createNote(
     string $author,
-    int $inReply,
+    ?int $inReply,
     string $content,
     int $priority = 0,
     bool $popup = false,
   ) {
-    $priority = $inReply < 0 ? intval($priority) % 256 : 0;
+    $priority = ($inReply ?? 0) <= 0 ? intval($priority) % 256 : 0;
 
     $note = new BlogEntry();
     $note->setAuthor($author);
