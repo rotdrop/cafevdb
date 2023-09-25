@@ -45,7 +45,7 @@ trait ParticipantTotalFeesTrait
   use SubstituteSQLFragmentTrait;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var ToolTipsService */
   protected $toolTipsService;

@@ -65,7 +65,7 @@ trait ConfigTrait
   protected $toolTipsService;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /**
    * Return the stored config-service for convenience.

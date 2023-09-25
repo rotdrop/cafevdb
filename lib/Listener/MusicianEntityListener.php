@@ -60,7 +60,7 @@ class MusicianEntityListener
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var IAppContainer */
   protected $appContainer;

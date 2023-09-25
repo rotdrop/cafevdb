@@ -41,7 +41,7 @@ class Navigation
   const SELECTED = 2;
 
   /** @var OCP\IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var OCA\CAFEVDB\Service\ToolTipsService */
   protected $toolTipsService;

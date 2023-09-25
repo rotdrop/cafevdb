@@ -163,7 +163,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected $toolTipsService;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var PHPMyEdit */
   protected $pme;

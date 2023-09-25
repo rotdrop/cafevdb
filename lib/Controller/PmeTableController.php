@@ -80,12 +80,6 @@ class PmeTableController extends Controller
   /** @var string */
   private $userId;
 
-  /** @var IL10N */
-  protected $l;
-
-  /** @var ILogger */
-  protected $logger;
-
   /** @var \OCP\AppFramework\IAppContainer */
   private $appContainer;
 

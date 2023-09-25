@@ -67,7 +67,7 @@ class PageController extends Controller
   public const HISTORY_ACTION_PUSH = 'push';
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var HistoryService */
   private $historyService;

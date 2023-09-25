@@ -46,7 +46,7 @@ class HistoryService
   const PME_ERROR_READONLY = 1;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var bool */
   protected $debug = false;

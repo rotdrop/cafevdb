@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -72,10 +72,7 @@ class BlogController extends Controller
   private $userId;
 
   /** @var IL10N */
-  protected $l;
-
-  /** @var ILogger */
-  protected $logger;
+  protected IL10N $l;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -196,6 +193,8 @@ class BlogController extends Controller
     $reader    = $this->parameterService->getParam('reader', '');
     $clearRdr  = $this->parameterService->getParam('clearReader', false);
 
+    $inReplyTo = $inReplyTo ?: null;
+
     $realValue = filter_var($popup, FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
     if ($realValue === null) {
       return self::grumble(
@@ -227,6 +226,7 @@ class BlogController extends Controller
           return self::grumble($this->l->t('Refusing to create empty blog entry.'));
         }
         $priority = intval($priority) % 256;
+        $this->logInfo('IN REPLY TO ' . (int)($inReplyTo === null) . ' "' . $inReplyTo);
         /* $result = */$this->blogMapper->createNote($author, $inReplyTo, $content, $priority, $popup);
         break;
       case 'modify':

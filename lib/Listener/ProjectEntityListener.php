@@ -57,7 +57,7 @@ class ProjectEntityListener
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var IAppContainer */
   protected $appContainer;

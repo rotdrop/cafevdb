@@ -300,7 +300,7 @@ class ConfigService
    * @var IL10N
    * Personal localization settings based on user preferences.
    */
-  protected $l;
+  protected IL10N $l;
 
   /** @var IL10N */
   protected $appL10n;

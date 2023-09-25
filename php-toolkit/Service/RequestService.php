@@ -53,7 +53,7 @@ class RequestService
   protected $urlGenerator;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
