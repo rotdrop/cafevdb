@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,16 +47,6 @@ class DoNothingProgressStatus extends AbstractProgressStatus
   /** @var mixed */
   protected $applicationData = null;
 
-  /** @var \DateTimeImmutable */
-  protected $lastModified;
-
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct()
-  {
-    $this->lastModified = new DateTimeImmutable;
-  }
-  // phpcs:enable
-
   /** {@inheritdoc} */
   public function delete()
   {
@@ -83,7 +73,6 @@ class DoNothingProgressStatus extends AbstractProgressStatus
     if ($data !== null) {
       $this->applicationData = $data;
     }
-    $this->lastModified = new DateTimeImmutable;
     return true;
   }
 
@@ -102,12 +91,6 @@ class DoNothingProgressStatus extends AbstractProgressStatus
   public function getTarget():int
   {
     return $this->target;
-  }
-
-  /** {@inheritdoc} */
-  public function getLastModified():\DateTimeinterface
-  {
-    return $this->lastModified;
   }
 
   /** {@inheritdoc} */

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -193,12 +193,6 @@ class PlainFileProgressStatus extends AbstractProgressStatus
   public function getTarget():int
   {
     return $this->data['target'];
-  }
-
-  /** {@inheritdoc} */
-  public function getLastModified():\DateTimeinterface
-  {
-    return (new DateTimeImmutable)->setTimestamp($this->data['lastModified']);
   }
 
   /** {@inheritdoc} */

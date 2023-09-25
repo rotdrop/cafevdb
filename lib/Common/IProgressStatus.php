@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -140,16 +140,4 @@ interface IProgressStatus
    * @return void
    */
   public function setData(array $data);
-
-  /**
-   * Return the cached value of the last modification time.
-   *
-   * @return DateTimeInterface
-   */
-  public function getLastModified():DateTimeinterface;
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
