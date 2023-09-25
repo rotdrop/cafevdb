@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-08-30 12:41+0200\n"
-"PO-Revision-Date: 2023-08-30 12:39+0200\n"
+"POT-Creation-Date: 2023-09-24 22:37+0200\n"
+"PO-Revision-Date: 2023-09-24 22:42+0200\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -32,17 +32,17 @@ msgstr ""
 "Es gibt keine solche Aufräumroutine für die Datenbankentität \"%1$s\": "
 "\"%2$s\"."
 
-#: lib/Command/DatabaseSanitizers.php:181
+#: lib/Command/DatabaseSanitizers.php:180
 #, php-format
 msgid "Unable to construct the sanitizer \"%s\"."
 msgstr "Konnte die Aufräumroutine \"%s\" nicht initialisieren."
 
-#: lib/Command/DatabaseSanitizers.php:231
+#: lib/Command/DatabaseSanitizers.php:230
 #, php-format
 msgid "Sanitizer \"%s\" reported %d failures."
 msgstr "Die Aufräumroutine \"%s\" hat %d Fehler gefunden."
 
-#: lib/Command/DatabaseSanitizers.php:235
+#: lib/Command/DatabaseSanitizers.php:234
 #, php-format
 msgid "Sanitizer \"%s\" succeeded with no failurs."
 msgstr ""
@@ -380,6 +380,42 @@ msgstr "Hallo!"
 msgid "Hello World!"
 msgstr "Hallo Welt!"
 
+#: lib/Command/ParticipantFolders.php:70
+msgid "Ensure all or selected participant-folders exist."
+msgstr ""
+"Sicherstellen, dass alle order die ausgewählten Teilnehmenden-Unterordener "
+"existieren."
+
+#: lib/Command/ParticipantFolders.php:75
+msgid "Restrict the operation to the given user-id."
+msgstr "Die Bearbeitung auf die angebenen Person beschränken."
+
+#: lib/Command/ParticipantFolders.php:81
+msgid "Work on all folders of all participants."
+msgstr "Alle Unterordner aller Teilnehmenden bearbeiten."
+
+#: lib/Command/ParticipantFolders.php:87
+msgid ""
+"Restrict the operation to the given project. Can be combined with --"
+"user=USER."
+msgstr ""
+"Die Bearbeitung auf das angegebene Projekt beschränken. Kann mit --"
+"user=PERSON kombiniert werden."
+
+#: lib/Command/ParticipantFolders.php:93
+msgid "Just simulate, do not generate any folders."
+msgstr ""
+"Simulationsmodues, Ordner und Daten werden weder erzeugt noch gelöscht."
+
+#: lib/Command/ParticipantFolders.php:99
+msgid ""
+"Check if the folders exist, exit with non-zero status if any is missing, "
+"print warnings."
+msgstr ""
+"Prüfemn, ob der Unterordner existiert. Das Programm beendet sich mit\n"
+"Nicht-Null Status-Code, falls irgendein Unterordner fehlt und wird in\n"
+"dem Fall Warnungen ausgeben."
+
 #: lib/Command/ParticipantFolders.php:117
 msgid ""
 "One of the options \"--user=USER\", \"--project=PROJECT\" or \"--all\" has "
@@ -395,23 +431,24 @@ msgstr ""
 "\"--all\" kann nicht mit \"--user=USER\" oder \"--project=PROJECT\" "
 "kombiniert werden."
 
-#: lib/Command/ParticipantFolders.php:146
+#: lib/Command/ParticipantFolders.php:147
+#: lib/Command/RecurringReceivables.php:218
 #, php-format
 msgid "Unable to find the project with name \"%s\"."
 msgstr "Konnte das Projekt mit dem Namen \"%s\" nicht finden."
 
-#: lib/Command/ParticipantFolders.php:192
+#: lib/Command/ParticipantFolders.php:193
 #: lib/Storage/Database/ProjectParticipantsStorage.php:463
 #, php-format
 msgid "Folder \"%s\" does not exist."
 msgstr "Der Datei-Ordner \"%s\" existiert nicht."
 
-#: lib/Command/ParticipantFolders.php:195
+#: lib/Command/ParticipantFolders.php:196
 #, php-format
 msgid "Folder \"%s\" exists."
 msgstr "Der Datei-Ordner \"%s\" existiert."
 
-#: lib/Command/ParticipantFolders.php:198
+#: lib/Command/ParticipantFolders.php:199
 #, php-format
 msgid "Ensured existence of folder \"%s\"."
 msgstr "Die Existenz des Dateiordners \"%s\" wurde sicher gestellt."
@@ -754,23 +791,27 @@ msgid "FOLDER must be one of \"%s\""
 msgstr ""
 "Für den FOLDER-Parameter gibt es nur die folgenden Möglichkeiten: \"%s\"."
 
-#: lib/Command/RecurringReceivables.php:66
+#: lib/Command/RecurringReceivables.php:95
 msgid "Work on the given project. This option is mandatory."
 msgstr "Das angegebene Projekt bearbeiten. Die Option muss angegeben werden."
 
-#: lib/Command/RecurringReceivables.php:72
+#: lib/Command/RecurringReceivables.php:101
 msgid "Work on the given receivable field. This option is mandatory."
 msgstr ""
 "Das angegebene Datenfeld bearbeiten. Diese Option muss angegeben werden."
 
-#: lib/Command/RecurringReceivables.php:78
+#: lib/Command/RecurringReceivables.php:108
 msgid ""
-"Restrict the operation to the given instance (e.g. for the a specific year)."
+"Restrict the operation to the given instance (e.g. for the a specific year). "
+"The instance name may be given incomplete (e.g. \"2018\" instead of "
+"\"Instrument Insurance 2018\")."
 msgstr ""
 "Die Bearbeitung auf die angebene Forderungs-Instanz beschränken\n"
-"(z.B. Forderungen für ein spezifisches Jahr)."
+"(z.B. Forderungen für ein spezifisches Jahr). Der Name der Forderung\n"
+"darf verkürzt angegeben werden (z.B. \"2018\" statt\n"
+"\"Instrumenten-Versicherung 2018\")."
 
-#: lib/Command/RecurringReceivables.php:84
+#: lib/Command/RecurringReceivables.php:115
 msgid ""
 "Restrict the operation to the given user-id. The default is to work on the "
 "receivables for all users."
@@ -779,7 +820,7 @@ msgstr ""
 "beschränken. Die Voreinstellung ist, die Forderungen gegenüber allen\n"
 "Personen zu bearbeiten."
 
-#: lib/Command/RecurringReceivables.php:90
+#: lib/Command/RecurringReceivables.php:121
 msgid ""
 "List the existing receivable instances for the given project, receivable "
 "field (and optionally receivable instance and user)."
@@ -788,13 +829,13 @@ msgstr ""
 "Datenfeld (und opional nur für die angegebene Person und\n"
 "Forderungen-Instanz)."
 
-#: lib/Command/RecurringReceivables.php:96
+#: lib/Command/RecurringReceivables.php:127
 msgid ""
 "Generate all neccessary receivable instances for the given receivable field."
 msgstr ""
 "Alle relevanten Instanzen für das angegebene Forderungen-Datenfeld erzeugen."
 
-#: lib/Command/RecurringReceivables.php:102
+#: lib/Command/RecurringReceivables.php:133
 msgid ""
 "Recompute the amounts and supporting documents for the given project, "
 "receivable field (and optionally receivable instance and user)."
@@ -802,15 +843,133 @@ msgstr ""
 "Die Beträge und Rechnungen für das angegebene Projekt, Datenfeld (und\n"
 "optional die Person und die Forderungen-Instanz) neu berechnen."
 
-#: lib/Command/RecurringReceivables.php:121
+#: lib/Command/RecurringReceivables.php:140
+#, php-format
+msgid ""
+"Conflict resolution strategy if the newly comuputed value differ from "
+"already existing values, one of %s."
+msgstr ""
+"Strategie zur Konfliktauflösung, falls ein neu berechneter Wert sich\n"
+"von einem bereits früher berechneten Wert\n"
+"unterscheidet. Auswahlmöglichkeiten: %s."
+
+#: lib/Command/RecurringReceivables.php:168
 msgid "Please specify the project-name to work on."
 msgstr "Bitte das Projekt angeben, das bearbeitet werden soll."
 
-#: lib/Command/RecurringReceivables.php:125
+#: lib/Command/RecurringReceivables.php:172
 msgid "Please specify the name of the receivable field to work on."
 msgstr ""
 "Bitte den Namen des Forderungen-Datenfelds angeben, das bearbeitet werden "
 "soll."
+
+#: lib/Command/RecurringReceivables.php:190
+#, php-format
+msgid "Unknown update strategy \"%1$s\", must be one of \"%2$s\"."
+msgstr ""
+"Unbekannte Aktualisierungsstrategie: \"%s\", mögliche Strategien sind "
+"\"%2$s\"."
+
+#: lib/Command/RecurringReceivables.php:228
+#, php-format
+msgid "Unable to find the participant with user-id \"%s\"."
+msgstr "Kann die Person mit der Benutzer-Kennung \"%s\" nicht finden."
+
+#: lib/Command/RecurringReceivables.php:237
+#, php-format
+msgid "Unable to find the receivable field with name \"%s\"."
+msgstr "Kann die Forderung mit dem Namen \"%s\" nicht finden."
+
+#: lib/Command/RecurringReceivables.php:245
+#, php-format
+msgid "Project \"%s\" has no recurring receivables."
+msgstr "Zu dem Projekt \"%s\" gibt es keine wiederkehrenden Forderungen."
+
+#: lib/Command/RecurringReceivables.php:247
+#, php-format
+msgid "Project \"%1$s\" has only the following recurring receivables: %2$s."
+msgstr ""
+"Das Projekt \"%1$s\" hat nur die folgenden wiederkehrenden Forderungen: %2$s."
+
+#: lib/Command/RecurringReceivables.php:263
+#, php-format
+msgid ""
+"Field \"%1$s\" has no receivable instance with label \"%2$s\", only the "
+"following options are available: %3$s."
+msgstr ""
+"Das Feld \"%1$s\" hat keine Forderungs-Instanz mit Label \"%2$s\",\n"
+"existierende Optionen sind: %3$s."
+
+#: lib/Command/RecurringReceivables.php:293
+msgid "All Receivables:"
+msgstr "Alle Forderungen:"
+
+#: lib/Command/RecurringReceivables.php:295
+msgid "New Receivables:"
+msgstr "Neue Forderungen:"
+
+#: lib/Command/RecurringReceivables.php:305
+msgid "new"
+msgstr "neu"
+
+#: lib/Command/RecurringReceivables.php:309
+msgid "No new receivables."
+msgstr "Es wurden keine neuen Forderungen erzeugt."
+
+#: lib/Command/RecurringReceivables.php:317
+#, php-format
+msgid "Updating receivables for %d participants."
+msgstr "Aktualisiere Forderungen für %d Teilnehmende."
+
+#: lib/Command/RecurringReceivables.php:349
+#, php-format
+msgid "Updating receivables for %s."
+msgstr "Akualisiere wiederkehrende Forderungen für %s."
+
+#: lib/Command/RecurringReceivables.php:355
+#, php-format
+msgid "Updating receivables for %1$s, working on \"%2$s\"."
+msgstr ""
+"Aktualisiere die Forderungen für %1$s, bearbeitet wird gerade \"%2$s\"."
+
+#: lib/Command/RecurringReceivables.php:369
+#, php-format
+msgid "Receivable \"%1$s\" does not apply for %2$s."
+msgstr "Die Forderung \"%1$s\" besteht gegenüber %2$s nicht."
+
+#: lib/Command/RecurringReceivables.php:377
+#, php-format
+msgid "%1$s: receivable \"%2$s\" amounts to %3$s."
+msgstr "%1$s: die Forderiung \"%2$s\" beläuft sich auf %3$s."
+
+#: lib/Command/RecurringReceivables.php:396
+#, php-format
+msgid ""
+"%1$s: added %2$d, removed %3$d, changed %4$d and skipped %5$d receivables, "
+"total amount %6$s."
+msgstr ""
+"%1$s: %2$d Forderungen hinzugefügt, %3$d entfernt, %4$d geändert und\n"
+" %5d übersprungen, der Gesamtbetrag beläuft sich auf %6$s."
+
+#: lib/Command/RecurringReceivables.php:428
+#, php-format
+msgid "Added %d, removed %d, changed %d and skipped %d receivables."
+msgstr ""
+"%1$d Forderungen hinzugefügt, %2$d entfernt, %3$d geändert und\n"
+" %4d übersprungen."
+
+#: lib/Command/RecurringReceivables.php:435
+msgid "Informational messages:"
+msgstr "Bemerkungen:"
+
+#: lib/Command/RecurringReceivables.php:443
+msgid "Receivables update has failed."
+msgstr "Die Aktualisierung der wiederkehrenden Forderung ist fehlgeschlagen."
+
+#: lib/Command/RecurringReceivables.php:462
+#, php-format
+msgid "Total amount for \"%s\": %s."
+msgstr "Gesamtsumme für \"%s\": %s."
 
 #: lib/Command/WikiOverview.php:88
 msgid "Operation successfully completed."
@@ -1057,16 +1216,16 @@ msgstr "Die Nutzer-Id \"%s\" ist kein Mitglied der Orchestergruppe \"%s\""
 msgid "Caught exception \\`%s' at %s:%s"
 msgstr "Ausnahme `aufgefangen': \\`%s' bei %s:%s."
 
-#: lib/Controller/BlogController.php:125 lib/Controller/BlogController.php:212
+#: lib/Controller/BlogController.php:122 lib/Controller/BlogController.php:211
 msgid "Refusing to create blog entry without author identity."
 msgstr "Pinnwand-Einträge ohne Autor können leider nicht erstellt werden."
 
-#: lib/Controller/BlogController.php:134
+#: lib/Controller/BlogController.php:131
 #, php-format
 msgid "Error, caught an exception `%s'."
 msgstr "Interner Fehler: `%s'."
 
-#: lib/Controller/BlogController.php:203
+#: lib/Controller/BlogController.php:202
 #: lib/Controller/PersonalSettingsController.php:207
 #: lib/Controller/PersonalSettingsController.php:1758
 #, php-format
@@ -1074,7 +1233,7 @@ msgid "Value \"%1$s\" for set \"%2$s\" is not convertible to boolean."
 msgstr ""
 "Wert \"%1$s\" für \"%2$s\" kann nicht als Wahrheitswert interpretiert werden."
 
-#: lib/Controller/BlogController.php:217
+#: lib/Controller/BlogController.php:216
 #, php-format
 msgid ""
 "Message priority should be numeric (and in principle positiv and in the "
@@ -1083,7 +1242,7 @@ msgstr ""
 "Die Darstellungspriorität für Notizen sollte eine Zahl zwischen 0 und\n"
 "255 sein. Angegeben wurde `%s'."
 
-#: lib/Controller/BlogController.php:227
+#: lib/Controller/BlogController.php:226
 msgid "Refusing to create empty blog entry."
 msgstr "Leere Notizen werden nicht abgespeichert."
 
@@ -2591,7 +2750,7 @@ msgstr ""
 "implementiert."
 
 #: lib/Controller/PersonalSettingsController.php:2188
-#: lib/Controller/PmeTableController.php:142
+#: lib/Controller/PmeTableController.php:136
 #: lib/Controller/ProjectsController.php:390
 #: lib/Controller/SepaBulkTransactionsController.php:165
 #, php-format
@@ -2634,29 +2793,29 @@ msgstr ""
 "Setzen des App-Verschlüsselungs-Schlüssel für %s ist endgültig "
 "fehlgeschlagen: \"%s\"."
 
-#: lib/Controller/PmeTableController.php:164
-#: lib/Controller/PmeTableController.php:225
+#: lib/Controller/PmeTableController.php:158
+#: lib/Controller/PmeTableController.php:219
 msgid "missing arguments"
 msgstr "fehlende Parameter"
 
-#: lib/Controller/PmeTableController.php:165
+#: lib/Controller/PmeTableController.php:159
 msgid "No template-renderer submitted."
 msgstr "Kein Template-Erzeuger übermittelt."
 
-#: lib/Controller/PmeTableController.php:172
+#: lib/Controller/PmeTableController.php:166
 #, php-format
 msgid "Template-renderer `%s' cannot be found."
 msgstr "Inhalts-Erzeuger für Schablone `%s' kann nicht gefunden werden."
 
-#: lib/Controller/PmeTableController.php:220
+#: lib/Controller/PmeTableController.php:214
 msgid "No export-format submitted"
 msgstr "Es wurde kein Export-Format übermittelt."
 
-#: lib/Controller/PmeTableController.php:226
+#: lib/Controller/PmeTableController.php:220
 msgid "No template submitted."
 msgstr "Es wurde kein Template übermittelt."
 
-#: lib/Controller/PmeTableController.php:233
+#: lib/Controller/PmeTableController.php:227
 #, php-format
 msgid "Template-exporter for template \"%s\" cannot be found."
 msgstr ""
@@ -2693,129 +2852,129 @@ msgstr "Ungültiger Kalendertyp \"%1$s\"."
 msgid "Project-id AND -name have to be specified (%s / %s)"
 msgstr "Projekt-Id und -Name müssen angegeben werden (%s / %s)"
 
-#: lib/Controller/ProjectParticipantFieldsController.php:159
-#: lib/Controller/ProjectParticipantFieldsController.php:275
+#: lib/Controller/ProjectParticipantFieldsController.php:160
+#: lib/Controller/ProjectParticipantFieldsController.php:276
 #, php-format
 msgid "Missing parameters in request \"%s\": \"%s\"."
 msgstr "Fehlende Anfrage-Parameter \"%s\" / \"%s\"."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:170
-#: lib/Controller/ProjectParticipantFieldsController.php:288
-#: lib/Controller/ProjectParticipantFieldsController.php:367
-#: lib/Controller/ProjectParticipantFieldsController.php:762
-#: lib/Controller/ProjectParticipantFieldsController.php:803
+#: lib/Controller/ProjectParticipantFieldsController.php:171
+#: lib/Controller/ProjectParticipantFieldsController.php:289
+#: lib/Controller/ProjectParticipantFieldsController.php:370
+#: lib/Controller/ProjectParticipantFieldsController.php:771
+#: lib/Controller/ProjectParticipantFieldsController.php:812
 #, php-format
 msgid "Unable to fetch field with id \"%d\"."
 msgstr "Kann das Feld mit der Id \"%s\" nicht laden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:191
+#: lib/Controller/ProjectParticipantFieldsController.php:192
 #, php-format
 msgid "Unable to retrieve property \"%s\" from field \"%s\"."
 msgstr "Kann die Eigenschaft \"%s\" des Felds \"%s\" nicht abfragen."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:211
+#: lib/Controller/ProjectParticipantFieldsController.php:212
 msgid "Request successful."
 msgstr "Anfrage erfolgreich."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:225
+#: lib/Controller/ProjectParticipantFieldsController.php:226
 #, php-format
 msgid "Missing parameters in request \"%s\"."
 msgstr "Fehlende Parameter in der Anfrage \"%s\"."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:232
+#: lib/Controller/ProjectParticipantFieldsController.php:233
 #, php-format
 msgid "No or too many items available: \"%s\"."
 msgstr "Keine oder zu viele Einträge vorhanden: \"%s\"."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:238
+#: lib/Controller/ProjectParticipantFieldsController.php:239
 #, php-format
 msgid "Generator data must be tagged with \"%s\" label, got \"%s\"."
 msgstr "Generator-Daten müssen die \"%s\" Markierung tragen, nicht \"%s\"."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:242
+#: lib/Controller/ProjectParticipantFieldsController.php:243
 #, php-format
 msgid "Generator data must be tagged with NIL uuid, got \"%s\"."
 msgstr ""
 "Generator-Daten müssen mit der NIL-UUID markiert sein, nicht mit \"%s\"."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:252
+#: lib/Controller/ProjectParticipantFieldsController.php:253
 #, php-format
 msgid "Generator \"%s\" could not be instantiated."
 msgstr "Der Generator \"%s\" konnte nicht instantiiert werden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:265
+#: lib/Controller/ProjectParticipantFieldsController.php:266
 #, php-format
 msgid "Generator \"%s\" successfully mapped to PHP-class \"%s\"."
 msgstr "Generator \"%s\" wurde erfolgreich der PHP-Klasse \"%s\" zugeordnet."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:295
+#: lib/Controller/ProjectParticipantFieldsController.php:296
 #, php-format
 msgid "No management option in field \"%s\"."
 msgstr "Keine Definitionsdaten im Feld \"%s\"."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:312
-#: lib/Controller/ProjectParticipantFieldsController.php:381
-#: lib/Controller/ProjectParticipantFieldsController.php:459
-#: lib/Controller/ProjectParticipantFieldsController.php:646
+#: lib/Controller/ProjectParticipantFieldsController.php:315
+#: lib/Controller/ProjectParticipantFieldsController.php:386
+#: lib/Controller/ProjectParticipantFieldsController.php:466
+#: lib/Controller/ProjectParticipantFieldsController.php:655
 #, php-format
 msgid "Unable to load generator for recurring receivables \"%s\"."
 msgstr ""
 "Kann den Generator für die regelmäßigen Unkostenbeiträge \"%s\" nicht laden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:337
-#: lib/Controller/ProjectParticipantFieldsController.php:578
-#: lib/Controller/ProjectParticipantFieldsController.php:718
+#: lib/Controller/ProjectParticipantFieldsController.php:340
+#: lib/Controller/ProjectParticipantFieldsController.php:585
+#: lib/Controller/ProjectParticipantFieldsController.php:727
 #, php-format
 msgid "Request \"%s/%s\" successful"
 msgstr "Anfrage \"%s/%s\" erfolgreich"
 
-#: lib/Controller/ProjectParticipantFieldsController.php:351
-#: lib/Controller/ProjectParticipantFieldsController.php:423
-#: lib/Controller/ProjectParticipantFieldsController.php:598
+#: lib/Controller/ProjectParticipantFieldsController.php:354
+#: lib/Controller/ProjectParticipantFieldsController.php:428
+#: lib/Controller/ProjectParticipantFieldsController.php:605
 #, php-format
 msgid "Missing parameters in request \"%s/%s\": \"%s\"."
 msgstr "Fehlende Anfrage-Parameter \"%s/%s\": \"%s\"."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:358
-#: lib/Controller/ProjectParticipantFieldsController.php:430
-#: lib/Controller/ProjectParticipantFieldsController.php:605
+#: lib/Controller/ProjectParticipantFieldsController.php:361
+#: lib/Controller/ProjectParticipantFieldsController.php:435
+#: lib/Controller/ProjectParticipantFieldsController.php:612
 #, php-format
 msgid "Unknown update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:396
+#: lib/Controller/ProjectParticipantFieldsController.php:401
 #, php-format
 msgid "Field \"%s\", options addded/removed/changed: %d/%d/%d/%d."
 msgstr ""
 "Feld \"%s\", Optionen erzeugt/gelöscht/geändert/übersprungen: %d/%d/%d/%d."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:438
+#: lib/Controller/ProjectParticipantFieldsController.php:443
 #, php-format
 msgid "Unable to find the project with the id %d."
 msgstr "Konnte kein Projekt mit der Id %d finden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:443
+#: lib/Controller/ProjectParticipantFieldsController.php:448
 #, php-format
 msgid "Project \"%s\" has no generated fields."
 msgstr "Das Projekt \"%s\" hat keine automatisch erzeugten Felder."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:477
+#: lib/Controller/ProjectParticipantFieldsController.php:484
 #, php-format
 msgid "Field \"%s\", options addded/removed/changed/skipped: %d/%d/%d/%d."
 msgstr ""
 "Feld \"%s\", Optionen erzeugt/gelöscht/geändert/übersprungen: %d/%d/%d/%d."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:503
+#: lib/Controller/ProjectParticipantFieldsController.php:510
 #, php-format
 msgid "Missing parameters in request %s"
 msgstr "Fehlender Anfrage-Parameter `%s'"
 
-#: lib/Controller/ProjectParticipantFieldsController.php:519
+#: lib/Controller/ProjectParticipantFieldsController.php:526
 #, php-format
 msgid "No or too many items available: %s"
 msgstr "Keine oder zu viele Einträge vorhanden: %s"
 
-#: lib/Controller/ProjectParticipantFieldsController.php:527
+#: lib/Controller/ProjectParticipantFieldsController.php:534
 #, php-format
 msgid ""
 "Using \"%1$s\" as option-label is not allowed. The \"%2$s\"-file is reserved "
@@ -2825,14 +2984,14 @@ msgstr ""
 "verwenden. Die \"%2$s\"-Datei wird benötigt, um den Inhalt der Kontexthilfe "
 "für dieses Feld zu präsentieren."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:542
 #: lib/Controller/ProjectParticipantFieldsController.php:549
+#: lib/Controller/ProjectParticipantFieldsController.php:556
 #: lib/Controller/ValidationController.php:89
 #, php-format
 msgid "Could not parse number: \"%s\""
 msgstr "Kann die Zahlangabe \"%s\" nicht interpretieren."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:557
+#: lib/Controller/ProjectParticipantFieldsController.php:564
 #, php-format
 msgid ""
 "Using \"%1$s\" as option-label is not allowed. The \"%2$s\"-file is used by "
@@ -2842,28 +3001,28 @@ msgstr ""
 "verwenden. Die \"%2$s\"-Datei wird benötigt, um den Inhalt der Kontexthilfe "
 "für dieses Feld zu präsentieren."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:613
+#: lib/Controller/ProjectParticipantFieldsController.php:620
 #, php-format
 msgid "Unable to fetch field with id \"%s\"."
 msgstr "Kann das Feld mit der Id \"%s\" nicht laden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:625
+#: lib/Controller/ProjectParticipantFieldsController.php:632
 #, php-format
 msgid "Unable to find the musician with the id \"%d\" in project \"%s\"."
 msgstr "Kann die Person mit der Id \"%d\" nicht im Projekt \"%s\" finden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:638
+#: lib/Controller/ProjectParticipantFieldsController.php:645
 #, php-format
 msgid "Unable to fetch receivable with key \"%s\"."
 msgstr "Kann die Forderung mit der Id \"%s\" nicht laden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:739
-#: lib/Controller/ProjectParticipantFieldsController.php:835
+#: lib/Controller/ProjectParticipantFieldsController.php:748
+#: lib/Controller/ProjectParticipantFieldsController.php:844
 #, php-format
 msgid "Unknown Request \"%s/%s\""
 msgstr "Unbekannte Anfrage \"%s/%s\""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:782
+#: lib/Controller/ProjectParticipantFieldsController.php:791
 #: lib/Controller/ProjectsController.php:512
 #: lib/Controller/ProjectsController.php:552
 #: lib/Controller/ProjectsController.php:603
@@ -2872,7 +3031,7 @@ msgstr "Unbekannte Anfrage \"%s/%s\""
 msgid "Unknown request: \"%1$s / %2$s\"."
 msgstr "Unbekannte Anfrage: \"%1$s / %2$s\""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:809
+#: lib/Controller/ProjectParticipantFieldsController.php:818
 #, php-format
 msgid "Unable to find the option with id \"%1$s\" for field \"%2$s\"."
 msgstr "Kann die Option mit Id \"%1$s\" für das Feld \"%2$s\" nicht finden."
@@ -7137,22 +7296,22 @@ msgstr ""
 msgid "CyberSpace"
 msgstr "CyberSpace"
 
-#: lib/Service/Finance/AbstractReceivablesGenerator.php:91
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:103
 msgid "Recompute all Receivables"
 msgstr "Alle Forderungen neu berechnen"
 
-#: lib/Service/Finance/AbstractReceivablesGenerator.php:93
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:105
 msgid "Recompute all Liabilities"
 msgstr "Alle Verbindlichkeiten neu berechnen"
 
-#: lib/Service/Finance/AbstractReceivablesGenerator.php:95
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:107
 msgid "Update all Input-Options"
 msgstr "Alle Felder aktualisieren"
 
-#: lib/Service/Finance/AbstractReceivablesGenerator.php:211
-#: lib/Service/Finance/AbstractReceivablesGenerator.php:238
-#: lib/Service/Finance/AbstractReceivablesGenerator.php:289
-#: lib/Service/Finance/AbstractReceivablesGenerator.php:314
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:220
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:247
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:298
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:323
 #, php-format
 msgid "Operation has been cancelled by user, last processed data was %s / %s."
 msgstr ""
@@ -7263,17 +7422,17 @@ msgstr "Anfangsbestand"
 msgid "Insurance Fee %d"
 msgstr "Versicherungs-Beitrag %d"
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:260
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:259
 #, php-format
 msgid "Keeping opening balance of %s."
 msgstr "Anfangsbestand %s unverändert beibehalten."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:262
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:261
 #, php-format
 msgid "Data inconsistency for musician %s in year %d: old fee %s, new fee %s."
 msgstr "Inkonsistente Daten für %s, Jahr %d: alter Betrag %s, neuer Betrag %s."
 
-#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:279
+#: lib/Service/Finance/InstrumentInsuranceReceivablesGenerator.php:278
 #, php-format
 msgid "Unknonw update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
@@ -7309,7 +7468,7 @@ msgstr "periodisch"
 msgid "Option %s"
 msgstr "Option %s"
 
-#: lib/Service/Finance/ReceivablesGeneratorFactory.php:95
+#: lib/Service/Finance/ReceivablesGeneratorFactory.php:96
 #, php-format
 msgid ""
 "Auto-generating receivables or options for the combination of multiplicity/"
@@ -7318,16 +7477,16 @@ msgstr ""
 "Automatisches Erzeugen von Forderungen bzw. Optionen für die\n"
 "Kombination von Vielfachheit / Datentyp %s/%s wird nicht unterstützt."
 
-#: lib/Service/Finance/ReceivablesGeneratorFactory.php:103
+#: lib/Service/Finance/ReceivablesGeneratorFactory.php:104
 msgid "Unable to find the management option."
 msgstr "Kann die Kontrolloption nicht finden."
 
-#: lib/Service/Finance/ReceivablesGeneratorFactory.php:111
+#: lib/Service/Finance/ReceivablesGeneratorFactory.php:112
 #, php-format
 msgid "Option label should be \"%s\", got \"%s\"."
 msgstr "Options-Markierung sollte \"%s\" sein, gefunden wurde \"%s\"."
 
-#: lib/Service/Finance/ReceivablesGeneratorFactory.php:117
+#: lib/Service/Finance/ReceivablesGeneratorFactory.php:118
 #, php-format
 msgid "Unable to construct generator class \"%s\"."
 msgstr "Kann den Generatorklasse \"%s\" nicht erzeugen."
@@ -13401,7 +13560,7 @@ msgstr ""
 
 #: src/app/project-participant-fields.js:242
 msgid "{musicianName}, {receivableLabel}: \"{message}\"."
-msgstr ""
+msgstr "\"{musicianName}, {receivableLabel}: \"{message}\"."
 
 #: src/app/project-participant-fields.js:502
 msgid ""
@@ -17082,16 +17241,19 @@ msgid "tooltips"
 msgstr "Kontext-Hilfe"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:1387
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:80
 #, php-format
 msgid "skip"
 msgstr "überspringen"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:1387
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:79
 #, php-format
 msgid "replace"
 msgstr "ersetzen"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:1387
+#: lib/Service/Finance/AbstractReceivablesGenerator.php:78
 #, php-format
 msgid "exception"
 msgstr "abbrechen"
@@ -17697,14 +17859,6 @@ msgstr "vorname.nachname"
 #~ msgid "Move project posters from database to filesystem storage."
 #~ msgstr ""
 #~ "Verschiebe die Projekt-Plakate aus der Datenbank in das Dateisystem."
-
-#, php-format
-#~ msgid ""
-#~ "The project \"%1$s\" already has the following file-system images: "
-#~ "\"%2$s\"."
-#~ msgstr ""
-#~ "Für das Projekt \"%1$s\" existieren bereits die folgenden Bilder im "
-#~ "Dateisystem: \"%2$s\"."
 
 #, php-format
 #~ msgid "Unable to fetch data-base image \"%1$d\" for project \"%2$s\"."

@@ -2,7 +2,7 @@
 
 #
 # This tool is used to allow the use of PHP constants as translatable
-# string. Only self::NAME is supported, not static::
+# strings. Only self::NAME is supported, not static::
 #
 
 APPDIR=$(realpath "$(dirname "$0")/..")
