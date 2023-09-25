@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -238,11 +238,11 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
         }
         $this->logInfo('Check option ' . (string)$fieldOption->getKey());
         if ($fieldOption->getMusicianFieldData($participant->getMusician())->isEmpty()) {
-          $this->logInfo('Found unbound option ' . (string)$fieldOption->getKey() . ' for musician ' . $participant->getMusician()->getPublicName());
+          $this->logInfo('Found unbound option ' . (string)$fieldOption->getKey() . ' for musician ' . $participant->getPublicName());
           $emptyFieldOption = $fieldOption;
           break;
         } else {
-          $this->logInfo('Option ' . (string)$fieldOption->getKey() . ' already used by musician ' . $participant->getMusician()->getPublicName());
+          $this->logInfo('Option ' . (string)$fieldOption->getKey() . ' already used by musician ' . $participant->getPublicName());
         }
       }
 

@@ -315,6 +315,20 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
+   * Get the cooked display-name, taking nick-name into account and
+   * just using $displayName if that set.
+   *
+   * @param bool $firstNameFirst If true return "FIRSTNAME LASTNAME" rather
+   * than "LASTNAME, FIRSTNAME".
+   *
+   * @return string
+   */
+  public function getPublicName(bool $firstNameFirst = false):string
+  {
+    return $this->musician->getPublicName($firstNameFirst);
+  }
+
+  /**
    * @var null|array
    *
    * The array of changed field values.

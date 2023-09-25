@@ -346,7 +346,7 @@ class ProjectsController extends Controller
             ++$noEmailCount;
             continue; // after all, it is a mailing list ...
           }
-          $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
+          $displayName = $participant->getPublicName(firstNameFirst: true);
           try {
             $result = $projectService->ensureMailingListSubscription($participant);
             $newCount += (int)$result;

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -409,7 +409,7 @@ class SepaBulkTransactionsController extends Controller
       /** @var Entities\CompositePayment $compositePayment */
       $compositePayment = $this->bulkTransactionService->generateProjectPayments($participant, $receivables, $dueDateEstimate);
       if ($compositePayment->getAmount() == 0.0) {
-        // $this->logInfo('AMOUNT IS 0 ' . $participant->getMusician()->getPublicName());
+        // $this->logInfo('AMOUNT IS 0 ' . $participant->getPublicName());
         // @todo Check whether this should be communicated to the musician anyway
         continue;
       }
@@ -423,7 +423,7 @@ class SepaBulkTransactionsController extends Controller
         if (empty($debitMandate)) {
           return self::grumble(
             $this->l->t('Musician "%s" has to pay an amount of %s, but there is no debit-note-mandate for the musician.', [
-              $participant->getMusician()->getPublicName(), $this->moneyValue($compositePayment->getAmount()),
+              $participant->getPublicName(), $this->moneyValue($compositePayment->getAmount()),
             ]));
         }
 
@@ -435,7 +435,7 @@ class SepaBulkTransactionsController extends Controller
             $this->l->t(
               'The debit-mandate for a bulk-transaction must either be all recurring or all one-time-only.'
               . ' The conflicting mandate of musician "%s", mandate-reference "%s" is %s, the previous mandates were %s.', [
-                $participant->getMusician()->getPublicName(),
+                $participant->getPublicName(),
                 $debitMandate->getMandateReference(),
                 ($nonRecurring ? $this->l->t('recurring') : $this->l->t('non-recurring')),
                 ($nonRecurring ? $this->l->t('non-recurring') : $this->l->t('recurring')),

@@ -2404,7 +2404,7 @@ Whatever.',
       return null;
     }
 
-    $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
+    $displayName = $participant->getPublicName(firstNameFirst: true);
     $memberStatus = $participant->getMusician()->getMemberStatus();
     $deliveryStatus = ($memberStatus == MemberStatus::CONDUCTOR
         || $memberStatus == MemberStatus::SOLOIST
@@ -2481,7 +2481,7 @@ Whatever.',
         throw new Exceptions\EnduserNotificationException(
           $this->l->t(
             'Unable to unsubscribe the confirmed paticipant "%s" from the project mailing list.',
-            $participant->getMusician()->getPublicName(true)),
+            $participant->getPublicName(true)),
           0, $t);
       } else {
         $this->logException($t, 'Mailing list service not reachable');
@@ -3213,13 +3213,13 @@ Whatever.',
    */
   public function deleteProjectParticipant(Entities\ProjectParticipant $participant):void
   {
-    $publicName = $participant->getMusician()->getPublicName();
+    $publicName = $participant->getPublicName();
     $this->entityManager->beginTransaction();
     try {
       /** @var Entities\ProjectParticipant $participant */
       $this->remove($participant, true); // this should be soft-delete
       if ($participant->unused()) {
-        $this->logInfo('Project participant ' . $participant->getMusician()->getPublicName() . ' is unused, issuing hard-delete');
+        $this->logInfo('Project participant ' . $participant->getPublicName() . ' is unused, issuing hard-delete');
 
         // For now rather cascade manually. Could also use ORM, of course ...
         /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
