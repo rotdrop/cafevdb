@@ -72,19 +72,19 @@ class ParticipantFolders extends Command
         'user',
         'u',
         InputOption::VALUE_REQUIRED,
-        $this->l->t('Restrict the operation to the given user-id'),
+        $this->l->t('Restrict the operation to the given user-id.'),
       )
       ->addOption(
         'all',
         'a',
         InputOption::VALUE_NONE,
-        $this->l->t('Work on all folders of all participants'),
+        $this->l->t('Work on all folders of all participants.'),
       )
       ->addOption(
         'project',
         'p',
         InputOption::VALUE_REQUIRED,
-        $this->l->t('Restrict the operation to the given project. Can be combined with --user=USER'),
+        $this->l->t('Restrict the operation to the given project. Can be combined with --user=USER.'),
       )
       ->addOption(
         'dry',
@@ -122,6 +122,7 @@ class ParticipantFolders extends Command
     if (!empty($all) && (!empty($memberUserId) || !empty($projectName))) {
       $output->writeln('<error>' . $this->l->t('"--all" cannot be compbined with "--user=USER" or "--project=PROJECT".') . '</error>');
       $output->writeln('');
+      (new DescriptorHelper)->describe($output, $this);
       return 1;
     }
 
