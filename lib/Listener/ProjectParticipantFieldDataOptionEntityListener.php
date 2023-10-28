@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,46 +24,42 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use OCP\AppFramework\IAppContainer;
-use OCP\EventDispatcher\Event;
-use OCP\EventDispatcher\IEventListener;
-use Psr\Log\LoggerInterface as ILogger;
-use OCP\IL10N;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
-use OCA\CAFEVDB\Events\PreRenameProjectParticipantFieldOption as HandledEvent;
+use Psr\Log\LoggerInterface as ILogger;
+use OCP\AppFramework\IAppContainer;
+
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 
-/** Rename file-system nodes if the field refers to file-attachments. */
-class PreRenameProjectParticipantFieldOptionListener implements IEventListener
+/**
+ * An Doctrine\Orm entity listener. The task is to handle rename events.
+ */
+class ProjectParticipantFieldDataOptionEntityListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  const EVENT = HandledEvent::class;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(IAppContainer $appContainer)
-  {
-    $this->appContainer = $appContainer;
+  public function __construct(
+    protected ILogger $logger,
+    protected IAppContainer $appContainer,
+    protected EntityManager $entityManager,
+  ) {
   }
   // phpcs:enable
 
-  /** {@inheritdoc} */
-  public function handle(Event $event):void
+  /**
+   * {@inheritdoc}
+   */
+  public function preUpdate(Entities\ProjectParticipantFieldDataOption $option, Event\PreUpdateEventArgs $event)
   {
-    /** @var HandledEvent $event */
-    if (!($event instanceof HandledEvent)) {
+    $field = 'label';
+    if (!$event->hasChangedField($field)) {
       return;
     }
-
-    // only lookup when this is "our" event
-    $this->logger = $this->appContainer->get(ILogger::class);
-    $this->l = $this->appContainer->get(IL10N::class);
-
-    $oldLabel = $event->getOldLabel();
-    $newLabel = $event->getNewLabel();
+    $oldLabel = $event->getOldValue($field);
+    $newLabel = $event->getNewValue($field);
 
     $this->logInfo('OLD / NEW: ' . $oldLabel . ' / ' . $newLabel);
 
@@ -72,14 +68,9 @@ class PreRenameProjectParticipantFieldOptionListener implements IEventListener
       return;
     }
 
-    /** @var ProjectParticipantFieldsService $participantFieldsService */
+     /** @var ProjectParticipantFieldsService $participantFieldsService */
     $participantFieldsService = $this->appContainer->get(ProjectParticipantFieldsService::class);
 
-    $participantFieldsService->handleRenameOption($event->getOption(), $oldLabel, $newLabel);
+    $participantFieldsService->handleRenameOption($option, $oldLabel, $newLabel);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

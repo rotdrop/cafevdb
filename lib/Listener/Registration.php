@@ -50,12 +50,12 @@ class Registration
     self::registerListener($context, PasswordUpdatedEventListener::class);
     self::registerListener($context, ProjectDeletedEventListener::class);
     self::registerListener($context, PreProjectUpdatedEventListener::class);
+    // The PostProjectUpdatedEvent is actually used in the cafevdbmembers app.
     // self::registerListener($context, PostProjectUpdatedEventListener::class);
     self::registerListener($context, UserLoggedInEventListener::class);
     self::registerListener($context, UserLoggedOutEventListener::class);
     self::registerListener($context, TranslationNotFoundListener::class);
     self::registerListener($context, FileNodeListener::class);
-    self::registerListener($context, PreRenameProjectParticipantFieldOptionListener::class);
     self::registerListener($context, ParticipantFieldCloudFolderListener::class);
     self::registerListener($context, BeforeEncryptionKeyPairChangedListener::class);
     self::registerListener($context, AfterEncryptionKeyPairChangedListener::class);

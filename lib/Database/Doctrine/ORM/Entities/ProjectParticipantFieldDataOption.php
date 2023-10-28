@@ -61,7 +61,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
- * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectParticipantFieldDataOptionEntityListener"})
  */
 class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
@@ -486,39 +486,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
       return array_filter($fields, fn($field) => $field !== 'label');
     }
     return $fields;
-  }
-
-  /** @var bool */
-  private $preUpdatePosted = false;
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PreUpdate
-   */
-  public function preUpdate(Event\PreUpdateEventArgs $event)
-  {
-    $field = 'label';
-    if (!$event->hasChangedField($field)) {
-      return;
-    }
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = EntityManager::getDecorator($event->getEntityManager());
-    $entityManager->dispatchEvent(new Events\PreRenameProjectParticipantFieldOption($this, $event->getOldValue($field), $event->getNewValue($field)));
-    $this->preUpdatePosted = true;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PostUpdate
-   */
-  public function postUpdate(Event\LifecycleEventArgs $event)
-  {
-    if (!$this->preUpdatePosted) {
-      return;
-    }
-    $this->preUpdatePosted = false;
   }
 
   /** {@inheritdoc} */
