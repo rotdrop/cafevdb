@@ -25,6 +25,8 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use Psr\Log\LoggerInterface as ILogger;
+
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
@@ -104,7 +106,7 @@ class FilesHooksListener implements IEventListener
 
     /** @var EncryptionService $encryptionService */
     $encryptionService = $this->appContainer->get(EncryptionService::class);
-    $this->logger = $this->appContainer->get(\OCP\ILogger::class);
+    $this->logger = $this->appContainer->get(ILogger::class);
     $this->l = $this->appContainer->get(\OCP\IL10N::class);
 
     $sharedFolder = $encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, '');
