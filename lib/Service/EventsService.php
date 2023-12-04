@@ -374,7 +374,7 @@ class EventsService
         $this->calDavService->deleteCalendarObject($calId, $eventUri);
       } else {
         // update categories
-        $this->unchain($projectId, $eventUri);
+        $this->unchain($projectId, $calId, $eventUri);
       }
     }
     $this->flush();
