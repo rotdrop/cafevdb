@@ -2656,6 +2656,8 @@ Whatever.',
       throw new RuntimeException($this->l->t('Unable to find the project to delete (id = %d)', $projectOrId));
     }
 
+    $softDeleteableState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
     $projectId = $project->getId();
     $projectName = $project->getName();
     $projectYear = $project->getYear();
@@ -2783,11 +2785,13 @@ Whatever.',
         foreach ($project->getParticipants() as $participant) {
           $this->deleteProjectParticipant($participant);
         }
+        $this->flush();
 
         /** @var Entities\ProjectParticipantField $participantField */
         foreach ($project->getParticipantFields() as $participantField) {
           $this->participantFieldsService->deleteField($participantField);
         }
+        $this->flush();
 
         // @todo: use cascading to remove
         $deleteTables = [
@@ -2818,6 +2822,7 @@ Whatever.',
     } catch (Throwable $t) {
       $this->logException($t);
       $this->entityManager->rollback();
+      $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       throw new Exception(
         $this->l->t('Failed to remove project "%s", id "%d".', [ $project['name'], $project['id'] ]),
         $t->getCode(),
@@ -2837,6 +2842,8 @@ Whatever.',
     } catch (Throwable $t) {
       $this->logException($t, 'After project-deleted handlers failed.');
     }
+
+    $softDeleteableState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     return $softDelete ? $project : null;
   }
