@@ -154,7 +154,7 @@
     "Receivable \"%1$s\" does not apply for %2$s." : "Die Forderung \"%1$s\" besteht gegenüber %2$s nicht.",
     "%1$s: receivable \"%2$s\" amounts to %3$s." : "%1$s: die Forderiung \"%2$s\" beläuft sich auf %3$s.",
     "%1$s: added %2$d, removed %3$d, changed %4$d and skipped %5$d receivables, total amount %6$s." : "%1$s: %2$d Forderungen hinzugefügt, %3$d entfernt, %4$d geändert und\n %5d übersprungen, der Gesamtbetrag beläuft sich auf %6$s.",
-    "Added %d, removed %d, changed %d and skipped %d receivables." : "%1$d Forderungen hinzugefügt, %2$d entfernt, %3$d geändert und\n %4d übersprungen.",
+    "Added %1$d, removed %2$d, changed %3$d and skipped %4$d receivables." : "%1$d Forderungen hinzugefügt, %2$d entfernt, %3$d geändert und\n %4d übersprungen.",
     "Informational messages:" : "Bemerkungen:",
     "Receivables update has failed." : "Die Aktualisierung der wiederkehrenden Forderung ist fehlgeschlagen.",
     "Total amount for \"%s\": %s." : "Gesamtsumme für \"%s\": %s.",

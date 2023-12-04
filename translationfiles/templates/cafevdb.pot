@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-09-24 22:44+0200\n"
+"POT-Creation-Date: 2023-12-04 08:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -819,7 +819,7 @@ msgstr ""
 
 #: lib/Command/RecurringReceivables.php:428
 #, php-format
-msgid "Added %d, removed %d, changed %d and skipped %d receivables."
+msgid "Added %1$d, removed %2$d, changed %3$d and skipped %4$d receivables."
 msgstr ""
 
 #: lib/Command/RecurringReceivables.php:435
@@ -1417,8 +1417,8 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:151
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2485
 #: lib/PageRenderer/Instruments.php:384
-#: lib/PageRenderer/Projects.php:786
-#: lib/PageRenderer/Projects.php:794
+#: lib/PageRenderer/Projects.php:788
+#: lib/PageRenderer/Projects.php:796
 #: lib/Service/Finance/InstrumentInsuranceService.php:621
 #: lib/Service/Finance/InstrumentInsuranceService.php:625
 #: lib/Service/PhoneNumberService.php:155
@@ -3109,13 +3109,13 @@ msgstr ""
 
 #: lib/Controller/ProjectsController.php:272
 #: lib/Controller/ProjectsController.php:293
-#: lib/PageRenderer/Projects.php:780
+#: lib/PageRenderer/Projects.php:782
 msgid "closed"
 msgstr ""
 
 #: lib/Controller/ProjectsController.php:274
 #: lib/Controller/ProjectsController.php:296
-#: lib/PageRenderer/Projects.php:778
+#: lib/PageRenderer/Projects.php:780
 msgid "active"
 msgstr ""
 
@@ -3145,7 +3145,7 @@ msgid "Successfully deleted \"%s\"."
 msgstr ""
 
 #: lib/Controller/ProjectsController.php:321
-#: lib/PageRenderer/Projects.php:769
+#: lib/PageRenderer/Projects.php:771
 msgid "unset"
 msgstr ""
 
@@ -3935,8 +3935,8 @@ msgstr ""
 #: lib/EmailForm/Composer.php:1016
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:604
 #: lib/PageRenderer/ProjectParticipantFields.php:627
-#: lib/PageRenderer/ProjectParticipantFields.php:1672
-#: lib/PageRenderer/ProjectParticipantFields.php:1681
+#: lib/PageRenderer/ProjectParticipantFields.php:1673
+#: lib/PageRenderer/ProjectParticipantFields.php:1682
 msgid "Deposit"
 msgstr ""
 
@@ -4709,7 +4709,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:877
 #: lib/PageRenderer/ProjectParticipantFields.php:767
 #: lib/PageRenderer/ProjectParticipantFields.php:976
-#: lib/PageRenderer/ProjectParticipantFields.php:1554
+#: lib/PageRenderer/ProjectParticipantFields.php:1555
 #: lib/Service/ProjectParticipantFieldsService.php:667
 msgid "true"
 msgstr ""
@@ -4723,7 +4723,7 @@ msgstr ""
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:876
 #: lib/PageRenderer/ProjectParticipantFields.php:767
 #: lib/PageRenderer/ProjectParticipantFields.php:977
-#: lib/PageRenderer/ProjectParticipantFields.php:1554
+#: lib/PageRenderer/ProjectParticipantFields.php:1555
 #: lib/Service/ProjectParticipantFieldsService.php:667
 #: templates/pme-table.php:80
 msgid "false"
@@ -4734,7 +4734,7 @@ msgid "Projects"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:75
-#: lib/PageRenderer/Projects.php:736
+#: lib/PageRenderer/Projects.php:738
 #: templates/settings/email-settings.php:127
 msgid "Mailing List"
 msgstr ""
@@ -5371,7 +5371,7 @@ msgstr ""
 
 #: lib/PageRenderer/Musicians.php:1002
 #: lib/PageRenderer/ProjectParticipants.php:1276
-#: lib/PageRenderer/Projects.php:989
+#: lib/PageRenderer/Projects.php:991
 msgid "Last Updated"
 msgstr ""
 
@@ -5663,8 +5663,8 @@ msgid "Default"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:598
-#: lib/PageRenderer/ProjectParticipantFields.php:1671
-#: lib/PageRenderer/ProjectParticipantFields.php:1680
+#: lib/PageRenderer/ProjectParticipantFields.php:1672
+#: lib/PageRenderer/ProjectParticipantFields.php:1681
 msgid "Data"
 msgstr ""
 
@@ -5679,8 +5679,8 @@ msgid "Default Value"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:878
-#: lib/PageRenderer/ProjectParticipantFields.php:1674
-#: lib/PageRenderer/ProjectParticipantFields.php:1683
+#: lib/PageRenderer/ProjectParticipantFields.php:1675
+#: lib/PageRenderer/ProjectParticipantFields.php:1684
 msgid "Tooltip"
 msgstr ""
 
@@ -5732,34 +5732,34 @@ msgstr ""
 msgid "Simple field-option key is not an UUID: \"%s\"."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1573
+#: lib/PageRenderer/ProjectParticipantFields.php:1574
 msgid "empty"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1581
+#: lib/PageRenderer/ProjectParticipantFields.php:1582
 msgid "Show deleted items."
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1583
+#: lib/PageRenderer/ProjectParticipantFields.php:1584
 msgid "Show data-fields."
-msgstr ""
-
-#: lib/PageRenderer/ProjectParticipantFields.php:1669
-#: lib/PageRenderer/ProjectParticipantFields.php:1678
-msgid "Key"
 msgstr ""
 
 #: lib/PageRenderer/ProjectParticipantFields.php:1670
 #: lib/PageRenderer/ProjectParticipantFields.php:1679
+msgid "Key"
+msgstr ""
+
+#: lib/PageRenderer/ProjectParticipantFields.php:1671
+#: lib/PageRenderer/ProjectParticipantFields.php:1680
 msgid "Label"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1673
-#: lib/PageRenderer/ProjectParticipantFields.php:1682
+#: lib/PageRenderer/ProjectParticipantFields.php:1674
+#: lib/PageRenderer/ProjectParticipantFields.php:1683
 msgid "Limit"
 msgstr ""
 
-#: lib/PageRenderer/ProjectParticipantFields.php:2007
+#: lib/PageRenderer/ProjectParticipantFields.php:2008
 #: lib/PageRenderer/ProjectPayments.php:558
 #: lib/PageRenderer/SepaBankAccounts.php:1092
 #: lib/PageRenderer/SepaBulkTransactions.php:389
@@ -6000,7 +6000,7 @@ msgstr ""
 
 #: lib/PageRenderer/Projects.php:389
 #: lib/PageRenderer/Projects.php:466
-#: lib/PageRenderer/Projects.php:887
+#: lib/PageRenderer/Projects.php:889
 #: src/app/pme.js:1384
 msgid "Clear"
 msgstr ""
@@ -6018,78 +6018,78 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:644
+#: lib/PageRenderer/Projects.php:645
 msgid "Registration Start"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:662
+#: lib/PageRenderer/Projects.php:663
 msgid "Registration Deadline"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:696
 #: lib/PageRenderer/Projects.php:697
+#: lib/PageRenderer/Projects.php:698
 #: templates/fragments/instrument-voices.php:46
 #, php-format
 msgid "e.g. %s"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:742
+#: lib/PageRenderer/Projects.php:744
 #: templates/fragments/projects/project-mailing-list.php:70
 msgid "create"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:742
+#: lib/PageRenderer/Projects.php:744
 msgid "do not create"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:827
+#: lib/PageRenderer/Projects.php:829
 msgid "Public Downloads"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:861
+#: lib/PageRenderer/Projects.php:863
 msgid "Participant Fields"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:924
+#: lib/PageRenderer/Projects.php:926
 #: lib/PageRenderer/Util/Navigation.php:652
 #: templates/fragments/projects/project-actions.php:119
 msgid "Participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:931
+#: lib/PageRenderer/Projects.php:933
 msgid "Copy participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:932
+#: lib/PageRenderer/Projects.php:934
 msgid "Do not copy participants"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:940
+#: lib/PageRenderer/Projects.php:942
 msgid "Program"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:957
+#: lib/PageRenderer/Projects.php:959
 msgid "Posters"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1028
+#: lib/PageRenderer/Projects.php:1030
 #, php-format
 msgid "Copy of %s"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1088
+#: lib/PageRenderer/Projects.php:1090
 msgid "edit"
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1382
+#: lib/PageRenderer/Projects.php:1384
 msgid "Copying participants is requested, but the new project id is not given."
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1394
+#: lib/PageRenderer/Projects.php:1396
 msgid "Copying is requested, but the old project id is not given."
 msgstr ""
 
-#: lib/PageRenderer/Projects.php:1548
+#: lib/PageRenderer/Projects.php:1550
 #, php-format
 msgid "%s (deleted)"
 msgstr ""
@@ -14876,7 +14876,7 @@ msgstr ""
 msgid "sub-page"
 msgstr ""
 
-#: lib/PageRenderer/PMETableViewBase.php:230 lib/PageRenderer/Projects.php:1002
+#: lib/PageRenderer/PMETableViewBase.php:230 lib/PageRenderer/Projects.php:1004
 #, php-format
 msgid "template"
 msgstr ""
