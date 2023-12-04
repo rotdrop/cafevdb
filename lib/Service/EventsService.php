@@ -370,7 +370,7 @@ class EventsService
 
       // Still used? We compare against <= 1 to avoid flush
       if (count($this->eventProjects($eventUri)) <= 1) {
-        $calId = $event->getCalendarId();
+        $calId = $projectEvent->getCalendarId();
         $this->calDavService->deleteCalendarObject($calId, $eventUri);
       } else {
         // update categories
