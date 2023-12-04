@@ -2621,13 +2621,14 @@ Störung.';
         'total' =>  $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD],
         'active' => $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT],
       ]);
-      $phpMailer->setProgressCallback(function($current, $total) use ($progressStatus) {
-        $oldTime = $progressStatus->getLastModified()->getTimestamp();
+      $oldTime = time();
+      $phpMailer->setProgressCallback(function($current, $total) use ($progressStatus, &$oldTime) {
         $nowTime = time();
         if ($current >= $total
             || ($current - $progressStatus->getCurrent() >= self::PROGRESS_CHUNK_SIZE
                 && $nowTime - $oldTime >= self::PROGRESS_THROTTLE_SECONDS)) {
           $progressStatus->update($current, $total);
+          $oldTime = $nowTime;
         }
       });
 
