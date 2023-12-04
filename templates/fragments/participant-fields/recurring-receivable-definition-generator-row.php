@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
+use OCA\CAFEVDB\Common\Uuid;
 
 /**
  * @param int $fieldId
