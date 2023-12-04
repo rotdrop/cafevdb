@@ -366,7 +366,7 @@ class EventsService
       $eventUri = $projectEvent->getEventUri();
 
       // Remove project link from join table
-      $this->remove($event);
+      $this->remove($projectEvent);
 
       // Still used? We compare against <= 1 to avoid flush
       if (count($this->eventProjects($eventUri)) <= 1) {
@@ -393,8 +393,8 @@ class EventsService
     foreach ($events as $projectEvent) {
       $calendarId = $projectEvent->getCalendarId();
       $eventURI = $projectEvent->getEventURI();
-      $event = $this->calDavService->getCalendarObject($calendarId, $eventURI);
-      $vCalendar  = VCalendarService::getVCalendar($event);
+      $calendarEvent = $this->calDavService->getCalendarObject($calendarId, $eventURI);
+      $vCalendar  = VCalendarService::getVCalendar($calendarEvent);
 
       foreach (VCalendarService::getAllVObjects($vCalendar) as $vEvent) {
         $categories = VCalendarService::getCategories($vEvent);
