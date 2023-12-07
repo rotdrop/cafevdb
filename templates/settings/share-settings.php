@@ -105,7 +105,7 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
     </form>
     <!-- Shared folders -->
     <h4><?php echo $l->t('Shared folder'); ?></h4>
-    <form id="sharedfolder-form">
+    <form id="sharedfolder-form" class="sharedfolders">
       <fieldset id="sharedfolder-fieldset" <?php echo $off; ?> >
         <input type="hidden" id="sharedfolder-saved" name="sharedfolder-saved" value="<?php echo $_['sharedfolder']; ?>" />
         <input <?php echo $_['sharedfolder'] != '' ? 'disabled' : ''; ?>
@@ -318,7 +318,8 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
       </fieldset>
       <fieldset id="balancesfolder-fieldset"
                 class="needs-sharedfolder needs-projectsfolder needs-financefolder"
-                <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?> >
+                <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?>
+      >
         <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
         <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
         <span><b>/</b></span>
@@ -334,11 +335,39 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         <span><b>/</b></span><span class="projectsfolder"><?php echo $_['projectsfolder'];?></span>
         <span><b>/</b></span><span><?php echo $l->t('YEAR'); ?></span>
         <span><b>/</b></span><span><?php echo $l->t('PROJECT'); ?></span><span><b>/</b></span>
-        <input type="checkbox" id="balancesfolder-force" name="balancesfolder-force" class="checkbox"/>
-        <label for="balancesfolder-force" title="<?php echo $toolTips['balancesfolder-force']; ?>" >
+        <input type="checkbox" id="balancesfolder-force" name="balancesfolder-force" class="checkbox" />
+        <label for="balancesfolder-force" title="<?php echo $toolTips['balancesfolder-force']; ?>">
           <?php echo $l->t('force');?>
         </label>
         <input name="balancesfolder-check" id="balancesfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
+      </fieldset>
+      <fieldset id="tax-excemption-notices"
+                class="needs-sharedfolder needs-financefolder"
+                <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?>
+      >
+        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
+        <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
+        <span><b>/</b></span><span class="taxofficefolder"><?php echo $l->t('tax-office'); ?></span>
+        <span><b>/</b></span><span class="yearplaceholder"><?php echo $l->t('YEAR'); ?></span>
+        <span><b>/</b></span>
+        <input type="text"
+               id="taxOfficeInTrayFolder"
+               name="taxOfficeInTrayFolder"
+               placeholder="<?php echo $l->t('in-tray'); ?>"
+               value="<?php echo $_['taxOfficeInTrayFolder']; ?>"
+               title="<?php echo $toolTips['taxOfficeInTrayFolder']; ?>"
+        />
+        <input type="hidden" id="taxOfficeInTrayFolder-saved" name="taxOfficeInTrayFolder-saved" value="<?php echo $_['taxOfficeInTrayFolder']; ?>" />
+        <input type="hidden" id="taxOfficeInTrayFolder-force"  name="taxOfficeInTrayFolder-force" value="1" />
+        <input type="hidden" id="taxOfficeInTrayFolder-check"  name="taxOfficeInTrayFolder-check" value="0" />
+        <span><b>/</b></span>
+        <input type="text"
+               id="taxExcemptionNoticeTemplate"
+               name="taxExcemptionNoticeTemplate"
+               placeholder="<?php echo $l->t('tax-excemption-notice-{FROM_YEAR}-{TO_YEAR}'); ?>"
+               value="<?php echo $_['taxExcemptionNoticeTemplate']; ?>"
+               title="<?php echo $toolTips['taxExcemptionNoticeTemplate']; ?>"
+        />
       </fieldset>
     </form>
     <!-- Cloud-User Connector -->

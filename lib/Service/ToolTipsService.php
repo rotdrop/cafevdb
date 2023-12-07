@@ -1304,8 +1304,7 @@ tablet or desktop computer.'),
 
       ],
 
-      'projectsbalancefolder-force' => $this->l->t('Force the re-creation of the folder where project balanaces are
-stored.'),
+      'balancesfolder-force' => $this->l->t('Force the re-creation of the folder where financial balances are stored.'),
 
       'projectsfolder-force' => $this->l->t('Force the re-creation of the folder where project data is stored.'),
 
@@ -1369,7 +1368,10 @@ and contact the treasurer for further instructions.',
         . ' The folder is automatically created and shared when the project is created.'
         . ' During mail-merge of emails the shared-link is available as ${GLOBAL::PARTICIPANTS_DOWNLOADS_URL}.'
         ),
-      'projectsbalancefolder' => $this->l->t('Shared folder for the financial balances, probably used after the project is finished.'),
+      'balancesfolder' => $this->l->t('Shared folder for the financial balances, probably used after the project is finished.'),
+      'taxOfficeInTrayFolder' => $this->l->t('Subfolder for incoming letters from the tax offices.'),
+      'taxExcemptionNoticeTemplate' => $this->l->t('Template file name for tax excemption notices, may and probably should contain
+placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period in the file-name.'),
 
       'settings' => [
         'admin' => [

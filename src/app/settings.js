@@ -591,6 +591,9 @@ const afterLoad = function(container) {
     });
     sharedFolder('outboxfolder');
 
+    simpleSetValueHandler(container.find('#taxOfficeInTrayFolder'), 'blur', msg);
+    simpleSetValueHandler(container.find('#taxExcemptionNoticeTemplate'), 'blur', msg);
+
     const $cloudUserForm = container.find('form.cloud-user');
 
     const $importClubMembersFieldSet = $cloudUserForm.find('fieldset.user-sql');
@@ -1569,6 +1572,8 @@ const documentReady = function(container) {
       // $('#smtpsecure').chosen().remove();
       // $('#imapsecure').chosen().remove();
     }
+
+    $.fn.cafevTooltip.remove(); // remove pending tooltips ...
   });
 
   container.on('cafevdb:content-update', function(event) {
@@ -1588,8 +1593,3 @@ const documentReady = function(container) {
 };
 
 export default documentReady;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

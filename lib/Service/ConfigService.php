@@ -103,6 +103,8 @@ class ConfigService
   const PROJECT_SKELETON_FOLDER = 'skeleton';
   const PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
   const PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
+  const TAX_OFFICE_IN_TRAY_FOLDER = 'taxOfficeInTrayFolder';
+  const TAX_EXEMPTION_NOTICE_TEMPLATE = 'taxExcemptionNoticeTemplate';
 
   const CMS_CATEGORIES = [
     'preview',
