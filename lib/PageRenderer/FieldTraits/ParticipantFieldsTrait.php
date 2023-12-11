@@ -1557,7 +1557,6 @@ trait ParticipantFieldsTrait
 
               // generate the per-option input rows
 
-
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
               $subDir = $this->participantFieldsService->getFileSystemFieldName($field);
               $rowHtml = '';
@@ -1628,11 +1627,11 @@ trait ParticipantFieldsTrait
               $html .= $rowHtml;
 
               // generate the footer
-              $recomputeLabel = $generatorClass::operationLabels(IRecurringReceivablesGenerator::OPERATION_OPTION_REGENERATE_ALL);
-              if (is_callable($recomputeLabel)) {
-                $recomputeLabel = $recomputeLabel($dataType);
+              $recomputeAllLabel = $generatorClass::operationLabels(IRecurringReceivablesGenerator::OPERATION_OPTION_REGENERATE_ALL);
+              if (is_callable($recomputeAllLabel)) {
+                $recomputeAllLabel = $recomputeAllLabel($dataType);
               }
-              $recomputeLabel = $this->l->t($recomputeLabel);
+              $recomputeAllLabel = $this->l->t($recomputeAllLabel);
 
               $html .= (new TemplateResponse(
                 $this->appName(),
@@ -1640,7 +1639,7 @@ trait ParticipantFieldsTrait
                   'field' => $field,
                   'uiFlags' => $uiFlags,
                   'generatorSlug' => $generatorSlug,
-                  'recomputeLabel' => $recomputeLabel,
+                  'recomputeAllLabel' => $recomputeAllLabel,
                   'updateStrategyChoices' => $generatorClass::updateStrategyChoices(),
                   'toolTips' => $this->toolTipsService,
                   'toolTipsPrefix' => self::$toolTipsPrefix,
@@ -2424,7 +2423,10 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
           // just convert to KEY:VALUE notation for the following trigger functions
           // $oldValues ATM already has this format
           foreach ([&$newValues] as &$dataSet) {
-            $keys = Util::explode(',', $dataSet[$keyName]);
+            if (empty($dataSet[$keyName])) {
+              break;
+            }
+            $keys = Util::explode(',', $dataSet[$keyName], flags: 0);
             $values = Util::explode(',', $dataSet[$valueName], flags: Util::ESCAPED);
             $keyedValues = [];
             if (count($keys) != count($values)) {
