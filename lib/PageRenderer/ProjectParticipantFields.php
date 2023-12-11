@@ -1590,19 +1590,20 @@ __EOT__;
   </div>
   <nav class="field-display-options dropdown-content dropdown-dropup dropdown-align-right">
     <ul class="menu-list">
-      <li class="menu-item show-deleted tooltip-left" title="'.$showDeletedTip.'">
+      <li class="menu-item show-deleted tooltip-left" title="' . $showDeletedTip . '">
         <label class="show-deleted menu-item" for="data-options-show-deleted">
           <input type="checkbox"
                  name="show-deleted"
                  class="show-deleted checkbox"
                  value="show"
                  id="data-options-show-deleted"
+                 ' . ($this->showDisabled ? 'checked' : '') . '
           />
           <img class="show-deleted checkmark"
                alt=""
                src="'.$this->urlGenerator()->imagePath('core', 'actions/checkmark.svg').'"
           >
-          '.$showDeletedLabel.'
+          ' . $showDeletedLabel . '
         </label>
       </li>
       <li class="menu-item show-data tooltip-left" title="'.$showDataTip.'">
@@ -1657,6 +1658,7 @@ __EOT__;
         $cssClass[] = 'recurring-' . $slug . '-' . ($value ? 'en' : 'dis') . 'abled';
       }
     }
+    $cssClass[] = $this->showDisabled ? 'show-deleted' : 'hide-deleted';
 
     $cssClass = implode(' ', $cssClass);
     $html .= '<table

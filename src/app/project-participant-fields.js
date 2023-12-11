@@ -556,9 +556,9 @@ const ready = function(selector, resizeCB) {
   const $dataOptionsTable = $container.find('table.data-options');
   $container.on('change', '#data-options-show-deleted', function(event) {
     if ($(this).prop('checked')) {
-      $dataOptionsTable.addClass('show-deleted');
+      $dataOptionsTable.addClass('show-deleted').removeClass('hide-deleted');
     } else {
-      $dataOptionsTable.removeClass('show-deleted');
+      $dataOptionsTable.removeClass('show-deleted').addClass('hide-deleted');
     }
     $.fn.cafevTooltip.remove();
     allowedHeaderVisibility();
@@ -568,9 +568,9 @@ const ready = function(selector, resizeCB) {
 
   $container.on('change', '#data-options-show-data', function(event) {
     if ($(this).prop('checked')) {
-      $dataOptionsTable.addClass('show-data');
+      $dataOptionsTable.addClass('show-data').removeClass('hide-data');
     } else {
-      $dataOptionsTable.removeClass('show-data');
+      $dataOptionsTable.removeClass('show-data').addClass('hide-data');
     }
     $.fn.cafevTooltip.remove();
     allowedHeaderVisibility();
