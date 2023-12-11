@@ -597,9 +597,6 @@ class ProjectParticipantFieldsController extends Controller
             if (empty($data['key']) && empty($data['musicianId'])) {
               $missing += [ 'key', 'musicianId' ];
             }
-            if ((empty($data['key']) || empty($data['musicianId'])) && empty($data['progressToken'])) {
-              $missing[] = 'progressToken';
-            }
             if (!empty($missing)) {
               return self::grumble(
                 $this->l->t('Missing parameters in request "%s/%s": "%s".', [

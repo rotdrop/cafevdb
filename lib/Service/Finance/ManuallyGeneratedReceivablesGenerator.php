@@ -63,7 +63,7 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
   /** {@inheritdoc} */
   public static function uiFlags():int
   {
-    return self::UI_EDITABLE_LABEL|self::UI_EDITABLE_VALUE;
+    return self::UI_EDITABLE_LABEL|self::UI_EDITABLE_VALUE|self::UI_NO_PROGRESS;
   }
 
   /** {@inheritdoc} */
@@ -146,6 +146,11 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
    */
   public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
+    $musician = $participant->getMusician();
+    $musicianId = $musician->getId();
+    $musicianName = $musician->getPublicName(firstNameFirst: true);
+    $receivables = [];
+
     $added = 0;
     $removed = 0;
 
@@ -174,29 +179,39 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
       fn(Entities\ProjectParticipantFieldDatum $datum) => empty($datum->getDataOption()->getLabel()));
 
     if (!empty($receivable)) {
+      $receivableKey = (string)$receivable->getKey();
+      $receivableLabel = $receivable->getLabel();
+      $receivables[$receivableKey] = $receivableLabel;
+
       // dedicated receivables update ... just update this one
 
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-      $fieldData = $receivable->getMusicianFieldData($participant->getMusician());
+      $fieldData = $receivable->getMusicianFieldData($musician);
       foreach ($fieldData as $fieldDatum) {
         if (empty($fieldDatum->getOptionValue()) && $emptyFieldData->count() > 1) {
           $this->remove($fieldDatum);
           $this->remove($fieldDatum);
           $participantFieldsData->removeElement($fieldDatum);
-          $participant->getMusician()->getProjectParticipantFieldsData()->removeElement($fieldDatum);
+          $musician->getProjectParticipantFieldsData()->removeElement($fieldDatum);
           $fieldDatum->getDataOption()->getFieldData()->removeElement($fieldDatum);
           $emptyFieldData->removeElement($fieldDatum);
           ++$removed;
         }
       }
 
-      return [
-        'added' => $added,
-        'removed' => $removed,
-        'changed' => 0, // never
-        'skipped' => 0,
-        'notices' => [],
-      ];
+      if (!$emptyFieldData->isEmpty()) {
+        return [
+          'added' => $added,
+          'removed' => $removed,
+          'changed' => 0, // never
+          'skipped' => 0,
+          'notices' => [],
+          'musicians' => [
+            $musicianId => $musicianName,
+          ],
+          'receivables' => $receivables,
+        ];
+      }
     }
 
     // then remove all but one empty option
@@ -265,6 +280,11 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
 
       // use it, add empty data to musician
       $added += $this->subscribeParticipant($participant, $emptyFieldOption);
+
+      $receivable = $emptyFieldOption;
+      $receivableKey = (string)$receivable->getKey();
+      $receivableLabel = $receivable->getLabel();
+      $receivables[$receivableKey] = $receivableLabel;
     }
 
     return [
@@ -273,6 +293,10 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
       'changed' => 0, // never
       'skipped' => 0,
       'notices' => [],
+      'musicians' => [
+        $musicianId => $musicianName,
+      ],
+      'receivables' => $receivables,
     ];
   }
 

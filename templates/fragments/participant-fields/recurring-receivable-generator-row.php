@@ -30,6 +30,7 @@ use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator as Generator;
 
 /**
  * @param Entities\ProjectParticipantField $field
+ * @param int $uiFlags
  * @param string $generatorSlug
  * @param string $recomputeLabel
  * @param array $updateStrategyChoices
@@ -57,13 +58,14 @@ $updateStrategyOptions = PageNavigation::selectOptions($updateStrategyOptions);
 <tr class="generator"
     data-field-id="<?php p($fieldId); ?>"
     data-field-name="<?php p($fieldName); ?>"
+    data-generator="<?php p($generatorSlug); ?>"
 >
   <td class="operations" colspan="4">
     <div class="flex-container">
-      <input class="operation regenerate-all"
+      <input class="operation regenerate-all<?php ($uiFlags & Generator::UI_NO_PROGRESS) && p(' no-progress'); ?>"
              title="<?php echo $toolTips['participant-fields-recurring-data:regenerate-all:' . $generatorSlug]; ?>"
              type="button"
-             value="<?php p($recomputeLabel) ?>"
+             value="<?php p($recomputeAllLabel) ?>"
       />
       <label for="recurring-receivables-update-strategy-<?php p($fieldId); ?>"
              class="recurring-receivables-update-strategy update-strategy-count-<?php p(count($updateStrategyChoices)); ?>">

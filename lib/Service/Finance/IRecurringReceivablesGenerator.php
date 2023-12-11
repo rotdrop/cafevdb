@@ -115,7 +115,14 @@ interface IRecurringReceivablesGenerator
    *
    * The option value should be protected in the per-musician view
    */
-  const UI_PROTECTED_VALUE = (1 << 2);
+  const UI_PROTECTED_VALUE = (1 << 3);
+
+  /**
+   * @var int
+   *
+   * Only bulk-updates without progress bar
+   */
+  const UI_NO_PROGRESS = (1 << 4);
 
   /**
    * @var array flags controlling the user interaction

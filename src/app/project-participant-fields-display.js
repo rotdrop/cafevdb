@@ -241,17 +241,23 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
         publicName: $pmeForm.find('input.pme-input.musician-public-name').val(),
         personalPublicName: $pmeForm.find('input.pme-input.musician-personal-public-name').val(),
       };
+
       // or parse the Dom:
       const receivables = [];
-      $row.closest('table').find('tr.field-datum').each(function() {
-        const $row = $(this);
-        const receivable = {
-          key: $row.data('optionKey'),
-          label: $row.find('td.label input.pme-input[type="text"]').val(),
-        };
-        receivables.push(receivable);
-      });
-
+      if (!$this.hasClass('no-progress')) {
+        $row.closest('table').find('tr.field-datum').each(function() {
+          const $row = $(this);
+          const receivable = {
+            key: $row.data('optionKey'),
+            label: $row.find('td.label input.pme-input[type="text"]').val(),
+          };
+          receivables.push(receivable);
+        });
+      }
+      if (receivables.length === 0) {
+        // this triggers bulk-update without progress
+        receivables.push({ key: undefined, label: '' });
+      }
       $this.addClass('busy');
       confirmedReceivablesUpdate(field, receivables, [participant], updateStrategy)
         .then(
@@ -262,7 +268,11 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
             console.info('ERROR', ...arguments);
           }
         )
-        .finally(() => $this.removeClass('busy'));
+        .finally(() => {
+          $this.removeClass('busy');
+          // just trigger reload
+          $container.find('form.pme-form input.pme-reload').first().trigger('click');
+        });
 
       return false;
     });

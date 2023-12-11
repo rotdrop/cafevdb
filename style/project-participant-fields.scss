@@ -411,6 +411,11 @@
             @include dataOptionsTable($operation: "change");
             table.data-options {
               /* could move it to the mixin, but it is OTOH only required once */
+              &.hide-deleted {
+                tr.deleted {
+                  display: none;
+                }
+              }
               tr {
                 td {
                   input, textarea {
