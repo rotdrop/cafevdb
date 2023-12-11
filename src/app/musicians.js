@@ -141,7 +141,6 @@ const contactValidation = function(container) {
     $expandProjectList
       .off('click')
       .on('click', function(event) {
-        console.info('HELLO');
         const $this = $(this);
         $this.closest('td').toggleClass('expanded');
         return false;
