@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-12-04 08:59+0100\n"
-"PO-Revision-Date: 2023-12-04 09:01+0100\n"
+"POT-Creation-Date: 2023-12-11 20:14+0100\n"
+"PO-Revision-Date: 2023-12-07 13:32+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1176,8 +1176,8 @@ msgstr ""
 "Voreinstellung der Schriftart für den Tabellen-Export auf \"%s\" gesetzt."
 
 #: lib/Controller/AdminSettingsController.php:332
-#: lib/Controller/PersonalSettingsController.php:1906
-#: lib/Controller/PersonalSettingsController.php:1961
+#: lib/Controller/PersonalSettingsController.php:1929
+#: lib/Controller/PersonalSettingsController.php:1984
 #: lib/Controller/ProjectParticipantsController.php:942
 #, php-format
 msgid "Unknown Request: \"%s\""
@@ -1227,7 +1227,7 @@ msgstr "Interner Fehler: `%s'."
 
 #: lib/Controller/BlogController.php:202
 #: lib/Controller/PersonalSettingsController.php:207
-#: lib/Controller/PersonalSettingsController.php:1758
+#: lib/Controller/PersonalSettingsController.php:1781
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not convertible to boolean."
 msgstr ""
@@ -1591,7 +1591,7 @@ msgstr "Der Hersteller wurde nicht angegeben."
 #: lib/Documents/OpenDocumentFiller.php:378
 #: lib/Documents/OpenDocumentFiller.php:381
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:151
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2485
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2487
 #: lib/PageRenderer/Instruments.php:384 lib/PageRenderer/Projects.php:788
 #: lib/PageRenderer/Projects.php:796
 #: lib/Service/Finance/InstrumentInsuranceService.php:621
@@ -1707,7 +1707,7 @@ msgstr "Ausnahme: \"%s\""
 
 #. TRANSLATORS: folder-name
 #: lib/Controller/MailMergeController.php:390
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1582
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1581
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:64
 msgid "Documents"
 msgstr "Dokumente"
@@ -1956,13 +1956,13 @@ msgstr ""
 "hochladen!"
 
 #: lib/Controller/PersonalSettingsController.php:211
-#: lib/Controller/PersonalSettingsController.php:1762
+#: lib/Controller/PersonalSettingsController.php:1785
 #, php-format
 msgid "Switching %2$s %1$s"
 msgstr "Schalte %2$s %1$s"
 
 #: lib/Controller/PersonalSettingsController.php:218
-#: lib/Controller/PersonalSettingsController.php:1400
+#: lib/Controller/PersonalSettingsController.php:1423
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not in the allowed range."
 msgstr "Wert \"%1$s\" für \"%2$s\" ist nicht im erlaubten Bereich."
@@ -2092,7 +2092,7 @@ msgstr ""
 "Benutzende verteilt werden."
 
 #: lib/Controller/PersonalSettingsController.php:547
-#: lib/Controller/PersonalSettingsController.php:1878
+#: lib/Controller/PersonalSettingsController.php:1901
 #, php-format
 msgid " \"%s\" set to \"%s\"."
 msgstr "\"%s\" auf \"%s\" eingestellt."
@@ -2141,7 +2141,7 @@ msgstr "Orchester Telefon-Nummer auf %s konfiguriert"
 
 #: lib/Controller/PersonalSettingsController.php:627
 #: lib/Controller/PersonalSettingsController.php:816
-#: lib/Controller/PersonalSettingsController.php:2220
+#: lib/Controller/PersonalSettingsController.php:2243
 #, php-format
 msgid "Erased config value for parameter \"%s\"."
 msgstr "Einstellung für Parameter \"%s\" gelöscht."
@@ -2255,7 +2255,7 @@ msgstr ""
 "wie vor für die Finanzbuchhaltung benötigt."
 
 #: lib/Controller/PersonalSettingsController.php:965
-#: lib/Service/ProjectService.php:2822
+#: lib/Service/ProjectService.php:2827
 #, php-format
 msgid "Failed to remove project \"%s\", id \"%d\"."
 msgstr "Konnte das Projekt \"%s\" mit der Id \"%d\" nicht löschen."
@@ -2272,7 +2272,7 @@ msgid "Renamed project \"%s\" (%d) to \"%s\"."
 msgstr "Projekt \"%s\" (%d) zu \"%s\" umbenannt."
 
 #: lib/Controller/PersonalSettingsController.php:999
-#: lib/Service/ProjectService.php:3084
+#: lib/Service/ProjectService.php:3091
 #, php-format
 msgid "Failed to rename project \"%s\", id \"%d\" to new name \"%s\"."
 msgstr ""
@@ -2357,32 +2357,32 @@ msgid "Folder must not be empty."
 msgstr "Ordner darf nicht leer sein."
 
 #: lib/Controller/PersonalSettingsController.php:1148
-#: lib/Controller/PersonalSettingsController.php:1274
+#: lib/Controller/PersonalSettingsController.php:1275
 #, php-format
 msgid "Created and shared new folder \"%s\"."
 msgstr "Neuen Ordner \"%s\" erzeugt und `geteilt'."
 
 #: lib/Controller/PersonalSettingsController.php:1152
-#: lib/Controller/PersonalSettingsController.php:1278
+#: lib/Controller/PersonalSettingsController.php:1279
 #, php-format
 msgid "Failed to create new shared folder \"%s\"."
 msgstr "Fehler beim Erzeugen des gemeinsamen Ordners \"%s\"."
 
 #: lib/Controller/PersonalSettingsController.php:1164
-#: lib/Controller/PersonalSettingsController.php:1310
+#: lib/Controller/PersonalSettingsController.php:1311
 #, php-format
 msgid "\"%s\" which is configured as \"%s\" exists and is usable."
 msgstr ""
 "\"%s\" -- konfiguriert als \"%s\" -- existiert und kann verwendet werden."
 
 #: lib/Controller/PersonalSettingsController.php:1168
-#: lib/Controller/PersonalSettingsController.php:1314
+#: lib/Controller/PersonalSettingsController.php:1315
 #, php-format
 msgid "\"%s\" does not exist or is unaccessible."
 msgstr "\"%s\" existiert nicht oder ist nicht erreichbar."
 
 #: lib/Controller/PersonalSettingsController.php:1174
-#: lib/Controller/PersonalSettingsController.php:1320
+#: lib/Controller/PersonalSettingsController.php:1321
 #, php-format
 msgid "Failure checking folder \"%s\", caught an exception \"%s\"."
 msgstr ""
@@ -2407,61 +2407,80 @@ msgstr "Poster-Ordner auf \"%s\" eingestellt."
 msgid "Participants downloads-folder set to \"%s\"."
 msgstr "Teilnehmenden-Download-Order auf \"%s\" eingestellt."
 
-#: lib/Controller/PersonalSettingsController.php:1233
+#: lib/Controller/PersonalSettingsController.php:1234
 #, php-format
 msgid "\"%s\" has to be defined first before defining \"%s\"."
 msgstr "\"%s\" muss angegeben werden bevor \"%s\" spezifiziert werden kann."
 
-#: lib/Controller/PersonalSettingsController.php:1342
+#: lib/Controller/PersonalSettingsController.php:1328
+msgid "FROM_YEAR"
+msgstr "JAHR_VON"
+
+#: lib/Controller/PersonalSettingsController.php:1329
+msgid "TO_YEAR"
+msgstr "JAHR_BIS"
+
+#: lib/Controller/PersonalSettingsController.php:1341
+#, php-format
+msgid ""
+"The tax-excemption-notice template must contain both, the from-year as well "
+"as the to-year placeholders (\"{%1$s}\", \"{%2$s}\")."
+msgstr ""
+"Die Schablone für den Dateinamen des Freistellungsbeischeids muss\n"
+"sowohl den Platzhalter \"{JAHR_VON}\" als auch den Platzhalter\n"
+"\"{JAHR_BIS}\" enthalten, damit die Gültigkeit des Bescheids bereits im\n"
+"Dateinamen augenfällig wird."
+
+#: lib/Controller/PersonalSettingsController.php:1365
 #, php-format
 msgid "Created and shared new calendar \"%s\"."
 msgstr "Kalender \"%s\" erzeugt und `geteilt'."
 
-#: lib/Controller/PersonalSettingsController.php:1343
+#: lib/Controller/PersonalSettingsController.php:1366
 #, php-format
 msgid "Validated shared calendar \"%s\"."
 msgstr "Gemeinsamer Kalender \"%s\" erfolgreich validiert."
 
-#: lib/Controller/PersonalSettingsController.php:1346
+#: lib/Controller/PersonalSettingsController.php:1369
 #, php-format
 msgid "Failed to create new shared calendar \"%s\"."
 msgstr "Fehler beim Erzeugen des gemeinsamen Kalenders \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1352
+#: lib/Controller/PersonalSettingsController.php:1375
 #, php-format
 msgid "Failure checking calendar \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf den Kalender \"%s\", Ausnahme \"%s\" "
 "\"gefangen\"."
 
-#: lib/Controller/PersonalSettingsController.php:1365
+#: lib/Controller/PersonalSettingsController.php:1388
 #, php-format
 msgid "Failed to create new shared address book \"%s\"."
 msgstr "Fehler beim erzeugen des gemeinsamen Adressbuchs \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1371
+#: lib/Controller/PersonalSettingsController.php:1394
 #, php-format
 msgid "Created and shared new address book \"%s\"."
 msgstr "Neues Adressbuch \"%s\" erzeugt und geteilt."
 
-#: lib/Controller/PersonalSettingsController.php:1376
+#: lib/Controller/PersonalSettingsController.php:1399
 #, php-format
 msgid "Failure checking address book \"%s\", caught an exception \"%s\"."
 msgstr ""
 "Fehler beim Zugriffstest auf das Adressbuch \"%s\", Ausnahme \"%s\" "
 "\"aufgefangen\"."
 
-#: lib/Controller/PersonalSettingsController.php:1387
+#: lib/Controller/PersonalSettingsController.php:1410
 #, php-format
 msgid "Display name of musicians-addressbook reset to \"%s\"."
 msgstr "Anzeigename des Musizierende-Adressbuchs auf \"%s\" zurückgesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1389
+#: lib/Controller/PersonalSettingsController.php:1412
 #, php-format
 msgid "Display name of musicians-addressbook set to \"%s\"."
 msgstr "Anzeigename des Musizierende-Adressbuchs auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1392
+#: lib/Controller/PersonalSettingsController.php:1415
 #, php-format
 msgid ""
 "Unable to set display-name of musicians-addressbook to \"%s\", it remains at "
@@ -2470,81 +2489,81 @@ msgstr ""
 "Kann den Anzeigenamen des Musker-Adressbhuchs nicht auf \"%s\" setzen, es "
 "bleibt bei \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1403
+#: lib/Controller/PersonalSettingsController.php:1426
 #, php-format
 msgid "Setting %2$s to %1$s minutes."
 msgstr "Setze `%2$s' auf `%1$s' Minuten."
 
-#: lib/Controller/PersonalSettingsController.php:1408
-#: lib/Controller/PersonalSettingsController.php:1503
-#: lib/Controller/PersonalSettingsController.php:1657
+#: lib/Controller/PersonalSettingsController.php:1431
+#: lib/Controller/PersonalSettingsController.php:1526
+#: lib/Controller/PersonalSettingsController.php:1680
 #, php-format
 msgid "Value \"%s\" for set \"%s\" is not convertible to boolean."
 msgstr ""
 "Wert \"%s\" für \"%s\" kann nicht als Wahrheitswert interpretiert werden."
 
-#: lib/Controller/PersonalSettingsController.php:1470
+#: lib/Controller/PersonalSettingsController.php:1493
 msgid "Cloud-user-views have been regenerated successfully."
 msgstr "Cloud User-Views wurden erfolgreich erzeugt."
 
-#: lib/Controller/PersonalSettingsController.php:1538
+#: lib/Controller/PersonalSettingsController.php:1561
 msgid ""
 "Personalized single-row database-views have been regenerated successfully."
 msgstr ""
 "Die personalisierten Datenbank-Ansichten wurden erfolgreich regeneriert."
 
-#: lib/Controller/PersonalSettingsController.php:1567
+#: lib/Controller/PersonalSettingsController.php:1590
 #, php-format
 msgid "Successfully distributed the email credentials for %s."
 msgstr "Email-Zugangsdaten erfolgreich an folgende Benutzer verteilt: %s."
 
-#: lib/Controller/PersonalSettingsController.php:1569
+#: lib/Controller/PersonalSettingsController.php:1592
 msgid "Unable to distribute the email credentials to any user."
 msgstr "Konnte die Email-Zugangsdaten an keinen einzigen Benutzer verteilen."
 
-#: lib/Controller/PersonalSettingsController.php:1572
+#: lib/Controller/PersonalSettingsController.php:1595
 #, php-format
 msgid "Email credentials could not be set for %s."
 msgstr "Die Email-Zugangsdaten für %s konnten nicht installiert werden."
 
-#: lib/Controller/PersonalSettingsController.php:1575
-#: lib/Controller/PersonalSettingsController.php:1578
+#: lib/Controller/PersonalSettingsController.php:1598
+#: lib/Controller/PersonalSettingsController.php:1601
 #, php-format
 msgid "Setting the email credentials for %s failed fatally: \"%s\"."
 msgstr ""
 "Setzen der Email-Zugangsdaten für %s ist endgültig fehlgeschlagen: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1598
+#: lib/Controller/PersonalSettingsController.php:1621
 #, php-format
 msgid "%s connection seems functional."
 msgstr "%s Verbindung scheint zu funktionieren."
 
-#: lib/Controller/PersonalSettingsController.php:1599
+#: lib/Controller/PersonalSettingsController.php:1622
 #, php-format
 msgid "Unable to establish %s connection to %s@%s:%d"
 msgstr "Kann keine %s-Verbindung zu %s@%s:%d herstellen."
 
-#: lib/Controller/PersonalSettingsController.php:1619
+#: lib/Controller/PersonalSettingsController.php:1642
 #, php-format
 msgid "Server name \"%s\" has neither an IPV4 nor an IPV6 address"
 msgstr "Der Server-Name \"%s\" hat weder eine IPV4- noch eine IPV6-Adresse."
 
-#: lib/Controller/PersonalSettingsController.php:1632
+#: lib/Controller/PersonalSettingsController.php:1655
 #, php-format
 msgid "\"%s\" is not an integral number in the range [%d, %d]"
 msgstr "\"%s\" ist keine Ganzzahl im Bereicht [%d, %d]."
 
-#: lib/Controller/PersonalSettingsController.php:1640
+#: lib/Controller/PersonalSettingsController.php:1663
 #, php-format
 msgid "Unknown transport security method: \"%s\"."
 msgstr "Unbekannter Transport-Sicherheits-Typ: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1647
+#: lib/Controller/PersonalSettingsController.php:1670
 #, php-format
 msgid "Using transport security \"%s\" for protocol \"%s\"."
 msgstr "Verwende Transport-Verschlüsselung \"%s\" für das Protokoll \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1666
+#: lib/Controller/PersonalSettingsController.php:1689
 msgid ""
 "Please configure the mailing-list address first, otherweise I do not know "
 "which list I have to work on."
@@ -2552,11 +2571,11 @@ msgstr ""
 "Bitte die Listen-Adresse zuerst eingeben, sonst weiß ich ja nicht, was ich "
 "konfigurieren soll."
 
-#: lib/Controller/PersonalSettingsController.php:1679
+#: lib/Controller/PersonalSettingsController.php:1702
 msgid "none"
 msgstr "keine"
 
-#: lib/Controller/PersonalSettingsController.php:1677
+#: lib/Controller/PersonalSettingsController.php:1700
 #, php-format
 msgid ""
 "Autoconfiguration of the mailing list \"%1$s\" successful, owner set to "
@@ -2567,13 +2586,13 @@ msgstr ""
 "wurde erfolgreich vorgenommen. Eigentümer ist \"%2$s\", Moderator und nicht-"
 "moderierter Author ist \"%3$s\", spezialisierte automatische Antworten: %4$s."
 
-#: lib/Controller/PersonalSettingsController.php:1690
+#: lib/Controller/PersonalSettingsController.php:1713
 #, php-format
 msgid "Unable to parse email address \"%1$s\": %2$s"
 msgstr ""
 "Die Email-Adresse \"%1$s\" scheint ein ungültiges Format zu haben: %2$s."
 
-#: lib/Controller/PersonalSettingsController.php:1693
+#: lib/Controller/PersonalSettingsController.php:1716
 #, php-format
 msgid ""
 "\"%s\" seems to contain multiple email address, only a single address is "
@@ -2582,7 +2601,7 @@ msgstr ""
 "\"%s\" scheint mehrere Email-Adressen zu enthalten; hier darf aber nur eine "
 "einzelne Adresse angegeben werden."
 
-#: lib/Controller/PersonalSettingsController.php:1697
+#: lib/Controller/PersonalSettingsController.php:1720
 #, php-format
 msgid ""
 "\"%s\" does not contain the host-part of the email-address, local addresses "
@@ -2591,12 +2610,12 @@ msgstr ""
 "Die Email-Adresse \"%s\" enthält keinen Server-Namen, lokale Adressen dürfen "
 "hier nicht angegeben werden."
 
-#: lib/Controller/PersonalSettingsController.php:1701
+#: lib/Controller/PersonalSettingsController.php:1724
 #, php-format
 msgid "\"%s\" does not seem to be a valid email address"
 msgstr "\"%s\" scheint keine gültige Email-Adresse zu sein."
 
-#: lib/Controller/PersonalSettingsController.php:1734
+#: lib/Controller/PersonalSettingsController.php:1757
 #, php-format
 msgid ""
 "The Mailing list \"%1$s\" does not seem to exist on the configured mailing-"
@@ -2605,13 +2624,13 @@ msgstr ""
 "Die Email-Verteiler-Liste \"%1$s\" scheint auf dem eingetragenen Listen-"
 "Server nicht zu existieren."
 
-#: lib/Controller/PersonalSettingsController.php:1741
-#: lib/Controller/PersonalSettingsController.php:1822
+#: lib/Controller/PersonalSettingsController.php:1764
+#: lib/Controller/PersonalSettingsController.php:1845
 msgid "announcements"
 msgstr "Ankündigungen"
 
-#: lib/Controller/PersonalSettingsController.php:1742
-#: lib/Controller/PersonalSettingsController.php:1823
+#: lib/Controller/PersonalSettingsController.php:1765
+#: lib/Controller/PersonalSettingsController.php:1846
 #, php-format
 msgid ""
 "Link-shared auto-responses directory for the announcements mailing list is "
@@ -2619,43 +2638,43 @@ msgid ""
 msgstr ""
 "Uri für automatische Antworten des Ankündigungs-Email-Verteilers ist \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1774
+#: lib/Controller/PersonalSettingsController.php:1797
 #: lib/Settings/PersonalForm.php:446
 #, php-format
 msgid "%d days"
 msgstr "%d Tage"
 
-#: lib/Controller/PersonalSettingsController.php:1811
-#: lib/Controller/PersonalSettingsController.php:1817
+#: lib/Controller/PersonalSettingsController.php:1834
+#: lib/Controller/PersonalSettingsController.php:1840
 #, php-format
 msgid "Unable to connect to mailing list service at \"%s\""
 msgstr "Kann keine Verbindung zum Mailing-List-Service unter \"%s\" aufnehmen."
 
-#: lib/Controller/PersonalSettingsController.php:1826
+#: lib/Controller/PersonalSettingsController.php:1849
 msgid "projects"
 msgstr "Projekte"
 
-#: lib/Controller/PersonalSettingsController.php:1827
+#: lib/Controller/PersonalSettingsController.php:1850
 #, php-format
 msgid ""
 "Link-shared auto-responses directory for project mailing lists is \"%s\"."
 msgstr ""
 "Uri für automatische Antworten der Projekt-Email-Verteilers ist \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:1834
+#: lib/Controller/PersonalSettingsController.php:1857
 msgid "Empty translation phrase or language"
 msgstr "Leere Übersetzung oder Sprache"
 
-#: lib/Controller/PersonalSettingsController.php:1837
+#: lib/Controller/PersonalSettingsController.php:1860
 msgid "Missing translation"
 msgstr "Fehlende Übersetzung"
 
-#: lib/Controller/PersonalSettingsController.php:1841
+#: lib/Controller/PersonalSettingsController.php:1864
 #, php-format
 msgid "Empty translation for phrase \"%s\"."
 msgstr "Leere Übersetzung der Phrase \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:1845
+#: lib/Controller/PersonalSettingsController.php:1868
 #, php-format
 msgid ""
 "Language specifier must between 2 and 5 chars (e.g. de or en_US), got %s"
@@ -2663,84 +2682,84 @@ msgstr ""
 "Sprachkürzel (%s) müsste eine Länge zweischen 2 und 5 Buchstaben haben (e.g. "
 "de or en_US)"
 
-#: lib/Controller/PersonalSettingsController.php:1849
+#: lib/Controller/PersonalSettingsController.php:1872
 msgid "Recording the translation failed"
 msgstr "Speichern der Übersetzung fehlgeschlagen"
 
-#: lib/Controller/PersonalSettingsController.php:1851
+#: lib/Controller/PersonalSettingsController.php:1874
 #, php-format
 msgid "Successfully recorded the given translation for the language \"%s\""
 msgstr "Übersetzung für Sprache \"%s\" erfolgreich gespeichert."
 
-#: lib/Controller/PersonalSettingsController.php:1854
+#: lib/Controller/PersonalSettingsController.php:1877
 msgid "Failed to erase all recorded translations."
 msgstr "Das Löschen aller aufgezeichneter Übersetzungen ist fehlgeschlagen."
 
-#: lib/Controller/PersonalSettingsController.php:1856
+#: lib/Controller/PersonalSettingsController.php:1879
 msgid "All recorded translations have been erased."
 msgstr "Alle aufgezeichneten Übersetzungen wurden gelöscht."
 
-#: lib/Controller/PersonalSettingsController.php:1868
+#: lib/Controller/PersonalSettingsController.php:1891
 #, php-format
 msgid "Value \"%1$s\" for set \"%2$s\" is not a valid URL."
 msgstr "Wert \"%1$s\" für \"%2$s\" ist keine gültige URL."
 
-#: lib/Controller/PersonalSettingsController.php:1872
+#: lib/Controller/PersonalSettingsController.php:1895
 #, php-format
 msgid "\"%1$s\" must be a http(s) URL, scheme \"%2$s\" not supported."
 msgstr ""
 "\"%1$s\" muss eine http(s)-URL sein, Schema \"%2$s\" nicht unterstützt."
 
-#: lib/Controller/PersonalSettingsController.php:1893
+#: lib/Controller/PersonalSettingsController.php:1916
 #, php-format
 msgid "Unknown configuation key %s"
 msgstr "Unbekannter Konfigurationseintrag `%s'"
 
-#: lib/Controller/PersonalSettingsController.php:1897
+#: lib/Controller/PersonalSettingsController.php:1920
 #, php-format
 msgid "Value \"%s\" for setting \"%s\" is not in the allowed range."
 msgstr "Wert \"%s\" für \"%s\" ist nicht im erlaubten Bereich."
 
-#: lib/Controller/PersonalSettingsController.php:1902
+#: lib/Controller/PersonalSettingsController.php:1925
 #, php-format
 msgid "Redaxo categorie Id for \"%s\" set to \"%s\"."
 msgstr "Redaxo-Kategorie für \"%s\" auf \"%s\" gesetzt."
 
-#: lib/Controller/PersonalSettingsController.php:1940
+#: lib/Controller/PersonalSettingsController.php:1963
 #, php-format
 msgid "Unknown link target %s"
 msgstr "Unbekanntes Verknüpfungs-Ziel %s"
 
-#: lib/Controller/PersonalSettingsController.php:1949
+#: lib/Controller/PersonalSettingsController.php:1972
 msgid "Shared folder is not configured."
 msgstr "Gemeinsamer Ordner ist nicht festgelegt."
 
-#: lib/Controller/PersonalSettingsController.php:1953
+#: lib/Controller/PersonalSettingsController.php:1976
 msgid "Document template folder is not configured."
 msgstr "Ort für Vorlagen-Ordner ist nicht konfiguriert."
 
-#: lib/Controller/PersonalSettingsController.php:2018
-#: lib/Controller/PersonalSettingsController.php:2143
+#: lib/Controller/PersonalSettingsController.php:2041
+#: lib/Controller/PersonalSettingsController.php:2166
 #, php-format
 msgid "Unknown auto-fill template: \"%s\"."
 msgstr "Unbekannte Serienbrief-Vorlage \"%s\" "
 
-#: lib/Controller/PersonalSettingsController.php:2041
-#: lib/Controller/PersonalSettingsController.php:2067
-#: lib/Controller/PersonalSettingsController.php:2092
-#: lib/Controller/PersonalSettingsController.php:2111
+#: lib/Controller/PersonalSettingsController.php:2064
+#: lib/Controller/PersonalSettingsController.php:2090
+#: lib/Controller/PersonalSettingsController.php:2115
+#: lib/Controller/PersonalSettingsController.php:2134
 #, php-format
 msgid "There is no template file for template \"%s\""
 msgstr "Es gibt keine Template-Datei für das Template \"%s\""
 
-#: lib/Controller/PersonalSettingsController.php:2128
+#: lib/Controller/PersonalSettingsController.php:2151
 #, php-format
 msgid "Auto-fill test for template \"%s: not yet implemented, sorry."
 msgstr ""
 "Serienbrief-Test für die Vorlage \"%s\" ist leider noch nicht implementiert, "
 "tut uns leid."
 
-#: lib/Controller/PersonalSettingsController.php:2172
+#: lib/Controller/PersonalSettingsController.php:2195
 #, php-format
 msgid ""
 "Download of auto-fill test-data for template \"%s\" is not yet implemented, "
@@ -2749,7 +2768,7 @@ msgstr ""
 "Download des Test-Datensatz für den Serienbrief \"%s\" ist noch nicht "
 "implementiert."
 
-#: lib/Controller/PersonalSettingsController.php:2188
+#: lib/Controller/PersonalSettingsController.php:2211
 #: lib/Controller/PmeTableController.php:136
 #: lib/Controller/ProjectsController.php:390
 #: lib/Controller/SepaBulkTransactionsController.php:165
@@ -2757,36 +2776,36 @@ msgstr ""
 msgid "Unknown Request: \"%s\"."
 msgstr "Unbekannte Anfrage: \"%s\"."
 
-#: lib/Controller/PersonalSettingsController.php:2232
+#: lib/Controller/PersonalSettingsController.php:2255
 #, php-format
 msgid "Value for \"%1$s\" set to \"%2$s\""
 msgstr "Wert für \"%1$s\" auf \"%2$s\" gesetzt"
 
-#: lib/Controller/PersonalSettingsController.php:2251
+#: lib/Controller/PersonalSettingsController.php:2274
 msgid "App encryption key is invalid, will not distribute it."
 msgstr ""
 "Der App-Verschlüsselungs-Schlüssel ist ungültig; er wird nicht verteilt."
 
-#: lib/Controller/PersonalSettingsController.php:2274
+#: lib/Controller/PersonalSettingsController.php:2297
 #, php-format
 msgid "Successfully distributed the app encryption key to %s."
 msgstr ""
 "App-Verschlüsselungs-Schlüssel erfolgreich an folgende Benutzer verteilt: %s."
 
-#: lib/Controller/PersonalSettingsController.php:2276
+#: lib/Controller/PersonalSettingsController.php:2299
 msgid "Unable to distribute the app encryptionkey to any user."
 msgstr ""
 "Konnte den App-Verschlüsselungs-Schlüssel an keinen einzigen Benutzer "
 "verteilen."
 
-#: lib/Controller/PersonalSettingsController.php:2279
+#: lib/Controller/PersonalSettingsController.php:2302
 #, php-format
 msgid "Public key missing for %s, key distribution failed."
 msgstr ""
 "Kann den App-Verschlüsselungs-Schlüssel nicht an die Person %s weitergeben, "
 "da deren öffentlicher Verschlüsselungs-Schlüssel fehlt."
 
-#: lib/Controller/PersonalSettingsController.php:2284
+#: lib/Controller/PersonalSettingsController.php:2307
 #, php-format
 msgid "Setting the app encryption key for %s failed fatally: \"%s\"."
 msgstr ""
@@ -2861,8 +2880,8 @@ msgstr "Fehlende Anfrage-Parameter \"%s\" / \"%s\"."
 #: lib/Controller/ProjectParticipantFieldsController.php:171
 #: lib/Controller/ProjectParticipantFieldsController.php:289
 #: lib/Controller/ProjectParticipantFieldsController.php:370
-#: lib/Controller/ProjectParticipantFieldsController.php:771
-#: lib/Controller/ProjectParticipantFieldsController.php:812
+#: lib/Controller/ProjectParticipantFieldsController.php:768
+#: lib/Controller/ProjectParticipantFieldsController.php:809
 #, php-format
 msgid "Unable to fetch field with id \"%d\"."
 msgstr "Kann das Feld mit der Id \"%s\" nicht laden."
@@ -2915,7 +2934,7 @@ msgstr "Keine Definitionsdaten im Feld \"%s\"."
 #: lib/Controller/ProjectParticipantFieldsController.php:315
 #: lib/Controller/ProjectParticipantFieldsController.php:386
 #: lib/Controller/ProjectParticipantFieldsController.php:466
-#: lib/Controller/ProjectParticipantFieldsController.php:655
+#: lib/Controller/ProjectParticipantFieldsController.php:652
 #, php-format
 msgid "Unable to load generator for recurring receivables \"%s\"."
 msgstr ""
@@ -2923,21 +2942,21 @@ msgstr ""
 
 #: lib/Controller/ProjectParticipantFieldsController.php:340
 #: lib/Controller/ProjectParticipantFieldsController.php:585
-#: lib/Controller/ProjectParticipantFieldsController.php:727
+#: lib/Controller/ProjectParticipantFieldsController.php:724
 #, php-format
 msgid "Request \"%s/%s\" successful"
 msgstr "Anfrage \"%s/%s\" erfolgreich"
 
 #: lib/Controller/ProjectParticipantFieldsController.php:354
 #: lib/Controller/ProjectParticipantFieldsController.php:428
-#: lib/Controller/ProjectParticipantFieldsController.php:605
+#: lib/Controller/ProjectParticipantFieldsController.php:602
 #, php-format
 msgid "Missing parameters in request \"%s/%s\": \"%s\"."
 msgstr "Fehlende Anfrage-Parameter \"%s/%s\": \"%s\"."
 
 #: lib/Controller/ProjectParticipantFieldsController.php:361
 #: lib/Controller/ProjectParticipantFieldsController.php:435
-#: lib/Controller/ProjectParticipantFieldsController.php:612
+#: lib/Controller/ProjectParticipantFieldsController.php:609
 #, php-format
 msgid "Unknown update strategy: \"%s\"."
 msgstr "Unbekannte Aktualisierungsstrategie: \"%s\"."
@@ -3001,28 +3020,28 @@ msgstr ""
 "verwenden. Die \"%2$s\"-Datei wird benötigt, um den Inhalt der Kontexthilfe "
 "für dieses Feld zu präsentieren."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:620
+#: lib/Controller/ProjectParticipantFieldsController.php:617
 #, php-format
 msgid "Unable to fetch field with id \"%s\"."
 msgstr "Kann das Feld mit der Id \"%s\" nicht laden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:632
+#: lib/Controller/ProjectParticipantFieldsController.php:629
 #, php-format
 msgid "Unable to find the musician with the id \"%d\" in project \"%s\"."
 msgstr "Kann die Person mit der Id \"%d\" nicht im Projekt \"%s\" finden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:645
+#: lib/Controller/ProjectParticipantFieldsController.php:642
 #, php-format
 msgid "Unable to fetch receivable with key \"%s\"."
 msgstr "Kann die Forderung mit der Id \"%s\" nicht laden."
 
-#: lib/Controller/ProjectParticipantFieldsController.php:748
-#: lib/Controller/ProjectParticipantFieldsController.php:844
+#: lib/Controller/ProjectParticipantFieldsController.php:745
+#: lib/Controller/ProjectParticipantFieldsController.php:841
 #, php-format
 msgid "Unknown Request \"%s/%s\""
 msgstr "Unbekannte Anfrage \"%s/%s\""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:791
+#: lib/Controller/ProjectParticipantFieldsController.php:788
 #: lib/Controller/ProjectsController.php:512
 #: lib/Controller/ProjectsController.php:552
 #: lib/Controller/ProjectsController.php:603
@@ -3031,7 +3050,7 @@ msgstr "Unbekannte Anfrage \"%s/%s\""
 msgid "Unknown request: \"%1$s / %2$s\"."
 msgstr "Unbekannte Anfrage: \"%1$s / %2$s\""
 
-#: lib/Controller/ProjectParticipantFieldsController.php:818
+#: lib/Controller/ProjectParticipantFieldsController.php:815
 #, php-format
 msgid "Unable to find the option with id \"%1$s\" for field \"%2$s\"."
 msgstr "Kann die Option mit Id \"%1$s\" für das Feld \"%2$s\" nicht finden."
@@ -4378,8 +4397,8 @@ msgstr "Gesamtbetrag"
 #: lib/EmailForm/Composer.php:1016
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:604
 #: lib/PageRenderer/ProjectParticipantFields.php:627
-#: lib/PageRenderer/ProjectParticipantFields.php:1673
-#: lib/PageRenderer/ProjectParticipantFields.php:1682
+#: lib/PageRenderer/ProjectParticipantFields.php:1675
+#: lib/PageRenderer/ProjectParticipantFields.php:1684
 msgid "Deposit"
 msgstr "Anzahlung"
 
@@ -4471,23 +4490,23 @@ msgstr ""
 "  </body>\n"
 "</html>"
 
-#: lib/EmailForm/Composer.php:2644 lib/EmailForm/Composer.php:3140
+#: lib/EmailForm/Composer.php:2645 lib/EmailForm/Composer.php:3141
 msgid "DO NOT REPLY"
 msgstr "NICHT ANTWORTEN"
 
-#: lib/EmailForm/Composer.php:3323
+#: lib/EmailForm/Composer.php:3324
 msgid "*** empty content ***"
 msgstr "*** leeres Dokument ***"
 
-#: lib/EmailForm/Composer.php:3377
+#: lib/EmailForm/Composer.php:3378
 msgid "Message(s) exported successfully!"
 msgstr "Die Nachricht(en) wurde erfolgreich gesendet!"
 
-#: lib/EmailForm/Composer.php:3379
+#: lib/EmailForm/Composer.php:3380
 msgid "Prewiew generation detected errors!"
 msgstr "Bei der Erzeugung der Vorschauen gab es Fehler!"
 
-#: lib/EmailForm/Composer.php:3428
+#: lib/EmailForm/Composer.php:3429
 msgid ""
 "Cannot substitute personal information in mailing list post. Personalized "
 "emails have to be send individually."
@@ -4496,47 +4515,47 @@ msgstr ""
 "einfügen. Personalisierte Emails müssen einzeln an jeden Empfänger\n"
 "versendet werden."
 
-#: lib/EmailForm/Composer.php:3431
+#: lib/EmailForm/Composer.php:3432
 msgid "The email text contains personalized substitutions."
 msgstr "Der Email-Text enthält personalisierte Ersetzungen."
 
-#: lib/EmailForm/Composer.php:3434
+#: lib/EmailForm/Composer.php:3435
 msgid "The email contains personalized attachments."
 msgstr "Die Email enhält personalisierte Anhänge."
 
-#: lib/EmailForm/Composer.php:3679
+#: lib/EmailForm/Composer.php:3680
 msgid "Pre-composition validation has failed!"
 msgstr "Em@il Vorab-Check ist fehlgeschlagen!"
 
 #. TRANSLATORS: email prefix when writing to all musicians
-#: lib/EmailForm/Composer.php:3714
+#: lib/EmailForm/Composer.php:3715
 msgid "ALL_PERSONS: musicians"
 msgstr "Personen"
 
-#: lib/EmailForm/Composer.php:3815 lib/EmailForm/Composer.php:3831
+#: lib/EmailForm/Composer.php:3816 lib/EmailForm/Composer.php:3832
 #, php-format
 msgid "Unknown substitution \"%s\"."
 msgstr "Unbekannte Ersetzung: \"%s\"."
 
-#: lib/EmailForm/Composer.php:3944 lib/EmailForm/Composer.php:4074
-#: lib/EmailForm/Composer.php:4084
+#: lib/EmailForm/Composer.php:3945 lib/EmailForm/Composer.php:4075
+#: lib/EmailForm/Composer.php:4085
 #, php-format
 msgid "Date-time substitution of \"%s\" / \"%s\" failed."
 msgstr "Darstellung der Zeitangabe \"%s\" / \"%s\" ist fehlgeschlagen."
 
 #. TRANSLATORS: %s is substituted by the dedicated role of a member of the organization
 #. TRANSLATORS: team, like e.g. "treasurer".
-#: lib/EmailForm/Composer.php:3966
+#: lib/EmailForm/Composer.php:3967
 #, php-format
 msgid "Nothing known about \"%s\""
 msgstr "Die Rolle \"%s\" scheint nicht besetzt zu sein."
 
-#: lib/EmailForm/Composer.php:3970
+#: lib/EmailForm/Composer.php:3971
 #, php-format
 msgid "Contact subfield for \"%1$s\" is missing, should be one of %2$s."
 msgstr "Kontakt-Datenfeld für \"%1$s feht, bekannte Datenfelder sind %2$s."
 
-#: lib/EmailForm/Composer.php:3976
+#: lib/EmailForm/Composer.php:3977
 #, php-format
 msgid ""
 "Contact subfield \"%3$s\"\" for \"%1$s\" is unknown, should be one of %2$s."
@@ -4544,88 +4563,88 @@ msgstr ""
 "Kontakt-Datenfeld \"%3$s\" für \"%1$s\" ist unbekannt, bekannte Datenfelder "
 "sind %2$s."
 
-#: lib/EmailForm/Composer.php:4003
+#: lib/EmailForm/Composer.php:4004
 msgid "no project involved"
 msgstr "Kein Projekt zugeordnet"
 
-#: lib/EmailForm/Composer.php:4006
+#: lib/EmailForm/Composer.php:4007
 msgid "PROJECT_PUBLIC_SHARE"
 msgstr "PROJEKT_OEFFENTLICHE_FREIGABE"
 
-#: lib/EmailForm/Composer.php:4016
+#: lib/EmailForm/Composer.php:4017
 msgid "PROJECT_PUBLIC_SHARE_EXPIRATION"
 msgstr "PROJEKT_OEFFENTLICHE_FREIGABE_ABLAUF"
 
-#: lib/EmailForm/Composer.php:4028
+#: lib/EmailForm/Composer.php:4029
 msgid "phrase"
 msgstr "Phrase"
 
-#: lib/EmailForm/Composer.php:4045
+#: lib/EmailForm/Composer.php:4046
 #, php-format
 msgid "(expires at %s)"
 msgstr "(läuft ab am %s)"
 
-#: lib/EmailForm/Composer.php:4185
+#: lib/EmailForm/Composer.php:4186
 #, php-format
 msgid "REPLYTO: On %1$s %2$s, %3$s wrote:"
 msgstr "Am %1$s um %2$s schrieb %3$s:"
 
-#: lib/EmailForm/Composer.php:4520
+#: lib/EmailForm/Composer.php:4521
 msgid "Unable to load draft without id"
 msgstr "Kann keinen Entwurf ohne Entwurfs-Id laden"
 
-#: lib/EmailForm/Composer.php:4532
+#: lib/EmailForm/Composer.php:4533
 #, php-format
 msgid "Draft %s could not be loaded"
 msgstr "Der Entwurf %s konnte nicht geladen werden."
 
-#: lib/EmailForm/Composer.php:4556
+#: lib/EmailForm/Composer.php:4557
 #, php-format
 msgid "Could not clear auto-generated flag of draft %s, \"%s\"."
 msgstr ""
 "Konnte die \"automatisch generiert\"-Markierung nicht vom Entwurf %s \"%s\" "
 "löschen."
 
-#: lib/EmailForm/Composer.php:4587
+#: lib/EmailForm/Composer.php:4588
 #, php-format
 msgid "Deleting draft with id %d failed: %s"
 msgstr "Löschen des Enwurfs mit Id %d fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4647 lib/EmailForm/Composer.php:4774
+#: lib/EmailForm/Composer.php:4648 lib/EmailForm/Composer.php:4775
 #, php-format
 msgid "Cleaning temporary files failed: %s"
 msgstr "Aufräumen der temporären Dateien ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:4683
+#: lib/EmailForm/Composer.php:4684
 msgid "Cleaning temporary files succeeded."
 msgstr "Aufräumen der temporären Dateien war erfolgreich."
 
-#: lib/EmailForm/Composer.php:4708
+#: lib/EmailForm/Composer.php:4709
 #, php-format
 msgid "Detaching temporary file attachments from draft %d failed: %s"
 msgstr "Lösen der temporären Dateien vom Entwurf %d ist fehlgeschlagen: %s"
 
-#: lib/EmailForm/Composer.php:5444
+#: lib/EmailForm/Composer.php:5445
 msgid "Blank Template"
 msgstr "Blanko-Vorlage"
 
-#: lib/EmailForm/Composer.php:5445
+#: lib/EmailForm/Composer.php:5446
 msgid "blank"
 msgstr "blanko"
 
-#: lib/EmailForm/Composer.php:5448
+#: lib/EmailForm/Composer.php:5449
 msgid "Personalized"
 msgstr "Personifiziert"
 
-#: lib/EmailForm/Composer.php:5451
+#: lib/EmailForm/Composer.php:5452
 msgid "Cloud"
 msgstr "Daten-Wolke"
 
-#: lib/EmailForm/Composer.php:5454
+#: lib/EmailForm/Composer.php:5455
 msgid "Local Filesystem"
 msgstr "Lokale Dateien"
 
-#: lib/EmailForm/Composer.php:5585
+#: lib/EmailForm/Composer.php:5586
 #, php-format
 msgid "code %1$d, %2$s:%3$d -- %4$s"
 msgstr "Code %1$d, %2$s:%3$d -- %4$s"
@@ -5119,7 +5138,7 @@ msgid "Orchestra Contact"
 msgstr "Orchester-Kontakt"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:547
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1590
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1589
 #: lib/PageRenderer/SepaBulkTransactions.php:611
 msgid "Date"
 msgstr "Datum"
@@ -5279,13 +5298,13 @@ msgstr "Auf Voreinstellung zurücksetzen."
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:917
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1201
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1315
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1818
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2072
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1817
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2071
 msgid "sub-totals"
 msgstr "Zwischensumme"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:565
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1587
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1586
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -5310,29 +5329,29 @@ msgstr "Der Dateiordner ist leer."
 msgid "Label for %s"
 msgstr "Kennzeichung für %s"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1581
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1580
 msgid "Value"
 msgstr "Wert"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1586
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1585
 #, php-format
 msgid "Value [%s]"
 msgstr "Wert [%s]"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1593
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1592
 msgid "Date/Time"
 msgstr "Datum/Zeit"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1597
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1596
 msgid "File"
 msgstr "Datei"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1619
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1618
 #: lib/PageRenderer/SepaBulkTransactions.php:657
 msgid "Actions"
 msgstr "Aktionen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1620
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1619
 #: lib/PageRenderer/ProjectPayments.php:605
 #: lib/PageRenderer/ProjectPayments.php:626
 #: lib/PageRenderer/SepaBulkTransactions.php:515
@@ -5341,23 +5360,23 @@ msgstr "Aktionen"
 msgid "Subject"
 msgstr "Betreff"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1671
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1768
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1874
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1670
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1767
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1873
 msgid "without group"
 msgstr "Ohne Gruppe"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1735
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1952
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2037
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1734
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1951
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2036
 msgid "deleted"
 msgstr "gelöscht"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1885
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1884
 msgid "add to this group"
 msgstr "zu dieser Gruppe hinzufügen"
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2363
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2362
 #, php-format
 msgid ""
 "Inconsistent field keys for \"%s\", field-id %d, should: \"%s\", old: "
@@ -5366,7 +5385,7 @@ msgstr ""
 "Inkonsistente Feld-Schlüssel für \"%s\", Feld-Id %d, sollte \"%s\", alt "
 "\"%s\""
 
-#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2504
+#: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2506
 #, php-format
 msgid ""
 "Number %d of requested participants for group %s is larger than the number "
@@ -6179,8 +6198,8 @@ msgid "Default"
 msgstr "Voreinstellung"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:598
-#: lib/PageRenderer/ProjectParticipantFields.php:1672
-#: lib/PageRenderer/ProjectParticipantFields.php:1681
+#: lib/PageRenderer/ProjectParticipantFields.php:1674
+#: lib/PageRenderer/ProjectParticipantFields.php:1683
 msgid "Data"
 msgstr "Daten"
 
@@ -6195,8 +6214,8 @@ msgid "Default Value"
 msgstr "Voreinstellung"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:878
-#: lib/PageRenderer/ProjectParticipantFields.php:1675
-#: lib/PageRenderer/ProjectParticipantFields.php:1684
+#: lib/PageRenderer/ProjectParticipantFields.php:1677
+#: lib/PageRenderer/ProjectParticipantFields.php:1686
 msgid "Tooltip"
 msgstr "Kontext-Hilfe"
 
@@ -6263,22 +6282,22 @@ msgstr "Gelöschte Einträge anzeigen."
 msgid "Show data-fields."
 msgstr "Daten-Feld anzeigen."
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1670
-#: lib/PageRenderer/ProjectParticipantFields.php:1679
+#: lib/PageRenderer/ProjectParticipantFields.php:1672
+#: lib/PageRenderer/ProjectParticipantFields.php:1681
 msgid "Key"
 msgstr "Schlüssel"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1671
-#: lib/PageRenderer/ProjectParticipantFields.php:1680
+#: lib/PageRenderer/ProjectParticipantFields.php:1673
+#: lib/PageRenderer/ProjectParticipantFields.php:1682
 msgid "Label"
 msgstr "Bezeichnung"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:1674
-#: lib/PageRenderer/ProjectParticipantFields.php:1683
+#: lib/PageRenderer/ProjectParticipantFields.php:1676
+#: lib/PageRenderer/ProjectParticipantFields.php:1685
 msgid "Limit"
 msgstr "Obergrenze"
 
-#: lib/PageRenderer/ProjectParticipantFields.php:2008
+#: lib/PageRenderer/ProjectParticipantFields.php:2010
 #: lib/PageRenderer/ProjectPayments.php:558
 #: lib/PageRenderer/SepaBankAccounts.php:1092
 #: lib/PageRenderer/SepaBulkTransactions.php:389
@@ -6658,8 +6677,8 @@ msgid "Recompute"
 msgstr "Neuberechnung"
 
 #: lib/PageRenderer/SepaBankAccounts.php:378
-#: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:147
-#: templates/fragments/participant-fields/recurring-receivable-generator-row.php:70
+#: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:148
+#: templates/fragments/participant-fields/recurring-receivable-generator-row.php:72
 msgid "In case of Conflict"
 msgstr "Bei Konflikt"
 
@@ -8111,11 +8130,11 @@ msgstr "Konnte kein Projekt \"%s\" erzeugen."
 msgid "Unable to find the project to delete (id = %d)"
 msgstr "Konnte das zu löschende Projekt mit der Id %d nicht finden."
 
-#: lib/Service/ProjectService.php:3164
+#: lib/Service/ProjectService.php:3171
 msgid "Project not found."
 msgstr "Projekt nicht gefunden."
 
-#: lib/Service/ProjectService.php:3197
+#: lib/Service/ProjectService.php:3204
 msgid ""
 "Upload an image with the personal signature to simplify the generation of "
 "\"official\" mails. Preferably the image should have a transparent "
@@ -8125,11 +8144,11 @@ msgstr ""
 "verfassen von Serienbriefen zu vereinfachen. Idealerweise hat das Bild einen "
 "transparenten Hintergrund und eine Auflösung von mindestens 600 DPI."
 
-#: lib/Service/ProjectService.php:3203
+#: lib/Service/ProjectService.php:3210
 msgid "Validation of projects not yet implemented."
 msgstr "Validierung von Projekten ist noch nicht implementiert."
 
-#: lib/Service/ProjectService.php:3249
+#: lib/Service/ProjectService.php:3256
 #, php-format
 msgid "Unable to remove participant \"%1$s\"."
 msgstr "Kann \"%1$s\" nicht vom Projekt austragen."
@@ -11189,31 +11208,30 @@ msgstr "Alle Termine neu aus den Cloud-Kalendern laden."
 
 #: lib/Service/ToolTipsService.php:1307
 msgid ""
-"Force the re-creation of the folder where project balanaces are\n"
-"stored."
+"Force the re-creation of the folder where financial balances are stored."
 msgstr "Erzwinge die Neu-Erstellung des Abrechnungs-Datei-Ordners."
 
-#: lib/Service/ToolTipsService.php:1310
+#: lib/Service/ToolTipsService.php:1309
 msgid "Force the re-creation of the folder where project data is stored."
 msgstr "Erstellen des gemeinsamen Ordners erzwingen."
 
-#: lib/Service/ToolTipsService.php:1312
+#: lib/Service/ToolTipsService.php:1311
 msgid "Article category of the concert-archive inside the Redaxo CMS."
 msgstr "Redaxo Artikel Kategorie für archivierte Konzerte."
 
-#: lib/Service/ToolTipsService.php:1314
+#: lib/Service/ToolTipsService.php:1313
 msgid "Article category of the concert-previews inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Konzertankündigungen."
 
-#: lib/Service/ToolTipsService.php:1316
+#: lib/Service/ToolTipsService.php:1315
 msgid "Article category of the rehearsals inside the Redaxo CMS."
 msgstr "Artikel-Kategorier für Probenpläne."
 
-#: lib/Service/ToolTipsService.php:1318
+#: lib/Service/ToolTipsService.php:1317
 msgid "Article category for templates inside the Redaxo CMS."
 msgstr "Artikel-Kategorie für Templates."
 
-#: lib/Service/ToolTipsService.php:1320
+#: lib/Service/ToolTipsService.php:1319
 msgid ""
 "Trashbin pseudo-category, articles deleted from within the\n"
 "project-views are moved here."
@@ -11221,7 +11239,7 @@ msgstr ""
 "Papierkorb Pseudo-Kategorie. Wird ein Artikel über das DB-Interface\n"
 "gelöscht, landet der in diesem Unterordner."
 
-#: lib/Service/ToolTipsService.php:1323
+#: lib/Service/ToolTipsService.php:1322
 msgid ""
 "Add the musician to the project. A new form will open were details like the "
 "instrument etc. can be adjustetd."
@@ -11229,7 +11247,7 @@ msgstr ""
 "Fügt die Person zum Projekt hinzu. Auf der Folgeseite können dann Details "
 "eingetragen werden."
 
-#: lib/Service/ToolTipsService.php:1325
+#: lib/Service/ToolTipsService.php:1324
 msgid ""
 "This is checked for officially registered musicians, those, who have\n"
 "sent us a signed registration form. It is left blannk otherwise."
@@ -11238,12 +11256,12 @@ msgstr ""
 "uns eine unterschriebene Anmeldung geschickt haben. Ansonsten ist das\n"
 "Feld leer."
 
-#: lib/Service/ToolTipsService.php:1328
+#: lib/Service/ToolTipsService.php:1327
 msgid "This is checked for section-leaders and left blank otherwise."
 msgstr ""
 "Die Markierung ist bei Stimmführern gesetzt, ansonsten bleibt das Feld leer."
 
-#: lib/Service/ToolTipsService.php:1331
+#: lib/Service/ToolTipsService.php:1330
 msgid ""
 "Delete the given account. If the account has been used for payments then the "
 "bank-account will just be marked disabled, but not removed from the data-"
@@ -11253,21 +11271,21 @@ msgstr ""
 "Zahlungen verwendet wurde, wird der Account lediglich als inaktiv\n"
 "markiert, aber nicht in der Datenbank gelöscht."
 
-#: lib/Service/ToolTipsService.php:1332
+#: lib/Service/ToolTipsService.php:1331
 msgid "Add a new dialog with detailed information about the bank-account."
 msgstr ""
 "Öffnet einen neuen Eingabe-Dialog mit Detailinformationen zu dieser "
 "Bankverbindung."
 
-#: lib/Service/ToolTipsService.php:1333
+#: lib/Service/ToolTipsService.php:1332
 msgid "Add a new dialog for defining a new bank-account."
 msgstr "Öffnet einen Eingabedialog, um eine neue Bankverbindung zu definieren."
 
-#: lib/Service/ToolTipsService.php:1334
+#: lib/Service/ToolTipsService.php:1333
 msgid "Show also the disabled bank accounts, if any."
 msgstr "Auch deaktiviert Bankverbindungen anzeigen, falls vorhanden."
 
-#: lib/Service/ToolTipsService.php:1338
+#: lib/Service/ToolTipsService.php:1337
 msgid ""
 "Toggle instant validation and automatic computation of derived bank account "
 "data. If instant validation is disabled, the final values will still be "
@@ -11284,7 +11302,7 @@ msgstr ""
 "muss der Haken zunächst wieder gesetzt werden, dann wird die IBAN auf\n"
 "Korrektheit überprüft und man kann dann anschließend speichern."
 
-#: lib/Service/ToolTipsService.php:1341
+#: lib/Service/ToolTipsService.php:1340
 #, php-format
 msgid ""
 "This debit-mandate has not been used for more than %d month and\n"
@@ -11295,7 +11313,7 @@ msgstr ""
 "verwendet und ist deshalb abgelaufen und kann nicht weiter verwendet\n"
 "werden. Bitte löschen und den Schatzmeister informieren, vielen Dank!"
 
-#: lib/Service/ToolTipsService.php:1346
+#: lib/Service/ToolTipsService.php:1345
 msgid ""
 "Use this debit-mandate only for the given project. Note that debit-mandates "
 "of club-members are always general debit-mandates for all receivables."
@@ -11305,17 +11323,17 @@ msgstr ""
 "immer nur allgemeine Mandate für alle Forderungen des Vereins\n"
 "gegenüber dem Mitglied sind."
 
-#: lib/Service/ToolTipsService.php:1347
+#: lib/Service/ToolTipsService.php:1346
 msgid "Use this as a general debit-mandate for all receivables of this person."
 msgstr ""
 "Dieses Lastschriftmandat als allgemeines Mandat für alle Forderungen\n"
 "des Vereins gegenüber der Person verwenden."
 
-#: lib/Service/ToolTipsService.php:1349
+#: lib/Service/ToolTipsService.php:1348
 msgid "Download the existing signed hard-copy of the debit mandate."
 msgstr "Die abgespeicherte Kopie des unterschriebenen Mandats herunterladen."
 
-#: lib/Service/ToolTipsService.php:1350
+#: lib/Service/ToolTipsService.php:1349
 msgid ""
 "Download a prefilled debit-mandate form with the name and bank-account of "
 "this person, suitable to be handed to the person in order to be signed. Note "
@@ -11327,20 +11345,20 @@ msgstr ""
 "das Email-Formular kann solche vorausgefüllten Lastschriftmandata\n"
 "automatisch and Serienbriefe anhängen."
 
-#: lib/Service/ToolTipsService.php:1353
+#: lib/Service/ToolTipsService.php:1352
 msgid "Upload a signed hard-copy of the debit-mandate from the computer."
 msgstr ""
 "Das unterschriebene Original bzw. eine elektronische Kopie davon vom Gerät "
 "hochladen."
 
-#: lib/Service/ToolTipsService.php:1354
+#: lib/Service/ToolTipsService.php:1353
 msgid ""
 "Choose a signed hard-copy of the debit-mandate from the cloud file-system."
 msgstr ""
 "Eine Kopie des unterschriebenen Originals aus dem Cloud-Dateisystem "
 "auswählen."
 
-#: lib/Service/ToolTipsService.php:1355
+#: lib/Service/ToolTipsService.php:1354
 msgid ""
 "For your inconvenience you have to check this box if you want skip the "
 "upload-step and store the mandate-data without a signed hard-copy."
@@ -11350,11 +11368,11 @@ msgstr ""
 "unterschriebenes Original abspeichern möchte.<\n"
 "\n"
 
-#: lib/Service/ToolTipsService.php:1360
+#: lib/Service/ToolTipsService.php:1359
 msgid "Folder shared by the orchestra group."
 msgstr "Gemeinsamer Ordner der Orchestergruppe."
 
-#: lib/Service/ToolTipsService.php:1361
+#: lib/Service/ToolTipsService.php:1360
 msgid ""
 "Public upload \"postbox\" folder. Meant for anonymous public uploads of "
 "larger files."
@@ -11362,23 +11380,23 @@ msgstr ""
 "Öffentlicher \"Briefkasten\"-Ordner. Für anonymes Hochladen von größeren "
 "Dateien."
 
-#: lib/Service/ToolTipsService.php:1362
+#: lib/Service/ToolTipsService.php:1361
 msgid "Shared folder for document templates."
 msgstr "Gemeinsamer Ordner für Dokumentenvorlagen."
 
-#: lib/Service/ToolTipsService.php:1363
+#: lib/Service/ToolTipsService.php:1362
 msgid "Shared folder for per-project data."
 msgstr "Gemeinsamer Ordner für Projektdaten."
 
-#: lib/Service/ToolTipsService.php:1364
+#: lib/Service/ToolTipsService.php:1363
 msgid "Shared folder for per-project per-participant data"
 msgstr "Gemeinsamer Ordner für personalisierte Projekt-Mitglieder-Daten."
 
-#: lib/Service/ToolTipsService.php:1365
+#: lib/Service/ToolTipsService.php:1364
 msgid "Shared folder for flyers and posters"
 msgstr "Gemeinsamer Ordner für Werbematerial (Handzettel, Plakate)"
 
-#: lib/Service/ToolTipsService.php:1367
+#: lib/Service/ToolTipsService.php:1366
 msgid ""
 "Link-shared folder for data needed by participants. In particular, this can "
 "be used for music-sheet downloads. The folder is automatically created and "
@@ -11391,7 +11409,7 @@ msgstr ""
 "Rundmails kann man auf den Freigabe-Link mit der Ersetzung\n"
 "${GLOBAL::PROJEKT_DOWNLOAD_FREIGABE} verweisen."
 
-#: lib/Service/ToolTipsService.php:1372
+#: lib/Service/ToolTipsService.php:1371
 msgid ""
 "Shared folder for the financial balances, probably used after the project is "
 "finished."
@@ -11399,7 +11417,25 @@ msgstr ""
 "Gemeinsamer Ordner mit der Gewinn- und Verlustrechnung; vermutlich erst nach "
 "Abschluß des Projekts von Bedeutung."
 
-#: lib/Service/ToolTipsService.php:1377
+#: lib/Service/ToolTipsService.php:1372
+msgid "Subfolder for incoming letters from the tax offices."
+msgstr "Unterordner für den eingehende (Brief-)Korrespondenz vom Finanzamt."
+
+#: lib/Service/ToolTipsService.php:1373
+msgid ""
+"Template file name for tax excemption notices, may and probably should "
+"contain\n"
+"placeholder \"{FROM_YEAR}\" and \"{TO_YEAR}\" in order to have the validity "
+"period in the file-name."
+msgstr ""
+"Eine Schablone für die Freistellungsaufträge. Die Schablone sollte die\n"
+"Platzhalter \"{VON_JAHR}\" und \"{BIS_JAHR}\" enthalten, damit die\n"
+"Gültigkeit des Freistellungsbescheids auch im Dateinamen sichtbar\n"
+"ist. Bitte beachten: der Kassenwart hat die Aufgabe, die Dateien so zu\n"
+"speichern, dass diese Schablone passt. Das ist (noch) kein\n"
+"Automatismus."
+
+#: lib/Service/ToolTipsService.php:1379
 msgid ""
 "Add the name of a dedicated user-group for the people allowed to access the "
 "orchestra-administration app."
@@ -11407,7 +11443,7 @@ msgstr ""
 "Name einer Benutzenden-Gruppe für alle Personen, die Zugriff zur Orchester-"
 "Orga-App bekommen."
 
-#: lib/Service/ToolTipsService.php:1378
+#: lib/Service/ToolTipsService.php:1380
 msgid ""
 "The list of group-admins for the dedicated user-group. You should at least "
 "add one group-admin."
@@ -11415,7 +11451,7 @@ msgstr ""
 "Die Gruppen-Administratoren für die Orchester-Benutzer-Gruppe. Wenigstens "
 "einer muss angegeben werden."
 
-#: lib/Service/ToolTipsService.php:1380
+#: lib/Service/ToolTipsService.php:1382
 msgid ""
 "Add the name of a DokuWiki namespace which will host all wiki-pages of the "
 "orchestra. The namespace should be all lower-case and must not contain any "
@@ -11425,7 +11461,7 @@ msgstr ""
 "gesammelt werden. Der Namensraum sollte nur Kleinbuchstaben und keine\n"
 "Sonder- oder gar Leerzeichen enthalten."
 
-#: lib/Service/ToolTipsService.php:1381
+#: lib/Service/ToolTipsService.php:1383
 msgid ""
 "It is possible to inject cloud-user-accounts for all orchestra club-members "
 "into the ambient cloud-software. This works by granting select access to the "
@@ -11442,7 +11478,7 @@ msgstr ""
 "\"Sharing\"-Einstellungen von einem Gruppen-Adminstrator der\n"
 "Orchester-Gruppe vorgenommen werden."
 
-#: lib/Service/ToolTipsService.php:1386
+#: lib/Service/ToolTipsService.php:1388
 msgid ""
 "Short descriptive name of the orchestra, e.g. use \"camerata\" instead of "
 "\"camerata academica freiburg e.V.\". The short name is used in various "
@@ -11453,7 +11489,7 @@ msgstr ""
 "verschiedenen Stellen verwendet. Er sollte kleingeschrieben,\n"
 "\"handlich\" und ohne Leerzeichen sein."
 
-#: lib/Service/ToolTipsService.php:1387
+#: lib/Service/ToolTipsService.php:1389
 msgid ""
 "The locale of the orchestral organization. In particular, this determines "
 "the currency and the name of some directories in the file-system. Note that "
@@ -11466,7 +11502,7 @@ msgstr ""
 "allerdings immer die Zeitzone des Servers ist in dem die\n"
 "Cloud-Software läuft."
 
-#: lib/Service/ToolTipsService.php:1392
+#: lib/Service/ToolTipsService.php:1394
 #, php-format
 msgid ""
 "Import the orchestra club-members into the ambient cloud as ordinary cloud-"
@@ -11479,7 +11515,7 @@ msgstr ""
 "insbesondere GRANT-Rechte für ihre Datenbank haben. Es sind auch\n"
 "weitere Einstellungen in der \"%s\"-App als Administrator nötig."
 
-#: lib/Service/ToolTipsService.php:1393
+#: lib/Service/ToolTipsService.php:1395
 #, php-format
 msgid ""
 "Recreate all \"%1$s\" views and grant permissions to use them to the cloud "
@@ -11488,7 +11524,7 @@ msgstr ""
 "Alle \"%1$s\"-Ansichten erneut erzeugen und dem Cloud-Datenbank-Account "
 "Leserechte daran geben."
 
-#: lib/Service/ToolTipsService.php:1394
+#: lib/Service/ToolTipsService.php:1396
 msgid ""
 "In order to isolate the SQL-views for the cloud-user-backend from the rest "
 "of the database tables it is possible to put them into their own separate "
@@ -11500,7 +11536,7 @@ msgstr ""
 "werden. Dazu ist es nötig, dass der Datenbank-Account der APP alls -- und "
 "insbesondere: GRANT -- Rechte an dieser separaten Datenbank hat."
 
-#: lib/Service/ToolTipsService.php:1398
+#: lib/Service/ToolTipsService.php:1400
 msgid ""
 "Optionally parts of the data-base and some configuration settings can be "
 "stored encrypted. If you are confronted with error messages about a missing "
@@ -11515,7 +11551,7 @@ msgstr ""
 "zu können, muss man sich außerdem noch mit dem eigenen Passwort\n"
 "authentifizieren."
 
-#: lib/Service/ToolTipsService.php:1399
+#: lib/Service/ToolTipsService.php:1401
 msgid ""
 "Changing the encryption key needs your login-password. Please enter it here "
 "before trying to save the changed encryption key."
@@ -11523,19 +11559,19 @@ msgstr ""
 "Das Setzen des Verschlüsselungs-Schlüssels erfordert das eigenen\n"
 "Cloud-Passwort, das hier eingegeben werden muss."
 
-#: lib/Service/ToolTipsService.php:1404
+#: lib/Service/ToolTipsService.php:1406
 msgid "Personal application settings."
 msgstr "Persönliche Einstellung für die Musizierendne-DB Anwendung."
 
-#: lib/Service/ToolTipsService.php:1406
+#: lib/Service/ToolTipsService.php:1408
 msgid "Force the re-creation of the root of the shared-folder hierarchy."
 msgstr "Erzwinge die Neuerstellung des gemeinsamen Ordners."
 
-#: lib/Service/ToolTipsService.php:1408
+#: lib/Service/ToolTipsService.php:1410
 msgid "Re-create the share-owner."
 msgstr "Erzeuge eine neue Share-Strohpuppe."
 
-#: lib/Service/ToolTipsService.php:1410
+#: lib/Service/ToolTipsService.php:1412
 msgid ""
 "Some data-sets should better not be deleted because they have attached\n"
 "important - e.g. financial - data attached to it. In this case a\n"
@@ -11550,20 +11586,20 @@ msgstr ""
 "unsichtbar ist. Aktivieren dieser Option macht auch solche Datensätze\n"
 "sichtbar."
 
-#: lib/Service/ToolTipsService.php:1416 templates/part.common.header.php:105
+#: lib/Service/ToolTipsService.php:1418 templates/part.common.header.php:105
 #: templates/part.common.header.php:111
 msgid "Toggle Tooltips"
 msgstr "Ballon-Hilfe ein- und ausschalten"
 
-#: lib/Service/ToolTipsService.php:1418
+#: lib/Service/ToolTipsService.php:1420
 msgid "Link to the source-code archives for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/Service/ToolTipsService.php:1420
+#: lib/Service/ToolTipsService.php:1422
 msgid "Link to the source-code documentation for the DB app."
 msgstr "Web-Verweis zur Quell-Code-Dokumentation. "
 
-#: lib/Service/ToolTipsService.php:1422
+#: lib/Service/ToolTipsService.php:1424
 msgid ""
 "Recompute the link between projects and events, using the event-categories "
 "as primary key."
@@ -11571,7 +11607,7 @@ msgstr ""
 "Zuordnung der Termine zu den Projekten neu berechnen. Dabei dienen die "
 "Projekt-Kategorien als Kriterium."
 
-#: lib/Service/ToolTipsService.php:1424
+#: lib/Service/ToolTipsService.php:1426
 msgid ""
 "The initial number of rows per page when displaying data-base\n"
 "tables. The actual number of rows per page can also changed later in\n"
@@ -11580,7 +11616,7 @@ msgstr ""
 "Anfängliche Anzahl von Tabellenzeilen pro Seite. Kann bei den\n"
 "indivuduellen Tabellen später noch einzeln angepasst werden."
 
-#: lib/Service/ToolTipsService.php:1429 lib/Service/ToolTipsService.php:989
+#: lib/Service/ToolTipsService.php:1431 lib/Service/ToolTipsService.php:989
 #, php-format
 msgid ""
 "An image file with the orchestra logo -- preferably in SVG format. The logo "
@@ -11590,7 +11626,7 @@ msgstr ""
 "Logo kann in Dokumentenvorlagen eingesetzt werden, indem man den\n"
 "\"[LOGO]\"-Platzhalter verwendet."
 
-#: lib/Service/ToolTipsService.php:1430
+#: lib/Service/ToolTipsService.php:1432
 msgid ""
 "A fillable PDF form for debit-mandates bound to special projects. The app is "
 "able to auto-fill form-fields with the names \"projectName\", "
@@ -11607,7 +11643,7 @@ msgstr ""
 "entsprechend erzeugt werden. Vorausgefüllte Mandate können aus der\n"
 "Teilnehmenden- und Musizierenden-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsService.php:1432
+#: lib/Service/ToolTipsService.php:1434
 msgid ""
 "A fillable PDF form for debit-mandates not bound to special projects. The "
 "app is able to auto-fill form-fields with the names \"bankAccountOwner\", "
@@ -11625,7 +11661,7 @@ msgstr ""
 "werden. Vorausgefüllte Mandate können aus der Musizierenden- und\n"
 "Vereinsmitglieds-Ansicht heraus herunter geladen werden."
 
-#: lib/Service/ToolTipsService.php:1434
+#: lib/Service/ToolTipsService.php:1436
 msgid ""
 "A fillable form in order to collect address updates and for renewal of debit-"
 "mandates."
@@ -11633,7 +11669,7 @@ msgstr ""
 "Ein Formular um Adress-Aktualisierungen zu melden und um Lastschriftmandate "
 "zu erneuern."
 
-#: lib/Service/ToolTipsService.php:1436
+#: lib/Service/ToolTipsService.php:1438
 msgid ""
 "An office document with variable substitutions \"[PLACEHOLDER]\" used to "
 "communicate the\n"
@@ -11643,19 +11679,19 @@ msgstr ""
 "im Stil \"[PLATZHALTER]\" um die jährlichen Versicherungsbeiträge an die "
 "betreffenden Personen zu kommunizieren."
 
-#: lib/Service/ToolTipsService.php:1439
+#: lib/Service/ToolTipsService.php:1441
 msgid "Delete this document template from the server"
 msgstr "Diese Dokumentenvorlage vom Server löschen"
 
-#: lib/Service/ToolTipsService.php:1442
+#: lib/Service/ToolTipsService.php:1444
 msgid "Choose a template file from the cloud storage."
 msgstr "Dokumentenvorlage-Datei aus der \"Cloud\" auswählen"
 
-#: lib/Service/ToolTipsService.php:1443
+#: lib/Service/ToolTipsService.php:1445
 msgid "Upload a document template from your computer or mobile."
 msgstr "Eine Dokumentenvorlage von Ihrem Computer oder Mobilgerät laden."
 
-#: lib/Service/ToolTipsService.php:1447
+#: lib/Service/ToolTipsService.php:1449
 msgid ""
 "Test the form-filling features with a test-data-set. The file-format of the "
 "generated download remains the same as of the original template."
@@ -11663,7 +11699,7 @@ msgstr ""
 "Das automatische Ausfüllen der Dokumentenvorlage mit einem Beispiel-"
 "Datensatz testen. Das Dateiformat bleibt dabei das der Vorlage."
 
-#: lib/Service/ToolTipsService.php:1448
+#: lib/Service/ToolTipsService.php:1450
 msgid ""
 "Test the form-filling features with a test-data-set and convert the "
 "generated file to PDF, providing a fillable PDF-form if the original "
@@ -11674,7 +11710,7 @@ msgstr ""
 "Vorlage ausfüllbare Formularfelder enthält, wird ein ausfüllbares PDF-"
 "Dokument erstellt."
 
-#: lib/Service/ToolTipsService.php:1449
+#: lib/Service/ToolTipsService.php:1451
 msgid ""
 "Just download the test-data set as JSON data for inspection and for "
 "debugging."
@@ -11682,26 +11718,26 @@ msgstr ""
 "Den Test-Datensatz im JSON herunterladen. Zur Illustration und zur "
 "Fehlersuche."
 
-#: lib/Service/ToolTipsService.php:1453
+#: lib/Service/ToolTipsService.php:1455
 msgid "Select the sender from the members of the executive board."
 msgstr "Den Absender aus dem Orga-Team auswählen."
 
-#: lib/Service/ToolTipsService.php:1455
+#: lib/Service/ToolTipsService.php:1457
 msgid "Select the recipients for the mail-merge."
 msgstr "Die Empfänger*innen für den Serienbrief auswählen."
 
-#: lib/Service/ToolTipsService.php:1456
+#: lib/Service/ToolTipsService.php:1458
 msgid "Select recipients from the one of the cloud's address-books."
 msgstr "Empfänger:innen aus einem der Adressbücherauswählen."
 
-#: lib/Service/ToolTipsService.php:1458
+#: lib/Service/ToolTipsService.php:1460
 msgid ""
 "Optionally select a project to provide more context information for the mail-"
 "merge operation."
 msgstr ""
 "Optional ein Projekt auswählen, um mehr Kontext-Informationen zu erzeugen."
 
-#: lib/Service/ToolTipsService.php:1459
+#: lib/Service/ToolTipsService.php:1461
 msgid ""
 "Preferred for one-time merges or for testing. Just download to your local "
 "computer."
@@ -11709,7 +11745,7 @@ msgstr ""
 "Vorzugsweise für einmalige Vorlagen-Ersetzungen oder zu Testzwecken. Einfach "
 "die ausgefüllte Vorlage herunterladen auf den eigenen Computer."
 
-#: lib/Service/ToolTipsService.php:1460
+#: lib/Service/ToolTipsService.php:1462
 msgid ""
 "Preferred for mass-mail-merges and when the substituted template does not "
 "need to be post-processed."
@@ -11717,7 +11753,7 @@ msgstr ""
 "Vorzugsweise bei \"echten\" Massen-Serien-Briefen und wenn die ausgefüllten "
 "Vorlagen nicht mehr weiter bearbeitet werden müssen."
 
-#: lib/Service/ToolTipsService.php:1461
+#: lib/Service/ToolTipsService.php:1463
 msgid ""
 "Download the data-set which would be substituted into the document. This is "
 "primarily meant for debuggin."
@@ -11726,11 +11762,11 @@ msgstr ""
 "Ggf. nützlich beim Entwurf neuer Vorlagen, oder falls das Ergebnis anders "
 "aussieht als erwartet."
 
-#: lib/Service/ToolTipsService.php:1466
+#: lib/Service/ToolTipsService.php:1468
 msgid "Test data-base passphrase."
 msgstr "Datenbank-Passwort testen"
 
-#: lib/Service/ToolTipsService.php:1468
+#: lib/Service/ToolTipsService.php:1470
 msgid ""
 "Check whether the data-base can be accessed with the given account\n"
 "information and password. The password will only be stored in the\n"
@@ -11740,7 +11776,7 @@ msgstr ""
 "Zugriffsinformationen. Das neue Passwort wird nur dann gespeichert, wenn der "
 "Test erfolgreich absolviert wurde."
 
-#: lib/Service/ToolTipsService.php:1472
+#: lib/Service/ToolTipsService.php:1474
 msgid ""
 "Try to connect to the specified web-address, will open the web-address in "
 "another window or tab, depending your local browser preferences."
@@ -11748,7 +11784,7 @@ msgstr ""
 "Versuche, die eingestellte Web-Adresse in einen anderen Fenster oder Tab zu "
 "öffnen (abhängig von den Einstellungen des Web-Browsers)."
 
-#: lib/Service/ToolTipsService.php:1474
+#: lib/Service/ToolTipsService.php:1476
 msgid ""
 "Total amount the participant has to pay, perhaps followed by total amount "
 "paid, followed by the outstanding amount."
@@ -11757,7 +11793,7 @@ msgstr ""
 "noch\n"
 "die Höhe der Außenstände angegeben."
 
-#: lib/Service/ToolTipsService.php:1476
+#: lib/Service/ToolTipsService.php:1478
 msgid ""
 "Add the instruments of the actually registered musicians to the instrument-"
 "table for the project."
@@ -11766,7 +11802,7 @@ msgstr ""
 "Besetzungstabelle eintragen; die Soll-Besetzungszahlen werden\n"
 "allerdings nicht angepasst."
 
-#: lib/Service/ToolTipsService.php:1478
+#: lib/Service/ToolTipsService.php:1480
 msgid "Change to another WYSIWYG editor."
 msgstr "Einen alternativen WYSIWYG-Editor auswählen."
 
@@ -12808,8 +12844,8 @@ msgstr "Abgebrochen"
 #: src/app/blog.js:387 src/app/cloud-file-picker-dialog.js:59
 #: src/app/cloud-file-picker-dialog.js:87 src/app/email.js:89
 #: src/app/email.js:826 src/app/email.js:952
-#: src/app/project-participant-fields.js:248 src/app/settings.js:1328
-#: src/app/settings.js:1341 src/legacy/calendar/calendar.js:340
+#: src/app/project-participant-fields.js:248 src/app/settings.js:1331
+#: src/app/settings.js:1344 src/legacy/calendar/calendar.js:340
 msgid "Error"
 msgstr "Fehler"
 
@@ -13002,7 +13038,7 @@ msgstr ""
 msgid "Select a file from the cloud"
 msgstr "Datei aus der \"Cloud\" auswählen"
 
-#: src/app/cloud-file-picker-dialog.js:59 src/app/settings.js:1328
+#: src/app/cloud-file-picker-dialog.js:59 src/app/settings.js:1331
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
@@ -13364,33 +13400,33 @@ msgstr ""
 msgid "{command} expects an argument, but none was specified"
 msgstr "{command} erwartet genau ein Argument, es wurde aber keines angegeben"
 
-#: src/app/musicians.js:217
+#: src/app/musicians.js:216
 msgid "Phone Number Validation"
 msgstr "Rufnummernvalidierung"
 
-#: src/app/musicians.js:280
+#: src/app/musicians.js:279
 msgid "Email Validation"
 msgstr "Em@il-Validierung"
 
-#: src/app/musicians.js:309
+#: src/app/musicians.js:308
 msgid "Email-address is empty, cannot perform mailing list operations."
 msgstr "die Email-Adresse is leer, kann dehalb nichts machen."
 
-#: src/app/musicians.js:418
+#: src/app/musicians.js:417
 msgid "Suggestions"
 msgstr "Vorschläge"
 
-#: src/app/musicians.js:709
+#: src/app/musicians.js:708
 msgid "I am refusing to add duplicates to the database."
 msgstr "Ich weigere mich, Duplikate zur Datenbank hinzu zu fügen."
 
-#: src/app/musicians.js:712
+#: src/app/musicians.js:711
 msgid "The following musician matches exactly your input:"
 msgid_plural "The following musicians match exactly your input:"
 msgstr[0] "Die folgende Person stimmmt exakt mit Deiner Eingabe überein:"
 msgstr[1] "Die folgenden Personen stimmen exakt mit Deiner Eingab überein:"
 
-#: src/app/musicians.js:715
+#: src/app/musicians.js:714
 msgid ""
 "When you click the 'OK'-button or close this alert-window\n"
 "you will be redirected to the existing musician's data in order to inspect "
@@ -13404,21 +13440,21 @@ msgstr ""
 "Datenbank existierenden Person. Die Daten können dann inspiziert\n"
 "und die Person ggf. zum Projekt hinzugefügt werden."
 
-#: src/app/musicians.js:719
+#: src/app/musicians.js:718
 msgid "Duplicates Detected"
 msgstr "Duplikate entdeckt"
 
-#: src/app/musicians.js:746
+#: src/app/musicians.js:745
 msgid "You definitely do not want to add duplicates to the database."
 msgstr "Du willst keine Duplikate zur Datenbank hinzufügen."
 
-#: src/app/musicians.js:750
+#: src/app/musicians.js:749
 msgid "The following musician matches your input:"
 msgid_plural "The following musicians match also your input:"
 msgstr[0] "Die folgende Person passt auch zu Deinen Eingaben:"
 msgstr[1] "Die folgenden Personen passen auch zu Deinen Eingaben:"
 
-#: src/app/musicians.js:753
+#: src/app/musicians.js:752
 msgid ""
 "Please answer \"YES\" in order not to add a new musician,\n"
 "otherwise answer \"no\" (but please do not do this). If you react in a "
@@ -13431,7 +13467,7 @@ msgstr ""
 "Fall öffnet sich ein neues Fenster mit den Daten der bereits existierenden "
 "Person, mit der Möglichkeit, die Person direkt zum Projekt hinu zu fügen."
 
-#: src/app/musicians.js:757
+#: src/app/musicians.js:756
 msgid "Avoid Possible Duplicate?"
 msgstr "Doppelten Datenbankeintrag lieber vermeiden?"
 
@@ -13853,19 +13889,19 @@ msgstr "Bitte warten, das dauert jetzt ein wenig!"
 msgid "Empty password, trying to use configured credentials."
 msgstr "Leeres Password, versuche gespeicherte Anmeldedaten zu verwenden."
 
-#: src/app/settings.js:445 src/app/settings.js:780
+#: src/app/settings.js:445 src/app/settings.js:783
 msgid "Password field must not be empty"
 msgstr "Das Passwort-feld darf nicht leer sein"
 
-#: src/app/settings.js:1266 src/app/settings.js:1287
+#: src/app/settings.js:1269 src/app/settings.js:1290
 msgid "Unable to download auto-fill result."
 msgstr "Kann den Serien-Brief-Test nicht herunter laden."
 
-#: src/app/settings.js:1340
+#: src/app/settings.js:1343
 msgid "Unable to copy selected file {file}."
 msgstr "Kann die ausgwählte Datei {file} nicht kopieren."
 
-#: src/app/settings.js:1483
+#: src/app/settings.js:1486
 msgid "Unable to download translation templates."
 msgstr "Kann die Übersetzungen nicht laden."
 
@@ -14911,19 +14947,19 @@ msgstr "aus der Cloud wählen"
 msgid "open parent folder"
 msgstr "übergeordneter Ordner"
 
-#: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:110
+#: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:111
 msgid "new option"
 msgstr "neue Auswahloption"
 
-#: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:166
+#: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:167
 msgid "field generator"
 msgstr "z.B. \\OCA\\CAFEVDB\\FieldGenerator"
 
-#: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:177
+#: templates/fragments/participant-fields/recurring-receivable-definition-generator-row.php:178
 msgid "start date"
 msgstr "Anfangsdatum"
 
-#: templates/fragments/participant-fields/recurring-receivable-generator-row.php:89
+#: templates/fragments/participant-fields/recurring-receivable-generator-row.php:91
 msgid "show empty"
 msgstr "leere Felder anzeigen"
 
@@ -16504,7 +16540,7 @@ msgstr "Share-Strohpuppe"
 #: templates/settings/share-settings.php:275
 #: templates/settings/share-settings.php:294
 #: templates/settings/share-settings.php:315
-#: templates/settings/share-settings.php:339
+#: templates/settings/share-settings.php:340
 msgid "force"
 msgstr "zwingen"
 
@@ -16516,7 +16552,7 @@ msgstr "zwingen"
 #: templates/settings/share-settings.php:207
 #: templates/settings/share-settings.php:296
 #: templates/settings/share-settings.php:317
-#: templates/settings/share-settings.php:341
+#: templates/settings/share-settings.php:342
 msgid "Check"
 msgstr "Überprüfen"
 
@@ -16609,7 +16645,8 @@ msgstr "Projekt-Dateien"
 #: templates/settings/share-settings.php:214
 #: templates/settings/share-settings.php:238
 #: templates/settings/share-settings.php:261
-#: templates/settings/share-settings.php:335
+#: templates/settings/share-settings.php:336
+#: templates/settings/share-settings.php:351
 msgid "YEAR"
 msgstr "JAHR"
 
@@ -16617,7 +16654,7 @@ msgstr "JAHR"
 #: templates/settings/share-settings.php:215
 #: templates/settings/share-settings.php:239
 #: templates/settings/share-settings.php:262
-#: templates/settings/share-settings.php:336
+#: templates/settings/share-settings.php:337
 msgid "PROJECT"
 msgstr "PROJEKT"
 
@@ -16645,48 +16682,60 @@ msgstr "Finanz-Ordner"
 msgid "transactions"
 msgstr "Bankaufträge"
 
-#: templates/settings/share-settings.php:330
+#: templates/settings/share-settings.php:331
 msgid "balances"
 msgstr "Bilanzen"
 
-#: templates/settings/share-settings.php:345
+#: templates/settings/share-settings.php:350
+msgid "tax-office"
+msgstr "Finanzamt"
+
+#: templates/settings/share-settings.php:356
+msgid "in-tray"
+msgstr "Posteingang"
+
+#: templates/settings/share-settings.php:367
+msgid "tax-excemption-notice-{FROM_YEAR}-{TO_YEAR}"
+msgstr "FreistellungsBescheid-{JAHR_VON}-{JAHR_BIS}"
+
+#: templates/settings/share-settings.php:374
 msgid "Members as Cloud-Users"
 msgstr "Mitglieder als Cloud-Accounts"
 
-#: templates/settings/share-settings.php:354
+#: templates/settings/share-settings.php:383
 msgid "Import club-members as cloud-user-accounts into the cloud"
 msgstr "Orchestermitglieder als Benutzer-Accounts in die Cloud importieren"
 
-#: templates/settings/share-settings.php:364
+#: templates/settings/share-settings.php:393
 #, php-format
 msgid "Generate database-views for the \"%s\" cloud user-backend"
 msgstr "Tabellen-Ansichten für das \"%s\" Cloud Benutzer-Backend erzeugen"
 
-#: templates/settings/share-settings.php:371
+#: templates/settings/share-settings.php:400
 #, php-format
 msgid "%s info"
 msgstr "%s Informationen"
 
-#: templates/settings/share-settings.php:374
+#: templates/settings/share-settings.php:403
 #, php-format
 msgid "Please log in as administrator and configure the \"%1$s\"-user-backend."
 msgstr ""
 "Bitte als Administrator anmelden und das \"%1$s\"-Benutzer-Backend "
 "konfigurieren."
 
-#: templates/settings/share-settings.php:387
+#: templates/settings/share-settings.php:416
 msgid "Use a separate dedicated database for the SQL-views."
 msgstr "Eine separate Datenbank für die SQL-Ansichten verwenden."
 
-#: templates/settings/share-settings.php:390
+#: templates/settings/share-settings.php:419
 msgid "Views-Database"
 msgstr "View-Datenbank"
 
-#: templates/settings/share-settings.php:394
+#: templates/settings/share-settings.php:423
 msgid "Databasename"
 msgstr "Datenbank-Name"
 
-#: templates/settings/share-settings.php:402
+#: templates/settings/share-settings.php:431
 #, php-format
 msgid ""
 "Please make sure the data-base user \"%1$s@%2$s\" has all -- and in "
@@ -16695,29 +16744,29 @@ msgstr ""
 "Bitte sicherstellen, dass der Datenbank-Account \"%1$s@%2$s\" alle -- und "
 "insbesondere: GRANT -- Rechte für die separate Datenbank haben."
 
-#: templates/settings/share-settings.php:411
-#: templates/settings/share-settings.php:441
+#: templates/settings/share-settings.php:440
+#: templates/settings/share-settings.php:470
 msgid "Recreate"
 msgstr "Regenerieren"
 
-#: templates/settings/share-settings.php:416
+#: templates/settings/share-settings.php:445
 #, php-format
 msgid "Recreate the database-views for the \"%1$s\"-user-backend."
 msgstr "Datenbank-Ansichten für das \"%1$s\"-Benutzer-Backend erneut erzeugen."
 
-#: templates/settings/share-settings.php:422
+#: templates/settings/share-settings.php:451
 msgid "Give club-members access to their personal data"
 msgstr "Den Vereinsmitgliedern Zugriff auf ihre persönlichen Daten geben"
 
-#: templates/settings/share-settings.php:432
+#: templates/settings/share-settings.php:461
 msgid "Generate personalized single-row database-views"
 msgstr "Personalisierte Datenbank-Ansichten für die Mitglieder erzeugen"
 
-#: templates/settings/share-settings.php:446
+#: templates/settings/share-settings.php:475
 msgid "Recreate the personalized single-row database-views"
 msgstr "Die personalisierten Per-Person Datenbank-Ansichten regenerieren"
 
-#: templates/settings/share-settings.php:452
+#: templates/settings/share-settings.php:481
 msgid "Hints"
 msgstr "Hinweise"
 
