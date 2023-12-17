@@ -87,7 +87,8 @@ SELECT m.user_id_slug AS uid,
        CONVERT((CONCAT(_ascii "%2$s' . self::GROUP_ID_SEPARATOR . '", p.id) COLLATE ascii_bin) USING utf8mb4) AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
-LEFT JOIN Projects p ON p.id = pp.project_id';
+LEFT JOIN Projects p ON p.id = pp.project_id
+WHERE pp.deleted IS NULL';
   // WITH CHECK OPTION. But view is not updatable. Ok.
 
   /**
