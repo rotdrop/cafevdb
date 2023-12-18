@@ -32,24 +32,25 @@
         <p class="info" v-html="forword" />
         <hr>
       </div>
-      <div v-if="config.isAdmin">
+      <div v-if="config.isSubAdmin || config.isAdmin">
         <SettingsSelectGroup v-model="settings.orchestraUserGroup"
                              :label="t(appName, 'User Group')"
                              :hint="hints['settings:admin:user-group']"
                              :multiple="false"
                              :required="true"
+                             :disabled="!config.isAdmin"
                              @update="saveSetting('orchestraUserGroup', ...arguments)"
                              @error="showErrorToast"
         />
         <SettingsSelectUsers v-model="settings.orchestraUserGroupAdmins"
                              :label="t(appName, 'User Group Admins')"
                              :hint="hints['settings:admin:user-group:admins']"
-                             :disabled="groupAdminsDisabled"
+                             :disabled="groupAdminsDisabled || !config.isAdmin"
                              @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
                              @error="showErrorToast"
         />
       </div>
-      <SettingsInputText v-if="config.isAdmin"
+      <SettingsInputText v-if="config.isSubAdmin || config.isAdmin"
                          v-model="settings.wikiNameSpace"
                          :label="t(appName, 'Wiki Name-Space')"
                          :hint="hints['settings:admin:wiki-name-space']"

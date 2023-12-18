@@ -67,6 +67,7 @@
       <input type="submit"
              class="icon-confirm"
              value=""
+             :disabled="disabled"
              @click="emitUpdate"
       >
     </div>
