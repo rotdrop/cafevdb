@@ -155,6 +155,8 @@ class GroupMembershipListener implements IEventListener
           $accountManager->updateAccount($account);
         }
 
+        $repository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
+
         /** @var Entities\ProjectParticipant $boardMember */
         $boardMember = $repository->findOneBy([
           'project' => $executiveBoardProjectId,

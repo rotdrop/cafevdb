@@ -116,7 +116,7 @@ class Admin implements IDelegatedSettings
     $isSubAdmin = $this->isSubAdminOfGroup();
 
     $configData = [
-      self::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue('usergroup'),
+      self::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigService::USER_GROUP_KEY),
       self::PERSONAL_APP_SETTINGS_LINK => $personalAppSettingsLink,
       self::WIKI_NAME_SPACE_KEY => $this->getAppValue('wikinamespace'),
       self::WIKI_VERSION => $this->wikiRPC->version(),

@@ -347,7 +347,7 @@ class PersonalForm
             'dbuser' => $this->getConfigValue('dbuser'),
             'dbpassword' => $this->getConfigValue('dbpassword'),
 
-            'shareowner' => $this->getConfigValue('shareowner', ''),
+            ConfigService::SHAREOWNER_KEY => $this->getConfigValue(ConfigService::SHAREOWNER_KEY, ''),
             'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('Concerts')),
             'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('Rehearsals')),
             'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('Other')),

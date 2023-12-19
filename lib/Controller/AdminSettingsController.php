@@ -88,7 +88,7 @@ class AdminSettingsController extends Controller
     $value = null;
     switch ($parameter) {
       case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
-        $value = $this->getAppValue('usergroup');
+        $value = $this->getAppValue(ConfigService::USER_GROUP_KEY);
         break;
       case AdminSettings::ORCHESTRA_USER_GROUP_KEY . 'Admins':
         $admins = $this->configService->getGroupSubAdmins();
@@ -176,7 +176,7 @@ class AdminSettingsController extends Controller
   private function post(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
     $wikiNameSpace = $this->getAppValue('wikinamespace');
-    $orchestraUserGroup = $this->getAppValue('usergroup');
+    $orchestraUserGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
     try {
       switch ($parameter) {
         case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
@@ -185,7 +185,7 @@ class AdminSettingsController extends Controller
             $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
           }
           $orchestraUserGroup = $realValue;
-          $this->setAppValue('usergroup', $orchestraUserGroup);
+          $this->setAppValue(ConfigService::USER_GROUP_KEY, $orchestraUserGroup);
           $result = [
             'orchestraUserGroup' => $orchestraUserGroup,
           ];

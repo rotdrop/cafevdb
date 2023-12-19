@@ -163,7 +163,7 @@ class Application extends App implements IBootstrap
       IURLGenerator $urlGenerator,
       INavigationManager $navigationManager,
     ) {
-      if ($authorizationService->authorized($userId)) {
+      if ($authorizationService->authorized($userId, AuthorizationService::PERMISSION_FRONTEND)) {
         $navigationManager->add([
           'id' => $this->appName,
           'name' => 'CAFeVDB',
@@ -180,7 +180,7 @@ class Application extends App implements IBootstrap
       AuthorizationService $authorizationService,
       ISettingsManager $settingsManager,
     ) {
-      if ($authorizationService->authorized($userId)) {
+      if ($authorizationService->authorized($userId, AuthorizationService::PERMISSION_FRONTEND)) {
         $settingsManager->registerSection('personal', PersonalSection::class);
         $settingsManager->registerSetting('personal', Personal::class);
       }

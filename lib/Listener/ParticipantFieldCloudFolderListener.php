@@ -703,7 +703,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
     /** @var AuthorizationService $authorizationService */
     $authorizationService = $this->appContainer->get(AuthorizationService::class);
-    if (!$authorizationService->authorized($this->user->getUID())) {
+    if (!$authorizationService->authorized($this->user->getUID(), AuthorizationService::PERMISSION_FILESYSTEM)) {
       return false;
     }
 

@@ -88,7 +88,7 @@ class EncryptionService
     'enabled',
     'installed_version',
     'types',
-    'usergroup', // cloud-admin setting
+    ConfigService::USER_GROUP_KEY, // cloud-admin setting
     ConfigService::SHAREOWNER_KEY, // needed as calendar principal in the member's app
     ConfigService::SHARED_FOLDER, // needed by some listeners in order to bail out early
     ConfigService::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
@@ -163,7 +163,7 @@ class EncryptionService
       //$this->logException($t);
       $userId = null;
     }
-    if (!$authorization->authorized($userId)) {
+    if ($authorization->getUserPermissions($userId) === AuthorizationService::PERMISSION_NONE) {
       return;
     }
     try {
@@ -300,7 +300,7 @@ class EncryptionService
    */
   public function initAppKeyPair(bool $forceNewKeyPair = false):void
   {
-    $group = $this->getAppValue('usergroup');
+    $group = $this->getAppValue(ConfigService::USER_GROUP_KEY);
     $encryptionKey = $this->getAppEncryptionKey();
     if (empty($group) || empty($encryptionKey)) {
       $this->logDebug('Cannot initialize encryption key-pair without user-group and encryption key');
@@ -333,7 +333,7 @@ class EncryptionService
    */
   public function restoreAppKeyPair():void
   {
-    $group = $this->getAppValue('usergroup');
+    $group = $this->getAppValue(ConfigService::USER_GROUP_KEY);
     $encryptionKey = $this->getAppEncryptionKey();
     if (empty($group) || empty($encryptionKey)) {
       $this->logDebug('Cannot restore encryption key-pair without user-group and encryption key');

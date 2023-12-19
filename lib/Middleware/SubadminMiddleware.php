@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -73,7 +73,7 @@ class SubadminMiddleware extends Middleware
       }
     }
     if ($this->reflector->hasAnnotation('ServiceAccountRequired')) {
-      if ($this->configService->getUserId() != $this->configService->getConfigValue('shareowner')) {
+      if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigService::SHAREOWNER_KEY)) {
         throw new NotAdminException($this->l->t('Logged in user account must be the service-account of the orchester app'));
       }
     }

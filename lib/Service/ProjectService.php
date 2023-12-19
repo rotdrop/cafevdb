@@ -943,7 +943,7 @@ class ProjectService
       /** @var SimpleSharingService $sharingService */
       $sharingService = $this->di(SimpleSharingService::class);
 
-      $shareOwnerUid = $this->getConfigValue('shareowner');
+      $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
       // try to create or use the folder and share it by a public link
       $url = $sharingService->linkShare(
         $node,

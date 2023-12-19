@@ -1110,7 +1110,7 @@ class PersonalSettingsController extends Controller
           'message' => $messages,
         ]);
       case 'sharedfolder':
-        $appGroup = $this->getConfigValue('usergroup');
+        $appGroup = $this->getConfigValue(ConfigService::USER_GROUP_KEY);
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
         }
@@ -1185,7 +1185,7 @@ class PersonalSettingsController extends Controller
       case ConfigService::TRANSACTIONS_FOLDER:
       case ConfigService::BALANCES_FOLDER:
       case ConfigService::PROJECTS_FOLDER:
-        $appGroup = $this->getConfigValue('usergroup');
+        $appGroup = $this->getConfigValue(ConfigService::USER_GROUP_KEY);
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
         }

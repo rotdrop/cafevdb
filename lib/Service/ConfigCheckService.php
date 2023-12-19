@@ -131,10 +131,10 @@ class ConfigCheckService
    * @return array
    * ```
    * [ 'summary',
-   *   'usergroup',
+   *   ConfigService::USER_GROUP_KEY,
    *   'encryptionkey'
    *   'orchestra',
-   *   'shareowner',
+   *   ConfigService::SHAREOWNER_KEY,
    *   'sharedfolder',
    *   'database',
    * ]
@@ -150,8 +150,8 @@ class ConfigCheckService
 
     foreach ([
       'orchestra',
-      'usergroup',
-      'shareowner',
+      ConfigService::USER_GROUP_KEY,
+      ConfigService::SHAREOWNER_KEY,
       'sharedfolder',
       'database',
       'encryptionkey',
@@ -192,7 +192,7 @@ class ConfigCheckService
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
-    $key = 'usergroup';
+    $key = ConfigService::USER_GROUP_KEY;
     try {
       $result[$key]['status'] = $this->shareGroupExists();
     } catch (Throwable $e) {
@@ -200,9 +200,9 @@ class ConfigCheckService
     }
     $this->logDebug($key.': '.$result[$key]['status']);
 
-    $key = 'shareowner';
+    $key = ConfigService::SHAREOWNER_KEY;
     try {
-      $result[$key]['status'] = $result['usergroup']['status'] && $this->shareOwnerExists();
+      $result[$key]['status'] = $result[ConfigService::USER_GROUP_KEY]['status'] && $this->shareOwnerExists();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -210,7 +210,7 @@ class ConfigCheckService
 
     $key = 'sharedfolder';
     try {
-      $result[$key]['status'] = $result['shareowner']['status'] && $this->sharedFolderExists();
+      $result[$key]['status'] = $result[ConfigService::SHAREOWNER_KEY]['status'] && $this->sharedFolderExists();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -218,7 +218,7 @@ class ConfigCheckService
 
     $key = 'sharedaddressbooks';
     try {
-      $result[$key]['status'] = $result['shareowner']['status'] && $this->sharedAddressBooksExist();
+      $result[$key]['status'] = $result[ConfigService::SHAREOWNER_KEY]['status'] && $this->sharedAddressBooksExist();
     } catch (Throwable $e) {
       $result[$key]['message'] = $e->getMessage();
     }
@@ -434,8 +434,8 @@ class ConfigCheckService
    */
   public function shareOwnerExists(?string $shareOwnerId = null)
   {
-    $shareGroupId = $this->getAppValue('usergroup');
-    empty($shareOwnerId) && $shareOwnerId = $this->getConfigValue('shareowner');
+    $shareGroupId = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    empty($shareOwnerId) && $shareOwnerId = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
 
     if (empty($shareOwnerId)) {
       return false;
@@ -475,7 +475,7 @@ class ConfigCheckService
    */
   public function checkShareOwner(string $shareOwnerId, ?string $shareOwnerPassword = null):bool
   {
-    $shareGroupId = $this->getAppValue('usergroup', false);
+    $shareGroupId = $this->getAppValue(ConfigService::USER_GROUP_KEY, false);
     if (empty($shareGroupId)) {
       return false; // need at least this group!
     }
@@ -554,8 +554,8 @@ class ConfigCheckService
       return false;
     }
 
-    $shareGroup   = $this->getAppValue('usergroup');
-    $shareOwner   = $this->getConfigValue('shareowner');
+    $shareGroup   = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $shareOwner   = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
     // $groupadmin   = $this->userId();
 
     $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
@@ -609,9 +609,9 @@ class ConfigCheckService
       return true;
     }
 
-    $shareGroup = $this->getAppValue('usergroup');
+    $shareGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
     $groupAdmin = $this->userId();
-    $shareOwner = $this->getConfigValue('shareowner');
+    $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
 
     if (!$this->isSubAdminOfGroup()) {
       $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
@@ -687,9 +687,9 @@ class ConfigCheckService
       $sharedFolder = '/'.$sharedFolder;
     }
 
-    $shareGroup = $this->getAppValue('usergroup');
+    $shareGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
     $groupAdmin = $this->userId();
-    $shareOwner = $this->getConfigValue('shareowner');
+    $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
 
     if (!$this->isSubAdminOfGroup()) {
       $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
@@ -757,8 +757,8 @@ class ConfigCheckService
       return false;
     }
 
-    $shareGroup = $this->getAppValue('usergroup');
-    // $shareOwner = $this->getConfigValue('shareowner');
+    $shareGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    // $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
     $groupAdmin = $this->userId();
 
     if (!$this->isSubAdminOfGroup()) {

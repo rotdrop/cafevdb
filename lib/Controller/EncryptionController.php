@@ -367,7 +367,7 @@ class EncryptionController extends OCSController
 
     /** @var AuthorizationService $authorizationService */
     $authorizationService = $this->appContainer->get(AuthorizationService::class);
-    if ($authorizationService->authorized($userId)) {
+    if ($authorizationService->getUserPermissions($userId) != AuthorizationService::PERMISSION_NONE) {
       // set encryption key for this user
       /** @var EncryptionService $encryptionService */
       $encryptionService = $this->appContainer->get(EncryptionService::class);

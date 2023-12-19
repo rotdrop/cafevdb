@@ -95,7 +95,7 @@ class FilesHooksListener implements IEventListener
     $userId = $user->getUID();
 
     $authorization = $this->appContainer->get(AuthorizationService::class);
-    if (!$authorization->authorized($userId)) {
+    if (!$authorization->authorized($userId, AuthorizationService::PERMISSION_FILESYSTEM)) {
       return;
     }
 
