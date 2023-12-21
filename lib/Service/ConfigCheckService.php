@@ -351,7 +351,7 @@ class ConfigCheckService
 
     // retrieve all shared items for $shareOwner
     foreach ($this->shareManager->getSharesBy($shareOwner, $shareType) as $share) {
-      if ($share->getNodeId() === $id) {
+      if ($share->getNodeId() === $id && $share->getSharedWith() == $group) {
         return $share->getPermissions() === $groupPerms;
       }
     }
@@ -390,7 +390,7 @@ class ConfigCheckService
 
     // retrieve all shared items for $shareOwner
     foreach ($this->shareManager->getSharesBy($shareOwner, $shareType) as $share) {
-      if ($share->getNodeId() === $id) {
+      if ($share->getNodeId() === $id && $share->getSharedWith() == $groupId) {
         // check permissions
         if ($share->getPermissions() !== $groupPerms) {
           $share->setPermissions($groupPerms);
@@ -409,7 +409,13 @@ class ConfigCheckService
     $share->setShareOwner($shareOwner);
     $share->setSharedBy($shareOwner);
 
-    return $this->shareManager->createShare($share);
+    try {
+      $this->shareManager->createShare($share);
+      return true;
+    } catch (Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
   }
 
   /**
@@ -555,6 +561,13 @@ class ConfigCheckService
     }
 
     $shareGroup   = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $shareGroupIds = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $permissions => $groupSuffix) {
+      $permissions |= AuthorizationService::IMPLIED_PERMISSIONS[$permissions];
+      if ($permissions & AuthorizationService::PERMISSION_FILESYSTEM) {
+        $shareGroupIds[] = $shareGroup . $groupSuffix;
+      }
+    }
     $shareOwner   = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
     // $groupadmin   = $this->userId();
 
@@ -567,7 +580,7 @@ class ConfigCheckService
     }
 
     //$id = \OC\Files\Cache\Cache::getId($sharedFolder, $vfsroot);
-    $result = $this->sudo($shareOwner, function(string $shareOwner) use ($sharedFolder, $shareGroup) {
+    $result = $this->sudo($shareOwner, function(string $shareOwner) use ($sharedFolder, $shareGroupIds) {
 
       if ($sharedFolder[0] != '/') {
         $sharedFolder = '/'.$sharedFolder;
@@ -576,7 +589,13 @@ class ConfigCheckService
       try {
         $id = $this->rootFolder->getUserFolder($shareOwner)->get($sharedFolder)->getId();
         $this->logDebug('Shared folder id: ' . $id);
-        return $this->groupSharedExists($id, $shareGroup, 'folder', $shareOwner);
+        foreach ($shareGroupIds as $shareGroupId) {
+          $this->logInfo('ShareGroupId ' . $shareGroupId);
+          if (!$this->groupSharedExists($id, $shareGroupId, 'folder', $shareOwner)) {
+            return false;
+          }
+        }
+        return true;
       } catch (Throwable $e) {
         $this->logError('No file id for  ' . $sharedFolder . ' ' . $e->getMessage());
         return false;
@@ -610,6 +629,13 @@ class ConfigCheckService
     }
 
     $shareGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $shareGroupIds = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $permissions => $groupSuffix) {
+      $permissions |= AuthorizationService::IMPLIED_PERMISSIONS[$permissions];
+      if ($permissions & AuthorizationService::PERMISSION_FILESYSTEM) {
+        $shareGroupIds[] = $shareGroup . $groupSuffix;
+      }
+    }
     $groupAdmin = $this->userId();
     $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
 
@@ -619,7 +645,7 @@ class ConfigCheckService
     }
 
     // try to create the folder and share it with the group
-    /* $result = */ $this->sudo($shareOwner, function(string $shareOwner) use ($sharedFolder, $shareGroup, $groupAdmin) {
+    /* $result = */ $this->sudo($shareOwner, function(string $shareOwner) use ($sharedFolder, $shareGroupIds, $groupAdmin) {
       $userId    = $this->userId();
       // $user      = $this->user();
 
@@ -642,26 +668,29 @@ class ConfigCheckService
         return false;
       }
 
-      $node = $rootView->nodeExists($sharedFolder) ? $rootView->get($sharedFolder) : null;
+      $node = $rootView->nodeExists($sharedFolder) ? $rootView->get($sharedFolder) : null; //
       if (empty($node) || $node->getType() != FileInfo::TYPE_FOLDER) {
         throw new Exception($this->l->t('Folder \`%s\' could not be created', [$sharedFolder]));
       }
 
       // Now it should exist as directory and $node should contain its file-info
 
+      $result = true;
       if ($node) {
         $id = $node->getId();
         $this->logDebug('shared folder id ' . $id);
-        if (!$this->groupShareObject($id, $shareGroup, 'folder', $userId)
-            || !$this->groupSharedExists($id, $shareGroup, 'folder', $userId)) {
-          return false;
+        foreach ($shareGroupIds as $shareGroupId) {
+          if (!$this->groupShareObject($id, $shareGroupId, 'folder', $userId)
+              || !$this->groupSharedExists($id, $shareGroupId, 'folder', $userId)) {
+            $result = false;
+          }
         }
       } else {
         $this->logError('No file info for ' . $sharedFolder);
-        return false;
+        $result = false;
       }
 
-      return true; // seems to be ok ...
+      return $result;
     });
 
     return $this->sharedFolderExists($sharedFolder);

@@ -40,7 +40,6 @@ use Icewind\Streams\IteratorDirectory;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
@@ -71,9 +70,6 @@ class ProjectParticipantsStorage extends Storage
   /** @var ProjectService */
   private $projectService;
 
-  /** @var bool Whether the current user belongs to the treasurer group. */
-  private $isTreasurer;
-
   /** {@inheritdoc} */
   public function __construct($params)
   {
@@ -85,9 +81,6 @@ class ProjectParticipantsStorage extends Storage
 
     $this->getRootFolder(create: false);
 
-    $organizationalRolesService = $this->di(OrganizationalRolesService::class);
-    $userId = $this->entityManager->getUserId();
-    $this->isTreasurer = $organizationalRolesService->isTreasurer($userId, allowGroupAccess: true);
     /** @var IEventDispatcher $eventDispatcher */
     $eventDispatcher = $this->di(IEventDispatcher::class);
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {

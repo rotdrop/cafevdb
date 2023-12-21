@@ -37,7 +37,7 @@ use OCP\IUser;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -61,8 +61,8 @@ class MountProvider implements IMountProvider
 
   const MOUNT_TYPE = 'cafevdb-database';
 
-  /** @var OrganizationalRolesService */
-  private $organizationalRolesService;
+  /** @var AuthorizationService */
+  private $authorizationService;
 
   /** @var Factory */
   private $storageFactory;
@@ -73,12 +73,12 @@ class MountProvider implements IMountProvider
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    OrganizationalRolesService $organizationalRolesService,
+    AuthorizationService $authorizationService,
     EntityManager $entityManager,
     Factory $storageFactory,
   ) {
     $this->configService = $configService;
-    $this->organizationalRolesService = $organizationalRolesService;
+    $this->authorizationService = $authorizationService;
     $this->l = $this->l10n();
     $this->entityManager = $entityManager;
     $this->storageFactory = $storageFactory;
@@ -111,7 +111,8 @@ class MountProvider implements IMountProvider
   {
     $userId = $user->getUID();
 
-    if (!$this->inGroup($userId)) {
+    if (!$this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FILESYSTEM)) {
+      $this->logInfo('USER: ' . $userId . ' NOT AUTHORIEZED');
       return [];
     }
 
@@ -161,8 +162,8 @@ class MountProvider implements IMountProvider
     $mounts = [];
     $bulkLoadStorageIds = [];
 
-    if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
-      // block for non-treasurers
+    if ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FINANCE)) {
+      // allow only treasurers or similar folk
 
       $storage = $this->storageFactory->getBankTransactionsStorage();
       $bulkLoadStorageIds[] = $storage->getId();
@@ -189,6 +190,8 @@ class MountProvider implements IMountProvider
           return MountProvider::MOUNT_TYPE;
         }
       };
+    } else {
+      $this->logInfo('USER: ' . $userId . ' NOT AUTHORIEZED FOR FINANCE');
     }
 
     try {
@@ -205,8 +208,8 @@ class MountProvider implements IMountProvider
       return [];
     }
 
-    if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
-      // block for non-treasurers
+    if ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FINANCE)) {
+      // allow only treasurers or similar folk
 
       /** @var Entities\Project $project */
       foreach ($projects as $project) {
@@ -244,6 +247,8 @@ class MountProvider implements IMountProvider
           }
         };
       }
+    } else {
+      $this->logInfo('USER: ' . $userId . ' NOT AUTHORIEZED FOR FINANCE');
     }
 
     /** @var ProjectService $projectService */

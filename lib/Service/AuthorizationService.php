@@ -47,13 +47,15 @@ class AuthorizationService
   public const ADDRESSBOOK_GROUP_SUFFIX = '-addressbook';
   public const FILESYSTEM_GROUP_SUFFIX = '-filesystem';
   public const CALENDAR_GROUP_SUFFIX = '-calendar';
+  public const FINANCE_GROUP_SUFFIX = '-finance';
 
   public const PERMISSION_NONE = 0;
   public const PERMISSION_FRONTEND = (1 << 0);
   public const PERMISSION_ADDRESSBOOK = (1 << 1);
   public const PERMISSION_FILESYSTEM = (1 << 2);
   public const PERMISSION_CALENDAR = (1 << 3);
-  public const PERMISSION_ALL = self::PERMISSION_FRONTEND|self::PERMISSION_ADDRESSBOOK|self::PERMISSION_FILESYSTEM;
+  public const PERMISSION_FINANCE = (1 << 4);
+  public const PERMISSION_ALL = self::PERMISSION_FRONTEND|self::PERMISSION_ADDRESSBOOK|self::PERMISSION_FILESYSTEM|self::PERMISSION_FINANCE;
 
   public const GROUP_SUFFIX_LIST = [
     self::PERMISSION_ALL => self::ALL_GROUP_SUFFIX,
@@ -61,6 +63,21 @@ class AuthorizationService
     self::PERMISSION_ADDRESSBOOK => self::ADDRESSBOOK_GROUP_SUFFIX,
     self::PERMISSION_FILESYSTEM => self::FILESYSTEM_GROUP_SUFFIX,
     self::PERMISSION_CALENDAR => self::CALENDAR_GROUP_SUFFIX,
+    self::PERMISSION_FINANCE => self::FINANCE_GROUP_SUFFIX,
+  ];
+
+  /**
+   * @var array
+   *
+   * Some permissions may imply other permissions.
+   */
+  public const IMPLIED_PERMISSIONS = [
+    self::PERMISSION_ALL => 0,
+    self::PERMISSION_FRONTEND => self::PERMISSION_ALL, // but that may change ...
+    self::PERMISSION_ADDRESSBOOK => 0,
+    self::PERMISSION_FILESYSTEM => 0,
+    self::PERMISSION_CALENDAR => 0,
+    self::PERMISSION_FINANCE => self::PERMISSION_FILESYSTEM,
   ];
 
   /**
@@ -118,18 +135,21 @@ class AuthorizationService
     } else {
       $permissionStrings = [];
       if ($permissions & self::PERMISSION_FILESYSTEM) {
-        $permissionString[] = 'filesystem';
+        $permissionStrings[] = 'filesystem';
       }
       if ($permissions & self::PERMISSION_CALENDAR) {
-        $permissionString[] = 'calendar';
+        $permissionStrings[] = 'calendar';
       }
       if ($permissions & self::PERMISSION_ADDRESSBOOK) {
-        $permissionString[] = 'addressbook';
+        $permissionStrings[] = 'addressbook';
       }
       if ($permissions & self::PERMISSION_FRONTEND) {
-        $permissionString[] = 'frontend';
+        $permissionStrings[] = 'frontend';
       }
-      $this->log($logLevel, 'User ' . $userId . ' has permissions for the following services of the app ' . $this->appName . ': ' . implode(',', $permissionStrings));
+      if ($permissions & self::PERMISSION_FINANCE) {
+        $permissionStrings[] = 'finance';
+      }
+      // $this->log($logLevel, 'User ' . $userId . ' has permissions for the following services of the app ' . $this->appName . ': ' . implode(',', $permissionStrings));
     }
   }
 
@@ -154,7 +174,7 @@ class AuthorizationService
     foreach (self::GROUP_SUFFIX_LIST as $permissions => $suffix) {
       $groupId = $this->userGroupId . $suffix;
       if ($this->groupManager->isInGroup($userId, $groupId)) {
-        $userPermissions |= $permissions;
+        $userPermissions |= $permissions|self::IMPLIED_PERMISSIONS[$permissions];
       }
       if ($userPermissions == self::PERMISSION_ALL) {
         break;
@@ -176,7 +196,7 @@ class AuthorizationService
   public function authorized(?string $userId, int $requestedPermissions = self::PERMISSION_ALL):bool
   {
     $userPermissions = $this->getUserPermissions($userId);
-    // $this->logInfo('PERMISSION CHECK: ' . (int)($userPermissions & $requestedPermissions) . ' vs ' . $requestedPermissions);
+    // $this->logInfo('PERMISSION CHECK: ' . $userId . ' -- ' . (int)($userPermissions & $requestedPermissions) . ' vs ' . (int)$requestedPermissions);
     return $requestedPermissions == ($userPermissions & $requestedPermissions);
   }
 
