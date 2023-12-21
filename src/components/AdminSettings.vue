@@ -33,7 +33,8 @@
         <hr>
       </div>
       <div v-if="config.isSubAdmin || config.isAdmin">
-        <SettingsSelectGroup v-model="settings.orchestraUserGroup"
+        <SettingsSelectGroup v-if="config.isAdmin"
+                             v-model="settings.orchestraUserGroup"
                              :label="t(appName, 'User Group')"
                              :hint="hints['settings:admin:user-group']"
                              :multiple="false"
@@ -42,6 +43,19 @@
                              @update="saveSetting('orchestraUserGroup', ...arguments)"
                              @error="showErrorToast"
         />
+        <div v-else class="input-wrapper">
+          <label for="dummy-group-display-input">
+            {{ t(appName, 'User Group') }}
+          </label>
+          <div />
+          <input id="dummy-group-display-input"
+                 :value="settings.orchestraUserGroup"
+                 disabled
+          >
+          <p class="hint">
+            {{ hints['settings:admin:user-group'] }}
+          </p>
+        </div>
         <SettingsSelectUsers v-model="settings.orchestraUserGroupAdmins"
                              :label="t(appName, 'User Group Admins')"
                              :hint="hints['settings:admin:user-group:admins']"
@@ -957,5 +971,9 @@ export default {
     background-size:16px 16px;
     padding-right:20px;
   }
+}
+.hint {
+  color: var(--color-text-lighter);
+  font-size:80%;
 }
 </style>
