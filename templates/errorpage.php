@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Common\Util;
 
-echo '<div class="cafevdb cfgerror error toastify">';
+echo '<div class="cafevdb cfgerror error toastify"><br />';
 switch ($error) {
   case 'notamember':
     echo $l->t(
