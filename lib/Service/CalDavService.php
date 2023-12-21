@@ -143,7 +143,7 @@ class CalDavService
   private static function makeGroupShare(string $groupId, bool $readOnly = false):array
   {
     return [
-      'href' => 'principal:principals/groups/'.$groupId,
+      'href' => 'principal:principals/groups/' . $groupId,
       'commonName' => '',
       'summary' => '',
       'readOnly' => $readOnly,
@@ -163,7 +163,7 @@ class CalDavService
     if (empty($calendarInfo)) {
       return null;
     }
-    return new Calendar($this->calDavBackend, $calendarInfo, $this->l10n(), $this->appConfig());
+    return new Calendar($this->calDavBackend, $calendarInfo, $this->l10n(), $this->appConfig(), $this->logger());
   }
 
   /**
@@ -206,10 +206,10 @@ class CalDavService
    */
   public function isGroupSharedCalendar(int $calendarId, string $groupId, bool $readOnly = false):bool
   {
-    $share = self::makeGroupShare($groupId, $readOnly);
+    $targetShare = self::makeGroupShare($groupId, $readOnly);
     $shares = $this->calDavBackend->getShares($calendarId);
     foreach ($shares as $share) {
-      if ($share['href'] === $share['href'] && $share['readOnly'] == $readOnly) {
+      if ($share['href'] === $targetShare['href'] && $share['readOnly'] == $targetShare['readonly']) {
         return true;
       }
     }
