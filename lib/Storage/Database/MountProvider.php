@@ -112,7 +112,6 @@ class MountProvider implements IMountProvider
     $userId = $user->getUID();
 
     if (!$this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FILESYSTEM)) {
-      $this->logInfo('USER: ' . $userId . ' NOT AUTHORIEZED');
       return [];
     }
 
@@ -190,8 +189,6 @@ class MountProvider implements IMountProvider
           return MountProvider::MOUNT_TYPE;
         }
       };
-    } else {
-      $this->logInfo('USER: ' . $userId . ' NOT AUTHORIEZED FOR FINANCE');
     }
 
     try {
@@ -247,8 +244,6 @@ class MountProvider implements IMountProvider
           }
         };
       }
-    } else {
-      $this->logInfo('USER: ' . $userId . ' NOT AUTHORIEZED FOR FINANCE');
     }
 
     /** @var ProjectService $projectService */
