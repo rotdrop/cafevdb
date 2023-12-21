@@ -748,7 +748,7 @@ make sure that the musicians are also automatically added to the
       'select' => 'C',
       'css' => [ 'postfix' => [ 'cloud-account-disabled', ], ],
       'sort' => true,
-      'default' => true,
+      'default' => null,
       'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
       'values2|LVDF' => [
         0 => '',
