@@ -241,6 +241,9 @@ class ConfigService
   const USER_GROUP_KEY = 'usergroup';
 
   /** @var string */
+  const ADMIN_GROUP_SUFFIX = '-admin';
+
+  /** @var string */
   const CONFIG_LOCK_KEY = EncryptionService::CONFIG_LOCK_KEY;
 
   /** @var string */
@@ -625,7 +628,7 @@ class ConfigService
    */
   public function getSubAdminGroupId():string
   {
-    return $this->getGroupId() . '-admin';
+    return $this->getGroupId() . self::ADMIN_GROUP_SUFFIX;
   }
 
   /**

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 
 /**
  * Track changes in sub-admins and act accordingly
@@ -69,11 +70,12 @@ class SubAdminEventListener implements IEventListener
     /** @var IConfig $cloudConfig */
     $cloudConfig = $this->appContainer->get(IConfig::class);
     $appName = $this->appContainer->get('appName');
-    $adminGroupId = $cloudConfig->getAppValue($appName, ConfigService::USER_GROUP_KEY, null);
+    $orchestraGroupId = $cloudConfig->getAppValue($appName, ConfigService::USER_GROUP_KEY, null);
 
-    if ($group->getGID() != $adminGroupId) {
+    if ($group->getGID() != $orchestraGroupId) {
       return; // not for us
     }
+    $orchestraGroup = $group;
 
     // ok, a new sub-admin has been added for the orchestra group, add it also
     // to the admin-group and as sub-admin to the catch-all group of the
@@ -88,44 +90,47 @@ class SubAdminEventListener implements IEventListener
     /** @var ConfigService $configService */
     $configService = $this->appContainer->get(ConfigService::class);
 
-    /** @var \OCP\IGroup $orchestraGroup */
-    $orchestraGroup = $configService->getGroup();
-
-    if (empty($orchestraGroup)) {
-      return; // no point in continuing
-    }
+    $groupManager = $configService->getGroupManager();
 
     $subAdminGroup = $configService->getSubAdminGroup();
     if (empty($subAdminGroup)) {
       // create it
       $subAdminGroupId = $configService->getSubAdminGroupId();
-      $subAdminGroup = $configService->getGroupManager()->createGroup($subAdminGroupId);
+      $subAdminGroup = $groupManager->createGroup($subAdminGroupId);
+    }
+
+    $administrableGroupGids = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $groupSuffix) {
+      $administrableGroupGids[] = $orchestraGroup->getGID() . $groupSuffix;
     }
 
     /** @var CloudUserConnectorService $cloudUserConnector */
     $cloudUserConnector = $this->appContainer->get(CloudUserConnectorService::class);
     if ($cloudUserConnector->haveCloudUserBackendConfig()) {
-      $cloudUserCatchAllGroup = $configService->getGroup(CloudUserConnectorService::CLOUD_USER_GROUP_ID);
+      $administrableGroupGids[] = CloudUserConnectorService::CLOUD_USER_GROUP_ID;
     }
     $subAdminManager = $configService->getSubAdminManager();
 
     if ($event instanceof AddedEvent) {
-      $subAdminGroup->addUser($adminUser);
-      if (!empty($cloudUserCatchAllGroup)
-          && !$subAdminManager->isSubAdminOfGroup($adminUser, $cloudUserCatchAllGroup)) {
-        $subAdminManager->createSubAdmin($adminUser, $cloudUserCatchAllGroup);
+      if (!$subAdminGroup->inGroup($adminUser)) {
+        $subAdminGroup->addUser($adminUser);
+      }
+      foreach ($administrableGroupGids as $gid) {
+        $group = $groupManager->get($gid);
+        if (!empty($group) && !$subAdminManager->isSubAdminOfGroup($adminUser, $group)) {
+          $subAdminManager->createSubAdmin($adminUser, $group);
+        }
       }
     } else {
-      $subAdminGroup->removeUser($adminUser);
-      if (!empty($cloudUserCatchAllGroup)
-          && $subAdminManager->isSubAdminOfGroup($adminUser, $cloudUserCatchAllGroup)) {
-        $subAdminManager->deleteSubAdmin($adminUser, $cloudUserCatchAllGroup);
+      if ($subAdminGroup->inGroup($adminUser)) {
+        $subAdminGroup->removeUser($adminUser);
+      }
+      foreach ($administrableGroupGids as $gid) {
+        $group = $groupManager->get($gid);
+        if (!empty($group) && $subAdminManager->isSubAdminOfGroup($adminUser, $group)) {
+          $subAdminManager->deleteSubAdmin($adminUser, $group);
+        }
       }
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

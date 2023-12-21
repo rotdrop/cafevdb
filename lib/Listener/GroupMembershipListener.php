@@ -34,10 +34,14 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IConfig as ICloudConfig;
 use OCP\Accounts\IAccount;
 use OCP\Accounts\IAccountManager;
+use OCP\IGroupManager;
+use OCP\Group\ISubAdmin as SubAdminManager;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -83,94 +87,132 @@ class GroupMembershipListener implements IEventListener
       return;
     }
 
+    $adminGroupId = $orchestraGroupId . ConfigService::ADMIN_GROUP_SUFFIX;
+
     $group = $event->getGroup();
-    if ($group->getGID() != $orchestraGroupId) {
-      return;
-    }
-
-    $user = $event->getUser();
-
-    /** @var IAccountManager $accountManager */
-    $accountManager = $this->appContainer->get(IAccountManager::class);
-    $account = $accountManager->getAccount($user);
-
-    /** @var EncryptionService $encryptionService */
-    $encryptionService = $this->appContainer->get(EncryptionService::class);
-
-    list(, $emailFromDomain) = array_pad(explode('@', $encryptionService->getConfigValue(ConfigService::EMAIL_FORM_ADDRESS_KEY)), null, 2);
-    if (empty($emailFromDomain)) {
-      return;
-    }
-
-    $userId = $user->getUID();
-
-    $personalizedOrchestraEmail = $userId. '@' . $emailFromDomain;
-
-    $emailCollection = $account->getPropertyCollection(IAccountManager::COLLECTION_EMAIL);
-
-    $emailProperty = $emailCollection->getPropertyByValue($personalizedOrchestraEmail);
-
     try {
-      if ($event instanceof UserAddedEvent) {
-        if (empty($emailProperty)) {
-          $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY);
-          if ($executiveBoardProjectId >= 0) {
-            return;
-          }
-          $this->entityManager = $this->appContainer->get(EntityManager::class);
+      switch ($group->getGID()) {
+        default:
+          break;
+        case $adminGroupId:
+          $user = $event->getUser();
 
-          $repository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
-
-          /** @var Entities\ProjectParticipant $boardMember */
-          $boardMember = $repository->findOneBy([
-            'project' => $executiveBoardProjectId,
-            'musician.userIdSlug' => $userId,
-          ]);
-          if (empty($boardMember)) {
-            // only enforce the email-address for executive board members
-            return;
+          $administrableGroupGids = [];
+          foreach (AuthorizationService::GROUP_SUFFIX_LIST as $groupSuffix) {
+            $administrableGroupGids[] = $orchestraGroupId . $groupSuffix;
           }
 
-          // add it to the cloud account s.t. email provisioning may work ...
-          $emailCollection->addPropertyWithDefaults($personalizedOrchestraEmail);
+          /** @var CloudUserConnectorService $cloudUserConnector */
+          $cloudUserConnector = $this->appContainer->get(CloudUserConnectorService::class);
+          if ($cloudUserConnector->haveCloudUserBackendConfig()) {
+            $administrableGroupGids[] = CloudUserConnectorService::CLOUD_USER_GROUP_ID;
+          }
+          /** @var SubAdminManager $subAdminManager*/
+          $subAdminManager = $this->appContainer->get(SubAdminManager::class);
+
+          /** @var IGroupManager $groupManager */
+          $groupManager = $this->appContainer->get(IGroupManager::class);
+
+          if ($event instanceof UserAddedEvent) {
+            foreach ($administrableGroupGids as $gid) {
+              $group = $groupManager->get($gid);
+              if (!empty($group) && !$subAdminManager->isSubAdminOfGroup($user, $group)) {
+                $subAdminManager->createSubAdmin($user, $group);
+              }
+            }
+          } else {
+            foreach ($administrableGroupGids as $gid) {
+              $group = $groupManager->get($gid);
+              if (!empty($group) && $subAdminManager->isSubAdminOfGroup($user, $group)) {
+                $subAdminManager->deleteSubAdmin($user, $group);
+              }
+            }
+          }
+          break;
+        case $orchestraGroupId:
+          $user = $event->getUser();
+
+          /** @var IAccountManager $accountManager */
+          $accountManager = $this->appContainer->get(IAccountManager::class);
+          $account = $accountManager->getAccount($user);
+
+          /** @var EncryptionService $encryptionService */
+          $encryptionService = $this->appContainer->get(EncryptionService::class);
+
+          list(, $emailFromDomain) = array_pad(explode('@', $encryptionService->getConfigValue(ConfigService::EMAIL_FORM_ADDRESS_KEY)), null, 2);
+          if (empty($emailFromDomain)) {
+            return;
+          }
+
+          $userId = $user->getUID();
+
+          $personalizedOrchestraEmail = $userId. '@' . $emailFromDomain;
+
+          $emailCollection = $account->getPropertyCollection(IAccountManager::COLLECTION_EMAIL);
+
           $emailProperty = $emailCollection->getPropertyByValue($personalizedOrchestraEmail);
-          $emailProperty->setLocallyVerified(IAccountManager::VERIFIED);
-          $emailProperty->setVerified(IAccountManager::VERIFIED);
-          $accountManager->updateAccount($account);
 
-          // add it to the database as well
-          $boardMember->getMusician()->addEmailAddress($personalizedOrchestraEmail);
-          $this->flush();
-        }
+          if ($event instanceof UserAddedEvent) {
+            if (empty($emailProperty)) {
+              $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY);
+              if ($executiveBoardProjectId >= 0) {
+                return;
+              }
+              $this->entityManager = $this->appContainer->get(EntityManager::class);
 
-        // message tagging on shared email accounts is really really
-        // annoying as it troubles also all other users. Would be nice if
-        // this could be a per-account setting.
-        $cloudConfig->setUserValue($userId, 'mail', 'tag-classified-messages', 'false');
+              $repository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
 
-      } else {
-        // remove in any case from the cloud user's emails
-        if (!empty($emailProperty)) {
-          $emailCollection->removeProperty($emailProperty);
-          $accountManager->updateAccount($account);
-        }
+              /** @var Entities\ProjectParticipant $boardMember */
+              $boardMember = $repository->findOneBy([
+                'project' => $executiveBoardProjectId,
+                'musician.userIdSlug' => $userId,
+              ]);
+              if (empty($boardMember)) {
+                // only enforce the email-address for executive board members
+                return;
+              }
 
-        $repository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
+              // add it to the cloud account s.t. email provisioning may work ...
+              $emailCollection->addPropertyWithDefaults($personalizedOrchestraEmail);
+              $emailProperty = $emailCollection->getPropertyByValue($personalizedOrchestraEmail);
+              $emailProperty->setLocallyVerified(IAccountManager::VERIFIED);
+              $emailProperty->setVerified(IAccountManager::VERIFIED);
+              $accountManager->updateAccount($account);
 
-        /** @var Entities\ProjectParticipant $boardMember */
-        $boardMember = $repository->findOneBy([
-          'project' => $executiveBoardProjectId,
-          'musician.userIdSlug' => $userId,
-        ]);
-        if (empty($boardMember)) {
-          return;
-        }
+              // add it to the database as well
+              $boardMember->getMusician()->addEmailAddress($personalizedOrchestraEmail);
+              $this->flush();
+            }
 
-        // the person must not remain a member of the executive board
-        /** @var ProjectService $projectService */
-        $projectService = $this->appContainer->get(ProjectService::class);
-        $projectService->deleteProjectParticipant($boardMember);
-      }
+            // message tagging on shared email accounts is really really
+            // annoying as it troubles also all other users. Would be nice if
+            // this could be a per-account setting.
+            $cloudConfig->setUserValue($userId, 'mail', 'tag-classified-messages', 'false');
+
+          } else {
+            // remove in any case from the cloud user's emails
+            if (!empty($emailProperty)) {
+              $emailCollection->removeProperty($emailProperty);
+              $accountManager->updateAccount($account);
+            }
+
+            $repository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
+
+            /** @var Entities\ProjectParticipant $boardMember */
+            $boardMember = $repository->findOneBy([
+              'project' => $executiveBoardProjectId,
+              'musician.userIdSlug' => $userId,
+            ]);
+            if (empty($boardMember)) {
+              return;
+            }
+
+            // the person must not remain a member of the executive board
+            /** @var ProjectService $projectService */
+            $projectService = $this->appContainer->get(ProjectService::class);
+            $projectService->deleteProjectParticipant($boardMember);
+          }
+      } // switch
     } catch (Throwable $t) {
       try {
         $this->logger = $this->appContainer->get(ILogger::class);
@@ -179,7 +221,6 @@ class GroupMembershipListener implements IEventListener
         // ignore
       }
     }
-
     return;
   }
 }
