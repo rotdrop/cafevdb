@@ -592,6 +592,7 @@ class ConfigCheckService
         foreach ($shareGroupIds as $shareGroupId) {
           $this->logInfo('ShareGroupId ' . $shareGroupId);
           if (!$this->groupSharedExists($id, $shareGroupId, 'folder', $shareOwner)) {
+            $this->logInfo('FOLDER NOT SHARED WITH ' . $shareGroupId);
             return false;
           }
         }
@@ -682,6 +683,7 @@ class ConfigCheckService
         foreach ($shareGroupIds as $shareGroupId) {
           if (!$this->groupShareObject($id, $shareGroupId, 'folder', $userId)
               || !$this->groupSharedExists($id, $shareGroupId, 'folder', $userId)) {
+            $this->logInfo('FOLDER NOT SHARED WITH ' . $shareGroupId);
             $result = false;
           }
         }
