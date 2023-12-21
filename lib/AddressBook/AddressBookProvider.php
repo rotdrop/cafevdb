@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
@@ -31,6 +31,7 @@ namespace OCA\CAFEVDB\AddressBook;
 use OCA\DAV\CardDAV\Integration\ExternalAddressBook;
 use OCA\DAV\CardDAV\Integration\IAddressBookProvider;
 
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ContactsService;
 
@@ -38,6 +39,9 @@ use OCA\CAFEVDB\Service\ContactsService;
 class AddressBookProvider implements IAddressBookProvider
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+
+  /** @var AuthorizationService */
+  private $authorizationService;
 
   /** @var AddressBook */
   private static $addressBook = null;
@@ -54,10 +58,12 @@ class AddressBookProvider implements IAddressBookProvider
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
+    AuthorizationService $authorizationService,
     ContactsService $contactsService,
     MusicianCardBackend $cardBackend,
   ) {
     $this->configService = $configService;
+    $this->authorizationService = $authorizationService;
     $this->contactsService = $contactsService;
     $this->l = $this->l10n();
     $this->cardBackend = $cardBackend;
@@ -100,8 +106,8 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function hasAddressBookInAddressBookHome(string $principalUri, string $uri): bool
   {
-    $this->logInfo('in group '.($this->inGroup() ? 'yes' : 'no'));
-    return $this->inGroup();
+    $this->logDebug('in group '.($this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK) ? 'yes' : 'no'));
+    return $this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK);
   }
 
   /**
@@ -116,7 +122,7 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function getAddressBookInAddressBookHome(string $principalUri, string $uri): ?ExternalAddressBook
   {
-    if (!$this->inGroup()) {
+    if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK)) {
       return null;
     }
     if ($uri !== $this->addressBookUri()) {
@@ -142,7 +148,7 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function getContactsAddressBook():?ContactsAddressBook
   {
-    if (!$this->inGroup()) {
+    if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK)) {
       // disallow access to non-group members
       return null;
     }

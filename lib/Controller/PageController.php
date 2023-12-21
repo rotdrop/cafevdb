@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\MigrationsService;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -81,8 +82,11 @@ class PageController extends Controller
   /** @var ConfigCheckService */
   private $configCheckService;
 
-  /** @var \OCA\CAFEVDB\Service\OrganizationalRolesService */
+  /** @var OrganizationalRolesService */
   private $organizationalRolesService;
+
+  /** @var AuthorizationService */
+  private $authorizationService;
 
   /** @var \OCP\IURLGenerator */
   private $urlGenerator;
@@ -90,7 +94,7 @@ class PageController extends Controller
   /** @var IAppContainer */
   private $appContainer;
 
-  /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
+  /** @var PageNavigation */
   private $pageNavigation;
 
   /** @var AssetService */
@@ -111,6 +115,7 @@ class PageController extends Controller
     ConfigService $configService,
     HistoryService $historyService,
     OrganizationalRolesService $organizationalRolesService,
+    AuthorizationService $authorizationService,
     RequestParameterService $parameterService,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
@@ -130,6 +135,7 @@ class PageController extends Controller
     $this->pageNavigation = $pageNavigation;
     $this->initialStateService = $initialStateService;
     $this->organizationalRolesService = $organizationalRolesService;
+    $this->authorizationService = $authorizationService;
     $this->configCheckService = $configCheckService;
     $this->urlGenerator = $urlGenerator;
     $this->l = $this->l10N();
@@ -356,7 +362,7 @@ class PageController extends Controller
 
     $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
 
-    if (!$this->inGroup()) {
+    if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_FRONTEND)) {
       return new TemplateResponse(
         $this->appName(),
         'errorpage',

@@ -590,9 +590,7 @@ class ConfigCheckService
         $id = $this->rootFolder->getUserFolder($shareOwner)->get($sharedFolder)->getId();
         $this->logDebug('Shared folder id: ' . $id);
         foreach ($shareGroupIds as $shareGroupId) {
-          $this->logInfo('ShareGroupId ' . $shareGroupId);
           if (!$this->groupSharedExists($id, $shareGroupId, 'folder', $shareOwner)) {
-            $this->logInfo('FOLDER NOT SHARED WITH ' . $shareGroupId);
             return false;
           }
         }
@@ -683,7 +681,6 @@ class ConfigCheckService
         foreach ($shareGroupIds as $shareGroupId) {
           if (!$this->groupShareObject($id, $shareGroupId, 'folder', $userId)
               || !$this->groupSharedExists($id, $shareGroupId, 'folder', $userId)) {
-            $this->logInfo('FOLDER NOT SHARED WITH ' . $shareGroupId);
             $result = false;
           }
         }
@@ -873,7 +870,15 @@ class ConfigCheckService
       return -1;
     }
 
-    $result = $this->sudo($shareOwnerId, function(string $shareOwnerId) use ($uri, $id, $displayName, $userGroupId) {
+    $shareGroupIds = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $permissions => $groupSuffix) {
+      $permissions |= AuthorizationService::IMPLIED_PERMISSIONS[$permissions];
+      if ($permissions & AuthorizationService::PERMISSION_CALENDAR) {
+        $shareGroupIds[] = $userGroupId . $groupSuffix;
+      }
+    }
+
+    $result = $this->sudo($shareOwnerId, function(string $shareOwnerId) use ($uri, $id, $displayName, $shareGroupIds) {
       $this->logDebug("Sudo to " . $this->userId());
 
       // get or create the calendar
@@ -903,13 +908,15 @@ class ConfigCheckService
         $created = false;
       }
 
-      // make sure it is shared with the group
-      if (!$this->calDavService->groupShareCalendar($id, $userGroupId)) {
-        $this->logError("Unable to share " . $uri . " with " . $userGroupId);
-        if ($created) {
-          $this->calDavService->deleteCalendar($id);
+      foreach ($shareGroupIds as $shareGroupId) {
+        // make sure it is shared with the group
+        if (!$this->calDavService->groupShareCalendar($id, $shareGroupId)) {
+          $this->logError("Unable to share " . $uri . " with " . $shareGroupId);
+          if ($created) {
+            $this->calDavService->deleteCalendar($id);
+          }
+          return -1;
         }
-        return -1;
       }
 
       // check the display name
@@ -995,7 +1002,15 @@ class ConfigCheckService
       return -1;
     }
 
-    return $this->sudo($shareOwnerId, function(string $shareOwnerId) use ($uri, $displayName, $id, $userGroupId) {
+    $shareGroupIds = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $permissions => $groupSuffix) {
+      $permissions |= AuthorizationService::IMPLIED_PERMISSIONS[$permissions];
+      if ($permissions & AuthorizationService::PERMISSION_ADDRESSBOOK) {
+        $shareGroupIds[] = $userGroupId . $groupSuffix;
+      }
+    }
+
+    return $this->sudo($shareOwnerId, function(string $shareOwnerId) use ($uri, $displayName, $id, $shareGroupIds) {
       $this->logDebug("Sudo to " . $this->userId());
 
       // get or create the addressBook
@@ -1024,13 +1039,15 @@ class ConfigCheckService
         $created = false;
       }
 
-      // make sure it is shared with the group
-      if (!$this->cardDavService->groupShareAddressBook($id, $userGroupId)) {
-        $this->logError("Unable to share " . $uri . " with " . $userGroupId);
-        if ($created) {
-          $this->cardDavService->deleteAddressBook($id);
+      foreach ($shareGroupIds as $shareGroupId) {
+        // make sure it is shared with the group
+        if (!$this->cardDavService->groupShareAddressBook($id, $shareGroupId)) {
+          $this->logError("Unable to share " . $uri . " with " . $shareGroupId);
+          if ($created) {
+            $this->cardDavService->deleteAddressBook($id);
+          }
+          return -1;
         }
-        return -1;
       }
 
       // check the display name

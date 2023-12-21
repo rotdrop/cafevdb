@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2022 Claus-Justus Heine
+ * @copyright 2020, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\TemplateResponse;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 
 /**
  * Verifies whether an user has at least subadmin rights.
@@ -39,21 +39,19 @@ use OCA\CAFEVDB\Service\ConfigService;
  */
 class GroupMemberMiddleware extends Middleware
 {
-  use \OCA\CAFEVDB\Traits\ConfigTrait;
-
-  /** @var IControllerMethodReflector */
-  protected $reflector;
-
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  /**
+   * @param IControllerMethodReflector $reflector
+   *
+   * @param AuthorizationService $authorizationService
+   *
+   * @param IL10N $l
+   */
   public function __construct(
-    IControllerMethodReflector $reflector,
-    ConfigService $configService,
+    protected IControllerMethodReflector $reflector,
+    protected AuthorizationService $authorizationService,
+    protected IL10N $l,
   ) {
-    $this->reflector = $reflector;
-    $this->configService = $configService;
-    $this->l = $this->l10n();
   }
-  // phpcs:enable
 
   /**
    * {@inheritdoc}
@@ -63,7 +61,7 @@ class GroupMemberMiddleware extends Middleware
   public function beforeController($controller, $methodName)
   {
     if (!$this->reflector->hasAnnotation('NoGroupMemberRequired')) {
-      if (!$this->configService->inGroup()) {
+      if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_FRONTEND)) {
         throw new NotAdminException($this->l->t('Logged in user must be a member of the orchestra group'));
       }
     }
