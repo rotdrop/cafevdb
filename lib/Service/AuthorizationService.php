@@ -149,7 +149,7 @@ class AuthorizationService
       if ($permissions & self::PERMISSION_FINANCE) {
         $permissionStrings[] = 'finance';
       }
-      // $this->log($logLevel, 'User ' . $userId . ' has permissions for the following services of the app ' . $this->appName . ': ' . implode(',', $permissionStrings));
+      $this->log($logLevel, 'User ' . $userId . ' has permissions for the following services of the app ' . $this->appName . ': ' . implode(',', $permissionStrings));
     }
   }
 
