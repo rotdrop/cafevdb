@@ -106,8 +106,9 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function hasAddressBookInAddressBookHome(string $principalUri, string $uri): bool
   {
-    $this->logDebug('in group '.($this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK) ? 'yes' : 'no'));
-    return $this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK);
+    list(,,$userId) = explode('/', $principalUri . '//');
+    // $this->logInfo('in group ' . $userId . ' ' . ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_ADDRESSBOOK) ? 'yes' : 'no'));
+    return $this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_ADDRESSBOOK);
   }
 
   /**
@@ -122,7 +123,10 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function getAddressBookInAddressBookHome(string $principalUri, string $uri): ?ExternalAddressBook
   {
-    if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK)) {
+    list(,,$userId) = explode('/', $principalUri . '//');
+    // $this->logInfo('in group ' . $userId . ' ' . ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_ADDRESSBOOK) ? 'yes' : 'no'));
+
+    if (!$this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_ADDRESSBOOK)) {
       return null;
     }
     if ($uri !== $this->addressBookUri()) {
@@ -148,6 +152,7 @@ class AddressBookProvider implements IAddressBookProvider
    */
   public function getContactsAddressBook():?ContactsAddressBook
   {
+    // $this->logInfo('in group ' . ($this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK) ? 'yes' : 'no'));
     if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_ADDRESSBOOK)) {
       // disallow access to non-group members
       return null;
