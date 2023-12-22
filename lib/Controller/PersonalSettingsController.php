@@ -1992,12 +1992,12 @@ class PersonalSettingsController extends Controller
   private function generateLocaleInfo(?string $scope = null):string
   {
     $scope = $scope ?? 'personal';
-    $locale = $scope == 'personal' ? $this->getLocale() : $this->appLocale();
+    $localeSymbol = $scope == 'personal' ? $this->getLocale() : $this->appLocale();
     $templateParameters = [
       'dateTimeZone' => $this->getDateTimeZone(),
-      'locale' => $locale,
-      'currencyCode' => $this->currencyCode($locale),
-      'currencySymbol' => $this->currencySymbol($locale),
+      'localeSymbol' => $localeSymbol,
+      'currencyCode' => $this->currencyCode($localeSymbol),
+      'currencySymbol' => $this->currencySymbol($localeSymbol),
       'l10n' => $scope == 'personal' ? $this->l : $this->appL10n(),
       'dateTimeFormatter' => $this->dateTimeFormatter(),
     ];

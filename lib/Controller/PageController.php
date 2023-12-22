@@ -423,7 +423,7 @@ class PageController extends Controller
       'projectName' => $projectName,
       'projectId' => $projectId,
       'musicianId' => $musicianId,
-      'locale' => $this->getLocale(),
+      'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
       'timezone' => $this->getTimezone(),
       'requesttoken' => \OCP\Util::callRegister(),
       'restorehistory' => $restoreHist,

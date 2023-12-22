@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB;
 
 /**
  * @param \DateTimeZone $infoDateTimeZone
-   @param string $infoLocale
+   @param string $infoLocaleSymbol
    @param string $infoCurrencySymbol
    @param string $infoCurrencyCode
    @param \OCP\IL10N $infoL10n
@@ -36,10 +36,12 @@ namespace OCA\CAFEVDB;
 
 $l10n = $l;
 
-foreach (['locale', 'currencySymbol', 'currencyCode', 'l10n', 'dateTimeZone'] as $key) {
+foreach (['localeSymbol', 'currencySymbol', 'currencyCode', 'l10n', 'dateTimeZone'] as $key) {
   $infoKey = 'info' . ucfirst($key);
   ${$key} = ${$infoKey} ?? ${$key};
 }
+
+list($localeSymbol,) = explode('.', $localeSymbol, 2);
 
 /** @var \OCP\IDateTimeFormatter $dateTimeFormatter */
 $time = $dateTimeFormatter->formatDateTime(null, 'medium', 'medium', $dateTimeZone, $l10n);
@@ -53,7 +55,7 @@ $localeScope = $localeScope ?? 'personal';
   <span class="locale heading"><?php p($l->t('Locale Information:')); ?></span>
   <span class="locale time"><?php echo p($time); ?></span>
   <span class="locale timezone"><?php echo p($timezone); ?></span>
-  <span class="locale thelocale"><?php echo p($locale); ?></span>
+  <span class="locale thelocale"><?php echo p($localeSymbol); ?></span>
   <span class="locale currency">
     <span class="locale currency-symbol"><?php p($currencySymbol); ?> </span>
     <?php if ($currencyCode != $currencySymbol) { ?>

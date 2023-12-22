@@ -65,7 +65,7 @@ usort($localeOptions, fn($a, $b) => strcmp($a['name'], $b['name']));
       </select>
       <label for="orchestraLocale"><?php p($l->t('locale of the orchestra')); ?></label>
       <?php echo $this->inc('settings/part.locale-info', [
-        'infoLocale' => $appLocale,
+        'infoLocaleSymbol' => $appLocale,
         'infoL10n' => $appL,
       ]); ?>
     </fieldset>

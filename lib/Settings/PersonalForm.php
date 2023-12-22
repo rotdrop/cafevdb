@@ -206,7 +206,7 @@ class PersonalForm
         //
         'roles' => $this->roles,
         //
-        'locale' => $this->getLocale(),
+        'localeSymbol' => $this->getLocale(),
         'language' => $this->l->getLanguageCode(),
         'locales' => $this->findAvailableLocales(),
         'languages' => $this->findAvailableLanguages(),

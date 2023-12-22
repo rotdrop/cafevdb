@@ -349,7 +349,7 @@ class ProjectEventsController extends Controller
         'projectId' => $projectId,
         'projectName' => $projectName,
         'cssClass' => 'projectevents',
-        'locale' => $this->getLocale(),
+        'localeSymbol' => $this->getLocale(),
         'timezone' => $this->getTimeZone(),
         'events' => $events,
         'eventMatrix' => $eventMatrix,

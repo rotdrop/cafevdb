@@ -257,7 +257,7 @@ class BlogController extends Controller
       $template = 'blog/blogthreads';
       $templateParameters = [
         'timezone' => $this->timeZone->getTimeZone(time())->getName(),
-        'locale' => $this->l->getLocaleCode(),
+        'locale' => $this->l->getLocaleCode(), // this should already have been provided by the NC core
         'user' => $this->userId,
         'urlGenerator' => $this->urlGenerator,
         'renderer' => $this->blogMapper,
