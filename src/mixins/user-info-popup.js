@@ -64,8 +64,8 @@ export default {
             'Provider: {providers}',
             'Providers: {providers}',
             providers.length,
-            { providers: providers.join(', ') }
-          )
+            { providers: providers.join(', ') },
+          ),
         );
       }
       const content = `<h4>${name}</h4>` + additionalInfo.join('<br/>');

@@ -38,7 +38,7 @@ const alert = function(text, title, callback, modal, allowHtml) {
     OC.dialogs.OK_BUTTON,
     callback,
     modal,
-    allowHtml
+    allowHtml,
   );
 };
 
@@ -50,7 +50,7 @@ const info = function(text, title, callback, modal, allowHtml) {
     OC.dialogs.OK_BUTTON,
     callback,
     modal,
-    allowHtml
+    allowHtml,
   );
 };
 
@@ -98,7 +98,7 @@ const confirm = function(text, title, options, modal, allowHtml) {
         resolve(answer);
       },
       options.modal,
-      options.allowHtml
+      options.allowHtml,
     ).then(() => {
       $('body').find('.oc-dialog-buttonrow.twobuttons').each(function() {
         const $buttonRow = $(this);
@@ -109,7 +109,7 @@ const confirm = function(text, title, options, modal, allowHtml) {
           $cancelButton.addClass('primary');
         }
       });
-    })
+    }),
   );
 };
 

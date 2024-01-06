@@ -1417,7 +1417,7 @@ function installInputSelectize(containerSel, onlyClass) {
         create: false,
         inputClass: 'pme-selectize-input',
       },
-      $self.data('selectizeOptions') || {}
+      $self.data('selectizeOptions') || {},
     );
     if (selectizeOptions.create && selectizeOptions.create !== true) {
       const create = selectizeOptions.create;

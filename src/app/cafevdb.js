@@ -47,7 +47,7 @@ $.extend(
     creditsTimer: -1,
     adminContact: t(appName, 'unknown'),
     phpUserAgent: t(appName, 'unknown'),
-  }, globalState)
+  }, globalState),
 );
 
 /**

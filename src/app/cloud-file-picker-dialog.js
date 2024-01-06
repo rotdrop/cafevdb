@@ -85,7 +85,7 @@ const cloudFilePickerDialog = function(options) {
                   Dialogs.alert(
                     t(appName, 'Unable to copy selected file(s) {file}.', { file: paths.join(', ') }),
                     t(appName, 'Error'),
-                    options.cleanup
+                    options.cleanup,
                   );
                   return;
                 }
@@ -127,7 +127,7 @@ const cloudFilePickerDialog = function(options) {
 
           const $fileSystemOps = $('#cloudFileSystemOperations').octemplate(
             templateParameters,
-            { escapeFunction: (x) => x }
+            { escapeFunction: (x) => x },
           );
 
           let uploadMode = 'copy';
@@ -161,7 +161,7 @@ const cloudFilePickerDialog = function(options) {
               },
               modal: true,
               allowHtml: true,
-            }
+            },
           )
             .then(function() {
               $('.oc-dialog .oc-dialog-content .cloud-file-system-operations-wrapper .tooltip-auto').cafevTooltip();

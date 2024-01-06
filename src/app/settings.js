@@ -499,7 +499,7 @@ const afterLoad = function(container) {
             $self.val(data.value.name);
           }
         },
-      }
+      },
     );
 
     container.find('#sharedfolder-form').submit(function() { return false; }); // @@TODO ???
@@ -1352,7 +1352,7 @@ const afterLoad = function(container) {
         },
         false, // multi-select
         '', // sub-directory
-        [] // options
+        [], // options
       );
     });
   }

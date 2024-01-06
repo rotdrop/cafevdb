@@ -105,7 +105,7 @@ function documentReady() {
     fileDownload(
       'download/test/pdfletter',
       post,
-      t(appName, 'Unable to download test-letter.')
+      t(appName, 'Unable to download test-letter.'),
     );
   });
 

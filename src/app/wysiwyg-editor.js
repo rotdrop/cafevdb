@@ -67,7 +67,7 @@ const addEditor = function(selector, initCallback) {
                   console.error('There was a problem initializing the editor.', error);
                   return $.Deferred().resolveWith(this, arguments);
                 });
-            }).get()
+            }).get(),
           )
           .then(() => {
             console.debug('ckeditor promise(s) settled.');
@@ -138,7 +138,7 @@ const addEditor = function(selector, initCallback) {
                   }
                   return $.Deferred().resolveWith(this, arguments);
                 });
-            }).get()
+            }).get(),
           )
           .then(function() {
             console.debug('tinyMCE promise(s) settled.', arguments);

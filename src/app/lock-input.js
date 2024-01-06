@@ -80,7 +80,7 @@ $.fn.lockUnlock = function(argument) {
             + ' class="' + cssClass + '"'
             + ' title="' + t(appName, 'Lock or unlock this widget. Under certain circumstances the unlock-functionality is disabled or only available in expert mode.') + '"'
             + '>'
-            + '</label>'
+            + '</label>',
         )
         .data(appName + 'LockUnlockId', id)
         .addClass(appName + '-lock-unlock-victim');

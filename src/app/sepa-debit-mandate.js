@@ -196,7 +196,7 @@ const mandatesInit = function(data, onChangeCallback) {
     fileDownload(
       'finance/sepa/debit-mandates/pre-filled',
       sepaId,
-      t(appName, 'Unable to download pre-filled mandate form.')
+      t(appName, 'Unable to download pre-filled mandate form.'),
     );
     return false;
   });

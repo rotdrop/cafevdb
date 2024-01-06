@@ -537,7 +537,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
   selectProjectInstruments.data(
     selectedOptionsKey,
-    SelectUtils.selected(selectProjectInstruments)
+    SelectUtils.selected(selectProjectInstruments),
   );
   console.info('SELECTED PROJECT INSTRUMENTS', selectProjectInstruments.data(selectedOptionsKey));
 
@@ -591,7 +591,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
 
   selectMusicianInstruments.data(
     selectedOptionsKey,
-    SelectUtils.selected(selectMusicianInstruments)
+    SelectUtils.selected(selectMusicianInstruments),
   );
   console.info('SELECTED MUSICIAN INSTRUMENTS', selectMusicianInstruments.data(selectedOptionsKey));
 
@@ -786,7 +786,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
           'Too many group members, allowed are {limit}, you specified {count}.'
           + 'You will not be able to save this configuration.',
           { limit, count: curSelected.length }),
-        { isHTML: true, timeout: 30 }
+        { isHTML: true, timeout: 30 },
       );
       console.log('exceeding limit');
       SelectUtils.selected($self, prevSelected);
@@ -916,7 +916,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     .find(
       'tr.participant-field.simple-valued.receivables'
         + ', '
-        + 'tr.participant-field.simple-valued.liabilities'
+        + 'tr.participant-field.simple-valued.liabilities',
     )
     .find('.documents')
     .each(function() {

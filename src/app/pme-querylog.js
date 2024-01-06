@@ -59,7 +59,7 @@ const handleQueryLogMenu = function($select) {
     t(appName, 'Selected SQL-Query'),
     undefined,
     undefined,
-    true // allow HTML
+    true, // allow HTML
   );
 
   $('body')

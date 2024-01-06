@@ -342,7 +342,7 @@ const contactValidation = function(container) {
           $mailingListOperationsContainer.data('status', status);
           $mailingListOperationsContainer.attr(
             'class',
-            $mailingListOperationsContainer.attr('class').replace(/(^|\s)status-\S+/, '$1status-' + status)
+            $mailingListOperationsContainer.attr('class').replace(/(^|\s)status-\S+/, '$1status-' + status),
           );
           $mailingListOperations.each(function(index) {
             const $this = $(this);

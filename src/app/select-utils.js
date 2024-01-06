@@ -210,7 +210,7 @@ const deselectAll = function($select) {
  * values into the select. If the select is not multiple and value is
  * an array then use values[0] as selected value.
  *
- * @param {boolean} [trigger=false] If trigger === true then trigger a
+ * @param {boolean} [trigger] If trigger === true then trigger a
  * change-event on the select after installing the new values.
  *
  * @returns {(Array|string|null)} Always return an array for multiple

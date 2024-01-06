@@ -124,7 +124,7 @@ const confirmedReceivablesUpdate = async function(field, receivables, participan
       t(appName, 'Update strategy "{updateStrategy}" replaces the value of existing receivables, please confirm that you want to continue.', {
         updateStrategy: t(appName, updateStrategy),
       }),
-      t(appName, 'Overwrite Existing Records?')
+      t(appName, 'Overwrite Existing Records?'),
     );
   }
   if (!confirmed) {
@@ -216,7 +216,7 @@ const confirmedReceivablesUpdate = async function(field, receivables, participan
         'option',
         'title',
         t(appName, 'Updating receivables for {fieldName}, {receivableLabel}, {musicianName}',
-          { fieldName, receivableLabel, musicianName })
+          { fieldName, receivableLabel, musicianName }),
       );
 
       const request = 'option/regenerate';
@@ -241,7 +241,7 @@ const confirmedReceivablesUpdate = async function(field, receivables, participan
         showSuccess(
           t(appName, '{musicianName}, {receivableLabel}: "{message}".', {
             musicianName, receivableLabel, message: data.message.join('; '),
-          })
+          }),
         );
       } catch (xhr) {
         const failData = await new Promise((resolve) => Ajax.handleError(xhr, 'error', xhr.statusText, resolve));
@@ -508,7 +508,7 @@ const ready = function(selector, resizeCB) {
             const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
             $multiplicitySelect.readonly(checked);
           },
-        }
+        },
       );
     } else {
       const $multiplicitySelect = $this.closest('td').find('select.multiplicity.pme-input');
@@ -530,7 +530,7 @@ const ready = function(selector, resizeCB) {
             const $dataTypeSelect = $this.closest('td').find('select.data-type.pme-input');
             $dataTypeSelect.readonly(checked);
           },
-        }
+        },
       );
     } else {
       const $dataTypeSelect = $this.closest('td').find('select.data-type.pme-input');
@@ -621,7 +621,7 @@ const ready = function(selector, resizeCB) {
           },
           function() {
             console.info('ERROR', ...arguments);
-          }
+          },
         )
         .finally(() => $self.removeClass('busy'));
     })();
@@ -668,7 +668,7 @@ const ready = function(selector, resizeCB) {
         },
         function() {
           console.info('ERROR', ...arguments);
-        }
+        },
       )
       .finally(() => $self.removeClass('busy'));
     return false;

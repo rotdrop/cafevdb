@@ -114,7 +114,7 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
               revertHandler();
             }
           },
-          true
+          true,
         );
       } else {
         revertHandler();
@@ -193,7 +193,7 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
           },
           function() {
             console.info('ERROR', ...arguments);
-          }
+          },
         )
         .finally(() => $this.removeClass('busy'));
 
@@ -266,7 +266,7 @@ const participantOptionHandlers = function(container, musicianId, projectId, dia
           },
           function() {
             console.info('ERROR', ...arguments);
-          }
+          },
         )
         .finally(() => {
           $this.removeClass('busy');

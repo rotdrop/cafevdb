@@ -118,8 +118,8 @@ const updateInsuranceFee = function(elements) {
         currency: $insuranceFee.data('currencyCode'),
       })
       .format(
-        $insuranceAmount.val() * rate * (1.0 + $insuranceFee.data('taxRate'))
-      )
+        $insuranceAmount.val() * rate * (1.0 + $insuranceFee.data('taxRate')),
+      ),
   );
 };
 

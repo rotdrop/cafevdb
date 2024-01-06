@@ -323,7 +323,7 @@ const adjustSize = function($dialogHolder) {
         + $dialogHolder.position().top;
   const width = Math.max(
     $dimensionElement.outerWidth(true),
-    $controls.outerWidth(true)
+    $controls.outerWidth(true),
   );
   const height = $dimensionElement.outerHeight(true);
 
@@ -600,7 +600,7 @@ const eventAction = function(event) {
         errorMessage(url, data) {
           t(appName, 'Unable to download calendar events.');
         },
-      }
+      },
     );
     break;
   }
