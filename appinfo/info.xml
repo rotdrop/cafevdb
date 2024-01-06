@@ -6,7 +6,7 @@
   <name>CAFeV DB</name>
   <description>Orchestra Management Application.</description>
   <codename>Keep Going</codename>
-  <version>8.0.1</version>
+  <version>8.0.2</version>
   <licence>AGPL</licence>
   <author mail="himself@claus-justus-heine.de" homepage="https://github.com/rotdrop/cafevdb.git">Claus-Justus Heine</author>
   <types>
@@ -23,7 +23,7 @@
   </sabre>
   <dependencies>
     <php min-version="8.1" max-version="8.2" />
-    <nextcloud min-version="27" max-version="27" />
+    <nextcloud min-version="27" max-version="28" />
   </dependencies>
   <repair-steps>
     <install>
