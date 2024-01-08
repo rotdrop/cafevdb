@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,30 +26,43 @@
  *
  */
 
-.cafevdb.tooltip[x-placement^="top"] .arrow,
-.cafevdb.tooltip[x-placement^="top"] .tooltip-arrow {
-    left: 50%;
-  }
-
 /* Need space for the close button. Unfortunatelly, this will also
  * apply to dialogs without close button.
  */
-.oc-dialog .oc-dialog-title {
+.oc-dialog {
+  .oc-dialog-title {
     padding-right: 3ex;
-}
+  }
 
-/* Safer, but needs modification of the Nextcloud code */
-.oc-dialog.oc-dialog-has-close .oc-dialog-title {
+  /* Safer, but needs modification of the Nextcloud code */
+  &.oc-dialog-has-close .oc-dialog-title {
     padding-right: 3ex;
-}
+  }
 
-.oc-dialog:not(.oc-dialog-has-close) .oc-dialog-title {
+  &:not(.oc-dialog-has-close) .oc-dialog-title {
     padding-right: 0 !important;
+  }
 }
 
-.cafevdb .ui-dialog-titlebar-close.ui-button,
-.cafevdb .customDialogHeaderButton.ui-button {
-  min-height: unset!important;
+.cafevdb {
+  &.tooltip[x-placement^="top"] {
+    .arrow, .tooltip-arrow {
+      left: 50%;
+    }
+  }
+
+  &.ui-dialog {
+    .ui-button {
+      &.ui-dialog-titlebar-close,
+      &.customDialogHeaderButton {
+        min-height: unset!important;
+      }
+      &.ui-dialog-titlebar-close {
+        // restore margin from jquery-ui, as one rule from NC core got more specific
+        margin: -10px 0 0 0!important;
+      }
+    }
+  }
 }
 
 /* NC min-width = XXpx breaks the tinyMCE status bar. */

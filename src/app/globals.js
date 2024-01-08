@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ require('../legacy/nextcloud/jquery/requesttoken.js');
 
 // CSS unrelated to particular modules
 
-require('oc-fixes.css');
+require('oc-fixes.scss');
 require('mobile.scss');
 require('config-check.scss');
 
