@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2014-2023 Claus-Justus Heine
+ * @copyright 2014-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -200,15 +200,6 @@ class Application extends App implements IBootstrap
 
     $context->injectFn(function(IMountProviderCollection $mountProviderCollection, DatabaseMountProvider $mountProvider) {
       $mountProviderCollection->registerProvider($mountProvider, PHP_INT_MAX);
-    });
-
-    $context->injectFn(function(IEventDispatcher $dispatcher, AssetService $assetService) {
-      list('asset' => $backgroundJobScript) = $assetService->getJSAsset('background-jobs');
-      $dispatcher->addListener(
-        \OCP\AppFramework\Http\TemplateResponse::EVENT_LOAD_ADDITIONAL_SCRIPTS_LOGGEDIN,
-        function() use ($backgroundJobScript) {
-          \OCP\Util::addScript($this->appName, $backgroundJobScript);
-        });
     });
   }
 
