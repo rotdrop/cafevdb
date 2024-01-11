@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,12 @@ namespace OCA\CAFEVDB\Service;
 
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
+use OCP\Files\IRootFolder;
 
-use OCA\RotDrop\Toolkit\Service\GroupFoldersService as ToolkitService;
+use OCA\GroupFolders\Folder\FolderManager;
+use OCA\GroupFolders\Mount\MountProvider;
+
+use OCA\CAFEVDB\Toolkit\Service\GroupFoldersService as ToolkitService;
 
 /** Toolkit forwarder service in order to have the app's L10N instance. */
 class GroupFoldersService extends ToolkitService
@@ -35,10 +39,18 @@ class GroupFoldersService extends ToolkitService
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     LoggerInterface $logger,
-    RequestService $requestService,
+    IRootFolder $rootFolder,
+    FolderManager $folderManager,
+    MountProvider $mountProvider,
     IL10N $l10n,
   ) {
-    parent::__construct(logger: $logger, requestService: $requestService, l10n: $l10n);
+    parent::__construct(
+      logger: $logger,
+      rootFolder: $rootFolder,
+      folderManager: $folderManager,
+      mountProvider: $mountProvider,
+      l10n: $l10n,
+    );
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
 }
