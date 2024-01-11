@@ -38,7 +38,7 @@
     "@nextcloud/files": "file:3rdparty/nextcloud-files",
     "@nextcloud/initial-state": "*",
     "@nextcloud/l10n": "^1.6.0",
-    "@nextcloud/moment": "*",
+    "@nextcloud/moment": "~1.2.2",
     "@nextcloud/router": "^2.0.0",
     "@nextcloud/vue": "^7.0.0",
     "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
