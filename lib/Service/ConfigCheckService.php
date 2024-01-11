@@ -618,16 +618,31 @@ class ConfigCheckService
 
     $this->logInfo('TRY CREATE ' . $sharedFolder);
 
+    $adminGroupId = $this->subAdminGroupId();
+    if (empty($adminGroupId)) {
+      $this->logInfo('NO ADMIN GROUP');
+      return false; // need at least this group!
+    }
+
     $shareGroupId = $this->groupId();
     if (empty($shareGroupId)) {
       $this->logInfo('NO SHARE GROUP');
       return false; // need at least this group!
     }
+    $shareGroupIds = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $permissions => $groupSuffix) {
+      $permissions |= AuthorizationService::IMPLIED_PERMISSIONS[$permissions];
+      if ($permissions & AuthorizationService::PERMISSION_FILESYSTEM) {
+        $shareGroupIds[] = $shareGroupId . $groupSuffix;
+      }
+    }
 
-    $adminGroupId = $this->subAdminGroupId();
-    if (empty($adminGroupId)) {
-      $this->logInfo('NO ADMIN GROUP');
-      return false; // need at least this group!
+    $groupAdmin = $this->userId();
+    foreach ($shareGroupIds as $shareGroupId) {
+      if (!$this->isSubAdminOfGroup($groupAdmin, $shareGroupId)) {
+        $this->logError('Permission denied: ' . $groupAdmin . ' is not a group admin of ' . $shareGroupId . '.');
+        return false;
+      }
     }
 
     $this->logInfo('HELLO');
@@ -640,18 +655,19 @@ class ConfigCheckService
     try {
       if (empty($folderInfo)) {
         $folderInfo = $groupFoldersService->createFolder(
-          $sharedFolder, [
-            $shareGroupId => GroupFoldersService::PERMISSION_ALL,
-          ], [
-            $adminGroupId => GroupFoldersService::MANAGER_TYPE_GROUP,
-          ]);
+          $sharedFolder,
+          array_combine($shareGroupIds, array_fill(0, count($shareGroupIds), GroupFoldersService::PERMISSION_ALL)),
+          [ $adminGroupId => GroupFoldersService::MANAGER_TYPE_GROUP, ],
+        );
         $this->logInfo('TRIED TO CREATE ' . $sharedFolder);
       } else {
-        $groupFoldersService->addGroupToFolder(
-          $sharedFolder,
-          $shareGroupId,
-          GroupFoldersService::PERMISSION_ALL,
-        );
+        foreach ($shareGroupIds as $shareGroupId) {
+          $groupFoldersService->addGroupToFolder(
+            $sharedFolder,
+            $shareGroupId,
+            GroupFoldersService::PERMISSION_ALL,
+          );
+        }
         $groupFoldersService->addManagerToFolder(
           $sharedFolder,
           $adminGroupId,
@@ -709,9 +725,11 @@ class ConfigCheckService
     $groupAdmin = $this->userId();
     $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
 
-    if (!$this->isSubAdminOfGroup()) {
-      $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
-      return false;
+    foreach ($shareGroupIds as $shareGroupId) {
+      if (!$this->isSubAdminOfGroup($groupAdmin, $shareGroupId)) {
+        $this->logError('Permission denied: ' . $groupAdmin . ' is not a group admin of ' . $shareGroupId . '.');
+        return false;
+      }
     }
 
     // try to create the folder and share it with the group
