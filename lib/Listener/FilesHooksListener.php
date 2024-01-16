@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,8 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\IUserSession;
 use OCP\Contacts\IManager as IContactsManager;
 
-use OCA\Files\Event\LoadAdditionalScriptsEvent as HandledEvent;
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
+use OCA\Files\Event\LoadSidebar;
 
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\AuthorizationService;
@@ -48,18 +49,29 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 class FilesHooksListener implements IEventListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ApiRequestTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\CloudAdminTrait;
   use \OCA\CAFEVDB\Traits\ContactsTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
-  const EVENT = HandledEvent::class;
+  const EVENT = [
+    LoadAdditionalScriptsEvent::class,
+    LoadSidebar::class,
+  ];
 
-  const BASENAME = 'files-hooks';
+  const ASSET_BASENAME = [
+    LoadAdditionalScriptsEvent::class => 'files-hooks',
+    LoadSidebar::class => 'files-sidebar-hooks',
+  ];
 
   /** @var IAppContainer */
   private $appContainer;
 
-  private $handled = false;
+  /** @var array */
+  private $handled = [];
+
+  /** @var bool */
+  private $initialStateEmitted = false;
 
   /**
    * @param IAppContainer $appContainer The only argument in order to have a
@@ -70,24 +82,41 @@ class FilesHooksListener implements IEventListener
     $this->appContainer = $appContainer;
   }
 
-  /** {@inheritdoc} */
+  /**
+   * {@inheritdoc}
+   *
+   * @SuppressWarnings(PHPMD.Superglobals)
+   */
   public function handle(Event $event): void
   {
-    if (!($event instanceof HandledEvent)) {
+    $eventClass = get_class($event);
+    if (!in_array($eventClass, self::EVENT)) {
       return;
     }
     /** @var HandledEvent $event */
 
     // this really only needs to be executed once per request.
-    if ($this->handled) {
+    if ($this->handled[$eventClass]) {
       return;
     }
-    $this->handled = true;
+    $this->handled[$eventClass] = true;
+
+    $this->logger = $this->appContainer->get(ILogger::class);
+
+    $request = $this->appContainer->get(IRequest::class);
+    if ($this->isNonInteractiveRequest($request, LogLevel::DEBUG)) {
+      return;
+    }
 
     /** @var IUserSession $userSession */
     $userSession = $this->appContainer->get(IUserSession::class);
-    $user = $userSession->getUser();
 
+    if (!$userSession->isLoggedIn()) {
+      // the scripts loaded here need authentication, so ...
+      return;
+    }
+
+    $user = $userSession->getUser();
     if (empty($user)) {
       return;
     }
@@ -101,87 +130,86 @@ class FilesHooksListener implements IEventListener
 
     $appName = $this->appContainer->get('appName');
 
-    /** @var IInitialState $initialState */
-    $initialState = $this->appContainer->get(IInitialState::class);
+    if (!$this->initialStateEmitted) {
+      // This needs only to done once per request, the initial state is the
+      // same for both request, at least ATM ...
 
-    /** @var EncryptionService $encryptionService */
-    $encryptionService = $this->appContainer->get(EncryptionService::class);
-    $this->logger = $this->appContainer->get(ILogger::class);
-    $this->l = $this->appContainer->get(\OCP\IL10N::class);
+      /** @var IInitialState $initialState */
+      $initialState = $this->appContainer->get(IInitialState::class);
 
-    $sharedFolder = $encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, '');
-    $templatesFolder = $encryptionService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER, '');
-    $financeFolder = $encryptionService->getConfigValue(ConfigService::FINANCE_FOLDER);
-    $balancesFolder = $encryptionService->getConfigValue(ConfigService::BALANCES_FOLDER);
-    $projectsFolder = $encryptionService->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    $supportingDocumentsFolder = $this->getSupportingDocumentsFolderName();
+      /** @var EncryptionService $encryptionService */
+      $encryptionService = $this->appContainer->get(EncryptionService::class);
+      $this->logger = $this->appContainer->get(ILogger::class);
+      $this->l = $this->appContainer->get(\OCP\IL10N::class);
 
-    /** @var EntityManager $entityManager */
-    $entityManager = $this->appContainer->get(EntityManager::class);
-    try {
-      $musicianId = $entityManager->getRepository(Entities\Musician::class)->findIdByUserId($userId);
-      // $this->logInfo('MUS ID ' . print_r($musicianId, true));
-    } catch (\Throwable $t) {
-      // ignore
-      $this->logException($t);
-      $musicianId = 0;
-    }
+      $sharedFolder = $encryptionService->getConfigValue(ConfigService::SHARED_FOLDER, '');
+      $templatesFolder = $encryptionService->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER, '');
+      $financeFolder = $encryptionService->getConfigValue(ConfigService::FINANCE_FOLDER);
+      $balancesFolder = $encryptionService->getConfigValue(ConfigService::BALANCES_FOLDER);
+      $projectsFolder = $encryptionService->getConfigValue(ConfigService::PROJECTS_FOLDER);
+      $supportingDocumentsFolder = $this->getSupportingDocumentsFolderName();
 
-    /** @var IContactsManager $contactsManager */
-    $contactsManager = $this->appContainer->get(IContactsManager::class);
+      /** @var EntityManager $entityManager */
+      $entityManager = $this->appContainer->get(EntityManager::class);
+      try {
+        $musicianId = $entityManager->getRepository(Entities\Musician::class)->findIdByUserId($userId);
+        // $this->logInfo('MUS ID ' . print_r($musicianId, true));
+      } catch (\Throwable $t) {
+        // ignore
+        $this->logException($t);
+        $musicianId = 0;
+      }
 
-    $sharedFolder = '/' . $sharedFolder;
-    $templatesFolder = $sharedFolder . '/' . $templatesFolder;
-    $financeFolder = $sharedFolder . '/' . $financeFolder;
-    $balancesFolder = $financeFolder . '/' . $balancesFolder;
-    $projectBalancesFolder = $balancesFolder . '/' . $projectsFolder;
+      /** @var IContactsManager $contactsManager */
+      $contactsManager = $this->appContainer->get(IContactsManager::class);
 
-    $initialState->provideInitialState('files', [
-      'sharing' => [
-        'files' => [
-          'folders' => [
-            // absolute paths
-            'root' => $sharedFolder,
-            'templates' => $templatesFolder,
-            'finance' => $financeFolder,
-            'balances' => $balancesFolder,
-            'projectBalances' => $projectBalancesFolder,
-          ],
-          'subFolders' => [
-            // relative paths
-            'supportingDocuments' => $supportingDocumentsFolder,
+      $sharedFolder = '/' . $sharedFolder;
+      $templatesFolder = $sharedFolder . '/' . $templatesFolder;
+      $financeFolder = $sharedFolder . '/' . $financeFolder;
+      $balancesFolder = $financeFolder . '/' . $balancesFolder;
+      $projectBalancesFolder = $balancesFolder . '/' . $projectsFolder;
+
+      $initialState->provideInitialState('files', [
+        'sharing' => [
+          'files' => [
+            'folders' => [
+              // absolute paths
+              'root' => $sharedFolder,
+              'templates' => $templatesFolder,
+              'finance' => $financeFolder,
+              'balances' => $balancesFolder,
+              'projectBalances' => $projectBalancesFolder,
+            ],
+            'subFolders' => [
+              // relative paths
+              'supportingDocuments' => $supportingDocumentsFolder,
+            ],
           ],
         ],
-      ],
-      'personal' => [
-        'userId' => $userId,
-        'musicianId' => $musicianId,
-      ],
-      'contacts' => [
-        'addressBooks' => self::flattenAdressBooks($contactsManager->getUserAddressBooks()),
-      ],
-    ]);
+        'personal' => [
+          'userId' => $userId,
+          'musicianId' => $musicianId,
+        ],
+        'contacts' => [
+          'addressBooks' => self::flattenAdressBooks($contactsManager->getUserAddressBooks()),
+        ],
+      ]);
 
-    // just admin contact and stuff to make the ajax error handlers work.
-    // @todo Replace by more lightweight stuff
-    $this->groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
-    $initialState->provideInitialState('CAFEVDB', [
-      'adminContact' => $this->getCloudAdminContacts(implode: true),
-      'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get in javescript from request
-    ]);
+      // just admin contact and stuff to make the ajax error handlers work.
+      // @todo Replace by more lightweight stuff
+      $this->groupManager = $this->appContainer->get(\OCP\IGroupManager::class);
+      $initialState->provideInitialState('CAFEVDB', [
+        'adminContact' => $this->getCloudAdminContacts(implode: true),
+        'phpUserAgent' => $_SERVER['HTTP_USER_AGENT'], // @@todo get in javescript from request
+      ]);
+    }
 
     /** @var AssetService $assetService */
     $assetService = $this->appContainer->get(AssetService::class);
-    list('asset' => $scriptAsset,) = $assetService->getJSAsset(self::BASENAME);
-    list('asset' => $styleAsset,) = $assetService->getCSSAsset(self::BASENAME);
+    $assetBasename = self::BASENAME[$eventClass];
+    list('asset' => $scriptAsset,) = $assetService->getJSAsset($assetBasename);
+    list('asset' => $styleAsset,) = $assetService->getCSSAsset($assetBasename);
     \OCP\Util::addScript($appName, $scriptAsset);
     \OCP\Util::addStyle($appName, $styleAsset);
   }
 }
-
-
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
