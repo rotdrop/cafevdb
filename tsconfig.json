@@ -1,0 +1,36 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "include": [
+    "./src/*.ts",
+    "./src/**/*.ts",
+    "./src/*.vue",
+    "./src/**/*.vue",
+    "./node_modules/webpack/**.ts",
+    "../../custom.d.ts"
+  ],
+  "compilerOptions": {
+    "types": ["jest", "node", "vue", "vue-router"],
+    "outDir": "./dist/",
+    "target": "ESNext",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "strict": true
+  },
+  "vueCompilerOptions": {
+    "target": 2.7
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "module": "commonjs",
+      "verbatimModuleSyntax": false
+    }
+  }
+}
