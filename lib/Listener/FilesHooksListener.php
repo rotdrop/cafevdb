@@ -25,6 +25,8 @@
 
 namespace OCA\CAFEVDB\Listener;
 
+use Throwable;
+
 use Psr\Log\LoggerInterface as ILogger;
 use Psr\Log\LogLevel;
 
@@ -209,9 +211,17 @@ class FilesHooksListener implements IEventListener
     /** @var AssetService $assetService */
     $assetService = $this->appContainer->get(AssetService::class);
     $assetBasename = self::ASSET_BASENAME[$eventClass];
-    list('asset' => $scriptAsset,) = $assetService->getJSAsset($assetBasename);
-    list('asset' => $styleAsset,) = $assetService->getCSSAsset($assetBasename);
-    \OCP\Util::addScript($appName, $scriptAsset);
-    \OCP\Util::addStyle($appName, $styleAsset);
+    try {
+      list('asset' => $scriptAsset,) = $assetService->getJSAsset($assetBasename);
+      \OCP\Util::addScript($appName, $scriptAsset);
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to add script asset ' . $assetBasename);
+    }
+    try {
+      list('asset' => $styleAsset,) = $assetService->getCSSAsset($assetBasename);
+      \OCP\Util::addStyle($appName, $styleAsset);
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to add style asset ' . $assetBasename);
+    }
   }
 }
