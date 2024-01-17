@@ -54,14 +54,12 @@ class LoadAdditionalScriptsEventListener implements IEventListener
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
-    $this->logger = $this->appContainer->get(ILogger::class);
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
 
   /** {@inheritdoc} */
   public function handle(Event $event):void
   {
-    $this->logger = $this->appContainer->get(ILogger::class);
     if (!($event instanceof HandledEvent)) {
       return;
     }
