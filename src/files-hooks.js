@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,27 +21,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
 import { appName } from './app/app-info.js';
 import { getInitialState } from './services/initial-state-service.js';
 import { generateFilePath, imagePath } from '@nextcloud/router';
 import { showError, showInfo } from '@nextcloud/dialogs';
-import { translate as t, translatePlural as n } from '@nextcloud/l10n';
-import FilesTab from './views/FilesTab.vue';
-import { createPinia, PiniaVuePlugin } from 'pinia';
-import { Tooltip } from '@nextcloud/vue';
-
-Vue.directive('tooltip', Tooltip);
-
-Vue.use(PiniaVuePlugin);
-const pinia = createPinia();
+import { translate as t } from '@nextcloud/l10n';
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js');
-Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
-
-const View = Vue.extend(FilesTab);
-let TabInstance = null;
 
 if (!window.OCA.CAFEVDB) {
   window.OCA.CAFEVDB = {};
@@ -200,47 +187,6 @@ window.addEventListener('DOMContentLoaded', () => {
         context.fileList.showDetailsView(fileName, 'cafevdb');
       },
     });
-  }
-
-  /**
-   * Register a new tab in the sidebar
-   */
-  if (OCA.Files && OCA.Files.Sidebar) {
-    OCA.Files.Sidebar.registerTab(new OCA.Files.Sidebar.Tab({
-      id: appName,
-      name: t(appName, 'MailMerge'),
-      icon: 'icon-rename',
-      enabled: enableTemplateActions,
-
-      async mount(el, fileInfo, context) {
-
-        if (TabInstance) {
-          TabInstance.$destroy();
-        }
-
-        TabInstance = new View({
-          // Better integration with vue parent component
-          parent: context,
-          pinia,
-        });
-
-        // Only mount after we hahve all theh info we need
-        await TabInstance.update(fileInfo);
-
-        TabInstance.$mount(el);
-        const $tabHeader = context.$el.closest('.app-sidebar-tabs');
-        const $iconSpan = $tabHeader.querySelector('#cafevdb .app-sidebar-tabs__tab-icon span');
-        $iconSpan.style.backgroundImage = 'url(' + imagePath(appName, appName) + ')';
-        $iconSpan.style.backgroundSize = '16px';
-      },
-      update(fileInfo) {
-        TabInstance.update(fileInfo);
-      },
-      destroy() {
-        TabInstance.$destroy();
-        TabInstance = null;
-      },
-    }));
   }
 
   if (OC.Plugins) {
