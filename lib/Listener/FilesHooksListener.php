@@ -26,13 +26,15 @@
 namespace OCA\CAFEVDB\Listener;
 
 use Psr\Log\LoggerInterface as ILogger;
+use Psr\Log\LogLevel;
 
-use OCP\EventDispatcher\Event;
-use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Services\IInitialState;
-use OCP\IUserSession;
 use OCP\Contacts\IManager as IContactsManager;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
+use OCP\IRequest;
+use OCP\IUserSession;
 
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\Files\Event\LoadSidebar;
@@ -206,7 +208,7 @@ class FilesHooksListener implements IEventListener
 
     /** @var AssetService $assetService */
     $assetService = $this->appContainer->get(AssetService::class);
-    $assetBasename = self::BASENAME[$eventClass];
+    $assetBasename = self::ASSET_BASENAME[$eventClass];
     list('asset' => $scriptAsset,) = $assetService->getJSAsset($assetBasename);
     list('asset' => $styleAsset,) = $assetService->getCSSAsset($assetBasename);
     \OCP\Util::addScript($appName, $scriptAsset);
