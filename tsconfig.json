@@ -6,6 +6,8 @@
     "./src/*.vue",
     "./src/**/*.vue",
     "./node_modules/webpack/**.ts",
+    "./node_modules/axios/**.ts",
+    "./node_modules/@nextcloud/**.ts",
     "../../custom.d.ts"
   ],
   "compilerOptions": {
