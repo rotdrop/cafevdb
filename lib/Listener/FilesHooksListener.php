@@ -49,6 +49,8 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use OCA\CAFEVDB\Constants;
+
 /** Listener for hooking up an additional context menu entry. */
 class FilesHooksListener implements IEventListener
 {
@@ -64,15 +66,24 @@ class FilesHooksListener implements IEventListener
   ];
 
   const ASSET_BASENAME = [
-    LoadAdditionalScriptsEvent::class => 'files-hooks',
-    LoadSidebar::class => 'files-sidebar-hooks',
+    LoadAdditionalScriptsEvent::class => [
+      Constants::JS => 'files-hooks-ts',
+      Constants::CSS => null,
+    ],
+    LoadSidebar::class => [
+      Constants::JS => 'files-sidebar-hooks',
+      Constants::CSS => 'files-sidebar-hooks',
+    ],
   ];
 
   /** @var IAppContainer */
   private $appContainer;
 
   /** @var array */
-  private $handled = [];
+  private $handled = [
+    LoadAdditionalScriptsEvent::class => false,
+    LoadSidebar::class => false,
+  ];
 
   /** @var bool */
   private $initialStateEmitted = false;
@@ -210,18 +221,23 @@ class FilesHooksListener implements IEventListener
 
     /** @var AssetService $assetService */
     $assetService = $this->appContainer->get(AssetService::class);
-    $assetBasename = self::ASSET_BASENAME[$eventClass];
-    try {
-      list('asset' => $scriptAsset,) = $assetService->getJSAsset($assetBasename);
-      \OCP\Util::addScript($appName, $scriptAsset);
-    } catch (Throwable $t) {
-      $this->logException($t, 'Unable to add script asset ' . $assetBasename);
+    $assetBasename = self::ASSET_BASENAME[$eventClass][Constants::JS];
+    if ($assetBasename) {
+      try {
+        list('asset' => $scriptAsset,) = $assetService->getJSAsset($assetBasename);
+        \OCP\Util::addScript($appName, $scriptAsset);
+      } catch (Throwable $t) {
+        $this->logException($t, 'Unable to add script asset ' . $assetBasename);
+      }
     }
-    try {
-      list('asset' => $styleAsset,) = $assetService->getCSSAsset($assetBasename);
-      \OCP\Util::addStyle($appName, $styleAsset);
-    } catch (Throwable $t) {
-      $this->logException($t, 'Unable to add style asset ' . $assetBasename);
+    $assetBasename = self::ASSET_BASENAME[$eventClass][Constants::CSS];
+    if ($assetBasename) {
+      try {
+        list('asset' => $styleAsset,) = $assetService->getCSSAsset($assetBasename);
+        \OCP\Util::addStyle($appName, $styleAsset);
+      } catch (Throwable $t) {
+        $this->logException($t, 'Unable to add style asset ' . $assetBasename);
+      }
     }
   }
 }
