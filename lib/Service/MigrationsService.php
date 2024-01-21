@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,6 +48,9 @@ class MigrationsService
 
   public const MIGRATIONS_FOLDER = __DIR__ . '/../Maintenance/Migrations/';
   public const MIGRATIONS_NAMESPACE = 'OCA\CAFEVDB\\Maintenance\\Migrations';
+
+  public const VERSION_FORMAT = 'YYYYMMDDHHMMSS';
+  public const VERSION_REGEXP = '/^\d{14}$/';
 
   /** @var IAppContainer */
   private $appContainer;
@@ -329,6 +332,8 @@ ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS updated datetime(6) DEFAULT NULL
       $migrations[$version] = sprintf('%s\\%s', self::MIGRATIONS_NAMESPACE, $className);
     }
 
+    ksort($migrations);
+
     return $migrations;
   }
 
@@ -342,8 +347,3 @@ ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS updated datetime(6) DEFAULT NULL
     return substr(strrchr(get_parent_class($className), '\\'), 1);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
