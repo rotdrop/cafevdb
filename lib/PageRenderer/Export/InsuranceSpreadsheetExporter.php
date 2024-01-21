@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -87,15 +87,6 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
   protected const INPUT_INDEX_INSURANCE_START = self::INPUT_INDEX_INSURANCE_FEES + 1;
   protected const INPUT_INDEX_INSURANCE_END = self::INPUT_INDEX_INSURANCE_START + 1;
 
-  /** @var PageRenderer\PMETableViewBase */
-  protected $renderer;
-
-  /** @var InstrumentInsuranceService */
-  protected $insuranceService;
-
-  /** @var FuzzyInputService */
-  protected $fuzzyInputService;
-
   /** @var array */
   protected $spreadSheetColumns;
 
@@ -118,15 +109,12 @@ class InsuranceSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param FontService $fontService
    */
   public function __construct(
-    PageRenderer\InstrumentInsurances $renderer,
-    InstrumentInsuranceService $insuranceService,
-    FuzzyInputService $fuzzyInputService,
+    protected PageRenderer\InstrumentInsurances $renderer,
+    protected InstrumentInsuranceService $insuranceService,
+    protected FuzzyInputService $fuzzyInputService,
     FontService $fontService,
   ) {
     parent::__construct($renderer->configService(), $fontService);
-    $this->renderer = $renderer;
-    $this->insuranceService = $insuranceService;
-    $this->fuzzyInputService = $fuzzyInputService;
 
     $this->preLastColumnAddress = chr(ord('A') + count(self::EXPORT_COLUMNS) - 2);
     $this->lastColumnAddress = chr(ord('A') + count(self::EXPORT_COLUMNS) - 1);

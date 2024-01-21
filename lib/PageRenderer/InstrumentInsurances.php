@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -98,34 +98,21 @@ class InstrumentInsurances extends PMETableViewBase
   /** @var Entities\Project */
   private $project = null;
 
-  /** @var InstrumentInsuranceService */
-  private $insuranceService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var UserStorage */
-  private $userStorage;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
     PHPMyEdit $phpMyEdit,
-    InstrumentInsuranceService $insuranceService,
-    ProjectService $projectService,
-    UserStorage $userStorage,
-    ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    ToolTipsService $toolTipsService,
+    private InstrumentInsuranceService $insuranceService,
+    private ProjectService $projectService,
+    private UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 
     $this->showDisabled = true; // otherwise it is too confusing.
-
-    $this->insuranceService = $insuranceService;
-    $this->projectService = $projectService;
-    $this->userStorage = $userStorage;
 
     $this->projectId = $this->getClubMembersProjectId();
     if ($this->projectId > 0) {

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -54,13 +54,10 @@ class DatabaseProgressStatus extends AbstractProgressStatus
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
-    ILogger $logger,
-    IL10N $l10n,
+    protected ILogger $logger,
+    protected IL10N $l,
     IDBConnection $db,
   ) {
-
-    $this->logger = $logger;
-    $this->l = $l10n;
     $this->mapper = new Mapper\ProgressStatusMapper($db, $appName);
   }
   // phpcs:enable

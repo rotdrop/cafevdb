@@ -34,6 +34,7 @@ use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Exceptions\EnduserNotificationException;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Maintenance\IMigration;
@@ -52,23 +53,16 @@ class MigrationsService
   public const VERSION_FORMAT = 'YYYYMMDDHHMMSS';
   public const VERSION_REGEXP = '/^\d{14}$/';
 
-  /** @var IAppContainer */
-  private $appContainer;
-
   /** @var null|array */
   private $unappliedMigrations = null;
 
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IL10N $l10n,
-    ILogger $logger,
-    IAppContainer $appContainer,
-    EntityManager $entityManager,
+    protected IL10N $l,
+    protected ILogger $logger,
+    private IAppContainer $appContainer,
+    protected EntityManager $entityManager,
   ) {
-    $this->l = $l10n;
-    $this->logger = $logger;
-    $this->appContainer = $appContainer;
-    $this->entityManager = $entityManager;
   }
   // phpcs:enable
 
@@ -179,9 +173,14 @@ class MigrationsService
     $this->entityManager->close();
     $this->entityManager->reopen();
 
-    $result = $instance->execute();
+    $t = null;
+    try {
+      $result = $instance->execute();
+    } catch (EnduserNotificationException $t) {
+      $result = false;
+    }
     if ($result !== true) {
-      throw new RuntimeException($this->l->t("Migration %s has failed to execute.", $className));
+      throw new RuntimeException($this->l->t("Migration %s has failed to execute.", $className), 0, $t);
     }
 
     $this->entityManager->close();

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,9 +42,6 @@ class DatabaseStorageUtil
 
   const PATH_SEP = '/';
 
-  /** @var string */
-  protected $appName;
-
   /**
    * @param string $appName Application name.
    *
@@ -55,15 +52,11 @@ class DatabaseStorageUtil
    * @param IL10N $l10n Guess what.
    */
   public function __construct(
-    string $appName,
-    EntityManager $entityManager,
-    ILogger $logger,
-    IL10N $l10n,
+    protected string $appName,
+    protected EntityManager $entityManager,
+    protected ILogger $logger,
+    protected IL10N $l10n,
   ) {
-    $this->appName = $appName;
-    $this->entityManager = $entityManager;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
 
   /**

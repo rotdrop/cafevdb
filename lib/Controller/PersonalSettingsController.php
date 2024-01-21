@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -92,79 +92,27 @@ class PersonalSettingsController extends Controller
     ],
   ];
 
-  /** @var Personal */
-  private $personalSettings;
-
-  /** @var ConfigCheckService */
-  private $configCheckService;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var CalDavService */
-  private $calDavService;
-
-  /** @var TranslationService */
-  private $translationService;
-
-  /** @var WikiRPC */
-  private $wikiRPC;
-
-  /** @var WebPagesRPC */
-  private $webPagesRPC;
-
-  /** @var PhoneNumberService */
-  private $phoneNumberService;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var UserStorage */
-  private $userStorage;
-
-  /** @var FuzzyInputService */
-  private $fuzzyInputService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    IAppContainer $appContainer,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    Personal $personalSettings,
-    ConfigCheckService $configCheckService,
-    PhoneNumberService $phoneNumberService,
-    FinanceService $financeService,
-    ProjectService $projectService,
-    CalDavService $calDavService,
-    TranslationService $translationService,
-    FuzzyInputService $fuzzyInputService,
-    UserStorage $userStorage,
-    WikiRPC $wikiRPC,
-    WebPagesRPC $webPagesRPC,
+    private IAppContainer $appContainer,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    private Personal $personalSettings,
+    private ConfigCheckService $configCheckService,
+    private PhoneNumberService $phoneNumberService,
+    private FinanceService $financeService,
+    private ProjectService $projectService,
+    private CalDavService $calDavService,
+    private TranslationService $translationService,
+    private FuzzyInputService $fuzzyInputService,
+    private UserStorage $userStorage,
+    private WikiRPC $wikiRPC,
+    private WebPagesRPC $webPagesRPC,
   ) {
     parent::__construct($appName, $request);
-    $this->appContainer = $appContainer;
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->configCheckService = $configCheckService;
-    $this->personalSettings = $personalSettings;
-    $this->phoneNumberService = $phoneNumberService;
-    $this->financeService = $financeService;
-    $this->projectService = $projectService;
-    $this->calDavService = $calDavService;
-    $this->translationService = $translationService;
-    $this->fuzzyInputService = $fuzzyInputService;
-    $this->userStorage = $userStorage;
-    $this->wikiRPC = $wikiRPC;
-    $this->webPagesRPC = $webPagesRPC;
+
     $this->l = $this->l10N();
   }
   // phpcs:enable

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,15 +59,6 @@ class AnyToPdf
     'default' => [ 'unoconv', ],
   ];
 
-  /** @var IMimeTypeDetector */
-  protected $mimeTypeDetector;
-
-  /** @var ITempManager */
-  protected $tempManager;
-
-  /** @var IL10N */
-  protected IL10N $l;
-
   /**
    * @var string
    *
@@ -77,9 +68,6 @@ class AnyToPdf
    */
   protected $paperSize = 'a4';
 
-  /** @var ExecutableFinder */
-  protected $executableFinder;
-
   /**
    * @var array
    * Cache of found executables for the current request.
@@ -88,17 +76,12 @@ class AnyToPdf
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IMimeTypeDetector $mimeTypeDetector,
-    ITempManager $tempManager,
-    ExecutableFinder $executableFinder,
-    ILogger $logger,
-    IL10N $l,
+    protected IMimeTypeDetector $mimeTypeDetector,
+    protected ITempManager $tempManager,
+    protected ExecutableFinder $executableFinder,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->mimeTypeDetector = $mimeTypeDetector;
-    $this->tempManager = $tempManager;
-    $this->executableFinder = $executableFinder;
-    $this->logger = $logger;
-    $this->l = $l;
   }
   // phpcs:enable
 

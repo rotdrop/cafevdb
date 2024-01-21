@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,14 +35,14 @@ use OCA\CAFEVDB\Common\UndoableRunQueue;
  */
 class UndoableRunQueueException extends RuntimeException
 {
-  /** @var UndoableRunQueue */
-  protected $runQueue;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(UndoableRunQueue $queue, string $message, int $code = 0, $previous = null)
-  {
+  public function __construct(
+    protected UndoableRunQueue $queue,
+    string $message,
+    int $code = 0,
+    $previous = null,
+  ) {
     parent::__construct($message, $code, $previous);
-    $this->runQueue = $queue;
   }
   // phpcs:enable
 

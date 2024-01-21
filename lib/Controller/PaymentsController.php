@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,26 +57,17 @@ class PaymentsController extends Controller
   public const DOCUMENT_ACTION_UPLOAD = 'upload';
   public const DOCUMENT_ACTION_DELETE = 'delete';
 
-  /** @var ReqeuestParameterService */
-  private $parameterService;
-
-  /** @var StorageFactory */
-  private $storageFactory;
-
   /** {@inheritdoc} */
   public function __construct(
     $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    EntityManager $entityManager,
-    StorageFactory $storageFactory,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private StorageFactory $storageFactory,
   ) {
     parent::__construct($appName, $request);
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->storageFactory = $storageFactory;
+
     $this->l = $this->l10N();
   }
 

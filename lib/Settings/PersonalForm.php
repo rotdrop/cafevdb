@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,76 +60,23 @@ class PersonalForm
   const TEMPLATE = "settings";
   const DEFAULT_EDITOR = 'tinymce';
 
-  /** @var AssetService */
-  private $assetService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var ErrorService */
-  private $errorService;
-
-  /** @var OCA\CAFEVDB\Service\L10N\TranslationService */
-  private $translationService;
-
-  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
-  private $wikiRPC;
-
-  /** @var WebPagesRPC */
-  private $webPagesRPC;
-
-  /** @var AddressBookProvider */
-  private $addressBookProvider;
-
-  /** @var UserStorage */
-  private $userStorage;
-
-  /** @var CloudUserConnectorService */
-  private $cloudUserService;
-
-  /** @var IInitialStateService */
-  private $initialStateService;
-
-  /** @var IAppManager */
-  private $appManager;
-
-  /** @var GeoCodingService */
-  private $geoCodingService;
-
-  /** @var OrganizationalRolesService */
-  private $roles;
-
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    AssetService $assetService,
-    ProjectService $projectService,
-    ErrorService $errorService,
-    TranslationService $translationService,
-    IInitialStateService $initialStateService,
-    IAppManager $appManager,
-    WikiRPC $wikiRPC,
-    WebPagesRPC $webPagesRPC,
-    AddressBookProvider $addressBookProvider,
-    UserStorage $userStorage,
-    CloudUserConnectorService $cloudUserService,
-    GeoCodingService $geoCodingService,
-    OrganizationalRolesService $roles,
+    protected ConfigService $configService,
+    private AssetService $assetService,
+    private ProjectService $projectService,
+    private ErrorService $errorService,
+    private TranslationService $translationService,
+    private IInitialStateService $initialStateService,
+    private IAppManager $appManager,
+    private WikiRPC $wikiRPC,
+    private WebPagesRPC $webPagesRPC,
+    private AddressBookProvider $addressBookProvider,
+    private UserStorage $userStorage,
+    private CloudUserConnectorService $cloudUserService,
+    private GeoCodingService $geoCodingService,
+    private OrganizationalRolesService $roles,
   ) {
-    $this->configService = $configService;
-    $this->assetService = $assetService;
-    $this->projectService = $projectService;
-    $this->errorService = $errorService;
-    $this->translationService = $translationService;
-    $this->initialStateService = $initialStateService;
-    $this->appManager = $appManager;
-    $this->wikiRPC = $wikiRPC;
-    $this->webPagesRPC = $webPagesRPC;
-    $this->addressBookProvider = $addressBookProvider;
-    $this->userStorage = $userStorage;
-    $this->cloudUserService = $cloudUserService;
-    $this->geoCodingService = $geoCodingService;
-    $this->roles = $roles;
     $this->l = $this->l10N();
   }
 

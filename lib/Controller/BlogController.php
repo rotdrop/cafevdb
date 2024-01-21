@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,50 +53,20 @@ class BlogController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var \OCP\IDateTimeZone */
-  private $timeZone;
-
-  /** @var \OCP\IURLGenerator */
-  private $urlGenerator;
-
-  /** @var ParameterService */
-  private $parameterService;
-
-  /** @var ToolTipsService */
-  protected $toolTipsService;
-
-  /** @var BlogMapper */
-  private $blogMapper;
-
-  /** @var string */
-  private $userId;
-
-  /** @var IL10N */
-  protected IL10N $l;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    IURLGenerator $urlGenerator,
-    RequestParameterService $parameterService,
-    ToolTipsService $toolTipsService,
-    BlogMapper $blogMapper,
-    ?string $userId,
-    IL10N $l10n,
-    IDateTimeZone $timeZone,
-    ILogger $logger,
+    private IURLGenerator $urlGenerator,
+    private RequestParameterService $parameterService,
+    private ToolTipsService $toolTipsService,
+    private BlogMapper $blogMapper,
+    private ?string $userId,
+    protected IL10N $l,
+    private IDateTimeZone $timeZone,
+    protected ILogger $logger,
   ) {
     parent::__construct($appName, $request);
-
-    $this->urlGenerator = $urlGenerator;
-    $this->parameterService = $parameterService;
-    $this->toolTipsService = $toolTipsService;
-    $this->blogMapper = $blogMapper;
-    $this->logger = $logger;
-    $this->userId = $userId;
-    $this->l = $l10n;
-    $this->timeZone = $timeZone;
   }
   // phpcs:enable
 

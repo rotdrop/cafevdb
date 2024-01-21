@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,33 +59,6 @@ class AsymmetricKeyService
 
   const RECRYPTION_REQUEST_KEY = Notifier::RECRYPT_USER_SUBJECT;
 
-  /** @var string */
-  private $appName;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var IUserSession */
-  private $userSession;
-
-  /** @var ICredentialsStore */
-  private $credentialsStore;
-
-  /** @var IEventDispatcher */
-  private $eventDispatcher;
-
-  /** @var IConfig */
-  private $cloudConfig;
-
-  /** @var IL10N */
-  private $l;
-
-  /** @var AsymmetricKeyStorageInterface */
-  private $keyStorage;
-
-  /** @var AsymmetricCryptorInterface */
-  private $cryptorPrototype;
-
   /** @var array<string, AsymmetricCryptorInterface> */
   private static $cryptors = [];
 
@@ -98,27 +71,17 @@ class AsymmetricKeyService
    */
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IAppContainer $appContainer,
-    IUserSession $userSession,
-    ICredentialsStore $credentialsStore,
-    IConfig $cloudConfig,
-    IEventDispatcher $eventDispatcher,
-    IL10N $l10n,
-    ILogger $logger,
-    AsymmetricKeyStorageInterface $keyStorage,
-    AsymmetricCryptorInterface $cryptorPrototype,
+    private string $appName,
+    private IAppContainer $appContainer,
+    private IUserSession $userSession,
+    private ICredentialsStore $credentialsStore,
+    private IConfig $cloudConfig,
+    private IEventDispatcher $eventDispatcher,
+    private IL10N $l,
+    protected ILogger $logger,
+    private AsymmetricKeyStorageInterface $keyStorage,
+    private AsymmetricCryptorInterface $cryptorPrototype,
   ) {
-    $this->appName = $appName;
-    $this->appContainer = $appContainer;
-    $this->userSession = $userSession;
-    $this->credentialsStore = $credentialsStore;
-    $this->cloudConfig = $cloudConfig;
-    $this->eventDispatcher = $eventDispatcher;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->keyStorage = $keyStorage;
-    $this->cryptorPrototype = $cryptorPrototype;
   }
   // phpcs:enable
 

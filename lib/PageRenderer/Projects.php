@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,24 +63,6 @@ class Projects extends PMETableViewBase
 
   private const MAX_POSTER_COLUMNS = 4;
 
-  /** @var ProjectService */
-  protected $projectService;
-
-  /** @var EventsService */
-  private $eventsService;
-
-  /** @var ImagesService */
-  private $imagesService;
-
-  /** @var MailingListsService */
-  private $listsService;
-
-  /** @var OrganizationalRolesService */
-  private $orgaRolesService;
-
-  /** @var UserStorage */
-  private $userStorage;
-
   /** @var Entities\Project */
   private $project = null;
 
@@ -124,24 +106,18 @@ class Projects extends PMETableViewBase
   public function __construct(
     ConfigService $configService,
     RequestParameterService $requestParameters,
-    ProjectService $projectService,
-    EventsService $eventsService,
-    ImagesService $imagesService,
-    MailingListsService $listsService,
-    OrganizationalRolesService $orgaRolesService,
-    UserStorage $userStorage,
     EntityManager $entityManager,
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    private ProjectService $projectService,
+    private EventsService $eventsService,
+    private ImagesService $imagesService,
+    private MailingListsService $listsService,
+    private OrganizationalRolesService $orgaRolesService,
+    private UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->projectService = $projectService;
-    $this->eventsService = $eventsService;
-    $this->imagesService = $imagesService;
-    $this->listsService = $listsService;
-    $this->orgaRolesService = $orgaRolesService;
-    $this->userStorage = $userStorage;
 
     if (empty($this->projectId)) {
       $this->projectId = $this->pmeRecordId['id']??null;

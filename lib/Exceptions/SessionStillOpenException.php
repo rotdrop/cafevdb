@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,14 +29,14 @@ use OCP\ISession;
 /** @see OCA\CAFEVDB\Service\RequestService */
 class SessionStillOpenException extends PhpSessionException
 {
-  /** @var ISession */
-  private $session;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null, ISession $session = null)
-  {
+  public function __construct(
+    string $message = "",
+    int $code = 0,
+    ?Throwable $previous = null,
+    private ?ISession $session = null
+  ) {
     parent::__construct($message, $code, $previous);
-    $this->session = $session;
   }
   // phpcs:enable
 

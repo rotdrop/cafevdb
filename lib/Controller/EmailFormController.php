@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,44 +61,19 @@ class EmailFormController extends Controller
 
   const TOPIC_UNSPECIFIC = 'general';
 
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var IURLGenerator */
-  private $urlGenerator;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var PageNavigation */
-  private $pageNavigation;
-
-  /** @var PHPMyEdit */
-  private $pme;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
   /** {@inheritdoc} */
   public function __construct(
     string $appName,
     IRequest $request,
-    IAppContainer $appContainer,
-    IURLGenerator $urlGenerator,
-    RequestParameterService $parameterService,
-    PageNavigation $pageNavigation,
-    ConfigService $configService,
-    ProjectService $projectService,
-    PHPMyEdit $pme
+    private IAppContainer $appContainer,
+    private IURLGenerator $urlGenerator,
+    private RequestParameterService $parameterService,
+    private PageNavigation $pageNavigation,
+    protected ConfigService $configService,
+    private ProjectService $projectService,
+    private PHPMyEdit $pme
   ) {
     parent::__construct($appName, $request);
-    $this->appContainer = $appContainer;
-    $this->urlGenerator = $urlGenerator;
-    $this->parameterService = $parameterService;
-    $this->pageNavigation = $pageNavigation;
-    $this->configService = $configService;
-    $this->projectService = $projectService;
-    $this->pme = $pme;
     $this->l = $this->l10N();
   }
 

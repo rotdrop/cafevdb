@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,19 +39,16 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Persistence\ObjectManager;
  */
 class GedmoLoggableListener extends BaseLoggableListener
 {
-  /** @var string */
-  private $remoteAddress;
-
   /**
    * @param null|string $userId string or null.
    *
    * @param null|string $remoteAddress string or null.
    */
-  public function __construct(?string $userId = null, ?string $remoteAddress = null)
-  {
+  public function __construct(
+    private ?string $userId = null,
+    private ?string $remoteAddress = null,
+  ) {
     parent::__construct();
-    $this->username = $userId;
-    $this->remoteAddress = $remoteAddress;
   }
 
   /**

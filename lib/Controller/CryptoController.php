@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,9 +44,6 @@ class CryptoController extends Controller
   /** @var Transformable\Transformer\TransformerInterface */
   protected $encryptionTransformer;
 
-  /** @var IAppContainer */
-  protected $appContainer;
-
   /** @var FinanceService */
   protected $financeService;
 
@@ -54,14 +51,12 @@ class CryptoController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    ILogger $logger,
-    IAppContainer $appContainer,
-    EntityManager $entityManager,
+    protected ILogger $logger,
+    protected IAppContainer $appContainer,
+    protected EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
 
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
     $this->encryptionTransformer = $entityManager->getDataTransformer(EntityManager::TRANSFORM_ENCRYPT);
   }
   // phpcs:enable

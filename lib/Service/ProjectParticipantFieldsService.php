@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -133,17 +133,12 @@ class ProjectParticipantFieldsService
     Multiplicity::GROUPSOFPEOPLE => [],
   ];
 
-  /** @var EntityManager */
-  protected $entityManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
   ) {
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->l = $this->l10n();
+    $this->l = $configService->getL10n();
   }
   // phpcs:enable
 

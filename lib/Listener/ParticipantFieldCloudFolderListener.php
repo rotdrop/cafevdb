@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021-2023 Claus-Justus Heine
+ * @copyright 2021-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -120,10 +120,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $user;
 
   /** @var string */
-  protected $appName;
-
-  /** @var IAppContainer */
-  private $appContainer;
+  protected string $appName;
 
   /** @var Repositories\ProjectParticipantFieldsRepository */
   private $fieldsRepository;
@@ -158,9 +155,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    */
   private $musicians = [];
 
-  /** @var IRootFolder */
-  protected $rootFolder;
-
   /**
    * @var string
    *
@@ -170,9 +164,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $ignoreCreatedPaths = [];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(IAppContainer $appContainer)
-  {
-    $this->appContainer = $appContainer;
+  public function __construct(
+    private IAppContainer $appContainer,
+  ) {
   }
   // phpcs:enable
 

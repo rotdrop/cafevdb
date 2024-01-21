@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,29 +58,16 @@ class EncryptionController extends OCSController
   // @todo move this definition somewhere else
   const ROW_ACCESS_TOKEN_KEY = 'rowAccessToken';
 
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var AsymmetricKeyService */
-  private $keyService;
-
-  /** @var IL10N */
-  protected IL10N $l;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     $appName,
     IRequest $request,
-    IAppContainer $appContainer,
-    AsymmetricKeyService $keyService,
-    ILogger $logger,
-    IL10N $l10n,
+    private IAppContainer $appContainer,
+    private AsymmetricKeyService $keyService,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->keyService = $keyService;
   }
   // phpcs:enable
 

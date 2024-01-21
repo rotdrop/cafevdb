@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -127,12 +127,6 @@ class EntityManager extends EntityManagerDecorator
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager */
   private $entityManager;
 
-  /** @var EncryptionService */
-  private $encryptionService;
-
-  /** @var CloudLogger */
-  private $sqlLogger;
-
   /**
    * @var array
    * Cache of entity names indexed by table names.
@@ -159,12 +153,6 @@ class EntityManager extends EntityManagerDecorator
   /** @var string */
   private $userId;
 
-  /** @var IRequest */
-  private $request;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
   /** @var bool */
   private $debug;
 
@@ -173,9 +161,6 @@ class EntityManager extends EntityManagerDecorator
 
   /** @var bool */
   private $reopenAfterRollback;
-
-  /** @var IL10N */
-  private $l;
 
   /** @var bool */
   private $typesBound;
@@ -231,21 +216,14 @@ class EntityManager extends EntityManagerDecorator
 
   /** {@inheritdoc} */
   public function __construct(
-    EncryptionService $encryptionService,
-    IAppContainer $appContainer,
-    CloudLogger $sqlLogger,
+    private EncryptionService $encryptionService,
+    private IAppContainer $appContainer,
+    private CloudLogger $sqlLogger,
     DeprecationLogger $deprecationLogger,
-    IRequest $request,
-    ILogger $logger,
-    IL10N $l10n,
+    private IRequest $request,
+    protected ILogger $logger,
+    private IL10N $l,
   ) {
-    $this->encryptionService = $encryptionService;
-    $this->appContainer = $appContainer;
-    $this->sqlLogger = $sqlLogger;
-    $this->request = $request;
-    $this->logger = $logger;
-    $this->l = $l10n;
-
     $this->preFlushActions = clone $this->appContainer->get(UndoableRunQueue::class);
     $this->preCommitActions = [];
     $this->postCommitActions = clone $this->appContainer->get(UndoableRunQueue::class);
@@ -625,14 +603,10 @@ class EntityManager extends EntityManagerDecorator
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
     $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
-
-      /** @var IAppContainer */
-      private $appContainer;
-
       /** {@inheritdoc} */
-      public function __construct(IAppContainer $appContainer)
-      {
-        $this->appContainer = $appContainer;
+      public function __construct(
+        private IAppContainer $appContainer,
+      ) {
       }
 
       /** {@inheritdoc} */

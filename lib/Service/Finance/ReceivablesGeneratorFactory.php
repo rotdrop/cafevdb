@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,6 @@ use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as Multiplicity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFEVDB\Common\IProgressStatus;
@@ -44,14 +43,10 @@ use OCA\CAFEVDB\Common\IProgressStatus;
 /** Factory for receivables generators. */
 class ReceivablesGeneratorFactory
 {
-  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   const GENERATORS_FOLDER = __DIR__ . '/../../';
   const GENERATOR_LABEL = IRecurringReceivablesGenerator::GENERATOR_LABEL;
-
-  /** @var IAppContainer */
-  private $appContainer;
 
   /**
    * @var array
@@ -61,13 +56,10 @@ class ReceivablesGeneratorFactory
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
+    private IAppContainer $appContainer,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 

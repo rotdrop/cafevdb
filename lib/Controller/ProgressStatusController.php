@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,35 +42,20 @@ use OCA\CAFEVDB\Common\IProgressStatus;
 /** AJAX end-point for progress status. */
 class ProgressStatusController extends Controller
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-
-  /** @var ProgressStatusService */
-  private $progressStatusService;
-
-  /** @var string */
-  private $userId;
-
-  /** @var IL10N */
-  private $l;
-
-  /** @var ILogger */
-  private $logger;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ProgressStatusService $progressStatusService,
-    ?string $userId,
-    ILogger $logger,
-    IL10N $l10n,
+    private ProgressStatusService $progressStatusService,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
 
     $this->progressStatusService = $progressStatusService;
-    $this->logger = $logger;
-    $this->userId = $userId;
-    $this->l = $l10n;
   }
   // phpcs:enable
 

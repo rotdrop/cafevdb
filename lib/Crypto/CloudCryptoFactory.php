@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,23 +30,15 @@ use OCP\Security\ICrypto;
 /** Factory using the Nextcloud crypto routines as backend. */
 class CloudCryptoFactory implements CryptoFactoryInterface
 {
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var ICrypto */
-  private $crypto;
-
   /**
    * @param IAppContainer $appContainer
    *
    * @param ICrypto $crypto
    */
   public function __construct(
-    IAppContainer $appContainer,
-    ICrypto $crypto,
+    private IAppContainer $appContainer,
+    private ICrypto $crypto,
   ) {
-    $this->appContainer = $appContainer;
-    $this->crypto = $crypto;
   }
 
   /** {@inheritdoc} */

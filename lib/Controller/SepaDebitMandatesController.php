@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -67,52 +67,26 @@ class SepaDebitMandatesController extends Controller
   public const HARDCOPY_ACTION_UPLOAD = 'upload';
   public const HARDCOPY_ACTION_DELETE = 'delete';
 
-  /** @var ReqeuestParameterService */
-  private $parameterService;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var FuzzyInputService */
-  private $fuzzyInputService;
-
   /** @var Repositories\SepaBankAccountsRepository */
   private $bankAccountsRepository;
 
   /** @var Repositories\SepaDebitMandatesRepository */
   private $debitMandatesRepository;
 
-  /** @var BankAccountValidator */
-  private $bav;
-
-  /** @var StorageFactory */
-  private $storageFactory;
-
   /** {@inheritdoc} */
   public function __construct(
     $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    EntityManager $entityManager,
-    FinanceService $financeService,
-    ProjectService $projectService,
-    FuzzyInputService $fuzzyInputService,
-    BankAccountValidator $bav,
-    StorageFactory $storageFactory,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private FinanceService $financeService,
+    private ProjectService $projectService,
+    private FuzzyInputService $fuzzyInputService,
+    private BankAccountValidator $bav,
+    private StorageFactory $storageFactory,
   ) {
     parent::__construct($appName, $request);
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->financeService = $financeService;
-    $this->projectService = $projectService;
-    $this->fuzzyInputService = $fuzzyInputService;
-    $this->bav = $bav;
-    $this->storageFactory = $storageFactory;
 
     $this->l = $this->l10N();
 

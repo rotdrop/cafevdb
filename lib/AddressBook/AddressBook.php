@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,22 +40,13 @@ class AddressBook extends ExternalAddressBook
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var ICardBackend */
-  private $cardBackend;
-
-  /** @var string */
-  private $principalUri;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    ICardBackend $cardBackend,
-    string $principalUri,
+    protected ConfigService $configService,
+    private ICardBackend $cardBackend,
+    private string $principalUri,
   ) {
     parent::__construct($configService->getAppName(), $cardBackend->getURI());
-    $this->cardBackend = $cardBackend;
-    $this->principalUri = $principalUri;
-    $this->configService = $configService;
     $this->l = $this->l10n();
   }
   // phpcs:enable

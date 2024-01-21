@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,18 +45,6 @@ class OpenDocumentFiller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var OpenDocumentFillerBackend */
-  private $backend;
-
-  /** @var UserStorage */
-  private $userStorage;
-
-  /** @var TemplateService */
-  private $templateService;
-
-  /** @var AnyToPdf */
-  private $anyToPdf;
-
   /**
    * @var array
    *
@@ -66,18 +54,13 @@ class OpenDocumentFiller
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    UserStorage $userStorage,
-    TemplateService $templateService,
-    OpenDocumentFillerBackend $backend,
-    AnyToPdf $anyToPdf,
+    protected ConfigService $configService,
+    private UserStorage $userStorage,
+    private TemplateService $templateService,
+    private OpenDocumentFillerBackend $backend,
+    private AnyToPdf $anyToPdf,
   ) {
-    $this->configService = $configService;
-    $this->userStorage = $userStorage;
-    $this->templateService = $templateService;
-    $this->backend = $backend;
-    $this->anyToPdf = $anyToPdf;
-    $this->di(\clsOpenTBS::class);
+    $this->di(\clsOpenTBS::class); // ??
     ob_start();
     $this->backend->NoErr = true;
     $this->backend->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);

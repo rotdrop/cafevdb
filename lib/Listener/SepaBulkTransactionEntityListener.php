@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
-use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -44,32 +43,17 @@ class SepaBulkTransactionEntityListener
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /** @var IL10N */
-  protected IL10N $l;
-
-  /** @var SepaBulkTransactionService */
-  protected $service;
-
-  /** @var BankTransactionsStorage */
-  protected $storage;
-
   /** @var array */
   protected $lock = [];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ILogger $logger,
-    IL10N $l10n,
-    EntityManager $entityManager,
-    BankTransactionsStorage $storage,
-    SepaBulkTransactionService $service,
-    IAppContainer $appContainer,
+    protected ILogger $logger,
+    protected IL10N $l,
+    protected EntityManager $entityManager,
+    protected BankTransactionsStorage $storage,
+    protected SepaBulkTransactionService $service,
   ) {
-    $this->l = $l10n;
-    $this->logger = $logger;
-    $this->entityManager = $entityManager;
-    $this->service = $service;
-    $this->storage = $storage;
   }
   // phpcs:enable
 

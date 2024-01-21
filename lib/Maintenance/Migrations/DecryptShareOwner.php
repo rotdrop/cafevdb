@@ -40,18 +40,12 @@ class DecryptShareOwner implements IMigration
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var EncryptionService */
-  private $encryptionService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ILogger $logger,
-    IL10N $l10n,
-    EncryptionService $encryptionService,
+    protected ILogger $logger,
+    protected IL10N $l,
+    protected EncryptionService $encryptionService,
   ) {
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->encryptionService = $encryptionService;
   }
 
   // phpcs:enable

@@ -76,9 +76,6 @@ class FilesHooksListener implements IEventListener
     ],
   ];
 
-  /** @var IAppContainer */
-  private $appContainer;
-
   /** @var array */
   private $handled = [
     LoadAdditionalScriptsEvent::class => false,
@@ -92,9 +89,9 @@ class FilesHooksListener implements IEventListener
    * @param IAppContainer $appContainer The only argument in order to have a
    * small CTOR footprint.
    */
-  public function __construct(IAppContainer $appContainer)
-  {
-    $this->appContainer = $appContainer;
+  public function __construct(
+    private IAppContainer $appContainer,
+  ) {
   }
 
   /**

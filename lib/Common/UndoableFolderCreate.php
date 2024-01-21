@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,20 +49,11 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   /** @var IDateTimeFormatter */
   protected $dateTimeFormatter;
 
-  /** @var callable */
-  protected $name;
-
-  /** @var string */
-  protected $ignoredFiles;
-
   /** @var bool */
   protected $reusedExisting;
 
   /** @var string */
   protected $renamedName;
-
-  /** @var bool */
-  protected $gracefully;
 
   /**
    * Undoable folder rename, optionally ignoring non-existing source folder.
@@ -73,11 +64,11 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
    *
    * @param string $ignoredFiles
    */
-  public function __construct(mixed $name, bool $gracefully = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i')
-  {
-    $this->name = $name;
-    $this->gracefully = $gracefully;
-    $this->ignoredFiles = $ignoredFiles;
+  public function __construct(
+    protected mixed $name,
+    protected bool $gracefully = false,
+    protected string $ignoredFiles = '/^[0-9]*-?README(.*)$/i',
+  ) {
     $this->reset();
   }
 

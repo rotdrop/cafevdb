@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,11 +48,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\UnitOfWork;
 class AssociationSlugHandler implements SlugHandlerInterface
 {
   /**
-   * @var SluggableListener
-   */
-  protected $sluggable;
-
-  /**
    * {@inheritdoc}
    *
    * $options = array(
@@ -61,9 +56,9 @@ class AssociationSlugHandler implements SlugHandlerInterface
    *     'mappedBy' => 'relationField'
    * )
    */
-  public function __construct(SluggableListener $sluggable)
-  {
-    $this->sluggable = $sluggable;
+  public function __construct(
+    protected SluggableListener $sluggable,
+  ) {
   }
 
   /** {@inheritdoc} */

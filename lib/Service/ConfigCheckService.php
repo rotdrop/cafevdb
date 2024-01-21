@@ -59,62 +59,21 @@ class ConfigCheckService
       | \OCP\Constants::PERMISSION_SHARE
   );
 
-  /** @var EntityManager */
-  private $entityManager;
-
-  /** @var IRootFolder  */
-  private $rootFolder;
-
-  /** @var \OCP\Share\IManager */
-  private $shareManager;
-
-  /** @var CalDavService */
-  private $calDavService;
-
-  /** @var CardDavService */
-  private $cardDavService;
-
-  /** @var \OCP\Calendar\IManager */
-  private $calendarManager;
-
-  /** @var \OCP\Contacts\IManager */
-  private $contactsManager;
-
-  /** @var AddressBookProvider */
-  private $addressBookProvider;
-
-  /** @var MigrationsService */
-  private $migrationsService;
-
-  /** @var SimpleSharingService */
-  private $sharingService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
-    IRootFolder $rootFolder,
-    IShareManager $shareManager,
-    ICalendarManager $calendarManager,
-    IContactsManager $contactsManager,
-    CalDavService $calDavService,
-    CardDavService $cardDavService,
-    EventsService $eventsService,
-    AddressBookProvider $addressBookProvider,
-    MigrationsService $migrationsService,
-    SimpleSharingService $sharingService,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private IRootFolder $rootFolder,
+    private IShareManager $shareManager,
+    private ICalendarManager $calendarManager,
+    private IContactsManager $contactsManager,
+    private CalDavService $calDavService,
+    private CardDavService $cardDavService,
+    private EventsService $eventsService,
+    private AddressBookProvider $addressBookProvider,
+    private MigrationsService $migrationsService,
+    private SimpleSharingService $sharingService,
   ) {
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->rootFolder = $rootFolder;
-    $this->shareManager = $shareManager;
-    $this->calendarManager = $calendarManager;
-    $this->contactsManager = $contactsManager;
-    $this->calDavService = $calDavService;
-    $this->cardDavService = $cardDavService;
-    $this->addressBookProvider = $addressBookProvider;
-    $this->migrationsService = $migrationsService;
-    $this->sharingService = $sharingService;
     $this->l = $this->l10n();
     // {
       // $mm3 = new MailingListsService($this->configService);
@@ -610,11 +569,17 @@ class ConfigCheckService
    *
    * @param string $sharedFolder The name of the folder.
    *
+   * @param null|string $postfix Postfix to append to the folder name. This is
+   * need in order to implement the migration from the personally shared
+   * share-holder folder to the anonymously shared group-folder.
+   *
    * @return bool \true on success.
    */
-  public function checkGroupSharedFolder(string $sharedFolder)
+  public function checkGroupSharedFolder(string $sharedFolder, ?string $postfix = null):bool
   {
-    $sharedFolder .= '-testing'; // @todo remove after it has proven useful
+    if ($postfix === null) {
+      $sharedFolder .= '-testing'; // @todo remove after it has proven useful
+    }
 
     $this->logInfo('TRY CREATE ' . $sharedFolder);
 

@@ -47,13 +47,10 @@ class LoadAdditionalScriptsEventListener implements IEventListener
 
   const EVENT = HandledEvent::class;
 
-  /** @var IAppContainer */
-  private $appContainer;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(IAppContainer $appContainer)
-  {
-    $this->appContainer = $appContainer;
+  public function __construct(
+    private IAppContainer $appContainer,
+  ) {
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,13 +42,6 @@ use Psr\Log\LoggerInterface;
  */
 class ScanFiles extends \OC\BackgroundJob\TimedJob
 {
-  /** @var IConfig */
-  private $config;
-  /** @var IEventDispatcher */
-  private $dispatcher;
-  private LoggerInterface $logger;
-  private $connection;
-
   /** Amount of users that should get scanned per execution */
   public const USERS_PER_SESSION = 500;
 
@@ -59,18 +52,13 @@ class ScanFiles extends \OC\BackgroundJob\TimedJob
    * @param IDBConnection $connection
    */
   public function __construct(
-    IConfig $config,
-    IEventDispatcher $dispatcher,
-    LoggerInterface $logger,
-    IDBConnection $connection,
+    private IConfig $config,
+    private IEventDispatcher $dispatcher,
+    private LoggerInterface $logger,
+    private IDBConnection $connection,
   ) {
     // Run once per 10 minutes
     $this->setInterval(60 * 10);
-
-    $this->config = $config;
-    $this->dispatcher = $dispatcher;
-    $this->logger = $logger;
-    $this->connection = $connection;
   }
 
   /**

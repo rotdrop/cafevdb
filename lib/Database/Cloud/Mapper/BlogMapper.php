@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,12 +44,10 @@ class BlogMapper extends Mapper
   public function __construct(
     IDBConnection $db,
     string $appName,
-    IL10N $l10n,
-    ILogger $logger,
+    protected IL10N $l,
+    protected ILogger $logger,
   ) {
     parent::__construct($db, $appName);
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 

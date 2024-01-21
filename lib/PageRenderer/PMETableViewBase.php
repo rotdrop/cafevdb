@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -156,17 +156,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   protected const PME_NAVIGATION_NO_MULTI = 'GUD';
   protected const PME_NAVIGATION_MULTI = 'GUDM';
 
-  /** @var RequestParameterService */
-  protected $requestParameters;
-
-  /** @var ToolTipsService */
-  protected $toolTipsService;
-
   /** @var IL10N */
   protected IL10N $l;
-
-  /** @var PHPMyEdit */
-  protected $pme;
 
   /** @var bool */
   protected $pmeBare;
@@ -201,17 +192,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   /** @var int */
   protected $membersProjectId;
 
-  /** @var string */
-  protected $template;
-
   /** @var ?int */
   protected $recordsPerPage;
 
   /** @var array */
   protected $defaultFDD;
-
-  /** @var PageNavigation */
-  protected $pageNavigation;
 
   /**
    * @var int Number of affected entries, fields or
@@ -254,20 +239,14 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
 
   /** {@inheritdoc} */
   protected function __construct(
-    string $template,
-    ConfigService $configService,
-    RequestParameterService $requestParameters,
-    EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit,
-    ToolTipsService $toolTipsService,
-    PageNavigation $pageNavigation,
+    protected string $template,
+    protected ConfigService $configService,
+    protected RequestParameterService $requestParameters,
+    protected EntityManager $entityManager,
+    protected PHPMyEdit $pme,
+    protected ToolTipsService $toolTipsService,
+    protected PageNavigation $pageNavigation,
   ) {
-    $this->configService = $configService;
-    $this->requestParameters = $requestParameters;
-    $this->entityManager = $entityManager;
-    $this->pme = $phpMyEdit;
-    $this->toolTipsService = $toolTipsService;
-    $this->pageNavigation = $pageNavigation;
     $this->l = $this->l10n();
 
     $this->pmeBare = false;

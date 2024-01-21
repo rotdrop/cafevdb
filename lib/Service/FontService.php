@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -85,15 +85,6 @@ class FontService
 
   private const SYSTEM_FONT_DATA_DIR = '/usr/share/fonts/';
 
-  /** @var string */
-  protected $appName;
-
-  /** @var CloudConfig */
-  protected $cloudConfig;
-
-  /** @var AppStorageDisclosure */
-  protected $appStorage;
-
   /** @var Folder */
   protected $fontsFolder;
 
@@ -119,15 +110,11 @@ class FontService
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    CloudConfig $cloudConfig,
-    ILogger $logger,
-    AppStorageDisclosure $appStorage,
+    protected string $appName,
+    protected CloudConfig $cloudConfig,
+    protected ILogger $logger,
+    protected AppStorageDisclosure $appStorage,
   ) {
-    $this->appName = $appName;
-    $this->cloudConfig = $cloudConfig;
-    $this->logger = $logger;
-    $this->appStorage = $appStorage;
   }
   // phcs:enable
 

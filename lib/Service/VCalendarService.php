@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,9 +48,6 @@ class VCalendarService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var OC_Calendar_Object */
-  private $legacyCalendarObject;
-
   const VTODO = VCalendarType::VTODO;
   const VEVENT = VCalendarType::VEVENT;
   const VCARD = VCalendarType::VCARD;
@@ -70,11 +67,9 @@ class VCalendarService
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    OC_Calendar_Object $legacyCalendarObject,
+    protected ConfigService $configService,
+    private OC_Calendar_Object $legacyCalendarObject,
   ) {
-    $this->configService = $configService;
-    $this->legacyCalendarObject = $legacyCalendarObject;
   }
 
   /**

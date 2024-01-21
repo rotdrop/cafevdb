@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,18 +39,6 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableFileReplace extends AbstractFileSystemUndoable
 {
-  /** @var string|callable */
-  protected $name;
-
-  /** @var string */
-  protected $content;
-
-  /** @var string */
-  protected $oldName;
-
-  /** @var bool */
-  protected $gracefully;
-
   /** @var bool */
   protected $restoreOldName;
 
@@ -69,12 +57,12 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
    *
    * @param bool $gracefully
    */
-  public function __construct(mixed $name, string $content, mixed $oldName = null, bool $gracefully = false)
+  public function __construct(
+    protected mixed $name,
+    protected string $content,
+    protected mixed $oldName = null,
+    protected bool $gracefully = false)
   {
-    $this->name = $name;
-    $this->content = $content;
-    $this->oldName = $oldName;
-    $this->gracefully = $gracefully;
     $this->reset();
   }
 

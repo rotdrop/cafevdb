@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,29 +53,16 @@ class ClassMetadataDecorator implements ClassMetadataInterface
   /** @var array */
   private $temporaryColumnStorage = [];
 
-  /** @var EntityManager */
-  private $entityManager;
-
-  /** @var ClassMetadata */
-  private $metaData;
-
-  /** @var IL10N */
-  private $l;
-
   /** @var bool */
   private $debug = false;
 
   /** {@inheritdoc} */
   public function __construct(
-    ClassMetadata $metaData,
-    EntityManager $entityManager,
-    ILogger $logger,
-    IL10N $l10n,
+    private ClassMetadata $metaData,
+    private EntityManager $entityManager,
+    protected ILogger $logger,
+    private IL10N $l,
   ) {
-    $this->metaData = $metaData;
-    $this->entityManager = $entityManager;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
 
   /**

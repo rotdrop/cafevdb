@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -84,46 +84,23 @@ class MailMergeController extends Controller
   const OPERATION_CLOUD = 'cloud';
   const OPERATION_DATASET = 'dataset';
 
-  /** @var OpenDocumentFiller */
-  private $documentFiller;
-
-  /** @var OrganizationalRolesService */
-  private $rolesService;
-
-  /** @var UserStorage */
-  private $userStorage;
-
-  /** @var InstrumentInsuranceService */
-  private $insuranceService;
-
-  /** @var IContactsManager */
-  private $contactsManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
-    ?string $userId,
-    IL10N $l10n,
-    ILogger $logger,
-    EntityManager $entityManager,
-    ConfigService $configService,
-    OrganizationalRolesService $rolesService,
-    InstrumentInsuranceService $insuranceService,
-    OpenDocumentFiller $documentFiller,
-    UserStorage $storage,
-    IContactsManager $contactsManager,
+    protected ?string $userId,
+    protected ILogger $logger,
+    protected EntityManager $entityManager,
+    protected ConfigService $configService,
+    private OrganizationalRolesService $rolesService,
+    private InstrumentInsuranceService $insuranceService,
+    private OpenDocumentFiller $documentFiller,
+    private UserStorage $storage,
+    private IContactsManager $contactsManager,
   ) {
     parent::__construct($appName, $request);
-    $this->l = $l10n;
-    $this->logger = $logger;
-    $this->entityManager = $entityManager;
-    $this->configService = $configService;
-    $this->rolesService = $rolesService;
-    $this->insuranceService = $insuranceService;
-    $this->documentFiller = $documentFiller;
-    $this->userStorage = $storage;
-    $this->contactsManager = $contactsManager;
+
+    $this->l = $this->l10n();
   }
   // phpcs:enable
 

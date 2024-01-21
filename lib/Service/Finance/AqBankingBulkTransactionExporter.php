@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,16 +49,12 @@ class AqBankingBulkTransactionExporter implements IBulkTransactionExporter
     false => 'following',
   ];
 
-  /** @var FinanceService */
-  private $financeService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    FinanceService $financeService,
+    protected ConfigService $configService,
+    private FinanceService $financeService,
   ) {
-    $this->configService = $configService;
-    $this->financeService = $financeService;
+    $this->l = $this->l10n();
 
     $iban = new PHP_IBAN($this->getConfigValue('bankAccountIBAN'));
     $this->iban = $iban->MachineFormat();

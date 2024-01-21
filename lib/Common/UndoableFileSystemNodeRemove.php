@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,21 +38,6 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
 {
-  /** @var callable */
-  protected $name;
-
-  /** @var string */
-  protected $ignoredFiles;
-
-  /** @var bool */
-  protected $gracefully;
-
-  /** @var bool */
-  protected $recursively;
-
-  /** @var null|string */
-  protected $nodeType;
-
   /** @var bool */
   protected $nothingToUndo;
 
@@ -76,13 +61,13 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
    *
    * @param string|null $nodeType Only remove matching node type.
    */
-  public function __construct(mixed $name, bool $gracefully = false, bool $recursively = false, string $ignoredFiles = '/^[0-9]*-?README(.*)$/i', ?string $nodeType = null)
-  {
-    $this->name = $name;
-    $this->gracefully = $gracefully;
-    $this->recursively = $recursively;
-    $this->ignoredFiles = $ignoredFiles;
-    $this->nodeType = $nodeType;
+  public function __construct(
+    protected mixed $name,
+    protected bool $gracefully = false,
+    protected bool $recursively = false,
+    protected string $ignoredFiles = '/^[0-9]*-?README(.*)$/i',
+    protected ?string $nodeType = null,
+  ) {
     $this->reset();
   }
 

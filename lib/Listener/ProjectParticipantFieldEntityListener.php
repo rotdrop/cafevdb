@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2023 Claus-Justus Heine
+ * @copyright 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,24 +44,15 @@ class ProjectParticipantFieldEntityListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var IAppContainer */
-  protected $appContainer;
-
   /** @var EventsService */
   protected $eventsService;
 
-  /** @var EntityManager */
-  protected $entityManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ILogger $logger,
-    IAppContainer $appContainer,
-    EntityManager $entityManager,
+    protected ILogger $logger,
+    protected IAppContainer $appContainer,
+    protected EntityManager $entityManager,
   ) {
-    $this->logger = $logger;
-    $this->appContainer = $appContainer;
-    $this->entityManager = $entityManager;
   }
   // phpcs:enable
 

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,12 +57,6 @@ class CalDavService
   const WRITE_PERMISSIONS = (Constants::PERMISSION_CREATE|Constants::PERMISSION_UPDATE);
   const URI_SUFFIX = '.ics';
 
-  /** @var CalDavBackend */
-  private $calDavBackend;
-
-  /** @var CalendarManager */
-  private $calendarManager;
-
   /** @var int */
   private $calendarUserId;
 
@@ -71,13 +65,10 @@ class CalDavService
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    CalendarManager $calendarManager,
-    CalDavBackend $calDavBackend,
+    protected ConfigService $configService,
+    private CalendarManager $calendarManager,
+    private CalDavBackend $calDavBackend,
   ) {
-    $this->configService = $configService;
-    $this->calendarManager = $calendarManager;
-    $this->calDavBackend = $calDavBackend;
     $this->calendarUserId = $this->userId();
     $this->l = $this->l10n();
     $this->calendarObjectCache = new CappedMemoryCache;
