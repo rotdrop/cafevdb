@@ -64,7 +64,7 @@ class Projects extends PMETableViewBase
   private const MAX_POSTER_COLUMNS = 4;
 
   /** @var Entities\Project */
-  private $project = null;
+  private ?Entities\Project $project = null;
 
   protected $joinStructure = [
     self::TABLE => [

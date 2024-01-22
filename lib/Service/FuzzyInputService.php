@@ -48,7 +48,7 @@ class FuzzyInputService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected ConfigService $config,
+    protected ConfigService $configService,
   ) {
     $this->l = $this->l10n();
   }

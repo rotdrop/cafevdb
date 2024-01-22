@@ -180,7 +180,7 @@ class SepaBankAccounts extends PMETableViewBase
   ];
 
   /** @var Entities\Project */
-  private $project = null;
+  private ?Entities\Project $project = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

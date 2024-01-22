@@ -156,7 +156,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   ];
 
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
-  private $project = null;
+  private ?Entities\Project $project = null;
 
   /** {@inheritdoc} */
   public function __construct(

@@ -68,7 +68,7 @@ class Musicians extends PMETableViewBase
    * @var bool Called with project-id in order to add musicians to an
    * existing project
    */
-  private $projectMode;
+  private bool $projectMode;
 
   /**
    * Join table structure. All update are handled in
@@ -128,7 +128,7 @@ class Musicians extends PMETableViewBase
   ];
 
   /** @var Entities\Project */
-  private $project;
+  private ?Entities\Project $project;
 
   /** {@inheritdoc} */
   public function __construct(

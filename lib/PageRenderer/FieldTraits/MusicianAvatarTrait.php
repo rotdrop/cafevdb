@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ use OCA\CAFEVDB\Common\Util;
 trait MusicianAvatarTrait
 {
   /** @var ToolTipsService */
-  protected $toolTipsService;
+  protected ToolTipsService $toolTipsService;
 
   /**
    * @param string $tableTab The id of the column-group the fields should be

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase as BaseRenderer;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /** Add for fun a field with all projects the musician already participated in. */
 trait AllProjectsTrait
@@ -36,7 +37,7 @@ trait AllProjectsTrait
   protected static $allProjectsTable = BaseRenderer::PROJECT_PARTICIPANTS_TABLE . BaseRenderer::VALUES_TABLE_SEP . 'allProjects';
 
   /** @var ToolTipsService */
-  protected $toolTipsService;
+  protected ToolTipsService $toolTipsService;
 
   /**
    * @param string $musicianIdField The field name of the column with the

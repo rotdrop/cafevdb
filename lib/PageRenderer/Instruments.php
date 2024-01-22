@@ -50,9 +50,6 @@ class Instruments extends PMETableViewBase
   private const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
   private const TRANSLATIONS_TABLE = self::FIELD_TRANSLATIONS_TABLE;
 
-  /** @var BiDirectionalL10N */
-  private $musicL10n;
-
   /**
    * @var array
    * @see PMETableViewBase::defineJoinStructure()

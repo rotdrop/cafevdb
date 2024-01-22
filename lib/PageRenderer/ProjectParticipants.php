@@ -187,7 +187,7 @@ class ProjectParticipants extends PMETableViewBase
   ];
 
   /** @var Entities\Project */
-  private $project;
+  private ?Entities\Project $project;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

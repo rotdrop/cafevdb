@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,19 +51,19 @@ trait ParticipantFileFieldsTrait
   use ParticipantFieldsCgiNameTrait;
 
   /** @var ProjectService */
-  protected $projectService;
+  protected ProjectService $projectService;
 
   /** @var ProjectParticipantFieldsService */
-  protected $participantFieldsService;
+  protected ProjectParticipantFieldsService $participantFieldsService;
 
   /** @var UserStorage */
-  protected $userStorage;
+  protected ?UserStorage $userStorage;
 
   /** @var ToolTipsService */
-  protected $toolTipsService;
+  protected ToolTipsService $toolTipsService;
 
   /** @var PHPMyEdit */
-  protected $pme;
+  protected PHPMyEdit $pme;
 
   /** @var string */
   protected static $toolTipsPrefix = 'page-renderer:participant-fields:display';

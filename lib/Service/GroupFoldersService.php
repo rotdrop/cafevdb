@@ -49,7 +49,7 @@ class GroupFoldersService extends ToolkitService
       rootFolder: $rootFolder,
       folderManager: $folderManager,
       mountProvider: $mountProvider,
-      l10n: $l10n,
+      l: $l10n,
     );
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing

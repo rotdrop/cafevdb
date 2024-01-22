@@ -71,7 +71,7 @@ class ProjectPayments extends PMETableViewBase
   private $compositePaymentExpanded = [];
 
   /** @var Entities\Project */
-  private $project;
+  private ?Entities\Project $project;
 
   protected $joinStructure = [
     self::TABLE => [
