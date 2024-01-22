@@ -4550,6 +4550,7 @@ Störung.';
         $this->remove($draftId, true);
       } catch (\Throwable $t) {
         $this->entityManager->reopen();
+        $this->clearDatabaseRepository();
         $this->logException($t);
         $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
           'Deleting draft with id %d failed: %s',

@@ -794,7 +794,11 @@ class SepaBulkTransactionsController extends Controller
       $this->entityManager->commit();
     } catch (\Throwable $t) {
       $this->entityManager->rollback();
+      $this->clearDatabaseRepository();
       $this->entityManager->reopen();
+      $accountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+      $debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
+      $participantsRepository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
       $this->logException($t);
 
       return self::grumble($this->exceptionChainData($t));

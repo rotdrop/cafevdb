@@ -857,6 +857,10 @@ class SepaDebitMandatesController extends Controller
           return self::grumble($this->l->t('Unable to modify already used bank-account.'));
         }
         $this->entityManager->reopen();
+        $this->clearDatabaseRepository();
+        $this->bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+        $this->debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
+
         $bankAccount->setSequence(null);
       }
     } while ($bankAccount->getSequence() === null);
@@ -954,6 +958,9 @@ class SepaDebitMandatesController extends Controller
           return self::grumble($this->l->t('Unable to modify already used debit-mandate.'));
         }
         $this->entityManager->reopen(); // this cannot work ...
+        $this->clearDatabaseRepository();
+        $this->bankAccountsRepository = $this->getDatabaseRepository(Entities\SepaBankAccount::class);
+        $this->debitMandatesRepository = $this->getDatabaseRepository(Entities\SepaDebitMandate::class);
         $debitMandate->setSequence(null);
       }
     } while ($debitMandate->getSequence() === null);
