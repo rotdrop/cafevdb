@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -64,41 +64,17 @@ class Admin implements IDelegatedSettings
     self::CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
   ];
 
-  /** @var AssetService */
-  private $assetService;
-
-  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
-  private $wikiRPC;
-
-  /** @var IAppManager */
-  private $appManager;
-
-  /** @var IInitialState */
-  private $initialState;
-
-  /** @var CloudUserConnectorService */
-  private $cloudUserConnector;
-
-  /** @var FontService */
-  private $fontService;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    AssetService $assetService,
-    IInitialState $initialState,
-    WikiRPC $wikiRPC,
-    IAppManager $appManager,
-    CloudUserConnectorService $cloudUserConnector,
-    FontService $fontService,
+    protected ConfigService $configService,
+    private AssetService $assetService,
+    private IInitialState $initialState,
+    private WikiRPC $wikiRPC,
+    private IAppManager $appManager,
+    private CloudUserConnectorService $cloudUserConnector,
+    private FontService $fontService,
   ) {
-    $this->configService = $configService;
-    $this->assetService = $assetService;
-    $this->initialState = $initialState;
-    $this->wikiRPC = $wikiRPC;
-    $this->appManager = $appManager;
-    $this->cloudUserConnector = $cloudUserConnector;
-    $this->fontService = $fontService;
+    $this->l = $this->l10n();
   }
   // phpcs:enable
 

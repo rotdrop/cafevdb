@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,38 +56,16 @@ class AppStorageDisclosure
 
   private const APP_DATA_PREFIX = 'appdata_';
 
-  /** @var string */
-  private $appName;
-
-  /** @var IAppData */
-  private $appData;
-
-  /** @var IRootFolder */
-  private $rootFolder;
-
-  /** @var IMountManager */
-  private $mountManager;
-
-  /** @var CloudConfig */
-  private $cloudConfig;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IAppData $appData,
-    IRootFolder $rootFolder,
-    IMountManager $mountManager,
-    CloudConfig $cloudConfig,
-    ILogger $logger,
-    IL10N $l10n,
+    private string $appName,
+    private IAppData $appData,
+    private IRootFolder $rootFolder,
+    private IMountManager $mountManager,
+    private CloudConfig $cloudConfig,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->appName = $appName;
-    $this->appData = $appData;
-    $this->rootFolder = $rootFolder;
-    $this->mountManager = $mountManager;
-    $this->cloudConfig = $cloudConfig;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 

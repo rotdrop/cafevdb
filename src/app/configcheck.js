@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import * as Dialogs from './dialogs.js';
 import * as Notification from './notification.js';
 import { addReadyCallback } from './cafevdb.js';
 import generateUrl from './generate-url.js';
-import fileDownload from './file-download.js';
+import setBusyIndicators from './busy-indicators.js';
 
 /**
  * jQuery ready-callback used elsewhere.
@@ -50,10 +50,17 @@ function documentReady() {
       return;
     }
 
+    setBusyIndicators(true, $container, false);
+
     // check for pending migrations and handle them
     $.get(generateUrl('maintenance/migrations/unapplied'))
-      .fail(Ajax.handleError)
+      .fail(function(xhr, status, errorThrown) {
+        Ajax.handleError(xhr, status, errorThrown, function() {
+          setBusyIndicators(false, $container, false);
+        });
+      })
       .done(function(data) {
+        setBusyIndicators(false, $container, false);
         if (data.migrations.length <= 0) {
           return;
         }
@@ -73,8 +80,13 @@ function documentReady() {
             if (confirmation !== true) {
               return;
             }
+            setBusyIndicators(true, $container, false);
             $.post(generateUrl('maintenance/migrations/apply/all'))
-              .fail(Ajax.handleError)
+              .fail(function(xhr, status, errorThrown) {
+                Ajax.handleError(xhr, status, errorThrown, function() {
+                  setBusyIndicators(false, $container, false);
+                });
+              })
               .done(function(data) {
                 Notification.show(
                   t(appName, 'Successfully applied the following migrations:')
@@ -90,6 +102,7 @@ function documentReady() {
                 }, second);
                 setTimeout(() => {
                   clearInterval(notifier);
+                  setBusyIndicators(false, $container, false);
                   window.location.reload();
                 }, redirectTimeout * 1000);
               });
@@ -99,15 +112,6 @@ function documentReady() {
       });
   };
   addReadyCallback(handleMigrations);
-
-  $container.on('click', '.pdfletter-download', function(event) {
-    const post = {};
-    fileDownload(
-      'download/test/pdfletter',
-      post,
-      t(appName, 'Unable to download test-letter.'),
-    );
-  });
 
   $container.on('click', '.progress-status.button', function(event) {
     console.info('Hello World');
@@ -144,8 +148,3 @@ function documentReady() {
 export {
   documentReady,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,34 +50,17 @@ class ImagesController extends Controller
 
   const UPLOAD_NAME = 'imagefile';
 
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var IL10N */
-  protected IL10N $l;
-
-  /** @var IRootFolder */
-  private $rootFolder;
-
-  /** @var ImagesService */
-  private $imagesService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    ImagesService $imagesService,
-    IRootFolder $rootFolder,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    private ImagesService $imagesService,
+    private IRootFolder $rootFolder,
   ) {
-
     parent::__construct($appName, $request);
 
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->imagesService = $imagesService;
-    $this->rootFolder = $rootFolder;
     $this->l = $this->l10N();
   }
   // phpcs:enable

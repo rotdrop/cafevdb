@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -186,29 +186,8 @@ class ProjectParticipants extends PMETableViewBase
     ],
   ];
 
-  /** @var GeoCodingService */
-  private $geoCodingService;
-
-  /** @var PhoneNumberService */
-  private $phoneNumberService;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var InstrumentInsuranceService */
-  private $insuranceService;
-
-  /** @var ProjectParticipantFieldsService */
-  protected $participantFieldsService;
-
-  /** @var ProjectService */
-  protected $projectService;
-
   /** @var Entities\Project */
-  private $project;
-
-  /** @var UserStorage */
-  protected $userStorage;
+  private ?Entities\Project $project;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -218,24 +197,17 @@ class ProjectParticipants extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    GeoCodingService $geoCodingService,
-    ContactsService $contactsService,
-    PhoneNumberService $phoneNumberService,
-    FinanceService $financeService,
-    InstrumentInsuranceService $insuranceService,
-    ProjectParticipantFieldsService $participantFieldsService,
-    ProjectService $projectService,
-    UserStorage $userStorage,
+
+    private GeoCodingService $geoCodingService,
+    private ContactsService $contactsService,
+    private PhoneNumberService $phoneNumberService,
+    private FinanceService $financeService,
+    private InstrumentInsuranceService $insuranceService,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private ProjectService $projectService,
+    private UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->geoCodingService = $geoCodingService;
-    $this->contactsService = $contactsService;
-    $this->phoneNumberService = $phoneNumberService;
-    $this->financeService = $financeService;
-    $this->insuranceService = $insuranceService;
-    $this->participantFieldsService = $participantFieldsService;
-    $this->projectService = $projectService;
-    $this->userStorage = $userStorage;
 
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);

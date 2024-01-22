@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -155,26 +155,8 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
   const GRANT_SELECT = 'GRANT SELECT ON %1$s TO %2$s@\'localhost\'';
   const GRANT_FIELD_UPDATE = 'GRANT UPDATE (%3$s) ON %1$s TO %2$s@\'localhost\'';
 
-  /** @var string */
-  private $appName;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var IL10N */
-  private $l;
-
-  /** @var IConfig */
-  private $cloudConfig;
-
-  /** @var EncryptionService */
-  private $encryptionService;
-
   /** @var Connection */
   private $connection;
-
-  /** @var IAppManager */
-  private $appManager;
 
   /** @var string */
   private $appDbHost;
@@ -187,21 +169,14 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
-    IConfig $cloudConfig,
-    EncryptionService $encryptionService,
-    IAppManager $appManager,
+    private string $appName,
+    private IAppContainer $appContainer,
+    protected ILogger $logger,
+    private IL10N $l,
+    private IConfig $cloudConfig,
+    private EncryptionService $encryptionService,
+    private IAppManager $appManager,
   ) {
-    $this->appName = $appName;
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->cloudConfig = $cloudConfig;
-    $this->appManager = $appManager;
-    $this->encryptionService = $encryptionService;
     if ($this->encryptionService->bound()) {
       $this->connection = $this->appContainer->get(Connection::class);
       $this->appDbName = $this->encryptionService->getConfigValue('dbname');

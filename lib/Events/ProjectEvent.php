@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,19 +31,6 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectT
 /** Base class for project events. */
 class ProjectEvent extends Event
 {
-
-  /** @var int */
-  private $projectId;
-
-  /** @var string */
-  private $projectName;
-
-  /** @var int */
-  private $projectYear;
-
-  /** @var ProjectType */
-  private $projectType;
-
   /**
    * @param int $projectId
    *
@@ -54,16 +41,12 @@ class ProjectEvent extends Event
    * @param ProjectType $projectType
    */
   public function __construct(
-    int $projectId,
-    string $projectName,
-    int $projectYear,
-    ProjectType $projectType,
+    private int $projectId,
+    private string $projectName,
+    private int $projectYear,
+    private ProjectType $projectType,
   ) {
     parent::__construct();
-    $this->projectId = $projectId;
-    $this->projectName = $projectName;
-    $this->projectYear = $projectYear;
-    $this->projectType = $projectType;
   }
 
   /** @return int */

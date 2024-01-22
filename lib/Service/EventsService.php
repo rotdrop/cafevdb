@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,21 +88,6 @@ class EventsService
   public const PROJECT_REGISTRATION_CATEGORY = 'project registration';
   public const RECORD_ABSENCE_CATEGORY = 'record absence';
 
-  /** @var IUserSession */
-  protected $userSession;
-
-  /** @var EntityManager */
-  protected $entityManager;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var CalDavService */
-  private $calDavService;
-
-  /** @var VCalendarService */
-  private $vCalendarService;
-
   /**
    * @var array Cache the siblings of recurring events by calendar-id,
    * event-uid, sequence, recurrence-id. This cache contains calendar VEvent
@@ -125,19 +110,13 @@ class EventsService
 
   /** {@inheritdoc} */
   public function __construct(
-    IUserSession $userSession,
-    ConfigService $configService,
-    EntityManager $entityManager,
-    ProjectService $projectService,
-    CalDavService $calDavService,
-    VCalendarService $vCalendarService,
+    protected IUserSession $userSession,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private ProjectService $projectService,
+    private CalDavService $calDavService,
+    private VCalendarService $vCalendarService,
   ) {
-    $this->userSession = $userSession;
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->projectService = $projectService;
-    $this->calDavService = $calDavService;
-    $this->vCalendarService = $vCalendarService;
     $this->setDatabaseRepository(Entities\ProjectEvent::class);
     $this->l = $this->l10n();
   }

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,31 +60,17 @@ class ProjectsController extends Controller
   const LIST_OPERATION_REOPEN = 'reopen';
   const LIST_OPERATION_DELETE = 'delete';
 
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
-  protected $pme;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var EntityManager */
-  protected $entityManager;
-
   /** {@inheritdoc} */
   public function __construct(
     string $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    protected PHPMyEdit $pme,
   ) {
-
     parent::__construct($appName, $request);
 
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->pme = $phpMyEdit;
     $this->l = $this->l10N();
   }
 

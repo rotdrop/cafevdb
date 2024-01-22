@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,16 +33,14 @@ use DateTimeInterface;
  */
 class ParticipantsStorageGenerator
 {
-  protected $closureData;
-
   /**
    * Wrap the supplied data members and closures into class methods.
    *
    * @param array $closureData
    */
-  public function __construct(array $closureData)
-  {
-    $this->closureData = $closureData;
+  public function __construct(
+    protected array $closureData,
+  ) {
   }
 
   /** @return array Path components relative to root. */

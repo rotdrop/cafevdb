@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,37 +53,24 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 
-  /** @var InstrumentInsuranceService */
-  private $insuranceService;
-
   /** @var Repositories\InstrumentInsurancesRepository */
   private $insurancesRepository;
-
-  /** @var StorageFactory */
-  private $storageFactory;
-
-  /** @var ToolTipsService */
-  protected $toolTipsService;
 
   /** @var \DateTimeZone */
   private $timeZone;
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    InstrumentInsuranceService $insuranceService,
-    ToolTipsService $toolTipsService,
+    protected ConfigService $configService,
+    private InstrumentInsuranceService $insuranceService,
+    private ToolTipsService $toolTipsService,
+    private StorageFactory $storageFactory,
     EntityManager $entityManager,
     ProgressStatusService $progressStatusService,
-    StorageFactory $storageFactory,
   ) {
     parent::__construct($entityManager, $progressStatusService);
 
-    $this->insuranceService = $insuranceService;
-    $this->configService = $configService;
-    $this->storageFactory = $storageFactory;
     $this->l = $this->l10n();
-    $this->toolTipsService = $toolTipsService;
 
     $this->insurancesRepository = $this->getDatabaseRepository(Entities\InstrumentInsurance::class);
     $this->timeZone = $this->getDateTimeZone();

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,16 +35,12 @@ class ErrorService
 
   const ERROR_TEMPLATE = "errorpage";
 
-  /** @var OrganizationalRolesService */
-  private $rolesService;
-
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    OrganizationalRolesService $rolesService,
+    protected ConfigService $configService,
+    private OrganizationalRolesService $rolesService,
   ) {
-    $this->configService = $configService;
-    $this->rolesService = $rolesService;
+    $this->l = $this->l10n();
   }
   // phpcs:enable
 

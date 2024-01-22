@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,15 +44,12 @@ class SepaBulkTransactionAnnouncedListener implements IEventListener
 
   const EVENT = Events\PostChangeCompositePaymentNotificationMessageId::class;
 
-  /** @var IAppContainer */
-  private $appContainer;
-
   /**
    * @param IAppContainer $appContainer App-container in order to have a leight-weight constructor.
    */
-  public function __construct(IAppContainer $appContainer)
-  {
-    $this->appContainer = $appContainer;
+  public function __construct(
+    private IAppContainer $appContainer,
+  ) {
   }
 
   /** {@inheritdoc} */

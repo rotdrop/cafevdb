@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -96,12 +96,6 @@ class ProjectService
    */
   private $skeletonPaths = null;
 
-  /** @var UserStorage */
-  private $userStorage;
-
-  /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
-
   /** @var WikiRPC */
   private $wikiRPCInstance;
 
@@ -111,23 +105,17 @@ class ProjectService
   /** @var ProjectsRepository */
   private $repository;
 
-  /** @var IEventDispatcher */
-  private $eventDispatcher;
-
-  /** @var MusicianService */
-  private $musicianService;
-
   /** @var ISystemTagManager */
   private $systemTagManager;
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
-    UserStorage $userStorage,
-    ProjectParticipantFieldsService $participantFieldsService,
-    MusicianService $musicianService,
-    IEventDispatcher $eventDispatcher
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private UserStorage $userStorage,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private MusicianService $musicianService,
+    private IEventDispatcher $eventDispatcher
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -150,8 +138,11 @@ class ProjectService
         $this->logError('User "'.$userId.'", no request?!');
       }
 
-      $this->logError('SERVER '.print_r($_SERVER, true));
-      $this->logError('POST '.print_r($_REQUEST, true));
+      $this->logError('SERVER ' . print_r($request->server, true));
+      if ($request->method == 'POST') {
+        $this->logError('POST ' . print_r($request->post, true));
+      }
+      $this->logError('get ' . print_r($request->get, true));
       $this->repository = null;
       $this->logException($t);
     }
@@ -943,7 +934,12 @@ class ProjectService
       /** @var SimpleSharingService $sharingService */
       $sharingService = $this->di(SimpleSharingService::class);
 
-      $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+      if ($this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+        $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+      } else {
+        $shareOwnerUid = $this->userId();
+      }
+
       // try to create or use the folder and share it by a public link
       $url = $sharingService->linkShare(
         $node,

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,12 +38,6 @@ use OCA\CAFEVDB\Service\ConfigService;
 /** Export general PME-tables as spread-sheet. */
 class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
 {
-  /** @var PageRenderer\PMETableViewBase */
-  protected $renderer;
-
-  /** @var ProjectService */
-  protected $projectService;
-
   /**
    * Construct a spread-sheet exporter for selected tables.
    *
@@ -55,13 +49,11 @@ class PMETableSpreadsheetExporter extends AbstractSpreadsheetExporter
    * @param null|ProjectService $projectService
    */
   public function __construct(
-    PageRenderer\PMETableViewBase $renderer,
+    protected PageRenderer\PMETableViewBase $renderer,
     FontService $fontService,
-    ?ProjectService $projectService = null,
+    protected ?ProjectService $projectService = null,
   ) {
     parent::__construct($renderer->configService(), $fontService);
-    $this->renderer = $renderer;
-    $this->projectService = $projectService;
   }
 
   /**

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -65,54 +65,23 @@ class PmeTableController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  /** @var HistoryService */
-  private $historyService;
-
-  /** @var ParameterService */
-  private $parameterService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
-  protected $pme;
-
-  /** @var string */
-  private $userId;
-
-  /** @var \OCP\AppFramework\IAppContainer */
-  private $appContainer;
-
-  /** @var \OCP\ITempManager */
-  private $tempManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
-    IAppContainer $appContainer,
-    ConfigService $configService,
-    HistoryService $historyService,
-    RequestParameterService $parameterService,
-    ProjectService $projectService,
-    PHPMyEdit $phpMyEdit,
-    ITempManager $tempManager,
-    $userId,
-    IL10N $l10n,
-    ILogger $logger,
+    private IAppContainer $appContainer,
+    protected ConfigService $configService,
+    private HistoryService $historyService,
+    private RequestParameterService $parameterService,
+    private ProjectService $projectService,
+    protected PHPMyEdit $pme,
+    private ITempManager $tempManager,
+    private $userId,
+    protected ILogger $logger,
   ) {
     parent::__construct($appName, $request);
 
-    $this->appContainer = $appContainer;
-    $this->parameterService = $parameterService;
-    $this->projectService = $projectService;
-    $this->historyService = $historyService;
-    $this->configService = $configService;
-    $this->pme = $phpMyEdit;
-    $this->tempManager = $tempManager;
-    $this->logger = $logger;
-    $this->userId = $userId;
-    $this->l = $l10n;
+    $this->l = $this->l10n();
   }
   // phpcs:enable
 

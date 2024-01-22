@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -64,26 +64,11 @@ class Musicians extends PMETableViewBase
   const TABLE = self::MUSICIANS_TABLE;
   const ALL_EMAILS_TABLE = self::MUSICIAN_EMAILS_TABLE . self::VALUES_TABLE_SEP . 'all';
 
-  /** @var GeoCodingService */
-  private $geoCodingService;
-
-  /** @var OCA\CAFEVDB\Service\PhoneNumberService */
-  private $phoneNumberService;
-
-  /** @var OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService */
-  private $insuranceService;
-
-  /** @var MusicianService */
-  private $musicianService;
-
-  /** @var MailingListsService */
-  private $listsService;
-
   /**
    * @var bool Called with project-id in order to add musicians to an
    * existing project
    */
-  private $projectMode;
+  private bool $projectMode;
 
   /**
    * Join table structure. All update are handled in
@@ -143,7 +128,7 @@ class Musicians extends PMETableViewBase
   ];
 
   /** @var Entities\Project */
-  private $project;
+  private ?Entities\Project $project;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -153,20 +138,14 @@ class Musicians extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    GeoCodingService $geoCodingService,
-    ContactsService $contactsService,
-    PhoneNumberService $phoneNumberService,
-    InstrumentInsuranceService $insuranceService,
-    MusicianService $musicianService,
-    MailingListsService $listsService,
+    private GeoCodingService $geoCodingService,
+    private ContactsService $contactsService,
+    private PhoneNumberService $phoneNumberService,
+    private InstrumentInsuranceService $insuranceService,
+    private MusicianService $musicianService,
+    private MailingListsService $listsService,
   ) {
     parent::__construct(self::ALL_TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->geoCodingService = $geoCodingService;
-    $this->contactsService = $contactsService;
-    $this->phoneNumberService = $phoneNumberService;
-    $this->insuranceService = $insuranceService;
-    $this->musicianService = $musicianService;
-    $this->listsService = $listsService;
     $this->projectMode = false;
 
     if (empty($this->musicianId)) {

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,27 +40,13 @@ class Navigation
   const DISABLED = 1;
   const SELECTED = 2;
 
-  /** @var OCP\IL10N */
-  protected IL10N $l;
-
-  /** @var OCA\CAFEVDB\Service\ToolTipsService */
-  protected $toolTipsService;
-
-  /** @var OCA\CAFEVDB\Database\Legacy\PME\IOptions */
-  protected $pmeOptions;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IL10N $l10n,
-    ILogger $logger,
-    ToolTipsService $toolTipsService,
-    PMEOptions $pmeOptions,
+    protected IL10N $l,
+    protected ILogger $logger,
+    protected ToolTipsService $toolTipsService,
+    protected PMEOptions $pmeOptions,
   ) {
-    $this->l = $l10n;
-    $this->logger = $logger;
-    $this->toolTipsService = $toolTipsService;
-    $this->pmeOptions = $pmeOptions;
   }
   // phpcs:enable
 

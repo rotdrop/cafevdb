@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -137,30 +137,15 @@ class SepaBulkTransactionService
   const SUBJECT_ITEM_SEPARATOR = ', ';
   const SUBJECT_OPTION_SEPARATOR = ': ';
 
-  /** @var IAppContainer */
-  protected $appContainer;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var EventsService */
-  private $eventsService;
-
   /** {@inheritdoc} */
   public function __construct(
-    EntityManager $entityManager,
-    FinanceService $financeService,
-    EventsService $eventsService,
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
+    protected EntityManager $entityManager,
+    private FinanceService $financeService,
+    private EventsService $eventsService,
+    private IAppContainer $appContainer,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->entityManager = $entityManager;
-    $this->financeService = $financeService;
-    $this->eventsService = $eventsService;
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
 
   /**

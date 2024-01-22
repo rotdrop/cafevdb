@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -72,19 +72,17 @@ class MusiciansController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    ?string $userId,
-    IL10N $l10n,
-    ILogger $logger,
-    EntityManager $entityManager,
-    ConfigService $configService,
+    protected ?string $userId,
+    protected ILogger $logger,
+    protected EntityManager $entityManager,
+    protected ConfigService $configService,
   ) {
     parent::__construct($appName, $request);
-    $this->l = $l10n;
-    $this->logger = $logger;
-    $this->entityManager = $entityManager;
+
+    $this->l = $this->l10n();
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
-    $this->configService = $configService;
     $this->countryNames = $this->localeCountryNames();
+
   }
   // phpcs:enable
 

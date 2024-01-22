@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,62 +59,21 @@ class ConfigCheckService
       | \OCP\Constants::PERMISSION_SHARE
   );
 
-  /** @var EntityManager */
-  private $entityManager;
-
-  /** @var IRootFolder  */
-  private $rootFolder;
-
-  /** @var \OCP\Share\IManager */
-  private $shareManager;
-
-  /** @var CalDavService */
-  private $calDavService;
-
-  /** @var CardDavService */
-  private $cardDavService;
-
-  /** @var \OCP\Calendar\IManager */
-  private $calendarManager;
-
-  /** @var \OCP\Contacts\IManager */
-  private $contactsManager;
-
-  /** @var AddressBookProvider */
-  private $addressBookProvider;
-
-  /** @var MigrationsService */
-  private $migrationsService;
-
-  /** @var SimpleSharingService */
-  private $sharingService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
-    IRootFolder $rootFolder,
-    IShareManager $shareManager,
-    ICalendarManager $calendarManager,
-    IContactsManager $contactsManager,
-    CalDavService $calDavService,
-    CardDavService $cardDavService,
-    EventsService $eventsService,
-    AddressBookProvider $addressBookProvider,
-    MigrationsService $migrationsService,
-    SimpleSharingService $sharingService,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private IRootFolder $rootFolder,
+    private IShareManager $shareManager,
+    private ICalendarManager $calendarManager,
+    private IContactsManager $contactsManager,
+    private CalDavService $calDavService,
+    private CardDavService $cardDavService,
+    private EventsService $eventsService,
+    private AddressBookProvider $addressBookProvider,
+    private MigrationsService $migrationsService,
+    private SimpleSharingService $sharingService,
   ) {
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->rootFolder = $rootFolder;
-    $this->shareManager = $shareManager;
-    $this->calendarManager = $calendarManager;
-    $this->contactsManager = $contactsManager;
-    $this->calDavService = $calDavService;
-    $this->cardDavService = $cardDavService;
-    $this->addressBookProvider = $addressBookProvider;
-    $this->migrationsService = $migrationsService;
-    $this->sharingService = $sharingService;
     $this->l = $this->l10n();
     // {
       // $mm3 = new MailingListsService($this->configService);
@@ -396,7 +355,7 @@ class ConfigCheckService
           $share->setPermissions($groupPerms);
           $this->shareManager->updateShare($share);
         }
-        return $share->getPermissions() !== $groupPerms;
+        return $share->getPermissions() === $groupPerms;
       }
     }
 
@@ -552,10 +511,85 @@ class ConfigCheckService
    * @param null|string $sharedFolder Optional. If unset, the name is fetched
    * from the application configuration options.
    *
+   * @param null|string $postfix Postfix to append to the folder name. This is
+   * need in order to implement the migration from the personally shared
+   * share-holder folder to the anonymously shared group-folder.
+   *
+   * @return bool @c true on success.
+   */
+  public function groupFolderExists(?string $sharedFolder = '', ?string $postfix = null):bool
+  {
+    if ($postfix === null) {
+      // check whether the folder migrations has been run or not.
+      if ($this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+        $postfix = '-testing'; // @todo remove after it has proven useful
+      } else {
+        $postfix = '';
+      }
+    }
+    $this->logInfo('POSTFIX ' . $postfix);
+
+    $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
+
+    if ($sharedFolder == '') {
+      $this->logError('no folder');
+      // not configured
+      return false;
+    }
+    $sharedFolder .= $postfix;
+
+    /** @var GroupFoldersService $groupFoldersService */
+    $groupFoldersService = $this->appContainer()->get(GroupFoldersService::class);
+    $folderInfo = $groupFoldersService->getFolder($sharedFolder);
+    if (empty($folderInfo)) {
+      return false;
+    }
+
+    $shareGroup   = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $shareGroupIds = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $permissions => $groupSuffix) {
+      $permissions |= AuthorizationService::IMPLIED_PERMISSIONS[$permissions];
+      if ($permissions & AuthorizationService::PERMISSION_FILESYSTEM) {
+        $shareGroupIds[] = $shareGroup . $groupSuffix;
+      }
+    }
+
+    $this->logInfo('FOLDER INFO ' . print_r($folderInfo, true));
+    foreach ($shareGroupIds as $groupId) {
+      if (empty($folderInfo['groups'][$groupId])) {
+        return false;
+      }
+      if ($folderInfo['groups'][$groupId]['permissions'] != self::SHARE_PERMISSIONS) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * We require that the share-owner owns a directory shared with the
+   * orchestra group. Check whether this folder exists.
+   *
+   * @param null|string $sharedFolder Optional. If unset, the name is fetched
+   * from the application configuration options.
+   *
    * @return bool @c true on success.
    */
   public function sharedFolderExists(?string $sharedFolder = '')
   {
+    try {
+      $result = $this->groupFolderExists($sharedFolder);
+    } catch (Throwable $t) {
+      $result = false;
+    }
+    if (!$this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+      // migration has been performed, so do nothing else
+      return $result;
+    }
+
+    $this->logInfo('Migration to group folders has not been performed: ' . $this->getConfigValu(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true));
+
     if (!$this->shareOwnerExists()) {
       return false;
     }
@@ -597,6 +631,7 @@ class ConfigCheckService
         return true;
       } catch (Throwable $e) {
         $this->logError('No file id for  ' . $sharedFolder . ' ' . $e->getMessage());
+        $this->logException($e);
         return false;
       }
     });
@@ -610,10 +645,110 @@ class ConfigCheckService
    *
    * @param string $sharedFolder The name of the folder.
    *
+   * @param null|string $postfix Postfix to append to the folder name. This is
+   * need in order to implement the migration from the personally shared
+   * share-holder folder to the anonymously shared group-folder.
+   *
+   * @return bool \true on success.
+   */
+  public function checkGroupFolder(string $sharedFolder, ?string $postfix = null):bool
+  {
+    if ($postfix === null) {
+      // check whether the folder migrations has been run or not.
+      if ($this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+        $postfix = '-testing'; // @todo remove after it has proven useful
+      } else {
+        $postfix = '';
+      }
+    }
+    $this->logInfo('POSTFIX ' . $postfix);
+
+    $sharedFolder .= $postfix;
+
+    $this->logInfo('TRY CREATE ' . $sharedFolder);
+
+    $adminGroupId = $this->subAdminGroupId();
+    if (empty($adminGroupId)) {
+      $this->logInfo('NO ADMIN GROUP');
+      return false; // need at least this group!
+    }
+
+    $shareGroupId = $this->groupId();
+    if (empty($shareGroupId)) {
+      $this->logInfo('NO SHARE GROUP');
+      return false; // need at least this group!
+    }
+    $shareGroupIds = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $permissions => $groupSuffix) {
+      $permissions |= AuthorizationService::IMPLIED_PERMISSIONS[$permissions];
+      if ($permissions & AuthorizationService::PERMISSION_FILESYSTEM) {
+        $shareGroupIds[] = $shareGroupId . $groupSuffix;
+      }
+    }
+
+    $groupAdmin = $this->userId();
+    foreach ($shareGroupIds as $shareGroupId) {
+      if (!$this->isSubAdminOfGroup($groupAdmin, $shareGroupId)) {
+        $this->logError('Permission denied: ' . $groupAdmin . ' is not a group admin of ' . $shareGroupId . '.');
+        return false;
+      }
+    }
+
+    /** @var GroupFoldersService $groupFoldersService */
+    $groupFoldersService = $this->appContainer()->get(GroupFoldersService::class);
+
+    $folderInfo = $groupFoldersService->getFolder($sharedFolder);
+
+    try {
+      if (empty($folderInfo)) {
+        $folderInfo = $groupFoldersService->createFolder(
+          $sharedFolder,
+          array_combine($shareGroupIds, array_fill(0, count($shareGroupIds), GroupFoldersService::PERMISSION_ALL)),
+          [ $adminGroupId => GroupFoldersService::MANAGER_TYPE_GROUP, ],
+        );
+      } else {
+        foreach ($shareGroupIds as $shareGroupId) {
+          $groupFoldersService->addGroupToFolder(
+            $sharedFolder,
+            $shareGroupId,
+            GroupFoldersService::PERMISSION_ALL,
+          );
+        }
+        $groupFoldersService->addManagerToFolder(
+          $sharedFolder,
+          $adminGroupId,
+          GroupFoldersService::MANAGER_TYPE_GROUP,
+        );
+      }
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to create or modify group shared folder ' . $sharedFolder);
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Check for the existence of the shared folder and create it when
+   * not found.
+   *
+   * @param string $sharedFolder The name of the folder.
+   *
    * @return bool @c true on success.
    */
   public function checkSharedFolder(string $sharedFolder):bool
   {
+    try {
+      $result = $this->checkGroupFolder($sharedFolder);
+    } catch (Throwable $t) {
+      $this->logException($t, 'CANNOT CREATE OR UPDATTE GROUP SHARED FOLDER');
+      $result = false;
+    }
+    if (!$this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+      // migration has been performed, so do nothing else
+      return result;
+    }
+
     if ($sharedFolder == '') {
       return false;
     }
@@ -638,9 +773,11 @@ class ConfigCheckService
     $groupAdmin = $this->userId();
     $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
 
-    if (!$this->isSubAdminOfGroup()) {
-      $this->logError("Permission denied: ".$groupAdmin." is not a group admin of ".$shareGroup.".");
-      return false;
+    foreach ($shareGroupIds as $shareGroupId) {
+      if (!$this->isSubAdminOfGroup($groupAdmin, $shareGroupId)) {
+        $this->logError('Permission denied: ' . $groupAdmin . ' is not a group admin of ' . $shareGroupId . '.');
+        return false;
+      }
     }
 
     // try to create the folder and share it with the group

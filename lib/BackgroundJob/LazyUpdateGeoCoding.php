@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,20 +40,15 @@ class LazyUpdateGeoCoding extends TimedJob
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var GeoCodignService */
-  private $geoCodingService;
-
   /** {@inheritdoc} */
   public function __construct(
     string $appName,
     ITimeFactory $time,
     ICloudConfig $cloudConfig,
-    ILogger $logger,
-    GeoCodingService $geoCodingService,
+    protected ILogger $logger,
+    private GeoCodingService $geoCodingService,
   ) {
     parent::__construct($time);
-    $this->logger = $logger;
-    $this->geoCodingService = $geoCodingService;
     $this->setInterval($cloudConfig->getAppValue($appName, 'geocoding.refresh.lazy', 600));
   }
 

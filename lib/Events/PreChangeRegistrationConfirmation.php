@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,25 +30,13 @@ use OCP\EventDispatcher\Event;
 /** ORM -> cloud event forwarder. */
 class PreChangeRegistrationConfirmation extends Event
 {
-  /** @var Entities\ProjectParticipant */
-  private $participant;
-
-  /** @var string */
-  private $oldRegistration;
-
-  /** @var string */
-  private $newRegistration;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    Entities\ProjectParticipant $participant,
-    bool $oldRegistration,
-    bool $newRegistration,
+    private Entities\ProjectParticipant $participant,
+    private bool $oldRegistration,
+    private bool $newRegistration,
   ) {
     parent::__construct();
-    $this->participant = $participant;
-    $this->oldRegistration = $oldRegistration;
-    $this->newRegistration = $newRegistration;
   }
   // phpcs:enable
 

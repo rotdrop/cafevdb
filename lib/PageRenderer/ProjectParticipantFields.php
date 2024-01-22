@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -143,31 +143,19 @@ class ProjectParticipantFields extends PMETableViewBase
     ],
   ];
 
-  /** @var InstrumentationService */
-  private $instrumentationService;
-
-  /** @var FuzzyInput */
-  private $fuzzyInput;
-
-  /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
     PHPMyEdit $phpMyEdit,
-    InstrumentationService $instrumentationService,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    FuzzyInputService $fuzzyInput,
-    ProjectParticipantFieldsService $participantFieldsService,
+    private InstrumentationService $instrumentationService,
+    private FuzzyInputService $fuzzyInput,
+    private ProjectParticipantFieldsService $participantFieldsService,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->instrumentationService = $instrumentationService;
-    $this->fuzzyInput = $fuzzyInput;
-    $this->participantFieldsService = $participantFieldsService;
   }
   // phpcs:enable
 

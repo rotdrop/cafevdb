@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,18 +48,6 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
   private const UNDO_RESTORE = 'restore';
   private const UNDO_NOTHING = 'nothing';
 
-  /** @var string|callable */
-  protected $oldName;
-
-  /** @var string|callable */
-  protected $newName;
-
-  /** @var int */
-  protected $gracefully;
-
-  /** @var bool */
-  protected $mkdir;
-
   /** @var string */
   protected $undoAction;
 
@@ -78,12 +66,12 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
    *
    * @param bool $mkdir Create non-existing directories.
    */
-  public function __construct(string $oldName, string $newName, bool $gracefully = false, bool $mkdir = true)
-  {
-    $this->oldName = $oldName;
-    $this->newName = $newName;
-    $this->gracefully = $gracefully;
-    $this->mkdir = $mkdir;
+  public function __construct(
+    protected string $oldName,
+    protected string $newName,
+    protected bool $gracefully = false,
+    protected bool $mkdir = true,
+  ) {
   }
 
   /**

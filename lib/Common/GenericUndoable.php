@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,12 +32,6 @@ namespace OCA\CAFEVDB\Common;
  */
 class GenericUndoable extends AbstractUndoable
 {
-  /** @var Callable */
-  protected $doCallback;
-
-  /** @var Callable|null */
-  protected $undoCallback = null;
-
   /**
    * @var mixed
    *
@@ -51,10 +45,10 @@ class GenericUndoable extends AbstractUndoable
    *
    * @param null|callable $undoCallback
    */
-  public function __construct(callable $doCallback, ?callable $undoCallback = null)
-  {
-    $this->doCallback = $doCallback;
-    $this->undoCallback = $undoCallback;
+  public function __construct(
+    protected callable $doCallback,
+    protected ?callable $undoCallback = null,
+  ) {
   }
 
   /** {@inheritdoc} */

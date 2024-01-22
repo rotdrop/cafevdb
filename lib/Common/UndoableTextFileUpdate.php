@@ -48,22 +48,13 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var IDateTimeFormatter */
-  protected $dateTimeFormatter;
-
-  /** @var string|callable */
-  protected $name;
+  protected IDateTimeFormatter $dateTimeFormatter;
 
   /**
    * @var string
    * The content to inject into the text-file.
    */
-  protected $content;
-
-  /**
-   * @var string
-   * Optional content which is ok to replace
-   */
-  protected $replacableContent;
+  protected string $content;
 
   /** @var string */
   protected $renamedName;
@@ -73,12 +64,6 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
 
   /** @var bool */
   protected $nothingToUndo;
-
-  /** @var bool */
-  protected $gracefully;
-
-  /** @var bool */
-  protected $mkdir;
 
   /**
    * @param string|callable $name
@@ -94,13 +79,14 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
    * directories. However, even if set to \false a regular file which is in
    * the way will be removed.
    */
-  public function __construct(mixed $name, ?string $content, ?string $replacableContent = null, bool $gracefully = false, bool $mkdir = true)
-  {
-    $this->name = $name;
+  public function __construct(
+    protected mixed $name,
+    ?string $content,
+    protected ?string $replacableContent = null,
+    protected bool $gracefully = false,
+    protected bool $mkdir = true,
+  ) {
     $this->content = $content ?? '';
-    $this->replacableContent = $replacableContent;
-    $this->gracefully = $gracefully;
-    $this->mkdir = $mkdir;
     $this->reset();
   }
 

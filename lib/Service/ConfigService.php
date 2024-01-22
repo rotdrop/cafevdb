@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,6 +88,9 @@ class ConfigService
    *
    */
   const SHAREOWNER_KEY = 'shareowner';
+  const SHAREOWNER_FOLDER_SERVICE_KEY = 'shareowner_folder';
+  const SHAREOWNER_CALENDAR_SERVICE_KEY = 'shareowner_calendar';
+  const SHAREOWNER_ADDRESSBOOK_SERVICE_KEY = 'shareowner_addressbook';
 
   const SHARED_FOLDER = 'sharedfolder';
   const PROJECTS_FOLDER = 'projectsfolder';
@@ -277,35 +280,11 @@ class ConfigService
    *
    */
 
-  /** @var string */
-  protected $appName;
-
-  /** @var IConfig */
-  private $containerConfig;
-
-  /** @var IUserSession */
-  private $userSession;
-
-  /** @var IUserManager */
-  private $userManager;
-
-  /** @var IGroupManager */
-  private $groupManager;
-
-  /** @var ISubAdmin */
-  private $groupSubAdmin;
-
   /** @var IUser
    *
    * Will be overridden by sudo().
    */
   private $user;
-
-  /**
-   * @var IL10N
-   * Personal localization settings based on user preferences.
-   */
-  protected IL10N $l;
 
   /** @var IL10N */
   protected $appL10n;
@@ -315,30 +294,6 @@ class ConfigService
 
   /** @var string */
   protected $appLanguage;
-
-  /** @var IL10NFactory */
-  private $l10NFactory;
-
-  /** @var IURLGenerator */
-  private $urlGenerator;
-
-  /** @var IDateTimeZone */
-  protected $dateTimeZone;
-
-  /** @var EncryptionService */
-  private $encryptionService;
-
-  /** @var ISecureRandom */
-  private $secureRandom;
-
-  /** @var IDateTimeFormatter */
-  protected $dateTimeFormatter;
-
-  /** @var ITimeFactory */
-  protected $timeFactory;
-
-  /** @var IAppContainer */
-  protected $appContainer;
 
   /**
    * @var array<string, array<string, string>>
@@ -351,40 +306,23 @@ class ConfigService
    * @SuppressWarnings(PHPMD.Superglobals)
    */
   public function __construct(
-    string $appName,
-    IConfig $containerConfig,
-    IUserSession $userSession,
-    IUserManager $userManager,
-    IGroupManager $groupManager,
-    ISubAdmin $groupSubAdmin,
-    EncryptionService $encryptionService,
-    ISecureRandom $secureRandom,
-    IURLGenerator $urlGenerator,
-    IL10NFactory $l10NFactory,
-    IDateTimeZone $dateTimeZone,
-    ILogger $logger,
-    IAppContainer $appContainer,
-    IDateTimeFormatter $dateTimeFormatter,
-    ITimeFactory $timeFactory,
-    IL10N $l,
+    protected string $appName,
+    private IConfig $containerConfig,
+    private IUserSession $userSession,
+    private IUserManager $userManager,
+    private IGroupManager $groupManager,
+    private ISubAdmin $groupSubAdmin,
+    private EncryptionService $encryptionService,
+    private ISecureRandom $secureRandom,
+    private IURLGenerator $urlGenerator,
+    private IL10NFactory $l10NFactory,
+    protected IDateTimeZone $dateTimeZone,
+    protected ILogger $logger,
+    protected IAppContainer $appContainer,
+    protected IDateTimeFormatter $dateTimeFormatter,
+    protected ITimeFactory $timeFactory,
+    protected IL10N $l,
   ) {
-    $this->appName = $appName;
-    $this->containerConfig = $containerConfig;
-    $this->userSession = $userSession;
-    $this->userManager = $userManager;
-    $this->groupManager = $groupManager;
-    $this->groupSubAdmin = $groupSubAdmin;
-    $this->encryptionService = $encryptionService;
-    $this->secureRandom = $secureRandom;
-    $this->urlGenerator = $urlGenerator;
-    $this->l10NFactory = $l10NFactory;
-    $this->dateTimeZone = $dateTimeZone;
-    $this->logger = $logger;
-    $this->dateTimeFormatter = $dateTimeFormatter;
-    $this->appContainer = $appContainer;
-    $this->timeFactory = $timeFactory;
-    $this->l = $l;
-
     if (\OC::$CLI && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
       $this->setUserId($GLOBALS['cafevdb-user']);
     } else {

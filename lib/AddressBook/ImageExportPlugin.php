@@ -8,7 +8,7 @@
  * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Jacob Neplokh <me@jacobneplokh.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
- * @copyright 2019-2022 Claus-Justus Heine
+ * @copyright 2019-2022, 2024 Claus-Justus Heine
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  * @license AGPL-3.0-or-later
  *
@@ -52,9 +52,8 @@ class ImageExportPlugin extends ServerPlugin
   protected $server;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(ConfigService $configService)
+  public function __construct(protected ConfigService $configService)
   {
-    $this->configService = $configService;
     $this->l = $this->l10n();
   }
   // phpcs:enable

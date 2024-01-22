@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,19 +32,15 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class PostChangeMusicianEmail extends MusicianEmailEvent
 {
-  /** @var Entities\MusicianEmailAddress */
-  private $oldEmail;
-
   /**
    * @param Entities\MusicianEmailAddress $oldEmail The old address.
    *
    * @param Entities\MusicianEmailAddress $newEmail The new address.
    */
   public function __construct(
-    Entities\MusicianEmailAddress $oldEmail,
+    private Entities\MusicianEmailAddress $oldEmail,
     Entities\MusicianEmailAddress $newEmail,
   ) {
-    $this->oldEmail = $oldEmail;
     parent::__construct($newEmail);
   }
 

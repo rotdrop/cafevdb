@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -78,46 +78,20 @@ class ProjectParticipantsController extends Controller
   const FILE_ACTION_DELETE = 'delete';
   const FILE_ACTION_UPLOAD = 'upload';
 
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
-  protected $pme;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
-
-  /** @var EntityManager */
-  protected $entityManager;
-
-  /** @var StorageFactory */
-  private $storageFactory;
-
   /** {@inheritdoc} */
   public function __construct(
     $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit,
-    ProjectService $projectService,
-    ProjectParticipantFieldsService $participantFieldsService,
-    StorageFactory $storageFactory,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private PHPMyEdit $pme,
+    private ProjectService $projectService,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private StorageFactory $storageFactory,
   ) {
-
     parent::__construct($appName, $request);
 
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->pme = $phpMyEdit;
-    $this->projectService = $projectService;
-    $this->participantFieldsService = $participantFieldsService;
-    $this->storageFactory = $storageFactory;
     $this->l = $this->l10N();
     $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }

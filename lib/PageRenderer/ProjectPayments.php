@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -67,23 +67,11 @@ class ProjectPayments extends PMETableViewBase
 
   const ROW_TAG_PREFIX = '0;';
 
-  /** @var ProjectService */
-  protected $projectService;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var UserStorage */
-  protected $userStorage;
-
-  /** @var DatabaseStorageUtil */
-  protected $databaseStorageUtil;
-
   /** @var array */
   private $compositePaymentExpanded = [];
 
   /** @var Entities\Project */
-  private $project;
+  private ?Entities\Project $project;
 
   protected $joinStructure = [
     self::TABLE => [
@@ -288,20 +276,15 @@ WHERE dsf.id IS NOT NULL',
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
     PHPMyEdit $phpMyEdit,
-    ProjectService $projectService,
-    ProjectParticipantFieldsService $participantFieldsService,
-    FinanceService $financeService,
-    UserStorage $userStorage,
-    DatabaseStorageUtil $databaseStorageUtil,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    private ProjectService $projectService,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private FinanceService $financeService,
+    private UserStorage $userStorage,
+    private DatabaseStorageUtil $databaseStorageUtil,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->projectService = $projectService;
-    $this->participantFieldsService = $participantFieldsService;
-    $this->financeService = $financeService;
-    $this->userStorage = $userStorage;
-    $this->databaseStorageUtil = $databaseStorageUtil;
     $this->compositePaymentExpanded = $this->requestParameters['compositePaymentExpanded'];
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);

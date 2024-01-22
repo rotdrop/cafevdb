@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,27 +61,17 @@ class MountProvider implements IMountProvider
 
   const MOUNT_TYPE = 'cafevdb-database';
 
-  /** @var AuthorizationService */
-  private $authorizationService;
-
-  /** @var Factory */
-  private $storageFactory;
-
   /** @var int */
   private static $recursionLevel = 0;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    AuthorizationService $authorizationService,
-    EntityManager $entityManager,
-    Factory $storageFactory,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private AuthorizationService $authorizationService,
+    private Factory $storageFactory,
   ) {
-    $this->configService = $configService;
-    $this->authorizationService = $authorizationService;
     $this->l = $this->l10n();
-    $this->entityManager = $entityManager;
-    $this->storageFactory = $storageFactory;
   }
   // phpcs:enable
 

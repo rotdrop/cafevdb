@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,18 +35,13 @@ use OCP\IConfig;
  */
 class BankAccountValidator extends BaseClass
 {
-  /** @var IConfig */
-  private $cloudConfig;
-
   /**
    * Construct \malkusch\bav\BAV from a PDO configuration.
    *
    * @param IConfig $cloudConfig
    */
-  public function __construct(IConfig $cloudConfig)
+  public function __construct(private IConfig $cloudConfig)
   {
-    $this->cloudConfig = $cloudConfig;
-
     parent::__construct($this->generateConfiguration());
   }
 

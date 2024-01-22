@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,24 +39,12 @@ use OCA\CAFEVDB\Service\ConfigService;
  */
 class SubadminMiddleware extends Middleware
 {
-  /** @var ConfigService */
-  protected $configService;
-
-  /** @var IControllerMethodReflector */
-  protected $reflector;
-
-  /** @var IL10N */
-  private $l;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IControllerMethodReflector $reflector,
-    ConfigService $configService,
-    IL10N $l
+    protected IControllerMethodReflector $reflector,
+    protected ConfigService $configService,
+    private IL10N $l
   ) {
-    $this->reflector = $reflector;
-    $this->configService = $configService;
-    $this->l = $l;
   }
   // phpcs:enable
 

@@ -3,7 +3,7 @@
  * Orchestra member, musician and project management application.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,10 +40,10 @@ trait MailingListsTrait
   protected $expertMode;
 
   /** @var MailingListsService */
-  private $listsService;
+  private MailingListsService $listsService;
 
   /** @var Entities\Project */
-  private $project;
+  private ?Entities\Project $project;
 
   /** @return MailingListsService */
   protected function getListsService():MailingListsService

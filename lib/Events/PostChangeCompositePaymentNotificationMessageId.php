@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,15 +39,6 @@ use OCP\EventDispatcher\Event;
  */
 class PostChangeCompositePaymentNotificationMessageId extends Event
 {
-  /** @var EntityManager */
-  private $entityManager;
-
-  /** @var Entities\CompositePayment */
-  private $entity;
-
-  /** @var DateTimeInterface */
-  private $oldValue;
-
   /**
    * @param EntityManager $entityManager Decorated ORM entity manager.
    *
@@ -56,13 +47,10 @@ class PostChangeCompositePaymentNotificationMessageId extends Event
    * @param null|string $oldValue The old pre-update value.
    */
   public function __construct(
-    EntityManager $entityManager,
-    Entities\CompositePayment $entity,
-    ?string $oldValue
+    private EntityManager $entityManager,
+    private Entities\CompositePayment $entity,
+    private ?string $oldValue
   ) {
-    $this->entityManager = $entityManager;
-    $this->entity = $entity;
-    $this->oldValue = $oldValue;
   }
 
   /**

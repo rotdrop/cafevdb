@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,9 +40,9 @@ class PDFFormFiller
   private $pdfTk = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(ILogger $logger)
-  {
-    $this->logger = $logger;
+  public function __construct(
+    protected ILogger $logger,
+  ) {
   }
   // phpcs:enable
 

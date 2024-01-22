@@ -2,7 +2,7 @@
 # later. See the COPYING file.
 #
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
-# @copyright Claus-Justus Heine 2020,2021,2022,2023
+# @copyright Claus-Justus Heine 2020,2021,2022,2023,2024
 #
 SRCDIR = .
 ABSSRCDIR = $(CURDIR)
@@ -259,7 +259,7 @@ $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCD
 	make -C $(ABSSRCDIR)/3rdparty/selectize compile
 
 CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
-JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue")
+JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts")
 L10N_FILES = $(shell find $(ABSSRCDIR)/l10n -name "*.js")
 
 SELECTIZE_DIST =\

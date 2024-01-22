@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -179,20 +179,8 @@ class SepaBankAccounts extends PMETableViewBase
     ],
   ];
 
-  /** @var ProjectParticipantFieldsService */
-  protected $participantFieldsService;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var ProjectService */
-  protected $projectService;
-
-  /** @var UserStorage */
-  protected $userStorage;
-
   /** @var Entities\Project */
-  private $project = null;
+  private ?Entities\Project $project = null;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -202,16 +190,12 @@ class SepaBankAccounts extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    ProjectParticipantFieldsService $participantFieldsService,
-    FinanceService $financeService,
-    ProjectService $projectService,
-    UserStorage $userStorage,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private FinanceService $financeService,
+    private ProjectService $projectService,
+    private UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->participantFieldsService = $participantFieldsService;
-    $this->financeService = $financeService;
-    $this->projectService = $projectService;
-    $this->userStorage = $userStorage;
     $this->initCrypto();
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);

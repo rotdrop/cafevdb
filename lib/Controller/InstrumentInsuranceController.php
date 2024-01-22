@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,39 +46,18 @@ class InstrumentInsuranceController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var ParameterService */
-  private $parameterService;
-
-  /** @var FuzzyInputService */
-  private $fuzzyInputService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var InstrumentInsuranceService */
-  private $insuranceService;
-
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
-  protected $pme;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    InstrumentInsuranceService $insuranceService,
-    ProjectService $projectService,
-    FuzzyInputService $fuzzyInputService,
-    PHPMyEdit $phpMyEdit,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    private InstrumentInsuranceService $insuranceService,
+    private ProjectService $projectService,
+    private FuzzyInputService $fuzzyInputService,
+    protected PHPMyEdit $phpMyEdit,
   ) {
     parent::__construct($appName, $request);
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->insuranceService = $insuranceService;
-    $this->projectService = $projectService;
-    $this->fuzzyInputService = $fuzzyInputService;
-    $this->pme = $phpMyEdit;
     $this->l = $this->l10N();
   }
   // phpcs:enable

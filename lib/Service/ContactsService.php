@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,28 +58,14 @@ class ContactsService
 
   const AVATAR_SIZE = 256;
 
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var IContactsManager */
-  private $contactsManager;
-
-  /** @var IAvatarManager */
-  private $avatarManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    IContactsManager $contactsManager,
-    IAvatarManager $avatarManager,
-    IAppContainer $appContainer,
-    EntityManager $entityManager,
+    protected ConfigService $configService,
+    private IContactsManager $contactsManager,
+    private IAvatarManager $avatarManager,
+    private IAppContainer $appContainer,
+    protected EntityManager $entityManager,
   ) {
-    $this->configService = $configService;
-    $this->contactsManager = $contactsManager;
-    $this->avatarManager = $avatarManager;
-    $this->appContainer = $appContainer;
-    $this->entityManager = $entityManager;
     $this->l = $this->configService->getAppL10n();
   }
   // phpcs:enable

@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2023
+ * @copyright Claus-Justus Heine 2014-2024
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -67,39 +67,6 @@ class PageController extends Controller
   public const HISTORY_ACTION_LOAD = 'load';
   public const HISTORY_ACTION_PUSH = 'push';
 
-  /** @var IL10N */
-  protected IL10N $l;
-
-  /** @var HistoryService */
-  private $historyService;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var ToolTipsService */
-  protected $toolTipsService;
-
-  /** @var ConfigCheckService */
-  private $configCheckService;
-
-  /** @var OrganizationalRolesService */
-  private $organizationalRolesService;
-
-  /** @var AuthorizationService */
-  private $authorizationService;
-
-  /** @var \OCP\IURLGenerator */
-  private $urlGenerator;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var PageNavigation */
-  private $pageNavigation;
-
-  /** @var AssetService */
-  private $assetService;
-
   /** @var array
    *
    * Result of ConfigCheckService.
@@ -110,34 +77,22 @@ class PageController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    IAppContainer $appContainer,
-    AssetService $assetService,
-    ConfigService $configService,
-    HistoryService $historyService,
-    OrganizationalRolesService $organizationalRolesService,
-    AuthorizationService $authorizationService,
-    RequestParameterService $parameterService,
-    ToolTipsService $toolTipsService,
-    PageNavigation $pageNavigation,
-    IInitialStateService $initialStateService,
-    ConfigCheckService $configCheckService,
-    \OCP\IURLGenerator $urlGenerator,
+    private IAppContainer $appContainer,
+    private AssetService $assetService,
+    protected ConfigService $configService,
+    protected HistoryService $historyService,
+    private OrganizationalRolesService $organizationalRolesService,
+    private AuthorizationService $authorizationService,
+    private RequestParameterService $parameterService,
+    protected ToolTipsService $toolTipsService,
+    private PageNavigation $pageNavigation,
+    protected IInitialStateService $initialStateService,
+    private ConfigCheckService $configCheckService,
+    private \OCP\IURLGenerator $urlGenerator,
   ) {
 
     parent::__construct($appName, $request);
 
-    $this->appContainer = $appContainer;
-    $this->assetService = $assetService;
-    $this->configService = $configService;
-    $this->historyService = $historyService;
-    $this->parameterService = $parameterService;
-    $this->toolTipsService = $toolTipsService;
-    $this->pageNavigation = $pageNavigation;
-    $this->initialStateService = $initialStateService;
-    $this->organizationalRolesService = $organizationalRolesService;
-    $this->authorizationService = $authorizationService;
-    $this->configCheckService = $configCheckService;
-    $this->urlGenerator = $urlGenerator;
     $this->l = $this->l10N();
 
     // See if we are configured

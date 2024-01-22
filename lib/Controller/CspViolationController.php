@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,21 +37,15 @@ class CspViolationController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var \OCP\IConfig */
-  private $config;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    IConfig $config,
-    ILogger $logger,
-    IL10N $l10n,
+    private IConfig $config,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
     parent::__construct($appName, $request);
-    $this->config = $config;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 

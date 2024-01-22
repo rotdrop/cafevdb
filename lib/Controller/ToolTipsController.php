@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,22 +43,14 @@ class ToolTipsController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var IL10N */
-  protected IL10N $l;
-
-  /** @var ToolTipsService */
-  private $toolTipsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ToolTipsService $toolTipsService,
-    ILogger $logger,
+    private ToolTipsService $toolTipsService,
+    protected ILogger $logger,
   ) {
     parent::__construct($appName, $request);
-    $this->toolTipsService = $toolTipsService;
-    $this->logger = $logger;
   }
   // phpcs:enable
 

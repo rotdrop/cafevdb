@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,9 +30,10 @@ use OCP\IUserManager;
 use OCP\AppFramework\IAppContainer;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -71,12 +72,33 @@ class HelloWorld extends Command
         InputOption::VALUE_NONE,
         $this->l->t('Try to authenticate with the cloud.'),
       )
+      ->addOption(
+        'failure',
+        'f',
+        InputOption::VALUE_NONE,
+        $this->l->t('Specifying this option with result in failure.'),
+      )
       ;
   }
 
   /** {@inheritdoc} */
   protected function execute(InputInterface $input, OutputInterface $output): int
   {
+    $optionCheck = true;
+
+    if ($input->getOption('failure')) {
+      $output->writeln('<error>' . $this->l->t('Generating an artificial failure as requested.') . '</error>');
+      $optionCheck = false;
+    }
+
+    if (!$optionCheck) {
+      $output->writeln('');
+      $output->writeln('<error>' . $this->l->t('Command failed, please have a look at the error messages above.') . '</error>');
+      $output->writeln('');
+      (new DescriptorHelper)->describe($output, $this);
+      return 1;
+    }
+
     if ($input->getOption('authenticated')) {
       $result = $this->authenticate($input, $output);
       if ($result != 0) {

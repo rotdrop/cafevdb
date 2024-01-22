@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,9 +49,6 @@ class Instruments extends PMETableViewBase
   private const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
   private const INSTRUMENT_FAMILIES_JOIN_TABLE = 'instrument_instrument_family';
   private const TRANSLATIONS_TABLE = self::FIELD_TRANSLATIONS_TABLE;
-
-  /** @var BiDirectionalL10N */
-  private $musicL10n;
 
   /**
    * @var array
@@ -104,11 +101,10 @@ class Instruments extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    BiDirectionalL10N $musicL10n,
+    private BiDirectionalL10N $musicL10n,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->projectMode = false;
-    $this->musicL10n = $musicL10n;
     $this->getDatabaseRepository(Entities\Instrument::class)->findAll();
     $this->flush();
   }

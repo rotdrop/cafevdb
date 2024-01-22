@@ -49,7 +49,7 @@ class LoginNameSlugHandler implements SlugHandlerInterface
   /**
    * @var GedmoSluggableListener
    */
-  protected $sluggable;
+  protected GedmoSluggableListener $sluggable;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(SluggableListener $sluggable)

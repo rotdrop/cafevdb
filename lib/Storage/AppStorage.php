@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,9 +51,6 @@ class AppStorage
   public const UPLOAD_FOLDER = 'uploads';
   public const DRAFTS_FOLDER = 'drafts';
 
-  /** @var IAppData */
-  private $appData;
-
   /** @var IFolder */
   private $uploadFolder;
 
@@ -62,13 +59,10 @@ class AppStorage
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IAppData $appData,
-    ILogger $logger,
-    IL10N $l10n,
+    private IAppData $appData,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->appData = $appData;
-    $this->logger = $logger;
-    $this->l = $l10n;
     try {
       $this->uploadFolder = $this->ensureFolder(self::UPLOAD_FOLDER);
       $this->draftsFolder = $this->ensureFolder(self::DRAFTS_FOLDER);

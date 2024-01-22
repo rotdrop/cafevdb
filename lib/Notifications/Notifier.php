@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,31 +48,14 @@ class Notifier implements \OCP\Notification\INotifier
   const DECLINE_ACTION = 'decline';
   const PROTEST_ACTION = 'protest';
 
-  /** @var string */
-  protected $appName;
-
-  /** @var IAppContainer */
-  protected $appContainer;
-
-  /** @var IL10NFactory */
-  protected $l10nFactory;
-
-  /** @var  IURLGenerator */
-  protected $urlGenerator;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IAppContainer $appContainer,
-    IL10NFactory $factory,
-    IURLGenerator $urlGenerator,
-    ILogger $logger,
+    protected string $appName,
+    protected IAppContainer $appContainer,
+    protected IL10NFactory $factory,
+    protected IURLGenerator $urlGenerator,
+    protected ILogger $logger,
   ) {
-    $this->appName = $appName;
-    $this->appContainer = $appContainer;
-    $this->l10nFactory = $factory;
-    $this->urlGenerator = $urlGenerator;
-    $this->logger = $logger;
   }
   // phpcs:enable
 

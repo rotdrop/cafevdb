@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,12 +52,6 @@ class SepaBulkTransactions extends PMETableViewBase
   const ROW_TAG_PREFIX = '0;';
 
   protected $cssClass = self::TEMPLATE;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var SepaBulkTransactionService */
-  private $bulkTransactionService;
 
   /** @var array */
   private $bulkTransactionExpanded = [];
@@ -162,7 +156,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
   ];
 
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project */
-  private $project = null;
+  private ?Entities\Project $project = null;
 
   /** {@inheritdoc} */
   public function __construct(
@@ -170,14 +164,12 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
     PHPMyEdit $phpMyEdit,
-    FinanceService $financeService,
-    SepaBulkTransactionService $bulkTransactionService,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
+    private FinanceService $financeService,
+    private SepaBulkTransactionService $bulkTransactionService,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->financeService = $financeService;
-    $this->bulkTransactionService = $bulkTransactionService;
     $this->bulkTransactionExpanded = $this->requestParameters['bulkTransactionExpanded'];
 
     if ($this->projectId > 0) {

@@ -1,5 +1,6 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
+const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -9,6 +10,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 const webpack = require('webpack');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin');
 const DeadCodePlugin = require('webpack-deadcode-plugin')
 const Visualizer = require('webpack-visualizer-plugin2');
@@ -26,14 +28,18 @@ const appName = appInfo.info.id[0];
 const productionMode = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  entry: {
+  entry: Object.entries({
     app: './src/app.js',
     'admin-settings': './src/admin-settings.js',
     settings: './src/settings.js',
     'background-jobs': './src/background-jobs.js',
     'files-hooks': './src/files-hooks.js',
+    'files-hooks-ts': './src/files-hooks.ts',
+    'files-sidebar-hooks': './src/files-sidebar-hooks.js',
     'iframe-content-script': './src/iframe-content-script.js',
-  },
+  })
+    .filter(([name, entry]) => !process.env.ONLY || process.env.ONLY === name)
+    .reduce((a, [name, entry]) => Object.assign(a, { [name]: entry }), {}),
   output: {
     // path: path.resolve(__dirname, 'js'),
     path: path.resolve(__dirname, '.'),
@@ -123,6 +129,7 @@ module.exports = {
       ],
     }),
     new VueLoaderPlugin(),
+    new NodePolyfillPlugin(),
     new DeadCodePlugin({
       patterns: [
         'src/**/*.(vue|js|jsx|css)',
@@ -180,11 +187,30 @@ module.exports = {
       },
       {
         test: /\.svg$/i,
-        use: 'svgo-loader',
+        loader: 'svgo-loader',
         type: 'asset', // 'asset/resource',
         generator: {
           filename: './css/img/[name]-[hash][ext]',
           publicPath: '../',
+        },
+        options: {
+          multipass: true,
+          js2svg: {
+            indent: 2,
+            pretty: true,
+          },
+          plugins: [
+            {
+              name: 'preset-default',
+              params: {
+                overrides: {
+                  // viewBox is required to resize SVGs with CSS.
+                  // @see https://github.com/svg/svgo/issues/1128
+                  removeViewBox: false,
+                },
+              },
+            },
+          ],
         },
       },
       // {
@@ -210,6 +236,76 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
+        exclude: BabelLoaderExcludeNodeModulesExcept([
+          'vue-material-design-icons',
+          'emoji-mart-vue-fast',
+        ]),
+      },
+      {
+        test: /\.tsx?$/,
+        use: [
+          'babel-loader',
+          {
+            // Fix TypeScript syntax errors in Vue
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
+        exclude: BabelLoaderExcludeNodeModulesExcept([]),
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        // automatically detect necessary packages to
+        // transpile in the node_modules folder
+        exclude: BabelLoaderExcludeNodeModulesExcept([
+          '@nextcloud/dialogs',
+          '@nextcloud/event-bus',
+          'davclient.js',
+          'nextcloud-vue-collections',
+          'p-finally',
+          'p-limit',
+          'p-locate',
+          'p-queue',
+          'p-timeout',
+          'p-try',
+          'semver',
+          'striptags',
+          'toastify-js',
+          'v-tooltip',
+          'yocto-queue',
+        ]),
+      },
+      {
+        resourceQuery: /raw/,
+        type: 'asset/source',
+      },
+      {
+        test: /\.svg$/i,
+        resourceQuery: /raw/,
+        loader: 'svgo-loader',
+        type: 'asset/source',
+        options: {
+          multipass: true,
+          js2svg: {
+            indent: 2,
+            pretty: true,
+          },
+          plugins: [
+            {
+              name: 'preset-default',
+              params: {
+                overrides: {
+                  // viewBox is required to resize SVGs with CSS.
+                  // @see https://github.com/svg/svgo/issues/1128
+                  removeViewBox: false,
+                },
+              },
+            },
+          ],
+        },
       },
     ],
   },
@@ -219,6 +315,7 @@ module.exports = {
       path.resolve(__dirname, 'style'),
       path.resolve(__dirname, 'src'),
       path.resolve(__dirname, '3rdparty'),
+      path.resolve(__dirname, 'img'),
       path.resolve(__dirname, '.'),
       'node_modules',
     ],
@@ -229,6 +326,7 @@ module.exports = {
       'jquery.tinymce': path.resolve(__dirname, '3rdparty/tinymce/JqueryIntegration.js'),
       // 'canvas-to-blob': 'blueimp-canvas-to-blob',
       // 'load-image': 'blueimp-load-image',
+      vue$: path.resolve('./node_modules/vue'),
     },
     fallback: {
       buffer: require.resolve('buffer'),
@@ -237,7 +335,14 @@ module.exports = {
       path: require.resolve('path-browserify'),
       stream: require.resolve('stream-browserify'),
     },
-    extensions: ['*', '.js', '.vue'],
+    extensions: ['*', '.js', '.vue', 'ts'],
+    extensionAlias: {
+      /**
+       * Resolve TypeScript files when using fully-specified esm import paths
+       * https://github.com/webpack/webpack/issues/13252
+       */
+      '.js': ['.js', '.ts'],
+    },
   },
   // externals: {
   //   tinymce: 'window tinymce',

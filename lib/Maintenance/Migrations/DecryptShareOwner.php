@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB\Maintenance\Migrations;
 
 use Throwable;
 
-use OCP\ILogger;
+use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
 use OCA\CAFEVDB\Service\EncryptionService;
@@ -40,18 +40,12 @@ class DecryptShareOwner implements IMigration
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var EncryptionService */
-  private $encryptionService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ILogger $logger,
-    IL10N $l10n,
-    EncryptionService $encryptionService,
+    protected ILogger $logger,
+    protected IL10N $l,
+    protected EncryptionService $encryptionService,
   ) {
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->encryptionService = $encryptionService;
   }
 
   // phpcs:enable
@@ -73,4 +67,4 @@ class DecryptShareOwner implements IMigration
 
     return true;
   }
-};
+}

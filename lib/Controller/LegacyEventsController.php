@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,54 +63,20 @@ class LegacyEventsController extends Controller
   const SUBTOPIC_DELETE = 'delete';
   const SUBTOPIC_EXPORT = 'export';
 
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var ConfigCheckService */
-  private $configCheckService;
-
-  /** @var CalDavService */
-  private $calDavService;
-
-  /** @var VCalendarService */
-  private $vCalendarService;
-
-  /** @var EventsService */
-  private $eventsService;
-
-  /** @var OC_Calendar_Object */
-  private $ocCalendarObject;
-
-  /** @var ToolTipsService */
-  protected $toolTipsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ConfigService $configService,
-    ConfigCheckService $configCheckService,
-    RequestParameterService $parameterService,
-    ProjectService $projectService,
-    CalDavService $calDavService,
-    VCalendarService $vCalendarService,
-    EventsService $eventsService,
-    ToolTipsService $toolTipsService,
+    protected ConfigService $configService,
+    private ConfigCheckService $configCheckService,
+    private RequestParameterService $parameterService,
+    private ProjectService $projectService,
+    private CalDavService $calDavService,
+    private VCalendarService $vCalendarService,
+    private EventsService $eventsService,
+    protected ToolTipsService $toolTipsService,
   ) {
     parent::__construct($appName, $request);
-
-    $this->configService = $configService;
-    $this->configCheckService = $configCheckService;
-    $this->parameterService = $parameterService;
-    $this->projectService = $projectService;
-    $this->calDavService = $calDavService;
-    $this->vCalendarService = $vCalendarService;
-    $this->eventsService = $eventsService;
-    $this->ocCalendarObject = $vCalendarService->legacyEventObject();
-    $this->toolTipsService = $toolTipsService;
 
     $this->l = $this->l10N();
   }

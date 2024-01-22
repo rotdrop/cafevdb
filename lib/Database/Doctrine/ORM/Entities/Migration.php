@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,6 +58,16 @@ class Migration implements \ArrayAccess
    * @ORM\Column(type="string", length=512)
    */
   private $migrationClassName;
+
+  /**
+   * @var int
+   *
+   * Run-count for tracking multiple invocations for fun. The table only
+   * contains migrations which have been executed, so the default is 1.
+   *
+   * @ORM\Column(type="integer", options={"default"="1"})
+   */
+  private $runCount;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -112,5 +122,41 @@ class Migration implements \ArrayAccess
   public function getMigrationClassName():?string
   {
     return $this->migrationClassName;
+  }
+
+  /**
+   * Set the migration class name.
+   *
+   * @param int $count
+   *
+   * @return Migration
+   */
+  public function setRunCount(int $count):Migration
+  {
+    $this->runCount = $count;
+
+    return $this;
+  }
+
+  /**
+   * Get runCount.
+   *
+   * @return int
+   */
+  public function getRunCount():int
+  {
+    return $this->runCount;
+  }
+
+  /**
+   * Increment the run-count and return the new this class instance.
+   *
+   * @return Migration
+   */
+  public function incrementRunCount():Migration
+  {
+    $this->runCount++;
+
+    return $this;
   }
 }

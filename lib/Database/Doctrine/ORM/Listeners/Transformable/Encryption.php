@@ -40,9 +40,6 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var Crypto\AsymmetricKeyService */
-  private $keyService;
-
   /** @var string */
   private $managementGroupId;
 
@@ -60,13 +57,12 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    Crypto\AsymmetricKeyService $keyService,
+    private Crypto\AsymmetricKeyService $keyService,
     string $managementGroupId,
     EncryptionService $encryptionService,
     Crypto\SealCryptor $sealCryptor,
-    ILogger $logger,
+    protected ILogger $logger,
   ) {
-    $this->keyService = $keyService;
     $this->managementGroupId = '@' . $managementGroupId;
     $this->appCryptor = $encryptionService->getAppAsymmetricCryptor();
     // The seal-cryptor carries state, namely the array of key-cryptors, so
@@ -74,7 +70,6 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     $this->sealCryptor = clone $sealCryptor;
     $this->sealService = $this->sealCryptor->getSealService();
     $this->cachable = true;
-    $this->logger = $logger;
   }
   // phpcs:enable
 

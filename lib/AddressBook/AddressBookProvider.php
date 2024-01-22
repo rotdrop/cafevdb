@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
@@ -40,33 +40,20 @@ class AddressBookProvider implements IAddressBookProvider
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var AuthorizationService */
-  private $authorizationService;
-
   /** @var AddressBook */
   private static $addressBook = null;
 
   /** @var ContactsAddressBook */
   private static $contactsAddressBook = null;
 
-  /** @var MusicianCardBackend */
-  private $cardBackend;
-
-  /** @var ContactsService */
-  private $contactsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    AuthorizationService $authorizationService,
-    ContactsService $contactsService,
-    MusicianCardBackend $cardBackend,
+    protected ConfigService $configService,
+    private AuthorizationService $authorizationService,
+    private ContactsService $contactsService,
+    private MusicianCardBackend $cardBackend,
   ) {
-    $this->configService = $configService;
-    $this->authorizationService = $authorizationService;
-    $this->contactsService = $contactsService;
     $this->l = $this->l10n();
-    $this->cardBackend = $cardBackend;
   }
   // phpcs:enable
 

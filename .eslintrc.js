@@ -93,6 +93,7 @@ module.exports = {
           './style',
           './3rdparty',
           './',
+          '../img',
         ],
       },
     ],

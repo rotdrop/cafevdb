@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -421,32 +421,8 @@ Störung.';
   private $executionStatus; // false on error
   private $diagnostics; // mixed, depends on operation
 
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var RecipientsFilter */
-  private $recipientsFilter;
-
-  /** @var EventsService */
-  private $eventsService;
-
-  /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
-
-  /** @var ProgressStatusService */
-  private $progressStatusService;
-
-  /** @var SimpleSharingService */
-  private $simpleSharingService;
-
   /** @var OrganizationalRolesService */
   private $organizationalRolesService;
-
-  /** @var AppStorage */
-  private $appStorage;
-
-  /** @var UserStorage */
-  private $userStorage;
 
   /** @var int */
   private $progressToken;
@@ -486,27 +462,18 @@ Störung.';
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    RequestParameterService $parameterService,
-    EventsService $eventsService,
-    RecipientsFilter $recipientsFilter,
-    EntityManager $entityManager,
-    ProjectParticipantFieldsService $participantFieldsService,
-    ProgressStatusService $progressStatusService,
-    SimpleSharingService $simpleSharingService,
-    OrganizationalRolesService $organizationRolesService,
-    AppStorage $appStorage,
-    UserStorage $userStorage,
+    protected ConfigService $configService,
+    private RequestParameterService $parameterService,
+    private EventsService $eventsService,
+    private RecipientsFilter $recipientsFilter,
+    private EntityManager $entityManager,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private ProgressStatusService $progressStatusService,
+    private SimpleSharingService $simpleSharingService,
+    private OrganizationalRolesService $organizationRolesService,
+    private AppStorage $appStorage,
+    private UserStorage $userStorage,
   ) {
-    $this->configService = $configService;
-    $this->eventsService = $eventsService;
-    $this->progressStatusService = $progressStatusService;
-    $this->simpleSharingService = $simpleSharingService;
-    $this->organizationalRolesService = $organizationRolesService;
-    $this->appStorage = $appStorage;
-    $this->userStorage = $userStorage;
-    $this->entityManager = $entityManager;
-    $this->participantFieldsService = $participantFieldsService;
     $this->l = $this->l10N();
 
     $this->constructionMode = $this->getConfigValue('emailtestmode') !== 'off';
@@ -4583,6 +4550,7 @@ Störung.';
         $this->remove($draftId, true);
       } catch (\Throwable $t) {
         $this->entityManager->reopen();
+        $this->clearDatabaseRepository();
         $this->logException($t);
         $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
           'Deleting draft with id %d failed: %s',

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,29 +42,14 @@ class PhpSpreadsheetValueBinder extends PhpSpreadSheet\Cell\DefaultValueBinder i
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var IL10N */
-  private $l;
-
-  /** @var IURLGenerator */
-  private $urlGenerator;
-
-  /** @var FuzzyInputService */
-  private $fuzzyInputService;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ILogger $logger,
-    IL10n $l10n,
-    IURLGenerator $urlGenerator,
-    FuzzyInputService $fuzzyInputService
+    protected ILogger $logger,
+    private IL10n $l,
+    private IURLGenerator $urlGenerator,
+    private FuzzyInputService $fuzzyInputService
   ) {
     //parent::__construct();
-    $this->logger = $logger;
-    $this->l10n = $l10n;
-    $this->urlGenerator = $urlGenerator;
-
-    $this->l = $l10n;
-    $this->fuzzyInputService = $fuzzyInputService;
   }
   // phpcs:enable
 

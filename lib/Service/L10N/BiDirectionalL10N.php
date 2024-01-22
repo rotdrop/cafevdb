@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,18 +47,15 @@ class BiDirectionalL10N
   /** @var string */
   protected $targetLang;
 
-  /** @var string */
-  protected $keyLang;
-
   /* @var array */
   protected $translations;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    ILogger $logger,
+    protected string $appName,
+    protected ILogger $logger,
     IL10N $l10n,
-    string $keyLang = 'en',
+    protected string $keyLang = 'en',
   ) {
     $this->appName = $appName;
     $this->logger = $logger;

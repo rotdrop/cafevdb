@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -104,21 +104,6 @@ class EncryptionService
     self::USER_ENCRYPTION_KEY_KEY,
   ];
 
-  /** @var string */
-  private $appName;
-
-  /** @var IConfig */
-  private $containerConfig;
-
-  /** @var IHasher */
-  private $hasher;
-
-  /** @var IEventDispatcher */
-  private $eventDispatcher;
-
-  /** @var Crypto\AsymmetricKeyService */
-  private $asymKeyService;
-
   /** @var Crypto\CloudSymmetricCryptor */
   private $appCryptor;
 
@@ -136,25 +121,20 @@ class EncryptionService
 
   /** {@inheritdoc} */
   public function __construct(
-    string $appName,
+    private string $appName,
     AuthorizationService $authorization,
-    IConfig $containerConfig,
+    private IConfig $containerConfig,
     IUserSession $userSession,
-    Crypto\AsymmetricKeyService $asymKeyService,
+    private Crypto\AsymmetricKeyService $asymKeyService,
     Crypto\CryptoFactoryInterface $cryptoFactory,
-    IHasher $hasher,
+    private IHasher $hasher,
     ICredentialsStore $credentialsStore,
-    IEventDispatcher $eventDispatcher,
-    ILogger $logger,
-    IL10N $l10n,
+    private IEventDispatcher $eventDispatcher,
+    protected ILogger $logger,
+    // private IL10N $l,
   ) {
-    $this->appName = $appName;
-    $this->containerConfig = $containerConfig;
-    $this->asymKeyService = $asymKeyService;
     $this->appCryptor = $cryptoFactory->getSymmetricCryptor();
-    $this->hasher = $hasher;
-    $this->eventDispatcher = $eventDispatcher;
-    $this->logger = $logger;
+
     $this->l = new FakeL10N(); // $l10n;
 
     try {
