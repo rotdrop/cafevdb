@@ -355,7 +355,7 @@ class ConfigCheckService
           $share->setPermissions($groupPerms);
           $this->shareManager->updateShare($share);
         }
-        return $share->getPermissions() !== $groupPerms;
+        return $share->getPermissions() === $groupPerms;
       }
     }
 
@@ -511,10 +511,85 @@ class ConfigCheckService
    * @param null|string $sharedFolder Optional. If unset, the name is fetched
    * from the application configuration options.
    *
+   * @param null|string $postfix Postfix to append to the folder name. This is
+   * need in order to implement the migration from the personally shared
+   * share-holder folder to the anonymously shared group-folder.
+   *
+   * @return bool @c true on success.
+   */
+  public function groupFolderExists(?string $sharedFolder = '', ?string $postfix = null):bool
+  {
+    if ($postfix === null) {
+      // check whether the folder migrations has been run or not.
+      if ($this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+        $postfix = '-testing'; // @todo remove after it has proven useful
+      } else {
+        $postfix = '';
+      }
+    }
+    $this->logInfo('POSTFIX ' . $postfix);
+
+    $sharedFolder == '' && $sharedFolder = $this->getConfigValue('sharedfolder', '');
+
+    if ($sharedFolder == '') {
+      $this->logError('no folder');
+      // not configured
+      return false;
+    }
+    $sharedFolder .= $postfix;
+
+    /** @var GroupFoldersService $groupFoldersService */
+    $groupFoldersService = $this->appContainer()->get(GroupFoldersService::class);
+    $folderInfo = $groupFoldersService->getFolder($sharedFolder);
+    if (empty($folderInfo)) {
+      return false;
+    }
+
+    $shareGroup   = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+    $shareGroupIds = [];
+    foreach (AuthorizationService::GROUP_SUFFIX_LIST as $permissions => $groupSuffix) {
+      $permissions |= AuthorizationService::IMPLIED_PERMISSIONS[$permissions];
+      if ($permissions & AuthorizationService::PERMISSION_FILESYSTEM) {
+        $shareGroupIds[] = $shareGroup . $groupSuffix;
+      }
+    }
+
+    $this->logInfo('FOLDER INFO ' . print_r($folderInfo, true));
+    foreach ($shareGroupIds as $groupId) {
+      if (empty($folderInfo['groups'][$groupId])) {
+        return false;
+      }
+      if ($folderInfo['groups'][$groupId]['permissions'] != self::SHARE_PERMISSIONS) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * We require that the share-owner owns a directory shared with the
+   * orchestra group. Check whether this folder exists.
+   *
+   * @param null|string $sharedFolder Optional. If unset, the name is fetched
+   * from the application configuration options.
+   *
    * @return bool @c true on success.
    */
   public function sharedFolderExists(?string $sharedFolder = '')
   {
+    try {
+      $result = $this->groupFolderExists($sharedFolder);
+    } catch (Throwable $t) {
+      $result = false;
+    }
+    if (!$this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+      // migration has been performed, so do nothing else
+      return $result;
+    }
+
+    $this->logInfo('Migration to group folders has not been performed: ' . $this->getConfigValu(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true));
+
     if (!$this->shareOwnerExists()) {
       return false;
     }
@@ -556,6 +631,7 @@ class ConfigCheckService
         return true;
       } catch (Throwable $e) {
         $this->logError('No file id for  ' . $sharedFolder . ' ' . $e->getMessage());
+        $this->logException($e);
         return false;
       }
     });
@@ -575,11 +651,19 @@ class ConfigCheckService
    *
    * @return bool \true on success.
    */
-  public function checkGroupSharedFolder(string $sharedFolder, ?string $postfix = null):bool
+  public function checkGroupFolder(string $sharedFolder, ?string $postfix = null):bool
   {
     if ($postfix === null) {
-      $sharedFolder .= '-testing'; // @todo remove after it has proven useful
+      // check whether the folder migrations has been run or not.
+      if ($this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+        $postfix = '-testing'; // @todo remove after it has proven useful
+      } else {
+        $postfix = '';
+      }
     }
+    $this->logInfo('POSTFIX ' . $postfix);
+
+    $sharedFolder .= $postfix;
 
     $this->logInfo('TRY CREATE ' . $sharedFolder);
 
@@ -610,8 +694,6 @@ class ConfigCheckService
       }
     }
 
-    $this->logInfo('HELLO');
-
     /** @var GroupFoldersService $groupFoldersService */
     $groupFoldersService = $this->appContainer()->get(GroupFoldersService::class);
 
@@ -624,7 +706,6 @@ class ConfigCheckService
           array_combine($shareGroupIds, array_fill(0, count($shareGroupIds), GroupFoldersService::PERMISSION_ALL)),
           [ $adminGroupId => GroupFoldersService::MANAGER_TYPE_GROUP, ],
         );
-        $this->logInfo('TRIED TO CREATE ' . $sharedFolder);
       } else {
         foreach ($shareGroupIds as $shareGroupId) {
           $groupFoldersService->addGroupToFolder(
@@ -638,14 +719,11 @@ class ConfigCheckService
           $adminGroupId,
           GroupFoldersService::MANAGER_TYPE_GROUP,
         );
-        $this->logInfo('TRIED TO MODIFY ' . $sharedFolder);
       }
     } catch (Throwable $t) {
       $this->logException($t, 'Unable to create or modify group shared folder ' . $sharedFolder);
       return false;
     }
-
-    $this->logInfo('HELLO');
 
     return true;
   }
@@ -661,9 +739,14 @@ class ConfigCheckService
   public function checkSharedFolder(string $sharedFolder):bool
   {
     try {
-      $this->checkGroupSharedFolder($sharedFolder);
+      $result = $this->checkGroupFolder($sharedFolder);
     } catch (Throwable $t) {
-      $this->logException($t, 'CANNOT CREATE GROUP SHARED FOLDER');
+      $this->logException($t, 'CANNOT CREATE OR UPDATTE GROUP SHARED FOLDER');
+      $result = false;
+    }
+    if (!$this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+      // migration has been performed, so do nothing else
+      return result;
     }
 
     if ($sharedFolder == '') {

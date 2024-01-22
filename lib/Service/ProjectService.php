@@ -139,7 +139,10 @@ class ProjectService
       }
 
       $this->logError('SERVER ' . print_r($request->server, true));
-      $this->logError('POST ' . print_r($request->post, true));
+      if ($request->method == 'POST') {
+        $this->logError('POST ' . print_r($request->post, true));
+      }
+      $this->logError('get ' . print_r($request->get, true));
       $this->repository = null;
       $this->logException($t);
     }
@@ -931,7 +934,12 @@ class ProjectService
       /** @var SimpleSharingService $sharingService */
       $sharingService = $this->di(SimpleSharingService::class);
 
-      $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+      if ($this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
+        $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
+      } else {
+        $shareOwnerUid = $this->userId();
+      }
+
       // try to create or use the folder and share it by a public link
       $url = $sharingService->linkShare(
         $node,

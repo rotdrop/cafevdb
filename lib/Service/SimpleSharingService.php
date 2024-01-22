@@ -301,4 +301,57 @@ class SimpleSharingService
 
     return empty($share) ? null : $share;
   }
+
+  /**
+   * Create a simple group-share (default read-only)
+   *
+   * @param FileSystemNode $node
+   *
+   * @param string $groupId
+   *
+   * @param null|string $target The targer location in the file-space of the
+   * consumer.
+   *
+   * @param int $permissions Default read-only.
+   *
+   * @return bool
+   */
+  public function groupShareNode(
+    FileSystemNode $node,
+    string $groupId,
+    ?string $target = null,
+    int $permissions = \OCP\Constants::PERMISSION_READ,
+  ):bool {
+    $ownerId = $node->getOwner();
+    if (empty($ownerId)) {
+      $ownerId = $this->userId();
+    }
+    foreach ($this->shareManager->getSharesBy($ownerId, IShare::TYPE_GROUP) as $share) {
+      if ($share->getNodeId() === $node->getId() && $share->getSharedWith() == $groupId) {
+        // check permissions
+        if ($share->getPermissions() !== $permissions) {
+          $share->setPermissions($permissions);
+          $this->shareManager->updateShare($share);
+        }
+        return $share->getPermissions() === $permissions;
+      }
+    }
+
+    // Otherwise it should be legal to attempt a new share ...
+    $share = $this->shareManager->newShare();
+    $share->setNode($node);
+    $share->setSharedWith($groupId);
+    $share->setPermissions($permissions);
+    $share->setShareType(IShare::TYPE_GROUP);
+    $share->setShareOwner($ownerId);
+    $share->setSharedBy($this->userId());
+
+    try {
+      $this->shareManager->createShare($share);
+      return true;
+    } catch (Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+  }
 }
