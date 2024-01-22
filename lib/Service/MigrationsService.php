@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Throwable;
+
 use RuntimeException;
 use RegexIterator;
 use RecursiveIteratorIterator;
@@ -89,7 +91,7 @@ class MigrationsService
       $this->logInfo('Trying to apply migration ' . $version . ', PHP-class ' . $className);
       try {
         $this->applyMigration($version, $className);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
         break;
       }
@@ -171,29 +173,37 @@ class MigrationsService
     $instance = $this->appContainer->get($className);
 
     $this->entityManager->close();
+    $this->clearDatabaseRepository();
     $this->entityManager->reopen();
 
-    $t = null;
+    $exception = null;
     try {
       $result = $instance->execute();
-    } catch (EnduserNotificationException $t) {
+    } catch (Throwable $exception) {
       $result = false;
     }
     if ($result !== true) {
-      throw new RuntimeException($this->l->t("Migration %s has failed to execute.", $className), 0, $t);
+      throw new RuntimeException($this->l->t("Migration %s has failed to execute.", $className), 0, $exception);
     }
 
     $this->entityManager->close();
     $this->entityManager->reopen();
+    $this->clearDatabaseRepository();
 
     $migrationClassName = self::getBaseClassName($className);
 
-    /** @var Entities\Migration $migrationRecord */
-    $migrationRecord = (new Entities\Migration)
-      ->setVersion($version)
-      ->setMigrationClassName($migrationClassName);
-
-    $this->persist($migrationRecord);
+    $migrationRecord = $this->getDatabaseRepository(Entities\Migration::class)->find($version);
+    if (empty($migrationRecord)) {
+      /** @var Entities\Migration $migrationRecord */
+      $migrationRecord = (new Entities\Migration)
+        ->setVersion($version)
+        ->setMigrationClassName($migrationClassName);
+      $this->persist($migrationRecord);
+    } else {
+      $migrationRecord
+        ->incrementRunCount()
+        ->setMigrationClassName($migrationClassName);
+    }
     $this->flush();
   }
 
@@ -229,7 +239,8 @@ class MigrationsService
     $sql = "ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS migration_class_name VARCHAR(512) NOT NULL;
 ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS version char(14) CHARACTER SET ascii NOT NULL;
 ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS created datetime(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)';
-ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS updated datetime(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'";
+ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS updated datetime(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)';
+ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS run_count INT DEFAULT 1 NOT NULL";
     $connection = $this->entityManager->getConnection();
     $stmt = $connection->prepare($sql);
     $stmt->executeQuery();
@@ -258,6 +269,7 @@ ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS updated datetime(6) DEFAULT NULL
     } catch (InvalidFieldNameException $ifne) {
       $this->logInfo('MIGRATIONS TABLE SEEMS BROKEN');
       if ($autoFix) {
+        $this->logInfo('ATTEMPTING TO FIX IT');
         $this->sanitizeMigrationsTable();
         return $this->findLatestVersion(autoFix: false);
       }

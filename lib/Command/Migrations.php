@@ -24,10 +24,11 @@
 
 namespace OCA\CAFEVDB\Command;
 
+use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
+use OCP\ISession;
 use OCP\IUserSession;
 use OCP\IUserManager;
-use OCP\AppFramework\IAppContainer;
 
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Command\Command;
@@ -87,6 +88,7 @@ class Migrations extends Command
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
+    protected ISession $session,
     protected IAppContainer $appContainer,
   ) {
     parent::__construct();
@@ -211,9 +213,9 @@ class Migrations extends Command
       }
       $l10nAuto = $this->l->t(self::APPLY_AUTO);
       $l10nSingle = $this->l->t(self::APPLY_SINGLE);
-      if (str_starts_with(self::APPLY_AUTO, $apply) || str_starts_with($l10nAscending, $apply)) {
+      if (str_starts_with(self::APPLY_AUTO, $apply) || str_starts_with($l10nAuto, $apply)) {
         $apply = self::APPLY_AUTO;
-      } elseif (str_starts_with(self::APPLY_SINGLE, $apply) || str_starts_with($l10nDescending, $apply)) {
+      } elseif (str_starts_with(self::APPLY_SINGLE, $apply) || str_starts_with($l10nSingle, $apply)) {
         $apply = self::APPLY_SINGLE;
       } elseif (preg_match(MigrationsService::VERSION_REGEXP, $apply)) {
         $version = $apply;
