@@ -33,8 +33,7 @@ module.exports = {
     'admin-settings': './src/admin-settings.js',
     settings: './src/settings.js',
     'background-jobs': './src/background-jobs.js',
-    'files-hooks': './src/files-hooks.js',
-    'files-hooks-ts': './src/files-hooks.ts',
+    'files-hooks': './src/files-hooks.ts',
     'files-sidebar-hooks': './src/files-sidebar-hooks.js',
     'iframe-content-script': './src/iframe-content-script.js',
   })
