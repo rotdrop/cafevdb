@@ -105,7 +105,6 @@ class FilesHooksListener implements IEventListener
     if (!in_array($eventClass, self::EVENT)) {
       return;
     }
-    /** @var HandledEvent $event */
 
     // this really only needs to be executed once per request.
     if ($this->handled[$eventClass]) {
