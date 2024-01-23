@@ -33,7 +33,6 @@ import type { Entry } from '@nextcloud/files';
 import { action as sidebarAction } from '../../files/src/actions/sidebarAction.ts';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import axios from '@nextcloud/axios';
-import Tooltip from '@nextcloud/vue/dist/Directives/Tooltip.js'
 
 import logoSvg from '../img/cafevdb.svg?raw';
 
@@ -44,8 +43,6 @@ declare global {
   }
   // var __webpack_public_path__: string;
 }
-
-Vue.directive('tooltip', Tooltip);
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js');
