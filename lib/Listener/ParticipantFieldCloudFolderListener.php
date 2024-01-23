@@ -119,8 +119,12 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   /** @var IUser */
   private $user;
 
-  /** @var string */
-  protected string $appName;
+  /**
+   * @var string
+   *
+   * Must remain untyped.
+   */
+  protected $appName;
 
   /** @var Repositories\ProjectParticipantFieldsRepository */
   private $fieldsRepository;
