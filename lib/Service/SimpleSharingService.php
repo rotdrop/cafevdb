@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \DateTimeImmutable;
-use \DateTimeInterface;
+use Throwable;
+use DateTimeImmutable;
+use DateTimeInterface;
 
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
@@ -314,6 +315,9 @@ class SimpleSharingService
    *
    * @param int $permissions Default read-only.
    *
+   * @param bool $sharedByOwner Pretend this was shared by the owner of the
+   * node instead of the currently logged in user.
+   *
    * @return bool
    */
   public function groupShareNode(
@@ -321,19 +325,32 @@ class SimpleSharingService
     string $groupId,
     ?string $target = null,
     int $permissions = \OCP\Constants::PERMISSION_READ,
+    bool $sharedByOwner = false,
   ):bool {
-    $ownerId = $node->getOwner();
-    if (empty($ownerId)) {
+    $owner = $node->getOwner();
+    if (empty($owner)) {
       $ownerId = $this->userId();
+    } else {
+      $ownerId = $owner->getUID();
     }
-    foreach ($this->shareManager->getSharesBy($ownerId, IShare::TYPE_GROUP) as $share) {
+    $sharedById = $sharedByOwner ? $ownerId : $this->userId();
+    /** @var IShare $share */
+    foreach ($this->shareManager->getSharesBy(userId: $ownerId, shareType: IShare::TYPE_GROUP, reshares: true) as $share) {
       if ($share->getNodeId() === $node->getId() && $share->getSharedWith() == $groupId) {
         // check permissions
         if ($share->getPermissions() !== $permissions) {
           $share->setPermissions($permissions);
-          $this->shareManager->updateShare($share);
         }
-        return $share->getPermissions() === $permissions;
+        if ($share->getSharedBy() !== $sharedById) {
+          $share->setSharedBy($sharedById);
+        }
+        if ($share->getShareOwner() !== $ownerId) {
+          $share->setShareOwner($ownerId);
+        }
+        $this->shareManager->updateShare($share);
+        return $share->getPermissions() === $permissions
+          && $share->getShareOwner() === $ownerId
+          && $share->getSharedBy() === $sharedById;
       }
     }
 
@@ -344,7 +361,7 @@ class SimpleSharingService
     $share->setPermissions($permissions);
     $share->setShareType(IShare::TYPE_GROUP);
     $share->setShareOwner($ownerId);
-    $share->setSharedBy($this->userId());
+    $share->setSharedBy($sharedById);
 
     try {
       $this->shareManager->createShare($share);

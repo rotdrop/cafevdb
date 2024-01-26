@@ -192,19 +192,27 @@ class MigrationsService
 
     $migrationClassName = self::getBaseClassName($className);
 
-    $migrationRecord = $this->getDatabaseRepository(Entities\Migration::class)->find($version);
-    if (empty($migrationRecord)) {
-      /** @var Entities\Migration $migrationRecord */
-      $migrationRecord = (new Entities\Migration)
-        ->setVersion($version)
-        ->setMigrationClassName($migrationClassName);
-      $this->persist($migrationRecord);
-    } else {
-      $migrationRecord
-        ->incrementRunCount()
-        ->setMigrationClassName($migrationClassName);
+    foreach (['run', 'retry'] as $state) {
+      try {
+        $migrationRecord = $this->getDatabaseRepository(Entities\Migration::class)->find($version);
+        if (empty($migrationRecord)) {
+          /** @var Entities\Migration $migrationRecord */
+          $migrationRecord = (new Entities\Migration)
+            ->setVersion($version)
+            ->setMigrationClassName($migrationClassName);
+          $this->persist($migrationRecord);
+        } else {
+          $migrationRecord
+            ->incrementRunCount()
+            ->setMigrationClassName($migrationClassName);
+        }
+        $this->flush();
+        break;
+      } catch (Throwable $t) {
+        $this->logInfo('Try to sanitize the migrations table');
+        $this->sanitizeMigrationsTable();
+      }
     }
-    $this->flush();
   }
 
   /**
@@ -273,7 +281,7 @@ ALTER TABLE Migrations ADD COLUMN IF NOT EXISTS run_count INT DEFAULT 1 NOT NULL
         $this->sanitizeMigrationsTable();
         return $this->findLatestVersion(autoFix: false);
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
     }
     if (empty($latestMigration)) {

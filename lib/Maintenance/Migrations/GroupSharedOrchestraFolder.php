@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,7 +88,7 @@ class GroupSharedOrchestraFolder implements IMigration
     protected IRootFolder $rootFolder,
     protected ILockingProvider $lockingProvider,
     protected IShareManager $shareManager,
-    protected string $appName,
+    protected $appName,
   ) {
     // note that this cannot be done by simply using dependency injection on
     // the userId as the user-id is already initialized to null when running
@@ -271,6 +271,7 @@ class GroupSharedOrchestraFolder implements IMigration
         $orchestraGroup,
         $sharedFolder . self::SHARED_KEEP_OLD_SUFFIX,
         \OCP\Constants::PERMISSION_READ,
+        sharedByOwner: true,
       );
 
       // Remember that we do no longer need the folder from the share-owner

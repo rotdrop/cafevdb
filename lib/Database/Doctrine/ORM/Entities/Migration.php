@@ -67,7 +67,7 @@ class Migration implements \ArrayAccess
    *
    * @ORM\Column(type="integer", options={"default"="1"})
    */
-  private $runCount;
+  private $runCount = 1;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()

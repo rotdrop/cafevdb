@@ -588,7 +588,7 @@ class ConfigCheckService
       return $result;
     }
 
-    $this->logInfo('Migration to group folders has not been performed: ' . $this->getConfigValu(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true));
+    $this->logInfo('Migration to group folders has not been performed: ' . $this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true));
 
     if (!$this->shareOwnerExists()) {
       return false;
@@ -625,6 +625,7 @@ class ConfigCheckService
         $this->logDebug('Shared folder id: ' . $id);
         foreach ($shareGroupIds as $shareGroupId) {
           if (!$this->groupSharedExists($id, $shareGroupId, 'folder', $shareOwner)) {
+            $this->logError('Shared folder not shared with ' . $shareGroupId);
             return false;
           }
         }
