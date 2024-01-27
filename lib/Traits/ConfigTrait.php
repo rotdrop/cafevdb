@@ -243,7 +243,7 @@ trait ConfigTrait
   /** @return EncryptionService */
   protected function encryptionService():EncryptionService
   {
-    return $this->configService->encryptionService();
+    return $this->configService->getEncryptionService();
   }
 
   /** @return null|string */

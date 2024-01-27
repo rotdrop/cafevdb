@@ -270,8 +270,12 @@ class ConfigService
   /** @var string */
   public const CLUB_MEMBER_PROJECT_ID_KEY = self::CLUB_MEMBERS_PROJECT_KEY . 'Id';
 
-  /** @var array */
-  protected $encryptionCache;
+  /**
+   * @var array
+   *
+   * Cache encrypted config values in order to speed up things
+   */
+  protected $encryptionCache = [];
 
   /*
    ****************************************************************************
@@ -300,6 +304,30 @@ class ConfigService
    */
   private $localeCountryNames = [];
 
+  /** @var IL10NFactory */
+  private IL10NFactory $l10NFactory;
+
+  /** @var IURLGenerator */
+  private IURLGenerator $urlGenerator;
+
+  /** @var ISecureRandom */
+  private ISecureRandom $secureRandom;
+
+  /** @var IUserManager */
+  private IUserManager $userManager;
+
+  /** @var IGroupManager */
+  private IGroupManager $groupManager;
+
+  /** @var ISubAdmin */
+  private ISubAdmin $groupSubAdmin;
+
+  /** @var EncryptionService */
+  private EncryptionService $encryptionService;
+
+  /** @var IConfig */
+  private IConfig $cloudConfig;
+
   /**
    * {@inheritdoc}
    *
@@ -307,31 +335,10 @@ class ConfigService
    */
   public function __construct(
     protected string $appName,
-    private IConfig $containerConfig,
-    private IUserSession $userSession,
-    private IUserManager $userManager,
-    private IGroupManager $groupManager,
-    private ISubAdmin $groupSubAdmin,
-    private EncryptionService $encryptionService,
-    private ISecureRandom $secureRandom,
-    private IURLGenerator $urlGenerator,
-    private IL10NFactory $l10NFactory,
-    protected IDateTimeZone $dateTimeZone,
-    protected ILogger $logger,
     protected IAppContainer $appContainer,
-    protected IDateTimeFormatter $dateTimeFormatter,
-    protected ITimeFactory $timeFactory,
+    protected ILogger $logger,
     protected IL10N $l,
   ) {
-    if (\OC::$CLI && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
-      $this->setUserId($GLOBALS['cafevdb-user']);
-    } else {
-      // The user may be empty at login. This is lazily corrected later.
-      $this->user = $this->userSession->getUser();
-    }
-
-    // Cache encrypted config values in order to speed up things
-    $this->encryptionCache = [];
   }
 
   /** @return IAppContainer */
@@ -340,10 +347,26 @@ class ConfigService
     return $this->appContainer;
   }
 
+  /**
+   * @return IL10NFactory
+   */
+  private function getL10NFactory():IL10NFactory
+  {
+    return $this->l10NFactory ?? ($this->l10NFactory = $this->appContainer->get(IL10NFactory::class));
+  }
+
+  /**
+   * @return ISecureRandom
+   */
+  private function getSecureRandom():ISecureRandom
+  {
+    return $this->secureRandom ?? ($this->secureRandom = $this->appContainer->get(ISecureRandom::class));
+  }
+
   /** @return ITimeFactory */
   public function getTimeFactory():ITimeFactory
   {
-    return $this->timeFactory;
+    return $this->appContainer->get(ITimeFactory::class);
   }
 
   /** @return IConfig */
@@ -355,7 +378,7 @@ class ConfigService
   /** @return IConfig */
   public function getCloudConfig():IConfig
   {
-    return $this->containerConfig;
+    return $this->cloudConfig ?? ($this->cloudConfig = $this->appContainer->get(IConfig::class));
   }
 
   /** @return string */
@@ -380,37 +403,37 @@ class ConfigService
   public function getIcon():string
   {
     // @@todo make it configurable
-    return $this->urlGenerator->imagePath($this->appName, self::APP_LOGO);
+    return $this->getUrlGenerator()->imagePath($this->appName, self::APP_LOGO);
   }
 
   /** @return IUserSession */
   public function getUserSession():IUserSession
   {
-    return $this->userSession;
+    return $this->userSession ?? ($this->userSession = $this->appContainer->get(IUserSession::class));
   }
 
   /** @return IUserManager */
   public function getUserManager():IUserManager
   {
-    return $this->userManager;
+    return $this->userManager ?? ($this->userManager = $this->appContainer->get(IUserManager::class));
   }
 
   /** @return IGroupManager */
   public function getGroupManager():IGroupManager
   {
-    return $this->groupManager;
+    return $this->groupManager ?? ($this->groupManager = $this->appContainer->get(IGroupManager::class));
   }
 
   /** @return ISubAdmin */
   public function getSubAdminManager():ISubAdmin
   {
-    return $this->groupSubAdmin;
+    return $this->groupSubAdmin ?? ($this->groupSubAdmin = $this->appContainer->get(ISubAdmin::class));
   }
 
   /** @return IURLGenerator */
   public function getUrlGenerator():IURLGenerator
   {
-    return $this->urlGenerator;
+    return $this->urlGenerator ?? ($this->urlGenerator = $this->appContainer->get(IURLGenerator::class));
   }
 
   /**
@@ -423,10 +446,14 @@ class ConfigService
   public function getUser(?string $userId = null):?IUser
   {
     if (!empty($userId)) {
-      return $this->userManager->get($userId);
+      return $this->getUserManager()->get($userId);
     }
     if (empty($this->user)) {
-      $this->user = $this->userSession->getUser();
+      if (\OC::$CLI && empty($userSession->getUser()) && !empty($GLOBALS['cafevdb-user'])) {
+        $this->setUserId($GLOBALS['cafevdb-user']);
+      } else {
+        $this->user = $this->getUserSession()->getUser();
+      }
     }
     return $this->user;
   }
@@ -464,7 +491,7 @@ class ConfigService
     }
     $oldUser = $this->getUser();
     $this->user = $user;
-    $this->userSession->setUser($this->user);
+    $this->getUserSession()->setUser($this->user);
     return $oldUser;
   }
 
@@ -497,7 +524,7 @@ class ConfigService
   public function getGroup(?string $groupId = null):?IGroup
   {
     empty($groupId) && ($groupId = $this->getGroupId());
-    return empty($groupId) ? null : $this->groupManager->get($groupId);
+    return empty($groupId) ? null : $this->getGroupManager()->get($groupId);
   }
 
   /**
@@ -508,7 +535,7 @@ class ConfigService
   public function groupExists($groupId = null):bool
   {
     empty($groupId) && ($groupId = $this->getGroupId());
-    return !empty($groupId) && $this->groupManager->groupExists($groupId);
+    return !empty($groupId) && $this->getGroupManager()->groupExists($groupId);
   }
 
   /**
@@ -525,7 +552,7 @@ class ConfigService
     if (empty($userId) || empty($groupId)) {
       return false;
     }
-    return $this->groupManager->isInGroup($userId, $groupId);
+    return $this->getGroupManager()->isInGroup($userId, $groupId);
   }
 
   /**
@@ -537,13 +564,13 @@ class ConfigService
    */
   public function isSubAdminOfGroup($userId = null, $groupId = null):bool
   {
-    $user = empty($userId) ? $this->user : $this->userManager->get($userId);
-    $group = empty($groupId) ? $this->getGroup() : $this->groupManager->get($groupId);
+    $user = empty($userId) ? $this->user : $this->getUserManager()->get($userId);
+    $group = empty($groupId) ? $this->getGroup() : $this->getGroupManager()->get($groupId);
 
     if (empty($user) || empty($group)) {
       return false;
     }
-    return $this->groupSubAdmin->isSubAdminofGroup($user, $group);
+    return $this->getGroupSubAdmin()->isSubAdminofGroup($user, $group);
   }
 
   /**
@@ -556,7 +583,7 @@ class ConfigService
   public function getGroupSubAdmins(?string $groupId = null): array
   {
     $group = $this->getGroup($groupId);
-    return $this->groupSubAdmin->getGroupsSubAdmins($group);
+    return $this->getGroupSubAdmin()->getGroupsSubAdmins($group);
   }
 
   /**
@@ -594,7 +621,7 @@ class ConfigService
       return false;
     }
     $groupId = $this->getSubAdminGroupId();
-    return $this->groupManager->isInGroup($userId, $groupId);
+    return $this->getGroupManager()->isInGroup($userId, $groupId);
   }
 
   /*
@@ -616,7 +643,7 @@ class ConfigService
   public function getUserValue(string $key, mixed $default = null, ?string $userId = null)
   {
     empty($userId) && ($userId = $this->getUserId());
-    return $this->containerConfig->getUserValue($userId, $this->appName, $key, $default);
+    return $this->getCloudConfig()->getUserValue($userId, $this->appName, $key, $default);
   }
 
   /**
@@ -631,7 +658,7 @@ class ConfigService
   public function setUserValue(string $key, mixed $value, ?string $userId = null)
   {
     empty($userId) && ($userId = $this->getUserId());
-    return $this->containerConfig->setUserValue($userId, $this->appName, $key, $value);
+    return $this->getCloudConfig()->setUserValue($userId, $this->appName, $key, $value);
   }
 
   /**
@@ -645,7 +672,7 @@ class ConfigService
    */
   public function getAppValue(string $key, mixed $default = null)
   {
-    return $this->containerConfig->getAppValue($this->appName, $key, $default);
+    return $this->getCloudConfig()->getAppValue($this->appName, $key, $default);
   }
 
   /**
@@ -659,7 +686,7 @@ class ConfigService
    */
   public function setAppValue(string $key, mixed $value)
   {
-    return $this->containerConfig->setAppValue($this->appName, $key, $value);
+    return $this->getCloudConfig()->setAppValue($this->appName, $key, $value);
   }
 
   /**
@@ -671,7 +698,7 @@ class ConfigService
    */
   public function deleteAppValue(string $key):void
   {
-    $this->containerConfig->deleteAppValue($this->appName, $key);
+    $this->getCloudConfig()->deleteAppValue($this->appName, $key);
   }
 
   /*
@@ -682,9 +709,9 @@ class ConfigService
    */
 
   /** @return EncryptionService */
-  public function encryptionService():EncryptionService
+  public function getEncryptionService():EncryptionService
   {
-    return $this->encryptionService;
+    return $this->encryptionService ?? ($this->encryptionService = $this->appContainer->get(EncryptionService::class));
   }
 
   /**
@@ -694,13 +721,13 @@ class ConfigService
    */
   public function setUserEncryptionKey(string $key):void
   {
-    $this->encryptionService->setUserEncryptionKey($key);
+    $this->getEncryptionService()->setUserEncryptionKey($key);
   }
 
   /** @return null|string */
   public function getUserEncryptionKey():?string
   {
-    return $this->encryptionService->getUserEncryptionKey();
+    return $this->getEncryptionService()->getUserEncryptionKey();
   }
 
   /**
@@ -710,13 +737,13 @@ class ConfigService
    */
   public function setAppEncryptionKey(string $key):void
   {
-    $this->encryptionService->setAppEncryptionKey($key);
+    $this->getEncryptionService()->setAppEncryptionKey($key);
   }
 
   /** @return null|string */
   public function getAppEncryptionKey():?string
   {
-    return $this->encryptionService->getAppEncryptionKey();
+    return $this->getEncryptionService()->getAppEncryptionKey();
   }
 
   /**
@@ -726,7 +753,7 @@ class ConfigService
    */
   public function encrypt(?string $value):?string
   {
-    return $this->encryptionService->getAppCryptor()->encrypt($value);
+    return $this->getEncryptionService()->getAppCryptor()->encrypt($value);
   }
 
   /**
@@ -736,7 +763,7 @@ class ConfigService
    */
   public function decrypt(?string $value):?string
   {
-    return $this->encryptionService->getAppCryptor()->decrypt($value);
+    return $this->getEncryptionService()->getAppCryptor()->decrypt($value);
   }
 
   /**
@@ -749,7 +776,7 @@ class ConfigService
    */
   public function verifyHash($value, $hash)
   {
-    return $this->encryptionService->verifyHash($value, $hash);
+    return $this->getEncryptionService()->verifyHash($value, $hash);
   }
 
   /**
@@ -759,7 +786,7 @@ class ConfigService
    */
   public function computeHash(string $value):string
   {
-    return $this->encryptionService->computeHash($value);
+    return $this->getEncryptionService()->computeHash($value);
   }
 
   /**
@@ -778,7 +805,7 @@ class ConfigService
    */
   public function encryptionKeyValid(?string $encryptionKey):bool
   {
-    return $this->encryptionService->encryptionKeyValid($encryptionKey);
+    return $this->getEncryptionService()->encryptionKeyValid($encryptionKey);
   }
 
   /**
@@ -797,7 +824,7 @@ class ConfigService
   public function getConfigValue(string $key, mixed $default = null, bool $ignoreLock = false)
   {
     if (!isset($this->encryptionCache[$key])) {
-      $value = $this->encryptionService->getConfigValue($key, $default, $ignoreLock);
+      $value = $this->getEncryptionService()->getConfigValue($key, $default, $ignoreLock);
       if ($value !== false) {
         $this->encryptionCache[$key] = $value;
       } else {
@@ -821,8 +848,8 @@ class ConfigService
    */
   public function setConfigValue(string $key, mixed $value, bool $ignoreLock = false)
   {
-    //$this->logInfo("enckey: ". $this->encryptionService->appEncryptionKey);
-    if ($this->encryptionService->setConfigValue($key, $value, $ignoreLock)) {
+    //$this->logInfo("enckey: ". $this->getEncryptionService()->appEncryptionKey);
+    if ($this->getEncryptionService()->setConfigValue($key, $value, $ignoreLock)) {
       $this->encryptionCache[$key] = $value;
       return true;
     }
@@ -847,7 +874,7 @@ class ConfigService
   {
     return array_values(
       array_filter(
-        $this->containerConfig->getAppKeys($this->appName),
+        $this->getCloudConfig()->getAppKeys($this->appName),
         fn($k) => strpos('::', $k) === false
       )
     );
@@ -913,7 +940,7 @@ class ConfigService
    */
   public function generateRandomBytes(int $length = 30):string
   {
-    return $this->secureRandom->generate($length, ISecureRandom::CHAR_HUMAN_READABLE);
+    return $this->getSecureRandom()->generate($length, ISecureRandom::CHAR_HUMAN_READABLE);
   }
 
   /*
@@ -962,7 +989,7 @@ class ConfigService
   /** @return IDateTimeFormatter */
   public function dateTimeFormatter():IDateTimeFormatter
   {
-    return $this->dateTimeFormatter;
+    return $this->appContainer->get(IDateTimeFormatter::class);
   }
 
   /**
@@ -974,7 +1001,7 @@ class ConfigService
    */
   public function getDateTimeZone(mixed $timeStamp = false):DateTimeZone
   {
-    return $this->dateTimeZone->getTimeZone($timeStamp);
+    return $this->appContainer->get(IDateTimeZone::class)->getTimeZone($timeStamp);
   }
 
   /**
@@ -1087,8 +1114,8 @@ class ConfigService
     $displayLanguage = locale_get_primary_language($locale);
     $languages = $this->findAvailableLanguages();
     $result = [];
-    if (method_exists($this->l10NFactory, 'getLanguages')) {
-      $cloudLanguages = $this->l10NFactory->getLanguages();
+    if (method_exists($this->getL10NFactory(), 'getLanguages')) {
+      $cloudLanguages = $this->getL10NFactory()->getLanguages();
       $otherLanguages = array_column($cloudLanguages['otherLanguages'], 'name', 'code');
       $commonLanguages = array_column($cloudLanguages['commonLanguages'], 'name', 'code');
       $cloudLanguages = array_merge($otherLanguages, $commonLanguages);
@@ -1119,7 +1146,7 @@ class ConfigService
    */
   public function findAvailableLanguages(string $app = 'core'):array
   {
-    return $this->l10NFactory->findAvailableLanguages($app);
+    return $this->getL10NFactory()->findAvailableLanguages($app);
   }
 
   /**
@@ -1129,7 +1156,7 @@ class ConfigService
    */
   public function findAvailableLocales():array
   {
-    return $this->l10NFactory->findAvailableLocales();
+    return $this->getL10NFactory()->findAvailableLocales();
   }
 
   /**
