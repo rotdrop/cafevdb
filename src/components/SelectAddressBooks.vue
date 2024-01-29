@@ -1,27 +1,25 @@
-<script>
-/**
- * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- *
- * @author Claus-Justus Heine
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-</script>
+<!--
+ - Orchestra member, musicion and project management application.
+ -
+ - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ -
+ - @author Claus-Justus Heine
+ - @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @license AGPL-3.0-or-later
+ -
+ - This program is free software: you can redistribute it and/or modify
+ - it under the terms of the GNU Affero General Public License as
+ - published by the Free Software Foundation, either version 3 of the
+ - License, or (at your option) any later version.
+ -
+ - This program is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ - GNU Affero General Public License for more details.
+ -
+ - You should have received a copy of the GNU Affero General Public License
+ - along with this program. If not, see <http://www.gnu.org/licenses/>.
+ -->
 <template>
   <form class="select-address-books" @submit.prevent="">
     <div v-if="loading" class="loading" />
@@ -73,7 +71,7 @@ import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import { NcMultiselect as Multiselect } from '@nextcloud/vue'
 import { getInitialState } from '../services/initial-state-service.js'
 
 let uuid = 0
@@ -146,7 +144,7 @@ export default {
     },
   },
   watch: {
-    value(newVal, oldVal) {
+    value(/* newVal, oldVal */) {
       this.inputValObjects = this.getValueObject()
       if (this.multiple && this.inputValObjects.length === 1 && this.inputValObjects[0].UID === 0) {
         this.$refs.multiselect.$refs.VueMultiselect.deactivate()
@@ -195,7 +193,7 @@ export default {
             return noUndefined ? null : { key, uid: key, FN: key }
           }
           return this.addressBooks[key]
-        }
+        },
       ).filter((contact) => contact !== null && contact !== undefined)
       if (this.multiple) {
         if (everybody) {
@@ -244,6 +242,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.cloud-version {
+  --cloud-icon-checkmark: var(--icon-checkmark-dark);
+  &.cloud-version-major-24 {
+    --cloud-icon-checkmark: var(--icon-checkmark-000);
+  }
+}
 .select-address-books {
   position:relative;
   .loading {
@@ -300,7 +304,7 @@ export default {
       &.multiselect--single {
         .multiselect__content-wrapper li > span {
           &::before {
-            background-image: var(--icon-checkmark-000);
+            background-image: var(--cloud-icon-checkmark);
             display:block;
           }
           &:not(.multiselect__option--selected):hover::before {

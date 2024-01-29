@@ -1,27 +1,25 @@
-<script>
-/**
- * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- *
- * @author Claus-Justus Heine
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-</script>
+<!--
+ - Orchestra member, musicion and project management application.
+ -
+ - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ -
+ - @author Claus-Justus Heine
+ - @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @license AGPL-3.0-or-later
+ -
+ - This program is free software: you can redistribute it and/or modify
+ - it under the terms of the GNU Affero General Public License as
+ - published by the Free Software Foundation, either version 3 of the
+ - License, or (at your option) any later version.
+ -
+ - This program is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ - GNU Affero General Public License for more details.
+ -
+ - You should have received a copy of the GNU Affero General Public License
+ - along with this program. If not, see <http://www.gnu.org/licenses/>.
+ -->
 <template>
   <form class="select-musicians" @submit.prevent="">
     <div v-if="showLoadingIndicator" class="loading" />
@@ -104,8 +102,8 @@ import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
-import EllipsisedMusicianOption from './EllipsisedMusicianOption'
+import { NcMultiselect as Multiselect } from '@nextcloud/vue'
+import EllipsisedMusicianOption from './EllipsisedMusicianOption.vue'
 import addressPopup from '../mixins/address-popup.js'
 import { usePersistentDataStore } from '../stores/persistentData.js'
 
@@ -206,7 +204,7 @@ export default {
     },
   },
   watch: {
-    value(newVal, oldVal) {
+    value(/* newVal, oldVal */) {
       this.loadingPromise.finally(() => {
         this.inputValObjects = this.getValueObject()
         if (this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].id === 0) {
@@ -215,7 +213,7 @@ export default {
       })
     },
     // setting the project id also resets the initial data.
-    projectId(newVal, oldVal) {
+    projectId(/* newVal, oldVal */) {
       this.getData()
     },
   },
@@ -227,7 +225,7 @@ export default {
   methods: {
     getData() {
       this.loadingPromise.finally(() => {
-        this.loadingPromise = new Promise((resolve, reject) => {
+        this.loadingPromise = new Promise((resolve/* , reject */) => {
           this.loading = true
           this.resetMusicians()
           if (!this.searchable) {
@@ -244,7 +242,7 @@ export default {
               return
             } catch (ignoreMe) {}
           }
-          this.asyncFindMusicians('', this.getValueIds()).then((result) => {
+          this.asyncFindMusicians('', this.getValueIds()).then((/* result */) => {
             this.inputValObjects = this.getValueObject(true)
             if (this.resetButton) {
               this.initialValObjects = this.inputValObjects
@@ -283,7 +281,7 @@ export default {
             return noUndefined ? null : { id, formalDisplayName: id }
           }
           return this.musicians[id]
-        }
+        },
       ).filter((musician) => musician !== null && musician !== undefined)
       if (this.provideSelectAll) {
         if (everybody) {
@@ -302,7 +300,7 @@ export default {
       const result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
         (musician) => {
           return musician.id !== undefined ? musician.id : musician
-        }
+        },
       )
       // console.info('GET VALUE IDS', result)
       return result
@@ -358,6 +356,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.cloud-version {
+  --cloud-icon-checkmark: var(--icon-checkmark-dark);
+  &.cloud-version-major-24 {
+    --cloud-icon-checkmark: var(--icon-checkmark-000);
+  }
+}
 .select-musicians {
   position:relative;
   .loading {
@@ -414,7 +418,7 @@ export default {
       &.multiselect--single {
         .multiselect__content-wrapper li > span {
           &::before {
-            background-image: var(--icon-checkmark-000);
+            background-image: var(--cloud-icon-checkmark);
             display:block;
           }
           &:not(.multiselect__option--selected):hover::before {

@@ -1,29 +1,27 @@
-<script>
-/**
- * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- *
- * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-</script>
+<!--
+ - Orchestra member, musicion and project management application.
+ -
+ - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ -
+ - @author Claus-Justus Heine
+ - @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @license AGPL-3.0-or-later
+ -
+ - This program is free software: you can redistribute it and/or modify
+ - it under the terms of the GNU Affero General Public License as
+ - published by the Free Software Foundation, either version 3 of the
+ - License, or (at your option) any later version.
+ -
+ - This program is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ - GNU Affero General Public License for more details.
+ -
+ - You should have received a copy of the GNU Affero General Public License
+ - along with this program. If not, see <http://www.gnu.org/licenses/>.
+ -->
 <template>
-  <div class="templateroot">
+  <div :class="['templateroot', ...cloudVersionClasses]">
     <SettingsSection :class="['major', { 'icon-loading': loading.general }]"
                      :title="t(appName, 'Camerata DB')"
     >
@@ -31,6 +29,39 @@
         <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="info" v-html="forword" />
         <hr>
+      </div>
+      <div>
+        <label for="user-and-group-backend" class="user-and-group-backend">{{ t(appName, 'User and group backend') }}</label>
+        <div class="flex-container flex-align-center">
+          <NcMultiselect id="user-and-group-backend"
+                         v-model="settings.userAndGroupBackend"
+                         :options="config.userAndGroupBackends"
+                         :multiple="false"
+                         :disabled="loading.general"
+          />
+          <!-- track-by="family"
+               label="family" -->
+          <Actions :disabled="loading.general || loading.fonts">
+            <ActionButton icon="icon-add"
+                          @click="updateFontData"
+            >
+              {{ t(appName, 'Update Font Data') }}
+            </ActionButton>
+            <ActionButton icon="icon-play"
+                          @click="rescanFontData"
+            >
+              {{ t(appName, 'Rescan Font Data') }}
+            </ActionButton>
+            <ActionButton icon="icon-delete"
+                          @click="purgeFontData"
+            >
+              {{ t(appName, 'Purge Font Data') }}
+            </ActionButton>
+          </Actions>
+        </div>
+        <p class="hint">
+          {{ hints['settings:admin:user-and-group-backend'] }}
+        </p>
       </div>
       <div v-if="config.isSubAdmin || config.isAdmin">
         <SettingsSelectGroup v-if="config.isAdmin"
@@ -242,29 +273,60 @@
           </ActionButton>
         </Actions>
       </div>
+      <div class="flex-spacer" />
+      <div class="flex-container flex-align-center">
+        <label for="default-font" class="default-font">{{ t(appName, 'Default Font') }}</label>
+        <NcMultiselect id="default-font"
+                       v-model="defaultOfficeFont"
+                       :options="Object.values(config.officeFonts)"
+                       track-by="family"
+                       label="family"
+                       :multiple="false"
+                       :disabled="loading.general || loading.fonts"
+        />
+        <Actions :disabled="loading.general || loading.fonts">
+          <ActionButton icon="icon-add"
+                        @click="updateFontData"
+          >
+            {{ t(appName, 'Update Font Data') }}
+          </ActionButton>
+          <ActionButton icon="icon-play"
+                        @click="rescanFontData"
+          >
+            {{ t(appName, 'Rescan Font Data') }}
+          </ActionButton>
+          <ActionButton icon="icon-delete"
+                        @click="purgeFontData"
+          >
+            {{ t(appName, 'Purge Font Data') }}
+          </ActionButton>
+        </Actions>
+      </div>
     </SettingsSection>
   </div>
 </template>
 <script>
 import { set as vueSet, del as vueDelete, nextTick as vueNextTick } from 'vue'
 
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import ProgressBar from '@nextcloud/vue/dist/Components/NcProgressBar'
-// import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import {
+  NcActions as Actions,
+  NcActionButton as ActionButton,
+  NcProgressBar as ProgressBar,
+  NcMultiselect,
+  NcSettingsSection as SettingsSection,
+} from '@nextcloud/vue'
 import Multiselect from './Multiselect.vue'
-import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
 import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
-import { showError, showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 
 import { appName } from '../app/app-info.js'
-
+import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 import SelectMusicians from './SelectMusicians.vue'
 import SelectProjects from './SelectProjects.vue'
-import SettingsInputText from './SettingsInputText.vue'
+// import SettingsInputText from './SettingsInputText.vue'
+import SettingsInputText from '@rotdrop/nextcloud-vue-components/lib/components/SettingsInputText.vue'
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
 import tooltip from '../mixins/tooltips.js'
@@ -278,8 +340,8 @@ export default {
   components: {
     Actions,
     ActionButton,
-    ActionCheckbox,
     Multiselect,
+    NcMultiselect,
     ProgressBar,
     SelectMusicians,
     SelectProjects,
@@ -294,6 +356,7 @@ export default {
   ],
   data() {
     return {
+      cloudVersionClasses,
       defaultOfficeFont: null,
       loading: {
         general: true,
@@ -302,6 +365,7 @@ export default {
         fonts: true,
       },
       settings: {
+        userAndGroupBackend: '',
         orchestraUserGroup: '',
         orchestraUserGroupAdmins: [],
         wikiNameSpace: '',
@@ -313,6 +377,7 @@ export default {
         'settings:admin:wiki-name-space': '',
         'settings:admin:user-group': '',
         'settings:admin:user-group:admins': '',
+        'settings:admin:user-and-group-backend': '',
         'settings:admin:access-control:musicians': '',
         'settings:admin:true-type-fonts-folder': '',
       },
@@ -322,7 +387,7 @@ export default {
         allRequestsMarked: '',
       },
       recryptionPollTimer: null,
-      recryptionPollTimeout: 10*1000,
+      recryptionPollTimeout: 10 * 1000,
       access: {
         musicians: [],
         project: '',
@@ -338,27 +403,12 @@ export default {
       },
     }
   },
-  created() {
-    this.getData()
-  },
-  beforeDestroy() {
-    this.clearTimeout(this.recryptionPollTimer)
-    this.recryptionPollTimer = null
-  },
-  watch: {
-    defaultOfficeFont(newValue, oldValue) {
-      console.info('DEFAULT FONT CHANGED', newValue, oldValue)
-      if (!this.loading.fonts && newValue !== oldValue) {
-        this.saveSetting('defaultOfficeFont', newValue ? newValue.family : null, true)
-      }
-    }
-  },
   computed: {
     humanOfficeFontsFolder() {
       return '.../' + (this.config.officeFontsFolder + '/').replace(/\/+/, '/').split('/').splice(-4).join('/')
     },
     groupAdminsDisabled() {
-      return this.settings.orchestraUserGroup == ''
+      return this.settings.orchestraUserGroup === ''
     },
     projectId() {
       try { return this.access.project.id } catch (ignoreMe) { return 0 }
@@ -397,9 +447,24 @@ export default {
       return this.loading.general || this.loading.tooltips || this.loading.recryption || this.loading.fonts
     },
   },
+  watch: {
+    defaultOfficeFont(newValue, oldValue) {
+      console.info('DEFAULT FONT CHANGED', newValue, oldValue)
+      if (!this.loading.fonts && newValue !== oldValue) {
+        this.saveSetting('defaultOfficeFont', newValue ? newValue.family : null, true)
+      }
+    },
+  },
+  created() {
+    this.getData()
+  },
+  beforeDestroy() {
+    this.clearTimeout(this.recryptionPollTimer)
+    this.recryptionPollTimer = null
+  },
   methods: {
-    info() {
-      console.info('INFO', arguments)
+    info(...args) {
+      console.info('INFO', ...args)
     },
     showErrorToast(message) {
       showError(message, { timeout: TOAST_DEFAULT_TIMEOUT })
@@ -425,8 +490,8 @@ export default {
       this.forword = t(
         appName,
         'Further detailed configurations are necessary after configuring the user-group. Please configure a dedicated group-admin for the user-group and then log-in as this group-admin and head over to the {personalSettingsLink} settings.', {
-          personalSettingsLink
-        }, undefined, { escape: false });
+          personalSettingsLink,
+        }, undefined, { escape: false })
       this.hints = await this.tooltips(Object.keys(this.hints))
       this.loading.tooltips = false
     },
@@ -438,7 +503,7 @@ export default {
       }
       for (const [key, request] of Object.entries(requests)) {
         const response = await request
-        this.settings[key] = response.data.value;
+        this.settings[key] = response.data.value
       }
       this.loading.general = false
     },
@@ -472,14 +537,14 @@ export default {
         }
         // update existing requests (time-stamp changed) and add new
         // ones. Initiate the AJAX calls in parallel, then serialize
-          // later
-        const cloudUserPromises = [];
+        // later
+        const cloudUserPromises = []
         for (const [userId, timeStamp] of Object.entries(recryptionRequests)) {
           if (!this.recryption.requests[userId] || this.recryption.requests[userId].timeStamp !== timeStamp) {
             cloudUserPromises.push({
               userId,
               timeStamp,
-                promise: axios.get(generateOcsUrl('cloud/users/{userId}', { userId })),
+              promise: axios.get(generateOcsUrl('cloud/users/{userId}', { userId })),
             })
           }
         }
@@ -510,8 +575,7 @@ export default {
       }
       this.loading.recryption = false
     },
-    async saveSetting(settingsKey, value, force) {
-      const self = this
+    async saveSetting(settingsKey, value) {
       try {
         const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/{settingsKey}', { settingsKey }), { value })
         const responseData = response.data
@@ -519,12 +583,12 @@ export default {
           OC.dialogs.confirm(
             responseData.feedback,
             t(appName, 'Confirmation Required'),
-            function(answer) {
+            (answer) => {
               if (answer) {
-                self.saveSetting(settingsKey, value, true)
+                this.saveSetting(settingsKey, value, true)
               } else {
                 showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
-                self.getSettingsData()
+                this.getSettingsData()
               }
             },
             true)
@@ -566,16 +630,16 @@ export default {
         } else {
           showError(t(appName, 'Could not set "{settingsKey}": {message}', { settingsKey, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         }
-        self.getSettingsData()
+        this.getSettingsData()
       }
     },
-    markAllRecryptionRequests(event) {
+    markAllRecryptionRequests(/* event */) {
       const value = !!this.recryption.allRequestsMarked
       for (const request of Object.values(this.recryption.requests)) {
         request.marked = value
       }
     },
-    markRecryptionRequest(userId, event) {
+    markRecryptionRequest(/* userId, event */) {
       const allRequests = Object.values(this.recryption.requests)
       const marked = allRequests.filter(request => request.marked)
       if (marked.length === allRequests.length) {
@@ -585,6 +649,12 @@ export default {
       }
     },
     /**
+     * @param {string} userId TBD.
+     *
+     * @param {boolean} silent TBD.
+     *
+     * @param {boolean} allowFailure TBD.
+     *
      * @returns {Promise}
      */
     async doHandleRecryptionRequest(userId, silent, allowFailure) {
@@ -601,7 +671,7 @@ export default {
     },
     async awaitRecryptionRequestPromise(userId, promise) {
       try {
-        const response = await promise
+        await promise
         showInfo(t(appName, 'Successfully handled recryption request for {userId}.', { userId }))
         vueDelete(this.recryption.requests, userId)
       } catch (e) {
@@ -623,9 +693,9 @@ export default {
     async deleteRecryptionRequest(userId) {
       try {
         const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
-            userId,
+          userId,
         })
-        const response = await axios.delete(url + '?format=json')
+        await axios.delete(url + '?format=json')
         showInfo(t(appName, 'Successfully deleted recryption request for {userId}.', { userId }))
         vueDelete(this.recryption.requests, userId)
       } catch (e) {
@@ -644,12 +714,12 @@ export default {
         this.getRecryptionRequests()
       }
     },
-    async doRevokeCloudAccess(userId, allowFailure) {
+    async doRevokeCloudAccess(userId/*, allowFailure */) {
       const url = generateOcsUrl(
         'apps/cafevdb/api/v1/maintenance/encryption/revoke/{userId}', {
           userId,
-        }
-      );
+        },
+      )
       return await axios.post(url + '?format=json')
     },
     async handleMarkedRecrytpionRequests() {
@@ -689,8 +759,8 @@ export default {
             : await this.doRevokeCloudAccess(musician.userIdSlug, true)
           const ocsData = response.data.ocs.data
           const lastUser = ocsData.userId
-          failedUsers += ocsData.status == 'failure'
-          this.access.action.done ++
+          failedUsers += ocsData.status === 'failure'
+          this.access.action.done++
           this.access.action.label = t(appName, 'Processed user-id {userId}.', { userId: lastUser })
           if (failedUsers > 0) {
             this.access.action.label += ' ' + t(appName, '{failedUsers} users have failed.', { failedUsers })
@@ -720,7 +790,7 @@ export default {
         }
         this.access.action.label += ' ' + t(appName, '{remainingUsers} remain unprocessed.', { remainingUsers })
       } else {
-        this.access.action.label = t(appName, '{numUsers} users have been processed successfully.', { numUsers})
+        this.access.action.label = t(appName, '{numUsers} users have been processed successfully.', { numUsers })
         if (failedUsers > 0) {
           this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
         }
@@ -732,7 +802,7 @@ export default {
       try {
         const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption?format=json')
         const response = await axios.post(url, {
-          grantAccess: action === 'grant' ? true : false,
+          grantAccess: action === 'grant',
           includeDisabled: this.access.includeDisabled,
           includeDeactivated: this.access.includeDeactivated,
           projectId: this.projectId,
@@ -744,9 +814,9 @@ export default {
         let count = 0
         let lastUser
         do {
-          url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption')
+          const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/bulk-recryption')
           const response = await axios.post(url + '?format=json', {
-            grantAccess: action === 'grant' ? true : false,
+            grantAccess: action === 'grant',
             includeDisabled: this.access.includeDisabled,
             includeDeactivated: this.access.includeDeactivated,
             projectId: this.projectId,
@@ -763,7 +833,7 @@ export default {
             this.access.action.label += ' ' + t(appName, '{failedUsers} users have failed.', { failedUsers })
           }
           this.access.action.label += '.'
-        } while(count > 0 && this.access.action.done < this.access.action.totals)
+        } while (count > 0 && this.access.action.done < this.access.action.totals)
       } catch (e) {
         console.info('ERROR', e)
         let message = t(appName, 'reason unknown')
@@ -788,7 +858,7 @@ export default {
         }
         this.access.action.label += ' ' + t(appName, '{remainingUsers} remain unprocessed.', { remainingUsers })
       } else {
-        this.access.action.label = t(appName, '{numUsers} users have been processed successfully.', { numUsers})
+        this.access.action.label = t(appName, '{numUsers} users have been processed successfully.', { numUsers })
         if (failedUsers > 0) {
           this.access.action.label += ' ' + t(appName, '{failedUsers} were processed unsuccessfully.', { failedUsers })
         }
@@ -837,7 +907,7 @@ export default {
     },
     disableUnavailableFontOptions() {
       for (const [fontName, fontFiles] of Object.entries(this.config.officeFonts)) {
-        if (fontFiles['x'] && fontFiles['xb'] && fontFiles['xi'] && fontFiles['xbi']) {
+        if (fontFiles.x && fontFiles.xb && fontFiles.xi && fontFiles.xbi) {
           vueSet(this.config.officeFonts[fontName], 'disabled', false)
         } else {
           vueSet(this.config.officeFonts[fontName], 'disabled', true)
@@ -885,15 +955,15 @@ export default {
       margin-right: 1ex;
     }
   }
+  .flex-spacer {
+    flex-grow:4;
+    height:34px
+  }
   .access-action-status {
     display:flex;
     flex-direction:row;
     align-items:center;
     width:100%;
-    .flex-spacer {
-      flex-grow:4;
-      height:34px
-    }
     button.sync-clear {
       margin-left:1ex;
     }

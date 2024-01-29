@@ -1,27 +1,25 @@
-<script>
-/**
+<!--
  * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- *
- * @author Claus-Justus Heine
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-</script>
+ -
+ - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ -
+ - @author Claus-Justus Heine
+ - @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @license AGPL-3.0-or-later
+ -
+ - This program is free software: you can redistribute it and/or modify
+ - it under the terms of the GNU Affero General Public License as
+ - published by the Free Software Foundation, either version 3 of the
+ - License, or (at your option) any later version.
+ -
+ - This program is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ - GNU Affero General Public License for more details.
+ -
+ - You should have received a copy of the GNU Affero General Public License
+ - along with this program. If not, see <http://www.gnu.org/licenses/>.
+ -->
 <template>
   <form class="settings-select-users" @submit.prevent="">
     <div :class="['input-wrapper', { empty, required }]">
@@ -85,7 +83,7 @@
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
-import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import { NcMultiselect as Multiselect } from '@nextcloud/vue'
 import userInfoPopup from '../mixins/user-info-popup.js'
 import EllipsisedCloudUserOption from './EllipsisedCloudUserOption.vue'
 
@@ -157,7 +155,7 @@ export default {
     },
   },
   watch: {
-    value(newVal) {
+    value(/* newVal, oldVal */) {
       this.loadingPromise.finally(() => {
         this.inputValObjects = this.getValueObject()
       })
@@ -167,9 +165,9 @@ export default {
     this.uuid = uuid.toString()
     uuid += 1
     this.loadingPromise.finally(() => {
-      this.loadingPromise = new Promise((resolve, reject) => {
+      this.loadingPromise = new Promise((resolve/* , reject */) => {
         this.loading = true
-        this.asyncFindUser('').then((result) => {
+        this.asyncFindUser('').then((/* result */) => {
           this.inputValObjects = this.getValueObject()
           this.loading = false
           resolve(this.loading)
@@ -188,7 +186,7 @@ export default {
             }
           }
           return this.users[id]
-        }
+        },
       )
     },
     emitInput() {

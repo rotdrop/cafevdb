@@ -1,27 +1,25 @@
-<script>
-/**
+<!--
  * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- *
- * @author Claus-Justus Heine
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
- * @license AGPL-3.0-or-later
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-</script>
+ -
+ - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ -
+ - @author Claus-Justus Heine
+ - @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @license AGPL-3.0-or-later
+ -
+ - This program is free software: you can redistribute it and/or modify
+ - it under the terms of the GNU Affero General Public License as
+ - published by the Free Software Foundation, either version 3 of the
+ - License, or (at your option) any later version.
+ -
+ - This program is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ - GNU Affero General Public License for more details.
+ -
+ - You should have received a copy of the GNU Affero General Public License
+ - along with this program. If not, see <http://www.gnu.org/licenses/>.
+ -->
 <template>
   <div class="files-tab">
     <ul>
@@ -175,25 +173,26 @@
 <script>
 
 import { appName } from '../app/app-info.js'
-import { getCurrentUser as getCloudUser } from '@nextcloud/auth/dist/user'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import ActionRadio from '@nextcloud/vue/dist/Components/NcActionRadio'
+import {
+  NcActions as Actions,
+  NcActionButton as ActionButton,
+  NcActionRadio as ActionRadio,
+  // NcAppSidebar as AppSidebar,
+  // NcAppSidebarTab as AppSidebarTab,
+} from '@nextcloud/vue'
 // import ActionRadio from '../components/action-radio/NcActionRadio'
-import AppSidebar from '@nextcloud/vue/dist/Components/NcAppSidebar'
-import AppSidebarTab from '@nextcloud/vue/dist/Components/NcAppSidebarTab'
-import CloudIcon from 'vue-material-design-icons/Cloud'
-import CodeJsonIcon from 'vue-material-design-icons/CodeJson'
-import DatabaseIcon from 'vue-material-design-icons/Database'
-import ContactsIcon from 'vue-material-design-icons/Contacts'
+import CloudIcon from 'vue-material-design-icons/Cloud.vue'
+import CodeJsonIcon from 'vue-material-design-icons/CodeJson.vue'
+// import DatabaseIcon from 'vue-material-design-icons/Database.vue'
+// import ContactsIcon from 'vue-material-design-icons/Contacts.vue'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { generateUrl } from '@nextcloud/router'
-import { getInitialState } from '../services/initial-state-service'
-import SelectContacts from '../components/SelectContacts'
-import SelectAddressBooks from '../components/SelectAddressBooks'
-import SelectMusicians from '../components/SelectMusicians'
-import SelectProjects from '../components/SelectProjects'
+import { getInitialState } from '../services/initial-state-service.js'
+import SelectContacts from '../components/SelectContacts.vue'
+import SelectAddressBooks from '../components/SelectAddressBooks.vue'
+import SelectMusicians from '../components/SelectMusicians.vue'
+import SelectProjects from '../components/SelectProjects.vue'
 import fileDownload from '../services/axios-file-download.js'
 import tooltip from '../mixins/tooltips.js'
 import md5 from 'blueimp-md5'
@@ -201,8 +200,8 @@ import md5 from 'blueimp-md5'
 export default {
   name: 'FilesTab',
   components: {
-    AppSidebar,
-    AppSidebarTab,
+    // AppSidebar,
+    // AppSidebarTab,
     SelectContacts,
     SelectAddressBooks,
     SelectMusicians,
@@ -212,8 +211,8 @@ export default {
     ActionRadio,
     CloudIcon,
     CodeJsonIcon,
-    DatabaseIcon,
-    ContactsIcon,
+    // DatabaseIcon,
+    // ContactsIcon,
   },
   mixins: [
     tooltip,
@@ -239,17 +238,13 @@ export default {
       initialState: {},
       merging: false,
       recipientsSource: null,
-    };
+    }
   },
   /* watch: {
    *   onlyAddressBooks(newVal, oldVal) {
    *     console.info('TOP ADDRESS BOOK WATCH', newVal, oldVal)
    *   },
    * }, */
-  created() {
-    this.getData()
-    console.info('SENDER ID', this.senderId)
-  },
   computed: {
     projectId() {
       try {
@@ -277,12 +272,14 @@ export default {
         return this
           .contacts
           .filter((contact) => !!contact.key || contact.key === 0)
-          .map((contact) => { return {
-            key: contact.key,
-            uri: contact.URI,
-            uid: contact.UID,
-            book: contact['addressbook-key'],
-          } })
+          .map((contact) => {
+            return {
+              key: contact.key,
+              uri: contact.URI,
+              uid: contact.UID,
+              book: contact['addressbook-key'],
+            }
+          })
       } catch (ignoreMe) {
         return []
       }
@@ -340,18 +337,23 @@ export default {
       return 'icon-triangle-s'
     },
   },
+  created() {
+    this.getData()
+    console.info('SENDER ID', this.senderId)
+  },
   // watch: {
   //   project(newVal, oldVal) {
   //    console.info('NEW PROJECT', newVal, oldVal)
   //   },
   // },
   methods: {
-    info() {
-      console.info.apply(null, arguments)
+    info(...args) {
+      console.info.apply(null, ...args)
     },
-     /**
-     * Update current fileInfo and fetch new data
-     * @param {Object} fileInfo the current file FileInfo
+    /**
+     * Update current fileInfo and fetch new data.
+     *
+     * @param {object} fileInfo Fhe current file FileInfo.
      */
     async update(fileInfo) {
       this.fileInfo = fileInfo
@@ -385,8 +387,8 @@ export default {
       console.info('RECIPIENTS', this.recipientsSource)
       this.$refs.recipientsSource.closeMenu()
     },
-    async handleMailMergeRequest(operation) {
-      console.info('MAIL MERGE', arguments)
+    async handleMailMergeRequest(operation, ...args) {
+      console.info('MAIL MERGE', operation, ...args)
       console.info('FILE', this.fileInfo)
 
       this.merging = true
@@ -405,20 +407,21 @@ export default {
 
       try {
         switch (operation) {
-          case 'dataset':
-            postData.limit = 1 // maybe ...
-          case 'download':
-            await fileDownload(ajaxUrl, postData)
-            break
-          case 'cloud': {
-            const response = await axios.post(ajaxUrl, postData)
-            const cloudFolder = response.data.cloudFolder
-            const message = response.data.message
-            console.info('CLOUD RESPONSE', response)
-            const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
-            showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })
-            break
-          }
+        case 'dataset':
+          postData.limit = 1 // maybe ...
+          // fallthrough
+        case 'download':
+          await fileDownload(ajaxUrl, postData)
+          break
+        case 'cloud': {
+          const response = await axios.post(ajaxUrl, postData)
+          const cloudFolder = response.data.cloudFolder
+          const message = response.data.message
+          console.info('CLOUD RESPONSE', response)
+          const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
+          showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })
+          break
+        }
         }
       } catch (e) {
         console.error('ERROR', e)
@@ -427,10 +430,10 @@ export default {
         if (e.response) {
           errorData = e.response.data || {}
           if (
-            e.request.responseType === 'blob' &&
-            errorData instanceof Blob &&
-            errorData.type &&
-            errorData.type.toLowerCase().indexOf('json') != -1
+            e.request.responseType === 'blob'
+            && errorData instanceof Blob
+            && errorData.type
+            && errorData.type.toLowerCase().indexOf('json') !== -1
           ) {
             try {
               errorData = JSON.parse(await errorData.text())
@@ -442,8 +445,8 @@ export default {
           message = t(appName, 'no response received from {ajaxUrl}', { ajaxUrl })
         }
         console.error('ERROR DATA', errorData)
-        message = errorData.message || message;
-        showError(t(appName, 'Could not perform mail-merge: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT });
+        message = errorData.message || message
+        showError(t(appName, 'Could not perform mail-merge: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
       }
 
       this.merging = false

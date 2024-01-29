@@ -1,4 +1,4 @@
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -10,10 +10,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 const webpack = require('webpack');
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const DeadCodePlugin = require('webpack-deadcode-plugin')
-const Visualizer = require('webpack-visualizer-plugin2');
+const DeadCodePlugin = require('webpack-deadcode-plugin');
+// const Visualizer = require('webpack-visualizer-plugin2');
 const xml2js = require('xml2js');
 
 const infoFile = path.join(__dirname, 'appinfo/info.xml');
@@ -82,15 +82,15 @@ module.exports = {
     ],
   },
   plugins: [
-    new BundleAnalyzerPlugin({
-      analyzerPort: 11111,
-      analyzerMode: 'static',
-      openAnalyzer: false,
-      reportFilename: './statistics/bundle-analyzer.html',
-    }),
-    new Visualizer({
-      filename: './statistics/visualizer-stats.html',
-    }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerPort: 11111,
+    //   analyzerMode: 'static',
+    //   openAnalyzer: false,
+    //   reportFilename: './statistics/bundle-analyzer.html',
+    // }),
+    // new Visualizer({
+    //   filename: './statistics/visualizer-stats.html',
+    // }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
@@ -106,7 +106,7 @@ module.exports = {
       {
         pluginOutputPostfix: productionMode ? null : 'min',
       },
-      productionMode ? /\.css$/ : /^$/
+      productionMode ? /\.css$/ : /^$/,
     ),
     new webpack.DefinePlugin({
       APP_NAME: JSON.stringify(appName),
@@ -135,6 +135,18 @@ module.exports = {
         'style/**/*.scss',
       ],
       exclude: [
+        'src/components/SettingsInputText.vue',
+        'src/toolkit/mixins/settings-sync.js',
+        'src/toolkit/services/InitialStateService.js',
+        'src/toolkit/util/ajax.js',
+        'src/toolkit/util/dialogs.js',
+        'src/toolkit/util/file-download.js',
+        'src/toolkit/util/file-node-helper.js',
+        'src/toolkit/util/generate-url.js',
+        'src/toolkit/util/jquery.js',
+        'src/toolkit/util/on-document-loaded.js',
+        'src/toolkit/util/pangram.js',
+        'src/toolkit/util/print-r.js',
       ],
     }),
   ],
@@ -238,6 +250,7 @@ module.exports = {
         exclude: BabelLoaderExcludeNodeModulesExcept([
           'vue-material-design-icons',
           'emoji-mart-vue-fast',
+          '@rotdrop/nextcloud-vue-components',
         ]),
       },
       {
