@@ -79,7 +79,7 @@
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
-import { NcMultiselect as Multiselect } from '@nextcloud/vue'
+import { NcMultiselect as Multiselect } from '@nextcloud/vue7'
 import userInfoPopup from '../mixins/user-info-popup.js'
 import EllipsisedCloudGroupOption from './EllipsisedCloudGroupOption.vue'
 

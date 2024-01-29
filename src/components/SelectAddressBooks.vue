@@ -71,7 +71,7 @@ import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { NcMultiselect as Multiselect } from '@nextcloud/vue'
+import { NcMultiselect as Multiselect } from '@nextcloud/vue7'
 import { getInitialState } from '../services/initial-state-service.js'
 
 let uuid = 0

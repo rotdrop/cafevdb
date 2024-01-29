@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-import { NcMultiselect as NextcloudMultiselect } from '@nextcloud/vue'
+import { NcMultiselect as NextcloudMultiselect } from '@nextcloud/vue7'
 
 export default {
   name: 'Multiselect',
