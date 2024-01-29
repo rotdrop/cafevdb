@@ -104,7 +104,7 @@ class EncryptionService
     self::USER_ENCRYPTION_KEY_KEY,
   ];
 
-  /** @var Crypto\CloudSymmetricCryptor */
+  /** @var Crypto\SymmetricCryptorInterface */
   private $appCryptor;
 
   /** @var Crypto\AsymmetricCryptorInterface */
@@ -122,15 +122,15 @@ class EncryptionService
   /** {@inheritdoc} */
   public function __construct(
     private string $appName,
-    AuthorizationService $authorization,
     private IConfig $containerConfig,
-    IUserSession $userSession,
     private Crypto\AsymmetricKeyService $asymKeyService,
-    Crypto\CryptoFactoryInterface $cryptoFactory,
     private IHasher $hasher,
-    ICredentialsStore $credentialsStore,
     private IEventDispatcher $eventDispatcher,
     protected ILogger $logger,
+    AuthorizationService $authorization,
+    IUserSession $userSession,
+    Crypto\CryptoFactoryInterface $cryptoFactory,
+    ICredentialsStore $credentialsStore,
     // private IL10N $l,
   ) {
     $this->appCryptor = $cryptoFactory->getSymmetricCryptor();
@@ -579,6 +579,13 @@ class EncryptionService
     }
     $value  = $this->getAppValue($key, $default);
 
+    if (in_array($key, self::NEVER_ENCRYPT) && $this->appCryptor->isEncrypted($value) === false) {
+      // short-cut, no need to bail out or complain. The "not enecrypted"
+      // check is necessary for the case that items are added to the
+      // NEVER_ENCRYPT list.
+      return $value;
+    }
+
     if (!empty($value) && ($value !== $default)) {
       // null is error or uninitialized, string '' means no encryption
       if ($this->appCryptor->getEncryptionKey() === null) {
@@ -622,8 +629,12 @@ class EncryptionService
     if (!$ignoreLock && !empty($this->getAppValue(self::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not storing value for config-key ' . $key);
     }
+    if (in_array($key, self::NEVER_ENCRYPT)) {
+      $this->setAppValue($key, $value);
+      return true;
+    }
     $encryptionKey = $this->appCryptor->getEncryptionKey();
-    if (!empty($encryptionKey) && !in_array($key, self::NEVER_ENCRYPT)) {
+    if ($encryptionKey !== '') {
       if ($encryptionKey === null) {
         // null is error or uninitialized, string '' means no encryption
         if (!empty($this->userId)) {
