@@ -21,7 +21,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div class="files-tab">
+  <div :class="['files-tab', ...cloudVersionClasses]">
     <ul>
       <li class="files-tab-entry flex clickable"
           @click="handleToggleMenu($refs.mailMergeOperations, ...arguments)"
@@ -171,8 +171,8 @@
   </div>
 </template>
 <script>
-
 import { appName } from '../app/app-info.js'
+import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 import {
   NcActions as Actions,
   NcActionButton as ActionButton,
@@ -219,6 +219,7 @@ export default {
   ],
   data() {
     return {
+      cloudVersionClasses,
       sender: '',
       project: '',
       recipients: [],
