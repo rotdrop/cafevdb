@@ -31,9 +31,10 @@ use Throwable;
 use OC\Files\Mount\MountPoint;
 
 use OCP\Files\Config\IMountProvider;
-use OCP\Files\Storage\IStorageFactory;
 use OCP\Files\FileInfo;
+use OCP\Files\Storage\IStorageFactory;
 use OCP\IUser;
+use OCP\IUserSession;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -49,9 +50,6 @@ use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Mount parts of the database-storage somewhere.
- *
- * @todo This is just a dummy for now in order to test the integration
- * with the surrounding cloud.
  */
 class MountProvider implements IMountProvider
 {
@@ -70,6 +68,7 @@ class MountProvider implements IMountProvider
     protected EntityManager $entityManager,
     private AuthorizationService $authorizationService,
     private Factory $storageFactory,
+    private IUserSession $userSession,
   ) {
     $this->l = $this->l10n();
   }
@@ -101,7 +100,13 @@ class MountProvider implements IMountProvider
   {
     $userId = $user->getUID();
 
+    if ($this->userSession->isLoggedIn())  {
+      $this->logDebug('No one is logged in.');
+      return [];
+    }
+
     if (!$this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FILESYSTEM)) {
+      $this->logDebug('User is not authorized: ' . $userId);
       return [];
     }
 
@@ -112,6 +117,7 @@ class MountProvider implements IMountProvider
     }
 
     if ($userId == $this->shareOwnerId()) {
+      $this->logDebug('Skipping virutal mounts for the shareholder: ' . $userId);
       // do not try to establish virtual mounts for the dummy user
       return [];
     }
