@@ -714,6 +714,11 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       return false;
     }
 
+    if (!$this->encryptionService()->bound()) {
+      // until we decide to handle this in another way
+      return false;
+    }
+
     /** @var IRootFolder $rootFolder */
     $this->rootFolder = $this->appContainer->get(IRootFolder::class);
     if (empty($this->rootFolder)) {
