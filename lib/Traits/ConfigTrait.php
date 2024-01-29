@@ -143,7 +143,7 @@ trait ConfigTrait
   }
 
   /** @return IUserSession */
-  protected function userSession():IUserSession
+  protected function getUserSession():IUserSession
   {
     return $this->configService->getUserSession();
   }
