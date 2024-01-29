@@ -136,7 +136,7 @@ class SealCryptor implements ICryptor
   }
 
   /** {@inheritdoc} */
-  public function isEncrypted(?string $data):?bool
+  public static function isEncrypted(?string $data):?bool
   {
     return $this->sealService->isSealedData($data);
   }

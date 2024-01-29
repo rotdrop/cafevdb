@@ -167,7 +167,7 @@ class HaliteAsymmetricCryptor implements AsymmetricCryptorInterface
   }
 
   /** {@inheritdoc} */
-  public function isEncrypted(?string $data):?bool
+  public static function isEncrypted(?string $data):?bool
   {
     return null;
   }

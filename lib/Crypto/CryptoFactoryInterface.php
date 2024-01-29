@@ -32,6 +32,8 @@ namespace OCA\CAFEVDB\Crypto;
  */
 interface CryptoFactoryInterface
 {
+  public const CRYPTOR_CLASSES = [];
+
   /**
    * @param null|string $passphrase
    *

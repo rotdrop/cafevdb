@@ -83,7 +83,7 @@ class CloudSymmetricCryptor implements SymmetricCryptorInterface
   {
     if (!empty($this->encryptionKey) && !empty($data)) {
       // not encrypted hack
-      if (!$this->isEncrypted($data)) {
+      if (!static::isEncrypted($data)) {
         return $data;
       }
       try {
@@ -108,7 +108,7 @@ class CloudSymmetricCryptor implements SymmetricCryptorInterface
   }
 
   /** {@inheritdoc} */
-  public function isEncrypted(?string $data):?bool
+  public static function isEncrypted(?string $data):?bool
   {
     if (empty($data)) {
       return false;
