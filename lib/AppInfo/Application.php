@@ -39,10 +39,6 @@ use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\IAppContainer;
 
 use OCP\AppFramework\App;
-use OCP\IL10N;
-
-use OC\L10N\Events\TranslationNotFound;
-use OCA\CAFEVDB\Listener\TranslationNotFoundListener;
 
 /*
  *
