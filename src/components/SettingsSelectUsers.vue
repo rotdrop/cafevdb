@@ -1,5 +1,5 @@
 <!--
- * Orchestra member, musicion and project management application.
+ - Orchestra member, musicion and project management application.
  -
  - CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  -
@@ -19,54 +19,62 @@
  -
  - You should have received a copy of the GNU Affero General Public License
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
+ -
+ - @file
+ - This file wraps an NcSelect with userSelect option but as input
+ - only a flat array of user-ids is provided, and the output is then
+ - also just a flat array of selected user ids, while the fancy
+ - wrapped user-select uses full-fledged user instances.
+ -
+ - Finally: the core distribution of NcSelect fails to set the "user:
+ - USER_ID" property which is needed to actually fetch the
+ - avatar. This should go to a pull-request ...
  -->
 <template>
-  <form class="settings-select-users" @submit.prevent="">
+  <form v-tooltip="tooltip" class="settings-select-users" @submit.prevent="">
     <div :class="['input-wrapper', { empty, required }]">
-      <div v-if="showLoadingIndicator" class="loading" />
       <label :for="id">{{ label }}</label>
-      <Multiselect :id="id"
-                   ref="multiselect"
-                   v-model="inputValObjects"
-                   v-tooltip="active ? false : tooltip"
-                   :options="usersArray"
-                   :options-limit="100"
-                   :placeholder="label"
-                   :hint="hint"
-                   track-by="id"
-                   label="displayname"
-                   class="multiselect-vue"
-                   :multiple="true"
-                   :close-on-select="false"
-                   :tag-width="60"
-                   :disabled="disabled"
-                   @input="emitInput"
-                   @search-change="asyncFindUser"
-                   @open="active = true"
-                   @close="active = false"
+      <NcSelect :id="id"
+                ref="ncselect"
+                v-model="inputValObjects"
+                :options="usersArray"
+                :options-limit="100"
+                :placeholder="label"
+                :label-outside="true"
+                :hint="hint"
+                label="displayname"
+                class="multiselect-vue"
+                :multiple="true"
+                :close-on-select="false"
+                :disabled="disabled"
+                :user-select="true"
+                @input="emitInput"
+                @search-change="asyncFindUser"
+                @open="active = true"
+                @close="active = false"
       >
-        <template #option="optionData">
-          <EllipsisedCloudUserOption :name="$refs.multiselect.getOptionLabel(optionData.option)"
-                                     :option="optionData.option"
-                                     :search="optionData.search"
-                                     :label="$refs.multiselect.label"
+        <!-- Unfortunately, the stock NcSelect seems to be somewhat borken. -->
+        <template #option="option">
+          <NcListItemIcon v-tooltip="userInfoPopup(option)"
+                          v-bind="option"
+                          :user="option.id"
+                          :avatar-size="24"
+                          :name="option[$refs.ncselect.localLabel]"
+                          :search="$refs.ncselect.search"
           />
         </template>
-        <template #tag="tagData">
-          <span :key="tagData.option.id"
-                v-tooltip="userInfoPopup(tagData.option)"
-                class="multiselect__tag"
-          >
-            <span v-text="$refs.multiselect.getOptionLabel(tagData.option)" />
-            <i tabindex="1"
-               class="multiselect__tag-icon"
-               @keypress.enter.prevent="tagData.remove(tagData.option)"
-               @mousedown.prevent="tagData.remove(tagData.option)"
-            />
-          </span>
+        <template #selected-option="selectedOption">
+          <NcListItemIcon v-tooltip="userInfoPopup(selectedOption)"
+                          v-bind="selectedOption"
+                          :user="selectedOption.id"
+                          :avatar-size="24"
+                          :name="selectedOption[$refs.ncselect.localLabel]"
+                          :search="$refs.ncselect.search"
+          />
         </template>
-      </Multiselect>
-      <input type="submit"
+      </NcSelect>
+      <input v-tooltip="'submit tooltip'"
+             type="submit"
              class="icon-confirm"
              value=""
              :disabled="disabled"
@@ -83,16 +91,15 @@
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
-import { NcMultiselect as Multiselect } from '@nextcloud/vue'
+import { NcSelect, NcListItemIcon/*, Tooltip */ } from '@nextcloud/vue'
 import userInfoPopup from '../mixins/user-info-popup.js'
-import EllipsisedCloudUserOption from './EllipsisedCloudUserOption.vue'
 
 let uuid = 0
 export default {
   name: 'SettingsSelectUsers',
   components: {
-    Multiselect,
-    EllipsisedCloudUserOption,
+    NcSelect,
+    NcListItemIcon,
   },
   mixins: [
     userInfoPopup,
@@ -249,76 +256,6 @@ export default {
     width: 100%;
     max-width: 400px;
     align-items: center;
-    div.multiselect.multiselect-vue.multiselect--multiple::v-deep {
-      &:not(.multiselect--active) {
-        height:35.2px;
-      }
-      flex-grow:1;
-      &:hover .multiselect__tags {
-        border-color: var(--color-primary-element);
-        outline: none;
-      }
-      &:hover + .icon-confirm {
-        border-color: var(--color-primary-element) !important;
-        border-left-color: transparent !important;
-        z-index: 2;
-      }
-      &.multiselect--active + .icon-confirm {
-        display:none;
-      }
-      + .icon-confirm {
-        &:disabled {
-          background-color: var(--color-background-dark) !important;
-        }
-        margin-left: -8px !important;
-        border-left-color: transparent !important;
-        border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
-        background-clip: padding-box;
-        background-color: var(--color-main-background) !important;
-        opacity: 1;
-        padding: 7px 6px;
-        height:35.2px;
-        width:35.2px;
-        margin-right:0;
-        z-index:2;
-        &:hover, &:focus {
-          border-color: var(--color-primary-element) !important;
-          border-radius: var(--border-radius) !important;
-        }
-      }
-
-      .multiselect__content-wrapper li > span {
-        &:not(.multiselect__option--selected):hover::before {
-          visibility:hidden;
-        }
-      }
-
-      .multiselect__tag {
-        position: relative;
-        padding-right: 18px;
-        .multiselect__tag-icon {
-          cursor: pointer;
-          margin-left: 7px;
-          position: absolute;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          font-weight: 700;
-          font-style: initial;
-          width: 22px;
-          text-align: center;
-          line-height: 22px;
-          transition: all 0.2s ease;
-          border-radius: 5px;
-        }
-
-        .multiselect__tag-icon:after {
-          content: "×";
-          color: #266d4d;
-          font-size: 14px;
-        }
-      }
-    }
 
     label {
       width: 100%;

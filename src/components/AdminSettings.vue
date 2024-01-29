@@ -23,7 +23,7 @@
 <template>
   <div :class="['templateroot', ...cloudVersionClasses]">
     <SettingsSection :class="['major', { 'icon-loading': loading.general }]"
-                     :title="t(appName, 'Camerata DB')"
+                     :name="t(appName, 'Camerata DB')"
     >
       <div v-if="config.isAdmin">
         <!-- eslint-disable-next-line vue/no-v-html -->
@@ -31,16 +31,19 @@
         <hr>
       </div>
       <div>
-        <label for="user-and-group-backend" class="user-and-group-backend">{{ t(appName, 'User and group backend') }}</label>
+        <label for="user-and-group-backend-select" class="user-and-group-backend nc-select-outside-label">
+          {{ t(appName, 'User and group backend') }}
+        </label>
         <div class="flex-container flex-align-center">
-          <NcMultiselect id="user-and-group-backend"
-                         v-model="settings.userAndGroupBackend"
-                         :options="config.userAndGroupBackends"
-                         :multiple="false"
-                         :disabled="loading.general"
+          <NcSelect id="user-and-group-backend"
+                    v-model="settings.userAndGroupBackend"
+                    intput-id="user-and-group-backend-select"
+                    :label-outside="true"
+                    :clearable="false"
+                    :options="config.userAndGroupBackends"
+                    :multiple="false"
+                    :disabled="loading.general"
           />
-          <!-- track-by="family"
-               label="family" -->
           <Actions :disabled="loading.general || loading.fonts">
             <ActionButton icon="icon-add"
                           @click="updateFontData"
@@ -95,16 +98,24 @@
                              @error="showErrorToast"
         />
       </div>
-      <SettingsInputText v-if="config.isSubAdmin || config.isAdmin"
-                         v-model="settings.wikiNameSpace"
-                         :label="t(appName, 'Wiki Name-Space')"
-                         :hint="hints['settings:admin:wiki-name-space']"
-                         @update="saveSetting('wikiNameSpace', ...arguments)"
-                         @error="showErrorToast"
+      <!-- Note: v-model does not work here -->
+      <TextField v-if="config.isSubAdmin || config.isAdmin"
+                 :value.sync="settings.wikiNameSpace"
+                 type="text"
+                 :label="t(appName, 'Wiki Name-Space')"
+                 :show-trailing-button="true"
+                 trailing-button-icon="arrowRight"
+                 @trailing-button-click="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
+                 @update="info(settings.wikiNameSpace, ...arguments)"
+                 @update:value="info(settings.wikiNameSpace, ...arguments)"
       />
+      <!-- @trailing-button-click="saveSetting('wikiNameSpace', ...arguments)" -->
+      <p class="hint">
+        {{ hints['settings:admin:wiki-name-space'] }}
+      </p>
     </SettingsSection>
     <SettingsSection v-if="config.isSubAdmin"
-                     :title="t(appName, 'Configure User Backend')"
+                     :name="t(appName, 'Configure User Backend')"
     >
       <div>
         <button type="button"
@@ -122,7 +133,7 @@
     </SettingsSection>
     <SettingsSection v-if="config.isSubAdmin"
                      :class="['sub-admin', { 'icon-loading': loading.recryption }]"
-                     :title="t(appName, 'Recryption Requests')"
+                     :name="t(appName, 'Recryption Requests')"
     >
       <div v-for="(request, userId) in recryption.requests" :key="request.id" class="recryption-request-container">
         <input :id="['mark',userId].join('-')"
@@ -171,7 +182,7 @@
     </SettingsSection>
     <SettingsSection v-if="config.isSubAdmin"
                      class="sub-admin"
-                     :title="t(appName, 'Access Control')"
+                     :name="t(appName, 'Access Control')"
     >
       <SelectMusicians v-model="access.musicians"
                        :tooltip="access.musicians.length ? false : hints['settings:admin:access-control:musicians']"
@@ -239,7 +250,7 @@
     </SettingsSection>
     <SettingsSection v-if="config.isSubAdmin"
                      :class="['sub-admin', 'fonts-container', { 'icon-loading': loading.fonts || loading.general }]"
-                     :title="t(appName, 'Configure Office Fonts for Office Exports')"
+                     :name="t(appName, 'Configure Office Fonts for Office Exports')"
     >
       <div>
         <span class="file-name-label">{{ t(appName, 'Font Data Folder') }}</span>
@@ -312,9 +323,11 @@ import {
   NcActions as Actions,
   NcActionButton as ActionButton,
   NcProgressBar as ProgressBar,
-  NcMultiselect,
+  NcSelect,
   NcSettingsSection as SettingsSection,
+  NcTextField as TextField,
 } from '@nextcloud/vue'
+// import { NcMultiselect } from '@nextcloud/vue7'
 import Multiselect from './Multiselect.vue'
 import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
@@ -326,7 +339,7 @@ import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 import SelectMusicians from './SelectMusicians.vue'
 import SelectProjects from './SelectProjects.vue'
 // import SettingsInputText from './SettingsInputText.vue'
-import SettingsInputText from '@rotdrop/nextcloud-vue-components/lib/components/SettingsInputText.vue'
+// import SettingsInputText from '@rotdrop/nextcloud-vue-components/lib/components/SettingsInputText.vue'
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
 import tooltip from '../mixins/tooltips.js'
@@ -341,14 +354,16 @@ export default {
     Actions,
     ActionButton,
     Multiselect,
-    NcMultiselect,
+    NcSelect,
+    // NcMultiselect,
     ProgressBar,
     SelectMusicians,
     SelectProjects,
-    SettingsInputText,
+    // SettingsInputText,
     SettingsSection,
     SettingsSelectGroup,
     SettingsSelectUsers,
+    TextField,
   },
   mixins: [
     tooltip,
@@ -476,8 +491,10 @@ export default {
       this.loadTooltips()
       this.getSettingsData()
 
-      // fetch recryption requests
-      this.getRecryptionRequests()
+      if (this.config.isSubAdmin) {
+        // fetch recryption requests
+        this.getRecryptionRequests()
+      }
 
       this.disableUnavailableFontOptions()
       this.defaultOfficeFont = this.config.officeFonts[this.config.defaultOfficeFont]
@@ -920,7 +937,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.cloud-version {
+  --cloud-icon-checkmark: var(--icon-checkmark-dark);
+  &.cloud-version-major-24 {
+    --cloud-icon-checkmark: var(--icon-checkmark-000);
+  }
+}
 .settings-section {
+  label.nc-select-outside-label {
+    display: block;
+     margin-bottom: 2px;
+  }
   &::v-deep .flex-container {
     display: flex;
     &.flex- {
