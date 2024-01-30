@@ -89,6 +89,7 @@ class EncryptionService
     'installed_version',
     'types',
     ConfigService::USER_GROUP_KEY, // cloud-admin setting
+    ConfigService::USER_AND_GROUP_BACKEND_KEY, // backend to use for the orchestra group
     ConfigService::SHAREOWNER_KEY, // needed as calendar principal in the member's app
     ConfigService::SHARED_FOLDER, // needed by some listeners in order to bail out early
     ConfigService::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
