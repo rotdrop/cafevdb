@@ -1376,6 +1376,15 @@ placeholder "{FROM_YEAR}" and "{TO_YEAR}" in order to have the validity period i
           ],
           'wiki-name-space' => $this->l->t('Add the name of a DokuWiki namespace which will host all wiki-pages of the orchestra. The namespace should be all lower-case and must not contain any spaces or fancy characters.'),
           'cloud-user-backend-conf' => $this->l->t('It is possible to inject cloud-user-accounts for all orchestra club-members into the ambient cloud-software. This works by granting select access to the cloud database account on special views which just expose the necessary information to the cloud. The configuration has to be set up first in the "sharing" section of the personal configuration dialog of a group-admin of the orchestra group.'),
+          'user-and-group-backend' => $this->l->t('In order to allow for the integration with exteranl services and to have SSO up to some extend it may be desirable to move the members of the orchestra group to special user backend. If this is desirable, then the backend can be specified here (e.g. "LDAP").'),
+          'user-backend' => [
+            'move-users' => $this->l->t('Synchronize the user backend for all "administrative" users: move "pure
+            ochestra users" back to the generic user-backend which makes sure,
+            that any registered orchestra member has a cloud account. Move any
+            "special" user to the configured "supervisor" backend. Note that
+            moving users between backends is not lossless, but should only
+            imply moderate lossage of personal settings.'),
+          ],
         ],
         'personal' => [
           'general' => [
