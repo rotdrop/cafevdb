@@ -30,6 +30,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
 use OCP\IGroupManager;
+use OCP\Group\Backend\INamedBackend;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
@@ -87,6 +88,7 @@ class SubAdminEventListener implements IEventListener
     /** @var ConfigService $configService */
     $configService = $this->appContainer->get(ConfigService::class);
 
+    /** @var IGroupManager $groupManager */
     $groupManager = $configService->getGroupManager();
 
     $subAdminGroup = $configService->getSubAdminGroup();
@@ -99,6 +101,31 @@ class SubAdminEventListener implements IEventListener
     $administrableGroupGids = [];
     foreach (AuthorizationService::GROUP_SUFFIX_LIST as $groupSuffix) {
       $administrableGroupGids[] = $orchestraGroup->getGID() . $groupSuffix;
+    }
+
+    $requestedBackend = $configService->getConfigValue(ConfigService::USER_AND_GROUP_BACKEND_KEY, 'Database');
+
+    $backends = $groupManager->getBackends();
+    $groupBackend = null;
+    /** @var INamedBackend $backend */
+    foreach ($backends as $backend) {
+      if (!$backend instanceof INamedBackend) {
+        continue;
+      }
+      $this->logInfo('Group-Backend: ' . $backend->getBackendName());
+      if ($backend->getBackendName() == $requestedBackend) {
+        $groupBackend = $backend;
+        break;
+      }
+    }
+    foreach ($administrableGroupGids as $gid) {
+      if (!$groupManager->get($gid)) {
+        if (!empty($groupBackend)) {
+          $groupManager->createGroupFromBackend($gid, $groupBackend);
+        } else {
+          $groupManager->createGroup($gid);
+        }
+      }
     }
 
     /** @var CloudUserConnectorService $cloudUserConnector */
