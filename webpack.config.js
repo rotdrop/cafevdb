@@ -251,6 +251,7 @@ module.exports = {
           'vue-material-design-icons',
           'emoji-mart-vue-fast',
           '@rotdrop/nextcloud-vue-components',
+          '@nextcloud/vue',
         ]),
       },
       {
@@ -347,7 +348,7 @@ module.exports = {
       path: require.resolve('path-browserify'),
       stream: require.resolve('stream-browserify'),
     },
-    extensions: ['*', '.js', '.vue', 'ts'],
+    extensions: ['.*', '.js', '.vue', '.ts'],
     extensionAlias: {
       /**
        * Resolve TypeScript files when using fully-specified esm import paths
