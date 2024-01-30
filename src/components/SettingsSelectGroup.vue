@@ -61,7 +61,8 @@
             />
           </template>
         </NcSelect>
-        <input type="submit"
+        <input v-tooltip="t(appName, 'Click to submit your changes.')"
+               Xtype="submit"
                class="icon-confirm"
                value=""
                :disabled="disabled"

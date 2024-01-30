@@ -51,24 +51,15 @@
                    class="user-and-group-backend icon-confirm"
                    value=""
                    :disabled="loading.general"
-                   @click="saveSetting('userAndGroupBackend', ...arguments)"
+                   @click="saveSetting('userAndGroupBackend', settings.userAndGroupBackend, ...arguments)"
             >
           </div>
           <Actions :disabled="loading.general || loading.fonts">
-            <ActionButton icon="icon-add"
-                          @click="updateFontData"
+            <ActionButton v-tooltip="hints['settings:admin:user-backend:move-users']"
+                          icon="icon-play"
+                          @click="synchronizeUserBackends"
             >
-              {{ t(appName, 'Update Font Data') }}
-            </ActionButton>
-            <ActionButton icon="icon-play"
-                          @click="rescanFontData"
-            >
-              {{ t(appName, 'Rescan Font Data') }}
-            </ActionButton>
-            <ActionButton icon="icon-delete"
-                          @click="purgeFontData"
-            >
-              {{ t(appName, 'Purge Font Data') }}
+              {{ t(appName, 'Sychronize User Backends') }}
             </ActionButton>
           </Actions>
         </div>
@@ -410,6 +401,7 @@ export default {
         'settings:admin:user-and-group-backend': '',
         'settings:admin:access-control:musicians': '',
         'settings:admin:true-type-fonts-folder': '',
+        'settings:admin:user-backend:move-users': '',
       },
       forword: '',
       recryption: {
@@ -664,6 +656,9 @@ export default {
         }
         this.getSettingsData()
       }
+    },
+    synchronizeUserBackends() {
+      showError(t(appName, 'Synchronizing user backends not yet implemented.'), { timeout: TOAST_PERMANENT_TIMEOUT })
     },
     markAllRecryptionRequests(/* event */) {
       const value = !!this.recryption.allRequestsMarked
