@@ -94,6 +94,7 @@
                              :label="t(appName, 'User Group Admins')"
                              :hint="hints['settings:admin:user-group:admins']"
                              :disabled="groupAdminsDisabled || !config.isAdmin"
+                             :required="true"
                              @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
                              @error="showErrorToast"
         />
@@ -1047,14 +1048,27 @@ export default {
   }
   &.sub-admin {
     &.fonts-container {
-      .file-name-label {
-      }
+      /* .file-name-label {
+      } */
       .file-name {
         font-family: monospace;
       }
       label.default-font {
         padding-right: 0.5em;
       }
+    }
+  }
+  .input-field::v-deep .input-field__trailing-button:hover {
+    border: var(--vs-border-width) var(--vs-border-style) var(--color-primary-element);
+    border-radius: var(--vs-border-radius);
+    outline: 2px solid var(--color-main-background);
+    background-color: var(--color-main-background);
+    width:var(--default-clickable-area);
+    height:var(--default-clickable-area);
+    flex-shrink:0;
+    .button-vue__icon {
+      min-width:unset;
+      min-height:unset;
     }
   }
 }

@@ -32,54 +32,56 @@
  -->
 <template>
   <form v-tooltip="tooltip" class="settings-select-users" @submit.prevent="">
-    <div :class="['input-wrapper', { empty, required }]">
+    <div :class="['input-wrapper', { empty, required, loading }]">
       <label :for="id">{{ label }}</label>
-      <NcSelect :id="id"
-                ref="ncselect"
-                v-model="inputValObjects"
-                :options="usersArray"
-                :options-limit="100"
-                :placeholder="label"
-                :label-outside="true"
-                :hint="hint"
-                label="displayname"
-                class="multiselect-vue"
-                :multiple="true"
-                :close-on-select="false"
-                :disabled="disabled"
-                :user-select="true"
-                @input="emitInput"
-                @search-change="asyncFindUser"
-                @open="active = true"
-                @close="active = false"
-      >
-        <!-- Unfortunately, the stock NcSelect seems to be somewhat borken. -->
-        <template #option="option">
-          <NcListItemIcon v-tooltip="userInfoPopup(option)"
-                          v-bind="option"
-                          :user="option.id"
-                          :avatar-size="24"
-                          :name="option[$refs.ncselect.localLabel]"
-                          :search="$refs.ncselect.search"
-          />
-        </template>
-        <template #selected-option="selectedOption">
-          <NcListItemIcon v-tooltip="userInfoPopup(selectedOption)"
-                          v-bind="selectedOption"
-                          :user="selectedOption.id"
-                          :avatar-size="24"
-                          :name="selectedOption[$refs.ncselect.localLabel]"
-                          :search="$refs.ncselect.search"
-          />
-        </template>
-      </NcSelect>
-      <input v-tooltip="'submit tooltip'"
-             type="submit"
-             class="icon-confirm"
-             value=""
-             :disabled="disabled"
-             @click="emitUpdate"
-      >
+      <div class="select-combo-wrapper">
+        <NcSelect :id="id"
+                  ref="ncselect"
+                  v-model="inputValObjects"
+                  :options="usersArray"
+                  :options-limit="100"
+                  :placeholder="label"
+                  :label-outside="true"
+                  :hint="hint"
+                  label="displayname"
+                  class="multiselect-vue"
+                  :multiple="true"
+                  :close-on-select="false"
+                  :disabled="disabled"
+                  :user-select="true"
+                  @input="emitInput"
+                  @search-change="asyncFindUser"
+                  @open="active = true"
+                  @close="active = false"
+        >
+          <!-- Unfortunately, the stock NcSelect seems to be somewhat borken. -->
+          <template #option="option">
+            <NcListItemIcon v-tooltip="userInfoPopup(option)"
+                            v-bind="option"
+                            :user="option.id"
+                            :avatar-size="24"
+                            :name="option[$refs.ncselect.localLabel]"
+                            :search="$refs.ncselect.search"
+            />
+          </template>
+          <template #selected-option="selectedOption">
+            <NcListItemIcon v-tooltip="userInfoPopup(selectedOption)"
+                            v-bind="selectedOption"
+                            :user="selectedOption.id"
+                            :avatar-size="24"
+                            :name="selectedOption[$refs.ncselect.localLabel]"
+                            :search="$refs.ncselect.search"
+            />
+          </template>
+        </NcSelect>
+        <input v-tooltip="t(appName, 'Click to submit your changes.')"
+               type="submit"
+               class="icon-confirm"
+               value=""
+               :disabled="disabled"
+               @click="emitUpdate"
+        >
+      </div>
     </div>
     <p v-if="hint !== ''" class="hint">
       {{ hint }}
@@ -232,33 +234,59 @@ export default {
 .settings-select-users {
   .input-wrapper {
     position:relative;
-    .loading {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    // max-width: 400px;
+    align-items: center;
+    .loading-indicator.loading {
       position:absolute;
       width:0;
       height:0;
       top:50%;
       left:50%;
     }
-    &.empty.required {
-      div.multiselect.multiselect-vue::v-deep .multiselect__tags {
-        border-left: 1px solid red;
-        border-top: 1px solid red;
-        border-bottom: 1px solid red;
-      }
-      .icon-confirm {
-        border-right: 1px solid red;
-        border-top: 1px solid red;
-        border-bottom: 1px solid red;
-      }
-    }
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 400px;
-    align-items: center;
-
     label {
       width: 100%;
+    }
+    .select-combo-wrapper {
+      display: flex;
+      align-items: stretch;
+      flex-grow: 1;
+      flex-wrap: nowrap;
+      .v-select.select::v-deep {
+        flex-grow:1;
+        max-width:100%;
+        .vs__dropdown-toggle {
+          // substract the round borders for the overlay
+          padding-right: calc(var(--default-clickable-area) - var(--vs-border-radius));
+        }
+        + .icon-confirm {
+          flex-shrink: 0;
+          width:var(--default-clickable-area);
+          align-self: stretch;
+          // align-self: stretch should do what we want here :)
+          // height:var(--default-clickable-area);
+          margin: 0 0 0 calc(0px - var(--default-clickable-area));
+          z-index: 2;
+          border-radius: var(--vs-border-radius) var(--vs-border-radius);
+          border-style: none;
+          background-color: rgba(0, 0, 0, 0);
+          background-clip: padding-box;
+          opacity: 1;
+          &:hover, &:focus {
+            border: var(--vs-border-width) var(--vs-border-style) var(--color-primary-element);
+            border-radius: var(--vs-border-radius);
+            outline: 2px solid var(--color-main-background);
+            background-color: var(--vs-search-input-bg);
+          }
+        }
+      }
+      &.empty.required:not(.loading) {
+        .v-select.select::v-deep .vs__dropdown-toggle {
+          border-color: red;
+        }
+      }
     }
   }
 
@@ -268,7 +296,8 @@ export default {
   }
 }
 </style>
-<style>
+<style lang="scss">
+// in vue-select anything starting from
 .vue-tooltip-user-info-popup.vue-tooltip .tooltip-inner {
   text-align: left !important;
   *:not(h4) {
