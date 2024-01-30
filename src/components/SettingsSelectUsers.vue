@@ -42,7 +42,6 @@
                   :options-limit="100"
                   :placeholder="label"
                   :label-outside="true"
-                  :hint="hint"
                   label="displayname"
                   class="multiselect-vue"
                   :multiple="true"

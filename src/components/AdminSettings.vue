@@ -73,7 +73,7 @@
                              :hint="hints['settings:admin:user-group']"
                              :multiple="false"
                              :required="true"
-                             :disabled="!config.isAdmin"
+                             :disabled="loading.general || !config.isAdmin"
                              @update="saveSetting('orchestraUserGroup', ...arguments)"
                              @error="showErrorToast"
         />
@@ -93,14 +93,18 @@
         <SettingsSelectUsers v-model="settings.orchestraUserGroupAdmins"
                              :label="t(appName, 'User Group Admins')"
                              :hint="hints['settings:admin:user-group:admins']"
-                             :disabled="groupAdminsDisabled || !config.isAdmin"
+                             :disabled="loading.general || groupAdminsDisabled"
                              :required="true"
                              @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
                              @error="showErrorToast"
         />
       </div>
       <!-- Note: v-model does not work here -->
+      <label for="wiki-name-space">
+        {{ t(appName, 'Wiki Name-Space') }}
+      </label>
       <TextField v-if="config.isSubAdmin || config.isAdmin"
+                 id="wiki-name-space"
                  :value.sync="settings.wikiNameSpace"
                  type="text"
                  :label="t(appName, 'Wiki Name-Space')"
@@ -424,7 +428,7 @@ export default {
       return '.../' + (this.config.officeFontsFolder + '/').replace(/\/+/, '/').split('/').splice(-4).join('/')
     },
     groupAdminsDisabled() {
-      return this.settings.orchestraUserGroup === ''
+      return this.settings.orchestraUserGroup === '' || !this.config.isAdmin
     },
     projectId() {
       try { return this.access.project.id } catch (ignoreMe) { return 0 }
@@ -1000,7 +1004,7 @@ export default {
     }
   }
   ::v-deep a.external.settings {
-    background-image:url('../../../../core/img/actions/settings.svg');
+    background-image:var(--icon-settings-dark);
     background-repeat:no-repeat;
     background-position:right center;
     background-size:16px 16px;
@@ -1086,5 +1090,6 @@ export default {
 .hint {
   color: var(--color-text-lighter);
   font-size:80%;
+  line-height:100%;
 }
 </style>
