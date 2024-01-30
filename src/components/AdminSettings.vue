@@ -35,15 +35,25 @@
           {{ t(appName, 'User and group backend') }}
         </label>
         <div class="flex-container flex-align-center">
-          <NcSelect id="user-and-group-backend"
-                    v-model="settings.userAndGroupBackend"
-                    intput-id="user-and-group-backend-select"
-                    :label-outside="true"
-                    :clearable="false"
-                    :options="config.userAndGroupBackends"
-                    :multiple="false"
-                    :disabled="loading.general"
-          />
+          <div class="user-and-group-backend select-combo-wrapper">
+            <!-- @todo Wrap this in a general vue component -->
+            <NcSelect id="user-and-group-backend"
+                      v-model="settings.userAndGroupBackend"
+                      intput-id="user-and-group-backend-select"
+                      :label-outside="true"
+                      :clearable="false"
+                      :options="config.userAndGroupBackends"
+                      :multiple="false"
+                      :disabled="loading.general"
+            />
+            <input v-tooltip="t(appName, 'Click to submit your changes.')"
+                   type="submit"
+                   class="user-and-group-backend icon-confirm"
+                   value=""
+                   :disabled="loading.general"
+                   @click="saveSetting('userAndGroupBackend', ...arguments)"
+            >
+          </div>
           <Actions :disabled="loading.general || loading.fonts">
             <ActionButton icon="icon-add"
                           @click="updateFontData"
@@ -1073,6 +1083,41 @@ export default {
     .button-vue__icon {
       min-width:unset;
       min-height:unset;
+    }
+  }
+  // @todo Wrap this in a general vue component
+  .user-and-group-backend.select-combo-wrapper {
+    display: flex;
+    align-items: stretch;
+    flex-grow: 1;
+    flex-wrap: nowrap;
+    .v-select.select::v-deep {
+      flex-grow:1;
+      max-width:100%;
+      .vs__dropdown-toggle {
+        // substract the round borders for the overlay
+        padding-right: calc(var(--default-clickable-area) - var(--vs-border-radius));
+      }
+      + .icon-confirm {
+        flex-shrink: 0;
+        width:var(--default-clickable-area);
+        align-self: stretch;
+        // align-self: stretch should do what we want here :)
+        // height:var(--default-clickable-area);
+        margin: 0 0 0 calc(0px - var(--default-clickable-area));
+        z-index: 2;
+        border-radius: var(--vs-border-radius) var(--vs-border-radius);
+        border-style: none;
+        background-color: rgba(0, 0, 0, 0);
+        background-clip: padding-box;
+        opacity: 1;
+        &:hover, &:focus {
+          border: var(--vs-border-width) var(--vs-border-style) var(--color-primary-element);
+          border-radius: var(--vs-border-radius);
+          outline: 2px solid var(--color-main-background);
+          background-color: var(--vs-search-input-bg);
+        }
+      }
     }
   }
 }
