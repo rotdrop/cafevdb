@@ -244,6 +244,9 @@ class ConfigService
   const USER_GROUP_KEY = 'usergroup';
 
   /** @var string */
+  const USER_AND_GROUP_BACKEND_KEY = 'userAndGroupBackend';
+
+  /** @var string */
   const ADMIN_GROUP_SUFFIX = '-admin';
 
   /** @var string */
@@ -320,7 +323,7 @@ class ConfigService
   private IGroupManager $groupManager;
 
   /** @var ISubAdmin */
-  private ISubAdmin $groupSubAdmin;
+  private ISubAdmin $subAdminManager;
 
   /** @var EncryptionService */
   private EncryptionService $encryptionService;
@@ -427,7 +430,7 @@ class ConfigService
   /** @return ISubAdmin */
   public function getSubAdminManager():ISubAdmin
   {
-    return $this->groupSubAdmin ?? ($this->groupSubAdmin = $this->appContainer->get(ISubAdmin::class));
+    return $this->subAdminManager ?? ($this->subAdminManager = $this->appContainer->get(ISubAdmin::class));
   }
 
   /** @return IURLGenerator */
@@ -570,7 +573,7 @@ class ConfigService
     if (empty($user) || empty($group)) {
       return false;
     }
-    return $this->getGroupSubAdmin()->isSubAdminofGroup($user, $group);
+    return $this->getSubAdminManager()->isSubAdminofGroup($user, $group);
   }
 
   /**
@@ -583,7 +586,7 @@ class ConfigService
   public function getGroupSubAdmins(?string $groupId = null): array
   {
     $group = $this->getGroup($groupId);
-    return $this->getGroupSubAdmin()->getGroupsSubAdmins($group);
+    return $this->getSubAdminManager()->getGroupsSubAdmins($group);
   }
 
   /**
