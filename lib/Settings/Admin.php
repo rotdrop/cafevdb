@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Settings;
 
+use Throwable;
+
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\IDelegatedSettings;
 use OCP\App\IAppManager;
@@ -46,6 +48,9 @@ class Admin implements IDelegatedSettings
 
   const PERSONAL_APP_SETTINGS_LINK = 'personalAppSettingsLink';
   const ORCHESTRA_USER_GROUP_KEY = 'orchestraUserGroup';
+  const ORCHESTRA_USER_GROUP_ADMINS_KEY = self::ORCHESTRA_USER_GROUP_KEY . 'Admins';
+  const DEFAULT_USER_AND_GROUP_BACKEND = 'Database';
+  const USER_AND_GROUP_BACKEND_KEY = ConfigService::USER_AND_GROUP_BACKEND_KEY;
   const WIKI_NAME_SPACE_KEY = 'wikiNameSpace';
   const WIKI_VERSION = 'wikiVersion';
   const CLOUD_USER_BACKEND_CONFIG_KEY = 'cloudUserBackendConfig';
@@ -55,6 +60,7 @@ class Admin implements IDelegatedSettings
   const SETTINGS_PROPERTIES = 'settingsProperties';
   const IS_ADMIN = 'isAdmin';
   const IS_SUB_ADMIN = 'isSubAdmin';
+  const USER_AND_GROUP_BACKENDS = 'userAndGroupBackends';
 
   const DELEGATABLE = 'delegatable';
   const ADMIN_ONLY = 'admin_only';
@@ -91,6 +97,34 @@ class Admin implements IDelegatedSettings
     $isAdmin = $this->groupManager()->isAdmin($this->userId());
     $isSubAdmin = $this->isSubAdminOfGroup();
 
+    $userBackends = array_values(
+      array_filter(
+        array_map(
+          function ($backend) {
+            try {
+              return $backend->getBackendName();
+            } catch (Throwable) {
+              return null;
+          }
+          },
+          $this->userManager()->getBackends(),
+        )));
+    $groupBackends = array_values(
+      array_filter(
+        array_map(
+          function ($backend) {
+            try {
+              return $backend->getBackendName();
+            } catch (Throwable) {
+              return null;
+            }
+          },
+          $this->groupManager()->getBackends(),
+        )));
+    $userAndGroupBackends = array_intersect($userBackends, $groupBackends);
+
+    $this->logInfo('BACKEND U / G ' . print_r($userAndGroupBackends, true));
+
     $configData = [
       self::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigService::USER_GROUP_KEY),
       self::PERSONAL_APP_SETTINGS_LINK => $personalAppSettingsLink,
@@ -105,6 +139,7 @@ class Admin implements IDelegatedSettings
       self::SETTINGS_PROPERTIES => self::SETTINGS_PROPERTY_VALUES,
       self::IS_ADMIN => $isAdmin,
       self::IS_SUB_ADMIN => $isSubAdmin,
+      self::USER_AND_GROUP_BACKENDS => $userAndGroupBackends,
     ];
 
     $this->initialState->provideInitialState('adminConfig', $configData);
