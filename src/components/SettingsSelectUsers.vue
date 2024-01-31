@@ -31,75 +31,57 @@
  - avatar. This should go to a pull-request ...
  -->
 <template>
-  <form v-tooltip="tooltip" class="settings-select-users" @submit.prevent="">
-    <div :class="['input-wrapper', { empty, required, loading }]">
-      <label :for="id">{{ label }}</label>
-      <div class="select-combo-wrapper">
-        <NcSelect :id="id"
-                  ref="ncselect"
-                  v-model="inputValObjects"
-                  :options="usersArray"
-                  :options-limit="100"
-                  :placeholder="label"
-                  :label-outside="true"
-                  label="displayname"
-                  class="multiselect-vue"
-                  :multiple="true"
-                  :close-on-select="false"
-                  :disabled="disabled"
-                  :user-select="true"
-                  @input="emitInput"
-                  @search-change="asyncFindUser"
-                  @open="active = true"
-                  @close="active = false"
-        >
-          <!-- Unfortunately, the stock NcSelect seems to be somewhat borken. -->
-          <template #option="option">
-            <NcListItemIcon v-tooltip="userInfoPopup(option)"
-                            v-bind="option"
-                            :user="option.id"
-                            :avatar-size="24"
-                            :name="option[$refs.ncselect.localLabel]"
-                            :search="$refs.ncselect.search"
-            />
-          </template>
-          <template #selected-option="selectedOption">
-            <NcListItemIcon v-tooltip="userInfoPopup(selectedOption)"
-                            v-bind="selectedOption"
-                            :user="selectedOption.id"
-                            :avatar-size="24"
-                            :name="selectedOption[$refs.ncselect.localLabel]"
-                            :search="$refs.ncselect.search"
-            />
-          </template>
-        </NcSelect>
-        <input v-tooltip="t(appName, 'Click to submit your changes.')"
-               type="submit"
-               class="icon-confirm"
-               value=""
-               :disabled="disabled"
-               @click="emitUpdate"
-        >
-      </div>
-    </div>
-    <p v-if="hint !== ''" class="hint">
-      {{ hint }}
-    </p>
-  </form>
+  <SelectWithSubmitButton ref="select"
+                          v-model="inputValObjects"
+                          :tooltip="tooltip"
+                          :options="usersArray"
+                          :options-limit="100"
+                          :placeholder="label"
+                          :input-label="label"
+                          :clearable="clearable"
+                          label="displayname"
+                          :multiple="true"
+                          :close-on-select="false"
+                          :disabled="disabled"
+                          :user-select="true"
+                          @update="emitUpdate"
+                          @input="emitInput"
+                          @search="findUsers"
+  >
+    <!-- Unfortunately, the stock NcSelect seems to be somewhat borken and does not set the "user" property. -->
+    <template #option="option">
+      <NcListItemIcon v-tooltip="userInfoPopup(option)"
+                      v-bind="option"
+                      :user="option.id"
+                      :avatar-size="24"
+                      :name="ncSelect ? option[ncSelect.localLabel] : t(appName, 'undefined')"
+                      :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+      />
+    </template>
+    <template #selected-option="option">
+      <NcListItemIcon v-tooltip="userInfoPopup(option)"
+                      v-bind="option"
+                      :user="option.id"
+                      :avatar-size="24"
+                      :name="ncSelect ? option[ncSelect.localLabel] : t(appName, 'undefined')"
+                      :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+      />
+    </template>
+  </SelectWithSubmitButton>
 </template>
 
 <script>
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
-import { NcSelect, NcListItemIcon/*, Tooltip */ } from '@nextcloud/vue'
+import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
+import { NcListItemIcon } from '@nextcloud/vue'
 import userInfoPopup from '../mixins/user-info-popup.js'
 
-let uuid = 0
 export default {
   name: 'SettingsSelectUsers',
   components: {
-    NcSelect,
+    SelectWithSubmitButton,
     NcListItemIcon,
   },
   mixins: [
@@ -122,7 +104,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    allowEmpty: {
+    clearable: {
       type: Boolean,
       default: true,
     },
@@ -143,168 +125,88 @@ export default {
     return {
       inputValObjects: [],
       users: {},
-      loading: true,
-      loadingPromise: Promise.resolve(),
-      active: false,
+      loading: false,
+      ncSelect: undefined,
     }
   },
   computed: {
-    id() {
-      return 'settings-select-user-' + this.uuid
+    isLoading() {
+      return this.loading && this.loadingIndicator
     },
     usersArray() {
       return Object.values(this.users)
     },
+    userIds() {
+      return this.inputValObjects.map((element) => element.id)
+    },
     empty() {
       return !this.inputValObjects || (Array.isArray(this.inputValObjects) && this.inputValObjects.length === 0)
     },
-    showLoadingIndicator() {
-      return this.loadingIndicator && this.loading
-    },
   },
   watch: {
-    value(/* newVal, oldVal */) {
-      this.loadingPromise.finally(() => {
-        this.inputValObjects = this.getValueObject()
-      })
+    async value(newValue, oldValue) {
+      if (this.loading) {
+        this.info('Skipping watch action during load')
+        return
+      }
+      if (newValue.length === 0) {
+        this.inputValObjects = []
+        return
+      }
+      this.info('VALUE HAS CHANGED', newValue, oldValue)
+      this.loading = true
+      for (const userId of newValue) {
+        if (!this.users[userId]) {
+          await this.findUsers(userId)
+        }
+      }
+      this.inputValObjects = this.getValueObject()
+      this.loading = false
     },
   },
-  created() {
-    this.uuid = uuid.toString()
-    uuid += 1
-    this.loadingPromise.finally(() => {
-      this.loadingPromise = new Promise((resolve/* , reject */) => {
-        this.loading = true
-        this.asyncFindUser('').then((/* result */) => {
-          this.inputValObjects = this.getValueObject()
-          this.loading = false
-          resolve(this.loading)
-        })
-      })
-    })
+  mounted() {
+    this.ncSelect = this.$refs.select.ncSelect
   },
   methods: {
+    info(...args) {
+      console.info(this.$options.name, ...args)
+    },
+    getUserObject(userId) {
+      return this.users[userId] || { id: userId, displayname: userId }
+    },
     getValueObject() {
-      return this.value.filter((user) => user !== '' && typeof user !== 'undefined').map(
-        (id) => {
-          if (typeof this.users[id] === 'undefined') {
-            return {
-              id,
-              displayname: id,
-            }
-          }
-          return this.users[id]
-        },
-      )
+      return this.value.filter((user) => user !== '' && typeof user !== 'undefined').map((userId) => this.getUserObject(userId))
     },
     emitInput() {
-      if (Array.isArray(this.inputValObjects) && (this.allowEmpty || !this.empty)) {
-        this.$emit('input', this.inputValObjects.map((element) => element.id))
+      if (Array.isArray(this.inputValObjects) && (this.clearable || !this.empty)) {
+        this.$emit('input', this.userIds)
       }
     },
     emitUpdate() {
       if (this.required && this.empty) {
         this.$emit('error', t(appName, 'An empty value is not allowed, please make your choice!'))
       } else {
-        this.$emit('update', this.inputValObjects.map((element) => element.id))
+        this.$emit('update', this.userIds)
       }
     },
-    asyncFindUser(query) {
+    async findUsers(query) {
       query = typeof query === 'string' ? encodeURI(query) : ''
-      return axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=10`, 2))
-        .then((response) => {
-          if (Object.keys(response.data.ocs.data.users).length > 0) {
-            Object.values(response.data.ocs.data.users).forEach((element) => {
-              if (typeof this.users[element.id] === 'undefined') {
-                this.$set(this.users, element.id, element)
-              }
-            })
-            return true
+      try {
+        const response = await axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=10`, 2))
+        if (Object.keys(response.data.ocs.data.users).length > 0) {
+          for (const element of Object.values(response.data.ocs.data.users)) {
+            const uid = element.id
+            if (!this.users[uid] || JSON.stringify(this.users[uid]) !== JSON.stringify(element)) {
+              this.$set(this.users, uid, element)
+            }
           }
-          return false
-        }).catch((error) => {
-          this.$emit('error', error)
-        })
+          return true
+        }
+      } catch (error) {
+        this.$emit('error', error)
+      }
+      return false
     },
   },
 }
 </script>
-<style lang="scss" scoped>
-.settings-select-users {
-  .input-wrapper {
-    position:relative;
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    // max-width: 400px;
-    align-items: center;
-    .loading-indicator.loading {
-      position:absolute;
-      width:0;
-      height:0;
-      top:50%;
-      left:50%;
-    }
-    label {
-      width: 100%;
-    }
-    .select-combo-wrapper {
-      display: flex;
-      align-items: stretch;
-      flex-grow: 1;
-      flex-wrap: nowrap;
-      .v-select.select::v-deep {
-        flex-grow:1;
-        max-width:100%;
-        .vs__dropdown-toggle {
-          // substract the round borders for the overlay
-          padding-right: calc(var(--default-clickable-area) - var(--vs-border-radius));
-        }
-        + .icon-confirm {
-          flex-shrink: 0;
-          width:var(--default-clickable-area);
-          align-self: stretch;
-          // align-self: stretch should do what we want here :)
-          // height:var(--default-clickable-area);
-          margin: 0 0 0 calc(0px - var(--default-clickable-area));
-          z-index: 2;
-          border-radius: var(--vs-border-radius) var(--vs-border-radius);
-          border-style: none;
-          background-color: rgba(0, 0, 0, 0);
-          background-clip: padding-box;
-          opacity: 1;
-          &:hover, &:focus {
-            border: var(--vs-border-width) var(--vs-border-style) var(--color-primary-element);
-            border-radius: var(--vs-border-radius);
-            outline: 2px solid var(--color-main-background);
-            background-color: var(--vs-search-input-bg);
-          }
-        }
-      }
-      &.empty.required:not(.loading) {
-        .v-select.select::v-deep .vs__dropdown-toggle {
-          border-color: red;
-        }
-      }
-    }
-  }
-
-  .hint {
-    color: var(--color-text-lighter);
-    font-size:80%;
-  }
-}
-</style>
-<style lang="scss">
-// in vue-select anything starting from
-.vue-tooltip-user-info-popup.vue-tooltip .tooltip-inner {
-  text-align: left !important;
-  *:not(h4) {
-    color: var(--color-text-lighter);
-    font-size:80%;
-  }
-  h4 {
-    font-weight: bold;
-  }
-}
-</style>

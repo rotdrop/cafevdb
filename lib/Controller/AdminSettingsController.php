@@ -118,12 +118,10 @@ class AdminSettingsController extends Controller
         $fontService = $this->di(FontService::class);
         $value = $fontService->getDefaultFontName();
         break;
+      default:
+        return new DataResponse([ 'key' => $parameter ], Http::STATUS_NOT_FOUND);
     }
-    if ($value != null) {
-      return new DataResponse([ 'value' => $value ]);
-    } else {
-      return new DataResponse([ 'key' => $parameter ], Http::STATUS_NOT_FOUND);
-    }
+    return new DataResponse([ 'value' => $value ]);
   }
 
   /**
@@ -185,7 +183,7 @@ class AdminSettingsController extends Controller
           $result = [
             'messages' => [
               'transient' => [
-                $this->l->t('Setting user and group backend to "%s". Please have a look at the "dots"-menu for additional actions.', [$value]),
+                $this->l->t('Setting user and group backend to "%s". Please have a look at the action-menu for additional actions.', [$value]),
               ],
             ],
           ];

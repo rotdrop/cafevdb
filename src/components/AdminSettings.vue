@@ -31,45 +31,34 @@
         <hr>
       </div>
       <div>
-        <label for="user-and-group-backend-select" class="user-and-group-backend nc-select-outside-label">
-          {{ t(appName, 'User and group backend') }}
-        </label>
-        <div class="flex-container flex-align-center">
-          <div class="user-and-group-backend select-combo-wrapper">
-            <!-- @todo Wrap this in a general vue component -->
-            <NcSelect id="user-and-group-backend"
-                      v-model="settings.userAndGroupBackend"
-                      intput-id="user-and-group-backend-select"
-                      :label-outside="true"
-                      :clearable="false"
-                      :options="config.userAndGroupBackends"
-                      :multiple="false"
-                      :disabled="loading.general"
-            />
-            <input v-tooltip="t(appName, 'Click to submit your changes.')"
-                   type="submit"
-                   class="user-and-group-backend icon-confirm"
-                   value=""
-                   :disabled="loading.general"
-                   @click="saveSetting('userAndGroupBackend', settings.userAndGroupBackend, ...arguments)"
+        <SelectWithSubmitButton v-model="settings.userAndGroupBackend"
+                                intput-id="user-and-group-backend-select"
+                                :input-label="t(appName, 'User and group backend')"
+                                :hint="hints['settings:admin:user-and-group-backend']"
+                                :required="true"
+                                :clearable="false"
+                                :options="config.userAndGroupBackends"
+                                :multiple="false"
+                                :disabled="loading.general || !config.isAdmin"
+                                @update="saveSetting('userAndGroupBackend')"
+                                @error="showErrorToast"
+        >
+          <template #alignedAfter>
+            <Actions v-tooltip="hints['settings:admin:user-backend:move-users']"
+                     :disabled="loading.general || loading.fonts || !config.isAdmin"
             >
-          </div>
-          <Actions :disabled="loading.general || loading.fonts">
-            <ActionButton v-tooltip="hints['settings:admin:user-backend:move-users']"
-                          icon="icon-play"
-                          @click="synchronizeUserBackends"
-            >
-              {{ t(appName, 'Sychronize User Backends') }}
-            </ActionButton>
-          </Actions>
-        </div>
-        <p class="hint">
-          {{ hints['settings:admin:user-and-group-backend'] }}
-        </p>
+              <ActionButton v-tooltip="hints['settings:admin:user-backend:move-users']"
+                            icon="icon-play"
+                            @click="synchronizeUserBackends"
+              >
+                {{ t(appName, 'Sychronize User Backends') }}
+              </ActionButton>
+            </Actions>
+          </template>
+        </SelectWithSubmitButton>
       </div>
       <div v-if="config.isSubAdmin || config.isAdmin">
-        <SettingsSelectGroup v-if="config.isAdmin"
-                             v-model="settings.orchestraUserGroup"
+        <SettingsSelectGroup v-model="settings.orchestraUserGroup"
                              :label="t(appName, 'User Group')"
                              :hint="hints['settings:admin:user-group']"
                              :multiple="false"
@@ -78,19 +67,6 @@
                              @update="saveSetting('orchestraUserGroup', ...arguments)"
                              @error="showErrorToast"
         />
-        <div v-else class="input-wrapper">
-          <label for="dummy-group-display-input">
-            {{ t(appName, 'User Group') }}
-          </label>
-          <div />
-          <input id="dummy-group-display-input"
-                 :value="settings.orchestraUserGroup"
-                 disabled
-          >
-          <p class="hint">
-            {{ hints['settings:admin:user-group'] }}
-          </p>
-        </div>
         <SettingsSelectUsers v-model="settings.orchestraUserGroupAdmins"
                              :label="t(appName, 'User Group Admins')"
                              :hint="hints['settings:admin:user-group:admins']"
@@ -264,42 +240,16 @@
       </div>
       <div class="flex-container flex-align-center">
         <label for="default-font" class="default-font">{{ t(appName, 'Default Font') }}</label>
-        <Multiselect id="default-font"
-                     v-model="defaultOfficeFont"
-                     :options="Object.values(config.officeFonts)"
-                     track-by="family"
-                     label="family"
-                     :multiple="false"
-                     :disabled="loading.general || loading.fonts"
-        />
-        <Actions :disabled="loading.general || loading.fonts">
-          <ActionButton icon="icon-add"
-                        @click="updateFontData"
-          >
-            {{ t(appName, 'Update Font Data') }}
-          </ActionButton>
-          <ActionButton icon="icon-play"
-                        @click="rescanFontData"
-          >
-            {{ t(appName, 'Rescan Font Data') }}
-          </ActionButton>
-          <ActionButton icon="icon-delete"
-                        @click="purgeFontData"
-          >
-            {{ t(appName, 'Purge Font Data') }}
-          </ActionButton>
-        </Actions>
-      </div>
-      <div class="flex-spacer" />
-      <div class="flex-container flex-align-center">
-        <label for="default-font" class="default-font">{{ t(appName, 'Default Font') }}</label>
-        <NcMultiselect id="default-font"
-                       v-model="defaultOfficeFont"
-                       :options="Object.values(config.officeFonts)"
-                       track-by="family"
-                       label="family"
-                       :multiple="false"
-                       :disabled="loading.general || loading.fonts"
+        <SelectWithSubmitButton v-model="defaultOfficeFont"
+                                input-id="default-font"
+                                :label-outside="true"
+                                :options="Object.values(config.officeFonts)"
+                                label="family"
+                                :clearable="false"
+                                :multiple="false"
+                                :disabled="loading.general || loading.fonts"
+                                @update="saveSetting('defaultOfficeFont')"
+                                @error="showErrorToast"
         />
         <Actions :disabled="loading.general || loading.fonts">
           <ActionButton icon="icon-add"
@@ -329,12 +279,9 @@ import {
   NcActions as Actions,
   NcActionButton as ActionButton,
   NcProgressBar as ProgressBar,
-  NcSelect,
   NcSettingsSection as SettingsSection,
   NcTextField as TextField,
 } from '@nextcloud/vue'
-// import { NcMultiselect } from '@nextcloud/vue7'
-import Multiselect from './Multiselect.vue'
 import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
@@ -344,10 +291,9 @@ import { appName } from '../app/app-info.js'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
 import SelectMusicians from './SelectMusicians.vue'
 import SelectProjects from './SelectProjects.vue'
-// import SettingsInputText from './SettingsInputText.vue'
-// import SettingsInputText from '@rotdrop/nextcloud-vue-components/lib/components/SettingsInputText.vue'
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
+import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
 import tooltip from '../mixins/tooltips.js'
 import formatDate from '../mixins/formatDate.js'
 
@@ -359,13 +305,10 @@ export default {
   components: {
     Actions,
     ActionButton,
-    Multiselect,
-    NcSelect,
-    // NcMultiselect,
     ProgressBar,
     SelectMusicians,
     SelectProjects,
-    // SettingsInputText,
+    SelectWithSubmitButton,
     SettingsSection,
     SettingsSelectGroup,
     SettingsSelectUsers,
@@ -391,6 +334,7 @@ export default {
         orchestraUserGroupAdmins: [],
         wikiNameSpace: '',
         cloudUserBackendConfig: '',
+        defaultOfficeFont: '',
       },
       config: initialState,
       hints: {
@@ -470,11 +414,8 @@ export default {
     },
   },
   watch: {
-    defaultOfficeFont(newValue, oldValue) {
-      console.info('DEFAULT FONT CHANGED', newValue, oldValue)
-      if (!this.loading.fonts && newValue !== oldValue) {
-        this.saveSetting('defaultOfficeFont', newValue ? newValue.family : null, true)
-      }
+    defaultOfficeFont(newValue) {
+      this.settings.defaultOfficeFont = newValue?.family
     },
   },
   created() {
@@ -486,7 +427,7 @@ export default {
   },
   methods: {
     info(...args) {
-      console.info('INFO', ...args)
+      console.info('ADMIN SETTINGS INFO', ...args)
     },
     showErrorToast(message) {
       showError(message, { timeout: TOAST_DEFAULT_TIMEOUT })
@@ -504,7 +445,7 @@ export default {
       }
 
       this.disableUnavailableFontOptions()
-      this.defaultOfficeFont = this.config.officeFonts[this.config.defaultOfficeFont]
+      this.defaultOfficeFont = this.config.officeFonts[this.settings.defaultOfficeFont]
       await vueNextTick()
       this.loading.fonts = false
     },
@@ -527,7 +468,7 @@ export default {
       }
       for (const [key, request] of Object.entries(requests)) {
         const response = await request
-        this.settings[key] = response.data.value
+        vueSet(this.settings, key, response.data.value)
       }
       this.loading.general = false
     },
@@ -601,6 +542,9 @@ export default {
     },
     async saveSetting(settingsKey, value) {
       try {
+        if (value === undefined) {
+          value = this.settings[settingsKey]
+        }
         const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/{settingsKey}', { settingsKey }), { value })
         const responseData = response.data
         if (responseData.status === 'unconfirmed') {
@@ -917,8 +861,8 @@ export default {
           showInfo(t(appName, 'Font cache operation {operation} completed successfully.', { operation }))
         }
         this.config.officeFonts = responseData.fonts
-        this.config.defaultOfficeFont = responseData.default
-        this.defaultOfficeFont = this.config.officeFonts[this.config.defaultOfficeFont]
+        this.settings.defaultOfficeFont = responseData.default
+        this.defaultOfficeFont = this.config.officeFonts[this.settings.defaultOfficeFont]
         this.disableUnavailableFontOptions()
         console.info('FONT DATA', responseData)
       } catch (e) {
@@ -1064,54 +1008,6 @@ export default {
       }
       label.default-font {
         padding-right: 0.5em;
-      }
-    }
-  }
-  .input-field::v-deep .input-field__trailing-button:hover {
-    border: var(--vs-border-width) var(--vs-border-style) var(--color-primary-element);
-    border-radius: var(--vs-border-radius);
-    outline: 2px solid var(--color-main-background);
-    background-color: var(--color-main-background);
-    width:var(--default-clickable-area);
-    height:var(--default-clickable-area);
-    flex-shrink:0;
-    .button-vue__icon {
-      min-width:unset;
-      min-height:unset;
-    }
-  }
-  // @todo Wrap this in a general vue component
-  .user-and-group-backend.select-combo-wrapper {
-    display: flex;
-    align-items: stretch;
-    flex-grow: 1;
-    flex-wrap: nowrap;
-    .v-select.select::v-deep {
-      flex-grow:1;
-      max-width:100%;
-      .vs__dropdown-toggle {
-        // substract the round borders for the overlay
-        padding-right: calc(var(--default-clickable-area) - var(--vs-border-radius));
-      }
-      + .icon-confirm {
-        flex-shrink: 0;
-        width:var(--default-clickable-area);
-        align-self: stretch;
-        // align-self: stretch should do what we want here :)
-        // height:var(--default-clickable-area);
-        margin: 0 0 0 calc(0px - var(--default-clickable-area));
-        z-index: 2;
-        border-radius: var(--vs-border-radius) var(--vs-border-radius);
-        border-style: none;
-        background-color: rgba(0, 0, 0, 0);
-        background-clip: padding-box;
-        opacity: 1;
-        &:hover, &:focus {
-          border: var(--vs-border-width) var(--vs-border-style) var(--color-primary-element);
-          border-radius: var(--vs-border-radius);
-          outline: 2px solid var(--color-main-background);
-          background-color: var(--vs-search-input-bg);
-        }
       }
     }
   }
