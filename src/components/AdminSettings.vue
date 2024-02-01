@@ -246,6 +246,10 @@
                               :clearable="false"
                               :multiple="false"
                               :disabled="loading.general || loading.fonts"
+                              :submit-button="true"
+                              :clear-action="true"
+                              :reset-action="true"
+                              :reset-state="savedDefaultOfficeFont"
                               @update="saveSetting('defaultOfficeFont')"
                               @error="showErrorToast"
       >
@@ -301,7 +305,6 @@ import tooltip from '../mixins/tooltips.js'
 import formatDate from '../mixins/formatDate.js'
 
 const initialState = loadState(appName, 'adminConfig')
-console.info('INITIAL ADMIN STATE', initialState)
 
 export default {
   name: 'AdminSettings',
@@ -340,6 +343,7 @@ export default {
         cloudUserBackendConfig: '',
         defaultOfficeFont: '',
       },
+      settingsBackup: {},
       config: initialState,
       hints: {
         'settings:admin:cloud-user-backend-conf': '',
@@ -416,11 +420,14 @@ export default {
     isLoading() {
       return this.loading.general || this.loading.tooltips || this.loading.recryption || this.loading.fonts
     },
+    savedDefaultOfficeFont() {
+      const result = this.config.officeFonts?.[this.settingsBackup.defaultOfficeFont]
+      return result
+    },
   },
   watch: {
     defaultOfficeFont(newValue) {
-      this.info('OFFICE FONT UPDATE', newValue)
-      this.settings.defaultOfficeFont = newValue?.family
+      vueSet(this.settings, 'defaultOfficeFont', newValue?.family)
     },
   },
   created() {
@@ -478,6 +485,7 @@ export default {
         const response = await request
         vueSet(this.settings, key, response.data.value)
       }
+      this.settingsBackup = { ...this.settings }
       this.loading.settings = false
     },
     async getRecryptionRequests() {
@@ -591,6 +599,7 @@ export default {
           for (const message of permanent) {
             showInfo(message, { timeout: TOAST_PERMANENT_TIMEOUT, isHTML: true })
           }
+          this.settingsBackup[settingsKey] = value
         }
       } catch (e) {
         let message = t(appName, 'reason unknown')
@@ -746,7 +755,7 @@ export default {
           }
         }
       } catch (e) {
-        console.info('ERROR', e)
+        this.info('ERROR', e)
         let message = t(appName, 'reason unknown')
         if (e.response && e.response.data) {
           const data = e.response.data
@@ -814,7 +823,7 @@ export default {
           this.access.action.label += '.'
         } while (count > 0 && this.access.action.done < this.access.action.totals)
       } catch (e) {
-        console.info('ERROR', e)
+        this.info('ERROR', e)
         let message = t(appName, 'reason unknown')
         if (e.response && e.response.data) {
           const data = e.response.data
@@ -872,9 +881,9 @@ export default {
         this.settings.defaultOfficeFont = responseData.default
         this.defaultOfficeFont = this.config.officeFonts[this.settings.defaultOfficeFont]
         this.disableUnavailableFontOptions()
-        console.info('FONT DATA', responseData)
+        this.info('FONT DATA', responseData)
       } catch (e) {
-        console.info('ERROR', e)
+        this.info('ERROR', e)
         let message = t(appName, 'reason unknown')
         if (e.response && e.response.data && e.response.data.message) {
           message = e.response.data.message
@@ -891,7 +900,7 @@ export default {
         } else {
           vueSet(this.config.officeFonts[fontName], 'disabled', true)
           vueSet(this.config.officeFonts[fontName], '$isDisabled', true)
-          console.info('DISABLE FONT', fontName, this.config.officeFonts[fontName])
+          this.info('DISABLE FONT', fontName, this.config.officeFonts[fontName])
         }
       }
     },

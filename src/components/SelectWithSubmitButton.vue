@@ -68,11 +68,23 @@
                @click="emitUpdate"
         >
       </div>
-      <NcActions v-if="$slots.actions"
+      <NcActions v-if="$slots.actions || clearAction || resetAction"
                  :disabled="disabled"
                  :class="['aligned-after', ...flexItemClasses]"
       >
         <slot name="actions" />
+        <NcActionButton v-if="resetAction"
+                        icon="icon-history"
+                        @click="resetChanges"
+        >
+          {{ t(appName, 'Reset Changes') }}
+        </NcActionButton>
+        <NcActionButton v-if="clearAction"
+                        icon="icon-delete"
+                        @click="clearSelection"
+        >
+          {{ t(appName, 'Clear Selection') }}
+        </NcActionButton>
       </NcActions>
       <div v-if="$slots.alignedAfter" :class="['aligned-after', ...flexItemClasses]">
         <slot name="alignedAfter" />
@@ -86,13 +98,14 @@
 <script>
 
 import { appName } from '../app/app-info.js'
-import { NcSelect, NcActions } from '@nextcloud/vue'
+import { NcSelect, NcActions, NcActionButton } from '@nextcloud/vue'
 
 export default {
   name: 'SelectWithSubmitButton',
   components: {
     NcSelect,
     NcActions,
+    NcActionButton,
   },
   inheritAttrs: false,
   props: {
@@ -164,6 +177,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    resetState: {
+      type: [String, Number, Object, Array],
+      default: null,
+    },
   },
   data() {
     return {
@@ -205,19 +222,12 @@ export default {
     listenersToForward() {
       const listeners = { ...this.$listeners }
       // delete listeners.input
-      this.info('FORWARDING LISTENERS', listeners)
       return listeners
     },
     attributesToForward() {
       const attributes = { ...this.$attrs }
       // delete attributes.value
-      this.info('FORWARDING ATTRIBUTES', attributes)
       return attributes
-    },
-  },
-  watch: {
-    value(newValue, oldValue) {
-      this.info('VALUE UPDATED', newValue, oldValue)
     },
   },
   created() {
@@ -238,6 +248,12 @@ export default {
         this.$emit('update:modelValue', this.value)
         this.$emit('update', this.value)
       }
+    },
+    resetChanges() {
+      this.$emit('input', this.resetState)
+    },
+    clearSelection() {
+      this.$emit('input', null)
     },
   },
 }
