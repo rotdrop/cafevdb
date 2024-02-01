@@ -46,7 +46,7 @@
                           :disabled="disabled"
                           :user-select="true"
                           v-on="$listeners"
-                          @search="findUsers"
+                          @search="(query) => findUsers(query)"
   >
     <!-- Unfortunately, the stock NcSelect seems to be somewhat borken and does not set the "user" property. -->
     <template #option="option">

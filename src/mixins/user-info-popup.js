@@ -75,7 +75,7 @@ export default {
         preventOverflow: false,
         boundariesElement: 'viewport',
         html: true,
-        classes: ['vue-tooltip-user-info-popup'],
+        csstag: ['vue-tooltip-data-popup'],
       };
     },
   },

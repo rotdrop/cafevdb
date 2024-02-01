@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -60,7 +60,6 @@ export default {
     contactAddressPopup(option) {
       const name = this.contactNameFromContact(option);
       const additionalInfo = [];
-      // const book = option.addressBookName || '';
       let emails = [];
       if (option.EMAIL) {
         for (const email of option.EMAIL) {
@@ -83,6 +82,10 @@ export default {
       const city = address[3] || this.addressItemUnknownLabel('city');
       const country = address[6] || this.addressItemUnknownLabel('country');
       additionalInfo.splice(additionalInfo.length, 0, street, postalCode + city, country);
+      const book = option.addressBookName;
+      if (book) {
+        additionalInfo.push('[' + book + ']');
+      }
       const content = `<h4>${name}</h4>`
             + additionalInfo.join('<br/>');
       return this.addressPopup(content);
@@ -93,8 +96,10 @@ export default {
         // placement: 'bottom',
         preventOverflow: false,
         boundariesElement: 'viewport',
+        // shown: true,
+        // triggers: [],
         html: true,
-        classes: ['vue-tooltip-address-popup'],
+        csstag: ['vue-tooltip-data-popup'],
       };
     },
   },

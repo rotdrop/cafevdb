@@ -37,7 +37,7 @@
                           :multiple="multiple"
                           :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
                           v-on="$listeners"
-                          @search="findProjects"
+                          @search="(query) => findProjects(query)"
   />
 </template>
 

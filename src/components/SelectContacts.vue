@@ -21,94 +21,60 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <form class="select-contacts" @submit.prevent="">
-    <div v-if="loading" class="loading" />
-    <div class="input-wrapper">
-      <label :for="id">{{ label }}</label>
-      <Multiselect :id="id"
-                   ref="multiselect"
-                   v-model="inputValObjects"
-                   v-tooltip="active ? false : tooltip"
-                   v-bind="$attrs"
-                   :options="contactsArray"
-                   :options-limit="100"
-                   :placeholder="placeholder === undefined ? label : placeholder"
-                   :hint="hint"
-                   :show-labels="true"
-                   :searchable="searchable"
-                   track-by="key"
-                   label="label"
-                   class="multiselect-vue"
-                   :multiple="multiple"
-                   :tag-width="60"
-                   :disabled="disabled"
-                   @input="emitInput"
-                   @search-change="(query, id) => asyncFindContacts(query)"
-                   @open="active = true"
-                   @close="active = false"
-      >
-        <template #option="optionData">
-          <EllipsisedContactOption :name="$refs.multiselect.getOptionLabel(optionData.option)"
-                                   :option="optionData.option"
-                                   :search="optionData.search"
-                                   :label="$refs.multiselect.label"
-          />
-        </template>
-        <template #tag="tagData">
-          <span :key="tagData.option.id"
-                v-tooltip="contactAddressPopup(tagData.option)"
-                class="multiselect__tag"
-          >
-            <span v-text="$refs.multiselect.getOptionLabel(tagData.option)" />
-            <i tabindex="1"
-               class="multiselect__tag-icon"
-               @keypress.enter.prevent="tagData.remove(tagData.option)"
-               @mousedown.prevent="tagData.remove(tagData.option)"
-            />
-          </span>
-        </template>
-      </Multiselect>
-      <input v-if="clearButton"
-             v-tooltip="t(appName, 'Remove all options.')"
-             type="submit"
-             class="clear-button icon-delete"
-             value=""
-             :disabled="disabled"
-             @click="clearSelection"
-      >
-    </div>
-    <p v-if="hint !== ''" class="hint">
-      {{ hint }}
-    </p>
-  </form>
+  <SelectWithSubmitButton ref="select"
+                          v-bind="$attrs"
+                          v-model="inputValObjects"
+                          label="label"
+                          :options="contactsArray"
+                          :selectable="(option) => !isSelectAllSelected || option.id === 0"
+                          :options-limit="100"
+                          :placeholder="placeholder || label"
+                          :input-label="label"
+                          :loading="isLoading"
+                          :multiple="multiple"
+                          :clearable="clearable"
+                          :close-on-select="false"
+                          :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
+                          :reset-action="resetAction"
+                          :searchable="true"
+                          v-on="$listeners"
+                          @search="(query) => findContacts(query)"
+  >
+    <template #option="option">
+      <NcEllipsisedOption v-tooltip="contactAddressPopup(option)"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+      />
+    </template>
+    <template #selected-option="option">
+      <NcEllipsisedOption v-tooltip="contactAddressPopup(option)"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+      />
+    </template>
+  </SelectWithSubmitButton>
 </template>
-
 <script>
-
 import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { NcMultiselect as Multiselect } from '@nextcloud/vue7'
-import EllipsisedContactOption from './EllipsisedContactOption.vue'
+import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
+import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import qs from 'qs'
 import addressPopup from '../mixins/address-popup.js'
 
-let uuid = 0
 export default {
   name: 'SelectContacts',
   components: {
-    Multiselect,
-    EllipsisedContactOption,
+    SelectWithSubmitButton,
+    NcEllipsisedOption,
   },
   mixins: [
     addressPopup,
   ],
+  inheritAttrs: false,
   props: {
-    searchable: {
-      type: Boolean,
-      default: true,
-    },
     multiple: {
       type: Boolean,
       default: true,
@@ -117,21 +83,9 @@ export default {
       type: String,
       required: true,
     },
-    hint: {
-      type: String,
-      default: '',
-    },
     value: {
       type: [Array, String, Object, Number],
       default: () => [],
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    clearButton: {
-      type: Boolean,
-      default: true,
     },
     placeholder: {
       type: String,
@@ -153,19 +107,32 @@ export default {
       type: Boolean,
       default: undefined,
     },
+    clearable: {
+      type: Boolean,
+      default: true,
+    },
+    clearAction: {
+      type: Boolean,
+      default: true,
+    },
+    resetAction: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       inputValObjects: [],
       contacts: {},
-      loading: true,
-      loadingPromise: Promise.resolve(true),
-      active: false,
+      ajaxLoading: true,
+      ncSelect: undefined,
+      id: null,
+      ajaxPromise: Promise.resolve(true),
     }
   },
   computed: {
-    id() {
-      return 'settings-contacts-' + this.uuid
+    isLoading() {
+      return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
     contactsArray() {
       return Object.values(this.contacts)
@@ -173,48 +140,46 @@ export default {
     provideSelectAll() {
       return this.selectAllOption === undefined ? this.multiple : this.selectAllOption
     },
+    isSelectAllSelected() {
+      return this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].id === 0
+    },
   },
   watch: {
-    value(/* newVal, oldVal */) {
-      this.loadingPromise.finally(() => {
-        this.inputValObjects = this.getValueObject()
-        if (this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].UID === 0) {
-          this.$refs.multiselect.$refs.VueMultiselect.deactivate()
-        }
-      })
+    async value(newValue) {
+      this.ajaxLoading = true
+      if (newValue.length > 1 && newValue.findIndex((object) => object.id === 0) !== -1) {
+        this.inputValObjects.splice(0, this.inputValObjects.length, this.contacts[0])
+      }
+      this.ajaxLoading = false
     },
-    onlyAddressBooks(/* newVal, oldVal */) {
-      this.loadingPromise.finally(() => {
-        // console.info('WATCH ONLY ADDRESSBOOKOS', newVal, oldVal)
-        this.loadingPromise = new Promise((resolve/* , reject */) => {
-          this.loading = true
-          this.resetContacts()
-          this.asyncFindContacts('', this.getValueKeys()).then((/* result */) => {
-            this.inputValObjects = this.getValueObject(true)
-            this.loading = false
-            resolve(this.loading)
-          })
-        })
-      })
+    async onlyAddressBooks() {
+      this.info('ONLY ADDRESSBOOKS CHANGED', this.onlyAddressBooks)
+      await this.ajaxPromise
+      this.ajaxLoading = true
+      this.resetContacts()
+      this.ajaxPromise = this.findContacts('', this.getValueKeys())
+      await this.ajaxPromise
+      this.inputValObjects = this.getValueObject(true)
+      this.ajaxLoading = false
     },
   },
-  created() {
-    this.uuid = uuid.toString()
-    uuid += 1
-    this.loadingPromise.finally(() => {
-      this.loadingPromise = new Promise((resolve/* , reject */) => {
-        // console.info('CREATED CONTACTS')
-        this.loading = true
-        this.resetContacts()
-        this.asyncFindContacts('', this.getValueKeys()).then((/* result */) => {
-          this.inputValObjects = this.getValueObject()
-          this.loading = false
-          resolve(this.loading)
-        })
-      })
-    })
+  async created() {
+    await this.ajaxPromise
+    this.ajaxLoading = true
+    this.resetContacts()
+    this.ajaxPromise = this.findContacts('', this.getValueKeys())
+    await this.ajaxPromise
+    this.inputValObjects = this.getValueObject()
+    this.ajaxLoading = false
+  },
+  mounted() {
+    this.ncSelect = this.$refs.select.ncSelect
+    this.id = this._uid
   },
   methods: {
+    info(...args) {
+      console.info(this.$options.name, ...args)
+    },
     resetContacts() {
       this.contacts = {}
       if (this.provideSelectAll) {
@@ -257,21 +222,7 @@ export default {
       )
       return result
     },
-    clearSelection() {
-      this.inputValObjects = []
-      this.emitInput() // why is this needed?
-    },
-    emitInput() {
-      this.emit('input')
-      this.emitUpdate()
-    },
-    emitUpdate() {
-      this.emit('update')
-    },
-    emit(event) {
-      this.$emit(event, this.inputValObjects)
-    },
-    asyncFindContacts(query, contactUids) {
+    async findContacts(query, contactUids) {
       query = typeof query === 'string' ? encodeURI(query) : ''
       if (query !== '') {
         query = '/' + query
@@ -285,174 +236,52 @@ export default {
           params.onlyAddressBooks[book.key] = book.uri
         }
       }
-      if (contactUids !== undefined && contactUids.length > 0) {
+      if (contactUids !== undefined) {
+        if (contactUids.length === 0) {
+          return true
+        }
         params.contactUids = contactUids
       }
-      return axios
-        .get(
-          generateUrl(`/apps/${appName}/contacts/search${query}`), {
-            params,
-            paramsSerializer: params => {
-              return qs.stringify(params, { arrayFormat: 'brackets' })
-            },
-          })
-        .then((response) => {
-          if (response.data.length > 0) {
-            for (const contact of response.data) {
-              const key = contact.UID || contact.URI
-              if (key) {
-                contact.key = key
-                if (contact.FN) {
-                  contact.name = contact.FN
-                } else {
-                  if (Array.isArray(contact.EMAIL) && contact.EMAIL.length > 0) {
-                    contact.name = contact.EMAIL[0]
-                    if (contact.name.value) {
-                      contact.name = contact.name.value
-                    }
-                  } else {
-                    contact.name = contact.key
-                  }
-                }
-                contact.label = this.contactNameFromContact(contact)
-                const addressBookKey = contact['addressbook-key']
-                if (addressBookKey && this.allAddressBooks[addressBookKey]) {
-                  contact.addressBookName = this.allAddressBooks[addressBookKey].displayName
-                  contact.label += ' [' + contact.addressBookName + ']'
-                }
-                vueSet(this.contacts, key, contact)
-              }
-            }
-            return true
-          }
-          return false
-        }).catch((error) => {
-          this.$emit('error', error)
+      try {
+        const response = await axios.get(generateUrl(`/apps/${appName}/contacts/search${query}`), {
+          params,
+          paramsSerializer: params => {
+            return qs.stringify(params, { arrayFormat: 'brackets' })
+          },
         })
+        if (response.data.length > 0) {
+          for (const contact of response.data) {
+            const key = contact.UID || contact.URI
+            if (key) {
+              contact.key = key
+              if (contact.FN) {
+                contact.name = contact.FN
+              } else {
+                if (Array.isArray(contact.EMAIL) && contact.EMAIL.length > 0) {
+                  contact.name = contact.EMAIL[0]
+                  if (contact.name.value) {
+                    contact.name = contact.name.value
+                  }
+                } else {
+                  contact.name = contact.key
+                }
+              }
+              contact.label = this.contactNameFromContact(contact)
+              const addressBookKey = contact['addressbook-key']
+              if (addressBookKey && this.allAddressBooks[addressBookKey]) {
+                contact.addressBookName = this.allAddressBooks[addressBookKey].displayName
+                contact.label += ' [' + contact.addressBookName + ']'
+              }
+              vueSet(this.contacts, key, contact)
+            }
+          }
+          return true
+        }
+      } catch (error) {
+        this.$emit('error', error)
+      }
+      return false
     },
   },
 }
 </script>
-<style lang="scss" scoped>
-.cloud-version {
-  --cloud-icon-checkmark: var(--icon-checkmark-dark);
-  &.cloud-version-major-24 {
-    --cloud-icon-checkmark: var(--icon-checkmark-000);
-  }
-}
-.select-contacts {
-  position:relative;
-  .loading {
-    position:absolute;
-    width:0;
-    height:0;
-    top:50%;
-    left:50%;
-  }
-  .input-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 400px;
-    align-items: center;
-    div.multiselect.multiselect-vue::v-deep {
-      &:not(.multiselect--active) {
-        height:35.2px;
-      }
-      flex-grow:1;
-      &:hover .multiselect__tags {
-        border-color: var(--color-primary-element);
-        outline: none;
-      }
-      &:hover + .clear-button {
-        border-color: var(--color-primary-element) !important;
-        border-left-color: transparent !important;
-        z-index: 2;
-      }
-      &.multiselect--active + .clear-button {
-        display:none;
-      }
-      + .clear-button {
-        &:disabled {
-          background-color: var(--color-background-dark) !important;
-        }
-        margin-left: -8px !important;
-        border-left-color: transparent !important;
-        border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
-        background-clip: padding-box;
-        background-color: var(--color-main-background) !important;
-        opacity: 1;
-        padding: 7px 6px;
-        height:35.2px;
-        width:35.2px;
-        margin-right:0;
-        z-index:2;
-        &:hover, &:focus {
-          border-color: var(--color-primary-element) !important;
-          border-radius: var(--border-radius) !important;
-        }
-      }
-
-      &.multiselect--single {
-        .multiselect__content-wrapper li > span {
-          &::before {
-            background-image: var(--cloud-icon-checkmark);
-            display:block;
-          }
-          &:not(.multiselect__option--selected):hover::before {
-            visibility:hidden;
-          }
-        }
-      }
-      &.multiselect--multiple {
-        .multiselect__content-wrapper li > span {
-          &:not(.multiselect__option--selected):hover::before {
-            visibility:hidden;
-          }
-        }
-      }
-
-      .multiselect__tag {
-        position: relative;
-        padding-right: 18px;
-        .multiselect__tag-icon {
-          cursor: pointer;
-          margin-left: 7px;
-          position: absolute;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          font-weight: 700;
-          font-style: initial;
-          width: 22px;
-          text-align: center;
-          line-height: 22px;
-          transition: all 0.2s ease;
-          border-radius: 5px;
-        }
-
-        .multiselect__tag-icon:after {
-          content: "×";
-          color: #266d4d;
-          font-size: 14px;
-        }
-      }
-
-    }
-
-    label {
-      width: 100%;
-    }
-  }
-
-  .hint {
-    color: var(--color-text-lighter);
-    font-size:80%;
-  }
-}
-</style>
-<style>
-.vue-tooltip-address-popup.vue-tooltip .tooltip-inner {
-  text-align: left !important;
-}
-</style>

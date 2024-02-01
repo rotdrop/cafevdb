@@ -40,7 +40,7 @@
                           :disabled="disabled"
                           :clearable="clearable"
                           v-on="$listeners"
-                          @search="findGroups"
+                          @search="(query) => findGroups(query)"
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="groupInfoPopup(option)"

@@ -77,10 +77,10 @@
                          :class="[{ empty: senderId <= 0 }]"
                          :placeholder="t(appName, 'e.g. John Doe')"
                          :multiple="false"
-                         :reset-button="true"
-                         :clear-button="false"
+                         :reset-action="true"
+                         :clear-action="false"
+                         :submit-button="false"
                          search-scope="executive-board"
-                         open-direction="bottom"
                          :searchable="false"
         />
       </li>
@@ -152,11 +152,12 @@
                         :label="t(appName, 'Contacts')"
                         :placeholder="t(appName, 'e.g. Bilbo Baggins')"
                         :multiple="true"
-                        :clear-button="true"
+                        :clear-action="true"
                         :only-address-books="onlyAddressBooks"
                         :all-address-books="allAddressBooks"
                         :disabled="senderId <= 0"
                         :select-all-option="false"
+                        :submit-button="false"
                         search-scope="contacts"
         />
         <SelectAddressBooks v-model="onlyAddressBooks"
@@ -243,11 +244,6 @@ export default {
       recipientsSource: null,
     }
   },
-  /* watch: {
-   *   onlyAddressBooks(newVal, oldVal) {
-   *     console.info('TOP ADDRESS BOOK WATCH', newVal, oldVal)
-   *   },
-   * }, */
   computed: {
     projectId() {
       try {
@@ -340,18 +336,18 @@ export default {
       return 'icon-triangle-s'
     },
   },
+  watch: {
+    onlyAddressBooks(newVal, oldVal) {
+      this.info('TOP ADDRESS BOOK WATCH', newVal, oldVal)
+    },
+  },
   created() {
     this.getData()
-    console.info('SENDER ID', this.senderId)
+    this.info('SENDER ID', this.senderId)
   },
-  // watch: {
-  //   project(newVal, oldVal) {
-  //    console.info('NEW PROJECT', newVal, oldVal)
-  //   },
-  // },
   methods: {
     info(...args) {
-      console.info.apply(null, ...args)
+      console.info(this.$options.name, ...args)
     },
     /**
      * Update current fileInfo and fetch new data.
@@ -370,8 +366,8 @@ export default {
       if (this.initialState.personal.musicianId > 0) {
         this.sender = { id: this.initialState.personal.musicianId }
       }
-      console.info('INITIAL STATE', this.initialState)
-      console.info('SENDER', this.sender)
+      this.info('INITIAL STATE', this.initialState)
+      this.info('SENDER', this.sender)
       this.hints = await this.tooltips(Object.keys(this.hints))
     },
     handleToggleMenu(menu, event) {
@@ -385,14 +381,14 @@ export default {
       }
     },
     toggleRecipientsSource(event) {
-      console.info('EVENT', event)
+      this.info('EVENT', event)
       this.recipientsSource = event.target.value
-      console.info('RECIPIENTS', this.recipientsSource)
+      this.info('RECIPIENTS', this.recipientsSource)
       this.$refs.recipientsSource.closeMenu()
     },
     async handleMailMergeRequest(operation, ...args) {
-      console.info('MAIL MERGE', operation, ...args)
-      console.info('FILE', this.fileInfo)
+      this.info('MAIL MERGE', operation, ...args)
+      this.info('FILE', this.fileInfo)
 
       this.merging = true
 
@@ -420,7 +416,7 @@ export default {
           const response = await axios.post(ajaxUrl, postData)
           const cloudFolder = response.data.cloudFolder
           const message = response.data.message
-          console.info('CLOUD RESPONSE', response)
+          this.info('CLOUD RESPONSE', response)
           const folderLinkMessage = `<a class="external link ${appName}" target="${md5(cloudFolder)}" href="${generateUrl('apps/files')}?dir=${cloudFolder}"><span class="icon-external link-text" style="padding-left:20px;background-position:left;">${cloudFolder}/</span></a>`
           showSuccess(message + ' ' + folderLinkMessage, { isHTML: true, timeout: TOAST_PERMANENT_TIMEOUT })
           break

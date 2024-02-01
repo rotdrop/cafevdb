@@ -281,6 +281,7 @@ export default {
   &::v-deep .alignment-wrapper {
     display: flex;
     flex-grow: 1;
+    max-width: 100%;
     &.flex- {
       &align- {
         &center {
@@ -318,6 +319,7 @@ export default {
   }
   .select-combo-wrapper {
     display: flex;
+    max-width: 100%;
     align-items: stretch;
     flex-grow: 1;
     flex-wrap: nowrap;
@@ -369,15 +371,20 @@ export default {
 }
 </style>
 <style lang="scss">
-// in vue-select anything starting from
-.vue-tooltip-user-info-popup.vue-tooltip .tooltip-inner {
-  text-align: left !important;
-  *:not(h4) {
-    color: var(--color-text-lighter);
-    font-size:80%;
+[csstag="vue-tooltip-data-popup"].v-popper--theme-tooltip {
+  .v-popper__inner div div {
+    text-align: left !important;
+    *:not(h4) {
+      color: var(--color-text-lighter);
+      font-size:80%;
+    }
+    h4 {
+      font-weight: bold;
+      font-size: 100%;
+    }
   }
-  h4 {
-    font-weight: bold;
-  }
+}
+.v-popper--theme-tooltip.v-popper__popper {
+  z-index: 100010 !important;
 }
 </style>

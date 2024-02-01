@@ -97,7 +97,7 @@ export default {
   },
   data() {
     return {
-      inputValObjects: [],
+      inputValObjects: undefined, // [],
       initialValObjects: [],
       addressBooks: {},
       ajaxLoading: true,
@@ -126,12 +126,10 @@ export default {
     this.$emit('update:address-books', this.addressBooks)
     if (Array.isArray(this.value) && this.value.length === 0) {
       // pre-select all non-system address-books if no initial value is provided
-      for (const book of Object.values(this.addressBooks)) {
-        if (!book.isSystemAddressBook) {
-          this.inputValObjects.push(book)
-        }
-      }
-      // this.emitInput() // why is this needed?
+      this.inputValObjects = Object.values(this.addressBooks).filter((book) => !book.isSystemAddressBook)
+      // this is needed as the wrapped select only emits input events
+      // when it is changed through user interaction (in general)
+      this.emitInput(this.inputValObjects)
     } else {
       this.inputValObjects = this.getValueObject()
     }
@@ -145,6 +143,13 @@ export default {
     this.id = this._uid
   },
   methods: {
+    info(...args) {
+      console.info(this.$options.name, ...args)
+    },
+    emitInput(value) {
+      this.info('EMIT INPUT', value)
+      this.$emit('input', value)
+    },
     getValueObject(noUndefined) {
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       let everybody = false

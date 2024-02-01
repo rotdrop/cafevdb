@@ -22,8 +22,8 @@
  -->
 <template>
   <SelectWithSubmitButton ref="select"
-                          v-bind="$attrs"
                           v-model="inputValObjects"
+                          v-bind="$attrs"
                           label="formalDisplayName"
                           :options="musiciansArray"
                           :selectable="(option) => !isSelectAllSelected || option.id === 0"
@@ -38,7 +38,7 @@
                           :reset-state="initialValObjects"
                           :searchable="searchable"
                           v-on="$listeners"
-                          @search="findMusicians"
+                          @search="(query) => findMusicians(query)"
   >
     <template #option="option">
       <NcEllipsisedOption v-tooltip="musicianAddressPopup(option)"
@@ -164,12 +164,10 @@ export default {
       }
       if (this.multiple) {
         if (newValue.length === 0) {
-          this.inputValObjects = []
           return
         }
       } else {
         if (!newValue) {
-          this.inputValObjects = null
           return
         }
         newValue = [newValue]
