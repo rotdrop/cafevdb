@@ -21,57 +21,32 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <form class="select-projects" @submit.prevent="">
-    <div v-if="loading" class="loading" />
-    <div class="input-wrapper">
-      <label :for="id">{{ label }}</label>
-      <Multiselect :id="id"
-                   v-model="inputValObjects"
-                   v-tooltip="active ? false : tooltip"
-                   v-bind="$attrs"
-                   :options="projectsArray"
-                   group-values="projects"
-                   group-label="year"
-                   :group-select="false"
-                   :options-limit="100"
-                   :placeholder="placeholder === undefined ? label : placeholder"
-                   :hint="hint"
-                   :show-labels="true"
-                   :searchable="searchable"
-                   track-by="id"
-                   label="name"
-                   class="multiselect-vue"
-                   :multiple="multiple"
-                   :tag-width="60"
-                   :disabled="disabled"
-                   @input="emitInput"
-                   @search-change="asyncFindProjects"
-                   @open="active = true"
-                   @close="active = false"
-      />
-      <input v-if="clearButton"
-             type="submit"
-             class="clear-button icon-delete"
-             value=""
-             :disabled="disabled"
-             @click="clearSelection"
-      >
-    </div>
-    <p v-if="hint !== ''" class="hint">
-      {{ hint }}
-    </p>
-  </form>
+  <SelectWithSubmitButton ref="select"
+                          v-model="inputValObjects"
+                          v-bind="$attrs"
+                          :input-id="id + '-projects-select-input'"
+                          :options="projectsArray"
+                          :selectable="(option) => option.id > 0"
+                          :uid="id + '-projects-select'"
+                          :group-select="false"
+                          :options-limit="100"
+                          :placeholder="placeholder || label"
+                          :input-label="label"
+                          :loading="isLoading"
+                          label="name"
+                          :multiple="multiple"
+                          :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
+                          v-on="$listeners"
+                          @search="findProjects"
+  />
 </template>
 
 <script>
-
-import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
+import { set as vueSet } from 'vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { NcMultiselect as Multiselect } from '@nextcloud/vue7'
-
-let uuid = 0
+import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
 
 /**
  * Select multiple or a single project. The provided value is always an array of project ids.
@@ -79,14 +54,24 @@ let uuid = 0
 export default {
   name: 'SelectProjects',
   components: {
-    Multiselect,
+    SelectWithSubmitButton,
   },
+  inheritAttrs: false,
   props: {
-    searchable: {
+    multiple: {
       type: Boolean,
       default: true,
     },
-    multiple: {
+    value: {
+      type: [Array, Object, String, Number],
+      default: () => [],
+    },
+    clearable: {
+      type: Boolean,
+      default: true,
+    },
+    // clear all options, only makes sense if multiple == true
+    clearAction: {
       type: Boolean,
       default: true,
     },
@@ -94,215 +79,147 @@ export default {
       type: String,
       required: true,
     },
-    hint: {
-      type: String,
-      default: '',
-    },
-    value: {
-      type: [Array, Object, String, Number],
-      default: () => [],
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    clearButton: {
-      type: Boolean,
-      default: true,
-    },
     placeholder: {
       type: String,
       default: undefined,
     },
-    tooltip: {
-      type: [Object, String],
-      default: undefined,
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    loadingIndicator: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
     return {
       inputValObjects: [],
       projects: {},
-      loading: true,
-      active: false,
+      ajaxLoading: false,
+      ncSelect: undefined,
+      id: null,
     }
   },
   computed: {
-    id() {
-      return 'select-projects-' + this.uuid
+    isLoading() {
+      return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
     projectsArray() {
-      const groupedValues = {}
-      for (const project of Object.values(this.projects)) {
-        const year = project.year
-        if (groupedValues[year] === undefined) {
-          groupedValues[year] = {
-            year,
-            projects: [project],
-          }
-        } else {
-          groupedValues[year].projects.push(project)
-        }
+      // const groupedValues = {}
+      // for (const project of Object.values(this.projects)) {
+      //   const year = project.year
+      //   if (groupedValues[year] === undefined) {
+      //     groupedValues[year] = {
+      //       year,
+      //       projects: [project],
+      //     }
+      //   } else {
+      //     groupedValues[year].projects.push(project)
+      //   }
+      // }
+      // return Object.values(groupedValues).sort((p1, p2) => -(p1.year - p2.year))
+      const projects = Object.values(this.projects).sort((p1, p2) => {
+        const p1year = p1?.year || -1
+        const p2year = p2?.year || -1
+        return p1year === p2year ? (p1.name > p2.name) - (p1.name < p2.name) : -(p1year - p2year)
+      })
+      if (projects.length === 0) {
+        return []
       }
-      return Object.values(groupedValues).sort((p1, p2) => -(p1.year - p2.year))
+      let index = 0
+      let fakeId = -1
+      while (index < projects.length) {
+        const year = projects[index].year
+        const yearName = year < 0 || year < 2000 ? t(appName, 'Permanent') : '' + year
+        projects.splice(index, 0, { id: fakeId--, name: yearName, year })
+        ++index
+        while (++index < projects.length && projects[index].year === year) { /* nothing */ }
+      }
+      return projects
     },
   },
   watch: {
-    value(/* newVal, oldVal */) {
+    async value(newValue) {
+      if (this.ajaxLoading) {
+        return
+      }
+      if (this.multiple) {
+        if (newValue.length === 0) {
+          this.inputValObjects = []
+          return
+        }
+      } else {
+        if (!newValue) {
+          this.inputValObjects = null
+          return
+        }
+        newValue = [newValue]
+      }
+      this.ajaxLoading = true
+      for (const projectId of newValue) {
+        if (!this.projects[projectId]) {
+          await this.findProjects(projectId)
+        }
+      }
       this.inputValObjects = this.getValueObjects()
+      this.ajaxLoading = false
     },
   },
-  created() {
-    this.uuid = uuid.toString()
-    uuid += 1
-    this.asyncFindProjects('').then((/* result */) => {
-      this.inputValObjects = this.getValueObjects()
-      this.loading = false
-    })
+  mounted() {
+    this.ncSelect = this.$refs.select.ncSelect
+    this.id = this._uid
   },
   methods: {
+    info(...args) {
+      console.info(this.$options.name, ...args)
+    },
+    getProjectObject(id) {
+      return this.projects[id] || { id, name: id, year: -1 }
+    },
     getValueObjects() {
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       const result = value.filter((project) => project !== '' && typeof project !== 'undefined').map(
         (project) => {
-          const id = project.id !== undefined ? project.id : project
-          if (typeof this.projects[id] === 'undefined') {
-            return {
-              id,
-              name: id,
-            }
-          }
-          return this.projects[id]
+          // project can be a simple project id if multiple == false
+          return this.getProjectObject(project?.id || project)
         },
       )
       return this.multiple ? result : (result.length > 0) ? result[0] : undefined
     },
-    clearSelection() {
-      this.inputValObjects = []
-      this.emitInput() // why is this needed?
-    },
-    emitInput() {
-      this.emit('input')
-      this.emitUpdate()
-    },
-    emitUpdate() {
-      this.emit('update')
-    },
-    emit(event) {
-      this.$emit(event, this.inputValObjects)
-    },
-    asyncFindProjects(query) {
+    async findProjects(query) {
       query = typeof query === 'string' ? encodeURI(query) : ''
       if (query !== '') {
         query = '/' + query
       }
-      return axios
-        .get(generateUrl(`/apps/${appName}/projects/search${query}`), {
+      try {
+        const response = await axios.get(generateUrl(`/apps/${appName}/projects/search${query}`), {
           params: { limit: 10 },
         })
-        .then((response) => {
-          if (response.data.length > 0) {
-            for (const project of response.data) {
-              vueSet(this.projects, project.id, project)
-            }
-            return true
+        if (response.data.length > 0) {
+          for (const project of response.data) {
+            vueSet(this.projects, project.id, project)
           }
-          return false
-        }).catch((error) => {
-          this.$emit('error', error)
-        })
+          this.info('GOT PROJECTS', this.projects)
+          return true
+        }
+      } catch (error) {
+        this.$emit('error', error)
+      }
+      return false
     },
   },
 }
 </script>
-<style lang="scss" scoped>
-.cloud-version {
-  --cloud-icon-checkmark: var(--icon-checkmark-dark);
-  &.cloud-version-major-24 {
-    --cloud-icon-checkmark: var(--icon-checkmark-000);
+<style lang="scss">
+ul[id$="-projects-select__listbox"] {
+  li.vs__dropdown-option.vs__dropdown-option--disabled {
+    background: var(--color-background-dark); // var(--vs-state-disabled-bg);
+    color: var(--vs-state-disabled-color);
+    cursor: default; // var(--vs-state-disabled-cursor);
+    font-weight: bold;
+    font-style: italic;
   }
 }
-.select-projects {
-  position:relative;
-  .loading {
-    position:absolute;
-    width:0;
-    height:0;
-    top:50%;
-    left:50%;
-  }
-  .input-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 400px;
-    align-items: center;
-    div.multiselect.multiselect-vue::v-deep {
-      &:not(.multiselect--active) {
-        height:35.2px;
-      }
-      flex-grow:1;
-      &:hover .multiselect__tags {
-        border-color: var(--color-primary-element);
-        outline: none;
-      }
-      &:hover + .clear-button {
-        border-color: var(--color-primary-element) !important;
-        border-left-color: transparent !important;
-        z-index: 2;
-      }
-      &.multiselect--active + .clear-button {
-        display:none;
-      }
-      + .clear-button {
-        &:disabled {
-          background-color: var(--color-background-dark) !important;
-        }
-        margin-left: -8px !important;
-        border-left-color: transparent !important;
-        border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
-        background-clip: padding-box;
-        background-color: var(--color-main-background) !important;
-        opacity: 1;
-        padding: 7px 6px;
-        height:35.2px;
-        width:35.2px;
-        margin-right:0;
-        z-index:2;
-        &:hover, &:focus {
-          border-color: var(--color-primary-element) !important;
-          border-radius: var(--border-radius) !important;
-        }
-      }
 
-      &.multiselect--single {
-        .multiselect__content-wrapper li > span {
-          &::before {
-            background-image: var(--cloud-icon-checkmark);
-            display:block;
-          }
-          &:not(.multiselect__option--selected):hover::before {
-            visibility:hidden;
-          }
-        }
-      }
-      &.multiselect--multiple {
-        .multiselect__content-wrapper li > span {
-          &:not(.multiselect__option--selected):hover::before {
-            visibility:hidden;
-          }
-        }
-      }
-    }
-
-    label {
-      width: 100%;
-    }
-  }
-
-  .hint {
-    color: var(--color-text-lighter);
-    font-size:80%;
-  }
-}
 </style>

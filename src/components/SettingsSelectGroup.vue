@@ -25,7 +25,10 @@
  -->
 <template>
   <SelectWithSubmitButton ref="select"
+                          v-bind="$attrs"
                           v-model="inputValObject"
+                          label="displayname"
+                          :reduce="(group) => group.id"
                           :tooltip="tooltip"
                           :options="groupsArray"
                           :options-limit="100"
@@ -33,12 +36,11 @@
                           :input-label="label"
                           :loading="isLoading"
                           :hint="hint"
-                          label="displayname"
                           :multiple="false"
                           :close-on-select="true"
                           :disabled="disabled"
                           :clearable="clearable"
-                          @update="emitUpdate"
+                          v-on="$listeners"
                           @search="findGroups"
   >
     <template #option="option">
@@ -56,7 +58,6 @@
   </SelectWithSubmitButton>
 </template>
 <script>
-import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
 import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
@@ -156,12 +157,6 @@ export default {
       this.inputValObject = this.getGroupObject(newValue)
       this.ajaxLoading = false
     },
-    inputValObject() {
-      if (this.ajaxLoading) {
-        return
-      }
-      this.emitInput()
-    },
   },
   mounted() {
     this.ncSelect = this.$refs.select.ncSelect
@@ -175,19 +170,6 @@ export default {
     },
     getGroupObject(gid) {
       return this.groups[gid] || { id: gid, displayname: gid }
-    },
-    emitInput() {
-      if (this.clearable || !this.empty) {
-        this.$emit('input', this.groupId)
-        this.$emit('update:modelValue', this.groupId)
-      }
-    },
-    emitUpdate() {
-      if (this.required && this.empty) {
-        this.$emit('error', t(appName, 'An empty value is not allowed, please make your choice!'))
-      } else {
-        this.$emit('update', this.groupId)
-      }
     },
     async findGroups(query) {
       query = typeof query === 'string' ? encodeURI(query) : ''

@@ -32,7 +32,10 @@
  -->
 <template>
   <SelectWithSubmitButton ref="select"
+                          v-bind="$attrs"
                           v-model="inputValObjects"
+                          :reduce="(user) => user.id"
+                          label="displayname"
                           :tooltip="tooltip"
                           :options="usersArray"
                           :options-limit="100"
@@ -40,13 +43,11 @@
                           :input-label="label"
                           :loading="isLoading"
                           :clearable="clearable"
-                          label="displayname"
                           :multiple="true"
                           :close-on-select="false"
                           :disabled="disabled"
                           :user-select="true"
-                          @update="emitUpdate"
-                          @input="emitInput"
+                          v-on="$listeners"
                           @search="findUsers"
   >
     <!-- Unfortunately, the stock NcSelect seems to be somewhat borken and does not set the "user" property. -->
@@ -72,7 +73,6 @@
 </template>
 
 <script>
-import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
 import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
@@ -163,7 +163,7 @@ export default {
           await this.findUsers(userId)
         }
       }
-      this.inputValObjects = this.getValueObject()
+      this.inputValObjects = this.getValueObjects()
       this.ajaxLoading = false
     },
   },
@@ -177,20 +177,8 @@ export default {
     getUserObject(userId) {
       return this.users[userId] || { id: userId, displayname: userId }
     },
-    getValueObject() {
+    getValueObjects() {
       return this.value.filter((user) => user !== '' && typeof user !== 'undefined').map((userId) => this.getUserObject(userId))
-    },
-    emitInput() {
-      if (Array.isArray(this.inputValObjects) && (this.clearable || !this.empty)) {
-        this.$emit('input', this.userIds)
-      }
-    },
-    emitUpdate() {
-      if (this.required && this.empty) {
-        this.$emit('error', t(appName, 'An empty value is not allowed, please make your choice!'))
-      } else {
-        this.$emit('update', this.userIds)
-      }
     },
     async findUsers(query) {
       query = typeof query === 'string' ? encodeURI(query) : ''

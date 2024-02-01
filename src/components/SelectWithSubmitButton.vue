@@ -250,20 +250,23 @@ export default {
     info(...args) {
       console.info(this.$options.name, ...args)
     },
+    emitInput(value) {
+      this.$emit('input', value)
+      this.$emit('update:modelValue', value)
+    },
     emitUpdate() {
       if (this.required && this.empty) {
         this.$emit('error', t(appName, 'An empty value is not allowed, please make your choice!'))
       } else {
-        this.$emit('input', this.value)
-        this.$emit('update:modelValue', this.value)
+        this.emitInput(this.value)
         this.$emit('update', this.value)
       }
     },
     resetChanges() {
-      this.$emit('input', this.resetState)
+      this.emitInput(this.resetState)
     },
     clearSelection() {
-      this.$emit('input', this.multiple ? [] : null)
+      this.emitInput(this.multiple ? [] : null)
     },
   },
 }

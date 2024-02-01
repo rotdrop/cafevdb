@@ -179,7 +179,8 @@
                       :label="t(appName, 'Restrict User Selection to Project')"
                       :placeholder="t(appName, 'e.g. Auvergne2019')"
                       :multiple="false"
-                      :clear-button="true"
+                      :submit-button="false"
+                      @update="info('Projects Update', ...arguments)"
       />
       <input id="include-disabled"
              v-model="access.includeDeactivated"
@@ -247,8 +248,8 @@
                               :multiple="false"
                               :disabled="loading.general || loading.fonts"
                               :submit-button="true"
-                              :clear-action="true"
-                              :reset-action="true"
+                              :clear-action="false"
+                              :reset-action="false"
                               :reset-state="savedDefaultOfficeFont"
                               @update="saveSetting('defaultOfficeFont')"
                               @error="showErrorToast"
@@ -296,8 +297,11 @@ import { showError, showInfo, TOAST_DEFAULT_TIMEOUT, TOAST_PERMANENT_TIMEOUT } f
 
 import { appName } from '../app/app-info.js'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
+
 import SelectMusicians from './SelectMusicians.vue'
+
 import SelectProjects from './SelectProjects.vue'
+
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
 import SelectWithSubmitButton from './SelectWithSubmitButton.vue'

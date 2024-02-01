@@ -180,8 +180,8 @@ class MusiciansController extends Controller
         'displayName' => $pattern,
         'nickName' => $pattern,
         'userIdSlug' => $pattern,
+        ')' => true,
       ];
-      $criteria[] = [ ')' => true ];
     }
 
     if ($project !== null) {
@@ -256,7 +256,7 @@ class MusiciansController extends Controller
   }
 
   /**
-   * Search by user-id and names. Pattern may contain wildcards (* and %).
+   * Search by project-id and name. Pattern may contain wildcards (* and %).
    *
    * @param string $pattern
    *
@@ -288,8 +288,13 @@ class MusiciansController extends Controller
         }
       }
       $criteria = [
-        'name' => $pattern,
+        '(|name' => $pattern,
+        'id' => $pattern,
+        ')' => true,
       ];
+      if ($year !== null) {
+        $criteria[] = [ 'year' => $year ];
+      }
     }
 
     $projects = $repository->findBy($criteria, [
