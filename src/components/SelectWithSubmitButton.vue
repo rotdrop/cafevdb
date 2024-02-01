@@ -21,15 +21,15 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="['input-wrapper', { empty, required }]">
+  <div :class="['input-wrapper', { empty, required }, ...actionClasses]">
     <label v-if="!labelOutside && inputLabel" :for="selectId" class="select-with-submit-button-label">
       {{ inputLabel }}
     </label>
     <div :class="['alignment-wrapper', ...flexContainerClasses]">
-      <div v-if="true || $slots.alignedBefore" :class="['aligned-before', ...flexItemClasses]">
+      <div v-if="$slots.alignedBefore" :class="['aligned-before', ...flexItemClasses]">
         <slot name="alignedBefore" />
       </div>
-      <div :class="['select-combo-wrapper', { loading },...flexItemClasses]">
+      <div :class="['select-combo-wrapper', { loading }, ...flexItemClasses, ...actionClasses]">
         <NcSelect ref="ncSelect"
                   v-bind="$attrs"
                   v-tooltip="tooltipToShow"
@@ -59,15 +59,22 @@
                <span>This text content goes to overrideExample slot</span>
                </template> -->
         </NcSelect>
-        <input v-tooltip="active ? false : t(appName, 'Click to submit your changes.')"
+        <input v-if="submitButton"
+               v-tooltip="active ? false : t(appName, 'Click to submit your changes.')"
                type="submit"
-               class="icon-confirm"
+               class="select-with-submit-button icon-confirm"
                value=""
                :disabled="disabled"
                @click="emitUpdate"
         >
       </div>
-      <div v-if="true || $slots.alignedAfter" :class="['aligned-after', ...flexItemClasses]">
+      <NcActions v-if="$slots.actions"
+                 :disabled="disabled"
+                 :class="['aligned-after', ...flexItemClasses]"
+      >
+        <slot name="actions" />
+      </NcActions>
+      <div v-if="$slots.alignedAfter" :class="['aligned-after', ...flexItemClasses]">
         <slot name="alignedAfter" />
       </div>
     </div>
@@ -79,12 +86,13 @@
 <script>
 
 import { appName } from '../app/app-info.js'
-import { NcSelect } from '@nextcloud/vue'
+import { NcSelect, NcActions } from '@nextcloud/vue'
 
 export default {
   name: 'SelectWithSubmitButton',
   components: {
     NcSelect,
+    NcActions,
   },
   inheritAttrs: false,
   props: {
@@ -143,6 +151,19 @@ export default {
       type: Array,
       default: () => ['flex-justify-left', 'flex-align-center'],
     },
+    // configure default button and action additions
+    submitButton: {
+      type: Boolean,
+      default: true,
+    },
+    clearAction: {
+      type: Boolean,
+      default: false,
+    },
+    resetAction: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -152,6 +173,17 @@ export default {
     }
   },
   computed: {
+    actionClasses() {
+      const classes = []
+      this.submitButton && classes.push('submit-button')
+      this.clearAction && classes.push('clear-action')
+      this.resetAction && classes.push('reset-action')
+
+      return classes
+    },
+    submitAction() {
+      return this.action.indexOf('submit') !== -1
+    },
     empty() {
       return !this.value || (Array.isArray(this.value) && this.value.length === 0)
     },
@@ -260,14 +292,16 @@ export default {
     align-items: stretch;
     flex-grow: 1;
     flex-wrap: nowrap;
-    .v-select.select::v-deep {
+    .v-select.select {
       flex-grow:1;
       max-width:100%;
+    }
+    &.submit-button::v-deep .v-select.select {
       .vs__dropdown-toggle {
         // substract the round borders for the overlay
         padding-right: calc(var(--default-clickable-area) - var(--vs-border-radius));
       }
-      + .icon-confirm {
+      + .select-with-submit-button.icon-confirm {
         flex-shrink: 0;
         width:var(--default-clickable-area);
         align-self: stretch;
@@ -289,7 +323,7 @@ export default {
           }
         }
       }
-      &.vs--disabled + .icon-confirm {
+      &.vs--disabled + .select-with-submit-button.icon-confirm {
         cursor: var(--vs-disabled-cursor);
       }
     }
