@@ -24,7 +24,7 @@
 import Vue from 'vue';
 import { appName } from './app/app-info.js';
 import { getInitialState } from './services/initial-state-service.js';
-import { generateFilePath, imagePath } from '@nextcloud/router';
+import { generateFilePath } from '@nextcloud/router';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
 import FilesTab from './views/FilesTab.vue';
 import { createPinia, PiniaVuePlugin } from 'pinia';
@@ -110,10 +110,6 @@ window.addEventListener('DOMContentLoaded', () => {
         await TabInstance.update(fileInfo);
 
         TabInstance.$mount(el);
-        const $tabHeader = context.$el.closest('.app-sidebar-tabs');
-        const $iconSpan = $tabHeader.querySelector('#cafevdb .app-sidebar-tabs__tab-icon span');
-        $iconSpan.style.backgroundImage = 'url(' + imagePath(appName, appName) + ')';
-        $iconSpan.style.backgroundSize = '16px';
       },
       update(fileInfo) {
         TabInstance.update(fileInfo);
