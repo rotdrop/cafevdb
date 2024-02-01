@@ -44,18 +44,14 @@
                                 @update="saveSetting('userAndGroupBackend')"
                                 @error="showErrorToast"
         >
-          <template #alignedAfter>
-            <Actions v-tooltip="hints['settings:admin:user-backend:move-users']"
-                     :disabled="loading.general || loading.fonts || !config.isAdmin"
+          <template #actions>
+            <ActionButton v-tooltip="hints['settings:admin:user-backend:move-users']"
+                          icon="icon-play"
+                          @click="synchronizeUserBackends"
             >
-              <ActionButton v-tooltip="hints['settings:admin:user-backend:move-users']"
-                            icon="icon-play"
-                            @click="synchronizeUserBackends"
-              >
-                {{ t(appName, 'Sychronize User Backends') }}
-              </ActionButton>
-            </Actions>
-          </template>
+              {{ t(appName, 'Sychronize User Backends') }}
+            </ActionButton>
+          </template>(
         </SelectWithSubmitButton>
       </div>
       <div v-if="config.isSubAdmin || config.isAdmin">
@@ -241,21 +237,24 @@
         <span class="file-name-label">{{ t(appName, 'Font Data Folder') }}</span>
         <span class="file-name">{{ humanOfficeFontsFolder }}</span>
       </div>
-      <div class="flex-container flex-align-center">
-        <label for="default-font" class="default-font">{{ t(appName, 'Default Font') }}</label>
-        <SelectWithSubmitButton v-model="defaultOfficeFont"
-                                input-id="default-font"
-                                :label-outside="true"
-                                :options="Object.values(config.officeFonts)"
-                                :loading="loading.fonts"
-                                label="family"
-                                :clearable="false"
-                                :multiple="false"
-                                :disabled="loading.general || loading.fonts"
-                                @update="saveSetting('defaultOfficeFont')"
-                                @error="showErrorToast"
-        />
-        <Actions :disabled="loading.general || loading.fonts">
+      <SelectWithSubmitButton v-model="defaultOfficeFont"
+                              input-id="default-font"
+                              :label-outside="true"
+                              :options="Object.values(config.officeFonts)"
+                              :loading="loading.fonts"
+                              label="family"
+                              :clearable="false"
+                              :multiple="false"
+                              :disabled="loading.general || loading.fonts"
+                              @update="saveSetting('defaultOfficeFont')"
+                              @error="showErrorToast"
+      >
+        <template #alignedBefore>
+          <label for="default-font" class="default-font">
+            {{ t(appName, 'Default Font') }}
+          </label>
+        </template>
+        <template #actions>
           <ActionButton icon="icon-add"
                         @click="updateFontData"
           >
@@ -271,8 +270,8 @@
           >
             {{ t(appName, 'Purge Font Data') }}
           </ActionButton>
-        </Actions>
-      </div>
+        </template>
+      </SelectWithSubmitButton>
     </SettingsSection>
   </div>
 </template>
