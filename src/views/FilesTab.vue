@@ -130,7 +130,8 @@
                          :label="t(appName, 'Musicians')"
                          :placeholder="t(appName, 'e.g. Jane Doe')"
                          :multiple="true"
-                         :clear-button="true"
+                         :submit-button="false"
+                         :clear-action="true"
                          :project-id="projectId"
                          :disabled="senderId <= 0"
                          search-scope="musicians"
@@ -140,7 +141,8 @@
                         :label="t(appName, 'Project')"
                         :placeholder="t(appName, 'e.g. Auvergne2019')"
                         :multiple="false"
-                        :clear-button="false"
+                        :submit-button="false"
+                        :clear-action="false"
                         :disabled="senderId <= 0"
         />
       </li>
