@@ -67,7 +67,7 @@
                @click="emitUpdate"
         >
       </div>
-      <div v-if="true || $slots.alignedAfter" :class="['aligned-before', ...flexItemClasses]">
+      <div v-if="true || $slots.alignedAfter" :class="['aligned-after', ...flexItemClasses]">
         <slot name="alignedAfter" />
       </div>
     </div>
@@ -183,6 +183,11 @@ export default {
       return attributes
     },
   },
+  watch: {
+    value(newValue, oldValue) {
+      this.info('VALUE UPDATED', newValue, oldValue)
+    },
+  },
   created() {
     this.id = this._uid
   },
@@ -276,7 +281,7 @@ export default {
         background-clip: padding-box;
         opacity: 1;
         &:hover, &:focus {
-          &:not(:readonly), &:not(:disabled) {
+          /* &:not(:readonly), */ &:not(:disabled) {
             border: var(--vs-border-width) var(--vs-border-style) var(--color-primary-element);
             border-radius: var(--vs-border-radius);
             outline: 2px solid var(--color-main-background);

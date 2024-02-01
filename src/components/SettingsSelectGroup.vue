@@ -103,6 +103,10 @@ export default {
       type: [Object, String, Boolean],
       default: undefined,
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     loadingIndicator: {
       type: Boolean,
       default: true,
@@ -112,13 +116,13 @@ export default {
     return {
       inputValObject: null,
       groups: {},
-      loading: false,
+      ajaxLoading: false,
       ncSelect: undefined,
     }
   },
   computed: {
     isLoading() {
-      return this.loading && this.loadingIndicator
+      return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
     groupsArray() {
       return Object.values(this.groups)
@@ -138,25 +142,22 @@ export default {
      * @param {string} newValue New GID set from outside
      */
     async value(newValue) {
-      if (this.loading) {
-        this.info('Skipping watch action during load')
+      if (this.ajaxLoading) {
         return
       }
       if (!newValue) {
         this.inputValObject = null
         return
       }
-      this.loading = true
+      this.ajaxLoading = true
       if (!this.groups[newValue]) {
         await this.findGroups(newValue)
       }
       this.inputValObject = this.getGroupObject(newValue)
-      this.loading = false
+      this.ajaxLoading = false
     },
-    inputValObject(newValue, oldValue) {
-      this.info('SELECT VALUE CHANGE', newValue, oldValue, this.value)
-      if (this.loading) {
-        this.info('Skipping watch action during load')
+    inputValObject() {
+      if (this.ajaxLoading) {
         return
       }
       this.emitInput()
@@ -176,7 +177,6 @@ export default {
       return this.groups[gid] || { id: gid, displayname: gid }
     },
     emitInput() {
-      this.info('EMIT INPUT', this.groupId, this.value)
       if (this.clearable || !this.empty) {
         this.$emit('input', this.groupId)
         this.$emit('update:modelValue', this.groupId)
@@ -192,16 +192,28 @@ export default {
     async findGroups(query) {
       query = typeof query === 'string' ? encodeURI(query) : ''
       try {
-        const response = await axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=10`, 2))
-        if (Object.keys(response.data.ocs.data.groups).length > 0) {
+        const limit = 10
+        let count = 0
+        let offset = 0
+        while (count < 10) {
+          const response = await axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=${limit}&offset=${offset}`, 2))
           for (const element of response.data.ocs.data.groups) {
+            if (!element.id) {
+              // if we were not a group admin, an empty entry is returned in order to enable paging
+              continue
+            }
+            ++count
             const gid = element.id
             if (!this.groups[gid] || JSON.stringify(this.groups[gid]) !== JSON.stringify(element)) {
               this.$set(this.groups, gid, element)
             }
           }
-          return true
+          if (Object.keys(response.data.ocs.data.groups).length < limit) {
+            break
+          }
+          offset += limit
         }
+        return true
       } catch (error) {
         this.$emit('error', error)
       }

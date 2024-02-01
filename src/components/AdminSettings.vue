@@ -22,7 +22,7 @@
  -->
 <template>
   <div :class="['templateroot', ...cloudVersionClasses]">
-    <SettingsSection :class="['major', { 'icon-loading': loading.general }]"
+    <SettingsSection :class="['major']"
                      :name="t(appName, 'Camerata DB')"
     >
       <div v-if="config.isAdmin">
@@ -39,6 +39,7 @@
                                 :clearable="false"
                                 :options="config.userAndGroupBackends"
                                 :multiple="false"
+                                :loading="loading.settings"
                                 :disabled="loading.general || !config.isAdmin"
                                 @update="saveSetting('userAndGroupBackend')"
                                 @error="showErrorToast"
@@ -63,6 +64,7 @@
                              :hint="hints['settings:admin:user-group']"
                              :multiple="false"
                              :required="true"
+                             :loading="loading.settings"
                              :disabled="loading.general || !config.isAdmin"
                              @update="saveSetting('orchestraUserGroup', ...arguments)"
                              @error="showErrorToast"
@@ -70,6 +72,7 @@
         <SettingsSelectUsers v-model="settings.orchestraUserGroupAdmins"
                              :label="t(appName, 'User Group Admins')"
                              :hint="hints['settings:admin:user-group:admins']"
+                             :loading="loading.settings"
                              :disabled="loading.general || groupAdminsDisabled"
                              :required="true"
                              @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
@@ -231,7 +234,7 @@
       </span>
     </SettingsSection>
     <SettingsSection v-if="config.isSubAdmin"
-                     :class="['sub-admin', 'fonts-container', { 'icon-loading': loading.fonts || loading.general }]"
+                     :class="['sub-admin', 'fonts-container']"
                      :name="t(appName, 'Configure Office Fonts for Office Exports')"
     >
       <div>
@@ -244,6 +247,7 @@
                                 input-id="default-font"
                                 :label-outside="true"
                                 :options="Object.values(config.officeFonts)"
+                                :loading="loading.fonts"
                                 label="family"
                                 :clearable="false"
                                 :multiple="false"
@@ -327,6 +331,7 @@ export default {
         recryption: true,
         tooltips: true,
         fonts: true,
+        settings: true,
       },
       settings: {
         userAndGroupBackend: '',
@@ -415,6 +420,7 @@ export default {
   },
   watch: {
     defaultOfficeFont(newValue) {
+      this.info('OFFICE FONT UPDATE', newValue)
       this.settings.defaultOfficeFont = newValue?.family
     },
   },
@@ -427,7 +433,7 @@ export default {
   },
   methods: {
     info(...args) {
-      console.info('ADMIN SETTINGS INFO', ...args)
+      console.info(this.$options.name, ...args)
     },
     showErrorToast(message) {
       showError(message, { timeout: TOAST_DEFAULT_TIMEOUT })
@@ -436,18 +442,21 @@ export default {
       this.loading.general = true
       this.loading.recryption = true
       this.loading.fonts = true
+      this.loading.settings = true
       this.loadTooltips()
-      this.getSettingsData()
-
       if (this.config.isSubAdmin) {
         // fetch recryption requests
         this.getRecryptionRequests()
       }
 
       this.disableUnavailableFontOptions()
+
+      await this.getSettingsData()
+
       this.defaultOfficeFont = this.config.officeFonts[this.settings.defaultOfficeFont]
       await vueNextTick()
       this.loading.fonts = false
+      this.loading.general = false
     },
     async loadTooltips() {
       this.loading.tooltips = true
@@ -461,7 +470,7 @@ export default {
       this.loading.tooltips = false
     },
     async getSettingsData() {
-      this.loading.general = true
+      this.loading.settings = true
       const requests = {}
       for (const key of Object.keys(this.settings)) {
         requests[key] = axios.get(generateUrl('apps/' + appName + '/settings/admin/{key}', { key }))
@@ -470,7 +479,7 @@ export default {
         const response = await request
         vueSet(this.settings, key, response.data.value)
       }
-      this.loading.general = false
+      this.loading.settings = false
     },
     async getRecryptionRequests() {
       this.loading.recryption = true
@@ -1008,6 +1017,25 @@ export default {
       }
       label.default-font {
         padding-right: 0.5em;
+      }
+    }
+  }
+  // Tweak the submit button of the NcTextField
+  .input-field::v-deep  .input-field__trailing-button.button-vue--vue-tertiary-no-background {
+    max-height: var(--default-clickable-area);
+    max-width: var(--default-clickable-area);
+    // FIXME: instead we probably should switch to material design icons for everything else ...
+    background-image: var(--icon-confirm-dark);
+    background-position: center;
+    background-repeat: no-repeat;
+    .button-vue__icon {
+      opacity: 0;
+    }
+    &:hover, &:focus {
+      &:not(:disabled) {
+        border: 2px solid var(--color-primary-element);
+        border-radius: var(--border-radius-large);
+        outline: 2px solid var(--color-main-background);
       }
     }
   }

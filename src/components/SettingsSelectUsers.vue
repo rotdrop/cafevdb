@@ -38,6 +38,7 @@
                           :options-limit="100"
                           :placeholder="label"
                           :input-label="label"
+                          :loading="isLoading"
                           :clearable="clearable"
                           label="displayname"
                           :multiple="true"
@@ -116,6 +117,10 @@ export default {
       type: [Object, String, Boolean],
       default: undefined,
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     loadingIndicator: {
       type: Boolean,
       default: true,
@@ -125,13 +130,13 @@ export default {
     return {
       inputValObjects: [],
       users: {},
-      loading: false,
+      ajaxLoading: false,
       ncSelect: undefined,
     }
   },
   computed: {
     isLoading() {
-      return this.loading && this.loadingIndicator
+      return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
     usersArray() {
       return Object.values(this.users)
@@ -144,24 +149,22 @@ export default {
     },
   },
   watch: {
-    async value(newValue, oldValue) {
-      if (this.loading) {
-        this.info('Skipping watch action during load')
+    async value(newValue) {
+      if (this.ajaxLoading) {
         return
       }
       if (newValue.length === 0) {
         this.inputValObjects = []
         return
       }
-      this.info('VALUE HAS CHANGED', newValue, oldValue)
-      this.loading = true
+      this.ajaxLoading = true
       for (const userId of newValue) {
         if (!this.users[userId]) {
           await this.findUsers(userId)
         }
       }
       this.inputValObjects = this.getValueObject()
-      this.loading = false
+      this.ajaxLoading = false
     },
   },
   mounted() {
