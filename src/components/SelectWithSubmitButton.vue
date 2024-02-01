@@ -34,6 +34,7 @@
                   v-bind="$attrs"
                   v-tooltip="tooltipToShow"
                   :value="value"
+                  :multiple="multiple"
                   :label-outside="true"
                   :clearable="clearable"
                   :disabled="disabled"
@@ -122,6 +123,15 @@ export default {
     clearable: {
       type: Boolean,
       default: true,
+    },
+    /**
+     * Allow selection of multiple options
+     *
+     * @see https://vue-select.org/api/props.html#multiple
+     */
+    multiple: {
+      type: Boolean,
+      default: false,
     },
     // required blocks the final submit if no value is selected
     required: {
@@ -253,7 +263,7 @@ export default {
       this.$emit('input', this.resetState)
     },
     clearSelection() {
-      this.$emit('input', null)
+      this.$emit('input', this.multiple ? [] : null)
     },
   },
 }
