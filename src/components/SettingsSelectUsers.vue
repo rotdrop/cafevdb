@@ -36,13 +36,11 @@
                           v-model="inputValObjects"
                           :reduce="(user) => user.id"
                           label="displayname"
-                          :tooltip="tooltip"
                           :options="usersArray"
                           :options-limit="100"
                           :placeholder="label"
                           :input-label="label"
                           :loading="isLoading"
-                          :clearable="clearable"
                           :multiple="true"
                           :close-on-select="false"
                           :disabled="disabled"
@@ -88,14 +86,11 @@ export default {
   mixins: [
     userInfoPopup,
   ],
+  inheritAttrs: false,
   props: {
     label: {
       type: String,
       required: true,
-    },
-    hint: {
-      type: String,
-      default: '',
     },
     value: {
       type: Array,
@@ -104,18 +99,6 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
-    },
-    clearable: {
-      type: Boolean,
-      default: true,
-    },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    tooltip: {
-      type: [Object, String, Boolean],
-      default: undefined,
     },
     loading: {
       type: Boolean,

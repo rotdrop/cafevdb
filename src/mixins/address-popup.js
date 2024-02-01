@@ -29,7 +29,7 @@ export default {
       return t(appName, '{item}: unknown', { item: t(appName, item) });
     },
     musicianAddressPopup(option) {
-      if (!option.id === 0) {
+      if (option.id === 0) {
         return this.addressPopup(t(appName, 'selects all musicians'));
       }
       const name = option.informalDisplayName || '';

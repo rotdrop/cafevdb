@@ -170,6 +170,9 @@
                        :label="t(appName, 'Musicians')"
                        :placeholder="t(appName, 'e.g. Jane Doe')"
                        :multiple="true"
+                       :deselect-from-dropdown="true"
+                       :close-on-select="false"
+                       :submit-button="false"
                        :clear-button="true"
                        :project-id="projectId"
                        search-scope="musicians"
@@ -197,7 +200,7 @@
              class="checkbox access-flags"
              :disabled="!applyAccessToAll"
       >
-      <label for="include-disabled" class="access-flags checkbox-label">
+      <label for="include-deactivated" class="access-flags checkbox-label">
         {{ t(appName, 'include deactivated accounts') }}
       </label>
       <span v-if="showAccessActionProgress">

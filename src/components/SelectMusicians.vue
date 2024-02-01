@@ -21,102 +21,58 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <form class="select-musicians" @submit.prevent="">
-    <div v-if="showLoadingIndicator" class="loading" />
-    <div class="input-wrapper">
-      <label v-if="label !== undefined" :for="id">{{ label }}</label>
-      <Multiselect :id="id"
-                   ref="multiselect"
-                   v-model="inputValObjects"
-                   v-tooltip="active ? false : tooltip"
-                   v-bind="$attrs"
-                   :options="musiciansArray"
-                   :options-limit="100"
-                   :placeholder="placeholder === undefined ? label : placeholder"
-                   :hint="hint"
-                   :show-labels="true"
-                   :searchable="searchable"
-                   track-by="id"
-                   label="formalDisplayName"
-                   class="multiselect-vue"
-                   :multiple="multiple"
-                   :tag-width="60"
-                   :disabled="disabled"
-                   @input="emitInput"
-                   @search-change="(query, id) => asyncFindMusicians(query)"
-                   @open="active = true"
-                   @close="active = false"
-      >
-        <template #option="optionData">
-          <EllipsisedMusicianOption :name="$refs.multiselect.getOptionLabel(optionData.option)"
-                                    :option="optionData.option"
-                                    :search="optionData.search"
-                                    :label="$refs.multiselect.label"
-          />
-        </template>
-        <template #singleLabel="singleLabelData">
-          <span v-tooltip="musicianAddressPopup(singleLabelData.option)">
-            {{ $refs.multiselect.$refs.VueMultiselect.currentOptionLabel }}
-          </span>
-        </template>
-        <template #tag="tagData">
-          <span :key="tagData.option.id"
-                v-tooltip="musicianAddressPopup(tagData.option)"
-                class="multiselect__tag"
-          >
-            <span v-text="$refs.multiselect.getOptionLabel(tagData.option)" />
-            <i tabindex="1"
-               class="multiselect__tag-icon"
-               @keypress.enter.prevent="tagData.remove(tagData.option)"
-               @mousedown.prevent="tagData.remove(tagData.option)"
-            />
-          </span>
-        </template>
-      </Multiselect>
-      <input v-if="clearButton"
-             v-tooltip="t(appName, 'Remove all options.')"
-             type="submit"
-             class="clear-button icon-delete"
-             value=""
-             :disabled="disabled"
-             @click="clearSelection"
-      >
-      <input v-if="resetButton && !clearButton"
-             v-tooltip="t(appName, 'Reset to initial selection.')"
-             type="submit"
-             class="clear-button icon-history"
-             value=""
-             :disabled="disabled"
-             @click="resetSelection"
-      >
-    </div>
-    <p v-if="hint !== ''" class="hint">
-      {{ hint }}
-    </p>
-  </form>
+  <SelectWithSubmitButton ref="select"
+                          v-bind="$attrs"
+                          v-model="inputValObjects"
+                          label="formalDisplayName"
+                          :options="musiciansArray"
+                          :selectable="(option) => !isSelectAllSelected || option.id === 0"
+                          :options-limit="100"
+                          :placeholder="placeholder || label"
+                          :input-label="label"
+                          :loading="isLoading"
+                          :multiple="multiple"
+                          :clear-action="(!clearable && clearAction) || (multiple && clearAction)"
+                          :reset-action="resetAction"
+                          :searchable="searchable"
+                          v-on="$listeners"
+                          @search="findMusicians"
+  >
+    <template #option="option">
+      <NcEllipsisedOption v-tooltip="musicianAddressPopup(option)"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+      />
+    </template>
+    <template #selected-option="option">
+      <NcEllipsisedOption v-tooltip="musicianAddressPopup(option)"
+                          :name="ncSelect ? String(option[ncSelect.localLabel]) : t(appName, 'undefined')"
+                          :search="ncSelect ? ncSelect.search : t(appName, 'undefined')"
+      />
+    </template>
+  </SelectWithSubmitButton>
 </template>
-
 <script>
 
 import { set as vueSet } from 'vue'
 import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { NcMultiselect as Multiselect } from '@nextcloud/vue7'
-import EllipsisedMusicianOption from './EllipsisedMusicianOption.vue'
-import addressPopup from '../mixins/address-popup.js'
+import musicianAddressPopup from '../mixins/address-popup.js'
 import { usePersistentDataStore } from '../stores/persistentData.js'
+import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
+import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 
-let uuid = 0
 export default {
   name: 'SelectMusicians',
   components: {
-    Multiselect,
-    EllipsisedMusicianOption,
+    SelectWithSubmitButton,
+    NcEllipsisedOption,
   },
   mixins: [
-    addressPopup,
+    musicianAddressPopup,
   ],
+  inheritAttrs: false,
   props: {
     searchable: {
       type: Boolean,
@@ -134,23 +90,19 @@ export default {
       type: String,
       default: undefined,
     },
-    hint: {
-      type: String,
-      default: '',
-    },
     value: {
       type: [Array, String, Object, Number],
       default: () => [],
     },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    clearButton: {
+    clearable: {
       type: Boolean,
       default: true,
     },
-    resetButton: {
+    clearAction: {
+      type: Boolean,
+      default: true,
+    },
+    resetAction: {
       type: Boolean,
       default: false,
     },
@@ -162,13 +114,13 @@ export default {
       type: String,
       default: undefined,
     },
-    tooltip: {
-      type: [Object, String, Boolean],
-      default: undefined,
-    },
     selectAllOption: {
       type: Boolean,
       default: undefined,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
     loadingIndicator: {
       type: Boolean,
@@ -184,14 +136,14 @@ export default {
       inputValObjects: [],
       initialValObjects: [],
       musicians: {},
-      loading: true,
-      loadingPromise: Promise.resolve(),
-      active: false,
+      ajaxLoading: false,
+      ncSelect: undefined,
+      id: null,
     }
   },
   computed: {
-    id() {
-      return 'settings-musicians-' + this.uuid
+    isLoading() {
+      return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
     musiciansArray() {
       return Object.values(this.musicians)
@@ -199,67 +151,92 @@ export default {
     provideSelectAll() {
       return this.selectAllOption === undefined ? this.multiple : this.selectAllOption
     },
-    showLoadingIndicator() {
-      return this.loadingIndicator && this.loading
+    isSelectAllSelected() {
+      return this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].id === 0
     },
   },
   watch: {
-    value(/* newVal, oldVal */) {
-      this.loadingPromise.finally(() => {
-        this.inputValObjects = this.getValueObject()
-        if (this.provideSelectAll && this.inputValObjects.length === 1 && this.inputValObjects[0].id === 0) {
-          this.$refs.multiselect.$refs.VueMultiselect.deactivate()
+    async value(newValue) {
+      if (this.ajaxLoading) {
+        return
+      }
+      if (this.multiple) {
+        if (newValue.length === 0) {
+          this.inputValObjects = []
+          return
         }
-      })
+      } else {
+        if (!newValue) {
+          this.inputValObjects = null
+          return
+        }
+        newValue = [newValue]
+      }
+      this.ajaxLoading = true
+      for (const musician of newValue) {
+        const musicianId = musician.id
+        if (musicianId !== 0 && !this.musicians[musicianId]) {
+          await this.findMusicians('', [musicianId])
+          if (this.musicians[musician.id]) {
+            const index = this.inputValObjects.findIndex((object) => object.id === musicianId)
+            if (index >= 0) {
+              this.inputValObjects.splice(index, 1, this.musicians[musicianId])
+            }
+          }
+        }
+      }
+      if (newValue.length > 1 && newValue.findIndex((object) => object.id === 0) !== -1) {
+        this.inputValObjects.splice(0, this.inputValObjects.length, this.musicians[0])
+      }
+      this.ajaxLoading = false
     },
     // setting the project id also resets the initial data.
-    projectId(/* newVal, oldVal */) {
-      this.getData()
+    async projectId(/* newVal, oldVal */) {
+      await this.getData()
     },
   },
-  created() {
-    this.uuid = uuid.toString()
-    uuid += 1
-    this.getData()
+  async created() {
+    await this.getData()
+  },
+  mounted() {
+    this.ncSelect = this.$refs.select.ncSelect
+    this.id = this._uid
   },
   methods: {
-    getData() {
-      this.loadingPromise.finally(() => {
-        this.loadingPromise = new Promise((resolve/* , reject */) => {
-          this.loading = true
-          this.resetMusicians()
-          if (!this.searchable) {
-            try {
-              // console.info('PERSISTENT DATA', this.persistentData)
-              this.musicians = this.persistentData.selectMusicians[this.searchScope][this.projectId]
-              this.inputValObjects = this.getValueObject()
-              if (this.resetButton) {
-                this.initialValObjects = this.inputValObjects
-              }
-              this.loading = false
-              resolve(this.loading)
-              // console.info('INIT FROM STORE', this.searchScope, this.projectId)
-              return
-            } catch (ignoreMe) {}
+    info(...args) {
+      console.info(this.$options.name, ...args)
+    },
+    async getData() {
+      if (this.ajaxLoading) {
+        return
+      }
+      this.ajaxLoading = true
+      this.resetMusicians()
+      if (!this.searchable) {
+        try {
+          // console.info('PERSISTENT DATA', this.persistentData)
+          this.musicians = this.persistentData.selectMusicians[this.searchScope][this.projectId]
+          this.inputValObjects = this.getValueObject()
+          if (this.resetButton) {
+            this.initialValObjects = this.inputValObjects
           }
-          this.asyncFindMusicians('', this.getValueIds()).then((/* result */) => {
-            this.inputValObjects = this.getValueObject(true)
-            if (this.resetButton) {
-              this.initialValObjects = this.inputValObjects
-            }
-            if (!this.searchable) {
-              this.persistentData.selectMusicians = {
-                [this.searchScope]: {
-                  [this.projectId]: this.musicians,
-                },
-              }
-            }
-            this.loading = false
-            resolve(this.loading)
-            // console.info('INIT FROM AJAX', this.searchScope, this.projectId)
-          })
-        })
-      })
+          this.ajaxLoading = false
+          return
+        } catch (ignoreMe) {}
+      }
+      await this.findMusicians('', this.getValueIds())
+      this.inputValObjects = this.getValueObjects(true)
+      if (this.resetButton) {
+        this.initialValObjects = this.inputValObjects
+      }
+      if (!this.searchable) {
+        this.persistentData.selectMusicians = {
+          [this.searchScope]: {
+            [this.projectId]: this.musicianIs,
+          },
+        }
+      }
+      this.ajaxLoading = false
     },
     resetMusicians() {
       this.musicians = {}
@@ -267,8 +244,7 @@ export default {
         vueSet(this.musicians, 0, { id: 0, formalDisplayName: t(appName, '** everybody **') })
       }
     },
-    getValueObject(noUndefined) {
-      // console.info('VALUE', this.value)
+    getValueObjects(noUndefined) {
       const value = Array.isArray(this.value) ? this.value : (this.value || this.value === 0 ? [this.value] : [])
       let everybody = false
       let result = value.filter((musician) => musician !== '' && typeof musician !== 'undefined').map(
@@ -277,20 +253,12 @@ export default {
           if (id === 0) {
             everybody = true
           }
-          if (typeof this.musicians[id] === 'undefined') {
-            return noUndefined ? null : { id, formalDisplayName: id }
-          }
-          return this.musicians[id]
+          return this.musicians[id] || (noUndefined ? null : { id, formalDisplayName: id })
         },
       ).filter((musician) => musician !== null && musician !== undefined)
       if (this.provideSelectAll) {
         if (everybody) {
           result = [this.musicians[0]]
-        }
-        for (const [musicianId, musician] of Object.entries(this.musicians)) {
-          if (musicianId !== 0 && musicianId !== '0') {
-            musician.$isDisabled = everybody
-          }
         }
       }
       return this.multiple ? result : (result.length > 0) ? result[0] : undefined
@@ -305,25 +273,7 @@ export default {
       // console.info('GET VALUE IDS', result)
       return result
     },
-    clearSelection() {
-      this.inputValObjects = []
-      this.emitInput() // why is this needed?
-    },
-    resetSelection() {
-      this.inputValObjects = this.initialValObjects
-      this.emitInput() // why is this needed?
-    },
-    emitInput() {
-      this.emit('input')
-      this.emitUpdate()
-    },
-    emitUpdate() {
-      this.emit('update')
-    },
-    emit(event) {
-      this.$emit(event, this.inputValObjects)
-    },
-    asyncFindMusicians(query, musicianIds) {
+    async findMusicians(query, musicianIds) {
       query = typeof query === 'string' ? encodeURI(query) : ''
       if (query !== '') {
         query = '/' + query
@@ -338,142 +288,26 @@ export default {
       if (musicianIds !== undefined && musicianIds.length > 0) {
         params.ids = musicianIds
       }
-      return axios
-        .get(generateUrl(`/apps/${appName}/musicians/search${query}`), { params })
-        .then((response) => {
-          if (response.data.length > 0) {
-            for (const musician of response.data) {
-              vueSet(this.musicians, musician.id, musician)
-            }
-            return true
+      try {
+        const response = await axios.get(generateUrl(`/apps/${appName}/musicians/search${query}`), { params })
+        if (response.data.length > 0) {
+          for (const musician of response.data) {
+            vueSet(this.musicians, musician.id, musician)
           }
-          return false
-        }).catch((error) => {
-          this.$emit('error', error)
-        })
+          return true
+        }
+      } catch (error) {
+        this.$emit('error', error)
+      }
+      return false
     },
   },
 }
 </script>
-<style lang="scss" scoped>
-.cloud-version {
-  --cloud-icon-checkmark: var(--icon-checkmark-dark);
-  &.cloud-version-major-24 {
-    --cloud-icon-checkmark: var(--icon-checkmark-000);
+<style lang="scss">
+ul[id$="-projects-select__listbox"] {
+  li.vs__dropdown-option.vs__dropdown-option--disabled {
+    cursor: default; // var(--vs-state-disabled-cursor);
   }
-}
-.select-musicians {
-  position:relative;
-  .loading {
-    position:absolute;
-    width:0;
-    height:0;
-    top:50%;
-    left:50%;
-  }
-  .input-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 400px;
-    align-items: center;
-    div.multiselect.multiselect-vue::v-deep {
-      &:not(.multiselect--active) {
-        height:35.2px;
-      }
-      flex-grow:1;
-      &:hover .multiselect__tags {
-        border-color: var(--color-primary-element);
-        outline: none;
-      }
-      &:hover + .clear-button {
-        border-color: var(--color-primary-element) !important;
-        border-left-color: transparent !important;
-        z-index: 2;
-      }
-      &.multiselect--active + .clear-button {
-        display:none;
-      }
-      + .clear-button {
-        &:disabled {
-          background-color: var(--color-background-dark) !important;
-        }
-        margin-left: -8px !important;
-        border-left-color: transparent !important;
-        border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
-        background-clip: padding-box;
-        background-color: var(--color-main-background) !important;
-        opacity: 1;
-        padding: 7px 6px;
-        height:35.2px;
-        width:35.2px;
-        margin-right:0;
-        z-index:2;
-        &:hover, &:focus {
-          border-color: var(--color-primary-element) !important;
-          border-radius: var(--border-radius) !important;
-        }
-      }
-
-      &.multiselect--single {
-        .multiselect__content-wrapper li > span {
-          &::before {
-            background-image: var(--cloud-icon-checkmark);
-            display:block;
-          }
-          &:not(.multiselect__option--selected):hover::before {
-            visibility:hidden;
-          }
-        }
-      }
-      &.multiselect--multiple {
-        .multiselect__content-wrapper li > span {
-          &:not(.multiselect__option--selected):hover::before {
-            visibility:hidden;
-          }
-        }
-      }
-
-      .multiselect__tag {
-        position: relative;
-        padding-right: 18px;
-        .multiselect__tag-icon {
-          cursor: pointer;
-          margin-left: 7px;
-          position: absolute;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          font-weight: 700;
-          font-style: initial;
-          width: 22px;
-          text-align: center;
-          line-height: 22px;
-          transition: all 0.2s ease;
-          border-radius: 5px;
-        }
-
-        .multiselect__tag-icon:after {
-          content: "×";
-          color: #266d4d;
-          font-size: 14px;
-        }
-      }
-    }
-
-    label {
-      width: 100%;
-    }
-  }
-
-  .hint {
-    color: var(--color-text-lighter);
-    font-size:80%;
-  }
-}
-</style>
-<style>
-.vue-tooltip-address-popup.vue-tooltip .tooltip-inner {
-  text-align: left !important;
 }
 </style>

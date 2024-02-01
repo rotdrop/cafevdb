@@ -29,7 +29,6 @@
                           v-model="inputValObject"
                           label="displayname"
                           :reduce="(group) => group.id"
-                          :tooltip="tooltip"
                           :options="groupsArray"
                           :options-limit="100"
                           :placeholder="label"
@@ -62,7 +61,7 @@ import axios from '@nextcloud/axios'
 import { generateOcsUrl } from '@nextcloud/router'
 import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
-import userInfoPopup from '../mixins/user-info-popup.js'
+import groupInfoPopup from '../mixins/user-info-popup.js'
 
 export default {
   name: 'SettingsSelectGroup',
@@ -71,8 +70,9 @@ export default {
     NcEllipsisedOption,
   },
   mixins: [
-    userInfoPopup,
+    groupInfoPopup,
   ],
+  inheritAttrs: false,
   props: {
     label: {
       type: String,
@@ -99,10 +99,6 @@ export default {
     required: {
       type: Boolean,
       default: false,
-    },
-    tooltip: {
-      type: [Object, String, Boolean],
-      default: undefined,
     },
     loading: {
       type: Boolean,

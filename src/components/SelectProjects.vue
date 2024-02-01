@@ -200,7 +200,6 @@ export default {
           for (const project of response.data) {
             vueSet(this.projects, project.id, project)
           }
-          this.info('GOT PROJECTS', this.projects)
           return true
         }
       } catch (error) {
@@ -221,5 +220,4 @@ ul[id$="-projects-select__listbox"] {
     font-style: italic;
   }
 }
-
 </style>
