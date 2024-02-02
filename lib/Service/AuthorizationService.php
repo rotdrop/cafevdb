@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -55,8 +55,14 @@ class AuthorizationService
   public const PERMISSION_FILESYSTEM = (1 << 2);
   public const PERMISSION_CALENDAR = (1 << 3);
   public const PERMISSION_FINANCE = (1 << 4);
-  public const PERMISSION_ALL = self::PERMISSION_FRONTEND|self::PERMISSION_ADDRESSBOOK|self::PERMISSION_FILESYSTEM|self::PERMISSION_FINANCE;
+  public const PERMISSION_ALL = self::PERMISSION_FRONTEND|self::PERMISSION_ADDRESSBOOK|self::PERMISSION_FILESYSTEM|self::PERMISSION_CALENDAR|self::PERMISSION_FINANCE;
 
+  /**
+   * @var array
+   *
+   * Mapping between permission classes and group suffixes. The mapping is
+   * 1-1, the overlap is handled by self::IMPLIED_PERMISSIONS.
+   */
   public const GROUP_SUFFIX_LIST = [
     self::PERMISSION_ALL => self::ALL_GROUP_SUFFIX,
     self::PERMISSION_FRONTEND => self::FRONTEND_GROUP_SUFFIX,
