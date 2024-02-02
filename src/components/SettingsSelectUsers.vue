@@ -71,10 +71,10 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
-import { generateOcsUrl } from '@nextcloud/router'
 import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
 import { NcListItemIcon } from '@nextcloud/vue'
+import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.js'
+import { mapWritableState } from 'pinia'
 import userInfoPopup from '../mixins/user-info-popup.js'
 
 export default {
@@ -109,15 +109,19 @@ export default {
       default: true,
     },
   },
+  setup() {
+    const store = useCloudUsersGroupsStore()
+    return { store }
+  },
   data() {
     return {
       inputValObjects: [],
-      users: {},
       ajaxLoading: false,
       ncSelect: undefined,
     }
   },
   computed: {
+    ...mapWritableState(useCloudUsersGroupsStore, ['users']),
     isLoading() {
       return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
@@ -146,7 +150,7 @@ export default {
           await this.findUsers(userId)
         }
       }
-      this.inputValObjects = this.getValueObjects()
+      this.inputValObjects = await this.getValueObjects()
       this.ajaxLoading = false
     },
   },
@@ -158,28 +162,24 @@ export default {
       console.info(this.$options.name, ...args)
     },
     getUserObject(userId) {
-      return this.users[userId] || { id: userId, displayname: userId }
+      return this.getUser(userId) || { id: userId, displayname: userId }
     },
-    getValueObjects() {
-      return this.value.filter((user) => user !== '' && typeof user !== 'undefined').map((userId) => this.getUserObject(userId))
-    },
-    async findUsers(query) {
-      query = typeof query === 'string' ? encodeURI(query) : ''
-      try {
-        const response = await axios.get(generateOcsUrl(`cloud/users/details?search=${query}&limit=10`, 2))
-        if (Object.keys(response.data.ocs.data.users).length > 0) {
-          for (const element of Object.values(response.data.ocs.data.users)) {
-            const uid = element.id
-            if (!this.users[uid] || JSON.stringify(this.users[uid]) !== JSON.stringify(element)) {
-              this.$set(this.users, uid, element)
-            }
-          }
-          return true
-        }
-      } catch (error) {
-        this.$emit('error', error)
+    async getValueObjects() {
+      const validValues = this.value.filter((userId) => userId !== '' && typeof userId !== 'undefined')
+      const result = []
+      for (const userId of validValues) {
+        result.push(await await this.getUserObject(userId))
       }
-      return false
+      return result
+    },
+    getUser(userId) {
+      return this.store.getUser(userId, this.errorHandler)
+    },
+    findUsers(query) {
+      return this.store.findUsers(query, this.errorHandler)
+    },
+    errorHandler(error) {
+      this.$emit('error', error)
     },
   },
 }

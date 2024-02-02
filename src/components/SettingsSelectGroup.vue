@@ -57,11 +57,11 @@
   </SelectWithSubmitButton>
 </template>
 <script>
-import axios from '@nextcloud/axios'
-import { generateOcsUrl } from '@nextcloud/router'
 import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import groupInfoPopup from '../mixins/user-info-popup.js'
+import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.js'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'SettingsSelectGroup',
@@ -109,15 +109,19 @@ export default {
       default: true,
     },
   },
+  setup() {
+    const store = useCloudUsersGroupsStore()
+    return { store }
+  },
   data() {
     return {
       inputValObject: null,
-      groups: {},
       ajaxLoading: false,
       ncSelect: undefined,
     }
   },
   computed: {
+    ...mapWritableState(useCloudUsersGroupsStore, ['groups']),
     isLoading() {
       return (this.loading || this.ajaxLoading) && this.loadingIndicator
     },
@@ -147,10 +151,7 @@ export default {
         return
       }
       this.ajaxLoading = true
-      if (!this.groups[newValue]) {
-        await this.findGroups(newValue)
-      }
-      this.inputValObject = this.getGroupObject(newValue)
+      this.inputValObject = await this.getGroupObject(newValue)
       this.ajaxLoading = false
     },
   },
@@ -165,37 +166,16 @@ export default {
       return this.$refs?.select?.$refs?.ncSelect
     },
     getGroupObject(gid) {
-      return this.groups[gid] || { id: gid, displayname: gid }
+      return this.getGroup(gid) || { id: gid, displayname: gid }
     },
-    async findGroups(query) {
-      query = typeof query === 'string' ? encodeURI(query) : ''
-      try {
-        const limit = 10
-        let count = 0
-        let offset = 0
-        while (count < 10) {
-          const response = await axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=${limit}&offset=${offset}`, 2))
-          for (const element of response.data.ocs.data.groups) {
-            if (!element.id) {
-              // if we were not a group admin, an empty entry is returned in order to enable paging
-              continue
-            }
-            ++count
-            const gid = element.id
-            if (!this.groups[gid] || JSON.stringify(this.groups[gid]) !== JSON.stringify(element)) {
-              this.$set(this.groups, gid, element)
-            }
-          }
-          if (Object.keys(response.data.ocs.data.groups).length < limit) {
-            break
-          }
-          offset += limit
-        }
-        return true
-      } catch (error) {
-        this.$emit('error', error)
-      }
-      return false
+    getGroup(groupId) {
+      return this.store.getGroup(groupId, this.errorHandler)
+    },
+    findGroups(query) {
+      return this.store.findGroups(query, this.errorHandler)
+    },
+    errorHandler(error) {
+      this.$emit('error', error)
     },
   },
 }
