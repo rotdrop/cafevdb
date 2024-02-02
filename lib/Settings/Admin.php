@@ -32,6 +32,7 @@ use OCP\App\IAppManager;
 use OCP\AppFramework\Services\IInitialState;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\FontService;
@@ -61,6 +62,8 @@ class Admin implements IDelegatedSettings
   const IS_ADMIN = 'isAdmin';
   const IS_SUB_ADMIN = 'isSubAdmin';
   const USER_AND_GROUP_BACKENDS = 'userAndGroupBackends';
+  const AUTHORIZATION_GROUP_SUFFIXES = AuthorizationService::GROUP_SUFFIX_LIST;
+  const AUTHORIZATION_GROUP_SUFFIXES_KEY = 'authorizationGroupSuffixes';
 
   const DELEGATABLE = 'delegatable';
   const ADMIN_ONLY = 'admin_only';
@@ -140,6 +143,7 @@ class Admin implements IDelegatedSettings
       self::IS_ADMIN => $isAdmin,
       self::IS_SUB_ADMIN => $isSubAdmin,
       self::USER_AND_GROUP_BACKENDS => $userAndGroupBackends,
+      self::AUTHORIZATION_GROUP_SUFFIXES_KEY => self::AUTHORIZATION_GROUP_SUFFIXES,
     ];
 
     $this->initialState->provideInitialState('adminConfig', $configData);

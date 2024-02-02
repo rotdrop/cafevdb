@@ -22,8 +22,8 @@
  -->
 <template>
   <div :class="['templateroot', ...cloudVersionClasses]">
-    <SettingsSection :class="['major']"
-                     :name="t(appName, 'Camerata DB')"
+    <NcSettingsSection :class="['major']"
+                       :name="t(appName, 'Camerata DB')"
     >
       <div v-if="config.isAdmin">
         <!-- eslint-disable-next-line vue/no-v-html -->
@@ -45,12 +45,12 @@
                                 @error="showErrorToast"
         >
           <template #actions>
-            <ActionButton v-tooltip="hints['settings:admin:user-backend:move-users']"
-                          icon="icon-play"
-                          @click="synchronizeUserBackends"
+            <NcActionButton v-tooltip="hints['settings:admin:user-backend:move-users']"
+                            icon="icon-play"
+                            @click="synchronizeUserBackends"
             >
               {{ t(appName, 'Sychronize User Backends') }}
-            </ActionButton>
+            </NcActionButton>
           </template>(
         </SelectWithSubmitButton>
       </div>
@@ -75,28 +75,65 @@
                              @error="showErrorToast"
         />
       </div>
-      <!-- Note: v-model does not work here -->
+      <div v-if="settings.orchestraUserGroup && (config.isSubAdmin || config.isAdmin)">
+        <ul class="orchestra-groups">
+          <NcListItem v-for="(group, gid) in orchestraGroups"
+                      :key="gid"
+                      :name="group.displayname + (gid !== group.displayname ? ' (' + gid + ')' : '')"
+                      :bold="true"
+                      :force-display-actions="true"
+                      :details="group.backends.join(', ')"
+                      :counter-number="group.usercount"
+                      counter-type="highlighted"
+          >
+            <template #icon>
+              <GroupIcon :size="24" />
+            </template>
+            <template #subname>
+              {{ group.users.join(', ') }}
+            </template>
+            <template #indicator>
+              <CheckboxBlankCircle v-if="group.status === 'inaccessible'" :size="16" fill-color="red" />
+              <CheckboxBlankCircle v-else-if="group.disabled" :size="16" fill-color="yellow" />
+              <CheckboxBlankCircle v-else-if="group.backends.indexOf(settings.userAndGroupBackend) == -1" :size="16" fill-color="purple" />
+              <CheckboxBlankCircle v-else :size="16" fill-color="green" />
+            </template>
+            <template #actions>
+              <NcActionButton>
+                Button one
+              </NcActionButton>
+              <NcActionButton>
+                Button two
+              </NcActionButton>
+              <NcActionButton>
+                Button three
+              </NcActionButton>
+            </template>
+          </NcListItem>
+        </ul>
+      </div>
       <label for="wiki-name-space">
         {{ t(appName, 'Wiki Name-Space') }}
       </label>
-      <TextField v-if="config.isSubAdmin || config.isAdmin"
-                 id="wiki-name-space"
-                 :value.sync="settings.wikiNameSpace"
-                 type="text"
-                 :label="t(appName, 'Wiki Name-Space')"
-                 :show-trailing-button="true"
-                 trailing-button-icon="arrowRight"
-                 @trailing-button-click="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
-                 @update="info(settings.wikiNameSpace, ...arguments)"
-                 @update:value="info(settings.wikiNameSpace, ...arguments)"
+      <!-- Note: v-model does not work here -->
+      <NcTextField v-if="config.isSubAdmin || config.isAdmin"
+                   id="wiki-name-space"
+                   :value.sync="settings.wikiNameSpace"
+                   type="text"
+                   :label="t(appName, 'Wiki Name-Space')"
+                   :show-trailing-button="true"
+                   trailing-button-icon="arrowRight"
+                   @trailing-button-click="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
+                   @update="info(settings.wikiNameSpace, ...arguments)"
+                   @update:value="info(settings.wikiNameSpace, ...arguments)"
       />
       <!-- @trailing-button-click="saveSetting('wikiNameSpace', ...arguments)" -->
       <p class="hint">
         {{ hints['settings:admin:wiki-name-space'] }}
       </p>
-    </SettingsSection>
-    <SettingsSection v-if="config.isSubAdmin"
-                     :name="t(appName, 'Configure User Backend')"
+    </NcSettingsSection>
+    <NcSettingsSection v-if="config.isSubAdmin"
+                       :name="t(appName, 'Configure User Backend')"
     >
       <div>
         <button type="button"
@@ -111,10 +148,10 @@
           {{ hints['settings:admin:cloud-user-backend-conf'] }}
         </p>
       </div>
-    </SettingsSection>
-    <SettingsSection v-if="config.isSubAdmin"
-                     :class="['sub-admin', { 'icon-loading': loading.recryption }]"
-                     :name="t(appName, 'Recryption Requests')"
+    </NcSettingsSection>
+    <NcSettingsSection v-if="config.isSubAdmin"
+                       :class="['sub-admin', { 'icon-loading': loading.recryption }]"
+                       :name="t(appName, 'Recryption Requests')"
     >
       <div v-for="(request, userId) in recryption.requests" :key="request.id" class="recryption-request-container">
         <input :id="['mark',userId].join('-')"
@@ -124,14 +161,14 @@
                @change="markRecryptionRequest(userId, ...arguments)"
         >
         <label :for="['mark', userId].join('-')" />
-        <Actions>
-          <ActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">
+        <NcActions>
+          <NcActionButton icon="icon-confirm" @click="handleRecryptionRequest(userId, ...arguments)">
             {{ t(appName, 'recrypt') }}
-          </ActionButton>
-          <ActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">
+          </NcActionButton>
+          <NcActionButton icon="icon-delete" @click="deleteRecryptionRequest(userId, ...arguments)">
             {{ t(appName, 'reject') }}
-          </ActionButton>
-        </Actions>
+          </NcActionButton>
+        </NcActions>
         <div :class="['recryption-request-data', { marked: request.marked }, 'flex-container', 'flex-justify-left', 'flex-align-center']">
           <span class="first visible display-name" :title="userId">{{ request.displayName }}</span>
           <span class="following visible time-stamp">{{ formatDate(request.timeStamp, 'LLL') }}</span>
@@ -148,22 +185,22 @@
         >
         <label class="bulk-operation-mark" for="mark-all">{{ t(appName, 'mark/unmark all.') }}</label>
         <span class="bulk-operation-title">{{ t(appName, 'With the marked requests perform the following action:') }}</span>
-        <Actions>
-          <ActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">
+        <NcActions>
+          <NcActionButton icon="icon-confirm" @click="handleMarkedRecrytpionRequests">
             {{ t(appName, 'recrypt') }}
-          </ActionButton>
-          <ActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">
+          </NcActionButton>
+          <NcActionButton icon="icon-delete" @click="deleteMarkedRecryptionRequests">
             {{ t(appName, 'reject') }}
-          </ActionButton>
-        </Actions>
+          </NcActionButton>
+        </NcActions>
       </div>
       <div v-else>
         <span class="hint">{{ t(appName, 'No recryption requests are pending.') }}</span>
       </div>
-    </SettingsSection>
-    <SettingsSection v-if="config.isSubAdmin"
-                     class="sub-admin"
-                     :name="t(appName, 'Access Control')"
+    </NcSettingsSection>
+    <NcSettingsSection v-if="config.isSubAdmin"
+                       class="sub-admin"
+                       :name="t(appName, 'Access Control')"
     >
       <SelectMusicians v-model="access.musicians"
                        :tooltip="access.musicians.length ? false : hints['settings:admin:access-control:musicians']"
@@ -216,26 +253,26 @@
           <span class="flex-spacer" />
           <span class="access-action-counter">{{ accessActionCounter }}</span>
         </div>
-        <ProgressBar :value="accessActionPercentage"
-                     :error="accessActionError"
-                     size="medium"
+        <NcProgressBar :value="accessActionPercentage"
+                       :error="accessActionError"
+                       size="medium"
         />
       </span>
       <span v-else class="flex-container flex-align-center flex-justify-start">
         <span class="bulk-operation-title">{{ t(appName, 'With the selected musicians perform the following action:') }}</span>
-        <Actions>
-          <ActionButton icon="icon-disabled-user" @click="handleAccessAction('deny')">
+        <NcActions>
+          <NcActionButton icon="icon-disabled-user" @click="handleAccessAction('deny')">
             {{ t(appName, 'deny access') }}
-          </ActionButton>
-          <ActionButton icon="icon-confirm" @click="handleAccessAction('grant')">
+          </NcActionButton>
+          <NcActionButton icon="icon-confirm" @click="handleAccessAction('grant')">
             {{ t(appName, 'grant access') }}
-          </ActionButton>
-        </Actions>
+          </NcActionButton>
+        </NcActions>
       </span>
-    </SettingsSection>
-    <SettingsSection v-if="config.isSubAdmin"
-                     :class="['sub-admin', 'fonts-container']"
-                     :name="t(appName, 'Configure Office Fonts for Office Exports')"
+    </NcSettingsSection>
+    <NcSettingsSection v-if="config.isSubAdmin"
+                       :class="['sub-admin', 'fonts-container']"
+                       :name="t(appName, 'Configure Office Fonts for Office Exports')"
     >
       <div>
         <span class="file-name-label">{{ t(appName, 'Font Data Folder') }}</span>
@@ -263,36 +300,41 @@
           </label>
         </template>
         <template #actions>
-          <ActionButton icon="icon-add"
-                        @click="updateFontData"
+          <NcActionButton icon="icon-add"
+                          @click="updateFontData"
           >
             {{ t(appName, 'Update Font Data') }}
-          </ActionButton>
-          <ActionButton icon="icon-play"
-                        @click="rescanFontData"
+          </NcActionButton>
+          <NcActionButton icon="icon-play"
+                          @click="rescanFontData"
           >
             {{ t(appName, 'Rescan Font Data') }}
-          </ActionButton>
-          <ActionButton icon="icon-delete"
-                        @click="purgeFontData"
+          </NcActionButton>
+          <NcActionButton icon="icon-delete"
+                          @click="purgeFontData"
           >
             {{ t(appName, 'Purge Font Data') }}
-          </ActionButton>
+          </NcActionButton>
         </template>
       </SelectWithSubmitButton>
-    </SettingsSection>
+    </NcSettingsSection>
   </div>
 </template>
 <script>
 import { set as vueSet, del as vueDelete, nextTick as vueNextTick } from 'vue'
 
 import {
-  NcActions as Actions,
-  NcActionButton as ActionButton,
-  NcProgressBar as ProgressBar,
-  NcSettingsSection as SettingsSection,
-  NcTextField as TextField,
+  NcActions,
+  NcActionButton,
+  NcProgressBar,
+  NcSettingsSection,
+  NcTextField,
+  NcListItem,
 } from '@nextcloud/vue'
+
+import CheckboxBlankCircle from 'vue-material-design-icons/CheckboxBlankCircle.vue'
+import GroupIcon from 'vue-material-design-icons/AccountGroup.vue'
+
 import axios from '@nextcloud/axios'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
@@ -311,26 +353,35 @@ import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
 import tooltip from '../mixins/tooltips.js'
 import formatDate from '../mixins/formatDate.js'
 
+import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.js'
+
 const initialState = loadState(appName, 'adminConfig')
 
 export default {
   name: 'AdminSettings',
   components: {
-    Actions,
-    ActionButton,
-    ProgressBar,
+    NcActions,
+    NcActionButton,
+    NcProgressBar,
     SelectMusicians,
     SelectProjects,
     SelectWithSubmitButton,
-    SettingsSection,
+    NcSettingsSection,
     SettingsSelectGroup,
     SettingsSelectUsers,
-    TextField,
+    NcTextField,
+    NcListItem,
+    CheckboxBlankCircle,
+    GroupIcon,
   },
   mixins: [
     tooltip,
     formatDate,
   ],
+  setup() {
+    const store = useCloudUsersGroupsStore()
+    return { store }
+  },
   data() {
     return {
       cloudVersionClasses,
@@ -384,9 +435,37 @@ export default {
       },
     }
   },
+  asyncComputed: {
+    async orchestraGroups() {
+      if (!this.orchestraUserGroup || this.orchestraUserGroup === '') {
+        return []
+      }
+      const gids = Object.values(this.config.authorizationGroupSuffixes).map((suffix) => this.orchestraUserGroup + suffix).sort()
+      const groups = {}
+      for (const id of gids) {
+        const group = await this.getGroup(id) || {}
+        if (group.id) {
+          group.l10nStatus = t(appName, group.status = 'accessible')
+          if (!group.users) {
+            await group.getUsers(this.errorHandler)
+          }
+        } else {
+          group.id =
+            group.displayname = id
+          group.l10nStatus = t(appName, group.status = 'inaccessible')
+          group.users = []
+        }
+        groups[id] = group
+      }
+      return groups
+    },
+  },
   computed: {
     humanOfficeFontsFolder() {
       return '.../' + (this.config.officeFontsFolder + '/').replace(/\/+/, '/').split('/').splice(-4).join('/')
+    },
+    orchestraUserGroup() {
+      return this.settings.orchestraUserGroup
     },
     groupAdminsDisabled() {
       return this.settings.orchestraUserGroup === '' || !this.config.isAdmin
@@ -910,6 +989,12 @@ export default {
           this.info('DISABLE FONT', fontName, this.config.officeFonts[fontName])
         }
       }
+    },
+    getGroup(groupId) {
+      return this.store.getGroup(groupId, this.errorHandler)
+    },
+    errorHandler(error) {
+      this.$emit('error', error)
     },
   },
 }
