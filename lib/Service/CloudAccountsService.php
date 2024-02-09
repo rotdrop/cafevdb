@@ -355,22 +355,46 @@ class CloudAccountsService
    *
    * @param IGroup $group
    *
+   * @param array $requiredBackends Array with the names of the required
+   * backends. If left empty then the database backend and the configured
+   * preferred orchestra user backend is chosen.
+   *
    * @return void
    */
-  public function promoteGroupMembership(IUser $user, IGroup $group)
+  public function promoteGroupMembership(IUser $user, IGroup $group, array $requiredBackends = [])
   {
+    if (empty($requiredBackends)) {
+      $requiredBackends = [ 'Database' ];
+      $orchestraUserAndGroupBackend = $this->cloudConfig->getAppValue(
+        $this->appName,
+        ConfigService::USER_AND_GROUP_BACKEND_KEY,
+        null,
+      );
+      if ($orchestraUserAndGroupBackend !== null) {
+        $requiredBackends[] = $orchestraUserAndGroupBackend;
+      }
+    }
+
     $groupId = $group->getGID();
     foreach ($this->groupManager->getBackends() as $backend) {
-      if ($backend->implementsActions(\OC\Group\Backend::ADD_TO_GROUP)) {
-        $userId = $user->getUID();
-        try {
-          if (!$backend->inGroup($userId, $groupId)) {
-            $backend->addToGroup($userId, $groupId);
-          }
-        } catch (Throwable $t) {
-          // Can happen if the user does not exist in the backend
-          $this->logException($t, 'Backend ' . get_class($backend) . ' cannot add user ' . $user->getUID());
+      if (!$backend->implementsActions(\OC\Group\Backend::ADD_TO_GROUP)) {
+        continue;
+      }
+      if (!($backend instanceof INamedBackend)) {
+        continue;
+      }
+      $backendName = $backend->getBackendName();
+      if (!in_array($backendName, $requiredBackends)) {
+        continue;
+      }
+      $userId = $user->getUID();
+      try {
+        if (!$backend->inGroup($userId, $groupId)) {
+          $backend->addToGroup($userId, $groupId);
         }
+      } catch (Throwable $t) {
+        // Can happen if the user does not exist in the backend
+        $this->logException($t, 'Backend ' . get_class($backend) . ' cannot add user ' . $user->getUID());
       }
     }
   }
@@ -387,7 +411,8 @@ class CloudAccountsService
    * @param IGroup $group
    *
    * @param array $requiredBackends Array with the names of the required
-   * backends.
+   * backends. If left empty then the database backend and the configured
+   * preferred orchestra user backend is chosen.
    *
    * @return array<string, bool> Success statuses for the required
    * backends. \true means the group is present in the respective backend.
@@ -398,11 +423,15 @@ class CloudAccountsService
   public function ensureGroupBackends(IGroup $group, array $requiredBackends = []):array
   {
     if (empty($requiredBackends)) {
+      $requiredBackends = [ 'Database' ];
       $orchestraUserAndGroupBackend = $this->cloudConfig->getAppValue(
         $this->appName,
-        ConfigService::USER_AND_GROUP_BACKEND_KEY
+        ConfigService::USER_AND_GROUP_BACKEND_KEY,
+        null,
       );
-      $requiredBackends = [ $orchestraUserAndGroupBackend, 'Database' ];
+      if ($orchestraUserAndGroupBackend !== null) {
+        $requiredBackends[] = $orchestraUserAndGroupBackend;
+      }
     }
 
     $status = array_fill_keys($requiredBackends, true); // set to \false on failure below
