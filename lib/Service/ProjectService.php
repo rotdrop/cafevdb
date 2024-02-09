@@ -2086,6 +2086,8 @@ Whatever.',
       // The musician exists and is not already registered, so add it.
       $participant = new Entities\ProjectParticipant(musician: $musician, project: $project);
       $this->persist($participant);
+      $musician->getProjectParticipation()->set($project->getId(), $participant);
+      $project->getParticipants()->set($musician->getId(), $participant);
 
       // Try to make a likely default choice for the project instrument.
       $instrumentationNumbers = $project->getInstrumentationNumbers();
