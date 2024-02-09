@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -85,52 +85,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       }
       $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     });
-  }
-
-  /**
-   * Insert a "cache" entry.
-   *
-   * @param string $name Path-name.
-   *
-   * @param Entities\DatabaseStorageDirEntry $node File-system node.
-   *
-   * @return void
-   */
-  private function setFileNameCache(string $name, Entities\DatabaseStorageDirEntry $node):void
-  {
-    $name = $this->buildPath($name);
-    if ($name == self::PATH_SEPARATOR) {
-      $dirName = '';
-      $baseName = '.';
-    } else {
-      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
-    }
-
-    $this->files[$dirName][$baseName] = $node;
-  }
-
-  /**
-   * Remove a "cache" entry.
-   *
-   * @param string $name Path-name.
-   *
-   * @return void
-   */
-  private function unsetFileNameCache(string $name):void
-  {
-    $name = $this->buildPath($name);
-    if ($name == self::PATH_SEPARATOR) {
-      $dirName = '';
-      $baseName = '.';
-    } else {
-      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
-    }
-
-    if (isset($this->files[$dirName][$baseName])) {
-      unset($this->files[$dirName][$baseName]);
-    } elseif (isset($this->files[$dirName][$baseName . self::PATH_SEPARATOR ])) {
-      unset($this->files[$dirName][$baseName . self::PATH_SEPARATOR]);
-    }
   }
 
   /**
@@ -362,6 +316,11 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       // $this->logInfo('NO DIR ENTRY FOR ' . $path1);
       return false;
     }
+
+    if ($dirEntry instanceof InMemoryFileNode) {
+      $dirEntry = $this->persistInMemoryFileNode($dirEntry);
+    }
+
     if ($dirName1 != $dirName2) {
       $parent2 = $this->fileFromFileName($dirName2);
       if (empty($parent2)) {
@@ -433,11 +392,15 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
         $this->persist($file);
         $this->flush();
         $dirEntry = $parent->addDocument($file, $baseName);
+        $this->persist($dirEntry);
         if ($mtime !== null) {
           $dirEntry->setCreated($mtime);
         }
       }
-      if ($mtime !== false) {
+      if ($dirEntry instanceof InMemoryFileNode) {
+        $dirEntry = $this->persistInMemoryFileNode($dirEntry);
+      }
+      if ($mtime !== null) {
         $dirEntry->setUpdated($mtime);
         $dirEntry->getFile()->setUpdated($mtime);
       }
@@ -494,10 +457,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
 
     $this->entityManager->beginTransaction();
     try {
-      $dirEntry->setParent(null);
-      $dirEntry->setFile(null);
-      $this->entityManager->remove($dirEntry);
-
       // break the link to the supporting documents of payments
       // @todo Maybe better use a find-by instead of bloating the entities with too many associations.
 
@@ -505,7 +464,7 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       $repository = $this->entityManager->getRepository(Entities\CompositePayment::class);
       $compositePayments = $repository->findBy([
         'balanceDocumentsFolder' => $parent,
-        'supportingDocument' => $file,
+        'supportingDocument' => $dirEntry,
       ]);
       /** @var Entities\CompositePayment $compositePayment */
       foreach ($compositePayments as $compositePayment) {
@@ -520,10 +479,14 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       /** @var Entities\ProjectPayment $projectPayment */
       foreach ($projectPayments as $projectPayment) {
         $supportingDocument = $projectPayment->getReceivable() ? $projectPayment->getReceivable()->getSupportingDocument() : null;
-        if ($supportingDocument == $file) {
+        if ($supportingDocument == $dirEntry) {
           $projectPayment->setBalanceDocumentsFolder(null);
         }
       }
+
+      $dirEntry->setParent(null);
+      $dirEntry->setFile(null);
+      $this->entityManager->remove($dirEntry);
 
       $this->flush();
 

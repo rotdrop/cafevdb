@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,12 +38,15 @@ use Icewind\Streams\CallbackWrapper;
 use Icewind\Streams\CountWrapper;
 use Icewind\Streams\IteratorDirectory;
 
+use OCA\Text\Service\WorkspaceService;
 use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Exceptions\Exception;
+use OCA\CAFEVDB\Constants;
 
 // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 
@@ -66,7 +69,7 @@ class Storage extends AbstractStorage
    */
   const STORAGE_ID_TAG = '::database-storage';
 
-  const PATH_SEPARATOR = '/';
+  const PATH_SEPARATOR = Constants::PATH_SEP;
 
   /** @var \OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository */
   protected $filesRepository;
@@ -80,6 +83,9 @@ class Storage extends AbstractStorage
   /** @var null|Entities\DatabaseStorageFolder */
   protected $rootFolder = null;
 
+  /** @var ReadMeFactory */
+  protected ReadMeFactory $readMeFactory;
+
   /** {@inheritdoc} */
   public function __construct($params)
   {
@@ -88,6 +94,7 @@ class Storage extends AbstractStorage
     $this->configService = $params['configService'];
     $this->l = $this->l10n();
     $this->entityManager = $this->di(EntityManager::class);
+    $this->readMeFactory = $this->di(ReadMeFactory::class);
 
     if (!$this->entityManager->connected()) {
       throw new Exception('not connected');
@@ -127,6 +134,7 @@ class Storage extends AbstractStorage
       ->setStorageId($shortId);
     $this->persist($rootFolder);
     $this->persist($rootStorage);
+
     $this->flush();
 
     $this->storageEntity = $rootStorage;
@@ -157,9 +165,14 @@ class Storage extends AbstractStorage
     /** @var Entities\DatabaseStorageFolder $folderDirEntry */
     $folderDirEntry = $this->rootFolder;
     if (!$rootIsMandatory && empty($dirName) && empty($folderDirEntry)) {
-      $this->files[$dirName] = [ '.' => $folderDirEntry ?? new DirectoryNode('.', new DateTimeImmutable('@1')) ];
+      $rootFolder = $folderDirEntry ?? new EmptyRootNode('.', new DateTimeImmutable('@1'), $this->getShortId());
+      $this->files[$dirName] = [ '.' => $rootFolder ];
       if (empty($folderDirEntry)) {
         $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+        $readMeNode = $this->readMeFactory->generateReadMe($rootFolder, $dirName);
+        if ($readMeNode !== null) {
+          $this->files[$dirName][$readMeNode->getName()] = $readMeNode;
+        }
         return $this->files[$dirName];
       }
     } elseif (empty($folderDirEntry)) {
@@ -186,6 +199,9 @@ class Storage extends AbstractStorage
 
     $dirEntries = $folderDirEntry->getDirectoryEntries();
 
+    $hasReadme = false;
+    $readMe = null;
+
     /** @var Entities\DatabaseStorageDirEntry $dirEntry */
     foreach ($dirEntries as $dirEntry) {
 
@@ -201,12 +217,125 @@ class Storage extends AbstractStorage
       } else {
         /** @var Entities\DatabaseStorageFile $dirEntry */
         $this->files[$dirName][$baseName] = $dirEntry;
+        $hasReadme = $hasReadme || $this->readMeFactory->isReadMe($baseName);
+        if ($this->readMeFactory->isReadMe($baseName)) {
+          $readMe = $baseName;
+        }
+      }
+    }
+    if (!$hasReadme) {
+      $readMeNode = $this->readMeFactory->generateReadMe($folderDirEntry, $dirName);
+      if ($readMeNode !== null) {
+        $this->files[$dirName][$readMeNode->getName()] = $readMeNode;
       }
     }
 
     $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     return $this->files[$dirName];
+  }
+
+  /**
+   * Persist an InMemoryFileNode to the database, kind of copy-on-write operation.
+   *
+   * @param InMemoryFileNode $memoryNode
+   *
+   * @param null|Entities\Musician $owner
+   *
+   * @return Entities\DatabaseStorageFile
+   */
+  protected function persistInMemoryFileNode(InMemoryFileNode $memoryNode, ?Entities\Musician $owner = null):Entities\DatabaseStorageFile
+  {
+    $this->entityManager->beginTransaction();
+    try {
+      if ($memoryNode->getParent() instanceof EmptyRootNode) {
+        $memoryNode->setParent($this->getRootFolder(create: true));
+      }
+
+      $file = new Entities\EncryptedFile(
+        $memoryNode->getName(),
+        $memoryNode->getFileData()->getData(),
+        $memoryNode->getMimeType(),
+        owner: $owner,
+      );
+      $file->setCreated($memoryNode->getUpdated());
+      $file->setUpdated($memoryNode->getUpdated());
+      $this->persist($file);
+      $this->flush();
+      $fileNode = $memoryNode->getParent()->addDocument($file, $memoryNode->getName());
+
+      if ($fileNode === null) {
+        throw new Exceptions\DatabaseStorageException(
+          $this->l->t('Unable to convert the in-memory file "%s".', $memoryNode->getParent()->getPathName()),
+        );
+      }
+
+      $this->flush();
+
+      $this->entityManager->commit();
+
+      return $fileNode;
+    } catch (Throwable $t) {
+      if ($this->entityManager->isTransactionActive()) {
+        $this->entityManager->rollback();
+      }
+      if ($t instanceof Exceptions\DatabaseStorageException) {
+        throw $t;
+      } else {
+        throw new Exceptions\DatabaseStorageException(
+          $this->l->t('Unable to convert the in-memory file "%s".', $memoryNode->getParent()->getPathName()),
+          0,
+          $t,
+        );
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Remove a "cache" entry.
+   *
+   * @param string $name Path-name.
+   *
+   * @return void
+   */
+  protected function unsetFileNameCache(string $name):void
+  {
+    $name = $this->buildPath($name);
+    if ($name == self::PATH_SEPARATOR) {
+      $dirName = '';
+      $baseName = '.';
+    } else {
+      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    }
+
+    if (isset($this->files[$dirName][$baseName])) {
+      unset($this->files[$dirName][$baseName]);
+    } elseif (isset($this->files[$dirName][$baseName . self::PATH_SEPARATOR ])) {
+      unset($this->files[$dirName][$baseName . self::PATH_SEPARATOR]);
+    }
+  }
+
+  /**
+   * Insert a "cache" entry.
+   *
+   * @param string $name Path-name.
+   *
+   * @param Entities\DatabaseStorageDirEntry $node File-system node.
+   *
+   * @return void
+   */
+  protected function setFileNameCache(string $name, Entities\DatabaseStorageDirEntry $node):void
+  {
+    $name = $this->buildPath($name);
+    if ($name == self::PATH_SEPARATOR) {
+      $dirName = '';
+      $baseName = '.';
+    } else {
+      list('basename' => $baseName, 'dirname' => $dirName) = self::pathInfo($name);
+    }
+
+    $this->files[$dirName][$baseName] = $node;
   }
 
   /**
@@ -217,7 +346,7 @@ class Storage extends AbstractStorage
   protected function getDirectoryModificationTime(string $dirName):DateTimeInterface
   {
     $directory = $this->fileFromFileName($dirName);
-    if ($directory instanceof DirectoryNode) {
+    if ($directory instanceof EmptyRootNode) {
       $date = $directory->minimalModificationTime ?? (new DateTimeImmutable('@1'));
     } elseif ($directory instanceof Entities\DatabaseStorageFolder) {
       $date = $directory->getUpdated();
@@ -319,7 +448,7 @@ class Storage extends AbstractStorage
    *
    * @param string $name The path-name to work on.
    *
-   * @return null|Entities\DatabaseStorageDirEntry|DirectoryNode
+   * @return null|Entities\DatabaseStorageDirEntry|EmptyRootNode
    */
   public function fileFromFileName(string $name)
   {
@@ -503,7 +632,7 @@ class Storage extends AbstractStorage
     }
     $dirEntry = $this->fileFromFileName($path);
 
-    if ($dirEntry instanceof DirectoryNode
+    if ($dirEntry instanceof EmptyRootNode
         || $dirEntry instanceof Entities\DatabaseStorageFolder
     ) {
       return true;
@@ -600,6 +729,10 @@ class Storage extends AbstractStorage
 
     $this->entityManager->beginTransaction();
     try {
+      if ($file instanceof InMemoryFileNode) {
+        // this needs first to be replaced by a real file-node
+        $file = $this->persistInMemoryFileNode($file);
+      }
       $file->getFileData()->setData($fileData);
       /** @var IMimeTypeDetector $mimeTypeDetector */
       $mimeTypeDetector = $this->di(IMimeTypeDetector::class);
@@ -628,7 +761,12 @@ class Storage extends AbstractStorage
     if (empty($file)) {
       return false;
     }
-    $stream = fopen('php://temp', 'w+');
+    // using data:// would also result in copying things around as something
+    // would have to be prepended to the file-data ... so we can as well just
+    // use fwrite(). Unfortunately there is not such a nice thing like
+    // memory-backed streams as there is in C++ -- where you just can use an
+    // existing buffer verbatim without the need to copy it around.
+    $stream = fopen('php://memory', 'w+');
     $result = fwrite($stream, $file->getFileData()->getData());
     rewind($stream);
     if ($result === false) {
