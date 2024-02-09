@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -177,6 +177,35 @@ class MountProvider implements IMountProvider
         [
           'filesystem_check_changes' => 1,
           'readonly' => true,
+          'previews' => true,
+          'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
+        ]
+      ) extends MountPoint
+      {
+        /** {@inheritdoc} */
+        public function getMountType()
+        {
+          return MountProvider::MOUNT_TYPE;
+        }
+      };
+
+      // allow only treasurers or similar folk
+
+      $storage = $this->storageFactory->getTaxExemptionNoticesStorage();
+      $bulkLoadStorageIds[] = $storage->getId();
+
+      $mounts[] = new class(
+        storage: $storage,
+        mountpoint: '/' . $userId
+        . '/files'
+        . $this->getTaxExemptionNoticesPath(),
+        mountId: null,
+        loader: $loader,
+        mountProvider: MountProvider::class,
+        mountOptions: [
+          'filesystem_check_changes' => 1,
+          'readonly' => false,
           'previews' => true,
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,

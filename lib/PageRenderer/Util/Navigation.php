@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -648,6 +648,7 @@ and even edit the public web-pages for the project and other things.");
                  'projectId' => $projectId];
         break;
 
+      case 'project-participants':
       case 'detailed':
         $value = $this->l->t("Participants");
         $title = $this->l->t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
@@ -724,6 +725,17 @@ to and from the registered bank accounts.');
         $title = $this->l->t("Display a table with the insurance brokers.");
         $controlclass = 'finance';
         $post = ['template' => 'insurance-brokers'];
+        break;
+
+      case 'tax-exemption-notices':
+        $value = $this->l->t("Notices of Exemption");
+        $title = $this->l->t("Display a table an overview table with exemption notices received by tax offices.");
+        $controlclass = 'finance';
+        $post = [
+          'template' => 'tax-exemption-notices',
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
     }
 

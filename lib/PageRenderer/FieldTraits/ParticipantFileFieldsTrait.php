@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -165,7 +165,7 @@ trait ParticipantFileFieldsTrait
    *
    * @param null|string $fileBase
    *
-   * @param Entities\Musician $musician
+   * @param null|Entities\Musician $musician
    *
    * @param null|Entities\Project $project
    *
@@ -179,7 +179,7 @@ trait ParticipantFileFieldsTrait
     string $optionKey,
     ?string $subDir,
     ?string $fileBase,
-    Entities\Musician $musician,
+    ?Entities\Musician $musician,
     ?Entities\Project $project = null,
     bool $overrideFileName = false,
   ):string {
@@ -261,7 +261,7 @@ trait ParticipantFileFieldsTrait
         'fieldId' => $fieldId,
         'optionKey' => $optionKey,
         'optionValue' => $optionValue,
-        'musicianId' => $musician->getId(),
+        'musicianId' => empty($musician) ? 0 : $musician->getId(),
         'projectId' => empty($project) ? 0 : $project->getId(),
         'fileBase' => $fileBase,
         'fileName' => $fileName,

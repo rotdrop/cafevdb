@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,10 +62,10 @@ import {
   tableSelector as pmeTableSelector,
   selector as pmeSelector,
   container as pmeContainer,
+  formEditSuffixes as pmeFormEditSuffixes,
 } from './pme-selectors.js';
 import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
-import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
 import mergician from 'mergician';
 // import 'selectize/dist/css/selectize.css';
@@ -88,6 +88,22 @@ const pmeDefaultSelector = PMEState.defaultSelector;
 const pmePrefix = PMEState.prefix;
 const pmeOpenDialogs = PMEState.openDialogs;
 const pmePageRenderer = PMEState.pageRenderer;
+
+const pmeHasEditableData = function(form) {
+  let $form = $(form);
+  if (!$form.is(pmeFormSelector)) {
+    $form = $form.find(pmeFormSelector + ':first');
+  }
+  if ($form.length === 0) {
+    return false;
+  }
+  for (const cssClass of pmeToken(pmeFormEditSuffixes)) {
+    if ($form.hasClass(cssClass)) {
+      return true;
+    }
+  }
+  return false;
+};
 
 /**
  * Generate the jQuery object corresponding to the inner container
@@ -2103,6 +2119,7 @@ export {
   pmeHalt as halt,
   pmeIsHalted as halted,
   pmePageRenderer as pageRenderer,
+  pmeHasEditableData as hasEditableData,
 };
 
 // Local Variables: ***

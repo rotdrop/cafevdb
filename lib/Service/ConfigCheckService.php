@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -808,7 +808,7 @@ class ConfigCheckService
 
     foreach ($projectFolder as $pathComponent) {
       $path .= '/'.$pathComponent;
-      //trigger_error("Path: ".$path, E_USER_NOTICE);
+      // $this->logInfo('Inspect ' . $path);
       try {
         $node = $rootView->get($path);
         if ($node->getType() != FileInfo::TYPE_FOLDER
@@ -830,7 +830,7 @@ class ConfigCheckService
         try {
           $node = $rootView->newFolder($path);
         } catch (Throwable $e) {
-          $this->logError('Could not create ' . $path . ' ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+          $this->logException($e, 'Could not create ' . $path);
           return false;
         }
       }

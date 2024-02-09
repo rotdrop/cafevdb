@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Event\AdapterInterface;
 use OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\HardDeleteable\HardDeleteableInterface;
 
-  /**
+/**
  * Allow hard-deletion of unused objects.
  */
 class HardDeleteUnused implements HardDeleteableInterface
@@ -44,8 +44,6 @@ class HardDeleteUnused implements HardDeleteableInterface
   /** {@inheritdoc} */
   public function hardDeleteAllowed($object, $config)
   {
-    if (method_exists($object, 'unused')) {
-      return $object->unused();
-    }
+    return method_exists($object, 'unused') ? $object->unused() : false;
   }
 }

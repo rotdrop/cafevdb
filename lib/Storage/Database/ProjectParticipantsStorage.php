@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -257,6 +257,7 @@ class ProjectParticipantsStorage extends Storage
     if (empty($file)) {
       throw new UnexpectedValueException($this->l->t('Debit-mandate "%s" has no hard-copy attached.', $debitMandate->getMandateReference()));
     }
+    $fileId = $file->getFile()->getId();
 
     if ($flush) {
       $this->entityManager->beginTransaction();
@@ -271,7 +272,7 @@ class ProjectParticipantsStorage extends Storage
       $folderEntity = $rootFolder->getFolderByName($folderName);
       /** @var Entities\DatabaseStorageFile $dirEntry */
       foreach ($folderEntity->getDocuments() as $dirEntry) {
-        if ($dirEntry->getFile()->getId() == $file->getId()) {
+        if ($dirEntry->getFile()->getId() == $fileId) {
           $this->entityManager->remove($dirEntry);
         }
       }
@@ -555,5 +556,13 @@ class ProjectParticipantsStorage extends Storage
     }
 
     return $needsFlush;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function persistInMemoryFileNode(InMemoryFileNode $memoryNode, ?Entities\Musician $owner = null):Entities\DatabaseStorageFile
+  {
+    return parent::persistInMemoryFileNode($memoryNode, $this->musician);
   }
 }
