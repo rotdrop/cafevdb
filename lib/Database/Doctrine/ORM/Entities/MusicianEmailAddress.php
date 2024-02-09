@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  * InstrumentInsurance
  *
  * @ORM\Table(name="MusicianEmailAddresses")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class MusicianEmailAddress implements \ArrayAccess
