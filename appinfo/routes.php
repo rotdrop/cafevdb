@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -534,6 +534,11 @@ $routes = [
     [
       'name' => 'payments#documents',
       'url' => '/finance/payments/documents/{operation}',
+      'verb' => 'POST',
+    ],
+    [
+      'name' => 'tax_exemption_notices#documents',
+      'url' => '/finance/exemption-notices/documents/{operation}',
       'verb' => 'POST',
     ],
     /**

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024, Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,6 +63,12 @@ class Factory
   public function getBankTransactionsStorage():BankTransactionsStorage
   {
     return $this->di(BankTransactionsStorage::class);
+  }
+
+  /** @return TaxExemptionNoticesStorage */
+  public function getTaxExemptionNoticesStorage():TaxExemptionNoticesStorage
+  {
+    return $this->di(TaxExemptionNoticesStorage::class);
   }
 
   /**
