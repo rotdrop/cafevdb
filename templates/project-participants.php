@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\Service\ConfigService;
 
 $cssPfx = $renderer->cssPrefix();
 $cssClass = 'instrumentation'; // @todo generalize
@@ -42,6 +44,9 @@ if ($roles->inTreasurerGroup()) {
   $nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $projectName, $projectId);
   if ($projectId == $appConfig->getConfigValue('memberProjectId', false)) {
     $nav .= $pageNavigation->pageControlElement('insurances');
+  }
+  if ($projectId == $appConfig->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, false)) {
+    $nav .= $pageNavigation->pageControlElement('tax-exemption-notices', $projectName, $projectId);
   }
 }
 $nav .= $pageNavigation->pageControlElement('projects');

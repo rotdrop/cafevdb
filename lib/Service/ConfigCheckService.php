@@ -946,7 +946,7 @@ class ConfigCheckService
 
     foreach ($projectFolder as $pathComponent) {
       $path .= '/'.$pathComponent;
-      //trigger_error("Path: ".$path, E_USER_NOTICE);
+      // $this->logInfo('Inspect ' . $path);
       try {
         $node = $rootView->get($path);
         if ($node->getType() != FileInfo::TYPE_FOLDER
@@ -968,7 +968,7 @@ class ConfigCheckService
         try {
           $node = $rootView->newFolder($path);
         } catch (Throwable $e) {
-          $this->logError('Could not create ' . $path . ' ' . $e->getMessage() . ' ' . $e->getTraceAsString());
+          $this->logException($e, 'Could not create ' . $path);
           return false;
         }
       }

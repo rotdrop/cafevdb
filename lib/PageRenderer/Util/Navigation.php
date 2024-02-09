@@ -634,6 +634,7 @@ and even edit the public web-pages for the project and other things.");
                  'projectId' => $projectId];
         break;
 
+      case 'project-participants':
       case 'detailed':
         $value = $this->l->t("Participants");
         $title = $this->l->t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
@@ -710,6 +711,17 @@ to and from the registered bank accounts.');
         $title = $this->l->t("Display a table with the insurance brokers.");
         $controlclass = 'finance';
         $post = ['template' => 'insurance-brokers'];
+        break;
+
+      case 'tax-exemption-notices':
+        $value = $this->l->t("Notices of Exemption");
+        $title = $this->l->t("Display a table an overview table with exemption notices received by tax offices.");
+        $controlclass = 'finance';
+        $post = [
+          'template' => 'tax-exemption-notices',
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
     }
 

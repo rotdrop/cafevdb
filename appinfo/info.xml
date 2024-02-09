@@ -23,12 +23,15 @@
   </sabre>
   <dependencies>
     <php min-version="8.1" max-version="8.3" />
-    <nextcloud min-version="27" max-version="28" />
+    <nextcloud min-version="28" max-version="28" />
   </dependencies>
   <repair-steps>
-    <install>
+    <!-- <install>
+    </install> -->
+    <post-migration>
       <step>OCA\CAFEVDB\Migration\RegisterMimeTypes</step>
-    </install>
+      <step>OCA\CAFEVDB\Migration\RecordModificationTimes</step>
+    </post-migration>
   </repair-steps>
   <!--
       <navigations>
@@ -63,6 +66,7 @@
   </commands>
   <background-jobs>
     <job>OCA\CAFEVDB\BackgroundJob\CleanupTemporaryFiles</job>
+    <job>OCA\CAFEVDB\BackgroundJob\UpdateAppMTimes</job>
     <!--
         Added programmatically on demand
         <job>OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads</job>

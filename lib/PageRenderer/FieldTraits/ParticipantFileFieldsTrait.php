@@ -165,7 +165,7 @@ trait ParticipantFileFieldsTrait
    *
    * @param null|string $fileBase
    *
-   * @param Entities\Musician $musician
+   * @param null|Entities\Musician $musician
    *
    * @param null|Entities\Project $project
    *
@@ -179,7 +179,7 @@ trait ParticipantFileFieldsTrait
     string $optionKey,
     ?string $subDir,
     ?string $fileBase,
-    Entities\Musician $musician,
+    ?Entities\Musician $musician,
     ?Entities\Project $project = null,
     bool $overrideFileName = false,
   ):string {
@@ -261,7 +261,7 @@ trait ParticipantFileFieldsTrait
         'fieldId' => $fieldId,
         'optionKey' => $optionKey,
         'optionValue' => $optionValue,
-        'musicianId' => $musician->getId(),
+        'musicianId' => empty($musician) ? 0 : $musician->getId(),
         'projectId' => empty($project) ? 0 : $project->getId(),
         'fileBase' => $fileBase,
         'fileName' => $fileName,

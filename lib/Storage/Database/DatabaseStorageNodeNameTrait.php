@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ use OCP\IL10N;
 use OCA\CAFEVDB\AppInfo\Application;
 use OCA\CAFEVDB\Service\Registration;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -96,6 +97,26 @@ trait DatabaseStorageNodeNameTrait
   {
     // TRANSLATORS: folder-name
     return $this->getAppL10n()->t('Receivables');
+  }
+
+  /**
+   * Get the name of the folder containing tax office related stuff.
+   *
+   * @return string
+   */
+  protected function getTaxAuthoritiesFolderName():string
+  {
+    return $this->getAppL10n()->t('TaxAuthorities');
+  }
+
+  /**
+   * Get the name of the folder containing tax exemption notices.
+   *
+   * @return string
+   */
+  protected function getTaxExemptionNoticesFolderName():string
+  {
+    return $this->getAppL10n()->t('TaxExemptionNotices');
   }
 
   /**
@@ -182,5 +203,57 @@ trait DatabaseStorageNodeNameTrait
   protected function getDebitMandateFileName(Entities\SepaDebitMandate $debitMandate, ?string $extension = null):string
   {
     return $this->getLegacyDebitMandateFileName($debitMandate->getMandateReference(), $extension);
+  }
+
+  /**
+   * PME-legacy.
+   *
+   * @param string|Types\EnumTaxType $taxType
+   *
+   * @param int $assessmentPeriodStart
+   *
+   * @param int $assessmentPeriodEnd
+   *
+   * @param null|string $extension
+   *
+   * @return string
+   */
+  protected function getLegacyTaxExemptionNoticeFileName(
+    string|Types\EnumTaxType $taxType,
+    int $assessmentPeriodStart,
+    int $assessmentPeriodEnd,
+    ?string $extension = null,
+  ):string {
+    // TRANSLATORS: file-name
+    $fileName =  $this->getAppL10n()->t('TaxExemptionNotice-%1$s-%2$04d-%3$04d', [
+      Util::dashesToCamelCase($this->getAppL10n()->t((string)$taxType), true, '_-. '),
+      $assessmentPeriodStart,
+      $assessmentPeriodEnd,
+    ]);
+    if (!empty($extension)) {
+      $fileName .= '.' . $extension;
+    }
+    return $fileName;
+  }
+
+  /**
+   * Generate a file-name for the given tax exemption notice
+   *
+   * @param Entities\TaxExemptionNotice $taxExemptionNotice
+   *
+   * @param null|string $extension
+   *
+   * @return string
+   */
+  protected function getTaxExemptionNoticeFileName(
+    Entities\TaxExemptionNotice $taxExemptionNotice,
+    ?string $extension = null,
+  ):string {
+    return $this->getLegacyTaxExemptionNoticeFileName(
+      $taxExemptionNotice->getTaxType(),
+      $taxExemptionNotice->getAssessmentPeriodStart(),
+      $taxExemptionNotice->getAssessmentPeriodEnd(),
+      $extension,
+    );
   }
 }

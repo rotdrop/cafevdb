@@ -598,7 +598,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
             'ifnull' => [ false ],
             'cast' => [ false ],
             'divs' => [
-              -1 => $this->l->t('To') . ': ',
+              -1 => $this->l->t('Recipients') . ': ',
               0 => '<br/>' . $this->l->t('Subject') . ': ',
               1 => '<br/>' . $this->l->t('Date') . ': ',
               2 => '<br/>' . $this->l->t('From') . ': ',

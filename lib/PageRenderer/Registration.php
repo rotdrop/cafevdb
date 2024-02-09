@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ use OCA\CAFEVDB\Service\FontService;
 /** Register template-names as dependency injection tags. */
 class Registration
 {
+  public const TEMPLATE_PREFIX = 'template:';
   /**
    * @param IRegistrationContext $context
    *
@@ -45,49 +46,50 @@ class Registration
     $context->registerService(IPMEOptions::class, function($c) {
       return $c->query(PME\Config::class);
     });
-    $context->registerService('template:' . 'maintenance/configcheck', function($c) {
+    $context->registerService(self::TEMPLATE_PREFIX . 'maintenance/configcheck', function($c) {
       return new class extends Renderer {}; // do nothing
     });
-    $context->registerService('template:' . 'maintenance/debug', function($c) {
+    $context->registerService(self::TEMPLATE_PREFIX . 'maintenance/debug', function($c) {
       return new class extends Renderer {}; // do nothing
     });
-    $context->registerServiceAlias('template:'.'all-musicians', Musicians::class);
-    $context->registerService('template:'.'add-musicians', function($c) {
-      $musicians = $c->query('template:'.'all-musicians');
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'all-musicians', Musicians::class);
+    $context->registerService(self::TEMPLATE_PREFIX.'add-musicians', function($c) {
+      $musicians = $c->query(self::TEMPLATE_PREFIX.'all-musicians');
       $musicians->enableProjectMode();
       return $musicians;
     });
-    $context->registerServiceAlias('template:'.'projects', Projects::class);
-    $context->registerServiceAlias('template:'.'project-participants', ProjectParticipants::class);
-    $context->registerServiceAlias('template:'.'project-instrumentation-numbers', ProjectInstrumentationNumbers::class);
-    $context->registerServiceAlias('template:'.'project-payments', ProjectPayments::class);
-    $context->registerServiceAlias('template:'.'sepa-bank-accounts', SepaBankAccounts::class);
-    $context->registerServiceAlias('template:'.'sepa-bulk-transactions', SepaBulkTransactions::class);
-    $context->registerServiceAlias('template:'.'instrument-insurance', InstrumentInsurances::class);
-    $context->registerServiceAlias('template:'.'project-participant-fields', ProjectParticipantFields::class);
-    $context->registerServiceAlias('template:'.'instruments', Instruments::class);
-    $context->registerServiceAlias('template:'.'instrument-families', InstrumentFamilies::class);
-    $context->registerServiceAlias('template:'.'insurance-brokers', InsuranceBrokers::class);
-    $context->registerServiceAlias('template:'.'insurance-rates', InsuranceRates::class);
-    $context->registerServiceAlias('template:'.'blog/blog', BlogMapper::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'projects', Projects::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'project-participants', ProjectParticipants::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'project-instrumentation-numbers', ProjectInstrumentationNumbers::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'project-payments', ProjectPayments::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'sepa-bank-accounts', SepaBankAccounts::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'sepa-bulk-transactions', SepaBulkTransactions::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'instrument-insurance', InstrumentInsurances::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'project-participant-fields', ProjectParticipantFields::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'instruments', Instruments::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'instrument-families', InstrumentFamilies::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'insurance-brokers', InsuranceBrokers::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'insurance-rates', InsuranceRates::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'tax-exemption-notices', TaxExemptionNotices::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'blog/blog', BlogMapper::class);
 
     // @todo find a cleaner way for the following
 
     $context->registerService('export:'.'all-musicians', function($c) {
-      $renderer = $c->query('template:'.'all-musicians');
+      $renderer = $c->query(self::TEMPLATE_PREFIX.'all-musicians');
       $fontService = $c->query(FontService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });
 
     $context->registerService('export:'.'project-participants', function($c) {
-      $renderer = $c->query('template:'.'project-participants');
+      $renderer = $c->query(self::TEMPLATE_PREFIX.'project-participants');
       $fontService = $c->query(FontService::class);
       $projectService = $c->query(\OCA\CAFEVDB\Service\ProjectService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService, $projectService);
     });
 
     $context->registerService('export:'.'sepa-bank-accounts', function($c) {
-      $renderer = $c->query('template:'.'sepa-bank-accounts');
+      $renderer = $c->query(self::TEMPLATE_PREFIX.'sepa-bank-accounts');
       $fontService = $c->query(FontService::class);
       return new Export\PMETableSpreadsheetExporter($renderer, $fontService);
     });

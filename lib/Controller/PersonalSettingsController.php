@@ -1216,6 +1216,10 @@ class PersonalSettingsController extends Controller
                     $this->configCheckService->checkProjectFolder($skeletonPath);
                   }
                   break;
+                case ConfigService::FINANCE_FOLDER:
+                  $taxOfficeFolder = $this->getTaxAuthoritiesPath();
+                  $this->configCheckService->checkProjectFolder($taxOfficeFolder);
+                  break;
               }
               return self::dataResponse([
                 'value' => $real,
@@ -1252,6 +1256,10 @@ class PersonalSettingsController extends Controller
                   $this->configCheckService->checkProjectFolder($skeletonPath);
                 }
                 break;
+              case ConfigService::FINANCE_FOLDER:
+                $taxOfficeFolder = $this->getTaxAuthoritiesPath();
+                $this->configCheckService->checkProjectFolder($taxOfficeFolder);
+                break;
             }
             return self::dataResponse([
               'value' => $actual,
@@ -1273,8 +1281,8 @@ class PersonalSettingsController extends Controller
         return $this->setSimpleConfigValue($parameter, $value);
       case ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE:
         $real = trim($value);
-        $translatedFromYear = $this->l->t($fromYear = 'FROM_YEAR');
-        $translatedToYear = $this->l->t($toYear = 'TO_YEAR');
+        $translatedFromYear = $this->l->t('FROM_YEAR');
+        $translatedToYear = $this->l->t('TO_YEAR');
         $found = 0;
         foreach (['from', 'to'] as $limit) {
           foreach ([${$limit . 'Year'}, ${'translated' . ucfirst($limit) . 'Year'}] as $required) {
