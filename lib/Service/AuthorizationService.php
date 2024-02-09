@@ -42,12 +42,22 @@ class AuthorizationService
 {
   use LoggerTrait;
 
+  public const MANAGEMENT = 'management';
+  public const FRONTEND = 'frontend';
+  public const ADDRESSBOOK = 'addressbook';
+  public const FILESYSTEM = 'filesystem';
+  public const CALENDAR = 'calendar';
+  public const FINANCE = 'finance';
+  public const EMAIL = 'email';
+
   public const ALL_GROUP_SUFFIX = '';
-  public const FRONTEND_GROUP_SUFFIX = '-frontend';
-  public const ADDRESSBOOK_GROUP_SUFFIX = '-addressbook';
-  public const FILESYSTEM_GROUP_SUFFIX = '-filesystem';
-  public const CALENDAR_GROUP_SUFFIX = '-calendar';
-  public const FINANCE_GROUP_SUFFIX = '-finance';
+  public const MANAGEMENT_GROUP_SUFFIX = '-' . self::MANAGEMENT;
+  public const FRONTEND_GROUP_SUFFIX = '-' . self::FRONTEND;
+  public const ADDRESSBOOK_GROUP_SUFFIX = '-' . self::ADDRESSBOOK;
+  public const FILESYSTEM_GROUP_SUFFIX = '-' . self::FILESYSTEM;
+  public const CALENDAR_GROUP_SUFFIX = '-' . self::CALENDAR;
+  public const FINANCE_GROUP_SUFFIX = '-' . self::FINANCE;
+  public const EMAIL_GROUP_SUFFIX = '-' . self::EMAIL;
 
   public const PERMISSION_NONE = 0;
   public const PERMISSION_FRONTEND = (1 << 0);
@@ -55,7 +65,15 @@ class AuthorizationService
   public const PERMISSION_FILESYSTEM = (1 << 2);
   public const PERMISSION_CALENDAR = (1 << 3);
   public const PERMISSION_FINANCE = (1 << 4);
-  public const PERMISSION_ALL = self::PERMISSION_FRONTEND|self::PERMISSION_ADDRESSBOOK|self::PERMISSION_FILESYSTEM|self::PERMISSION_CALENDAR|self::PERMISSION_FINANCE;
+  public const PERMISSION_MANAGEMENT = (1 << 5);
+  public const PERMISSION_EMAIL = (1 << 6);
+  public const PERMISSION_ALL = self::PERMISSION_FRONTEND
+    | self::PERMISSION_ADDRESSBOOK
+    | self::PERMISSION_FILESYSTEM
+    | self::PERMISSION_CALENDAR
+    | self::PERMISSION_FINANCE
+    | self::PERMISSION_MANAGEMENT
+    | self::PERMISSION_EMAIL;
 
   /**
    * @var array
@@ -70,6 +88,8 @@ class AuthorizationService
     self::PERMISSION_FILESYSTEM => self::FILESYSTEM_GROUP_SUFFIX,
     self::PERMISSION_CALENDAR => self::CALENDAR_GROUP_SUFFIX,
     self::PERMISSION_FINANCE => self::FINANCE_GROUP_SUFFIX,
+    self::PERMISSION_MANAGEMENT => self::MANAGEMENT_GROUP_SUFFIX,
+    self::PERMISSION_EMAIL => self::EMAIL_GROUP_SUFFIX,
   ];
 
   /**
@@ -79,11 +99,13 @@ class AuthorizationService
    */
   public const IMPLIED_PERMISSIONS = [
     self::PERMISSION_ALL => 0,
+    self::PERMISSION_MANAGEMENT => self::PERMISSION_ALL,
     self::PERMISSION_FRONTEND => self::PERMISSION_ALL, // but that may change ...
     self::PERMISSION_ADDRESSBOOK => 0,
     self::PERMISSION_FILESYSTEM => 0,
     self::PERMISSION_CALENDAR => 0,
     self::PERMISSION_FINANCE => self::PERMISSION_FILESYSTEM,
+    self::PERMISSION_EMAIL => 0,
   ];
 
   /**
@@ -126,7 +148,7 @@ class AuthorizationService
    * @param null|string $userId The user-id to check, if null use the user-id of
    * the currently logged-on user.
    *
-   * @param int $permissions.
+   * @param int $permissions
    *
    * @param int  $logLevel
    *
@@ -141,19 +163,25 @@ class AuthorizationService
     } else {
       $permissionStrings = [];
       if ($permissions & self::PERMISSION_FILESYSTEM) {
-        $permissionStrings[] = 'filesystem';
+        $permissionStrings[] = self::FILESYSTEM;
       }
       if ($permissions & self::PERMISSION_CALENDAR) {
-        $permissionStrings[] = 'calendar';
+        $permissionStrings[] = self::CALENDAR;
       }
       if ($permissions & self::PERMISSION_ADDRESSBOOK) {
-        $permissionStrings[] = 'addressbook';
+        $permissionStrings[] = self::ADDRESSBOOK;
       }
       if ($permissions & self::PERMISSION_FRONTEND) {
-        $permissionStrings[] = 'frontend';
+        $permissionStrings[] = self::FRONTEND;
       }
       if ($permissions & self::PERMISSION_FINANCE) {
-        $permissionStrings[] = 'finance';
+        $permissionStrings[] = self::FINANCE;
+      }
+      if ($permissions & self::PERMISSION_MANAGEMENT) {
+        $permissionStrings[] = self::MANAGEMENT;
+      }
+      if ($permissions & self::PERMISSION_EMAIL) {
+        $permissionStrings[] = self::EMAIL;
       }
       $this->log($logLevel, 'User ' . $userId . ' has permissions for the following services of the app ' . $this->appName . ': ' . implode(',', $permissionStrings));
     }
