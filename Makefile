@@ -530,7 +530,7 @@ appstore: $(BUILDDIR)/core-exclude
 
 .PHONY: verifydb
 verifydb: $(ABSSRCDIR)/vendor-wrapped
-	$(ORM_CLI) orm:validate-schema || $(ORM_CLI) orm:schema-tool:update --dump-sql
+	$(ORM_CLI) orm:validate-schema || $(ORM_CLI) orm:schema-tool:update --complete --dump-sql
 
 .PHONY: updatesql
 updatesql: $(ABSSRCDIR)/vendor-wrapped
