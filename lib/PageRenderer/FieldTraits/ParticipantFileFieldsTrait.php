@@ -183,11 +183,16 @@ trait ParticipantFileFieldsTrait
     ?Entities\Project $project = null,
     bool $overrideFileName = false,
   ):string {
+    $filePathInfo = pathinfo($fileBase);
+    $fileDirName = trim($filePathInfo['dirname'], '.' . UserStorage::PATH_SEP);
+    $fileBase = $filePathInfo['basename'];
     $project = ($project ?? $this->project) ?? null;
-    $participantFolder = empty($project)
-      ? ''
+    $folderPath = (empty($project) || empty($musician))
+      ? ($overrideFileName ? UserStorage::PATH_SEP . $fileDirName : '')
       : $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
-    $subDirPrefix = UserStorage::PATH_SEP . $this->getDocumentsFolderName();
+    $subDirPrefix = ($overrideFileName && !empty($fileDirName))
+      ? ''
+      : UserStorage::PATH_SEP . $this->getDocumentsFolderName();
     if (!empty($subDir)) {
       $subDirPrefix .= UserStorage::PATH_SEP . $subDir;
     }
@@ -230,25 +235,26 @@ trait ParticipantFileFieldsTrait
     } else {
       $downloadLink = $dbFileName = $dbExtension = '';
     }
-    if (!empty($participantFolder)) {
+    if (!empty($folderPath)) {
       try {
-        $filesAppLinkParticipant = $this->userStorage->getFilesAppLink($participantFolder, subDir: true);
-        $filesAppTarget = md5($filesAppLinkParticipant);
-        $filesAppPath = $participantFolder . $subDirPrefix;
+        $filesAppLinkFolder = $this->userStorage->getFilesAppLink($folderPath, subDir: true);
+        $filesAppTarget = md5($filesAppLinkFolder);
+        $filesAppPath = $folderPath . $subDirPrefix;
         try {
-          $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
+          $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, subDir: true);
         } catch (\OCP\Files\NotFoundException $e) {
           $this->logDebug('No file found for ' . $filesAppPath);
-          $filesAppLink = $filesAppLinkParticipant;
+          $filesAppLink = $filesAppLinkFolder;
         }
       } catch (\OCP\Files\NotFoundException $e) {
-        $this->logDebug('No folder found for ' . $participantFolder);
+        $this->logDebug('No folder found for ' . $folderPath);
         $filesAppPath = '';
         $filesAppLink = '';
       }
     } else {
       $filesAppPath = '';
       $filesAppLink = '';
+      $filesAppTarget = '_blank';
     }
     $placeHolder = empty($fileBase)
       ? $this->l->t('Drop files here or click to upload files.')
@@ -265,7 +271,7 @@ trait ParticipantFileFieldsTrait
         'projectId' => empty($project) ? 0 : $project->getId(),
         'fileBase' => $fileBase,
         'fileName' => $fileName,
-        'participantFolder' => $participantFolder,
+        'participantFolder' => $folderPath,
         'filesAppPath' => $filesAppPath,
         'filesAppLink' => $filesAppLink,
         'filesAppTarget' => $filesAppTarget,
