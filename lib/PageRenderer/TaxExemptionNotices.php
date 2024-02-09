@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Storage\UserStorage;
+use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
 
 use OCA\CAFEVDB\Common\Util;
 
@@ -262,7 +263,7 @@ class TaxExemptionNotices extends PMETableViewBase
 
     $opts['fdd']['written_notice_id'] = [
       'name' => $this->l->t('Written Notice'),
-      'input|ALF' => 'HR',
+      'input|A' => 'HR',
       'css'      => [ 'postfix' => [ 'written-notice', ], ],
       'options' => 'LFACDPV',
       'php|CP' => function($value, $action, $k, $row, $recordId, $pme) {
@@ -270,8 +271,6 @@ class TaxExemptionNotices extends PMETableViewBase
         if ($pme->hidden($k) || empty($row)) {
           return '';
         }
-
-        $this->logInfo('ROW ' . print_r($row, true) . ' FDN ' . print_r($pme->fdn, true));
 
         $taxType = $row['qf' . $pme->fdn['tax_type']];
         $assessmentPeriodStart = $row['qf' . $pme->fdn['assessment_period_start']];
@@ -282,9 +281,7 @@ class TaxExemptionNotices extends PMETableViewBase
           $assessmentPeriodEnd,
         );
 
-        $dir = $this->getFinanceFolderPath()
-          . UserStorage::PATH_SEP . $this->getTaxAuthoritiesFolderName()
-          . UserStorage::PATH_SEP . $this->getTaxExemptionNoticesFolderName();
+        $dir = $this->getTaxExemptionNoticesPath();
 
         return '<div class="file-upload-wrapper">
   <table class="file-upload">'
@@ -292,8 +289,8 @@ class TaxExemptionNotices extends PMETableViewBase
             $value,
             fieldId: $recordId['id'],
             optionKey: $recordId['id'],
-            subDir: $dir,
-            fileBase: $fileName,
+            subDir: null,
+            fileBase: $dir . UserStorage::PATH_SEP . $fileName,
             overrideFileName: true,
             musician: null,
             project: null,
@@ -321,8 +318,8 @@ class TaxExemptionNotices extends PMETableViewBase
           . UserStorage::PATH_SEP . $this->getTaxExemptionNoticesFolderName();
 
         try {
-          $filesAppTarget = md5($dir);
           $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);
+          $filesAppTarget = md5($filesAppLink);
           $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
        title="'.$this->toolTipsService['tax-exemption-notices:written-notice:open-parent'].'"
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
@@ -331,10 +328,13 @@ class TaxExemptionNotices extends PMETableViewBase
           $this->logInfo('No file found for ' . $dir);
           $filesAppLink = '';
         }
-        return $filesAppLink
-          . '<a class="download-link ajax-download tooltip-auto"
+        return '<div class="flex-container">
+'
+          . $filesAppLink
+          . '<a class="download-link ajax-download tooltip-auto inline-block clip-long-text"
    title="'.$this->toolTipsService['tax-exemption-notices:written-notice'].'"
-   href="'.$downloadLink.'">' . $file->getName() . '</a>';
+   href="'.$downloadLink.'">' . $file->getName() . '</a>
+</div>';
       },
     ];
 
