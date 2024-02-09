@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,17 @@ const $ = jQuery;
 const pmeDefaultSelector = PHPMyEdit.defaultSelector;
 const pmePrefix = PHPMyEdit.prefix;
 const PMEPrefix = PHPMyEdit.ucPrefix;
+
+const pmeFormViewSuffixes = [
+  'list',
+  'view',
+  'delete',
+];
+
+const pmeFormEditSuffixes = [
+  'change',
+  'copyadd',
+];
 
 /**
  * Generate a string with PME_sys_.... prefix.
@@ -65,6 +76,9 @@ const pmeData = function(token) {
  * @returns {string}
  */
 const pmeToken = function(token) {
+  if (Array.isArray(token)) {
+    return token.map((value) => pmeToken(value));
+  }
   return pmePrefix + '-' + token;
 };
 
@@ -281,6 +295,8 @@ export {
   pmeCellSelector as cellSelector,
   pmeFilterSelector as filterSelector,
   pmeQueryInfoSelector as queryInfoSelector,
+  pmeFormViewSuffixes as formViewSuffixes,
+  pmeFormEditSuffixes as formEditSuffixes,
 };
 
 // Local Variables: ***
