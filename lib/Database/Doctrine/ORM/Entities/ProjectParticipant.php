@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
- * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener"})
  */
 class ProjectParticipant implements \ArrayAccess
 {
@@ -326,50 +326,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getPublicName(bool $firstNameFirst = false):string
   {
     return $this->musician->getPublicName($firstNameFirst);
-  }
-
-  /**
-   * @var null|array
-   *
-   * The array of changed field values.
-   */
-  private $preUpdateValue = [];
-
-  /**
-   * @param Event\PreUpdateEventArgs $event
-   *
-   * @return void
-   *
-   * @ORM\PreUpdate
-   */
-  public function preUpdate(Event\PreUpdateEventArgs $event)
-  {
-    $field = 'registration';
-    if ($event->hasChangedField($field)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $oldValue = $event->getOldValue($field);
-      $entityManager->dispatchEvent(new Events\PreChangeRegistrationConfirmation($this, !empty($oldValue), !empty($event->getNewValue($field))));
-      $this->preUpdateValue[$field] = $oldValue;
-    }
-  }
-
-  /**
-   * @param Event\LifecycleEventArgs $event
-   *
-   * @return void
-   *
-   * @ORM\PostUpdate
-   */
-  public function postUpdate(Event\LifecycleEventArgs $event)
-  {
-    $field = 'registration';
-    if (array_key_exists($field, $this->preUpdateValue)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostChangeRegistrationConfirmation($this, !empty($this->preUpdateValue[$field])));
-      unset($this->preUpdateValue[$field]);
-    }
   }
 
   /**
