@@ -58,14 +58,14 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   /**
    * Undoable folder rename, optionally ignoring non-existing source folder.
    *
-   * @param string|callable $name
+   * @param string|Closure $name
    *
    * @param bool $gracefully Do not throw if folder already exists.
    *
    * @param string $ignoredFiles
    */
   public function __construct(
-    protected mixed $name,
+    protected string|Closure $name,
     protected bool $gracefully = false,
     protected string $ignoredFiles = '/^[0-9]*-?README(.*)$/i',
   ) {
@@ -82,8 +82,8 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   /** {@inheritdoc} */
   public function do():void
   {
-    if (is_callable($this->name)) {
-      $this->name = call_user_func($this->name);
+    if ($this->name instanceof Closure) {
+      $this->name = $this->name();
     }
     $this->name = self::normalizePath($this->name);
 

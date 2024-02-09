@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,7 +61,7 @@ class PHPMailer extends PHPMailerUpstream
   protected $mimeMessageTotalSize = 0;
   protected $mimeDataSent;
 
-  protected $progressCallback = null;
+  protected ?Callable $progressCallback = null;
 
   /**
    * @var array
@@ -105,8 +105,8 @@ class PHPMailer extends PHPMailerUpstream
         }
       }
 
-      if (is_callable($this->progressCallback)) {
-        call_user_func($this->progressCallback, $this->mimeDataSent, $this->mimeMessageTotalSize);
+      if ($this->progressCallback !== null) {
+        $this->progressCallback($this->mimeDataSent, $this->mimeMessageTotalSize);
       }
     };
     $this->SMTPDebug = 1;
@@ -128,11 +128,11 @@ class PHPMailer extends PHPMailerUpstream
   }
 
   /**
-   * @param callable $progressCallback
+   * @param Closure $progressCallback
    *
    * @return void
    */
-  public function setProgressCallback(callable $progressCallback):void
+  public function setProgressCallback(Closure $progressCallback):void
   {
     $this->progressCallback = $progressCallback;
   }

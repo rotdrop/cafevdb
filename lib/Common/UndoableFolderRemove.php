@@ -39,7 +39,7 @@ class UndoableFolderRemove extends UndoableFileSystemNodeRemove
   /**
    * Undoable folder remove.
    *
-   * @param string|callable $name
+   * @param string|Closure $name
    *
    * @param bool $gracefully Do not complain if folders are non-empty or do not exist.
    *

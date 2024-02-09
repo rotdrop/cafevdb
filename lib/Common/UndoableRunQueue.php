@@ -66,23 +66,23 @@ class UndoableRunQueue
   /**
    * Register the given action in the run-queue.
    *
-   * @param callable|IUndoable $action The action to be registered.
+   * @param Closure|IUndoable $action The action to be registered.
    *
-   * @param null|callable $undo The undo action if $action is a mere callable.
+   * @param null|Closure $undo The undo action if $action is a mere Closure.
    *
    * @return UndoableRunQueue
    *
-   * @throw InvalidArgumentException If $action is neither a callable nor an
+   * @throw InvalidArgumentException If $action is neither a Closure nor an
    * IUndoable.
    */
-  public function register(mixed $action, ?callable $undo = null):UndoableRunQueue
+  public function register(Closure|IUndoable $action, ?Closure $undo = null):UndoableRunQueue
   {
-    if (is_callable($action)) {
+    if ($action instanceof Closure) {
       $action = new GenericUndoable($action, $undo);
     } elseif ($action instanceof IUndoable) {
       // fallthrouh
     } else {
-      throw new InvalidArgumentException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+      throw new InvalidArgumentException($this->l->t('$action must be a Closure or an instance of "%s".', IUndoable::class));
     }
     $action->initialize($this->appContainer);
     $this->actionQueue[] = $action; // at end

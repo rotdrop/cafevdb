@@ -49,20 +49,20 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
   protected $doneInterval;
 
   /**
-   * @param string|callable $name The name of the new file.
+   * @param string|Closure $name The name of the new file.
    *
    * @param string $content The content to place into the file system with name $name.
    *
-   * @param null|string|callable $oldName A name of an old file to replace.
+   * @param null|string|Closure $oldName A name of an old file to replace.
    *
    * @param bool $gracefully
    */
   public function __construct(
-    protected mixed $name,
+    protected string|Closure $name,
     protected string $content,
-    protected mixed $oldName = null,
-    protected bool $gracefully = false)
-  {
+    protected null|string|Closure $oldName = null,
+    protected bool $gracefully = false,
+  ) {
     $this->reset();
   }
 
@@ -76,12 +76,12 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
   public function do():void
   {
     $startTime = $this->timeFactory->getTime();
-    if (is_callable($this->name)) {
+    if ($this->name instanceof Closure) {
       $this->name = call_user_func($this->name);
     }
     $this->name = self::normalizePath($this->name);
     if ($this->oldName) {
-      if (is_callable($this->oldName)) {
+      if ($this->oldName instanceof Closure) {
         $this->oldName = call_user_func($this->oldName);
       }
       $this->oldName = self::normalizePath($this->oldName);

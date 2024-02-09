@@ -57,9 +57,9 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
   /**
    * Undoable folder rename, optionally ignoring non-existing source folder.
    *
-   * @param string $oldName
+   * @param string|Closure $oldName
    *
-   * @param string $newName
+   * @param string|Closure $newName
    *
    * @param bool $gracefully Do not throw if the source-folder given
    * as $oldName does not exist.
@@ -67,8 +67,8 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
    * @param bool $mkdir Create non-existing directories.
    */
   public function __construct(
-    protected string $oldName,
-    protected string $newName,
+    protected string|Closure $oldName,
+    protected string|Closure $newName,
     protected bool $gracefully = false,
     protected bool $mkdir = true,
   ) {
@@ -86,12 +86,12 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
   public function do():void
   {
     $startTime = $this->timeFactory->getTime();
-    if (is_callable($this->oldName)) {
-      $this->oldName = call_user_func($this->oldName);
+    if ($this->oldName instanceof Closure) {
+      $this->oldName = $this->oldName();
     }
     $this->oldName = self::normalizePath($this->oldName);
-    if (is_callable($this->newName)) {
-      $this->newName = call_user_func($this->newName);
+    if ($this->newName instanceof Closure) {
+      $this->newName = $this->newName();
     }
     $this->newName = self::normalizePath($this->newName);
 

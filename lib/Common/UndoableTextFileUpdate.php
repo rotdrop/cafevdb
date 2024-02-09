@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,7 +66,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   protected $nothingToUndo;
 
   /**
-   * @param string|callable $name
+   * @param string|Closure $name
    *
    * @param null|string $content Content to place into the text-file.
    *
@@ -80,7 +80,7 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
    * the way will be removed.
    */
   public function __construct(
-    protected mixed $name,
+    protected string|Closure $name,
     ?string $content,
     protected ?string $replacableContent = null,
     protected bool $gracefully = false,
@@ -100,8 +100,8 @@ class UndoableTextFileUpdate extends AbstractFileSystemUndoable
   /** {@inheritdoc} */
   public function do():void
   {
-    if (is_callable($this->name)) {
-      $this->name = call_user_func($this->name);
+    if ($this->name instanceof Closure) {
+      $this->name = $this->name();
     }
     $this->name = self::normalizePath($this->name);
 

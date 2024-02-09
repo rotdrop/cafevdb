@@ -47,7 +47,7 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
   /**
    * Undoable file system node remove.
    *
-   * @param string|callable $name
+   * @param string|Closure $name
    *
    * @param bool $gracefully Do not complain if folders are non-empty or do not exist.
    *
@@ -62,7 +62,7 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
    * @param string|null $nodeType Only remove matching node type.
    */
   public function __construct(
-    protected mixed $name,
+    protected string|Closure $name,
     protected bool $gracefully = false,
     protected bool $recursively = false,
     protected string $ignoredFiles = '/^[0-9]*-?README(.*)$/i',
@@ -81,8 +81,8 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
   public function do():void
   {
     $startTime = $this->timeFactory->getTime();
-    if (is_callable($this->name)) {
-      $this->name = call_user_func($this->name);
+    if ($this->name instanceof Closure) {
+      $this->name = $this->name();
     }
     $this->name = self::normalizePath($this->name);
     try {

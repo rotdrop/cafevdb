@@ -41,27 +41,27 @@ class GenericUndoable extends AbstractUndoable
   protected $doResult;
 
   /**
-   * @param callable $doCallback
+   * @param Closure $doCallback
    *
-   * @param null|callable $undoCallback
+   * @param null|Closure $undoCallback
    */
   public function __construct(
-    protected callable $doCallback,
-    protected ?callable $undoCallback = null,
+    protected Closure $doCallback,
+    protected ?Closure $undoCallback = null,
   ) {
   }
 
   /** {@inheritdoc} */
   public function do():void
   {
-    $this->doResult = call_user_func($this->doCallback);
+    $this->doResult = $this->doCallback();
   }
 
   /** {@inheritdoc} */
   public function undo():void
   {
     if (!empty($this->undoCallback)) {
-      call_user_func($this->undoCallback, $this->doResult);
+      $this->undoCallback($this->doResult);
     }
     $this->reset();
   }

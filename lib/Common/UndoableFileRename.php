@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,21 +44,15 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableFileRename extends AbstractFileSystemUndoable
 {
-  /** @var string */
-  protected $oldName = null;
-
-  /** @var string */
-  protected $newName = null;
-
-  /** @var Callable */
-  protected $generator;
+  /** @var Closure */
+  protected Closure $generator;
 
   protected const GRACELESS = 0;
   protected const GRACEFULLY_REQUESTED = 1;
   protected const GRACEFULLY_PERFORMED = 2;
 
   /** @var int */
-  protected $gracefully;
+  protected int $gracefully;
 
   /**
    * Undoable file rename, optionally ignoring non-existing source file. The
@@ -71,22 +65,22 @@ class UndoableFileRename extends AbstractFileSystemUndoable
    * @param bool $gracefully Do not throw if the source-file given as $oldName
    * does not exist.
    *
-   * @param null|callable $generator A callable returning an array
+   * @param null|Closure $generator A Closure returning an array
    * [NEW,OLD]. The generator will be called by the invocation of the
    * do() function.
    */
-  public function __construct(?string $oldName = null, ?string $newName = null, bool $gracefully = false, ?callable $generator = null)
-  {
+  public function __construct(
+    protected ?string $oldName = null,
+    protected ?string $newName = null,
+    bool $gracefully = false,
+    ?Closure $generator = null,
+  ) {
     if ((empty($oldName) || empty($newName)) && empty($generator)) {
       throw new InvalidArgumentException('Paramteter $oldName and $newName must be non-null when the file-name generator is null.');
     }
-    if (empty($generator)) {
-      $this->generator = function() use ($oldName, $newName) {
-        return [ $oldName, $newName ];
-      };
-    } else {
-      $this->generator = $generator;
-    }
+    $this->generator = $generator ?? function() use ($oldName, $newName) {
+      return [ $oldName, $newName ];
+    };
     $this->gracefully = $gracefully ? self::GRACEFULLY_REQUESTED : self::GRACELESS;
   }
 
