@@ -24,11 +24,10 @@
 
 namespace OCA\CAFEVDB\Command;
 
-use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
-use OCP\ISession;
 use OCP\IUserSession;
 use OCP\IUserManager;
+use OCP\AppFramework\IAppContainer;
 
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Command\Command;
@@ -88,7 +87,6 @@ class Migrations extends Command
     protected IL10N $l,
     protected IUserManager $userManager,
     protected IUserSession $userSession,
-    protected ISession $session,
     protected IAppContainer $appContainer,
   ) {
     parent::__construct();

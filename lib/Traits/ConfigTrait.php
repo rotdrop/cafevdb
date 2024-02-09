@@ -50,6 +50,8 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Common\Util;
 
+use OCA\CAFEVDB\Constants;
+
 /**
  * Too big a traits class to forward most of the ConfigService methods to the
  * using class.
@@ -618,7 +620,7 @@ trait ConfigTrait
     if (empty($subFolder)) {
       return null;
     }
-    return '/' . $sharedFolder . '/' . $subFolder;
+    return Constants::PATH_SEP . $sharedFolder . Constants::PATH_SEP . $subFolder;
   }
 
   /**
@@ -660,7 +662,7 @@ trait ConfigTrait
       }
       $pathComponents[] = $dirName ? '' : $templateFileName ;
     }
-    return implode('/', $pathComponents);
+    return implode(Constants::PATH_SEP, $pathComponents);
   }
 
   /**
@@ -692,7 +694,7 @@ trait ConfigTrait
     if (empty($transactionsFolder)) {
       return null;
     }
-    return $financeFolder . '/' . $transactionsFolder;
+    return $financeFolder . Constants::PATH_SEP . $transactionsFolder;
   }
 
   /**
@@ -708,7 +710,7 @@ trait ConfigTrait
     if (empty($balancesFolder)) {
       return null;
     }
-    return $financeFolder . '/' . $balancesFolder;
+    return $financeFolder . Constants::PATH_SEP . $balancesFolder;
   }
 
   /**
@@ -724,7 +726,33 @@ trait ConfigTrait
     if (empty($projectsFolder)) {
       return null;
     }
-    return $balancesFolder . '/' . $projectsFolder;
+    return $balancesFolder . Constants::PATH_SEP . $projectsFolder;
+  }
+
+  /**
+   * @return null|string Return the full path to the financial balances folder
+   */
+  protected function getTaxAuthoritiesPath():?string
+  {
+    $financeFolder = $this->getFinanceFolderPath();
+    if (empty($financeFolder)) {
+      return null;
+    }
+    $taxAuthoritiesFolder = $this->appL10n()->t('tax-authorities');
+    return $financeFolder . Constants::PATH_SEP . $taxAuthoritiesFolder;
+  }
+
+  /**
+   * @return null|string Return the full path to the financial balances folder
+   */
+  protected function getTaxExemptionNoticesPath():?string
+  {
+    $taxAuthoritiesFolder = $this->getTaxAuthoritiesPath();
+    if (empty($taxAuthoritiesFolder)) {
+      return null;
+    }
+    $taxExemptionNoticesFolder = $this->appL10n()->t('exemption-notices');
+    return $taxAuthoritiesFolder . Constants::PATH_SEP . $taxExemptionNoticesFolder;
   }
 
   /**

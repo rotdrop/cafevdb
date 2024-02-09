@@ -448,6 +448,7 @@ class EntityManager extends EntityManagerDecorator
       Types\EnumVCalendarType::class => 'enum',
       Types\EnumDirEntryType::class => 'enum',
       Types\EnumAccessPermission::class => 'enum',
+      Types\EnumTaxType::class => 'enum',
       // Ramsey\UuidType::class => null,
       // Ramsey\UuidBinaryType::class => 'binary',
       // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',

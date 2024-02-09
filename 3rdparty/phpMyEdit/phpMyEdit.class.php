@@ -5,7 +5,7 @@
  * phpMyEdit.class.php - main table editor class definition file
  * ____________________________________________________________
  *
- * Copyright (c) 2011-2016, 2020-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2011-2016, 2020-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * C opyright (c) 1999-2002 John McCreesh <jpmcc@users.sourceforge.net>
  * C opyright (c) 2001-2002 Jim Kraai <jkraai@users.sourceforge.net>
@@ -1566,7 +1566,9 @@ class phpMyEdit
 		$fields = array();
 		$fieldAliases = array();
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			if (/*false*/ !$this->displayed[$k] && !in_array($k, $this->key_num) && !in_array($k, $this->mrec_num)) {
+			if (/*false*/ !$this->displayed[$k]
+				&& !in_array($k, $this->key_num)
+				&& !in_array($k, $this->mrec_num ?? [])) {
 				continue;
 			}
 			$flags = 0;
@@ -3393,7 +3395,7 @@ class phpMyEdit
 		} else if (isset($this->fdd[$k][self::FDD_VALUES2])) {
 			if (isset($row['qf'.$k.'_idx'])) {
 				$value = $row['qf'.$k.'_idx'];
-			} else if (isset($row["qf${k}_encrypted"])) {
+			} else if (isset($row["qf{$k}_encrypted"])) {
 				$value = $row["qf{$k}_encrypted"];
 			} else {
 				$value = $row["qf$k"];

@@ -1,0 +1,22 @@
+@use "sass:list";
+
+@function listToString($list, $glue: '') {
+  $result: null;
+
+  @for $i from 1 through length($list) {
+    $e: nth($list, $i);
+
+    @if type-of($e) == list {
+      $e: "#{listToString($e, $glue)}";
+    }
+    $result: if(
+      $i != length($list),
+      "#{$result}#{$e}#{$glue}",
+      "#{$result}#{$e}"
+    );
+  }
+
+  @return $result;
+}
+
+@debug listToString(("a" "b"), '@');

@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Event\AdapterInterface;
 use OCA\CAFEVDB\Wrapped\Gedmo\SoftDeleteable\HardDeleteable\HardDeleteableInterface;
 
-  /**
+/**
  * Allow hard-deletion of unused objects.
  */
 class HardDeleteUnused implements HardDeleteableInterface
@@ -41,8 +41,6 @@ class HardDeleteUnused implements HardDeleteableInterface
   /** {@inheritdoc} */
   public function hardDeleteAllowed($object, $config)
   {
-    if (method_exists($object, 'unused')) {
-      return $object->unused();
-    }
+    return method_exists($object, 'unused') ? $object->unused() : false;
   }
 }

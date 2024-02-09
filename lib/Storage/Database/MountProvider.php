@@ -185,6 +185,35 @@ class MountProvider implements IMountProvider
           return MountProvider::MOUNT_TYPE;
         }
       };
+
+      // allow only treasurers or similar folk
+
+      $storage = $this->storageFactory->getTaxExemptionNoticesStorage();
+      $bulkLoadStorageIds[] = $storage->getId();
+
+      $mounts[] = new class(
+        storage: $storage,
+        mountpoint: '/' . $userId
+        . '/files'
+        . $this->getTaxExemptionNoticesPath(),
+        mountId: null,
+        loader: $loader,
+        mountProvider: MountProvider::class,
+        mountOptions: [
+          'filesystem_check_changes' => 1,
+          'readonly' => false,
+          'previews' => true,
+          'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
+        ]
+      ) extends MountPoint
+      {
+        /** {@inheritdoc} */
+        public function getMountType()
+        {
+          return MountProvider::MOUNT_TYPE;
+        }
+      };
     }
 
     try {

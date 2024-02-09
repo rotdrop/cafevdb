@@ -61,6 +61,12 @@ class Factory
     return $this->di(BankTransactionsStorage::class);
   }
 
+  /** @return TaxExemptionNoticesStorage */
+  public function getTaxExemptionNoticesStorage():TaxExemptionNoticesStorage
+  {
+    return $this->di(TaxExemptionNoticesStorage::class);
+  }
+
   /**
    * @param Entities\Project $project
    *
