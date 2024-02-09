@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Service;
 
 use Throwable;
+use Exception;
 use RuntimeException;
 
 use OCA\Settings\Mailer\NewUserMailHelper;
@@ -348,6 +349,33 @@ class CloudAccountsService
   }
 
   /**
+   * Greedily try to add the user to all group backends.
+   *
+   * @param IUser $user
+   *
+   * @param IGroup $group
+   *
+   * @return void
+   */
+  public function promoteGroupMembership(IUser $user, IGroup $group)
+  {
+    $groupId = $group->getGID();
+    foreach ($this->groupManager->getBackends() as $backend) {
+      if ($backend->implementsActions(\OC\Group\Backend::ADD_TO_GROUP)) {
+        $userId = $user->getUID();
+        try {
+          if (!$backend->inGroup($userId, $groupId)) {
+            $backend->addToGroup($userId, $groupId);
+          }
+        } catch (Throwable $t) {
+          // Can happen if the user does not exist in the backend
+          $this->logException($t, 'Backend ' . get_class($backend) . ' cannot add user ' . $user->getUID());
+        }
+      }
+    }
+  }
+
+  /**
    * Ensure that the given group exists in all required backends. The use case
    * is to add people to user groups although they do not live in the primary
    * group backend. Nextcloud's group manager just creates groups in one
@@ -363,6 +391,9 @@ class CloudAccountsService
    *
    * @return array<string, bool> Success statuses for the required
    * backends. \true means the group is present in the respective backend.
+   *
+   * @todo Is this really necessary? We do need the management group in the
+   * backend, but do we really need also all the others?
    */
   public function ensureGroupBackends(IGroup $group, array $requiredBackends = []):array
   {

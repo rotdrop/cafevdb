@@ -55,13 +55,15 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * Do something special if the membership to the orchestra group changes.
+ *
+ * @todo
  */
 class GroupMembershipListener implements IEventListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const EVENT = [ UserAddedEvent::class, UserRemovedEvent::class ];
+  const EVENT = [ UserAddedEvent::class, UserRemovedEvent::class, BeforeUserAddedEvent::class ];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -104,10 +106,16 @@ class GroupMembershipListener implements IEventListener
           break;
         case $adminGroupId:
           $user = $event->getUser();
-          if ($event instanceof UserAddedEvent) {
-            $cloudAccountsService->addGroupSubAdmin($user);
-          } else {
-            $cloudAccountsService->removeGroupSubAdmin($user);
+          switch ($eventClass) {
+            case UserAddedEvent::class:
+              $cloudAccountsService->addGroupSubAdmin($user);
+              break;
+            case UserRemovedEvent::class:
+              $cloudAccountsService->removeGroupSubAdmin($user);
+              break;
+            case BeforeUserAddedEvent::class:
+              // nothing
+              break;
           }
           break;
         case $managementGroupId:
@@ -132,17 +140,20 @@ class GroupMembershipListener implements IEventListener
           $emailProperty = $emailCollection->getPropertyByValue($personalizedOrchestraEmail);
 
           switch (true) {
-            case ($event instanceof UserAddedEvent):
-              if (empty($boardMember)) {
-                $executiveBoardProject = $rolesService->executiveBoardProject();
-                $cloudAccountsService->addCloudUserToProject($user, $executiveBoardProject);
-              }
-
+            case ($event instanceof BeforeUserAddedEvent):
               // make in particular sure that the person is also added to
               // the configured orchestra user backend
               $orchestraUserAndGroupBackend = $cloudConfig->getAppValue($appName, ConfigService::USER_AND_GROUP_BACKEND_KEY);
               if (!empty($orchestraUserAndGroupBackend)) {
                 $cloudAccountsService->addUserToBackend($user, $orchestraUserAndGroupBackend);
+              }
+              break;
+            case ($event instanceof UserAddedEvent):
+              $cloudAccountsService->promoteGroupMembership($user, $group);
+
+              if (empty($boardMember)) {
+                $executiveBoardProject = $rolesService->executiveBoardProject();
+                $cloudAccountsService->addCloudUserToProject($user, $executiveBoardProject);
               }
 
               if (empty($emailProperty)) {
@@ -165,6 +176,8 @@ class GroupMembershipListener implements IEventListener
               $cloudConfig->setUserValue($userId, 'mail', 'tag-classified-messages', 'false');
               break;
             case ($event instanceof UserRemovedEvent):
+              // core already removes the user from all backends
+
               // remove in any case from the cloud user's emails
               if (!empty($emailProperty)) {
                 $emailCollection->removeProperty($emailProperty);
@@ -176,6 +189,8 @@ class GroupMembershipListener implements IEventListener
                 $projectService = $this->appContainer->get(ProjectService::class);
                 $projectService->deleteProjectParticipant($boardMember);
               }
+              // @todo
+              // We could also remove the user from the orchestra backend, but ...
               break;
           }
       } // switch
