@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -165,8 +165,11 @@ trait EntityManagerTrait
     }
     if (is_array($entity)) {
       $key = $entity;
-      $entity = $this->entityManager->getReference($this->entityClassName, $key);
-      // $this->logDebug("Create reference from " . print_r($key, true) . ' for ' . $this->entityClassName);
+      // getReference() will not always work, and in particular not with
+      // foreign keys, so just fetch the entity first.
+      //
+      // $entity = $this->entityManager->getReference($this->entityClassName, $key);
+      $entity = $this->entityManager->find($this->entityClassName, $key);
     }
     if ($soft && !$hard && method_exists($entity, 'isDeleted') && $entity->isDeleted()) {
       return;
