@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,6 +45,18 @@ class FileData implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\FactoryTrait;
+
+  public const DATA_FORMAT_BINARY = 'binary';
+  public const DATA_FORMAT_BASE64 = 'base64';
+  public const DATA_FORMAT_RESOURCE = 'resource';
+  public const DATA_FORMAT_URI = 'uri';
+
+  public const DATA_FORMATS = [
+    self::DATA_FORMAT_BINARY,
+    self::DATA_FORMAT_BASE64,
+    self::DATA_FORMAT_RESOURCE,
+    self::DATA_FORMAT_URI,
+  ];
 
   /**
    * @var File
@@ -90,21 +102,24 @@ class FileData implements \ArrayAccess
   /**
    * Set data.
    *
-   * @param null|string $data
+   * @param mixed $data
    *
-   * @param string $format
+   * @param string $format The input format of the data
    *
    * @return FileData
    */
-  public function setData(?string $data, string $format = 'binary')
+  public function setData(mixed $data, string $format = self::DATA_FORMAT_BINARY)
   {
     switch ($format) {
-      case 'base64':
-        $this->data = base64_decode($data);
+      case self::DATA_FORMAT_URI:
+        $data =  substr($data, strpos($data, ',') + 1);
+        // fallthrough
+      case self::DATA_FORMAT_BASE64:
+        $data = base64_decode($data);
         // fallthrough
       default:
-      case 'resource':
-      case 'binary':
+      case self::DATA_FORMAT_RESOURCE:
+      case self::DATA_FORMAT_BINARY:
         $this->data = $data;
         break;
     }
@@ -117,32 +132,37 @@ class FileData implements \ArrayAccess
    *
    * @param string $format
    *
-   * @return string|null
+   * @return mixed
    */
-  public function getData(string $format = 'binary'):?string
+  public function getData(string $format = self::DATA_FORMAT_BINARY):mixed
   {
     if (is_resource($this->data)) {
       rewind($this->data);
       switch ($format) {
-        case 'base64':
+        case self::DATA_FORMAT_URI:
+          $data = base64_encode(stream_get_contents($this->data));
+          return 'data:' . $this->file->getMimeType() . ';base64,' . $data;
+        case self::DATA_FORMAT_BASE64:
           return base64_encode(stream_get_contents($this->data));
-        case 'resource':
+        case self::DATA_FORMAT_RESOURCE:
           return $this->data;
-        case 'binary':
+        case self::DATA_FORMAT_BINARY:
           return stream_get_contents($this->data);
         default:
           return $this->data;
       }
     } else {
       switch ($format) {
-        case 'base64':
+        case self::DATA_FORMAT_URI:
+          return 'data:' . $this->file->getMimeType() . ';base64,' . base64_encode($this->data);
+        case self::DATA_FORMAT_BASE64:
           return base64_encode($this->data);
-        case 'resource':
+        case self::DATA_FORMAT_RESOURCE:
           $stream = fopen('php://memory', 'r+');
           fwrite($stream, $this->data);
           rewind($stream);
           return $stream;
-        case 'binary':
+        case self::DATA_FORMAT_BINARY:
           return $this->data;
         default:
           return $this->data;
