@@ -174,7 +174,7 @@ class TaxExemptionNoticesController extends Controller
 
         $originalFileName = $originalFilePath ? basename($originalFilePath) : null;
 
-        /** @var Entities\DatabaseStorageFile $databaseFile */
+        /** @var Entities\DatabaseStorageFile $fileNodeEntity */
         $fileNodeEntity = $entity->getWrittenNotice();
         $fileEntity = $fileNodeEntity ? $fileNodeEntity->getFile() : null;
 
@@ -301,6 +301,8 @@ class TaxExemptionNoticesController extends Controller
           'baseName' => $pathInfo['basename'],
           'extension' => $pathInfo['extension']?:'',
           'fileName' => $pathInfo['filename'],
+          'fileId'   => $fileNodeEntity->getId(),
+          'storageBackend'  => 'db',
           'download' => $downloadLink,
           'filesApp' => $filesAppLink,
           'conflict' => $conflict,

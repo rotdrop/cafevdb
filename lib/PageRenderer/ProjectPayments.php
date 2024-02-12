@@ -868,7 +868,7 @@ WHERE dsf.id IS NOT NULL',
             $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
             $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
             $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
-       title="'.$this->toolTipsService['project-payments:payment:open-parent'].'"
+       title="'.$this->toolTipsService['page-renderer:upload:open-parent'].'"
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
        ></a>';
           } catch (\OCP\Files\NotFoundException $e) {

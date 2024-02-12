@@ -46,6 +46,7 @@ class CreateTaxExemptionNotices extends AbstractMigration
  tax_number VARCHAR(256) NOT NULL,
  date_issued DATE DEFAULT NULL COMMENT '(DC2Type:date_immutable)',
  beneficiary_purpose VARCHAR(4096) NOT NULL,
+ membership_fees_are_donations TINYINT(1) DEFAULT '0' NOT NULL,
  created DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
  updated DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
  deleted DATETIME(6) DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',

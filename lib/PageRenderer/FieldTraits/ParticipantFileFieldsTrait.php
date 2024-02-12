@@ -171,6 +171,8 @@ trait ParticipantFileFieldsTrait
    *
    * @param bool $overrideFileName
    *
+   * @param null|string $inputValueName
+   *
    * @return string HTML fragment.
    */
   protected function dbFileUploadRowHtml(
@@ -182,11 +184,12 @@ trait ParticipantFileFieldsTrait
     ?Entities\Musician $musician,
     ?Entities\Project $project = null,
     bool $overrideFileName = false,
+    ?string $inputValueName = null,
   ):string {
     $filePathInfo = pathinfo($fileBase);
-    $fileDirName = trim($filePathInfo['dirname'], '.' . UserStorage::PATH_SEP);
+    $fileDirName = trim($filePathInfo['dirname'] ?? '', '.' . UserStorage::PATH_SEP);
     $fileBase = $filePathInfo['basename'];
-    $project = ($project ?? $this->project) ?? null;
+    $project = $project ?? ($this->project ?? null);
     $folderPath = (empty($project) || empty($musician))
       ? ($overrideFileName ? UserStorage::PATH_SEP . $fileDirName : '')
       : $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
@@ -259,7 +262,7 @@ trait ParticipantFileFieldsTrait
     $placeHolder = empty($fileBase)
       ? $this->l->t('Drop files here or click to upload files.')
       : $this->l->t('Load %s', pathinfo($fileName, PATHINFO_FILENAME));
-    $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId));
+    $optionValueName = $this->pme->cgiDataName($inputValueName ?? self::participantFieldValueFieldName($fieldId));
 
     return (new TemplateResponse(
       $this->appName(),

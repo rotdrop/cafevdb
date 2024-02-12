@@ -77,7 +77,7 @@ const pmeAutocomplete = function($input) {
   }
 };
 
-const pmeFormInit = function(containerSel, resizeCB) {
+const pmeFormInit = function(containerSel, parameters, resizeCB) {
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
   const $form = $container.find('form[class^="pme-form"]');
@@ -110,21 +110,30 @@ const pmeFormInit = function(containerSel, resizeCB) {
           upload: 'finance/exemption-notices/documents/upload',
           delete: 'finance/exemption-notices/documents/delete',
         });
+      const ambientContainerSelector = parameters?.tableOptions?.ambientContainerSelector;
+      if (ambientContainerSelector) {
+        $(this).on('pme:upload-done pme:upload-deleted', (event) => {
+          event.stopImmediatePropagation();
+          $(ambientContainerSelector).trigger('pmedialog:changed');
+          PHPMyEdit.submitOuterForm(ambientContainerSelector);
+        });
+      }
     });
 };
 
 const documentReady = function() {
 
-  PHPMyEdit.addTableLoadCallback('tax-exemption-notices', {
-    callback(selector, parameters, resizeCB) {
-      if (parameters.reason === 'dialogOpen') {
-        pmeFormInit(selector, resizeCB);
-      }
-      resizeCB();
-    },
-    context: globalState,
-    parameters: [],
-  });
+  PHPMyEdit.addTableLoadCallback(
+    'tax-exemption-notices', {
+      callback(selector, parameters, resizeCB) {
+        if (parameters.reason === 'dialogOpen') {
+          pmeFormInit(selector, parameters, resizeCB);
+        }
+        resizeCB();
+      },
+      context: globalState,
+      parameters: [],
+    });
 
   CAFEVDB.addReadyCallback(function() {
 
@@ -136,7 +145,7 @@ const documentReady = function() {
 
     const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
     if (renderer === Page.templateRenderer('tax-exemption-notices')) {
-      pmeFormInit(PHPMyEdit.defaultSelector, () => null);
+      pmeFormInit(PHPMyEdit.defaultSelector, undefined, () => null);
     }
   });
 };

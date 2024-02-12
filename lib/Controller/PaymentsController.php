@@ -300,6 +300,8 @@ class PaymentsController extends Controller
           'baseName' => $pathInfo['basename'],
           'extension' => $pathInfo['extension']?:'',
           'fileName' => $pathInfo['filename'],
+          'fileId'   => $supportingDocument->getId(),
+          'storageBackend'  => 'db',
           'download' => $downloadLink,
           'filesApp' => $filesAppLink,
           'conflict' => $conflict,
