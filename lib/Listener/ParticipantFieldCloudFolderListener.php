@@ -472,7 +472,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               $fieldDatum->setDeleted(null);
               $this->persist($fieldDatum);
               if ($finalBaseName != $baseName) { // THIS CANNOT HAPPEN?
-                $this->logInfo('WHY SHOULD EVER BE "' . $finalBaseName . '" BE DIFFERENT FROM "' . $baseName . '"?');
                 $this->entityManager->registerPreCommitAction(
                   new UndoableFileRename(
                     $folderName . Constants::PATH_SEP . $baseName,
@@ -538,7 +537,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 if (empty($files)) {
                   $this->remove($fieldDatum, hard: true);
                 } else {
-                  $fieldDatum->setOptionValue(json_encode($files));
+                  $fieldDatum->setOptionValue(json_encode(array_values($files)));
                   $fieldDatum->setDeleted(null);
                 }
               }
@@ -591,6 +590,8 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    */
   private static function matchPrefixDirectory(?string $path, string $folderPrefix)
   {
+    $path = ltrim((string)$path, Constants::PATH_SEP);
+    $folderPrefix = ltrim((string)$folderPrefix, Constants::PATH_SEP);
     $prefixLen = strlen($folderPrefix);
     if (substr($path, 0, $prefixLen) == $folderPrefix) {
       return substr($path, $prefixLen);
