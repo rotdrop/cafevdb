@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,6 +51,7 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
   const fileBase = $thisRow.data('fileBase');
   const widgetId = 'file-upload-' + optionKey + (fileBase || !fileName ? '' : '-md5-' + md5(fileName));
   const isCloudFolder = $thisRow.closest('td.participant-field').hasClass('cloud-folder');
+  // const storageType = $thisRow.data('storage');
   const uploadMultiple = isCloudFolder && !fileName;
   const $uploadUi = $('#fileUploadTemplate').octemplate({
     wrapperId: widgetId,
@@ -131,7 +132,15 @@ const initFileUploadRow = function(projectId, musicianId, resizeCB, uploadUrls) 
       if (!$downloadLink.hasClass('static-content')) {
         $downloadLink.html(file.meta.baseName);
       }
-      $placeholder.val(file.meta.baseName);
+      switch (file.meta.storageBackend) {
+      case 'db':
+        $placeholder.val(file.meta.fileId);
+        break;
+      case 'cloud':
+      default:
+        $placeholder.val(file.meta.baseName);
+        break;
+      }
       $parentFolder.attr('href', file.meta.filesApp);
 
       unmaskInputs();

@@ -43,7 +43,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  *     @ORM\UniqueConstraint(columns={"tax_type", "assessment_period_start", "assessment_period_end"})
  *   }
  * )
- * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TaxExemptionNoticesRepository")
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\NeverHardDelete"
@@ -125,6 +125,15 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
    * @ORM\Column(type="string", length=4096, nullable=false)
    */
   private string $beneficiaryPurpose;
+
+  /**
+   * @var bool
+   *
+   * Whether the orchester is allowed to treat membership fees as donations.
+   *
+   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
+   */
+  private bool $membershipFeesAreDonations = false;
 
   /**
    * @var DatabaseStorageFile
@@ -306,6 +315,26 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   }
 
   /**
+   * @return null|bool
+   */
+  public function getMembershipFeesAreDonations():?bool
+  {
+    return $this->membershipFeesAreDonations;
+  }
+
+  /**
+   * @param bool $membershipFeesAreDonations
+   *
+   * @return TaxExemptionNotice
+   */
+  public function setMembershipFeesAreDonations(bool $membershipFeesAreDonations):TaxExemptionNotice
+  {
+    $this->membershipFeesAreDonations = $membershipFeesAreDonations;
+
+    return $this;
+  }
+
+  /**
    * @return null|DateTimeInterface
    */
   public function getWrittenNotice():?DatabaseStorageFile
@@ -328,11 +357,8 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   /** {@inheritdoc} */
   public function jsonSerialize():array
   {
-    return array_merge($this->toArray(), [
-      'publicName' => $this->getPublicName(true),
-    ]);
+    $this->toArray();
   }
-
 
   /** {@inheritdoc} */
   public function __toString():string

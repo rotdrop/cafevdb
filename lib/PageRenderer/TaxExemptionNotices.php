@@ -241,6 +241,23 @@ class TaxExemptionNotices extends PMETableViewBase
         'input' => 'M', // required
       ]);
 
+    $opts['fdd']['membershipt_fees_are_donations'] = [
+      'name' => $this->l->t('Membership Fees'),
+      'css'      => [ 'postfix' => [ 'membership-fees', ], ],
+      'select|CAP' => 'O',
+      'select|LVDF' => 'T',
+      'sort' => true,
+      'default' => false,
+      'escape' => false,
+      'sqlw' => 'IF($val_qas = "", 0, 1)',
+      'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+      'values2|LVDF' => [
+        0 => '',
+        1 => '&#10004;',
+      ],
+      'tooltip' => $this->toolTipsService['page-renderer:tax-exemption-notices:membership-fees'],
+    ];
+
     $opts['fdd']['beneficiary_purpose'] = [
       'name'     => $this->l->t('Beneficiary Purpose'),
       'css'      => [ 'postfix' => [ 'beneficiary-purpose', 'squeeze-subsequent-lines', ], ],
@@ -294,6 +311,7 @@ class TaxExemptionNotices extends PMETableViewBase
             overrideFileName: true,
             musician: null,
             project: null,
+            inputValueName: 'written_notice_id',
           )
           . '
   </table>
@@ -321,7 +339,7 @@ class TaxExemptionNotices extends PMETableViewBase
           $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);
           $filesAppTarget = md5($filesAppLink);
           $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
-       title="'.$this->toolTipsService['tax-exemption-notices:written-notice:open-parent'].'"
+       title="'.$this->toolTipsService['page-renderer:upload:open-parent'].'"
        class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
        ></a>';
         } catch (\OCP\Files\NotFoundException $e) {

@@ -50,6 +50,20 @@ class ToolTipsDataService
    */
   private static function t(string $text, mixed $parameters = []):array
   {
+    if (!is_array($parameters)
+        || (isset($parameter['text'])
+            && isset($parameter['parameters']))) {
+      $parameters = [ $parameters ];
+    }
+    foreach ($parameters as &$parameter) {
+      if (is_array($parameter)
+          && isset($parameter['text'])
+          && isset($parameter['parameters'])) {
+        $text = $parameter['text'];
+        $param = $parameter['parameters'];
+        $parameter = fn(IL10N $l) => $l->t($text, $param);
+      }
+    }
     return [ 'text' => $text, 'parameters' => $parameters ];
   }
 
@@ -340,6 +354,18 @@ invited to have a look, but please do not change anything unless you know what y
       ],
 
       'page-renderer' => [
+        'attachment' => [
+          'default' => self::t('Attach a supporting document.'),
+          'delete' => self::t('Delete this file attachment. Undelete may be possible using the files-app of the cloud-software.'),
+
+          'upload' => [
+            'default' => self::t('Click to upload the relevant file or use drag and drop anywhere in this data-row.'),
+            'from-client' => self::t('Upload a new attachment from your device.'),
+            'from-cloud' => self::t('Select a new attachment from the cloud storage. The selected file will be copied.'),
+          ],
+          'download' => self::t('Click to download this file.'),
+          'open-parent' => self::t('Open the containing folder using the files-app of the cloud.'),
+        ],
         'miscinfo-tab' => self::t('Further "not so important" data of the participant.'),
         'musicians' => [
           'avatar' => self::t('An optional avatar image provided by the person itself. This is part of the public self-expression of the respective user and thus read-only and only provided here for reference. Avatar images are only availabe for persons with an active cloud account.'),
@@ -380,18 +406,22 @@ invited to have a look, but please do not change anything unless you know what y
             'view' => self::t('Set to "%s" in order to mark the section leader.', [ "&alpha;" ])
           ],
           'registration' => [
-            'default' => self::t('Set to "%1$s" for participants whose participation is not sure for whatever reason. Set to "%2$s" for participants whose participation is confirmative. "%1$s" may be the result of e.g. doubts of the executive board, missing confirmation of the participant, too many applications, missing signed registration form (if applicable). When the settings is changed from "%1$s" to "%2$s" the person is also subscribed to the project mailing list and an automatic confirmation email is sent out to the person.
+            'default' => self::t(
+              'Set to "%1$s" for participants whose participation is not sure for whatever reason. Set to "%2$s" for participants whose participation is confirmative. "%1$s" may be the result of e.g. doubts of the executive board, missing confirmation of the participant, too many applications, missing signed registration form (if applicable). When the settings is changed from "%1$s" to "%2$s" the person is also subscribed to the project mailing list and an automatic confirmation email is sent out to the person.
 
-This setting is meant to support a project in the planning phase: one may enter persons freely into the instrumentation table and decide later whether they really participate.', [
-  self::t('tentatively'),
-  self::t('confirmed'),
-]),
-            'tentatively' => self::t('"%1$s" means that it is not clear whether this person really will participate in the project.  Changing the participation status from "%1$s" to "%2$s" will also subscribe the person to the project mailing list and results in an automated project subscription confirmation email.
+This setting is meant to support a project in the planning phase: one may enter persons freely into the instrumentation table and decide later whether they really participate.',
+              [
+                self::t('tentatively'),
+                self::t('confirmed'),
+              ]),
+            'tentatively' => self::t(
+              '"%1$s" means that it is not clear whether this person really will participate in the project.  Changing the participation status from "%1$s" to "%2$s" will also subscribe the person to the project mailing list and results in an automated project subscription confirmation email.
 
-This setting is here to support the planning phase of a project: one may freely enter persons to the instrumentation table and decide later about their confirmative participation, e.g. because one is waiting for confirmation from the tentative participant, or a signed application, or simply because there are too many applications which need to be cleaned up later.', [
-  self::t('tentatively'),
-  self::t('confirmed'),
-]),
+This setting is here to support the planning phase of a project: one may freely enter persons to the instrumentation table and decide later about their confirmative participation, e.g. because one is waiting for confirmation from the tentative participant, or a signed application, or simply because there are too many applications which need to be cleaned up later.',
+              [
+                self::t('tentatively'),
+                self::t('confirmed'),
+              ]),
             'confirmed' => self::t('"%2$s" means that this person definitely will participate in this project. The reason for labeling a person\'s participation status as "%2$s" may vary from project to project, e.g. a signed application may have been received for larger projects which carry a project fee, or maybe the person simply has confirmed its participation after checking its calendar or the like.
 
 This setting is meant to support a project in the planning phase: one may enter persons freely into the instrumentation table, label their participoation as "%1$s" and decide later whether they really participate at which point the person is either deleted or its participation status is set to "%2$s".', [

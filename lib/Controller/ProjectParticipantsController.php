@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -597,6 +597,8 @@ class ProjectParticipantsController extends Controller
         $uploads = [];
         foreach ($files as $file) {
 
+          $fileId = -1;
+
           $messages = []; // messages for non-fatal errors
 
           if ($file['error'] != UPLOAD_ERR_OK) {
@@ -771,6 +773,7 @@ class ProjectParticipantsController extends Controller
             switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
               case FieldDataType::CLOUD_FOLDER:
+                $storageBackend = 'cloud';
                 // from the field-name and user-id-slug
                 $optionValue = $pathInfo['basename'];
                 if ($dataType == FieldDataType::CLOUD_FOLDER) {
@@ -799,13 +802,16 @@ class ProjectParticipantsController extends Controller
                   );
                 }
                 $this->entityManager->registerPreCommitAction(function() use (&$file, $filePath, $userStorage) {
-                  $downloadLink = $userStorage->getDownloadLink($filePath);
+                  $cloudFile = $userStorage->get($filePath, useCache: true, throw: true);
+                  $downloadLink = $userStorage->getDownloadLink($cloudFile);
+                  $file['meta']['fileId'] = $cloudFile->getId();
                   $file['meta']['download'] = $downloadLink;
                 });
                 break;
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
               case FieldDataType::DB_FILE:
+                $storageBackend = 'db';
 
                 $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
 
@@ -869,6 +875,8 @@ class ProjectParticipantsController extends Controller
                   . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
                   . '&fileName=' . urlencode($filePath);
 
+                $fileId = $dbDocument->getId();
+
                 break;
             }
 
@@ -907,6 +915,8 @@ class ProjectParticipantsController extends Controller
               'baseName' => $pathInfo['basename'],
               'extension' => $pathInfo['extension']?:'',
               'fileName' => $pathInfo['filename'],
+              'fileId' => $fileId,
+              'storageBackend' => $storageBackend,
               'download' => $downloadLink ?? null,
               'filesApp' => $filesAppLink,
               'conflict' => $conflict,
