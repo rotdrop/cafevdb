@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,11 +39,20 @@ use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Constants;
 
 /**
- * File-name entry for a database-backed file.
+ * File-node entry for a database-backed file.
  *
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageFilesRepository")
  * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\DatabaseStorageFileEntityListener"})
  * @ORM\HasLifecycleCallbacks
+ *
+ * @method File setSize(int $size)
+ * @method int getSize()
+ * @method mixed getData()
+ * @method File setFileData(FileData $data)
+ * @method FileData getFileData()
+ * @method File setMimeType(string $mimeType)
+ * @method string getMimeType()
+ * @method int getNumberOfLinks()
  */
 class DatabaseStorageFile extends DatabaseStorageDirEntry
 {
@@ -120,6 +129,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   const FILE_METHODS = [
     'setSize',
     'getSize',
+    'getData',
     'setFileData',
     'getFileData',
     'getMimeType',
