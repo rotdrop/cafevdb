@@ -241,7 +241,7 @@ class TaxExemptionNotices extends PMETableViewBase
         'input' => 'M', // required
       ]);
 
-    $opts['fdd']['membershipt_fees_are_donations'] = [
+    $opts['fdd']['membership_fees_are_donations'] = [
       'name' => $this->l->t('Membership Fees'),
       'css'      => [ 'postfix' => [ 'membership-fees', ], ],
       'select|CAP' => 'O',
