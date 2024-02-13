@@ -33,10 +33,10 @@ use Sabre\VObject\Component\VCalendar;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\Constants;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -231,6 +231,7 @@ class LegacyEventsController extends Controller
       'legacy/calendar/part.newevent',
       [
         'appName' => $this->appName(),
+        'appNameTag' => 'app-' . $this->appName,
         'toolTips' => $this->toolTipsService,
 
         'requesttoken' => \OCP\Util::callRegister(),
@@ -563,6 +564,7 @@ class LegacyEventsController extends Controller
 
     $templateParameters = [
       'appName' => $this->appName(),
+      'appNameTag' => 'app-' . $this->appName,
       'toolTips' => $this->toolTipsService,
 
       'requestoken' => \OCP\Util::callRegister(),

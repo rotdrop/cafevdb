@@ -28,9 +28,9 @@ use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\TemplateResponse;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /**

@@ -29,7 +29,6 @@ use Throwable;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IUserSession;
 use OCP\IRequest;
@@ -39,6 +38,7 @@ use OCP\IDateTimeZone;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 

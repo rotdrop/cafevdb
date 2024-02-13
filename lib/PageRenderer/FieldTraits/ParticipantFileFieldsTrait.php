@@ -26,8 +26,7 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use RuntimeException;
 
-use OCP\AppFramework\Http\TemplateResponse;
-
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;

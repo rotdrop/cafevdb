@@ -28,8 +28,8 @@ use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\TemplateResponse;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Exceptions;
 

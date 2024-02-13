@@ -25,7 +25,6 @@
 namespace OCA\CAFEVDB\Settings;
 
 use OCP\App\IAppManager;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 use OCP\IInitialStateService;
 
@@ -46,6 +45,7 @@ use OCA\Redaxo\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Http\TemplateResponse;
 
 /**
  * Simple helper class in order to avoid instantiation of a bunch of
@@ -148,6 +148,7 @@ class PersonalForm
           Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
         'appName' => $this->appName(),
+        'appNameTag' => 'app-' . $this->appName,
         'appInfo' => $this->appManager->getAppInfo($this->appName()),
         'userId' => $this->userId(),
         //
@@ -257,6 +258,7 @@ class PersonalForm
         $templateParameters = array_merge(
           $templateParameters,
           [
+            Admin::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigService::USER_GROUP_KEY),
             'streetAddressName01' => $this->getConfigValue('streetAddressName01'),
             'streetAddressName02' => $this->getConfigValue('streetAddressName02'),
             'streetAddressStreet' => $this->getConfigValue('streetAddressStreet'),
@@ -318,6 +320,8 @@ class PersonalForm
             ConfigService::FINANCE_FOLDER => $this->getConfigValue(ConfigService::FINANCE_FOLDER, ''),
             ConfigService::TRANSACTIONS_FOLDER => $this->getConfigValue(ConfigService::TRANSACTIONS_FOLDER, ''),
             ConfigService::BALANCES_FOLDER => $this->getConfigValue(ConfigService::BALANCES_FOLDER, ''),
+            ConfigService::TAX_OFFICE_IN_TRAY_FOLDER => $this->getConfigValue(ConfigService::TAX_OFFICE_IN_TRAY_FOLDER, ''),
+            ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE => $this->getConfigValue(ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE, ''),
 
             'translations' => $translations,
 

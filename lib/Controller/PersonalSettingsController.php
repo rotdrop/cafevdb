@@ -36,11 +36,11 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -2204,7 +2204,7 @@ class PersonalSettingsController extends Controller
       $this->setConfigValue($key, $realValue);
 
       if (preg_match('/.*password.*/i', $key)) {
-        $realValue = '••••••••';
+        $reportValue = $realValue = $realValue[0] . '••••••••';
       }
       return self::dataResponse(
         $responseData = Util::arrayMergeRecursive([

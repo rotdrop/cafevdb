@@ -30,8 +30,8 @@ use RuntimeException;
 use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCP\Files as CloudFiles;
-use OCP\AppFramework\Http\TemplateResponse;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;

@@ -28,10 +28,9 @@ use InvalidArgumentException;
 
 use chillerlan\QRCode\QRCode;
 
-use OCP\AppFramework\Http\TemplateResponse;
-
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;

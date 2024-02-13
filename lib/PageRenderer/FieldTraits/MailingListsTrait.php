@@ -22,10 +22,9 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use OCP\AppFramework\Http\TemplateResponse;
-
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Controller\ProjectParticipantsController;

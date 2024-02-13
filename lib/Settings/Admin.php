@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\Settings;
 
 use Throwable;
 
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\IDelegatedSettings;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Services\IInitialState;
@@ -39,6 +38,7 @@ use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\AssetService;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Http\TemplateResponse;
 
 /** Admin settings class. */
 class Admin implements IDelegatedSettings
@@ -152,6 +152,7 @@ class Admin implements IDelegatedSettings
       $this->appName(),
       self::TEMPLATE, [
         'appName' => $this->appName(),
+        'appNameTag' => 'app-' . $this->appName,
         'assets' => [
           Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
           Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),

@@ -28,7 +28,6 @@ use Throwable;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IDBConnection;
 use OCP\IUserSession;
@@ -36,6 +35,7 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\IProgressStatus;
 

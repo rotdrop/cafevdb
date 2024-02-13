@@ -24,11 +24,11 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\AuthorizationService;
 
 /**

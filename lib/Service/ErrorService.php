@@ -26,7 +26,8 @@ namespace OCA\CAFEVDB\Service;
 
 use Exception;
 
-use OCP\AppFramework\Http\TemplateResponse;
+use OCA\CAFEVDB\Http\TemplateResponse;
+use OCA\CAFEVDB\Service\AuthorizationService;
 
 /** Generate frontend HTML page with error information. */
 class ErrorService

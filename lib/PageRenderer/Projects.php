@@ -28,10 +28,9 @@ use Throwable;
 use RuntimeException;
 use DateTimeImmutable;
 
-use OCP\AppFramework\Http\TemplateResponse;
-
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -1528,8 +1527,3 @@ class Projects extends PMETableViewBase
     return true;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
