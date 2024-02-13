@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -575,7 +575,7 @@ if (!empty($diagnostics[Composer::DIAGNOSTICS_MAILER_EXCEPTIONS])) {
     'Please copy this page and send it via email to %s.'.
     'It may be possible to simply click on the red, underlined text '.
     'in order to compose a useful message.',
-    [ '<span class="error cafevdb email">'
+    [ '<span class="error <?php p($appNameTag) ?> email">'
       . '<a href="mailto:' . $mailto . '">'
       . $adminName
       . '</a>'
@@ -639,7 +639,7 @@ if (!empty($diagnostics[Composer::DIAGNOSTICS_DUPLICATES])) {
   $mailto = $adminMailto
     . '?subject='.rawurlencode('[CAFEVDB-EmailDuplicate] Probably False Positive')
     . '&body='.rawurlencode($errorBody);
-  $mailto = '<span class="error cafevdb email"><a href="mailto:'.$mailto.'">'.$adminName.'</a></span>';
+  $mailto = '<span class="error ' . $appNameTag . ' email"><a href="mailto:'.$mailto.'">'.$adminName.'</a></span>';
   $explanations =
     $l->t(
       'The email-form refuses to send email twice to the same recipients. '.
@@ -700,7 +700,7 @@ if (!empty($diagnostics[Composer::DIAGNOSTICS_COPY_TO_SENT])) {
   $mailto = $cloudAdminContact['email'].
             '?subject='.rawurlencode('[CAFEVDB-CopyToSent] IMAP Error').
             '&body='.rawurlencode($errorBody);
-  $mailto = '<span class="error cafevdb email"><a href="mailto:'.$mailto.'">'.$cloudAdminContact['name'].'</a></span>';
+  $mailto = '<span class="error ' . $appNameTag . ' email"><a href="mailto:'.$mailto.'">'.$cloudAdminContact['name'].'</a></span>';
   $explanations = $l->t(
     'If no other error messages are echoed on this page, then'
     . ' the emails have probably been sent successfully. However, copying'

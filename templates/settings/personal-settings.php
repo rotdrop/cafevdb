@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ namespace OCA\CAFEVDB;
 ?>
 
 <div id="tabs-<?php echo $_['tabNr']; ?>" class="personalblock <?php $_['adminsettings'] && p('admin'); ?>">
-  <form id="cafevdb" class="personal-settings">
+  <form id="app-cafevdb" class="personal-settings">
     <input id="tooltips"
            type="checkbox"
            class="checkbox tooltips <?php p($toolTipClass); ?>"
@@ -163,28 +163,42 @@ namespace OCA\CAFEVDB;
   </form>
   <br />
   <form id="userkey">
-    <input class="cafevdb-password tooltip-auto"
-           type="password"
-           autocomplete="current-password"
-           required="required"
-           id="password"
-           name="password"
-           title="<?php p($toolTips['settings:personal:encryptionkey:own-password']); ?>"
-           placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show"
-    />
-    <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
-    <label class="cafevdb-password-show" for="password-show"><?php echo $l->t('show');?></label>
-    <input class="cafevdb-password tooltip-auto"
-           type="password"
-           id="encryptionkey"
-           name="encryptionkey"
-           value="<?php echo (true ? '' : $_['encryptionkey']); ?>"
-           placeholder="<?php echo $l->t('DB Encryption Key');?>"
-           title="<?php p($toolTips['settings:personal:encryptionkey']); ?>"
-           data-typetoggle="#userkey-show" />
-    <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
-    <label class="cafevdb-password-show" for="userkey-show"><?php echo $l->t('show');?></label>
-    <input id="button" type="button" value="<?php echo $l->t('Set Encryption Key');?>" />
+    <fieldset class="inline-block">
+      <input type="hidden"
+             name="userId"
+             value="<?php p($userId); ?>"
+             autocomplete="username"
+      />
+      <input class="cafevdb-password tooltip-auto"
+             type="password"
+             autocomplete="current-password"
+             required="required"
+             id="password"
+             name="password"
+             title="<?php p($toolTips['settings:personal:encryptionkey:own-password']); ?>"
+             placeholder="<?php echo $l->t('Own Password');?>" data-typetoggle="#password-show"
+      />
+      <input class="cafevdb-password-show" type="checkbox" id="password-show" name="password-show" />
+      <label class="cafevdb-password-show" for="password-show"><?php echo $l->t('show');?></label>
+    </fieldset>
+    <fieldset class="inline-block">
+      <input type="hidden"
+             name="orchestraUserGroup"
+             value="@<?php p($orchestraUserGroup); ?>"
+             autocomplete="username"
+      />
+      <input class="cafevdb-password tooltip-auto"
+             type="password"
+             id="encryptionkey"
+             name="encryptionkey"
+             value="<?php echo (true ? '' : $_['encryptionkey']); ?>"
+             placeholder="<?php echo $l->t('DB Encryption Key');?>"
+             title="<?php p($toolTips['settings:personal:encryptionkey']); ?>"
+             data-typetoggle="#userkey-show" />
+      <input class="cafevdb-password-show" type="checkbox" id="userkey-show" name="userkey-show" />
+      <label class="cafevdb-password-show" for="userkey-show"><?php echo $l->t('show');?></label>
+      <input id="button" type="button" value="<?php echo $l->t('Set Encryption Key');?>" />
+    </fieldset>
     <div class="statusmessage changed"><?php echo $l->t('The encryption key has been set successfully.');?></div>
     <div class="statusmessage error"><?php echo $l->t('Unable to set the encryption key.');?></div>
     <div class="statusmessage info"></div>
