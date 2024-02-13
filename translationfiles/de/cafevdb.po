@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2024-02-13 11:16+0100\n"
-"PO-Revision-Date: 2024-02-13 12:47+0100\n"
+"POT-Creation-Date: 2024-02-13 16:25+0100\n"
+"PO-Revision-Date: 2024-02-13 16:31+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -2855,7 +2855,7 @@ msgstr ""
 "Uri für automatische Antworten des Ankündigungs-Email-Verteilers ist \"%s\"."
 
 #: lib/Controller/PersonalSettingsController.php:1805
-#: lib/Settings/PersonalForm.php:448
+#: lib/Settings/PersonalForm.php:449
 #, php-format
 msgid "%d days"
 msgstr "%d Tage"
@@ -5476,7 +5476,7 @@ msgstr "nein"
 #: lib/PageRenderer/ProjectParticipantFields.php:977
 #: lib/PageRenderer/ProjectParticipantFields.php:1555
 #: lib/Service/ProjectParticipantFieldsService.php:667
-#: templates/pme-table.php:80
+#: templates/pme-table.php:82
 msgid "false"
 msgstr "falsch"
 
@@ -5485,7 +5485,7 @@ msgid "Projects"
 msgstr "Projekte"
 
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:75
-#: lib/PageRenderer/Projects.php:738 templates/settings/email-settings.php:127
+#: lib/PageRenderer/Projects.php:738 templates/settings/email-settings.php:134
 msgid "Mailing List"
 msgstr "Mailing-Liste"
 
@@ -8327,7 +8327,7 @@ msgstr "Vorschau"
 
 #: lib/Service/ProjectService.php:1644 lib/Service/ProjectService.php:1699
 #: lib/Service/ProjectService.php:1872 lib/Service/ProjectService.php:1917
-#: lib/Service/ProjectService.php:1977 lib/Settings/PersonalForm.php:354
+#: lib/Service/ProjectService.php:1977 lib/Settings/PersonalForm.php:353
 msgid "Rehearsals"
 msgstr "Proben"
 
@@ -8682,7 +8682,7 @@ msgstr ""
 "herunterladen."
 
 #: lib/Service/ToolTipsDataService.php:166
-#, php-format, fuzzy
+#, php-format
 msgid ""
 "# Notices of Tax Exemption\n"
 "## What's This?\n"
@@ -8720,16 +8720,25 @@ msgstr ""
 "-- vermutlich ein Scan -- des offiziellen Bescheids in der Cloud\n"
 "hinterlegt wurde, dann wird der hier angezeigt.\n"
 "\n"
-"Die eigentliche Übersicht über die Freistellungsbescheide findet sich allerdings dort: [%2$s](%3$s)\n"
+"Die eigentliche Übersicht über die Freistellungsbescheide findet sich "
+"allerdings dort: [%2$s](%3$s)\n"
 "\n"
 "## Schema der Dateinamen\n"
 "```\n"
 "FreistellungsBescheid-STEUER_TYP-JJJJ-JJJJ\n"
 "```\n"
 "wobei `STEUER_TYP` einer der folgenden ist: \"%1$s\"\n"
-"- es ist bis zu einem gewissen Grad möglich, die Dateien umzubenennen, so dass die Änderungen zurückgespielt werden in die Übersichtstabelle in der Orchester-App\n"
-"- das klappt aber ausschließlich dann, wenn man das vorgegebene Datei-Namen-Schema strikt respektiert: keine Leerzeichen, Bindestriche nicht in Unterstriche konvertieren, keine phantastischen Änderungen, nur weil man selbst es schöner findet\n"
-"- falls man sich also richtig verhält und höflich gegenüber dem Programmierer dieser App, dann werden Änderungen des Steuer-Typs und des Veranlagungszeitraums beim Umbenennen der Datei akzeptiert *und* in die [Übersichtstabelle](%3$s) eingepflegt.\n"
+"- es ist bis zu einem gewissen Grad möglich, die Dateien umzubenennen, so "
+"dass die Änderungen zurückgespielt werden in die Übersichtstabelle in der "
+"Orchester-App\n"
+"- das klappt aber ausschließlich dann, wenn man das vorgegebene Datei-Namen-"
+"Schema strikt respektiert: keine Leerzeichen, Bindestriche nicht in "
+"Unterstriche konvertieren, keine phantastischen Änderungen, nur weil man "
+"selbst es schöner findet\n"
+"- falls man sich also richtig verhält und höflich gegenüber dem "
+"Programmierer dieser App, dann werden Änderungen des Steuer-Typs und des "
+"Veranlagungszeitraums beim Umbenennen der Datei akzeptiert *und* in die "
+"[Übersichtstabelle](%3$s) eingepflegt.\n"
 
 #: lib/Service/ToolTipsDataService.php:215
 msgid ""
@@ -9300,7 +9309,9 @@ msgstr "Anklicken um die Datei zu laden."
 
 #: lib/Service/ToolTipsDataService.php:367
 msgid "Open the containing folder using the files-app of the cloud."
-msgstr "Den Datei-Ordner mit dieser Datei in der Dateien-App der Cloud-Software öffnen."
+msgstr ""
+"Den Datei-Ordner mit dieser Datei in der Dateien-App der Cloud-Software "
+"öffnen."
 
 #: lib/Service/ToolTipsDataService.php:369 lib/Service/ToolTipsService.php:775
 #, php-format
@@ -12204,31 +12215,31 @@ msgstr "Hilfe-Tag \"%s\""
 msgid "Default Event Notification"
 msgstr "Termin-Erinnerung (Voreinstellung)"
 
-#: lib/Settings/PersonalForm.php:248
+#: lib/Settings/PersonalForm.php:246
 msgid "ClubMembers"
 msgstr "Vereinsmitglieder"
 
-#: lib/Settings/PersonalForm.php:250
+#: lib/Settings/PersonalForm.php:248
 msgid "ExecutiveBoardMembers"
 msgstr "Vorstand"
 
-#: lib/Settings/PersonalForm.php:353
+#: lib/Settings/PersonalForm.php:352
 msgid "Concerts"
 msgstr "Konzerte"
 
-#: lib/Settings/PersonalForm.php:355
+#: lib/Settings/PersonalForm.php:354
 msgid "Other"
 msgstr "Sonstiges"
 
-#: lib/Settings/PersonalForm.php:356
+#: lib/Settings/PersonalForm.php:355
 msgid "Management"
 msgstr "Vorstand"
 
-#: lib/Settings/PersonalForm.php:357
+#: lib/Settings/PersonalForm.php:356
 msgid "Finance"
 msgstr "Kasse"
 
-#: lib/Settings/PersonalForm.php:360
+#: lib/Settings/PersonalForm.php:359
 msgid "Miscellaneous"
 msgstr "Sonstiges"
 
@@ -12582,13 +12593,13 @@ msgstr ""
 "installiert, bitte kontaktieren Sie den Systemadministrator!"
 
 #: php-toolkit/Traits/AuthenticatedCommandTrait.php:64
-#: templates/settings/app-settings.php:138
-#: templates/settings/email-settings.php:306
+#: templates/settings/app-settings.php:151
+#: templates/settings/email-settings.php:314
 msgid "User"
 msgstr "Benutzer"
 
 #: php-toolkit/Traits/AuthenticatedCommandTrait.php:66
-#: templates/settings/email-settings.php:320
+#: templates/settings/email-settings.php:330
 msgid "Password"
 msgstr "Passwort"
 
@@ -12613,7 +12624,7 @@ msgid "CAFeV DB"
 msgstr "CAFeV DB"
 
 #: specialAppInfoFakeDummyForL10nScript.php:3
-msgid "Orchestra Management Application."
+msgid "Orchestra Management Application"
 msgstr "Orchester-Verwaltungs-Anwendung"
 
 #. TRANSLATORS src/components/AdminSettings.vue:28
@@ -13004,7 +13015,7 @@ msgstr "Anschrift eingeben"
 
 #. TRANSLATORS src/views/FilesTab.vue:152
 #: specialVueFakeDummyForL10nScript.js:190
-#: templates/settings/share-settings.php:96
+#: templates/settings/share-settings.php:100
 msgid "Contacts"
 msgstr "Kontakte"
 
@@ -13307,8 +13318,8 @@ msgstr "Abgebrochen"
 #: src/app/blog.js:387 src/app/cloud-file-picker-dialog.js:59
 #: src/app/cloud-file-picker-dialog.js:87 src/app/email.js:89
 #: src/app/email.js:826 src/app/email.js:952
-#: src/app/project-participant-fields.js:248 src/app/settings.js:1331
-#: src/app/settings.js:1344 src/legacy/calendar/calendar.js:340
+#: src/app/project-participant-fields.js:248 src/app/settings.js:1336
+#: src/app/settings.js:1349 src/legacy/calendar/calendar.js:340
 msgid "Error"
 msgstr "Fehler"
 
@@ -13472,9 +13483,9 @@ msgid "Choose some Options"
 msgstr "Wähle aus den Optionen"
 
 #: src/app/chosen-popup.js:41 src/app/sepa-debit-mandate.js:590
-#: templates/settings/share-settings.php:231
-#: templates/settings/share-settings.php:254
-#: templates/settings/share-settings.php:277
+#: templates/settings/share-settings.php:235
+#: templates/settings/share-settings.php:258
+#: templates/settings/share-settings.php:281
 msgid "Save"
 msgstr "Speichern"
 
@@ -13501,7 +13512,7 @@ msgstr ""
 msgid "Select a file from the cloud"
 msgstr "Datei aus der \"Cloud\" auswählen"
 
-#: src/app/cloud-file-picker-dialog.js:59 src/app/settings.js:1331
+#: src/app/cloud-file-picker-dialog.js:59 src/app/settings.js:1336
 msgid "Empty response from file selection!"
 msgstr "Keine Antwort vom Datei-Auswahldialog!"
 
@@ -14340,31 +14351,31 @@ msgstr ""
 msgid "Set Project-Participant to Bank-Account-Owner?"
 msgstr "Projekt-Mitlied durch Kontoinhaber:in ersetzen?"
 
-#: src/app/settings.js:130
+#: src/app/settings.js:135
 msgid "You must type in your login password."
 msgstr "Sie müssen Ihr Anmelde-Passwort eingeben."
 
-#: src/app/settings.js:232
+#: src/app/settings.js:237
 msgid "Please standby, the operation will take some time!"
 msgstr "Bitte warten, das dauert jetzt ein wenig!"
 
-#: src/app/settings.js:350
+#: src/app/settings.js:355
 msgid "Empty password, trying to use configured credentials."
 msgstr "Leeres Password, versuche gespeicherte Anmeldedaten zu verwenden."
 
-#: src/app/settings.js:445 src/app/settings.js:783
+#: src/app/settings.js:450 src/app/settings.js:788
 msgid "Password field must not be empty"
 msgstr "Das Passwort-feld darf nicht leer sein"
 
-#: src/app/settings.js:1269 src/app/settings.js:1290
+#: src/app/settings.js:1274 src/app/settings.js:1295
 msgid "Unable to download auto-fill result."
 msgstr "Kann den Serien-Brief-Test nicht herunter laden."
 
-#: src/app/settings.js:1343
+#: src/app/settings.js:1348
 msgid "Unable to copy selected file {file}."
 msgstr "Kann die ausgwählte Datei {file} nicht kopieren."
 
-#: src/app/settings.js:1486
+#: src/app/settings.js:1491
 msgid "Unable to download translation templates."
 msgstr "Kann die Übersetzungen nicht laden."
 
@@ -14790,7 +14801,7 @@ msgid "CONJUNCTION: or"
 msgstr "oder"
 
 #: templates/emailform/part.emailform.recipients.php:237
-#: templates/settings/email-settings.php:129
+#: templates/settings/email-settings.php:136
 msgid "Announcements Mailing List"
 msgstr "Ankündigungs-Email-Verteiler"
 
@@ -15984,7 +15995,7 @@ msgstr "Kontext-Hilfe"
 msgid "Close Side-Bar Menu"
 msgstr "Seitenmenü schließen"
 
-#: templates/pme-table.php:58
+#: templates/pme-table.php:60
 #, php-format
 msgid "Renderer failed: %s"
 msgstr "Laden der Seite fehlgeschlagen: %s"
@@ -16194,6 +16205,29 @@ msgstr "Ausgefülltes SEPA Lastschriftmandat hochladen"
 msgid "upload later"
 msgstr "später hochladen"
 
+#: templates/settings/about.php:60
+msgid "Source Code:"
+msgstr "Quell-Code-Archiv:"
+
+#: templates/settings/about.php:67
+#, php-format
+msgid "Licenced under the %s"
+msgstr "Lizenziert unter der %s"
+
+#: templates/settings/about.php:72
+msgid ""
+"There is a long list of free software(%1$s)\n"
+"projects this application depends on, coded in the spare-time of\n"
+"an amazingly long list of volunteers. We just randomly choose\n"
+"five projects and display them below. The list refreshes\n"
+"\"itself\" every %d seconds."
+msgstr ""
+"Es gibt unglaublich viele Freie Software(%1$s), die von dieser\n"
+"Applikation verwendet werden, die von unglaublich langen Liste von\n"
+"Programmierern in deren Freizeit geschrieben wurde. Aus dieser Liste\n"
+"zeigen wir unten exemplarisch nur fünf zufällig ausgewählte Projekte\n"
+"an. Die Liste aktualisiert \"sich\" alle %2$d Sekunden."
+
 #: templates/settings/app-settings.php:50
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
@@ -16213,63 +16247,63 @@ msgstr "Gebietsschema des Orchesters"
 msgid "Encryption settings"
 msgstr "Verschlüsselungs Einstellungen"
 
-#: templates/settings/app-settings.php:82
+#: templates/settings/app-settings.php:87
 msgid "Current Key"
 msgstr "Aktueller Schlüssel"
 
-#: templates/settings/app-settings.php:85
-#: templates/settings/app-settings.php:88
-#: templates/settings/app-settings.php:147
-#: templates/settings/email-settings.php:97
-#: templates/settings/email-settings.php:331
-#: templates/settings/personal-settings.php:176
-#: templates/settings/personal-settings.php:186
-#: templates/settings/share-settings.php:63
+#: templates/settings/app-settings.php:92
+#: templates/settings/app-settings.php:102
+#: templates/settings/app-settings.php:167
+#: templates/settings/email-settings.php:104
+#: templates/settings/email-settings.php:341
+#: templates/settings/personal-settings.php:182
+#: templates/settings/personal-settings.php:199
+#: templates/settings/share-settings.php:67
 msgid "show"
 msgstr "zeigen"
 
-#: templates/settings/app-settings.php:86
+#: templates/settings/app-settings.php:97
 msgid "New Key"
 msgstr "Neuer Schlüssel"
 
-#: templates/settings/app-settings.php:89
-#: templates/settings/share-settings.php:64
+#: templates/settings/app-settings.php:103
+#: templates/settings/share-settings.php:68
 msgid "Generate"
 msgstr "Erzeugen"
 
-#: templates/settings/app-settings.php:89
+#: templates/settings/app-settings.php:103
 msgid "Generate a random encryption key"
 msgstr "Erzeuge einen Zufallsschlüssel (bitte gut merken!)"
 
-#: templates/settings/app-settings.php:90
+#: templates/settings/app-settings.php:104
 msgid "Change Encryption Key"
 msgstr "Schlüssel ändern"
 
-#: templates/settings/app-settings.php:92
+#: templates/settings/app-settings.php:106
 msgid "The encryption key was changed"
 msgstr "Der Schlüssel wurde gespeichert."
 
-#: templates/settings/app-settings.php:93
+#: templates/settings/app-settings.php:107
 msgid "Unable to change the encryption key"
 msgstr "Kann den Schlüssel nicht ändern"
 
-#: templates/settings/app-settings.php:94
+#: templates/settings/app-settings.php:108
 msgid "Data will be stored unencrypted"
 msgstr "Die Daten werden unverschlüsselt gespeichert."
 
-#: templates/settings/app-settings.php:95
+#: templates/settings/app-settings.php:109
 msgid "The keys are the same and remain unchanged."
 msgstr "Die Schlüssel stimmen überein und werden daher nicht geändert."
 
-#: templates/settings/app-settings.php:96
+#: templates/settings/app-settings.php:110
 msgid "Please standby, this action needs some seconds."
 msgstr "Bitte warten, dauert jetzt ein paar Sekunden."
 
-#: templates/settings/app-settings.php:104
+#: templates/settings/app-settings.php:118
 msgid "Distribute Encryption Key"
 msgstr "Schlüssel publizieren"
 
-#: templates/settings/app-settings.php:106
+#: templates/settings/app-settings.php:120
 msgid ""
 "Insert the data-base encryption key into the user preferences of all users "
 "belonging to the user group. The data-base key will be encrypted by the "
@@ -16279,33 +16313,33 @@ msgstr ""
 "Mitglieder der Orchester-Gruppe ein. Der Schlüssel wird dabei wiederum mit "
 "den perönlichen öffentlichen SSL-Schlüsseln der Benutzer verschlüsselt."
 
-#: templates/settings/app-settings.php:114
+#: templates/settings/app-settings.php:128
 msgid "Database settings"
 msgstr "Datenbank Einstellungen"
 
-#: templates/settings/app-settings.php:120
+#: templates/settings/app-settings.php:134
 msgid "Server"
 msgstr "Server"
 
-#: templates/settings/app-settings.php:122
+#: templates/settings/app-settings.php:136
 msgid "Database Server"
 msgstr "Datenbank-Server"
 
-#: templates/settings/app-settings.php:129
-#: templates/settings/app-settings.php:131
+#: templates/settings/app-settings.php:143
+#: templates/settings/app-settings.php:145
 msgid "Database Name"
 msgstr "Datenbank-Name"
 
-#: templates/settings/app-settings.php:140
+#: templates/settings/app-settings.php:154
 msgid "Database User"
 msgstr "Datenbank-Benutzer"
 
-#: templates/settings/app-settings.php:145
-#: templates/settings/email-settings.php:87
+#: templates/settings/app-settings.php:163
+#: templates/settings/email-settings.php:93
 msgid "New Password"
 msgstr "Neues Passwort"
 
-#: templates/settings/app-settings.php:148
+#: templates/settings/app-settings.php:168
 msgid "Test Database Password"
 msgstr "Datenbank-Passwort testen"
 
@@ -16401,99 +16435,99 @@ msgstr "Sicherheit"
 msgid "Email Account"
 msgstr "Em@il Account"
 
-#: templates/settings/email-settings.php:79
+#: templates/settings/email-settings.php:83
 msgid "Email-User"
 msgstr "Em@il-Login"
 
-#: templates/settings/email-settings.php:80
+#: templates/settings/email-settings.php:86
 msgid "Login for email account."
 msgstr "Login-Name für den Email-Account"
 
-#: templates/settings/email-settings.php:101
+#: templates/settings/email-settings.php:108
 msgid "Change email password"
 msgstr "Email-Passwort ändern"
 
-#: templates/settings/email-settings.php:110
+#: templates/settings/email-settings.php:117
 msgid "Distribute Email Account"
 msgstr "Em@il Account-Daten verteilen"
 
-#: templates/settings/email-settings.php:116
+#: templates/settings/email-settings.php:123
 msgid "Bulk Email Composition"
 msgstr "Verfassen von Massenmail"
 
-#: templates/settings/email-settings.php:119
+#: templates/settings/email-settings.php:126
 msgid "Bulk Email Transport"
 msgstr "Massenmail Auslieferung"
 
-#: templates/settings/email-settings.php:138
+#: templates/settings/email-settings.php:145
 msgid "configure"
 msgstr "konfigurieren"
 
-#: templates/settings/email-settings.php:140
+#: templates/settings/email-settings.php:147
 msgid "auto-configure announcements mailing-list"
 msgstr "Ankündigungs-Email-Verteiler automatisch konfigurieren"
 
-#: templates/settings/email-settings.php:144
+#: templates/settings/email-settings.php:151
 msgid "Bulk Email Identity"
 msgstr "Massen-Absender-Identität"
 
-#: templates/settings/email-settings.php:152
+#: templates/settings/email-settings.php:159
 msgid "Real Sender Name"
 msgstr "Absender-Name"
 
-#: templates/settings/email-settings.php:154
+#: templates/settings/email-settings.php:161
 msgid "From: name"
 msgstr "From: Name"
 
-#: templates/settings/email-settings.php:163
+#: templates/settings/email-settings.php:170
 msgid "Email From Adress"
 msgstr "Em@il Absender-Adresse"
 
-#: templates/settings/email-settings.php:165
+#: templates/settings/email-settings.php:172
 msgid "From: address"
 msgstr "From: Adresse"
 
-#: templates/settings/email-settings.php:169
+#: templates/settings/email-settings.php:176
 msgid "Bulk Email Subject"
 msgstr "Massen-Absender-Betreff"
 
-#: templates/settings/email-settings.php:180
+#: templates/settings/email-settings.php:187
 msgid "ProjectNameYYYY"
 msgstr "ProjektNameJJJJ"
 
-#: templates/settings/email-settings.php:181
+#: templates/settings/email-settings.php:188
 msgid "Example Subject"
 msgstr "Freitext"
 
-#: templates/settings/email-settings.php:185
+#: templates/settings/email-settings.php:192
 msgid "Attachment Policy"
 msgstr "Behandlung von Anhängen"
 
-#: templates/settings/email-settings.php:195
+#: templates/settings/email-settings.php:202
 msgid "e.g. 4.7 GB"
 msgstr "z.B. 4,8 GB"
 
-#: templates/settings/email-settings.php:197
+#: templates/settings/email-settings.php:204
 msgid "Attachment Link Size Limit"
 msgstr "Größere Anhänge als Download-Link"
 
-#: templates/settings/email-settings.php:209
+#: templates/settings/email-settings.php:216
 msgid "e.g. 7 days"
 msgstr "z.B. 7 Tage"
 
-#: templates/settings/email-settings.php:211
+#: templates/settings/email-settings.php:218
 msgid "Attachment Link Expiration Limit"
 msgstr "Gültigkeit der Download-Links"
 
-#: templates/settings/email-settings.php:226
+#: templates/settings/email-settings.php:233
 msgid "Always Link Cloud Files"
 msgstr "Cloud-Dateien immer als Link"
 
-#: templates/settings/email-settings.php:230
+#: templates/settings/email-settings.php:237
 msgid "Bulk Email Privacy Notice"
 msgstr "Massenmail Datenschutz-Hinweis"
 
-#: templates/settings/email-settings.php:234
+#: templates/settings/email-settings.php:241
 msgid ""
 "This is the notice attached to all bulk-emails which are not directed to a "
 "mailing list or project-participants. The idea is to give the recipients "
@@ -16507,76 +16541,76 @@ msgstr ""
 "Emails vermeiden können, wenn die Orchester-Emails als Spam betrachtet\n"
 "werden."
 
-#: templates/settings/email-settings.php:247
+#: templates/settings/email-settings.php:254
 msgid "Mailing List Service"
 msgstr "Mailing-Listen Service"
 
-#: templates/settings/email-settings.php:252
+#: templates/settings/email-settings.php:259
 msgid "Mailing Lists Domain"
 msgstr "Mailing-Listen Domain"
 
-#: templates/settings/email-settings.php:264
+#: templates/settings/email-settings.php:271
 msgid "Mailing-List Domain"
 msgstr "Mailing-Listen Domain"
 
-#: templates/settings/email-settings.php:277
+#: templates/settings/email-settings.php:284
 msgid "Mailing-List Configuration Pages"
 msgstr "Email-Verteiler Konfigurations-Seite"
 
-#: templates/settings/email-settings.php:284
+#: templates/settings/email-settings.php:291
 msgid "REST API Account"
 msgstr "REST API Zugang"
 
-#: templates/settings/email-settings.php:296
+#: templates/settings/email-settings.php:303
 msgid "Mailing-List REST URL"
 msgstr "Mailinglisten REST-URL"
 
-#: templates/settings/email-settings.php:309
+#: templates/settings/email-settings.php:318
 msgid "REST User"
 msgstr "REST Account"
 
-#: templates/settings/email-settings.php:333
+#: templates/settings/email-settings.php:343
 msgid "REST Password"
 msgstr "REST Passwort"
 
-#: templates/settings/email-settings.php:340
+#: templates/settings/email-settings.php:350
 msgid "Defaults for Generated Lists"
 msgstr "Voreinstellungen für erzeugte Verteiler"
 
-#: templates/settings/email-settings.php:349
-#: templates/settings/email-settings.php:361
+#: templates/settings/email-settings.php:359
+#: templates/settings/email-settings.php:371
 msgid "someone@somewhere.tld"
 msgstr "musteradresse@irgendwo.tld"
 
-#: templates/settings/email-settings.php:351
+#: templates/settings/email-settings.php:361
 msgid "Default List-Owner"
 msgstr "Voreinstellung Email-Verteiler-Eigentümer"
 
-#: templates/settings/email-settings.php:363
+#: templates/settings/email-settings.php:373
 msgid "Default List-Moderator"
 msgstr "Voreinstellunge Email-Verteiler-Moderator"
 
-#: templates/settings/email-settings.php:367
+#: templates/settings/email-settings.php:377
 msgid "Test Settings"
 msgstr "Test-Einstellungen"
 
-#: templates/settings/email-settings.php:372
+#: templates/settings/email-settings.php:382
 msgid "Test Email Setup"
 msgstr "Einstellungen testen."
 
-#: templates/settings/email-settings.php:382
+#: templates/settings/email-settings.php:392
 msgid "Email test-mode; send emails only to the email test-address."
 msgstr "Email Test-Modus; Emails werden nur an die Test-Adresse versendet."
 
-#: templates/settings/email-settings.php:383
+#: templates/settings/email-settings.php:393
 msgid "Test-Mode"
 msgstr "Test-Modus"
 
-#: templates/settings/email-settings.php:388
+#: templates/settings/email-settings.php:398
 msgid "Test Email Adress"
 msgstr "Em@il-Test-Adresse"
 
-#: templates/settings/email-settings.php:390
+#: templates/settings/email-settings.php:400
 msgid "Test address"
 msgstr "Test-Adresse"
 
@@ -16959,23 +16993,23 @@ msgstr "WYSIWYG Editor"
 msgid "WYSIWYG Text-Editor"
 msgstr "WYSIWYG Editor"
 
-#: templates/settings/personal-settings.php:173
+#: templates/settings/personal-settings.php:179
 msgid "Own Password"
 msgstr "Eigenes Passwort"
 
-#: templates/settings/personal-settings.php:182
+#: templates/settings/personal-settings.php:195
 msgid "DB Encryption Key"
 msgstr "DB Schlüssel"
 
-#: templates/settings/personal-settings.php:187
+#: templates/settings/personal-settings.php:200
 msgid "Set Encryption Key"
 msgstr "Schlüssel speichern"
 
-#: templates/settings/personal-settings.php:188
+#: templates/settings/personal-settings.php:202
 msgid "The encryption key has been set successfully."
 msgstr "Der Schlüssel wurde erfolgreich installiert."
 
-#: templates/settings/personal-settings.php:189
+#: templates/settings/personal-settings.php:203
 msgid "Unable to set the encryption key."
 msgstr "Kann den Schlüssel nicht installieren."
 
@@ -16983,217 +17017,217 @@ msgstr "Kann den Schlüssel nicht installieren."
 msgid "Share owner"
 msgstr "Share-Strohpuppe"
 
-#: templates/settings/share-settings.php:43
+#: templates/settings/share-settings.php:45
 msgid "shareowner"
 msgstr "Share-Strohpuppe"
 
-#: templates/settings/share-settings.php:49
-#: templates/settings/share-settings.php:121
-#: templates/settings/share-settings.php:144
-#: templates/settings/share-settings.php:164
-#: templates/settings/share-settings.php:183
-#: templates/settings/share-settings.php:205
-#: templates/settings/share-settings.php:229
-#: templates/settings/share-settings.php:252
-#: templates/settings/share-settings.php:275
-#: templates/settings/share-settings.php:294
-#: templates/settings/share-settings.php:315
-#: templates/settings/share-settings.php:340
+#: templates/settings/share-settings.php:52
+#: templates/settings/share-settings.php:125
+#: templates/settings/share-settings.php:148
+#: templates/settings/share-settings.php:168
+#: templates/settings/share-settings.php:187
+#: templates/settings/share-settings.php:209
+#: templates/settings/share-settings.php:233
+#: templates/settings/share-settings.php:256
+#: templates/settings/share-settings.php:279
+#: templates/settings/share-settings.php:298
+#: templates/settings/share-settings.php:319
+#: templates/settings/share-settings.php:344
 msgid "force"
 msgstr "zwingen"
 
-#: templates/settings/share-settings.php:51
-#: templates/settings/share-settings.php:123
-#: templates/settings/share-settings.php:146
-#: templates/settings/share-settings.php:166
-#: templates/settings/share-settings.php:185
-#: templates/settings/share-settings.php:207
-#: templates/settings/share-settings.php:296
-#: templates/settings/share-settings.php:317
-#: templates/settings/share-settings.php:342
+#: templates/settings/share-settings.php:54
+#: templates/settings/share-settings.php:127
+#: templates/settings/share-settings.php:150
+#: templates/settings/share-settings.php:170
+#: templates/settings/share-settings.php:189
+#: templates/settings/share-settings.php:211
+#: templates/settings/share-settings.php:300
+#: templates/settings/share-settings.php:321
+#: templates/settings/share-settings.php:346
 msgid "Check"
 msgstr "Überprüfen"
 
-#: templates/settings/share-settings.php:59
+#: templates/settings/share-settings.php:62
 msgid "Share-Password"
 msgstr "Share-Passwort"
 
-#: templates/settings/share-settings.php:65
+#: templates/settings/share-settings.php:69
 msgid "Change"
 msgstr "Ändern"
 
-#: templates/settings/share-settings.php:72
+#: templates/settings/share-settings.php:76
 msgid "Calendars"
 msgstr "Kalender"
 
-#: templates/settings/share-settings.php:75
-#: templates/settings/share-settings.php:78
-#: templates/settings/share-settings.php:81
-#: templates/settings/share-settings.php:84
-#: templates/settings/share-settings.php:87
+#: templates/settings/share-settings.php:79
+#: templates/settings/share-settings.php:82
+#: templates/settings/share-settings.php:85
+#: templates/settings/share-settings.php:88
+#: templates/settings/share-settings.php:91
 msgid "calendarname"
 msgstr "Kalender-Name"
 
-#: templates/settings/share-settings.php:76
+#: templates/settings/share-settings.php:80
 msgid "Calendar for Concerts"
 msgstr "Konzert-Kalender"
 
-#: templates/settings/share-settings.php:79
+#: templates/settings/share-settings.php:83
 msgid "Calendar for Rehearsals"
 msgstr "Proben-Kalender"
 
-#: templates/settings/share-settings.php:82
+#: templates/settings/share-settings.php:86
 msgid "Calendar for other Events"
 msgstr "Andere öffentliche Termine"
 
-#: templates/settings/share-settings.php:85
+#: templates/settings/share-settings.php:89
 msgid "Management-Calendar"
 msgstr "Interner Vorstands-Kalender"
 
-#: templates/settings/share-settings.php:88
+#: templates/settings/share-settings.php:92
 msgid "Finance-Calendar"
 msgstr "Interner Kassen-Kalender"
 
-#: templates/settings/share-settings.php:91
+#: templates/settings/share-settings.php:95
 msgid "#Minutes"
 msgstr "#Minuten"
 
-#: templates/settings/share-settings.php:92
+#: templates/settings/share-settings.php:96
 msgid "Default Duration for Events"
 msgstr "Voreinstellung Termin-Dauer"
 
-#: templates/settings/share-settings.php:99
-#: templates/settings/share-settings.php:102
+#: templates/settings/share-settings.php:103
+#: templates/settings/share-settings.php:106
 msgid "addressbook"
 msgstr "Adressbuch"
 
-#: templates/settings/share-settings.php:100
+#: templates/settings/share-settings.php:104
 msgid "General Addresbook"
 msgstr "Allgemeines Adressbuch"
 
-#: templates/settings/share-settings.php:103
+#: templates/settings/share-settings.php:107
 msgid "Addresbook for Musicians"
 msgstr "Adressbuch für Musizierende"
 
-#: templates/settings/share-settings.php:107
+#: templates/settings/share-settings.php:111
 msgid "Shared folder"
 msgstr "Gemeinsamer Ordner"
 
-#: templates/settings/share-settings.php:115
+#: templates/settings/share-settings.php:119
 msgid "shared folder"
 msgstr "Gemeinsamer Ordner"
 
-#: templates/settings/share-settings.php:138
+#: templates/settings/share-settings.php:142
 msgid "Postbox-Folder"
 msgstr "Briefkasten-Ordner"
 
-#: templates/settings/share-settings.php:158
+#: templates/settings/share-settings.php:162
 msgid "Outbox-Folder"
 msgstr "Postausgangs-Ordner"
 
-#: templates/settings/share-settings.php:177
+#: templates/settings/share-settings.php:181
 msgid "Document templates folder"
 msgstr "Dokumentenvorlagen-Ordner"
 
-#: templates/settings/share-settings.php:197
+#: templates/settings/share-settings.php:201
 msgid "Project folder"
 msgstr "Projekt-Dateien"
 
-#: templates/settings/share-settings.php:201
-#: templates/settings/share-settings.php:214
-#: templates/settings/share-settings.php:238
-#: templates/settings/share-settings.php:261
-#: templates/settings/share-settings.php:336
-#: templates/settings/share-settings.php:351
+#: templates/settings/share-settings.php:205
+#: templates/settings/share-settings.php:218
+#: templates/settings/share-settings.php:242
+#: templates/settings/share-settings.php:265
+#: templates/settings/share-settings.php:340
+#: templates/settings/share-settings.php:355
 msgid "YEAR"
 msgstr "JAHR"
 
-#: templates/settings/share-settings.php:202
-#: templates/settings/share-settings.php:215
-#: templates/settings/share-settings.php:239
-#: templates/settings/share-settings.php:262
-#: templates/settings/share-settings.php:337
+#: templates/settings/share-settings.php:206
+#: templates/settings/share-settings.php:219
+#: templates/settings/share-settings.php:243
+#: templates/settings/share-settings.php:266
+#: templates/settings/share-settings.php:341
 msgid "PROJECT"
 msgstr "PROJEKT"
 
-#: templates/settings/share-settings.php:222
+#: templates/settings/share-settings.php:226
 msgid "Participants Folder"
 msgstr "Teilnehmenden-Ordner"
 
-#: templates/settings/share-settings.php:226
+#: templates/settings/share-settings.php:230
 msgid "john.doe"
 msgstr "lieschen.mueller"
 
-#: templates/settings/share-settings.php:246
+#: templates/settings/share-settings.php:250
 msgid "Posters Folder"
 msgstr "Plakat-Ordner"
 
-#: templates/settings/share-settings.php:269
+#: templates/settings/share-settings.php:273
 msgid "Participants Downloads"
 msgstr "Teilnehmenden-Download-Ordner"
 
-#: templates/settings/share-settings.php:288
+#: templates/settings/share-settings.php:292
 msgid "finance folder"
 msgstr "Finanz-Ordner"
 
-#: templates/settings/share-settings.php:309
+#: templates/settings/share-settings.php:313
 msgid "transactions"
 msgstr "Bankaufträge"
 
-#: templates/settings/share-settings.php:331
+#: templates/settings/share-settings.php:335
 msgid "balances"
 msgstr "Bilanzen"
 
-#: templates/settings/share-settings.php:350
+#: templates/settings/share-settings.php:354
 msgid "tax-office"
 msgstr "Finanzamt"
 
-#: templates/settings/share-settings.php:356
+#: templates/settings/share-settings.php:360
 msgid "in-tray"
 msgstr "Posteingang"
 
-#: templates/settings/share-settings.php:367
+#: templates/settings/share-settings.php:371
 msgid "tax-excemption-notice-{FROM_YEAR}-{TO_YEAR}"
 msgstr "FreistellungsBescheid-{JAHR_VON}-{JAHR_BIS}"
 
-#: templates/settings/share-settings.php:374
+#: templates/settings/share-settings.php:378
 msgid "Members as Cloud-Users"
 msgstr "Mitglieder als Cloud-Accounts"
 
-#: templates/settings/share-settings.php:383
+#: templates/settings/share-settings.php:387
 msgid "Import club-members as cloud-user-accounts into the cloud"
 msgstr "Orchestermitglieder als Benutzer-Accounts in die Cloud importieren"
 
-#: templates/settings/share-settings.php:393
+#: templates/settings/share-settings.php:397
 #, php-format
 msgid "Generate database-views for the \"%s\" cloud user-backend"
 msgstr "Tabellen-Ansichten für das \"%s\" Cloud Benutzer-Backend erzeugen"
 
-#: templates/settings/share-settings.php:400
+#: templates/settings/share-settings.php:404
 #, php-format
 msgid "%s info"
 msgstr "%s Informationen"
 
-#: templates/settings/share-settings.php:403
+#: templates/settings/share-settings.php:407
 #, php-format
 msgid "Please log in as administrator and configure the \"%1$s\"-user-backend."
 msgstr ""
 "Bitte als Administrator anmelden und das \"%1$s\"-Benutzer-Backend "
 "konfigurieren."
 
-#: templates/settings/share-settings.php:416
+#: templates/settings/share-settings.php:420
 msgid "Use a separate dedicated database for the SQL-views."
 msgstr "Eine separate Datenbank für die SQL-Ansichten verwenden."
 
-#: templates/settings/share-settings.php:419
+#: templates/settings/share-settings.php:423
 msgid "Views-Database"
 msgstr "View-Datenbank"
 
-#: templates/settings/share-settings.php:423
+#: templates/settings/share-settings.php:427
 msgid "Databasename"
 msgstr "Datenbank-Name"
 
-#: templates/settings/share-settings.php:431
+#: templates/settings/share-settings.php:435
 #, php-format
 msgid ""
 "Please make sure the data-base user \"%1$s@%2$s\" has all -- and in "
@@ -17202,29 +17236,29 @@ msgstr ""
 "Bitte sicherstellen, dass der Datenbank-Account \"%1$s@%2$s\" alle -- und "
 "insbesondere: GRANT -- Rechte für die separate Datenbank haben."
 
-#: templates/settings/share-settings.php:440
-#: templates/settings/share-settings.php:470
+#: templates/settings/share-settings.php:444
+#: templates/settings/share-settings.php:474
 msgid "Recreate"
 msgstr "Regenerieren"
 
-#: templates/settings/share-settings.php:445
+#: templates/settings/share-settings.php:449
 #, php-format
 msgid "Recreate the database-views for the \"%1$s\"-user-backend."
 msgstr "Datenbank-Ansichten für das \"%1$s\"-Benutzer-Backend erneut erzeugen."
 
-#: templates/settings/share-settings.php:451
+#: templates/settings/share-settings.php:455
 msgid "Give club-members access to their personal data"
 msgstr "Den Vereinsmitgliedern Zugriff auf ihre persönlichen Daten geben"
 
-#: templates/settings/share-settings.php:461
+#: templates/settings/share-settings.php:465
 msgid "Generate personalized single-row database-views"
 msgstr "Personalisierte Datenbank-Ansichten für die Mitglieder erzeugen"
 
-#: templates/settings/share-settings.php:475
+#: templates/settings/share-settings.php:479
 msgid "Recreate the personalized single-row database-views"
 msgstr "Die personalisierten Per-Person Datenbank-Ansichten regenerieren"
 
-#: templates/settings/share-settings.php:481
+#: templates/settings/share-settings.php:485
 msgid "Hints"
 msgstr "Hinweise"
 
@@ -19813,9 +19847,6 @@ msgstr "vorname.nachname"
 
 #~ msgid "Database Cloud"
 #~ msgstr "Cloud Datenbank"
-
-#~ msgid "Source-Code Archive"
-#~ msgstr "Quell-Code-Archiv"
 
 #~ msgid ""
 #~ "View the git-repository holding all revision of this entire mess. Mostly "
