@@ -77,13 +77,13 @@ class ReadMeFactory
   }
 
   /**
-   * @param DatabaseStorageFolder|EmptyRootNode $parent
+   * @param DatabaseStorageFolder|EmptyDirectoryNode $parent
    *
    * @param string $dirName
    *
    * @return null|InMemoryFileNode
    */
-  public function generateReadMe(DatabaseStorageFolder|EmptyRootNode $parent, string $dirName):?InMemoryFileNode
+  public function generateReadMe(DatabaseStorageFolder|EmptyDirectoryNode $parent, string $dirName):?InMemoryFileNode
   {
     $storageId = $parent->getStorage()->getStorageId();
     $content = $this->getDefaultReadMeContents($storageId, $dirName);
