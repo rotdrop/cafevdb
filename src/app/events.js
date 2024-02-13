@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $ } from './globals.js';
+import { globalState, appName, appPrefix, $ } from './globals.js';
 import fileDownload from './file-download.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
@@ -103,7 +103,7 @@ const init = function(htmlContent, textStatus, request, afterInit) {
 
   const dialogContent = $(htmlContent);
   dialogContent.cafevDialog({
-    dialogClass: 'cafevdb-project-events no-scroll',
+    dialogClass: appPrefix('project-events') + ' no-scroll',
     position: {
       my: 'center top',
       at: 'center top+50',
@@ -258,8 +258,8 @@ const init = function(htmlContent, textStatus, request, afterInit) {
         .on('change', 'input.absence-field-check', eventAction);
 
       $dialogHolder
-        .off('cafevdb:events_changed')
-        .on('cafevdb:events_changed', function(event, events, source) {
+        .off(appName + ':events_changed')
+        .on(appName + ':events_changed', function(event, events, source) {
           $.post(
             generateUrl('projects/events/redisplay'),
             {
@@ -309,7 +309,7 @@ const updateEmailForm = function(post, emailFormDialog) {
         events.push(param.value);
       }
     });
-    emailFormDialog.trigger('cafevdb:events_changed', [events]);
+    emailFormDialog.trigger(appName + ':events_changed', [events]);
   }
 };
 

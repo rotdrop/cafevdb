@@ -22,7 +22,7 @@
  */
 
 import { onRequestTokenUpdate, getRequestToken } from '@nextcloud/auth';
-import { initialState, appName, cloudWebRoot, webRoot, cloudUser, appPrefix } from './config.js';
+import { initialState, appName, cloudWebRoot, webRoot, cloudUser, appPrefix, appNameTag } from './config.js';
 import jQuery from './jquery.js';
 import globalState from './globalstate.js';
 
@@ -77,9 +77,5 @@ export {
   jQuery as $,
   cloudUser,
   appPrefix,
+  appNameTag,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

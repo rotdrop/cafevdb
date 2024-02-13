@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $ } from './globals.js';
+import { globalState, $, appName, appPrefix, appNameTag } from './globals.js';
 import { setPersonalUrl } from './settings-urls.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -52,7 +52,7 @@ const documentReady = function() {
       self.chosen({
         disable_search: true,
         inherit_select_classes: true,
-        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+        title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
         width: '10ex',
       });
     });
@@ -68,7 +68,7 @@ const documentReady = function() {
       self.show();
       self.chosen({
         inherit_select_classes: true,
-        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+        title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
         disable_search: true,
         width: 'auto',
       });
@@ -82,7 +82,7 @@ const documentReady = function() {
       }
       self.chosen({
         inherit_select_classes: true,
-        title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+        title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
         disable_search: true,
         width: '100%',
       });
@@ -91,7 +91,7 @@ const documentReady = function() {
     container.find('.chosen-container').cafevTooltip();
   };
 
-  container.on('cafevdb:content-update', function(event) {
+  container.on(appName + ':content-update', function(event) {
     if (event.target === this) {
       chosenInit($(this));
       msgElement = $('form.personal-settings .statusmessage');
@@ -272,7 +272,7 @@ const documentReady = function() {
       });
 
     $('.expert-mode-container').toggleClass('hidden', !checked);
-    $('body').toggleClass('cafevdb-expert-mode', checked);
+    $('body').toggleClass(appPrefix('expert-mode'), checked);
     $('.personal-settings input[type="checkbox"].expert-mode').prop('checked', checked);
     $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
     $.fn.cafevTooltip.remove(); // remove any left-over items.
@@ -300,7 +300,7 @@ const documentReady = function() {
         // console.error(data);
       });
     $('.finance-mode-container').toggleClass('hidden', !checked);
-    $('body').toggleClass('cafevdb-finance-mode', checked);
+    $('body').toggleClass(appPrefix('finance-mode'), checked);
     $('.personal-settings input[type="checkbox"].finance-mode').prop('checked', checked);
     $('select.debug-mode').prop('disabled', false).trigger('chosen:updated');
     $.fn.cafevTooltip.remove(); // remove any left-over items.
@@ -391,11 +391,11 @@ export default documentReady;
 const updateCredits = function() {
   const numItems = 5;
   const items = [];
-  const numTotal = $('div.cafevdb.about div.product.credits.list ul li').length;
+  const numTotal = $(`div.${appNameTag}.about div.product.credits.list ul li`).length;
   for (let i = 0; i < numItems; ++i) {
     items.push(Math.round(Math.random() * (numTotal - 1)));
   }
-  $('div.cafevdb.about div.product.credits.list ul li').each(function(index) {
+  $(`div.${appNameTag}.about div.product.credits.list ul li`).each(function(index) {
     if (items.includes(index)) {
       $(this).removeClass('hidden');
     } else {
@@ -411,7 +411,7 @@ export const updateCreditsTimer = function() {
   }
 
   globalState.creditsTimer = setInterval(function() {
-    if ($('div.cafevdb.about div.product.credits.list:visible').length > 0) {
+    if ($(`div.${appNameTag}.about div.product.credits.list:visible`).length > 0) {
       console.log('Updating credits.');
       updateCredits();
     } else {

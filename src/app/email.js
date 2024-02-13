@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -84,7 +84,7 @@ function generateComposerUrl(operation, topic) {
 }
 
 function attachmentFromJSON(response, info) {
-  const fileAttachmentsHolder = $('form.cafevdb-email-form fieldset.attachments input.file-attachments');
+  const fileAttachmentsHolder = $(`form.${appName}-email-form fieldset.attachments input.file-attachments`);
   if (fileAttachmentsHolder === '') {
     Dialogs.alert(t(appName, 'Not called from main email-form.'), t(appName, 'Error'));
     return;
@@ -607,8 +607,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     // @todo why is this so separated from rest???
     WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'));
 
-    $('#cafevdb-stored-messages-selector').chosen({ disable_search_threshold: 10 });
-    $('#cafevdb-sent-messages-selector').chosen({ disable_search_threshold: 10 });
+    $('#' + appPrefix('stored-messages-selector')).chosen({ disable_search_threshold: 10 });
+    $('#' + appPrefix('sent-messages-selector')).chosen({ disable_search_threshold: 10 });
 
     const composerPanel = $('#emailformcomposer');
     const fileAttachmentsSelect = composerPanel.find('#file-attachments-selector');
@@ -1625,8 +1625,8 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
   // Update our selected events on request
   dialogHolder
-    .off('cafevdb:events_changed')
-    .on('cafevdb:events_changed', function(event, events) {
+    .off(appName + ':events_changed')
+    .on(appName + ':events_changed', function(event, events) {
       const requestData = {
         operation: 'update',
         topic: 'element',
@@ -1713,7 +1713,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     .off('change')
     .on('change', function(event) {
       const $this = $(this);
-      const eventDialog = $('.cafevdb-project-events #events');
+      const eventDialog = $('.' + appPrefix('project-events') + ' #events');
       let events = $this.val();
       if (events.length === 0) {
         events = [];
@@ -1723,7 +1723,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         .toggleClass('empty-selection', events.length === 0)
         .toggleClass('no-attachments', $this.find('option').length === 0);
       // events = events.map(item => JSON.parse(item).uri);
-      eventDialog.trigger('cafevdb:events_changed', [events]);
+      eventDialog.trigger(appName + ':events_changed', [events]);
       return false;
     });
 
@@ -2059,7 +2059,7 @@ function emailFormPopup(post, modal, single, afterInit) {
       dialogHolder.html(data.contents);
       $('body').append(dialogHolder);
 
-      const emailForm = $('form#cafevdb-email-form');
+      const emailForm = $('form#' + appPrefix('email-form'));
       const recipientsPanel = dialogHolder.find('div#emailformrecipients');
       const composerPanel = dialogHolder.find('div#emailformcomposer');
 

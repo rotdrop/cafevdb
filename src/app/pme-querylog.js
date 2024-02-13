@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName, appPrefix } from './app-info.js';
 import { selectedOptions, deselectAll as selectDeselectAll, makePlaceholder as selectPlaceholder } from './select-utils.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
@@ -85,7 +85,7 @@ const handleQueryLogMenu = function($select) {
 
 const pmeQueryLogMenu = function(containerSel) {
   if (typeof containerSel === 'undefined') {
-    containerSel = '#cafevdb-page-body';
+    containerSel = '#' + appPrefix('page-body');
   }
   const $container = $(containerSel);
 
@@ -96,7 +96,7 @@ const pmeQueryLogMenu = function(containerSel) {
   $queryLogSelect.chosen({
     disable_search: true,
     inherit_select_classes: true,
-    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+    title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
   });
 
   // install placeholder as first item if chosen is not active

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $, jQuery } from './globals.js';
+import { globalState, appName, appNameTag, $, jQuery } from './globals.js';
 import { urlDecode } from './url-decode.js';
 import { token as pmeToken } from './pme-selectors.js';
 import {
@@ -95,9 +95,9 @@ const unfocus = function(element) {
  * @returns {jQuery}
  */
 const modalWaitNotification = function(message) {
-  const dialogHolder = $('<div class="cafevdb modal-wait-notification"></div>');
-  dialogHolder.html('<div class="cafevdb modal-wait-message">' + message + '</div>'
-                    + '<div class="cafevdb modal-wait-animation"></div>');
+  const dialogHolder = $('<div class="' + appNameTag + ' modal-wait-notification"></div>');
+  dialogHolder.html('<div class="' + appNameTag + ' modal-wait-message">' + message + '</div>'
+                    + '<div class="' + appNameTag + ' modal-wait-animation"></div>');
   $('body').append(dialogHolder);
   dialogHolder.find('div.modal-wait-animation').progressbar({ value: false });
   dialogHolder.cafevDialog({
@@ -111,7 +111,7 @@ const modalWaitNotification = function(message) {
     height: 'auto',
     modal: true,
     closeOnEscape: false,
-    dialogClass: 'transparent no-close wait-notification cafevdb',
+    dialogClass: 'transparent no-close wait-notification ' + appNameTag,
     resizable: false,
     open() {
     },

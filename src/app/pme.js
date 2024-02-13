@@ -287,8 +287,9 @@ const tableDialogReplace = function(container, content, options, callback, trigg
   container.find('iframe').on('load', function(event) {
     const $this = $(this);
     const data = $this.data();
-    data.cafevdbLoadEvent = (data.cafevdbLoadEvent || 0) + 1;
-    console.info('IFRAME LOAD', $this.attr('class'), data.cafevdbLoadEvent);
+    const dataKey = appName + 'dbLoadEvent';
+    data[dataKey] = (data[dataKey] || 0) + 1;
+    console.info('IFRAME LOAD', $this.attr('class'), data[dataKey]);
   });
 
   tableDialogLoadIndicator(container, true);
@@ -843,8 +844,9 @@ const pmeTableDialogOpen = function(tableOptions, post) {
       dialogHolder.find('iframe').on('load', function(event) {
         const $this = $(this);
         const data = $this.data();
-        data.cafevdbLoadEvent = (data.cafevdbLoadEvent || 0) + 1;
-        console.info('IFRAME LOAD', $this.attr('class'), data.cafevdbLoadEvent);
+        const dataKey = appName + 'LoadEvent';
+        data[dataKey] = (data[dataKey] || 0) + 1;
+        console.info('IFRAME LOAD', $this.attr('class'), data[dataKey]);
       });
 
       dialogHolder.data('ambientContainer', tableOptions.ambientContainerSelector);
@@ -1134,8 +1136,9 @@ const pseudoSubmit = function(form, element, selector, resetFilter) {
       container.find('iframe').on('load', function(event) {
         const $this = $(this);
         const data = $this.data();
-        data.cafevdbLoadEvent = (data.cafevdbLoadEvent || 0) + 1;
-        console.info('IFRAME LOAD', $this.attr('class'), data.cafevdbLoadEvent);
+        const dataKey = appName + 'LoadEvent';
+        data[dataKey] = (data[dataKey] || 0) + 1;
+        console.info('IFRAME LOAD', $this.attr('class'), data[dataKey]);
       });
 
       pmeInit(selector);
@@ -1281,7 +1284,7 @@ const maybeTranspose = function(transpose, containerSel) {
   if (transpose) {
     tooltip.remove();
     transposeMainTable(pmeTableSelector, container);
-    pageitems = t('cafevdb', '#columns');
+    pageitems = t(appName, '#columns');
 
     container.find('input[name="Transpose"]').val('transposed');
     container.find(trUp).removeClass(unTrClass).addClass(trClass);
@@ -1290,7 +1293,7 @@ const maybeTranspose = function(transpose, containerSel) {
   } else {
     tooltip.remove();
     transposeMainTable(pmeTableSelector, container);
-    pageitems = t('cafevdb', '#rows');
+    pageitems = t(appName, '#rows');
 
     container.find('input[name="Transpose"]').val('untransposed');
     container.find(trUp).removeClass(trClass).addClass(unTrClass);
@@ -1346,7 +1349,7 @@ const installFilterChosen = function(containerSel) {
   container.find('select.' + pmeCompFilter).chosen({
     width: 'auto',
     inherit_select_classes: true,
-    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+    title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
     disable_search_threshold: 10,
     single_backstroke_delete: false,
   });
@@ -1361,7 +1364,7 @@ const installFilterChosen = function(containerSel) {
   container.find('select.' + pmeFilter).chosen({
     width: '100%', // This needs margin:0 and box-sizing:border-box to be useful.
     inherit_select_classes: true,
-    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+    title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
     no_results_text: noRes,
     single_backstroke_delete: false,
   });
@@ -1519,7 +1522,7 @@ const installInputChosen = function(containerSel, onlyClass) {
     const chosenOptions = {
       // width:'100%',
       inherit_select_classes: true,
-      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+      title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
       disable_search: self.hasClass('no-search'),
       disable_search_threshold: self.hasClass('no-search') ? 999999 : 10,
       no_results_text: noRes,
@@ -1963,7 +1966,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     gotoSelect.chosen({
       width: 'auto',
       inherit_select_classes: true,
-      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+      title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
       disable_search_threshold: 10,
     });
     if (gotoSelect.is(':disabled')) {
@@ -1977,7 +1980,7 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     container.find('select.' + pmePageRows).chosen({
       width: 'auto',
       inherit_select_classes: true,
-      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+      title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
       disable_search: true,
     });
   }
