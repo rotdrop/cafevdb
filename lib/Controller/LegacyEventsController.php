@@ -36,7 +36,6 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\Constants;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -226,8 +225,7 @@ class LegacyEventsController extends Controller
     $repeatByWeekNoOptions = $this->ocCalendarObject->getByWeekNoOptions();
     $repeatByMonthDayOptions = $this->ocCalendarObject->getByMonthDayOptions();
 
-    return new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       'legacy/calendar/part.newevent',
       [
         'appName' => $this->appName(),
@@ -281,7 +279,7 @@ class LegacyEventsController extends Controller
         'duration' => $duration,
         'default_duration' => $defaultEventDuration,
       ],
-      'blank');
+    );
   }
 
   /**
@@ -663,11 +661,10 @@ class LegacyEventsController extends Controller
     $templateParameters = array_merge($templateParameters, $repeatParameters);
 
     $this->logError("returning template " . $template);
-    return new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       $template,
       $templateParameters,
-      'blank');
+    );
   }
 
   /** @return Http\Response */

@@ -35,7 +35,6 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\Files\SimpleFS\ISimpleFile;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -709,7 +708,10 @@ class SepaDebitMandatesController extends Controller
       'toolTips' => $this->toolTipsService(),
     ];
 
-    $tmpl = new TemplateResponse($this->appName, 'sepa-debit-mandate', $templateParameters, 'blank');
+    $tmpl = $this->templateResponse(
+      'sepa-debit-mandate',
+      $templateParameters,
+    );
     $html = $tmpl->render();
 
     $responseData = [

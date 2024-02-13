@@ -30,7 +30,6 @@ use chillerlan\QRCode\QRCode;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -57,6 +56,7 @@ use OCA\CAFEVDB\Common\Functions;
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
 {
+  use OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\MusicianAvatarTrait;
@@ -678,7 +678,10 @@ class ProjectParticipants extends PMETableViewBase
               'toolTipSlug' => $this->toolTipSlug('instrument-voice-request'),
             ];
 
-            $template = new TemplateResponse($this->appName(), 'fragments/instrument-voices', $templateParameters, 'blank');
+            $template = $this->templateResponse(
+              'fragments/instrument-voices',
+              $templateParameters,
+            );
             $html .= $template->render();
 
             return $html;

@@ -24,7 +24,6 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Controller\ProjectParticipantsController;
@@ -34,6 +33,7 @@ use OCA\CAFEVDB\Common\Util;
 trait MailingListsTrait
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   /** @var bool */
   protected $expertMode;
@@ -80,13 +80,11 @@ trait MailingListsTrait
       'input|AP' => 'R',
       'tooltip' => $this->toolTipsService['page-renderer:musicians:mailing-list'],
       'php|AP' =>  function($email, $action, $k, $row, $recordId, PHPMyEdit $pme) {
-        return (new TemplateResponse(
-          $this->appName(),
+        return $this->templateResponse(
           'fragments/mailing-lists/announcements-list-controls-add-copy', [
             'mailingListActionName' => $pme->cgiDataName('mailing_list'),
           ],
-          'blank',
-        ))->render();
+        )->render();
       },
       'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
         // Do not contact the mailing-list service here, as this really slows
@@ -100,7 +98,7 @@ trait MailingListsTrait
         //   $status = 'unknown';
         // }
         $status = 'unknown';
-        return (new TemplateResponse(
+        return ($this->templateResponse(
           $this->appName(),
           'fragments/mailing-lists/announcements-list-controls', [
             'appName' => $this->appName(),
@@ -170,7 +168,7 @@ trait MailingListsTrait
 
         // add an "action button" for some convenience operations in order to
         // spare the change to the admin page for the list.
-        return (new TemplateResponse(
+        return ($this->templateResponse(
           $this->appName(),
           'fragments/mailing-lists/project-list-controls', [
             'appName' => $this->appName(),

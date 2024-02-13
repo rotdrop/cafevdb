@@ -30,7 +30,6 @@ use OCP\IL10N;
 use OCP\AppFramework\Http;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 
 /**
@@ -39,11 +38,13 @@ use OCA\CAFEVDB\Service\ConfigService;
  */
 class SubadminMiddleware extends Middleware
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected IControllerMethodReflector $reflector,
     protected ConfigService $configService,
-    private IL10N $l
+    protected IL10N $l
   ) {
   }
   // phpcs:enable
@@ -75,7 +76,7 @@ class SubadminMiddleware extends Middleware
   public function afterException($controller, $methodName, \Exception $exception)
   {
     if ($exception instanceof NotAdminException) {
-      $response = new TemplateResponse('core', '403', [], 'guest');
+      $response = $this->templateResponse('403', [], self::RENDER_AS_GUEST, appName: 'core');
       $response->setStatus(Http::STATUS_FORBIDDEN);
       return $response;
     }

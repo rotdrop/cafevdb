@@ -30,7 +30,6 @@ use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
@@ -57,6 +56,7 @@ use OCA\CAFEVDB\Constants;
 class ProjectParticipantFields extends PMETableViewBase
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'project-participant-fields';
   const TABLE = self::PROJECT_PARTICIPANT_FIELDS_TABLE;
@@ -1449,8 +1449,7 @@ __EOT__;
    */
   public function dataOptionInputRowHtml(mixed $value, int $index, bool $used, ?string $dataType):string
   {
-    return (new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       'fragments/participant-fields/recurring-receivable-definition-input-row', [
         'rowData' => $value,
         'index' => $index,
@@ -1459,8 +1458,7 @@ __EOT__;
         'inputName' => $this->pme->cgiDataName('data_options'),
         'toolTips' => $this->toolTipsService,
       ],
-      'blank'
-    ))->render();
+    )->render();
   }
 
   /**
@@ -1481,8 +1479,7 @@ __EOT__;
    */
   private function dataOptionGeneratorHtml(?int $fieldId, int $numberOfOptions, mixed $generatorItem):string
   {
-    return (new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       'fragments/participant-fields/recurring-receivable-definition-generator-row', [
         'fieldId' => $fieldId,
         'generatorItem' => $generatorItem,
@@ -1492,8 +1489,7 @@ __EOT__;
         'toolTips' => $this->toolTipsService,
         'dateTimeFormatter' => $this->dateTimeFormatter(),
       ],
-      'blank'
-    ))->render();
+    )->render();
   }
 
   /**

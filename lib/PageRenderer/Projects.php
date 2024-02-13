@@ -30,7 +30,6 @@ use DateTimeImmutable;
 
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -52,6 +51,8 @@ use OCA\CAFEVDB\Common\Util;
 /**Table generator for Projects table. */
 class Projects extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
   const TEMPLATE = 'projects';
   const TABLE = self::PROJECTS_TABLE;
   const ENTITY = Entities\Project::class;
@@ -464,7 +465,10 @@ class Projects extends PMETableViewBase
               'toolTipSlug' => $this->toolTipSlug('instrument-voice-request'),
             ];
 
-            $template = new TemplateResponse($this->appName(), 'fragments/instrument-voices', $templateParameters, 'blank');
+            $template = $this->templateResponse(
+              'fragments/instrument-voices',
+              $templateParameters,
+            );
             $html .= $template->render();
 
             return $html;
@@ -787,11 +791,9 @@ class Projects extends PMETableViewBase
           'cssClassName' => $cssClassName,
         ];
 
-        $template = new TemplateResponse(
-          $this->appName(),
+        $template = $this->templateResponse(
           'fragments/projects/project-mailing-list',
           $templateParameters,
-          'blank'
         );
         $html = $template->render();
 
@@ -826,7 +828,10 @@ class Projects extends PMETableViewBase
           'operation' => $this->listOperation() ? 'list' : $op,
           'expirationDate' => $this->formatDate($expires, 'medium'),
         ];
-        $template = new TemplateResponse($this->appName(), 'fragments/projects/project-download-share', $templateParameters, 'blank');
+        $template = $this->templateResponse(
+          'fragments/projects/project-download-share',
+          $templateParameters,
+        );
         return $template->render();
       },
       'sort' => true,
@@ -950,7 +955,10 @@ class Projects extends PMETableViewBase
           'toolTips' => $this->toolTipsService,
           'operation' => $this->listOperation() ? 'list' : $op,
         ];
-        $template = new TemplateResponse($this->appName(), 'fragments/projects/project-posters', $templateParameters, 'blank');
+        $template = $this->templateResponse(
+          'fragments/projects/project-posters',
+          $templateParameters,
+        );
         return $template->render();
       },
       'default' => '',
@@ -1106,7 +1114,10 @@ class Projects extends PMETableViewBase
       'financeMode' => $this->financeMode,
       'expertMode' => $this->expertMode,
     ];
-    $template = new TemplateResponse($this->appName(), 'fragments/projects/project-actions', $templateParameters, 'blank');
+    $template = $this->templateResponse(
+      'fragments/projects/project-actions',
+      $templateParameters,
+    );
     $html = $template->render();
 
     return $html;
@@ -1145,11 +1156,9 @@ class Projects extends PMETableViewBase
       ]
     );
 
-    $template = new TemplateResponse(
-      $this->appName(),
+    $template = $this->templateResponse(
       'project-web-articles',
       $templateParameters,
-      'blank'
     );
 
     return $template->render();

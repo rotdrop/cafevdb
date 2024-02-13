@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
 use RuntimeException;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
@@ -47,6 +46,7 @@ trait ParticipantFileFieldsTrait
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use ParticipantFieldsCgiNameTrait;
 
   /** @var ProjectService */
@@ -128,8 +128,7 @@ trait ParticipantFileFieldsTrait
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
                      . ($subDir ? '[]' : '');
 
-    return (new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       'fragments/participant-fields/cloud-file-upload-row', [
         'fieldId' => $fieldId,
         'optionKey' => $optionKey,
@@ -149,8 +148,7 @@ trait ParticipantFileFieldsTrait
         'toolTips' => $this->toolTipsService,
         'toolTipsPrefix' => self::$toolTipsPrefix,
       ],
-      'blank'
-    ))->render();
+    )->render();
   }
 
   /**
@@ -263,8 +261,7 @@ trait ParticipantFileFieldsTrait
       : $this->l->t('Load %s', pathinfo($fileName, PATHINFO_FILENAME));
     $optionValueName = $this->pme->cgiDataName($inputValueName ?? self::participantFieldValueFieldName($fieldId));
 
-    return (new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       'fragments/participant-fields/db-file-upload-row', [
         'fieldId' => $fieldId,
         'optionKey' => $optionKey,
@@ -283,9 +280,8 @@ trait ParticipantFileFieldsTrait
         'toolTips' => $this->toolTipsService,
         'toolTipsPrefix' => self::$toolTipsPrefix,
       ],
-      'blank'
-    ))->render();
-  }
+    )->render();
+}
 
   /**
    * Generate a link to the files-app if appropriate. The link is always a

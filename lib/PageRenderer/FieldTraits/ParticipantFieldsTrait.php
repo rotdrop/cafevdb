@@ -31,7 +31,6 @@ use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCP\Files as CloudFiles;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
@@ -59,6 +58,7 @@ trait ParticipantFieldsTrait
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use ParticipantFileFieldsTrait;
   use ParticipantFieldsCgiNameTrait;
   use SubstituteSQLFragmentTrait;
@@ -563,8 +563,7 @@ trait ParticipantFieldsTrait
                   );
 
                   $html .=  '<span class="invoice-label">' . $this->l->t('Invoice') . ':</span>';
-                  $html .= (new TemplateResponse(
-                    $this->appName(),
+                  $html .= $this->templateResponse(
                     'fragments/participant-fields/attachment-file-upload-menu', [
                       'containerTag' => 'span',
                       'containerAttributes' => [ 'class' => 'documents', ],
@@ -581,8 +580,7 @@ trait ParticipantFieldsTrait
                       'toolTips' => $this->toolTipsService,
                       'toolTipsPrefix' => self::$toolTipsPrefix,
                     ],
-                    'blank',
-                  ))->render();
+                  )->render();
 
                   return $html;
                 };
@@ -1633,8 +1631,7 @@ trait ParticipantFieldsTrait
               }
               $recomputeAllLabel = $this->l->t($recomputeAllLabel);
 
-              $html .= (new TemplateResponse(
-                $this->appName(),
+              $html .= $this->templateResponse(
                 'fragments/participant-fields/recurring-receivable-generator-row', [
                   'field' => $field,
                   'uiFlags' => $uiFlags,
@@ -1644,8 +1641,7 @@ trait ParticipantFieldsTrait
                   'toolTips' => $this->toolTipsService,
                   'toolTipsPrefix' => self::$toolTipsPrefix,
                 ],
-                'blank'
-              ))->render();
+              )->render();
 
               $html .= '
   </tbody>
@@ -2262,8 +2258,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       }
     }
 
-    return (new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       'fragments/participant-fields/recurring-receivable-change-row', [
         'uiFlags' => $uiFlags,
         'field' => $field,
@@ -2282,8 +2277,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
         'toolTips' => $this->toolTipsService,
         'toolTipsPrefix' => self::$toolTipsPrefix,
       ],
-      'blank'
-    ))->render();
+    )->render();
   }
 
   /**

@@ -38,12 +38,12 @@ use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\AssetService;
 
 use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Http\TemplateResponse;
 
 /** Admin settings class. */
 class Admin implements IDelegatedSettings
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = "admin-settings";
 
@@ -148,16 +148,15 @@ class Admin implements IDelegatedSettings
 
     $this->initialState->provideInitialState('adminConfig', $configData);
 
-    return new TemplateResponse(
-      $this->appName(),
-      self::TEMPLATE, [
-        'appName' => $this->appName(),
-        'appNameTag' => 'app-' . $this->appName,
+    return $this->templateResponse(
+      self::TEMPLATE,
+      [
         'assets' => [
           Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
           Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
-      ]);
+      ],
+    );
   }
 
   /** {@inheritdoc} */
