@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,6 @@ use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
@@ -49,6 +48,7 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\ITempManager;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\RequestParameterService;

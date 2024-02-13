@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,11 +32,11 @@ use OCP\IRequest;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IURLGenerator;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -158,6 +158,7 @@ class EmailFormController extends Controller
 
     $templateParameters = [
       'appName' => $this->appName(),
+      'appNameTag' => 'app-' . $this->appName,
       'urlGenerator' => $this->urlGenerator,
       'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
       'dateTimeZone' => $this->getDateTimeZone(),
@@ -366,6 +367,7 @@ class EmailFormController extends Controller
             $previewMessages = $composer->previewMessages();
             $templateParameters = [
               'appName' => $this->appName,
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'messages' => $previewMessages,
@@ -488,6 +490,7 @@ class EmailFormController extends Controller
 
             $templateParameters = [
               'appName' =>  $this->appName(),
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
@@ -527,6 +530,7 @@ class EmailFormController extends Controller
             $filterHistory = $recipientsFilter->filterHistory();
             $templateParameters = [
               'appName' => $this->appName(),
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               // Needed for the recipient selection
@@ -611,6 +615,7 @@ class EmailFormController extends Controller
 
             $templateParameters = [
               'appName' =>  $this->appName(),
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
@@ -652,6 +657,7 @@ class EmailFormController extends Controller
             $filterHistory = $recipientsFilter->filterHistory();
             $templateParameters = [
               'appName' => $this->appName(),
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               // Needed for the recipient selection
@@ -829,6 +835,7 @@ class EmailFormController extends Controller
 
       $templateParameters = [
         'appName' => $this->appName(),
+        'appNameTag' => 'app-' . $this->appName,
         'projectName' => $projectName,
         'projectId' => $projectId,
         'bulkTransactionId' => $bulkTransactionId,

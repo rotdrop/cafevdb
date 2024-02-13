@@ -3,7 +3,7 @@
  * Orchestra member, musician and project management application.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,10 +22,9 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use OCP\AppFramework\Http\TemplateResponse;
-
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\MailingListsService;
 use OCA\CAFEVDB\Controller\MailingListsController;
 use OCA\CAFEVDB\Controller\ProjectParticipantsController;

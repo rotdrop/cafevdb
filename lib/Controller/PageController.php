@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2023
+ * @copyright Claus-Justus Heine 2014-2024
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,6 @@ use OutOfBoundsException;
 
 use OCP\IRequest;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
@@ -41,6 +40,7 @@ use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Common\Util;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -400,6 +400,7 @@ class PageController extends Controller
 
       //'l' => $this->l,
       'appName' => $this->appName,
+      'appNameTag' => 'app-' . $this->appName,
 
       'configcheck' => $this->configCheck,
       'orchestra' => $this->getConfigValue('orchestra'),

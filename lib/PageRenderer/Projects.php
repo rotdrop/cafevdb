@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,10 +28,9 @@ use Throwable;
 use RuntimeException;
 use DateTimeImmutable;
 
-use OCP\AppFramework\Http\TemplateResponse;
-
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 
+use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\ConfigService;
@@ -1552,8 +1551,3 @@ class Projects extends PMETableViewBase
     return true;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

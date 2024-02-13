@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\IDelegatedSettings;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Services\IInitialState;
@@ -36,6 +35,7 @@ use OCA\CAFEVDB\Service\FontService;
 use OCA\CAFEVDB\Service\AssetService;
 
 use OCA\CAFEVDB\Constants;
+use OCA\CAFEVDB\Http\TemplateResponse;
 
 /** Admin settings class. */
 class Admin implements IDelegatedSettings
@@ -137,6 +137,7 @@ class Admin implements IDelegatedSettings
       $this->appName(),
       self::TEMPLATE, [
         'appName' => $this->appName(),
+        'appNameTag' => 'app-' . $this->appName,
         'assets' => [
           Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
           Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
