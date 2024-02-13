@@ -122,6 +122,7 @@ class BlogController extends Controller
       'priority' => $priority,
       'popup' => $popup,
       'toolTips' => $this->toolTipsService,
+      'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
     ];
     $tmpl = $this->templateResponse(
       $template,
@@ -228,6 +229,7 @@ class BlogController extends Controller
       $template = 'blog/blogthreads';
       $templateParameters = [
         'timezone' => $this->timeZone->getTimeZone(time())->getName(),
+        'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
         'user' => $this->userId,
         'urlGenerator' => $this->urlGenerator,
         'renderer' => $this->blogMapper,

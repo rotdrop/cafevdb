@@ -155,6 +155,7 @@ class PersonalForm
         'roles' => $this->roles,
         //
         'language' => $this->l->getLanguageCode(),
+        'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
         'locales' => $this->findAvailableLocales(),
         'languages' => $this->findAvailableLanguages(),
         'localeCountryNames' => $this->localeCountryNames(),
