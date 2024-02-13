@@ -2,7 +2,7 @@
 # later. See the COPYING file.
 #
 # @author Claus-Justus Heine <himself@claus-justus-heine.de>
-# @copyright Claus-Justus Heine 2020,2021,2022,2023
+# @copyright Claus-Justus Heine 2020,2021,2022,2023,2024
 #
 SRCDIR = .
 ABSSRCDIR = $(CURDIR)
@@ -253,10 +253,10 @@ include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 selectize: $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css)
 
 $(ABSSRCDIR)/3rdparty/selectize/dist/js/selectize.js: $(shell find $(ABSSRCDIR)/3rdparty/selectize/src -name "*.js")
-	make -C $(ABSSRCDIR)/3rdparty/selectize compile
+	make -C $(ABSSRCDIR)/3rdparty/selectize compile clean
 
 $(wildcard $(ABSSRCDIR)/3rdparty/selectize/dist/css/*.css): $(wildcard $(ABSSRCDIR)/3rdparty/selectize/src/scss/*.scss)
-	make -C $(ABSSRCDIR)/3rdparty/selectize compile
+	make -C $(ABSSRCDIR)/3rdparty/selectize compile clean
 
 CSS_FILES = $(shell find $(ABSSRCDIR)/style -name "*.css" -o -name "*.scss")
 JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue")
