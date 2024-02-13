@@ -7,7 +7,7 @@
   <description>Orchestra Management Application</description>
   <codename>Keep Going</codename>
   <version>8.0.1</version>
-  <licence>AGPL-3.0</licence>
+  <licence>AGPL-3.0-or-later</licence>
   <lifetime>2010-2024</lifetime>
   <author mail="himself@claus-justus-heine.de" homepage="https://github.com/rotdrop/cafevdb.git">Claus-Justus Heine</author>
   <types>
