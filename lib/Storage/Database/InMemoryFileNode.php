@@ -35,7 +35,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 class InMemoryFileNode
 {
   /**
-   * @param DatabaseStorageFolder|EmptyRootNode $parent
+   * @param DatabaseStorageFolder|EmptyDirectoryNode $parent
    *
    * @param string $name
    *
@@ -46,7 +46,7 @@ class InMemoryFileNode
    * @param  null|DateTimeInterface $updated
    */
   public function __construct(
-    protected DatabaseStorageFolder|EmptyRootNode $parent,
+    protected DatabaseStorageFolder|EmptyDirectoryNode $parent,
     protected string $name,
     protected string $data,
     protected string $mimeType,
@@ -80,7 +80,7 @@ class InMemoryFileNode
   /**
    * @return string
    */
-  public function getParent():DatabaseStorageFolder|EmptyRootNode
+  public function getParent():DatabaseStorageFolder|EmptyDirectoryNode
   {
     return $this->parent;
   }
@@ -114,7 +114,7 @@ class InMemoryFileNode
   }
 
   /**
-   * @param string $fileData
+   * @param string $data
    *
    * @return InMemoryFileNode
    */
@@ -159,7 +159,7 @@ class InMemoryFileNode
    */
   public function getSize():int
   {
-    return  strlen($this->fileData);
+    return  strlen($this->data);
   }
 
   /**

@@ -165,7 +165,7 @@ class Storage extends AbstractStorage
     /** @var Entities\DatabaseStorageFolder $folderDirEntry */
     $folderDirEntry = $this->rootFolder;
     if (!$rootIsMandatory && empty($dirName) && empty($folderDirEntry)) {
-      $rootFolder = $folderDirEntry ?? new EmptyRootNode('.', new DateTimeImmutable('@1'), $this->getShortId());
+      $rootFolder = $folderDirEntry ?? new EmptyDirectoryNode('.', new DateTimeImmutable('@1'), $this->getShortId());
       $this->files[$dirName] = [ '.' => $rootFolder ];
       if (empty($folderDirEntry)) {
         $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
@@ -192,7 +192,6 @@ class Storage extends AbstractStorage
           ));
         }
       }
-      $this->files[$dirName] = [ '.' => $folderDirEntry ];
     }
 
     $this->files[$dirName] = [ '.' => $folderDirEntry ];
@@ -200,7 +199,6 @@ class Storage extends AbstractStorage
     $dirEntries = $folderDirEntry->getDirectoryEntries();
 
     $hasReadme = false;
-    $readMe = null;
 
     /** @var Entities\DatabaseStorageDirEntry $dirEntry */
     foreach ($dirEntries as $dirEntry) {
@@ -218,9 +216,6 @@ class Storage extends AbstractStorage
         /** @var Entities\DatabaseStorageFile $dirEntry */
         $this->files[$dirName][$baseName] = $dirEntry;
         $hasReadme = $hasReadme || $this->readMeFactory->isReadMe($baseName);
-        if ($this->readMeFactory->isReadMe($baseName)) {
-          $readMe = $baseName;
-        }
       }
     }
     if (!$hasReadme) {
@@ -248,7 +243,7 @@ class Storage extends AbstractStorage
   {
     $this->entityManager->beginTransaction();
     try {
-      if ($memoryNode->getParent() instanceof EmptyRootNode) {
+      if ($memoryNode->getParent() instanceof EmptyDirectoryNode) {
         $memoryNode->setParent($this->getRootFolder(create: true));
       }
 
@@ -346,7 +341,7 @@ class Storage extends AbstractStorage
   protected function getDirectoryModificationTime(string $dirName):DateTimeInterface
   {
     $directory = $this->fileFromFileName($dirName);
-    if ($directory instanceof EmptyRootNode) {
+    if ($directory instanceof EmptyDirectoryNode) {
       $date = $directory->minimalModificationTime ?? (new DateTimeImmutable('@1'));
     } elseif ($directory instanceof Entities\DatabaseStorageFolder) {
       $date = $directory->getUpdated();
@@ -448,7 +443,7 @@ class Storage extends AbstractStorage
    *
    * @param string $name The path-name to work on.
    *
-   * @return null|Entities\DatabaseStorageDirEntry|EmptyRootNode
+   * @return null|Entities\DatabaseStorageDirEntry|EmptyDirectoryNode
    */
   public function fileFromFileName(string $name)
   {
@@ -632,7 +627,7 @@ class Storage extends AbstractStorage
     }
     $dirEntry = $this->fileFromFileName($path);
 
-    if ($dirEntry instanceof EmptyRootNode
+    if ($dirEntry instanceof EmptyDirectoryNode
         || $dirEntry instanceof Entities\DatabaseStorageFolder
     ) {
       return true;
@@ -730,9 +725,21 @@ class Storage extends AbstractStorage
     $this->entityManager->beginTransaction();
     try {
       if ($file instanceof InMemoryFileNode) {
+        /** @var InMemoryFileNode $file */
+        // Hack: if the contents actually has not changed (Text app is
+        // notoriously writing content when a conflict is resolved and the
+        // server version is to be kept)
+        if ($fileData == $file->getData()) {
+          $this->logError('Working around buggy text-app notoriously saving unchanged content.');
+          $this->entityManager->commit();
+          return $size;
+        } else {
+          $this->logInfo('SAME DATA? "' . $fileData . '" || "' . $file->getData() . '"');
+        }
         // this needs first to be replaced by a real file-node
         $file = $this->persistInMemoryFileNode($file);
       }
+      /** @var Entities\DatabaseStorageFile $file */
       $file->getFileData()->setData($fileData);
       /** @var IMimeTypeDetector $mimeTypeDetector */
       $mimeTypeDetector = $this->di(IMimeTypeDetector::class);

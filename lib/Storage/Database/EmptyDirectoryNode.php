@@ -26,24 +26,30 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use DateTimeInterface;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorage;
+
 /**
  * This is a placeholder which appears as top-level directory if the storage
  * does not hold any
  * entries.
  */
-class EmptyRootNode
+class EmptyDirectoryNode
 {
   /**
    * @param string $name
    *
-   * @param  null|DateTimeInterface $minimalModificationTime
+   * @param null|DateTimeInterface $updated
    *
-   * @param string $storageId
+   * @param null|string $storageId
+   *
+   * @param null|DatabaseStorageFolder $parent
    */
   public function __construct(
     protected string $name,
     protected DateTimeInterface $updated,
-    protected string $storageId,
+    protected ?string $storageId = null,
+    protected ?DatabaseStorageFolder $parent = null,
   ) {
   }
 
@@ -72,7 +78,7 @@ class EmptyRootNode
    */
   public function getParent():?DatabaseStorageFolder
   {
-    return null;
+    return $this->parent;
   }
 
   /**
@@ -84,11 +90,11 @@ class EmptyRootNode
   }
 
   /**
-   * @return EmptyRootNode
+   * @return EmptyDirectoryNode
    */
-  public function getStorage():EmptyRootNode
+  public function getStorage():DatabaseStorage|EmptyDirectoryNode
   {
-    return $this;
+    return $this->parent ? $this->parent->getStorage() : $this;
   }
 
   /**
@@ -96,7 +102,7 @@ class EmptyRootNode
    */
   public function getStorageId():string
   {
-    return $this->storageId;
+    return $this->parent ? $this->parent->getStorageId() : $this->storageId;
   }
 
   /**
@@ -112,7 +118,7 @@ class EmptyRootNode
    *
    * @return InMemoryFileNode $this.
    */
-  public function setUpdated(DateTimeInterface $updated):EmptyRootNode
+  public function setUpdated(DateTimeInterface $updated):EmptyDirectoryNode
   {
     $this->update = $updated;
 
