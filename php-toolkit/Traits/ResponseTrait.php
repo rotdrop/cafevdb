@@ -42,6 +42,13 @@ use OCP\IL10N;
  */
 trait ResponseTrait
 {
+  protected const RENDER_AS_GUEST = TemplateResponse::RENDER_AS_GUEST;
+  protected const RENDER_AS_BLANK = 'blank';
+  protected const RENDER_AS_BASE = TemplateResponse::RENDER_AS_BASE;
+  protected const RENDER_AS_USER = TemplateResponse::RENDER_AS_USER;
+  protected const RENDER_AS_ERROR = TemplateResponse::RENDER_AS_ERROR;
+  protected const RENDER_AS_PUBLIC = TemplateResponse::RENDER_AS_PUBLIC;
+
   /** @var IL10N */
   protected IL10N $l;
 
