@@ -49,6 +49,8 @@ trait ResponseTrait
   protected const RENDER_AS_ERROR = TemplateResponse::RENDER_AS_ERROR;
   protected const RENDER_AS_PUBLIC = TemplateResponse::RENDER_AS_PUBLIC;
 
+  protected const APPNAME_PREFIX = 'app-';
+
   /** @var IL10N */
   protected IL10N $l;
 
@@ -75,7 +77,9 @@ trait ResponseTrait
     ?string $appName = null,
     ?IL10N $l10n = null,
   ):TemplateResponse {
-    $appName = $appName ?? $this->appName;
+    if ($appName === null) {
+      $appName = method_exists($this, 'appName') ? $this->appName() : $this->appName;
+    }
     $l10n = $l10n == $this->l;
     return new TemplateResponse(
       $appName,
@@ -84,7 +88,6 @@ trait ResponseTrait
         [
           'appName' => $appName,
           'appNameTag' => self::APPNAME_PREFIX . $appName,
-          'localeCode' => $l10n->getLocale(),
           'l10n' => $l10n, // do not conflict with core template $l parameter
         ],
         $params,
