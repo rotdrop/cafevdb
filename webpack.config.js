@@ -185,7 +185,7 @@ module.exports = {
               implementation: require('sass'),
               additionalData: [
                 '$appName: ' + appName,
-                '$appNameTag: appp-' + appName,
+                '$appNameTag: app-' + appName,
                 '$cssPrefix: ' + appName + '-',
                 '$dokuWikiAppName: dokuwiki',
               ].join('; ')
