@@ -4,10 +4,11 @@
   <id>cafevdb</id>
   <namespace>CAFEVDB</namespace>
   <name>CAFeV DB</name>
-  <description>Orchestra Management Application.</description>
+  <description>Orchestra Management Application</description>
   <codename>Keep Going</codename>
   <version>8.0.2</version>
-  <licence>AGPL</licence>
+  <licence>AGPL-3.0</licence>
+  <lifetime>2010-2024</lifetime>
   <author mail="himself@claus-justus-heine.de" homepage="https://github.com/rotdrop/cafevdb.git">Claus-Justus Heine</author>
   <types>
     <filesystem/><!-- required for catching dav events, otherwise app is not loaded -->
