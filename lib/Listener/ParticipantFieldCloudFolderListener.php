@@ -122,9 +122,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   /** @var string */
   protected $appName;
 
-  /** @var IAppContainer */
-  private $appContainer;
-
   /** @var Repositories\ProjectParticipantFieldsRepository */
   private $fieldsRepository;
 
@@ -159,7 +156,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $musicians = [];
 
   /** @var IRootFolder */
-  protected $rootFolder;
+  protected IRootFolder $rootFolder;
 
   /**
    * @var string
@@ -170,9 +167,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $ignoreCreatedPaths = [];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(IAppContainer $appContainer)
-  {
-    $this->appContainer = $appContainer;
+  public function __construct(
+    private IAppContainer $appContainer,
+  ) {
   }
   // phpcs:enable
 
