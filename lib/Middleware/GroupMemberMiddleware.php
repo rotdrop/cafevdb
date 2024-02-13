@@ -30,7 +30,6 @@ use OCP\IL10N;
 use OCP\AppFramework\Http;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\AuthorizationService;
 
 /**
@@ -39,6 +38,8 @@ use OCA\CAFEVDB\Service\AuthorizationService;
  */
 class GroupMemberMiddleware extends Middleware
 {
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+
   /**
    * @param IControllerMethodReflector $reflector
    *
@@ -75,7 +76,7 @@ class GroupMemberMiddleware extends Middleware
   public function afterException($controller, $methodName, \Exception $exception)
   {
     if ($exception instanceof NotAdminException) {
-      $response = new TemplateResponse('core', '403', [], 'guest');
+      $response = $this->templateResponse('403', [], self::RENDER_AS_GUEST, appName: 'core');
       $response->setStatus(Http::STATUS_FORBIDDEN);
       return $response;
     }

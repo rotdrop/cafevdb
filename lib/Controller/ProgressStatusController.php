@@ -35,7 +35,6 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Common\IProgressStatus;
 

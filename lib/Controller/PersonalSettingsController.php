@@ -40,7 +40,6 @@ use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -2010,7 +2009,10 @@ class PersonalSettingsController extends Controller
       'dateTimeFormatter' => $this->dateTimeFormatter(),
     ];
 
-    $tmpl = new TemplateResponse($this->appName, 'settings/part.locale-info', $templateParameters, 'blank');
+    $tmpl = $this->templateResponse(
+      'settings/part.locale-info',
+      $templateParameters,
+    );
     return $tmpl->render();
   }
 

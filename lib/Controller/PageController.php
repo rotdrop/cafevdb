@@ -40,7 +40,6 @@ use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Common\Util;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -162,9 +161,9 @@ class PageController extends Controller
       return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
     }
     if ($this->shouldLoadHistory()) {
-      return $this->history(0, 'user');
+      return $this->history(0, self::RENDER_AS_USER);
     } else {
-      return $this->remember('user');
+      return $this->remember(self::RENDER_AS_USER);
     }
   }
 
@@ -277,11 +276,11 @@ class PageController extends Controller
    *
    * @NoAdminRequired
    */
-  public function remember(string $renderAs = 'user'):Http\Response
+  public function remember(string $renderAs = self::RENDER_AS_USER):Http\Response
   {
     $this->historyService->push($this->parameterService->getParams());
     return $this->loader(
-      $this->parameterService->getParam('renderAs', 'user'),
+      $this->parameterService->getParam('renderAs', self::RENDER_AS_USER),
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
@@ -299,7 +298,7 @@ class PageController extends Controller
   public function debug():Http\Response
   {
     return $this->loader(
-      'user',
+      self::RENDER_AS_USER,
       'maintenance/debug', // template
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
@@ -363,14 +362,14 @@ class PageController extends Controller
     $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
 
     if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_FRONTEND)) {
-      return new TemplateResponse(
-        $this->appName(),
+      return $this->templateResponse(
         'errorpage',
         [
           'error' => 'notamember',
           'userId' => $this->userId(),
         ],
-        'user');
+        self::RENDER_AS_USER,
+      );
     };
 
     $template = $this->getTemplate($template, $renderAs);
@@ -410,7 +409,7 @@ class PageController extends Controller
       'sharedfolder' => $this->getConfigValue('sharedfolder'),
       'database' => $this->getConfigValue('database'),
       'groupadmin' => $this->isSubAdminOfGroup(),
-      'user' => $this->userId(),
+      self::RENDER_AS_USER => $this->userId(),
       'expertMode' => $expertMode,
       'financeMode' => $financeMode,
       'showToolTips' => $showToolTips,
@@ -436,8 +435,12 @@ class PageController extends Controller
     ];
 
     // renderAs = admin, user, blank
-    // $renderAs = 'user';
-    $response = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
+    // $renderAs = self::RENDER_AS_USER;
+    $response = $this->templateResponse(
+      $template,
+      $templateParameters,
+      $renderAs,
+    );
 
     // @todo: we need this only for some site like DokuWiki and CMS
     $policy = new ContentSecurityPolicy();
@@ -472,7 +475,7 @@ class PageController extends Controller
     if (empty($template) || $template == self::HOME_TEMPLATE) {
       $template = self::DEFAULT_TEMPLATE;
     }
-    if ($renderAs === 'user') {
+    if ($renderAs === self::RENDER_AS_USER) {
       $blogMapper = \OC::$server->query(BlogMapper::class);
       if ($blogMapper->notificationPending($this->userId())) {
         $template = 'blog/blog';

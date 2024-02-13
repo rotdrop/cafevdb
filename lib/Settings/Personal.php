@@ -28,7 +28,6 @@ use OCP\Settings\ISettings;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\AuthorizationService;
 
 /**
@@ -40,6 +39,7 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 class Personal implements ISettings
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 
@@ -74,13 +74,13 @@ class Personal implements ISettings
   public function getForm()
   {
     if (!$this->authorizationService->authorized($this->userId, AuthorizationService::PERMISSION_FRONTEND)) {
-      return new TemplateResponse(
-        $this->appName,
+      return $this->templateResponse(
         self::ERROR_TEMPLATE,
         [
           'error' => 'notamember',
           'userId' => $this->userId,
-        ], 'blank');
+        ],
+      );
     }
     return \OC::$server->query(PersonalForm::class)->getForm();
   }

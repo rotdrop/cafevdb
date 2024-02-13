@@ -26,13 +26,15 @@ namespace OCA\CAFEVDB\Service;
 
 use Exception;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
+use OCP\AppFramework\Http\TemplateResponse;
+
 use OCA\CAFEVDB\Service\AuthorizationService;
 
 /** Generate frontend HTML page with error information. */
 class ErrorService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 
@@ -56,15 +58,16 @@ class ErrorService
    *
    * @return TemplateResponse
    */
-  public function exceptionTemplate(Exception $e, string $renderAs = 'blank'):TemplateResponse
-  {
+  public function exceptionTemplate(
+    Exception $e,
+    string $renderAs = self::RENDER_AS_BLANK,
+  ):TemplateResponse {
     $admin = implode(',', array_map(
       fn($contact) => $contact['name'] . ' <' . $contact['email'] . '>',
       $this->rolesService->cloudAdminContact()
     ));
 
-    return new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       self::ERROR_TEMPLATE,
       [
         'userId' => $this->userId(),

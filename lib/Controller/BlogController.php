@@ -38,7 +38,6 @@ use OCP\IDateTimeZone;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
@@ -154,8 +153,11 @@ class BlogController extends Controller
       'popup' => $popup,
       'toolTips' => $this->toolTipsService,
     ];
-    $renderAs = 'blank';
-    $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
+    $tmpl = $this->templateResponse(
+      $template,
+      $templateParameters,
+      self::RENDER_AS_BLANK,
+    );
     $html = $tmpl->render();
 
     $responseData = [
@@ -226,7 +228,6 @@ class BlogController extends Controller
           return self::grumble($this->l->t('Refusing to create empty blog entry.'));
         }
         $priority = intval($priority) % 256;
-        $this->logInfo('IN REPLY TO ' . (int)($inReplyTo === null) . ' "' . $inReplyTo);
         /* $result = */$this->blogMapper->createNote($author, $inReplyTo, $content, $priority, $popup);
         break;
       case 'modify':
@@ -257,14 +258,16 @@ class BlogController extends Controller
       $template = 'blog/blogthreads';
       $templateParameters = [
         'timezone' => $this->timeZone->getTimeZone(time())->getName(),
-        'locale' => $this->l->getLocaleCode(), // this should already have been provided by the NC core
         'user' => $this->userId,
         'urlGenerator' => $this->urlGenerator,
         'renderer' => $this->blogMapper,
         'toolTips' => $this->toolTipsService,
       ];
-      $renderAs = 'blank';
-      $tmpl = new TemplateResponse($this->appName, $template, $templateParameters, $renderAs);
+      $tmpl = $this->templateResponse(
+        $template,
+        $templateParameters,
+        self::RENDER_AS_BLANK,
+      );
       $html = $tmpl->render();
     }
 

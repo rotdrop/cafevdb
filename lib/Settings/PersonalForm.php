@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Settings;
 
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\App\IAppManager;
 use OCP\Settings\ISettings;
 use OCP\IInitialStateService;
@@ -45,7 +46,6 @@ use OCA\Redaxo\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Http\TemplateResponse;
 
 /**
  * Simple helper class in order to avoid instantiation of a bunch of
@@ -143,8 +143,7 @@ class PersonalForm
   public function getForm()
   {
     if (!$this->inGroup()) {
-      return new TemplateResponse(
-        $this->appName(),
+      return $this->templateResponse(
         self::ERROR_TEMPLATE,
         [
           'assets' => [
@@ -153,7 +152,8 @@ class PersonalForm
           ],
           'error' => 'notamember',
           'userId' => $this->userId(),
-        ], 'blank');
+        ],
+      );
     }
     try {
       // Initial state injecton for JS
@@ -207,7 +207,6 @@ class PersonalForm
         //
         'roles' => $this->roles,
         //
-        'localeSymbol' => $this->getLocale(),
         'language' => $this->l->getLanguageCode(),
         'locales' => $this->findAvailableLocales(),
         'languages' => $this->findAvailableLanguages(),
@@ -486,11 +485,9 @@ class PersonalForm
         }
       }
 
-      return new TemplateResponse(
-        $this->appName(),
+      return $this->templateResponse(
         self::TEMPLATE,
         $templateParameters,
-        'blank',
       );
     } catch (\Exception $e) {
       return $this->errorService->exceptionTemplate($e);

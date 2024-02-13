@@ -29,7 +29,6 @@ use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 use OCP\AppFramework\Http;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Exceptions;
 
@@ -38,24 +37,14 @@ use OCA\CAFEVDB\Exceptions;
  */
 class ConfigLockMiddleware extends Middleware
 {
-  /** @var ConfigService */
-  protected $configService;
-
-  /** @var IControllerMethodReflector */
-  protected $reflector;
-
-  /** @var IL10N */
-  private $l;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IControllerMethodReflector $reflector,
-    ConfigService $configService,
-    IL10N $l,
+    protected IControllerMethodReflector $reflector,
+    protected ConfigService $configService,
+    protected IL10N $l,
   ) {
-    $this->reflector = $reflector;
-    $this->configService = $configService;
-    $this->l = $l;
   }
   // phpcs:enable
 
@@ -82,7 +71,7 @@ class ConfigLockMiddleware extends Middleware
   public function afterException($controller, $methodName, \Exception $exception)
   {
     if ($exception instanceof Exceptions\ConfigLockedException) {
-      $response = new TemplateResponse('core', 'update.user', [], 'guest');
+      $response = $this->templateResponse('update.user', [], self::RENDER_AS_GUEST, appName: 'core');
       $response->setStatus(Http::STATUS_LOCKED);
       return $response;
     }

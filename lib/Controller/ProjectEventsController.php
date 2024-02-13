@@ -30,7 +30,6 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -361,11 +360,9 @@ class ProjectEventsController extends Controller
         'requesttoken' => \OCP\Util::callRegister(),
         'wikinamespace' => $this->getAppValue('wikinamespace'),
       ];
-      $response = new TemplateResponse(
-        $this->appName(),
+      $response = $this->templateResponse(
         $template,
         $templateParameters,
-        'blank'
       );
 
       $response->addHeader('X-'.$this->appName().'-project-id', $projectId);

@@ -48,7 +48,6 @@ use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\ITempManager;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\HistoryService;
 use OCA\CAFEVDB\Service\RequestParameterService;
@@ -183,7 +182,10 @@ class PmeTableController extends Controller
         'recordId' => $this->pme->getCGIRecordId(),
       ];
 
-      $response = new TemplateResponse($this->appName, $template, $templateParameters, 'blank');
+      $response = $this->templateResponse(
+        $template,
+        $templateParameters,
+      );
 
       $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
 

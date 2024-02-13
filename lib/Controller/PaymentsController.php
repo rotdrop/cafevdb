@@ -33,7 +33,6 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\Files\SimpleFS\ISimpleFile;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Database\EntityManager;

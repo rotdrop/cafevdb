@@ -36,7 +36,6 @@ use OCP\IURLGenerator;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
 
-use OCA\CAFEVDB\Http\TemplateResponse;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -217,11 +216,10 @@ class EmailFormController extends Controller
       'toolTips' => $this->toolTipsService(),
     ];
 
-    $html = (new TemplateResponse(
-      $this->appName,
+    $html = $this->templateResponse(
       'emailform/form',
       $templateParameters,
-      'blank'))->render();
+    )->render();
 
     $responseData = [
       'contents' => $html,
@@ -249,11 +247,10 @@ class EmailFormController extends Controller
       'dateTimeZone' => $this->getDateTimeZone(),
     ];
 
-    $tmpl = new TemplateResponse(
-      $this->appName,
+    $tmpl = $this->templateResponse(
       'emailform/part.stored-email-options',
       $templateParamters,
-      'blank');
+    );
     return $tmpl->render();
   }
 
@@ -273,11 +270,10 @@ class EmailFormController extends Controller
       'dateTimeZone' => $this->getDateTimeZone(),
     ];
 
-    $tmpl = new TemplateResponse(
-      $this->appName,
+    $tmpl = $this->templateResponse(
       'emailform/part.sent-email-options',
       $templateParameters,
-      'blank');
+    );
     return $tmpl->render();
   }
 
@@ -341,8 +337,7 @@ class EmailFormController extends Controller
           $caption = $diagnostics['caption'];
 
           $roles = $this->appContainer->get(OrganizationalRolesService::class);
-          $tmpl = new TemplateResponse(
-            $this->appName,
+          $tmpl = $this->templateResponse(
             'emailform/part.emailform.statuspage',
             [
               'projectName' => $projectName,
@@ -352,7 +347,7 @@ class EmailFormController extends Controller
               'dateTimeFormatter' => $this->dateTimeFormatter(),
               'urlGenerator' => $this->urlGenerator,
             ],
-            'blank');
+          );
           $messageText = $tmpl->render();
 
           // Update list of drafts after sending the message (draft has
@@ -374,11 +369,10 @@ class EmailFormController extends Controller
               'urlGenerator' => $this->urlGenerator,
               'requesttoken' => \OCP\Util::callRegister(),
             ];
-            $html = (new TemplateResponse(
-              $this->appName,
+            $html = $this->templateResponse(
               'emailform/part.emailform.preview',
               $templateParameters,
-              'blank'))->render();
+            )->render();
             if ($composer->errorStatus()) {
               $requestData['errorStatus'] = $composer->errorStatus();
               $requestData['diagnostics'] = $composer->statusDiagnostics();
@@ -430,11 +424,10 @@ class EmailFormController extends Controller
 
               'toolTips' => $this->toolTipsService(),
             ];
-            $elementData = (new TemplateResponse(
-              $this->appName,
+            $elementData = $this->templateResponse(
               'emailform/part.emailform.composer',
               $templateParameters,
-              'blank'))->render();
+            )->render();
             break;
           case 'element':
             $formElements = $requestData['formElement'];
@@ -518,11 +511,10 @@ class EmailFormController extends Controller
               'toolTips' => $this->toolTipsService(),
             ];
 
-            $msgData = (new TemplateResponse(
-              $this->appName,
+            $msgData = $this->templateResponse(
               'emailform/part.emailform.composer',
               $templateParameters,
-              'blank'))->render();
+            )->render();
 
             $requestData['composerForm'] = $msgData;
 
@@ -546,11 +538,10 @@ class EmailFormController extends Controller
               'toolTips' => $this->toolTipsService(),
             ];
 
-            $rcptData = (new TemplateResponse(
-              $this->appName,
+            $rcptData = $this->templateResponse(
               'emailform/part.emailform.recipients',
               $templateParameters,
-              'blank'))->render();
+            )->render();
 
             $requestData['recipientsForm'] = $rcptData;
 
@@ -645,11 +636,10 @@ class EmailFormController extends Controller
               'toolTips' => $this->toolTipsService(),
             ];
 
-            $msgData = (new TemplateResponse(
-              $this->appName,
+            $msgData = $this->templateResponse(
               'emailform/part.emailform.composer',
               $templateParameters,
-              'blank'))->render();
+            )->render();
 
             $requestData['composerForm'] = $msgData;
 
@@ -675,11 +665,10 @@ class EmailFormController extends Controller
               'toolTips' => $this->toolTipsService(),
             ];
 
-            $rcptData = (new TemplateResponse(
-              $this->appName,
+            $rcptData = $this->templateResponse(
               'emailform/part.emailform.recipients',
               $templateParameters,
-              'blank'))->render();
+            )->render();
 
             $requestData['composerForm'] = $msgData;
             $requestData['recipientsForm'] = $rcptData;
@@ -767,8 +756,7 @@ class EmailFormController extends Controller
       $caption = $requestData['diagnostics']['caption'];
 
       $roles = $this->appContainer->get(OrganizationalRolesService::class);
-      $messageText = (new TemplateResponse(
-        $this->appName,
+      $messageText = $this->templateResponse(
         'emailform/part.emailform.statuspage',
         [
           'projectName' => $projectName,
@@ -778,7 +766,7 @@ class EmailFormController extends Controller
           'dateTimeFormatter' => $this->dateTimeFormatter(),
           'urlGenerator' => $this->urlGenerator,
         ],
-        'blank'))->render();
+      )->render();
 
       return self::grumble([
         'operation' => $operation,
@@ -854,11 +842,10 @@ class EmailFormController extends Controller
         'toolTips' => $this->toolTipsService(),
       ];
 
-      $contents = (new TemplateResponse(
-        $this->appName,
+      $contents = $this->templateResponse(
         'emailform/part.emailform.recipients',
         $templateParameters,
-        'blank'))->render();
+      )->render();
 
       return self::dataResponse([
         'projectName' => $projectName,
@@ -876,26 +863,23 @@ class EmailFormController extends Controller
     $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
     $recipientsOptions = PageNavigation::selectOptions($recipientsChoices);
 
-    $missingEmailAddresses = (new TemplateResponse(
-      $this->appName,
-        'emailform/part.broken-email-addresses', [
-          'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
-        ],
-      'blank'))->render();
+    $missingEmailAddresses = $this->templateResponse(
+      'emailform/part.broken-email-addresses', [
+        'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+      ],
+    )->render();
 
-    $instrumentsFilter = (new TemplateResponse(
-      $this->appName,
+    $instrumentsFilter = $this->templateResponse(
       'emailform/part.instruments-filter', [
         'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
       ],
-      'blank'))->render();
+    )->render();
 
-    $memberStatusFilter = (new TemplateResponse(
-      $this->appName,
+    $memberStatusFilter = $this->templateResponse(
       'emailform/part.member-status-filter', [
         'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
       ],
-      'blank'))->render();
+    )->render();
 
     return self::dataResponse([
       'projectName' => $projectName,
@@ -1000,11 +984,10 @@ class EmailFormController extends Controller
 
         // $phpMailer = new \OCA\CAFEVDB\CommonPHPMailer(true); could validate addresses here
 
-        $html = (new TemplateResponse(
-          $this->appName,
+        $html = $this->templateResponse(
           'emailform/addressbook',
           [ 'emailOptions' => $selectOptions ],
-          'blank'))->render();
+        )->render();
 
         return self::dataResponse([ 'contents' => $html ]);
 
