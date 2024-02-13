@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -132,8 +132,8 @@
     top:0!important;
   }
 
-  .cafevdb-page-container.instruments .pme-sys,
-  .cafevdb-page-container.instruments .pme-main .pme-navigation  {
+  .#{$appName}-page-container.instruments .pme-sys,
+  .#{$appName}-page-container.instruments .pme-main .pme-navigation  {
     display:none;
   }
 
@@ -183,7 +183,7 @@
     margin: 0px !important;
   }
 
-  #appsettings_popup div.personalblock.cafevdb.about {
+  #appsettings_popup div.personalblock.#{$appNameTag}.about {
     max-width:none !important;
     width: auto !important;
     min-width:0 !important;
@@ -201,7 +201,7 @@
     overflow: initial !important;
   }
 
-  fieldset#cafevdb-email-composition-fieldset {
+  fieldset##{$appName}-email-composition-fieldset {
     min-width:0 !important;
   }
 
@@ -246,12 +246,12 @@
     border-width: 0px !important;
   }
 
-  #cafevdb-page-blog-header {
+  ##{$appName}-page-blog-header {
     background-image:none !important;
     padding-left: 0px !important;
   }
 
-  body.snapjs-left .cafevdb-page-header-box {
+  body.snapjs-left .#{$appName}-page-header-box {
     display:none;
     width:0;
     height:0;

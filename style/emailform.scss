@@ -96,7 +96,7 @@ $editorHeight: 20em;
         }
       } /* ul#emailformtabs */
 
-      form#cafevdb-email-form {
+      form##{$appName}-email-form {
 
         fieldset.page {
           max-width:65em;
@@ -439,7 +439,7 @@ $editorHeight: 20em;
            *
            */
 
-          div#cafevdb-email-preview {
+          div##{$appName}-email-preview {
             line-height:initial;
             font-size:initial;
 
@@ -694,7 +694,7 @@ $editorHeight: 20em;
                       background-image:url('../../../core/img/actions/toggle.svg');
                     }
                     &.delete-all-attachments {
-                      background-image:url('../img/cafevdb-delete.svg');
+                      background-image:url('../img/#{$appName}-delete.svg');
                     }
                   }
                 }
@@ -754,7 +754,7 @@ $editorHeight: 20em;
             }
 
             input.delete-message {
-              background-image:url('../img/cafevdb-delete.svg');
+              background-image:url('../img/#{$appName}-delete.svg');
             }
 
             input {
@@ -979,7 +979,7 @@ $editorHeight: 20em;
           vertical-align:middle;
         }
 
-      } /* form#cafevdb-email-form */
+      } /* form##{$appName}-email-form */
 
       div#sendingprogresswrapper {
         display:none;

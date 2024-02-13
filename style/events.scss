@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -490,7 +490,7 @@
 }
 
 /* make popups scrollable in smaller viewports */
-.ui-dialog.cafevdb-project-events {
+.ui-dialog.#{$appName}-project-events {
 	max-height: 75% !important;
 	/*top: 15% !important;*/
 	overflow-y: auto;
@@ -499,7 +499,7 @@
 /*        min-width:30em;*/
 }
 
-.ui-dialog.cafevdb-project-events .ui-dialog-content {
+.ui-dialog.#{$appName}-project-events .ui-dialog-content {
 	overflow: initial;
 }
 
@@ -512,7 +512,7 @@ div.google-popup {
  * projects, or at least to restore event-project connection. Better not
  * let the user fiddle with that.
  */
-.cafevdb.eventdlg {
+.#{$appNameTag}.eventdlg {
   input#category, a#editCategories {
     /*  display:none;*/
   }

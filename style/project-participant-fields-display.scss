@@ -359,7 +359,7 @@ form.pme-form.project-participant-fields-display {
           .dropdown-content {
             .menu-item {
               .delete-undelete .menu-icon {
-                background-image:url('../img/cafevdb-delete.svg');
+                background-image:url('../img/#{$appName}-delete.svg');
               }
               .upload-replace .menu-icon {
                 background-image:url('../../../core/img/actions/upload.svg');
@@ -463,7 +463,7 @@ form.pme-form.project-participant-fields-display {
               background-image:url('../img/actions/compute-red.svg');
             }
             &.delete-undelete {
-              background-image:url('../img/cafevdb-delete.svg');
+              background-image:url('../img/#{$appName}-delete.svg');
             }
             &.busy {
               background-image:url('../../../core/img/loading.gif') !important;
@@ -582,7 +582,7 @@ form.pme-form.project-participant-fields-display {
         vertical-align:middle;
         /* margin-right:0.5em; */
         &.delete-undelete {
-          background-image:url('../img/cafevdb-delete.svg');
+          background-image:url('../img/#{$appName}-delete.svg');
         }
         &.upload-replace {
           background-image:url('../../../core/img/actions/upload.svg');

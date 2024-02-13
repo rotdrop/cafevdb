@@ -1,9 +1,10 @@
-/**Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2016, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2016, 2021, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -97,13 +98,13 @@ table.pme-main td.project-instrumentation-numbers--balance {
  *
  */
 
-.ui-dialog.cafevdb-project-instruments {
+.ui-dialog.#{$appName}-project-instruments {
   max-height: 75% !important;
   overflow: visible !important;
   padding: 0;
 }
 
-.ui-dialog.cafevdb-project-instruments .ui-dialog-content {
+.ui-dialog.#{$appName}-project-instruments .ui-dialog-content {
   overflow: visible !important;
 }
 
@@ -115,28 +116,28 @@ table.pme-main td.project-instrumentation-numbers--balance {
   width: 20em;
 }
 
-.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane {
+.ui-dialog.#{$appName}-project-instruments .ui-dialog-buttonpane {
   margin-top: 0;
 }
 
-.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane {
+.ui-dialog.#{$appName}-project-instruments .ui-dialog-buttonpane {
   padding: 0;
 }
 
-.ui-dialog.cafevdb-project-instruments .ui-dialog-buttonpane .ui-dialog-buttonset {
+.ui-dialog.#{$appName}-project-instruments .ui-dialog-buttonpane .ui-dialog-buttonset {
   width: 100%;
 }
 
-.ui-dialog.cafevdb-project-instruments button {
+.ui-dialog.#{$appName}-project-instruments button {
   margin-left: 0.4em;
   margin-right: 0.4em;
 }
 
-.ui-dialog.cafevdb-project-instruments button.save {
+.ui-dialog.#{$appName}-project-instruments button.save {
   float: left;
 }
 
-.ui-dialog.cafevdb-project-instruments button.cancel {
+.ui-dialog.#{$appName}-project-instruments button.cancel {
   float: right;
 }
 

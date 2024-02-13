@@ -23,7 +23,7 @@
 
 @import 'variables';
 
-#cafevdb-page-header-box.projects {}
+##{$appName}-page-header-box.projects {}
 
 #pme-table-container.projects {
 
@@ -148,9 +148,9 @@
             $articleParentOffsetPx: $pme-key-max-width + 2 * $jquery-ui-widget-border-width + 2 * ($pme-table-cell-padding + $pme-table-cell-border-width);
             $articleParentOffsetEm: 2 * $jquery-ui-tabs-padding;
             max-width: calc(
-              var(--cafevdb-pme-table-dialog-max-width)
-              - 2 * var(--cafevdb-pme-table-dialog-horizontal-padding)
-              - 2 * var(--cafevdb-pme-table-dialog-border-width)
+              var(--#{$appName}-pme-table-dialog-max-width)
+              - 2 * var(--#{$appName}-pme-table-dialog-horizontal-padding)
+              - 2 * var(--#{$appName}-pme-table-dialog-border-width)
               - $articleParentOffsetEm - $articleParentOffsetPx
             );
             height: auto; // set by iframe
@@ -286,7 +286,7 @@
 
 } /* page container */
 
-body:not(.cafevdb-expert-mode) {
+body:not(.#{$appName}-expert-mode) {
   #pme-table-container.projects {
     form.pme-form {
       td {
@@ -300,7 +300,7 @@ body:not(.cafevdb-expert-mode) {
   }
 }
 
-body:not(.cafevdb-finance-mode) {
+body:not(.#{$appName}-finance-mode) {
   #pme-table-container.projects {
     form.pme-form {
       td {

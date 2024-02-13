@@ -90,7 +90,7 @@
 
 } /* page container */
 
-body.cafevdb-expert-mode {
+body.#{$appName}-expert-mode {
   #pme-table-container.project-participants {
     form.pme-form {
       td.pme-value.mailing-list.project {

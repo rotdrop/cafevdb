@@ -183,7 +183,13 @@ module.exports = {
             options: {
               // Prefer `dart-sass`
               implementation: require('sass'),
-              additionalData: '$appName: ' + appName + '; $cssPrefix: ' + appName + '-' + '; $dokuWikiAppName: dokuwiki;',
+              additionalData: [
+                '$appName: ' + appName,
+                '$appNameTag: appp-' + appName,
+                '$cssPrefix: ' + appName + '-',
+                '$dokuWikiAppName: dokuwiki',
+              ].join('; ')
+                + ';',
             },
           },
         ],

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2013, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2013, 2021, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-div.cafevdb.about {
+div.#{$appNameTag}.about {
   a:link {
     color:CornFlowerBlue;
     /* text-decoration:underline; */
@@ -54,7 +54,7 @@ div.cafevdb.about {
   }
 }
 
-#appsettings_popup div.personalblock.cafevdb.about {
+#appsettings_popup div.personalblock.#{$appNameTag}.about {
   max-width:46em;
   width:46em;
 }

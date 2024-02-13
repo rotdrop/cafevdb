@@ -1492,7 +1492,7 @@ form.pme-form {
     &:checked + label.pme-input-lock {
       opacity: 0.8;
       &.lock-empty {
-        background-image: url('../img/cafevdb-delete.svg');
+        background-image: url('../img/#{$appName}-delete.svg');
       }
       &.lock-unlock {
         background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
@@ -1525,7 +1525,7 @@ form.pme-form {
     &:checked + label.pme-select-lock {
       opacity: 0.8;
       &.lock-empty {
-        background-image: url('../img/cafevdb-delete.svg');
+        background-image: url('../img/#{$appName}-delete.svg');
       }
       &.lock-unlock {
         background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
