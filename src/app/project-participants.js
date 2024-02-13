@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './config.js';
+import { appName, appPrefix } from './config.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Page from './page.js';
@@ -782,7 +782,7 @@ const myReady = function(selector, dialogParameters, resizeCB) {
     const limit = groupId ? $self.data('groups')[groupId].limit : -1;
     if (limit > 0 && curSelected.length > limit) {
       Notification.showTemporary(
-        t('cafevdb',
+        t(appName,
           'Too many group members, allowed are {limit}, you specified {count}.'
           + 'You will not be able to save this configuration.',
           { limit, count: curSelected.length }),
@@ -973,7 +973,7 @@ const myDocumentReady = function() {
   });
 
   CAFEVDB.addReadyCallback(function() {
-    if ($('div#cafevdb-page-body.project-participants').length > 0) {
+    if ($('div#' + appPrefix('page-body') + '.project-participants').length > 0) {
       myReady();
     }
   });

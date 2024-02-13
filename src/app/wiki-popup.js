@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName, appPrefix } from './app-info.js';
 import { wikiPopup as dokuWikiPopup } from '@rotdrop/nextcloud-app-dokuwiki/src/doku-wiki-popup.js';
 import { toBackButton as dialogToBackButton } from './dialog-utils.js';
 import modalizer from './modalizer.js';
@@ -59,7 +59,7 @@ const wikiPopup = function(post, reopen) {
     },
     function(dwDialog, dwDialogWidget) {
       // open callback
-      dwDialog.dialog('option', 'appendTo', '#cafevdb-general');
+      dwDialog.dialog('option', 'appendTo', '#' + appPrefix('general'));
       // Custom shuffle button
       dialogToBackButton(dwDialog);
     },
@@ -71,8 +71,3 @@ const wikiPopup = function(post, reopen) {
 };
 
 export default wikiPopup;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

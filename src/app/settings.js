@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName, appPrefix } from './app-info.js';
 import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as Dialogs from './dialogs.js';
@@ -55,33 +55,38 @@ const tabsSelector = '#personal-settings-container';
 
 let timeStampTimer;
 
+const localeUpdateOne = function(element) {
+  const $element = $(element);
+  if (!$element.is(':visible')) {
+    // avoid update if the element currently is hidden
+    return;
+  }
+  return $.post(getUrl('locale-info'), { scope: $element.data('scope') })
+  // .fail(function(xhr, status, errorThrown) { ignore }
+    .done(function(data) {
+      $element.find('.locale.time').replaceWith($(data.contents).find('.locale.time'));
+    });
+};
+
+const localeUpdater = async function($localeInfo) {
+  if (!$localeInfo.filter(':visible').length) {
+    clearTimeout(timeStampTimer);
+    return;
+  }
+  const promises = [];
+  for (const element of $localeInfo) {
+    promises.push(localeUpdateOne(element));
+  }
+  for (const promise of promises) {
+    await promise;
+  }
+  clearTimeout(timeStampTimer); // just in case, should not be necessary
+  timeStampTimer = setTimeout(() => localeUpdater($localeInfo), 1000 + Math.floor(Math.random() * 29000.0));
+};
+
 const updateLocaleTimeStamps = function($container) {
-
-  if (timeStampTimer) {
-    clearInterval(timeStampTimer);
-  }
-
   const $localeInfo = $container.find('.locale.information');
-
-  if ($localeInfo.length > 0) {
-    timeStampTimer = setInterval(() => {
-      $localeInfo.each(function() {
-        const $self = $(this);
-        if (!$localeInfo.filter(':visible').length) {
-          clearInterval(timeStampTimer);
-          return;
-        }
-        if (!$self.is(':visible')) {
-          return;
-        }
-        $.post(getUrl('locale-info'), { scope: $localeInfo.data('scope') })
-        // .fail(function(xhr, status, errorThrown) { ignore }
-          .done(function(data) {
-            $self.find('.locale.time').replaceWith($(data.contents).find('.locale.time'));
-          });
-      });
-    }, 30000);
-  }
+  localeUpdater($localeInfo);
 };
 
 /**
@@ -334,15 +339,15 @@ const afterLoad = function(container) {
 
     // DB-Password
     // 'show password' checkbox
-    const dbPassword = $('fieldset.cafevdb_dbpassword #cafevdb-dbpassword');
+    const dbPassword = $(`fieldset.${appName}_dbpassword #${appPrefix('dbpassword')}`);
     showPassword(dbPassword);
 
     // test password
     simpleSetValueHandler(
-      $('fieldset.cafevdb_dbpassword #button'), 'click', $('fieldset.cafevdb_dbpassword .statusmessage'), {
+      $(`fieldset.${appName}_dbpassword #button`), 'click', $(`fieldset.${appName}_dbpassword .statusmessage`), {
         success(element, data, value) {
-          // $('fieldset.cafevdb_dbpassword input[name="dbpassword"]').val('');
-          // $('fieldset.cafevdb_dbpassword input[name="dbpassword-clone"]').val('');
+          // $(`fieldset.${appName}_dbpassword input[name="dbpassword"]`).val('');
+          // $(`fieldset.${appName}_dbpassword input[name="dbpassword-clone"]`).val('');
         },
         getValue(element, msg) {
           const val = { name: dbPassword.attr('name'), value: dbPassword.val() };
@@ -1112,7 +1117,7 @@ const afterLoad = function(container) {
       disable_search_threshold: 10,
       allow_single_deselect: true,
       inherit_select_classes: true,
-      title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+      title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
       width: '100%',
     });
     selectPlaceholder(executiveBoardIds);
@@ -1368,7 +1373,7 @@ const afterLoad = function(container) {
     const $locales = $('select.translation-locales');
     const $translationKey = $('.translation-key');
     const $translationText = $('textarea.translation-translation');
-    const $hideTranslated = $('#cafevdb-hide-translated');
+    const $hideTranslated = $('#' + appPrefix('hide-translated'));
     const $downloadPoTemplates = $('#' + appName + '-translations-download-pot');
     const $deleteRecorded = $('#' + appName + '-translations-erase-all');
     const $msg = $('.translation.msg');
@@ -1576,12 +1581,12 @@ const documentReady = function(container) {
     $.fn.cafevTooltip.remove(); // remove pending tooltips ...
   });
 
-  container.on('cafevdb:content-update', function(event) {
+  container.on(appName + ':content-update', function(event) {
     console.debug('Settings content-update');
     if (event.target === this) {
       console.debug('Settings trigger PS content-update');
       if (!container.hasClass('personal-settings')) {
-        $('.personal-settings').trigger('cafevdb:content-update');
+        $('.personal-settings').trigger(appName + ':content-update');
       }
       afterLoad($(this));
     } else {

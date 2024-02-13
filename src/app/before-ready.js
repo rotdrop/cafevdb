@@ -3,7 +3,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $, appName } from './globals.js';
+import { globalState, $, appName, appPrefix } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 // import * as Dialogs from './dialogs.js';
 import * as Page from './page.js';
@@ -53,7 +53,7 @@ const documentReady = function() {
       const width = (win.innerWidth > 0) ? win.innerWidth : screen.width;
       const height = (win.innerHeight > 0) ? win.innerHeight : screen.height;
       if (win.oldWidth !== width || win.oldHeight !== height) {
-        console.debug('cafevdb size change', width, win.oldWidth, height, win.oldHeight);
+        console.debug(appName + ' size change', width, win.oldWidth, height, win.oldHeight);
         win.resizeTimeout = setTimeout(
           function() {
             win.resizeTimeout = null;
@@ -104,7 +104,7 @@ const documentReady = function() {
     });
 
   CAFEVDB.addReadyCallback(function() {
-    $('input.alertdata.cafevdb-page').each(function(index) {
+    $('input.alertdata.' + appPrefix('page')).each(function(index) {
       const title = $(this).attr('name');
       const text = $(this).attr('value');
       Dialogs.alert(text, title, undefined, true, true);
@@ -114,14 +114,14 @@ const documentReady = function() {
 
   // fire an event when this has been finished
   console.debug('trigger loaded');
-  $(document).trigger('cafevdb:donecafevdbjs');
+  $(document).trigger(appName + ':done');
 
   if (globalState.expertMode) {
-    $('body').addClass('cafevdb-expert-mode');
+    $('body').addClass(appPrefix('expert-mode'));
   }
 
   if (globalState.financeMode) {
-    $('body').addClass('cafevdb-finance-mode');
+    $('body').addClass(appPrefix('finance-mode'));
   }
 
   // ???? needed ????
@@ -144,7 +144,7 @@ const documentReady = function() {
   //   return false;
   // });
 
-  content.on('cafevdb:content-update', function(event) {
+  content.on(appName + ':content-update', function(event) {
     $.fn.cafevTooltip.remove(); // remove any left-over items.
   });
 

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $ } from './globals.js';
+import { globalState, $, appName } from './globals.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
@@ -30,7 +30,7 @@ import * as WysiwygEditor from './wysiwyg-editor.js';
 import * as DialogUtils from './dialog-utils.js';
 import '../legacy/nextcloud/jquery/avatar.js';
 
-require('blog.css');
+require('blog.scss');
 
 globalState.Blog = {
   author: 'unknown',
@@ -65,7 +65,7 @@ const editWindow = function(data) {
   $('div.debug').show();
 
   $('#blogedit').cafevDialog({
-    title: t('cafevdb', 'Edit Blog Entry'),
+    title: t(appName, 'Edit Blog Entry'),
     dialogClass: 'blog-edit-dialog custom-close resize-target',
     modal: true,
     closeOnEscape: false,
@@ -139,8 +139,8 @@ const cancel = function(event) {
     $('#blogedit').dialog('close').remove();
   } else {
     Dialogs.confirm(
-      t('cafevdb', 'The message content has been changed and will be lost if you press `Yes\''),
-      t('cafevdb', 'Really cancel current entry?'),
+      t(appName, 'The message content has been changed and will be lost if you press `Yes\''),
+      t(appName, 'Really cancel current entry?'),
       function(decision) {
         if (decision) {
           $('#blogedit').dialog('close').remove();
@@ -179,7 +179,7 @@ const submit = function(event) {
   })
     .fail(function(xhr, status, errorThrown) {
       const message = Ajax.failMessage(xhr, status, errorThrown);
-      Dialogs.alert(message, t('cafevdb', 'Error'));
+      Dialogs.alert(message, t(appName, 'Error'));
     })
     .done(function(data) {
       $('#blogedit').dialog('close').remove();
@@ -211,7 +211,7 @@ const popupMessages = function() {
     }
     $(this).cafevDialog({
       dialogClass: 'no-close blog-popup-dialog',
-      title: t('cafevdb', 'One-time Blog Popup'),
+      title: t(appName, 'One-time Blog Popup'),
       modal: true,
       closeOnEscape: false,
       position: popupPosition,
@@ -220,14 +220,14 @@ const popupMessages = function() {
       resizable: false,
       buttons: [
         {
-          text: t('cafevdb', 'I have read this popup, please bother me no more!'),
-          title: t('cafevdb', 'Mark this popup as read; the popup will not show up again.'),
+          text: t(appName, 'I have read this popup, please bother me no more!'),
+          title: t(appName, 'Mark this popup as read; the popup will not show up again.'),
           click() {
             const action = 'markread';
             $.post(generateUrl('blog/action/' + action), { blogId: thisBlogId })
               .fail(function(xhr, status, errorThrown) {
                 const message = Ajax.failMessage(xhr, status, errorThrown);
-                Dialogs.alert(message, t('cafevdb', 'Error'));
+                Dialogs.alert(message, t(appName, 'Error'));
               })
               .done(function(data) {
                 // no need to submit the form
@@ -277,7 +277,7 @@ const documentReady = function() {
       $.post(generateUrl('blog/editentry'), post)
         .fail(function(xhr, status, errorThrown) {
           const message = Ajax.failMessage(xhr, status, errorThrown);
-          Dialogs.alert(message, t('cafevdb', 'Error'));
+          Dialogs.alert(message, t(appName, 'Error'));
         })
         .done(editWindow);
       return false;
@@ -297,7 +297,7 @@ const documentReady = function() {
         })
           .fail(function(xhr, status, errorThrown) {
             const message = Ajax.failMessage(xhr, status, errorThrown);
-            Dialogs.alert(message, t('cafevdb', 'Error'));
+            Dialogs.alert(message, t(appName, 'Error'));
           })
           .done(editWindow);
         return false;
@@ -314,7 +314,7 @@ const documentReady = function() {
         })
           .fail(function(xhr, status, errorThrown) {
             const message = Ajax.failMessage(xhr, status, errorThrown);
-            Dialogs.alert(message, t('cafevdb', 'Error'));
+            Dialogs.alert(message, t(appName, 'Error'));
           })
           .done(editWindow);
         return false;
@@ -327,15 +327,15 @@ const documentReady = function() {
         event.preventDefault();
         const blogId = $(this).val();
         Dialogs.confirm(
-          t('cafevdb', 'The entire message thread will be deleted if you press `Yes\''),
-          t('cafevdb', 'Really delete the entry?'),
+          t(appName, 'The entire message thread will be deleted if you press `Yes\''),
+          t(appName, 'Really delete the entry?'),
           function(decision) {
             if (decision) {
               const action = 'delete';
               $.post(generateUrl('blog/action/' + action), { blogId })
                 .fail(function(xhr, status, errorThrown) {
                   const message = Ajax.failMessage(xhr, status, errorThrown);
-                  Dialogs.alert(message, t('cafevdb', 'Error'));
+                  Dialogs.alert(message, t(appName, 'Error'));
                 })
                 .done(updateThreads);
             }
@@ -361,7 +361,7 @@ const documentReady = function() {
         })
           .fail(function(xhr, status, errorThrown) {
             const message = Ajax.failMessage(xhr, status, errorThrown);
-            Dialogs.alert(message, t('cafevdb', 'Error'));
+            Dialogs.alert(message, t(appName, 'Error'));
           })
           .done(updateThreads);
         return false;
@@ -384,7 +384,7 @@ const documentReady = function() {
         })
           .fail(function(xhr, status, errorThrown) {
             const message = Ajax.failMessage(xhr, status, errorThrown);
-            Dialogs.alert(message, t('cafevdb', 'Error'));
+            Dialogs.alert(message, t(appName, 'Error'));
           })
           .done(updateThreads);
         return false;

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import * as CAFEVDB from './cafevdb.js';
 import * as PHPMyEdit from './pme.js';
 import generateUrl from './generate-url.js';
 
-require('project-instrumentation-numbers.css');
+require('project-instrumentation-numbers.scss');
 
 const ready = function(selector) {
   const container = PHPMyEdit.container(selector);

@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from './app-info.js';
+import { appName, appPrefix } from './app-info.js';
 import generateUrl from './generate-url.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Page from './page.js';
@@ -347,7 +347,7 @@ const contactValidation = function(container) {
           $mailingListOperations.each(function(index) {
             const $this = $(this);
             const visible = $this.hasClass('status-' + status + '-visible');
-            const disabled = !visible || ($this.hasClass('expert-mode-only') && !$('body').hasClass('cafevdb-expert-mode'));
+            const disabled = !visible || ($this.hasClass('expert-mode-only') && !$('body').hasClass(appPrefix('expert-mode')));
             $this.prop('disabled', disabled);
             $this.toggleClass('disabled', disabled);
           });
@@ -881,7 +881,7 @@ const ready = function(container) {
 const documentReady = function() {
 
   CAFEVDB.addReadyCallback(function() {
-    if ($('div#cafevdb-page-body.musicians').length > 0) {
+    if ($('div#' + appPrefix('page-body') + '.musicians').length > 0) {
       ready();
     }
   });

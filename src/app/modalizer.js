@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, $ } from './globals.js';
+import { appPrefix, globalState, $ } from './globals.js';
+
+const cssTag = appPrefix('modalizer');
 
 /**
  * Open one invisible modal dialog in order to have a persistent
@@ -34,13 +36,13 @@ import { globalState, $ } from './globals.js';
  * @returns {boolean|jQuery}
  */
 const modalizer = function(open) {
-  const modalizer = $('#cafevdb-modalizer');
+  const modalizer = $('#' + cssTag);
   if (open) {
     if (modalizer.length > 0) {
-      $('body').addClass('cafevdb-modalizer');
+      $('body').addClass(appPrefix('modalizer'));
       return modalizer;
     }
-    const dialogHolder = $('<div id="cafevdb-modalizer" class="cafevdb-modalizer"></div>');
+    const dialogHolder = $(`<div id="${cssTag}" class="${cssTag}"></div>`);
     $('body').append(dialogHolder);
     dialogHolder.cafevDialog({
       title: '',
@@ -53,24 +55,24 @@ const modalizer = function(open) {
       height: '0px',
       modal: true,
       closeOnEscape: false,
-      dialogClass: 'transparent no-close zero-size cafevdb-modalizer',
+      dialogClass: `transparent no-close zero-size ${cssTag}`,
       resizable: false,
       open() {
         // This one must be ours.
         globalState.dialogOverlay = $('.ui-widget-overlay:last');
-        $('body').addClass('cafevdb-modalizer');
+        $('body').addClass(cssTag);
       },
       close() {
         globalState.dialogOverlay = false;
         dialogHolder.dialog('close');
         dialogHolder.dialog('destroy').remove();
-        $('body').removeClass('cafevdb-modalizer');
+        $('body').removeClass(cssTag);
       },
     });
     return dialogHolder;
   } else {
     if (modalizer.length <= 0) {
-      $('body').removeClass('cafevdb-modalizer');
+      $('body').removeClass(cssTag);
       return true;
     }
     const overlayIndex = parseInt(modalizer.dialog('widget').css('z-index'));
@@ -92,15 +94,10 @@ const modalizer = function(open) {
     }
 
     modalizer.dialog('close');
-    $('body').removeClass('cafevdb-modalizer');
+    $('body').removeClass(cssTag);
 
     return true;
   }
 };
 
 export default modalizer;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

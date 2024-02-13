@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $ } from './globals.js';
+import { globalState, appName, $, appPrefix } from './globals.js';
 import * as CAFEVDB from './cafevdb.js';
 import * as Ajax from './ajax.js';
 import * as Dialogs from './dialogs.js';
@@ -392,7 +392,7 @@ const mandatesInit = function(data, onChangeCallback) {
         .chosen({
           allow_single_deselect: true,
           inherit_select_classes: true,
-          title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+          title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
           disable_search_threshold: 8,
         });
       if (disabled) {
@@ -1060,7 +1060,7 @@ const mandateValidatePMEWorker = function(event, validateLockCB) {
             + ' '
             + (makeSuggestions(responseData) || '');
       if (msg !== ' ') {
-        $('#cafevdb-page-debug').html(msg).show();
+        $('#' + appPrefix('page-debug')).html(msg).show();
       }
     }
     validateLockCB(false, false);
@@ -1378,7 +1378,7 @@ const mandateReady = function(selector, parameters, resizeCB) {
   bulkTransactionChooser.chosen({
     disable_search: true,
     inherit_select_classes: true,
-    title_attributes: ['title', 'data-original-title', 'data-cafevdb-title'],
+    title_attributes: ['title', 'data-original-title', `data-${appName}-title`],
     allow_single_deselect: true,
   });
   bulkTransactionChooser
@@ -1864,8 +1864,3 @@ export {
   mandateInsuranceReady as insuranceReady,
   mandateExportHandler as exportHandler,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

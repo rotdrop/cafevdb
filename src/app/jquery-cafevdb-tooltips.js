@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -241,7 +241,7 @@ $.fn.cafevTooltip = function(argument) {
     if (optionsForAll.cssclass && typeof optionsForAll.cssclass === 'string') {
       optionsForAll.cssclass = [optionsForAll.cssclass];
     }
-    optionsForAll.cssclass.push('cafevdb');
+    optionsForAll.cssclass.push('app-' + appName);
     // Iterator over individual element in order to pick up the
     // correct class-arguments. The setTimeout() hack is in order to
     // fake background jobs and keep the UI somewhat responsive.
