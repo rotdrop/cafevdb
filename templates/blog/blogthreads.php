@@ -37,7 +37,7 @@ while (!empty($blog)) {
   $id       = $msg->getId();
   $author   = $msg->getAuthor();
   $created  = $msg->getCreated();
-  $created  = Util::strftime('%x, %H:%M', $created, $_['timezone'], $_['locale']);
+  $created  = Util::strftime('%x, %H:%M', $created, $_['timezone'], $localeSymbol);
   $editor   = $msg->getEditor();
   $modified = $msg->getModified();
   $priority = $msg->getPriority();
@@ -52,7 +52,7 @@ while (!empty($blog)) {
   $imgtitle = $l->t("Avatar pictures can be uploaded through the personal settings page.");
   $imgtitle = 'title="'.$imgtitle.'" ';
   if ($deleted > 0) {
-    $deleted = Util::strftime('%x, %H:%M', $deleted, $_['timezone'], $_['locale']);
+    $deleted = Util::strftime('%x, %H:%M', $deleted, $_['timezone'], $localeSymbol);
     continue;
   }
 
@@ -63,7 +63,7 @@ while (!empty($blog)) {
 
   $edittxt = '';
   if ($modified > 0) {
-    $modified = Util::strftime('%x, %H:%M', $modified, $_['timezone'], $_['locale']);
+    $modified = Util::strftime('%x, %H:%M', $modified, $_['timezone'], $localeSymbol);
     $edittxt = $l->t(', latest change by `%s\', %s', [$editor,$modified]);
   }
 
