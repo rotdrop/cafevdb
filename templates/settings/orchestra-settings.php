@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
+use Throwable;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
 use Cmixin\BusinessDay;
@@ -67,8 +68,7 @@ if (!empty($appLocale)) {
 
   try {
     $regionNames = $geoCodingService->getRegionNames($country);
-    \OCP\Util::writeLog('cafevdb', 'REGIONS ' . print_r($regionNames, true), \OCP\Util::INFO);
-  } catch (\Throwable $t) {
+  } catch (Throwable $t) {
   }
 
   $holidayOptions = [];

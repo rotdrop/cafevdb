@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB;
 
+use Throwable;
+
 use OCA\CAFEVDB\Service\ConfigService;
 
 $cssPfx = $renderer->cssPrefix();
@@ -66,7 +68,7 @@ echo $this->inc(
 try {
   // Issue the main part
   echo $this->inc('pme-table', []);
-} catch (\Throwable $t) {
+} catch (Throwable $t) {
   $keys = [
     'projectId' => true,
     'projectName' => true,

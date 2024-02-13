@@ -90,7 +90,7 @@
 				<?php if (empty($_['location'])) { print_unescaped('<!--'); } ?>
 				<td>
 					<a class="action permanent google" id="google-location" title="<?php echo $l->t("View the current location with Google-Maps"); ?>" style="width:2em;height:2em;padding:0em 0.3em 0.3em 0em;vertical-align:middle;">
-						<img alt="<?php echo $l->t("Location@Google"); ?>" src="<?php echo $urlGenerator->imagePath('cafevdb', 'googlemaps.png'); ?>"/>
+						<img alt="<?php echo $l->t("Location@Google"); ?>" src="<?php echo $urlGenerator->imagePath($appName, 'googlemaps.png'); ?>"/>
 					</a>
 				</td>
 				<td>

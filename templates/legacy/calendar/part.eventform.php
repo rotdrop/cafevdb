@@ -87,7 +87,7 @@ use OCA\CAFEVDB\Controller\LegacyEventsController as EventsController;
 	     maxlength="100"  name="location" />
       <!-- <a class="action google tooltip-auto" id="google-location" title="<?php echo $l->t("View the current location with Google-Maps"); ?>">
         <img alt="<?php echo $l->t("Location@Google"); ?>"
-             src="<?php echo $urlGenerator->imagePath('cafevdb', 'googlemaps.png'); ?>"
+             src="<?php echo $urlGenerator->imagePath($appName, 'googlemaps.png'); ?>"
              class="png action permanent"/>
       </a> -->
       <a class="action tooltip-auto"

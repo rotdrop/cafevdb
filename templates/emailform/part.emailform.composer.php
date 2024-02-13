@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -250,7 +250,7 @@ foreach ($eventAttachmentOptions as $option) {
                 title="<?php echo $toolTips['emailform:composer:attachments:cloud']; ?>"
                 value="<?php echo $l->t('Select from Owncloud'); ?>">
           <img class="svg small"
-               src="<?php echo $urlGenerator->imagePath('cafevdb', 'cloud.svg'); ?>"
+               src="<?php echo $urlGenerator->imagePath($appName, 'cloud.svg'); ?>"
                alt="<?php echo $l->t('Select from Owncloud'); ?>"/>
         </button>
         <button type="button"
@@ -266,7 +266,7 @@ foreach ($eventAttachmentOptions as $option) {
                 title="<?php echo $toolTips['emailform:composer:attachments:events']; ?>"
                 value="<?php echo $l->t('Project Events'); ?>">
           <img class="svg events"
-               src="<?php echo $urlGenerator->imagePath('cafevdb', 'calendar-dark.svg'); ?>"
+               src="<?php echo $urlGenerator->imagePath($appName, 'calendar-dark.svg'); ?>"
                alt="<?php echo $l->t('Select Events'); ?>"/>
         </button>
         <div class="separator"></div>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -135,8 +135,8 @@ log-in again in order to be able to access the encrypted values.',
   <br/>
   <!-- <br/>
        <pre><?php echo $_SERVER['PHP_SELF']; ?></pre>
-       <pre>Image: <?php echo $urlGenerator->imagePath('cafevdb', ''); ?></pre>
-       <pre>File: <?php echo $urlGenerator->linkTo('cafevdb', ''); ?></pre>
+       <pre>Image: <?php echo $urlGenerator->imagePath($appName, ''); ?></pre>
+       <pre>File: <?php echo $urlGenerator->linkTo($appName, ''); ?></pre>
        <pre>Route: <?php echo $urlGenerator->linkToRoute('cafevdb.page.index'); ?></pre> -->
   <ul>
 

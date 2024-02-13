@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,13 @@ use OCA\CAFEVDB\Common\Util;
     <form id="emailaccount">
       <fieldset class="emailuser">
         <!-- EMAIL user / password -->
-        <input type="text" name="emailuser" id="emailuser" value="<?php echo $_['emailuser']; ?>" placeholder="<?php echo $l->t('Email-User');?>" />
+        <input type="text"
+               name="emailuser"
+               id="emailuser"
+               value="<?php echo $_['emailuser']; ?>"
+               placeholder="<?php echo $l->t('Email-User');?>"
+               autocomplete="username"
+        />
         <label for="emailuser"><?php echo $l->t('Login for email account.');?></label>
         <fieldset class="emailpassword">
           <input class="cafevdb-password"
@@ -86,6 +92,7 @@ use OCA\CAFEVDB\Common\Util;
                  name="emailpassword"
                  placeholder="<?php echo $l->t('New Password');?>"
                  data-typetoggle="#emailpassword-show"
+                 autocomplete="current-password"
           />
           <input class="cafevdb-password-show"
                  type="checkbox"
@@ -302,9 +309,11 @@ use OCA\CAFEVDB\Common\Util;
           <input type="text"
                  name="mailingListRestUser"
                  id="mailingListRestUser"
+                 autocomplete="username"
                  value="<?php echo $mailingListRestUser; ?>"
                  placeholder="<?php echo $l->t('User');?>"
                  required
+                 autocomplete="username"
           />
           <?php echo $l->t('REST User');?>
         </label>
@@ -313,10 +322,11 @@ use OCA\CAFEVDB\Common\Util;
                title="<?php echo $toolTips['mailing-list:restapi:password']; ?>"
         >
           <input class="cafevdb-password"
+                 name="mailingListRestPassword"
                  type="password"
+                 autocomplete="current-password"
                  value="<?php echo $mailingListRestPassword; ?>"
                  id="mailingListRestPassword"
-                 name="mailingListRestPassword"
                  placeholder="<?php echo $l->t('Password');?>"
                  data-typetoggle="#mailingListRestPassword-show"
                  required
