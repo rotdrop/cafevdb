@@ -3,7 +3,7 @@
  * A collection of reusable traits classes for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
+use OCP\IL10N;
 
 /**
  * Utility class to ease constructing HTTP responses.
@@ -41,6 +42,50 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
  */
 trait ResponseTrait
 {
+  /** @var IL10N */
+  protected IL10N $l;
+
+  /** @var string */
+  protected $appName;
+
+  /**
+   * @param string $templateName
+   *
+   * @param array $params
+   *
+   * @param string $renderAs
+   *
+   * @param null|string $appName
+   *
+   * @param null|IL10N $l10n
+   *
+   * @return TemplateResponse
+   */
+  protected function templateResponse(
+    string $templateName,
+    array $params = [],
+    string $renderAs = 'blank',
+    ?string $appName = null,
+    ?IL10N $l10n = null,
+  ):TemplateResponse {
+    $appName = $appName ?? $this->appName;
+    $l10n = $l10n == $this->l;
+    return new TemplateResponse(
+      $appName,
+      $templateName,
+      array_merge(
+        [
+          'appName' => $appName,
+          'appNameTag' => self::APPNAME_PREFIX . $appName,
+          'localeCode' => $l10n->getLocale(),
+          'l10n' => $l10n, // do not conflict with core template $l parameter
+        ],
+        $params,
+      ),
+      $renderAs,
+    );
+  }
+
   /**
    * @param string $data Data-blob.
    *
@@ -50,7 +95,7 @@ trait ResponseTrait
    *
    * @return Http\DataDownloadResponse
    */
-  private function dataDownloadResponse(
+  protected function dataDownloadResponse(
     string $data,
     string $fileName,
     string $contentType,
@@ -78,7 +123,7 @@ trait ResponseTrait
    *
    * @return TemplateResponse
    */
-  private function exceptionResponse(
+  protected function exceptionResponse(
     Throwable $throwable,
     string $renderAs,
     ?string $method = null,
@@ -113,7 +158,7 @@ trait ResponseTrait
    *
    * @return array
    */
-  private function exceptionChainData(Throwable $throwable, bool $top = true):array
+  protected function exceptionChainData(Throwable $throwable, bool $top = true):array
   {
     $previous = $throwable->getPrevious();
     $shortException = (new ReflectionClass($throwable))->getShortName();
@@ -135,7 +180,7 @@ trait ResponseTrait
    *
    * @return DataResponse
    */
-  private static function dataResponse(array $data, int $status = Http::STATUS_OK):DataResponse
+  protected static function dataResponse(array $data, int $status = Http::STATUS_OK):DataResponse
   {
     $response = new DataResponse($data, $status);
     $policy = $response->getContentSecurityPolicy();
@@ -156,7 +201,7 @@ trait ResponseTrait
    *
    * @todo Remove message/messages duplication.
    */
-  private static function valueResponse(
+  protected static function valueResponse(
     mixed $value,
     ?string $message = '',
     int $status = Http::STATUS_OK,
@@ -180,7 +225,7 @@ trait ResponseTrait
    *
    * @see dataResponse()
    */
-  private static function response(mixed $message, int $status = Http::STATUS_OK):DataResponse
+  protected static function response(mixed $message, int $status = Http::STATUS_OK):DataResponse
   {
     $responseData = [
       'messages' => [],
@@ -213,7 +258,7 @@ trait ResponseTrait
    *
    * @todo Remove message/messages duplication.
    */
-  private static function grumble(
+  protected static function grumble(
     mixed $message,
     mixed $value = null,
     int $status = Http::STATUS_BAD_REQUEST,
@@ -242,7 +287,7 @@ trait ResponseTrait
    *
    * @todo Remove message/messages duplication.
    */
-  private static function getResponseMessages(DataResponse $response):array
+  protected static function getResponseMessages(DataResponse $response):array
   {
     $messages = [];
     $data = $response->getData();
