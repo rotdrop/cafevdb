@@ -48,11 +48,11 @@
           right:0;
         }
         &.disable {
-          /* background-image:url('../img/cafevdb-delete.svg'); */
+          /* background-image:url('../img/#{$appName}-delete.svg'); */
           background-image:url('../img/dont-solid.svg');
         }
         &.delete {
-          background-image:url('../img/cafevdb-delete.svg');
+          background-image:url('../img/#{$appName}-delete.svg');
         }
         &.reactivate {
           background-image:url('../img/history.svg');
@@ -374,7 +374,7 @@
         /* margin-right:0.5em; */
 
         &.delete-undelete {
-          background-image:url('../img/cafevdb-delete.svg');
+          background-image:url('../img/#{$appName}-delete.svg');
         }
 
         &.upload-from-client {

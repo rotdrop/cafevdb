@@ -28,7 +28,7 @@
  */
 
 /* Undo search-box height */
-.app-cafevdb .selectize-control {
+.#{$appNameTag} .selectize-control {
 
   white-space:normal;
   display:inline-block;

@@ -28,14 +28,14 @@
 
 html {
   @each $name, $value in $pme-table-dialog {
-    --cafevdb-pme-table-dialog-#{$name}: #{$value};
+    --#{$appName}-pme-table-dialog-#{$name}: #{$value};
   }
 }
 
 @media only screen and (width < $breakpoint-mobile-small) {
   html {
     @each $name, $value in $pme-table-dialog-mobile {
-      --cafevdb-pme-table-dialog-#{$name}: #{$value};
+      --#{$appName}-pme-table-dialog-#{$name}: #{$value};
     }
   }
 }

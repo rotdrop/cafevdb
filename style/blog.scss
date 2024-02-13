@@ -1,9 +1,10 @@
-/**Orchestra member, musicion and project management application.
+/**
+ * Orchestra member, musicion and project management application.
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2020 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2020, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,21 +50,21 @@
  *
  */
 
-div.cafevdb-page-header-box.blog-page {
+div.#{$appName}-page-header-box.blog-page {
   height:20.5ex;
   padding-left:1ex;
 }
-div.cafevdb-page-header.blog-page {
+div.#{$appName}-page-header.blog-page {
   height:20ex;
   padding-left:0;
   transform:unset;
   top:0;
 }
-div.cafevdb-page-container.blog-page {
+div.#{$appName}-page-container.blog-page {
   margin-top:15ex;
 }
 
-#cafevdb-page-blog-header {
+##{$appName}-page-blog-header {
   background-image:url('../img/logo-greyf-large.svg');
   background-repeat:no-repeat;
   background-origin:padding-box;
@@ -77,11 +78,11 @@ div.cafevdb-page-container.blog-page {
   top:0;
 }
 
-div#cafevdb-general div.inline {
+div##{$appName}-general div.inline {
   display:inline-block;
 }
 
-div.cafevdb-page-header.collapsed #cafevdb-page-blog-header {
+div.#{$appName}-page-header.collapsed ##{$appName}-page-blog-header {
   height:3ex;
   padding-left:4ex;
   margin-top:0ex;

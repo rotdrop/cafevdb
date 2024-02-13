@@ -21,23 +21,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.cafevdb-lock-unlock-victim.hidden,
-input.cafevdb-lock-unlock-victim[type="hidden"] {
-  &+ input[type="checkbox"].cafevdb-lock-input-widget {
-    & + label.cafevdb-lock-input-widget {
+.#{$appName}-lock-unlock-victim.hidden,
+input.#{$appName}-lock-unlock-victim[type="hidden"] {
+  &+ input[type="checkbox"].#{$appName}-lock-input-widget {
+    & + label.#{$appName}-lock-input-widget {
       display:none!important;
     }
   }
 }
 
-input[type="checkbox"].cafevdb-lock-input-widget.disabled {
-  & + label.cafevdb-lock-input-widget {
+input[type="checkbox"].#{$appName}-lock-input-widget.disabled {
+  & + label.#{$appName}-lock-input-widget {
     display:none!important;
   }
 }
 
-input[type="checkbox"].cafevdb-lock-input-widget {
-  + label.cafevdb-lock-input-widget {
+input[type="checkbox"].#{$appName}-lock-input-widget {
+  + label.#{$appName}-lock-input-widget {
     position: absolute !important;
     height: 16px;
     width: 24px;
@@ -50,7 +50,7 @@ input[type="checkbox"].cafevdb-lock-input-widget {
   }
 
   /* default is top-left */
-  + label.cafevdb-lock-input-widget {
+  + label.#{$appName}-lock-input-widget {
     margin-top: 4px;
     margin-left: -24px;
 
@@ -69,12 +69,12 @@ input[type="checkbox"].cafevdb-lock-input-widget {
   }
 
   &:checked {
-    + label.cafevdb-lock-input-widget.lock-unlock {
+    + label.#{$appName}-lock-input-widget.lock-unlock {
       background-image: url('../node_modules/@fortawesome/fontawesome-free/svgs/solid/lock.svg');
       opacity: 0.2;
     }
 
-    &:disabled + label.cafevdb-lock-input-widget.lock-unlock {
+    &:disabled + label.#{$appName}-lock-input-widget.lock-unlock {
       background-image: url('../img/dontred.svg');
       background-size: 16px 16px;
     }

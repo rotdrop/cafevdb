@@ -21,17 +21,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-div.cafevdb-page-header-box.config-check {
+div.#{$appName}-page-header-box.config-check {
   height:23ex;
 }
-div.cafevdb-page-header.config-check {
+div.#{$appName}-page-header.config-check {
   height:23ex;
 }
-div.cafevdb-page-container {
+div.#{$appName}-page-container {
   .config-check {
     padding-top:18ex;
 
-    cafevdb-page-playground {
+    #{$appName}-page-playground {
       width: 60em;
       max-width: 60em;
     }
