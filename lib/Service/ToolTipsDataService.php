@@ -169,7 +169,7 @@ institute.'),
 This is a virtual folder giving direct access to stored copies -- probably
 scans of the real documents -- of notices of exemption from various tax-types,
 as issued on request by the respective tax authorities. The main overview
-table with additional information is accessible through the [%2$s](%3$s) table.
+table with additional information is accessible through the [%2$s table](%3$s).
 
 ## Naming Scheme
 ```
@@ -185,8 +185,8 @@ to the overview table of existing notices of exemption
 do not change hyphens to underscores, do not change the casing etc.).
 
 - so if you are well-behaved and polite, then changing the years and the
-tax-types is allowed *and* those changes will be written back to the overview
-table in the database
+tax-types is allowed *and* those changes will be written back to the
+[overview table in the database](%2$s).
 ',
             [
               fn(IL10N $l) => implode(
@@ -204,7 +204,7 @@ table in the database
                 $template = \OCA\CAFEVDB\PageRenderer\TaxExemptionNotices::TEMPLATE;
                 /** @var \OCP\IURLGenerator  $urlGenerator */
                 $urlGenerator = $appContainer->get(\OCP\IURLGenerator::class);
-                $url = $urlGenerator->linkToRoute($appName . '.index', compact('template'));
+                $url = $urlGenerator->linkToRoute($appName . '.page.index', compact('template'));
                 return $url;
               }
             ],
