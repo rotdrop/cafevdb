@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,6 +47,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IDateTimeFormatter;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\AppInfo\AppL10N;
 use OCA\CAFEVDB\Exceptions;
 
 /**
@@ -308,7 +309,7 @@ class ConfigService
   protected IL10N $l;
 
   /** @var IL10N */
-  protected $appL10n;
+  protected AppL10N $appL10n;
 
   /** @var string */
   protected $appLocale;
@@ -540,7 +541,7 @@ class ConfigService
   public function getAppL10n():IL10N
   {
     if (empty($this->appL10n)) {
-      $this->appL10n = $this->appContainer->get(Registration::APP_L10N);
+      $this->appL10n = $this->appContainer->get(AppL10N::class);
     }
     return $this->appL10n;
   }
