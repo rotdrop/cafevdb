@@ -44,7 +44,7 @@ class Personal implements ISettings
   const ERROR_TEMPLATE = "errorpage";
 
   /** @var string */
-  private $appName;
+  protected $appName;
 
   /** @var string */
   private $userId;
