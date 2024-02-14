@@ -1,12 +1,21 @@
 <map id="criteriaExpr" name="criteriaExpr">
-<area shape="rect" id="node1" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="480,250,568,275"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae987ce50626dd3e4a9b255037433c776" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="276,213,432,253"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e" title="Convenience function." alt="" coords="305,278,403,303"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafe8e2082bd107d572aa76086a06b24e" title=" " alt="" coords="39,5,195,45"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#aaccc30214fd11a89620910ae83cb2b31" title=" " alt="" coords="27,69,206,139"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#ae3f26d0c9ab593df3331ca906567a115" title=" " alt="" coords="27,163,206,232"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#ad8bd1b1e4e8f449108639d5add09edb7" title=" " alt="" coords="27,256,206,325"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#abba1d644a20b16908a615d2409b81720" title="Filter field&#45;data by musician." alt="" coords="27,349,206,419"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html#abba1d644a20b16908a615d2409b81720" title="Filter field&#45;data by musician." alt="" coords="5,443,228,512"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a89b1874ae24baa224ffd642bbb1f6437" title="Search an option by its label." alt="" coords="27,536,206,605"/>
+<area shape="rect" id="Node000001" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="479,264,566,291"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ae987ce50626dd3e4a9b255037433c776" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="276,227,431,269"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="463,270,431,264,432,259,464,265"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e" title="Convenience function." alt="" coords="304,293,403,320"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="464,290,403,301,402,296,463,285"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aafe8e2082bd107d572aa76086a06b24e" title=" " alt="" coords="39,5,194,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="288,295,274,283,255,254,247,226,246,198,249,170,252,143,252,116,244,89,226,62,211,50,194,41,196,36,214,45,230,58,249,87,257,115,258,143,255,171,252,198,252,225,260,252,278,280,291,290"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#aaccc30214fd11a89620910ae83cb2b31" title=" " alt="" coords="27,72,206,147"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="289,294,274,283,261,268,253,252,248,221,244,191,237,176,226,161,204,143,208,139,230,157,242,173,249,189,254,220,258,250,265,265,277,279,292,289"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#ae3f26d0c9ab593df3331ca906567a115" title=" " alt="" coords="27,171,206,245"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="291,290,275,284,227,260,202,248,204,243,229,255,277,279,293,285"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#ad8bd1b1e4e8f449108639d5add09edb7" title=" " alt="" coords="27,269,206,344"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="289,309,206,309,206,304,289,304"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#abba1d644a20b16908a615d2409b81720" title="Filter field&#45;data by musician." alt="" coords="27,368,206,443"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="306,329,207,371,205,366,304,324"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html#abba1d644a20b16908a615d2409b81720" title="Filter field&#45;data by musician." alt="" coords="5,467,228,541"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="337,335,293,395,263,427,229,457,212,468,209,464,226,453,259,424,289,391,333,331"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#a89b1874ae24baa224ffd642bbb1f6437" title="Search an option by its label." alt="" coords="27,565,206,640"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="347,335,332,382,308,440,274,501,253,530,229,555,208,572,204,568,226,551,249,526,270,498,303,438,327,380,342,334"/>
 </map>

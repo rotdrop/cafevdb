@@ -1,10 +1,18 @@
 <map id="subscribe" name="subscribe">
-<area shape="rect" id="node1" title="Subscribe a victim to the email&#45;list." alt="" coords="5,34,84,60"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="533,34,627,60"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="159,34,288,60"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="132,84,315,109"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="675,34,747,60"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="795,34,877,60"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4cd47312ba83aa234d85affa07109dc2" title="MAJOR.MINOR.REVISION." alt="" coords="363,34,485,60"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="368,84,480,109"/>
+<area shape="rect" id="Node000001" title="Subscribe a victim to the email&#45;list." alt="" coords="5,34,83,60"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="529,34,622,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,31,130,19,229,7,306,3,383,7,482,19,518,26,517,32,481,24,383,12,306,8,229,12,131,24,84,36"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="157,34,286,60"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="83,44,141,44,141,50,83,50"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="131,84,312,111"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="84,56,131,70,157,77,155,82,130,75,82,61"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="670,34,741,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="622,44,654,44,654,50,622,50"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="789,34,871,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="741,44,773,44,773,50,741,50"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4cd47312ba83aa234d85affa07109dc2" title="MAJOR.MINOR.REVISION." alt="" coords="360,34,481,60"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="286,44,344,44,344,50,286,50"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="365,84,476,111"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="312,95,349,95,349,100,312,100"/>
+<area shape="poly" id="edge8_Node000008_Node000002" title=" " alt="" coords="463,81,517,63,519,68,465,86"/>
 </map>

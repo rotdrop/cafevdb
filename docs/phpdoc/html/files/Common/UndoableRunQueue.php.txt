@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Common;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
+use Throwable;
 
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
@@ -39,19 +40,16 @@ class UndoableRunQueue
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var IAppContainer */
-  protected $appContainer;
-
   /** @var array */
   protected $actionQueue = [];
 
   /** @var array|null */
   protected $undoStack = null;
 
-  /** @var array<int,\Throwable> */
+  /** @var array<int, Throwable> */
   protected $runQueueExceptions = [];
 
-  /** @var array<int,\Throwable> */
+  /** @var array<int, Throwable> */
   protected $undoExceptions = [];
 
   /** @var bool */
@@ -59,35 +57,32 @@ class UndoableRunQueue
 
   /** {@inheritdoc} */
   public function __construct(
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
+    protected IAppContainer $appContainer,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
 
   /**
    * Register the given action in the run-queue.
    *
-   * @param callable|IUndoable $action The action to be registered.
+   * @param Closure|IUndoable $action The action to be registered.
    *
-   * @param null|callable $undo The undo action if $action is a mere callable.
+   * @param null|Closure $undo The undo action if $action is a mere Closure.
    *
    * @return UndoableRunQueue
    *
-   * @throw InvalidArgumentException If $action is neither a callable nor an
+   * @throw InvalidArgumentException If $action is neither a Closure nor an
    * IUndoable.
    */
-  public function register(mixed $action, ?callable $undo = null):UndoableRunQueue
+  public function register(Closure|IUndoable $action, ?Closure $undo = null):UndoableRunQueue
   {
-    if (is_callable($action)) {
+    if ($action instanceof Closure) {
       $action = new GenericUndoable($action, $undo);
     } elseif ($action instanceof IUndoable) {
       // fallthrouh
     } else {
-      throw new InvalidArgumentException($this->l->t('$action must be callable or an instance of "%s".', IUndoable::class));
+      throw new InvalidArgumentException($this->l->t('$action must be a Closure or an instance of "%s".', IUndoable::class));
     }
     $action->initialize($this->appContainer);
     $this->actionQueue[] = $action; // at end
@@ -133,7 +128,7 @@ class UndoableRunQueue
         $action = array_shift($this->actionQueue); // from front
         $action->do();
         array_unshift($this->undoStack, $action); // at front
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $message = $this->l->t(
           'Exception during execution of run-queue: %1$s. Number of successful actions: %2$d.', [
             $t->getMessage(),
@@ -143,6 +138,7 @@ class UndoableRunQueue
         if ($gracefully) {
           $this->logException($t, $message);
         } else {
+          $this->executing = false;
           throw new UndoableRunQueueException($this, $message, 0, $t);
         }
       }
@@ -170,7 +166,7 @@ class UndoableRunQueue
         if (is_callable([ $action, 'undo' ])) {
           $action->undo();
         }
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->undoExceptions[] = $t;
         $this->logException($t);
       }
@@ -184,7 +180,7 @@ class UndoableRunQueue
    * UndoableRunQueue::executeAction() had been executed with the $gracefully
    * parameter set to \true, otherwise it will contain at most one exception.
    *
-   * @return array<int,\Throwable>
+   * @return array<int, Throwable>
    */
   public function getRunQueueExceptions():array
   {
@@ -197,9 +193,9 @@ class UndoableRunQueue
    * UndoableRunQueue::executeAction() had been executed with the $gracefully
    * parameter set to \false.
    *
-   * @return null|\Throwable
+   * @return null|Throwable
    */
-  public function getRunQueueException():?\Throwable
+  public function getRunQueueException():?Throwable
   {
     if (!empty($this->runQueueExceptions)) {
       return reset($this->runQueueExceptions);
@@ -210,7 +206,7 @@ class UndoableRunQueue
    * Get the list of thrown exceptions during the most recent execution of the
    * undo-queue.
    *
-   * @return array<int,\Throwable>
+   * @return array<int, Throwable>
    */
   public function getUndoExceptions():array
   {

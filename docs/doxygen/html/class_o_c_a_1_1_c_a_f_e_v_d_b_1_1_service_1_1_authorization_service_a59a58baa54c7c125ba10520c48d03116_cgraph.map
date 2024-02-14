@@ -1,0 +1,5 @@
+<map id="authorized" name="authorized">
+<area shape="rect" id="Node000001" title="Basic check for authorization." alt="" coords="5,5,87,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a84cedb02222eaf941859e8f91e6a9591" title="Compute the permission mask for the given or the currently logged&#45;on user." alt="" coords="135,5,274,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,16,119,16,119,21,87,21"/>
+</map>

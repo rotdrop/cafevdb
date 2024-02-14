@@ -1,4 +1,5 @@
 <map id="getAppL10n" name="getAppL10n">
-<area shape="rect" id="node1" title=" " alt="" coords="5,13,96,38"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="144,5,312,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,96,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="144,5,311,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,24,128,24,128,29,96,29"/>
 </map>

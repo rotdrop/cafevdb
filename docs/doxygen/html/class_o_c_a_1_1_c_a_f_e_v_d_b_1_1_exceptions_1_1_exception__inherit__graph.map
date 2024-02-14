@@ -1,35 +1,69 @@
 <map id="Exception" name="Exception">
-<area shape="rect" id="node1" title="General abstraction base&#45;class." alt="" coords="161,695,241,720"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_calendar_exception.html" title="General abstraction base&#45;class." alt="" coords="337,96,469,121"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_config_locked_exception.html" title=" " alt="" coords="323,260,483,285"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="335,309,471,335"/>
-<area shape="rect" id="node15" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_storage_exception.html" title="Exception class tag for the database storage backend." alt="" coords="312,596,493,621"/>
-<area shape="rect" id="node16" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html" title="Base class for other exceptions." alt="" coords="331,645,474,671"/>
-<area shape="rect" id="node24" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html" title="This exception should provide an error message which informs an end&#45;user about an error." alt="" coords="305,695,500,720"/>
-<area shape="rect" id="node25" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_missing_projects_folder_exception.html" title=" " alt="" coords="298,744,507,769"/>
-<area shape="rect" id="node26" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_php_session_exception.html" title="Base for other exceptions." alt="" coords="327,793,478,819"/>
-<area shape="rect" id="node28" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_progress_status_not_found_exception.html" title=" " alt="" coords="289,843,516,868"/>
-<area shape="rect" id="node29" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_exception.html" title="Exceptions thrown by the database sanitizers." alt="" coords="337,908,468,933"/>
-<area shape="rect" id="node33" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_substitution_exception.html" title=" " alt="" coords="328,957,477,983"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,695,113,720"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_calendar_entry_not_found_exception.html" title="General abstraction base&#45;class." alt="" coords="570,5,790,31"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html" title="Thrown during generation of the cloud&#45;user connector views." alt="" coords="579,55,781,95"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_found_exception.html" title="Thrown if an entity could not be found." alt="" coords="567,120,793,145"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_unique_exception.html" title="Thrown if more than one entity is found when there should be only one." alt="" coords="564,169,796,195"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_inconsistent_value_exception.html" title="Thrown if inconsistencies are detected." alt="" coords="589,219,771,259"/>
-<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html" title="Thrown if a field has an incompatible type for the operation." alt="" coords="579,284,781,309"/>
-<area shape="rect" id="node12" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html" title="Thrown during database migrations." alt="" coords="585,333,775,359"/>
-<area shape="rect" id="node13" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html" title="Thrown when trying to mute data which should not be muted." alt="" coords="585,383,775,408"/>
-<area shape="rect" id="node14" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html" title="Thrown when trying to fiddle with an active transaction but there is none." alt="" coords="578,433,782,473"/>
-<area shape="rect" id="node17" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_decrypt_exception.html" title=" " alt="" coords="596,497,764,523"/>
-<area shape="rect" id="node18" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_encrypt_exception.html" title=" " alt="" coords="597,547,763,572"/>
-<area shape="rect" id="node19" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_decryption_failed_exception.html" title=" " alt="" coords="591,596,769,621"/>
-<area shape="rect" id="node20" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_failed_exception.html" title=" " alt="" coords="591,645,769,671"/>
-<area shape="rect" id="node21" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_key_exception.html" title=" " alt="" coords="597,695,763,720"/>
-<area shape="rect" id="node22" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_failed_exception.html" title=" " alt="" coords="591,744,769,769"/>
-<area shape="rect" id="node23" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_request_not_found_exception.html" title=" " alt="" coords="585,794,775,834"/>
-<area shape="rect" id="node27" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_session_still_open_exception.html" title=" " alt="" coords="590,859,770,884"/>
-<area shape="rect" id="node30" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_failed_exception.html" title="Exception thrown if the respective sanitizer operation is not implemented." alt="" coords="597,908,763,933"/>
-<area shape="rect" id="node31" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_implemented_exception.html" title="Exception thrown if the respective sanitizer operation is not implemented." alt="" coords="567,957,793,983"/>
-<area shape="rect" id="node32" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_needed_exception.html" title="Exception thrown if the respective sanitizer operation is not implemented." alt="" coords="581,1007,779,1032"/>
+<area shape="rect" id="Node000001" title="General abstraction base&#45;class." alt="" coords="161,720,240,747"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_calendar_exception.html" title="General abstraction base&#45;class." alt="" coords="336,111,467,137"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,704,202,624,214,509,225,445,240,379,260,314,286,252,307,216,333,184,381,136,385,140,337,187,311,219,290,255,265,316,245,380,230,446,220,510,208,624,204,705"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_config_locked_exception.html" title=" " alt="" coords="322,265,481,292"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="201,704,209,613,224,493,236,433,249,378,266,333,286,302,302,290,320,282,322,287,305,295,290,306,271,335,254,380,241,434,230,494,214,614,206,705"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="334,316,469,343"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="213,705,391,342,395,344,217,707"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_storage_exception.html" title="Exception class tag for the database storage backend." alt="" coords="311,593,491,620"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="215,705,245,666,264,646,287,630,312,618,314,623,289,634,268,650,249,669,219,709"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html" title="Base class for other exceptions." alt="" coords="331,644,472,671"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="233,709,287,680,329,667,331,672,289,685,235,713"/>
+<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_enduser_notification_exception.html" title="This exception should provide an error message which informs an end&#45;user about an error." alt="" coords="305,695,498,721"/>
+<area shape="poly" id="edge23_Node000001_Node000024" title=" " alt="" coords="255,724,304,718,304,723,256,729"/>
+<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_migration_exception.html" title="Base&#45;class for database exceptions." alt="" coords="335,745,467,772"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="256,738,335,748,334,753,255,743"/>
+<area shape="rect" id="Node000026" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_missing_projects_folder_exception.html" title=" " alt="" coords="297,796,505,823"/>
+<area shape="poly" id="edge25_Node000001_Node000026" title=" " alt="" coords="235,753,289,782,324,793,323,798,287,786,233,758"/>
+<area shape="rect" id="Node000027" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_php_session_exception.html" title="Base for other exceptions." alt="" coords="327,847,476,873"/>
+<area shape="poly" id="edge26_Node000001_Node000027" title=" " alt="" coords="219,758,249,797,268,816,289,832,327,848,325,853,287,837,264,820,245,801,215,761"/>
+<area shape="rect" id="Node000029" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_progress_status_not_found_exception.html" title=" " alt="" coords="288,897,514,924"/>
+<area shape="poly" id="edge28_Node000001_Node000029" title=" " alt="" coords="212,761,240,824,262,856,290,883,310,895,307,899,286,887,258,860,235,826,208,763"/>
+<area shape="rect" id="Node000030" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_exception.html" title="Exceptions thrown by the database sanitizers." alt="" coords="336,948,466,975"/>
+<area shape="poly" id="edge29_Node000001_Node000030" title=" " alt="" coords="208,761,217,801,232,848,256,895,271,916,290,934,311,947,336,955,335,960,309,952,286,938,267,919,251,897,227,850,211,802,203,763"/>
+<area shape="rect" id="Node000034" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_substitution_exception.html" title=" " alt="" coords="327,999,475,1025"/>
+<area shape="poly" id="edge33_Node000001_Node000034" title=" " alt="" coords="205,762,211,810,224,871,250,933,268,960,290,985,307,996,328,1004,326,1009,305,1001,286,989,263,964,245,935,219,872,206,811,200,762"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,720,113,747"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,731,160,731,160,736,128,736"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_calendar_entry_not_found_exception.html" title="General abstraction base&#45;class." alt="" coords="568,5,788,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="437,100,495,70,561,41,601,30,602,35,563,47,497,75,440,105"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html" title="Thrown during generation of the cloud&#45;user connector views." alt="" coords="578,56,778,99"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="483,320,499,312,512,302,530,279,537,256,538,232,536,208,534,184,535,159,543,134,560,109,576,97,579,101,564,112,548,136,540,160,540,183,542,208,544,232,543,257,534,282,516,306,502,317,485,325"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_found_exception.html" title="Thrown if an entity could not be found." alt="" coords="565,123,791,149"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="482,319,513,302,526,285,533,268,536,232,538,196,546,177,561,159,577,148,580,152,564,163,550,180,543,197,541,233,538,270,531,288,516,306,485,324"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_unique_exception.html" title="Thrown if more than one entity is found when there should be only one." alt="" coords="562,173,794,200"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="483,317,513,302,523,291,530,281,536,257,542,233,549,221,561,210,581,198,583,203,564,214,553,224,547,235,541,259,535,283,527,295,516,306,485,322"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_inconsistent_value_exception.html" title="Thrown if inconsistencies are detected." alt="" coords="588,224,768,267"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="483,311,513,302,537,289,561,276,593,265,595,270,563,281,540,294,515,306,484,316"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html" title="Thrown if a field has an incompatible type for the operation." alt="" coords="577,291,779,317"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="484,319,577,311,577,316,485,324"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html" title="Thrown during database migrations." alt="" coords="584,341,772,368"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="484,334,584,343,583,349,484,340"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html" title="Thrown when trying to mute data which should not be muted." alt="" coords="583,392,773,419"/>
+<area shape="poly" id="edge12_Node000006_Node000013" title=" " alt="" coords="458,345,563,377,610,389,609,394,562,383,456,351"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html" title="Thrown when trying to fiddle with an active transaction but there is none." alt="" coords="576,443,780,485"/>
+<area shape="poly" id="edge13_Node000006_Node000014" title=" " alt="" coords="434,350,493,390,563,428,592,440,590,445,561,433,490,394,431,354"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_decrypt_exception.html" title=" " alt="" coords="594,509,762,536"/>
+<area shape="poly" id="edge16_Node000016_Node000017" title=" " alt="" coords="485,644,513,630,529,610,536,589,543,567,561,546,593,530,595,535,564,550,547,570,541,591,534,613,516,634,488,649"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_encrypt_exception.html" title=" " alt="" coords="595,560,761,587"/>
+<area shape="poly" id="edge17_Node000016_Node000018" title=" " alt="" coords="486,639,513,630,537,613,561,596,595,585,596,590,564,601,540,618,516,634,488,644"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_decryption_failed_exception.html" title=" " alt="" coords="589,611,767,637"/>
+<area shape="poly" id="edge18_Node000016_Node000019" title=" " alt="" coords="487,644,588,632,589,637,488,650"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_failed_exception.html" title=" " alt="" coords="590,661,766,688"/>
+<area shape="poly" id="edge19_Node000016_Node000020" title=" " alt="" coords="488,660,589,666,589,672,487,665"/>
+<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_key_exception.html" title=" " alt="" coords="596,712,760,739"/>
+<area shape="poly" id="edge20_Node000016_Node000021" title=" " alt="" coords="486,672,515,680,563,697,607,709,606,714,562,703,514,685,484,677"/>
+<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_failed_exception.html" title=" " alt="" coords="589,763,767,789"/>
+<area shape="poly" id="edge21_Node000016_Node000022" title=" " alt="" coords="488,667,516,681,533,698,541,716,548,733,564,749,590,761,588,766,561,753,544,736,536,718,528,701,513,685,485,672"/>
+<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_request_not_found_exception.html" title=" " alt="" coords="583,813,773,856"/>
+<area shape="poly" id="edge22_Node000016_Node000023" title=" " alt="" coords="488,665,516,681,529,695,537,711,541,741,546,771,552,785,564,799,584,813,581,817,561,803,548,788,541,773,536,742,532,712,525,698,513,685,485,669"/>
+<area shape="rect" id="Node000028" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_session_still_open_exception.html" title=" " alt="" coords="588,880,768,907"/>
+<area shape="poly" id="edge27_Node000027_Node000028" title=" " alt="" coords="492,868,588,880,588,885,491,873"/>
+<area shape="rect" id="Node000031" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_failed_exception.html" title="Exception thrown if the respective sanitizer operation is not implemented." alt="" coords="595,931,761,957"/>
+<area shape="poly" id="edge30_Node000030_Node000031" title=" " alt="" coords="482,954,595,946,595,952,482,959"/>
+<area shape="rect" id="Node000032" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_implemented_exception.html" title="Exception thrown if the respective sanitizer operation is not implemented." alt="" coords="565,981,791,1008"/>
+<area shape="poly" id="edge31_Node000030_Node000032" title=" " alt="" coords="482,968,565,978,564,984,482,974"/>
+<area shape="rect" id="Node000033" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_sanitizer_not_needed_exception.html" title="Exception thrown if the respective sanitizer operation is not implemented." alt="" coords="580,1032,776,1059"/>
+<area shape="poly" id="edge32_Node000030_Node000033" title=" " alt="" coords="482,973,516,984,540,1001,564,1018,596,1029,595,1034,561,1022,537,1006,513,989,480,978"/>
 </map>

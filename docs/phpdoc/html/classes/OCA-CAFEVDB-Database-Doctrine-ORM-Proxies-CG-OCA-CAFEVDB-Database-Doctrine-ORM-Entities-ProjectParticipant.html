@@ -242,12 +242,6 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_preUpdateValue">$preUpdateValue</a>
-    <span>
-                        &nbsp;: null|array&lt;string|int, mixed&gt;            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_project">$project</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>            </span>
@@ -431,6 +425,14 @@
 <dd>Get projectInstruments.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getPublicName">getPublicName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Get the cooked display-name, taking nick-name into account and
+just using $displayName if that set.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getRegistration">getRegistration()</a>
     <span>
                                 &nbsp;: bool    </span>
@@ -496,14 +498,16 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_postUpdate">postUpdate()</a>
     <span>
-                                &nbsp;: void    </span>
+                                &nbsp;: mixed    </span>
 </dt>
+<dd>{@inheritDoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_preUpdate">preUpdate()</a>
     <span>
-                                &nbsp;: void    </span>
+                                &nbsp;: mixed    </span>
 </dt>
+<dd>{@inheritDoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_setCreated">setCreated()</a>
@@ -1179,42 +1183,6 @@ but we keep it here for convenient access.</p>
 
                                     </dd>
                                             </dl>
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="property_preUpdateValue">
-        $preUpdateValue
-        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_preUpdateValue" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/ProjectParticipant.php"><a href="files/database-doctrine-orm-entities-projectparticipant.html"><abbr title="Database/Doctrine/ORM/Entities/ProjectParticipant.php">ProjectParticipant.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">320</span>
-
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.320" class="phpdocumentor-element-found-in__source" data-line="320" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">null|array&lt;string|int, mixed&gt;</span>
-    <span class="phpdocumentor-signature__name">$preUpdateValue</span>
-     = <span class="phpdocumentor-signature__default-value">[]</span></code>
-
-    
-        <section class="phpdocumentor-description"><p>The array of changed field values.</p>
-</section>
-
-    
 
 </article>
                     <article
@@ -1953,9 +1921,9 @@ but we keep it here for convenient access.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">382</span>
+    <span class="phpdocumentor-element-found-in__line">393</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.382" class="phpdocumentor-element-found-in__source" data-line="382" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.393" class="phpdocumentor-element-found-in__source" data-line="393" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2059,9 +2027,9 @@ but we keep it here for convenient access.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">459</span>
+    <span class="phpdocumentor-element-found-in__line">470</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.459" class="phpdocumentor-element-found-in__source" data-line="459" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.470" class="phpdocumentor-element-found-in__source" data-line="470" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2129,9 +2097,9 @@ but we keep it here for convenient access.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">503</span>
+    <span class="phpdocumentor-element-found-in__line">514</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.503" class="phpdocumentor-element-found-in__source" data-line="503" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.514" class="phpdocumentor-element-found-in__source" data-line="514" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2389,6 +2357,57 @@ Uuid::asUuid().</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getPublicName">
+        getPublicName()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getPublicName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">349</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.349" class="phpdocumentor-element-found-in__source" data-line="349" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get the cooked display-name, taking nick-name into account and
+just using $displayName if that set.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getPublicName</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$firstNameFirst</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$firstNameFirst</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>If true return &quot;FIRSTNAME LASTNAME&quot; rather
+than &quot;LASTNAME, FIRSTNAME&quot;.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getRegistration">
         getRegistration()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getRegistration" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2434,9 +2453,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">481</span>
+    <span class="phpdocumentor-element-found-in__line">492</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.481" class="phpdocumentor-element-found-in__source" data-line="481" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.492" class="phpdocumentor-element-found-in__source" data-line="492" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2471,9 +2490,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">547</span>
+    <span class="phpdocumentor-element-found-in__line">558</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.547" class="phpdocumentor-element-found-in__source" data-line="547" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.558" class="phpdocumentor-element-found-in__source" data-line="558" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2508,9 +2527,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">514</span>
+    <span class="phpdocumentor-element-found-in__line">525</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.514" class="phpdocumentor-element-found-in__source" data-line="514" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.525" class="phpdocumentor-element-found-in__source" data-line="525" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2545,9 +2564,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">525</span>
+    <span class="phpdocumentor-element-found-in__line">536</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.525" class="phpdocumentor-element-found-in__source" data-line="525" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.536" class="phpdocumentor-element-found-in__source" data-line="536" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2582,9 +2601,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">404</span>
+    <span class="phpdocumentor-element-found-in__line">415</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.404" class="phpdocumentor-element-found-in__source" data-line="404" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.415" class="phpdocumentor-element-found-in__source" data-line="415" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2629,9 +2648,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">415</span>
+    <span class="phpdocumentor-element-found-in__line">426</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.415" class="phpdocumentor-element-found-in__source" data-line="415" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.426" class="phpdocumentor-element-found-in__source" data-line="426" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2672,9 +2691,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">426</span>
+    <span class="phpdocumentor-element-found-in__line">437</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.426" class="phpdocumentor-element-found-in__source" data-line="426" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.437" class="phpdocumentor-element-found-in__source" data-line="437" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2722,9 +2741,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">437</span>
+    <span class="phpdocumentor-element-found-in__line">448</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.437" class="phpdocumentor-element-found-in__source" data-line="437" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2765,15 +2784,16 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">360</span>
+    <span class="phpdocumentor-element-found-in__line">371</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.371" class="phpdocumentor-element-found-in__source" data-line="371" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">{@inheritDoc}</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">postUpdate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs">LifecycleEventArgs</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$event</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">postUpdate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs">LifecycleEventArgs</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$event</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2807,15 +2827,16 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">349</span>
+    <span class="phpdocumentor-element-found-in__line">360</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.349" class="phpdocumentor-element-found-in__source" data-line="349" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.360" class="phpdocumentor-element-found-in__source" data-line="360" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">{@inheritDoc}</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">preUpdate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreUpdateEventArgs">PreUpdateEventArgs</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$event</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">preUpdate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreUpdateEventArgs">PreUpdateEventArgs</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$event</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2849,9 +2870,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">448</span>
+    <span class="phpdocumentor-element-found-in__line">459</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.448" class="phpdocumentor-element-found-in__source" data-line="448" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.459" class="phpdocumentor-element-found-in__source" data-line="459" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2939,9 +2960,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">492</span>
+    <span class="phpdocumentor-element-found-in__line">503</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.492" class="phpdocumentor-element-found-in__source" data-line="492" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.503" class="phpdocumentor-element-found-in__source" data-line="503" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3268,9 +3289,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">470</span>
+    <span class="phpdocumentor-element-found-in__line">481</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.470" class="phpdocumentor-element-found-in__source" data-line="470" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.481" class="phpdocumentor-element-found-in__source" data-line="481" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3311,9 +3332,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">393</span>
+    <span class="phpdocumentor-element-found-in__line">404</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.393" class="phpdocumentor-element-found-in__source" data-line="393" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.404" class="phpdocumentor-element-found-in__source" data-line="404" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3348,9 +3369,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">536</span>
+    <span class="phpdocumentor-element-found-in__line">547</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.536" class="phpdocumentor-element-found-in__source" data-line="536" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.547" class="phpdocumentor-element-found-in__source" data-line="547" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3385,9 +3406,9 @@ Uuid::asUuid().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesprojectparticipant.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProjectParticipant.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">371</span>
+    <span class="phpdocumentor-element-found-in__line">382</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.371" class="phpdocumentor-element-found-in__source" data-line="371" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#source-view.382" class="phpdocumentor-element-found-in__source" data-line="382" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the number of &quot;serious&quot; items which &quot;use&quot; this entity. For
@@ -3754,7 +3775,6 @@ null if no entity is found.</p>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_musician">$musician<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_participantFieldsData">$participantFieldsData<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_payments">$payments<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_preUpdateValue">$preUpdateValue<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_project">$project<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_projectInstruments">$projectInstruments<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#property_registration">$registration<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html"></li>
@@ -3787,6 +3807,7 @@ null if no entity is found.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getPayments">getPayments()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getProject">getProject()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getProjectInstruments">getProjectInstruments()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getPublicName">getPublicName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getRegistration">getRegistration()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_getUpdated">getUpdated()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipant.html#method_inUse">inUse()</a></li>

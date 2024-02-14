@@ -1,4 +1,5 @@
 <map id="ProgressStatusController" name="ProgressStatusController">
-<area shape="rect" id="node1" title="AJAX end&#45;point for progress status." alt="" coords="5,79,173,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="50,5,129,31"/>
+<area shape="rect" id="Node000001" title="AJAX end&#45;point for progress status." alt="" coords="5,80,173,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="50,5,128,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,48,92,80,86,80,86,48"/>
 </map>

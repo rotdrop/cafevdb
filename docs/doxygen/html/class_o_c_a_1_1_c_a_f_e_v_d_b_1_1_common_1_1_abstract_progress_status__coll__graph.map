@@ -1,4 +1,5 @@
 <map id="AbstractProgressStatus" name="AbstractProgressStatus">
-<area shape="rect" id="node1" title="Simplistic progress&#45;status interface." alt="" coords="5,79,167,104"/>
-<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="28,5,144,31"/>
+<area shape="rect" id="Node000001" title="Simplistic progress&#45;status interface." alt="" coords="5,80,166,107"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="28,5,143,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,48,88,80,83,80,83,48"/>
 </map>

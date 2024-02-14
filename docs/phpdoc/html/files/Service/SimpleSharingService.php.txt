@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,9 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \DateTimeImmutable;
-use \DateTimeInterface;
+use Throwable;
+use DateTimeImmutable;
+use DateTimeInterface;
 
 use OCP\Share\IManager as IShareManager;
 use OCP\Share\IShare;
@@ -41,18 +42,12 @@ class SimpleSharingService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var IShareManager */
-  private $shareManager;
-
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    IShareManager $shareManager,
-    IURLGenerator $urlGenerator,
+    protected ConfigService $configService,
+    private IShareManager $shareManager,
+    private IURLGenerator $urlGenerator,
   ) {
-    $this->configService = $configService;
-    $this->shareManager = $shareManager;
-    $this->urlGenerator = $urlGenerator;
     $this->l = $this->l10n();
   }
 
@@ -306,5 +301,74 @@ class SimpleSharingService
     $share = $this->shareManager->getShareByToken($token);
 
     return empty($share) ? null : $share;
+  }
+
+  /**
+   * Create a simple group-share (default read-only)
+   *
+   * @param FileSystemNode $node
+   *
+   * @param string $groupId
+   *
+   * @param null|string $target The targer location in the file-space of the
+   * consumer.
+   *
+   * @param int $permissions Default read-only.
+   *
+   * @param bool $sharedByOwner Pretend this was shared by the owner of the
+   * node instead of the currently logged in user.
+   *
+   * @return bool
+   */
+  public function groupShareNode(
+    FileSystemNode $node,
+    string $groupId,
+    ?string $target = null,
+    int $permissions = \OCP\Constants::PERMISSION_READ,
+    bool $sharedByOwner = false,
+  ):bool {
+    $owner = $node->getOwner();
+    if (empty($owner)) {
+      $ownerId = $this->userId();
+    } else {
+      $ownerId = $owner->getUID();
+    }
+    $sharedById = $sharedByOwner ? $ownerId : $this->userId();
+    /** @var IShare $share */
+    foreach ($this->shareManager->getSharesBy(userId: $ownerId, shareType: IShare::TYPE_GROUP, reshares: true) as $share) {
+      if ($share->getNodeId() === $node->getId() && $share->getSharedWith() == $groupId) {
+        // check permissions
+        if ($share->getPermissions() !== $permissions) {
+          $share->setPermissions($permissions);
+        }
+        if ($share->getSharedBy() !== $sharedById) {
+          $share->setSharedBy($sharedById);
+        }
+        if ($share->getShareOwner() !== $ownerId) {
+          $share->setShareOwner($ownerId);
+        }
+        $this->shareManager->updateShare($share);
+        return $share->getPermissions() === $permissions
+          && $share->getShareOwner() === $ownerId
+          && $share->getSharedBy() === $sharedById;
+      }
+    }
+
+    // Otherwise it should be legal to attempt a new share ...
+    $share = $this->shareManager->newShare();
+    $share->setNode($node);
+    $share->setSharedWith($groupId);
+    $share->setPermissions($permissions);
+    $share->setShareType(IShare::TYPE_GROUP);
+    $share->setShareOwner($ownerId);
+    $share->setSharedBy($sharedById);
+
+    try {
+      $this->shareManager->createShare($share);
+      return true;
+    } catch (Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
   }
 }

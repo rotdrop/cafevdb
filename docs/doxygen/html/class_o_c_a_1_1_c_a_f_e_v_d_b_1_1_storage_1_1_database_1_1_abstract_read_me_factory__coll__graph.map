@@ -1,0 +1,5 @@
+<map id="AbstractReadMeFactory" name="AbstractReadMeFactory">
+<area shape="rect" id="Node000001" title="Abstract factory baseclass." alt="" coords="6,80,170,107"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory_interface.html" title="Factory interface for generating in&#45;memory README nodes." alt="" coords="5,5,171,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,48,91,80,85,80,85,48"/>
+</map>

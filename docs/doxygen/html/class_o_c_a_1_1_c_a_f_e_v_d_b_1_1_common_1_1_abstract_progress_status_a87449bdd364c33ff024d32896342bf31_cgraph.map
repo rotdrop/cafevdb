@@ -1,6 +1,9 @@
 <map id="setData" name="setData">
-<area shape="rect" id="node1" title="{Set the data value and sync.void}" alt="" coords="5,77,73,102"/>
-<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#ad926899d7cac34a3f1a90e552d8eb27d" title="Return the cached value of the current state." alt="" coords="121,5,307,45"/>
-<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#afd77d5a1c164c8d6f4a18cbf9c341410" title="Return the cached value of the target state." alt="" coords="125,69,303,109"/>
-<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a60696fa745c7b2fd721f2f3fbbc8d39f" title="Update to the given values, where null arguments are simply ignored." alt="" coords="126,133,302,173"/>
+<area shape="rect" id="Node000001" title="{Set the data value and sync.void}" alt="" coords="5,80,73,107"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#ad926899d7cac34a3f1a90e552d8eb27d" title="Return the cached value of the current state." alt="" coords="121,5,305,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,77,120,58,136,51,137,56,122,62,74,82"/>
+<area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#afd77d5a1c164c8d6f4a18cbf9c341410" title="Return the cached value of the target state." alt="" coords="124,72,302,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,91,109,91,109,96,73,96"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a60696fa745c7b2fd721f2f3fbbc8d39f" title="Update to the given values, where null arguments are simply ignored." alt="" coords="125,139,301,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,105,122,124,137,130,136,135,120,129,72,110"/>
 </map>

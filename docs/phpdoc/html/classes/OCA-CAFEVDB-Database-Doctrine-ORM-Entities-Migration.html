@@ -204,6 +204,12 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#property_runCount">$runCount</a>
+    <span>
+                        &nbsp;: int            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#property_version">$version</a>
     <span>
                         &nbsp;: string            </span>
@@ -244,11 +250,25 @@
 <dd>Get migrationClassName.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_getRunCount">getRunCount()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Get runCount.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_getVersion">getVersion()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Get version.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_incrementRunCount">incrementRunCount()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration">Migration</abbr></a>    </span>
+</dt>
+<dd>Increment the run-count and return the new this class instance.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetExists">offsetExists()</a>
@@ -280,6 +300,13 @@
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_setMigrationClassName">setMigrationClassName()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration">Migration</abbr></a>    </span>
+</dt>
+<dd>Set the migration class name.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_setRunCount">setRunCount()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration">Migration</abbr></a>    </span>
 </dt>
@@ -423,6 +450,59 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="property_runCount">
+        $runCount
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#property_runCount" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">70</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">$runCount</span>
+     = <span class="phpdocumentor-signature__default-value">1</span></code>
+
+    
+        <section class="phpdocumentor-description"><p>Run-count for tracking multiple invocations for fun. The table only
+contains migrations which have been executed, so the default is 1.</p>
+</section>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#property_runCount#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\Column</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;integer&quot;, options={&quot;default&quot;=&quot;1&quot;})</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="property_version">
         $version
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#property_version" class="headerlink"><i class="fas fa-link"></i></a>
@@ -506,9 +586,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -607,9 +687,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">112</span>
+    <span class="phpdocumentor-element-found-in__line">122</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get migrationClassName.</p>
@@ -636,6 +716,43 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getRunCount">
+        getRunCount()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_getRunCount" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">146</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get runCount.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getRunCount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getVersion">
         getVersion()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_getVersion" class="headerlink"><i class="fas fa-link"></i></a>
@@ -644,9 +761,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">88</span>
+    <span class="phpdocumentor-element-found-in__line">98</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get version.</p>
@@ -664,6 +781,43 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_incrementRunCount">
+        incrementRunCount()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_incrementRunCount" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">156</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Increment the run-count and return the new this class instance.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">incrementRunCount</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration">Migration</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration">Migration</abbr></a></span>
             </section>
 
 </article>
@@ -864,9 +1018,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the migration class name.</p>
@@ -903,6 +1057,53 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setRunCount">
+        setRunCount()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_setRunCount" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">134</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set the migration class name.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setRunCount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$count</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration">Migration</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$count</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Migration">Migration</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setVersion">
         setVersion()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_setVersion" class="headerlink"><i class="fas fa-link"></i></a>
@@ -911,9 +1112,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Migration.php"><a href="files/database-doctrine-orm-entities-migration.html"><abbr title="Database/Doctrine/ORM/Entities/Migration.php">Migration.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">86</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set version.</p>
@@ -1242,6 +1443,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                     <ul class="phpdocumentor-list -clean">
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#property_keys">$keys<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#property_migrationClassName">$migrationClassName<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#property_runCount">$runCount<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#property_version">$version<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html"></li>
                                             </ul>
                 </li>
@@ -1253,12 +1455,15 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method___wakeup">__wakeup()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_getMigrationClassName">getMigrationClassName()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_getRunCount">getRunCount()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_getVersion">getVersion()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_incrementRunCount">incrementRunCount()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetExists">offsetExists()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetGet">offsetGet()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetSet">offsetSet()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_offsetUnset">offsetUnset()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_setMigrationClassName">setMigrationClassName()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_setRunCount">setRunCount()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Migration.html#method_setVersion">setVersion()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_toArray">toArray()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-ArrayTrait.html#method_arrayCTOR">arrayCTOR()</a></li>

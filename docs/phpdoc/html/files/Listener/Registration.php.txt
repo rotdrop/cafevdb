@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,18 +50,12 @@ class Registration
     self::registerListener($context, PasswordUpdatedEventListener::class);
     self::registerListener($context, ProjectDeletedEventListener::class);
     self::registerListener($context, PreProjectUpdatedEventListener::class);
+    // The PostProjectUpdatedEvent is actually used in the cafevdbmembers app.
     // self::registerListener($context, PostProjectUpdatedEventListener::class);
     self::registerListener($context, UserLoggedInEventListener::class);
     self::registerListener($context, UserLoggedOutEventListener::class);
     self::registerListener($context, TranslationNotFoundListener::class);
     self::registerListener($context, FileNodeListener::class);
-    self::registerListener($context, PreChangeUserIdSlugListener::class);
-    self::registerListener($context, PreRenameProjectParticipantFieldListener::class);
-    self::registerListener($context, PreChangeProjectParticipantFieldTooltipListener::class);
-    self::registerListener($context, PreChangeProjectParticipantFieldTypeListener::class);
-    self::registerListener($context, PreRenameProjectParticipantFieldOptionListener::class);
-    self::registerListener($context, PrePersistProjectParticipantFieldListener::class);
-    self::registerListener($context, PreRemoveProjectParticipantFieldListener::class);
     self::registerListener($context, ParticipantFieldCloudFolderListener::class);
     self::registerListener($context, BeforeEncryptionKeyPairChangedListener::class);
     self::registerListener($context, AfterEncryptionKeyPairChangedListener::class);
@@ -74,6 +68,7 @@ class Registration
     self::registerListener($context, SepaBulkTransactionSubmittedListener::class);
     self::registerListener($context, SepaBulkTransactionAnnouncedListener::class);
     self::registerListener($context, GroupMembershipListener::class);
+    self::registerListener($context, LoadAdditionalScriptsEventListener::class);
   }
 
   /**

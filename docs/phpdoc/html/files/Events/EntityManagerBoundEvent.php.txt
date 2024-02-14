@@ -3,7 +3,7 @@
  * Orchestra member, musician and project management application.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,14 +31,11 @@ use OCA\CAFEVDB\Database\EntityManager;
  */
 class EntityManagerBoundEvent extends Event
 {
-  /** @var EntityManager */
-  private $entityManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(EntityManager $entityManager)
-  {
+  public function __construct(
+    private EntityManager $entityManager,
+  ) {
     parent::__construct();
-    $this->entityManager = $entityManager;
   }
   // phpcs:enable
 

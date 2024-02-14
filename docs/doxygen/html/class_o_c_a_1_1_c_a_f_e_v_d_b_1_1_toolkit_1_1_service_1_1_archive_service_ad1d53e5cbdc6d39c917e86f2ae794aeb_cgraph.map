@@ -1,13 +1,25 @@
 <map id="open" name="open">
-<area shape="rect" id="node1" title=" " alt="" coords="5,196,56,221"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2af13dd8e56c5d7af6c1e805d5156219" title="Check whether the given file can be opened." alt="" coords="171,96,245,121"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="155,145,261,171"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac4bb04636b9ff49d1eb1bce172994d36" title="Guard against undefined $this&#45;&gt;l." alt="" coords="797,171,836,196"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_backend.html#a2714bd86f40228fd9c4b045566c433f5" title="{}" alt="" coords="104,275,312,315"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a841a7efc4a56f2bc0e0175bb56411be2" title="Return a proposal for the extraction destination." alt="" coords="373,5,527,31"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a32db872c14509fccd1b29071f894ddb7" title=" " alt="" coords="360,55,540,95"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="360,120,540,145"/>
-<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#afeccc115bd3157d8f327e1d48b44af46" title=" " alt="" coords="588,55,749,95"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a7010e197d8dce475dfdd443c11dd7ee9" title=" " alt="" coords="635,120,703,145"/>
-<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_formats.html#adc591104b34d61e56698d5a2d843b031" title="Fetch all drivers matching the given abilities." alt="" coords="363,272,537,327"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,199,55,225"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2af13dd8e56c5d7af6c1e805d5156219" title="Check whether the given file can be opened." alt="" coords="170,97,243,124"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="38,197,64,165,101,134,127,122,154,115,155,120,129,127,104,138,68,169,42,200"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="154,148,259,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="54,203,142,177,144,182,56,208"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac4bb04636b9ff49d1eb1bce172994d36" title="Guard against undefined $this&#45;&gt;l." alt="" coords="794,173,832,200"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="55,209,746,187,778,185,778,191,746,192,55,214"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_backend.html#a2714bd86f40228fd9c4b045566c433f5" title="{}" alt="" coords="103,279,310,321"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="53,224,104,254,138,270,135,275,101,258,51,228"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a841a7efc4a56f2bc0e0175bb56411be2" title="Return a proposal for the extraction destination." alt="" coords="370,5,525,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="259,155,285,147,308,134,325,112,332,90,338,65,356,42,363,37,366,42,360,46,343,68,337,91,330,115,312,138,287,152,260,160"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a32db872c14509fccd1b29071f894ddb7" title=" " alt="" coords="358,56,537,99"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="259,149,309,134,333,121,357,108,370,103,372,108,359,113,335,126,311,138,260,154"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="358,123,537,149"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="259,153,342,144,343,150,260,158"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="259,161,779,183,778,188,259,166"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#afeccc115bd3157d8f327e1d48b44af46" title=" " alt="" coords="585,56,746,99"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="499,120,570,100,571,105,501,125"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a7010e197d8dce475dfdd443c11dd7ee9" title=" " alt="" coords="632,123,699,149"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="538,133,616,133,616,139,538,139"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="701,145,780,173,778,178,699,150"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_formats.html#adc591104b34d61e56698d5a2d843b031" title="Fetch all drivers matching the given abilities." alt="" coords="361,275,534,333"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="311,299,346,300,346,305,311,304"/>
 </map>

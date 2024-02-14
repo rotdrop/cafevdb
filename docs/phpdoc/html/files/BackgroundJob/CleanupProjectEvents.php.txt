@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,19 +40,13 @@ class CleanupProjectEvents extends TimedJob
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var EventsService */
-  private $eventsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
     ITimeFactory $time,
-    ILogger $logger,
-    EventsService $eventsService,
+    protected ILogger $logger,
+    private EventsService $eventsService,
   ) {
     parent::__construct($time);
-    $this->logger = $logger;
-    $this->eventsService = $eventsService;
   }
   // phpcs:enable
 

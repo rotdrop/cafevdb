@@ -198,8 +198,16 @@ encryption may be costly.</p>
     &#039;enabled&#039;,
     &#039;installed_version&#039;,
     &#039;types&#039;,
-    &#039;usergroup&#039;,
+    \OCA\CAFEVDB\Service\ConfigService::USER_GROUP_KEY,
     // cloud-admin setting
+    \OCA\CAFEVDB\Service\ConfigService::USER_AND_GROUP_BACKEND_KEY,
+    // backend to use for the orchestra group
+    \OCA\CAFEVDB\Service\ConfigService::SHAREOWNER_KEY,
+    // needed as calendar principal in the member&#039;s app
+    \OCA\CAFEVDB\Service\ConfigService::SHARED_FOLDER,
+    // needed by some listeners in order to bail out early
+    \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_FOLDER,
+    // needed by some listeners in order to bail out early
     &#039;wikinamespace&#039;,
     // cloud-admin setting
     &#039;cspfailuretoken&#039;,
@@ -248,7 +256,7 @@ encryption may be costly.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger</a>
+    <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
@@ -262,7 +270,7 @@ encryption may be costly.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appCryptor">$appCryptor</a>
     <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Crypto-CloudSymmetricCryptor.html"><abbr title="\OCA\CAFEVDB\Crypto\CloudSymmetricCryptor">CloudSymmetricCryptor</abbr></a>            </span>
+                        &nbsp;: <a href="classes/OCA-CAFEVDB-Crypto-SymmetricCryptorInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\SymmetricCryptorInterface">SymmetricCryptorInterface</abbr></a>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -668,8 +676,16 @@ understands those.</dd>
     &#039;enabled&#039;,
     &#039;installed_version&#039;,
     &#039;types&#039;,
-    &#039;usergroup&#039;,
+    \OCA\CAFEVDB\Service\ConfigService::USER_GROUP_KEY,
     // cloud-admin setting
+    \OCA\CAFEVDB\Service\ConfigService::USER_AND_GROUP_BACKEND_KEY,
+    // backend to use for the orchestra group
+    \OCA\CAFEVDB\Service\ConfigService::SHAREOWNER_KEY,
+    // needed as calendar principal in the member&#039;s app
+    \OCA\CAFEVDB\Service\ConfigService::SHARED_FOLDER,
+    // needed by some listeners in order to bail out early
+    \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_FOLDER,
+    // needed by some listeners in order to bail out early
     &#039;wikinamespace&#039;,
     // cloud-admin setting
     &#039;cspfailuretoken&#039;,
@@ -758,9 +774,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -824,17 +840,17 @@ understands those.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_logger">
         $logger
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -866,9 +882,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">123</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -900,15 +916,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">120</span>
+    <span class="phpdocumentor-element-found-in__line">109</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Crypto-CloudSymmetricCryptor.html"><abbr title="\OCA\CAFEVDB\Crypto\CloudSymmetricCryptor">CloudSymmetricCryptor</abbr></a></span>
+        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Crypto-SymmetricCryptorInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\SymmetricCryptorInterface">SymmetricCryptorInterface</abbr></a></span>
     <span class="phpdocumentor-signature__name">$appCryptor</span>
     </code>
 
@@ -934,9 +950,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">105</span>
+    <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.105" class="phpdocumentor-element-found-in__source" data-line="105" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -968,9 +984,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">117</span>
+    <span class="phpdocumentor-element-found-in__line">127</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.127" class="phpdocumentor-element-found-in__source" data-line="127" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1002,9 +1018,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">108</span>
+    <span class="phpdocumentor-element-found-in__line">126</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.108" class="phpdocumentor-element-found-in__source" data-line="108" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1036,9 +1052,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">114</span>
+    <span class="phpdocumentor-element-found-in__line">129</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1070,9 +1086,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">111</span>
+    <span class="phpdocumentor-element-found-in__line">128</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.111" class="phpdocumentor-element-found-in__source" data-line="111" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.128" class="phpdocumentor-element-found-in__source" data-line="128" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1104,9 +1120,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">132</span>
+    <span class="phpdocumentor-element-found-in__line">121</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.132" class="phpdocumentor-element-found-in__source" data-line="132" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1138,9 +1154,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">126</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1172,9 +1188,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">129</span>
+    <span class="phpdocumentor-element-found-in__line">118</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1211,16 +1227,16 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">135</span>
+    <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"><abbr title="\OCA\CAFEVDB\Service\AuthorizationService">AuthorizationService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authorization</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$containerConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html"><abbr title="\OCA\CAFEVDB\Crypto\AsymmetricKeyService">AsymmetricKeyService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$asymKeyService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Crypto-CryptoFactoryInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\CryptoFactoryInterface">CryptoFactoryInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cryptoFactory</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Security\IHasher">IHasher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$hasher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$credentialsStore</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\EventDispatcher\IEventDispatcher">IEventDispatcher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$eventDispatcher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$containerConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Crypto-AsymmetricKeyService.html"><abbr title="\OCA\CAFEVDB\Crypto\AsymmetricKeyService">AsymmetricKeyService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$asymKeyService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Security\IHasher">IHasher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$hasher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\EventDispatcher\IEventDispatcher">IEventDispatcher</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$eventDispatcher</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"><abbr title="\OCA\CAFEVDB\Service\AuthorizationService">AuthorizationService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authorization</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Crypto-CryptoFactoryInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\CryptoFactoryInterface">CryptoFactoryInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cryptoFactory</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$credentialsStore</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1235,22 +1251,8 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$authorization</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"><abbr title="\OCA\CAFEVDB\Service\AuthorizationService">AuthorizationService</abbr></a></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$containerConfig</span>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$userSession</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IUserSession">IUserSession</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1263,22 +1265,8 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$cryptoFactory</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Crypto-CryptoFactoryInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\CryptoFactoryInterface">CryptoFactoryInterface</abbr></a></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$hasher</span>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Security\IHasher">IHasher</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$credentialsStore</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1298,8 +1286,29 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$l10n</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
+                <span class="phpdocumentor-signature__argument__name">$authorization</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"><abbr title="\OCA\CAFEVDB\Service\AuthorizationService">AuthorizationService</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$userSession</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IUserSession">IUserSession</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$cryptoFactory</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Crypto-CryptoFactoryInterface.html"><abbr title="\OCA\CAFEVDB\Crypto\CryptoFactoryInterface">CryptoFactoryInterface</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$credentialsStore</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -1324,9 +1333,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">191</span>
+    <span class="phpdocumentor-element-found-in__line">175</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.191" class="phpdocumentor-element-found-in__source" data-line="191" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.175" class="phpdocumentor-element-found-in__source" data-line="175" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Bind $this to the given userId and password, for instance during
@@ -1379,9 +1388,9 @@ listeners for password-change etc.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">191</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.191" class="phpdocumentor-element-found-in__source" data-line="191" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Test if we a bound to a user</p>
@@ -1416,9 +1425,9 @@ listeners for password-change etc.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">675</span>
+    <span class="phpdocumentor-element-found-in__line">673</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.675" class="phpdocumentor-element-found-in__source" data-line="675" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.673" class="phpdocumentor-element-found-in__source" data-line="673" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1468,9 +1477,9 @@ listeners for password-change etc.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">355</span>
+    <span class="phpdocumentor-element-found-in__line">339</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.355" class="phpdocumentor-element-found-in__source" data-line="355" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.339" class="phpdocumentor-element-found-in__source" data-line="339" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Remove the SSL key-pair for the given login. This is needed if an
@@ -1514,9 +1523,9 @@ data is removed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">574</span>
+    <span class="phpdocumentor-element-found-in__line">558</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.574" class="phpdocumentor-element-found-in__source" data-line="574" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.558" class="phpdocumentor-element-found-in__source" data-line="558" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1567,9 +1576,9 @@ data is removed.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">476</span>
+    <span class="phpdocumentor-element-found-in__line">460</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.476" class="phpdocumentor-element-found-in__source" data-line="476" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.460" class="phpdocumentor-element-found-in__source" data-line="460" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check the validity of the encryption key. In order to do so we fetch
@@ -1634,9 +1643,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">248</span>
+    <span class="phpdocumentor-element-found-in__line">232</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.248" class="phpdocumentor-element-found-in__source" data-line="248" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.232" class="phpdocumentor-element-found-in__source" data-line="232" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1670,9 +1679,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">240</span>
+    <span class="phpdocumentor-element-found-in__line">224</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1706,9 +1715,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">223</span>
+    <span class="phpdocumentor-element-found-in__line">207</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.223" class="phpdocumentor-element-found-in__source" data-line="223" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1746,9 +1755,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">520</span>
+    <span class="phpdocumentor-element-found-in__line">504</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.520" class="phpdocumentor-element-found-in__source" data-line="520" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.504" class="phpdocumentor-element-found-in__source" data-line="504" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -1800,9 +1809,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">592</span>
+    <span class="phpdocumentor-element-found-in__line">576</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.592" class="phpdocumentor-element-found-in__source" data-line="592" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.576" class="phpdocumentor-element-found-in__source" data-line="576" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch the value for the given key and possibly decrypt it.</p>
@@ -1872,9 +1881,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">432</span>
+    <span class="phpdocumentor-element-found-in__line">416</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.416" class="phpdocumentor-element-found-in__source" data-line="416" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get and decrypt an personal &#039;user&#039; value encrypted with the
@@ -1951,9 +1960,9 @@ to a user and password, see self::bind().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">362</span>
+    <span class="phpdocumentor-element-found-in__line">346</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.362" class="phpdocumentor-element-found-in__source" data-line="362" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.346" class="phpdocumentor-element-found-in__source" data-line="346" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1987,9 +1996,9 @@ to a user and password, see self::bind().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">217</span>
+    <span class="phpdocumentor-element-found-in__line">201</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.201" class="phpdocumentor-element-found-in__source" data-line="201" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2027,9 +2036,9 @@ to a user and password, see self::bind().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">548</span>
+    <span class="phpdocumentor-element-found-in__line">532</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.548" class="phpdocumentor-element-found-in__source" data-line="548" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.532" class="phpdocumentor-element-found-in__source" data-line="532" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2089,9 +2098,9 @@ to a user and password, see self::bind().</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">390</span>
+    <span class="phpdocumentor-element-found-in__line">374</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.390" class="phpdocumentor-element-found-in__source" data-line="390" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.374" class="phpdocumentor-element-found-in__source" data-line="374" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Initialize the global symmetric app encryption key used to
@@ -2146,9 +2155,9 @@ encrypt shared data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">298</span>
+    <span class="phpdocumentor-element-found-in__line">282</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.298" class="phpdocumentor-element-found-in__source" data-line="298" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2190,9 +2199,9 @@ encrypt shared data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">265</span>
+    <span class="phpdocumentor-element-found-in__line">249</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.265" class="phpdocumentor-element-found-in__source" data-line="265" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.249" class="phpdocumentor-element-found-in__source" data-line="249" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Initialize the per-user public/private key pair, which
@@ -2767,9 +2776,9 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">331</span>
+    <span class="phpdocumentor-element-found-in__line">315</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.331" class="phpdocumentor-element-found-in__source" data-line="331" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.315" class="phpdocumentor-element-found-in__source" data-line="315" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Restore a potential backup e.g. after recryption failure.</p>
@@ -2800,9 +2809,9 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">233</span>
+    <span class="phpdocumentor-element-found-in__line">217</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2844,9 +2853,9 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">534</span>
+    <span class="phpdocumentor-element-found-in__line">518</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.534" class="phpdocumentor-element-found-in__source" data-line="534" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -2898,9 +2907,9 @@ old one is found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">634</span>
+    <span class="phpdocumentor-element-found-in__line">628</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.634" class="phpdocumentor-element-found-in__source" data-line="634" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.628" class="phpdocumentor-element-found-in__source" data-line="628" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Encrypt the given value and store it in the application settings
@@ -2979,9 +2988,9 @@ table of the Cloud.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">453</span>
+    <span class="phpdocumentor-element-found-in__line">437</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.453" class="phpdocumentor-element-found-in__source" data-line="453" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.437" class="phpdocumentor-element-found-in__source" data-line="437" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Encrypt the given value with the user&#039;s public key.</p>
@@ -3067,9 +3076,9 @@ user id.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">377</span>
+    <span class="phpdocumentor-element-found-in__line">361</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.377" class="phpdocumentor-element-found-in__source" data-line="377" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.361" class="phpdocumentor-element-found-in__source" data-line="361" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the encryption key for the current or the given user.</p>
@@ -3122,9 +3131,9 @@ currently logged in user.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">562</span>
+    <span class="phpdocumentor-element-found-in__line">546</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.562" class="phpdocumentor-element-found-in__source" data-line="562" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.546" class="phpdocumentor-element-found-in__source" data-line="546" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3184,9 +3193,9 @@ currently logged in user.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/EncryptionService.php"><a href="files/service-encryptionservice.html"><abbr title="Service/EncryptionService.php">EncryptionService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">665</span>
+    <span class="phpdocumentor-element-found-in__line">663</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.665" class="phpdocumentor-element-found-in__source" data-line="665" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#source-view.663" class="phpdocumentor-element-found-in__source" data-line="663" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3402,7 +3411,7 @@ understands those.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appAsymmetricCryptor">$appAsymmetricCryptor<a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appCryptor">$appCryptor<a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html#property_appName">$appName<a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"></li>

@@ -1,8 +1,13 @@
 <map id="UndoableFileSystemNodeRemove" name="UndoableFileSystemNodeRemove">
-<area shape="rect" id="node1" title="Remove the given path which may either point to a file or folder." alt="" coords="57,225,279,251"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_remove.html" title="Remove the given node, which must be a regular file." alt="" coords="5,299,152,324"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_remove.html" title="Remove the given node, which must be a folder." alt="" coords="176,299,339,324"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="72,152,264,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="105,79,231,104"/>
-<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="127,5,209,31"/>
+<area shape="rect" id="Node000001" title="Remove the given path which may either point to a file or folder." alt="" coords="55,229,278,256"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_remove.html" title="Remove the given node, which must be a regular file." alt="" coords="5,304,152,331"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="141,268,95,306,92,302,138,264"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_remove.html" title="Remove the given node, which must be a folder." alt="" coords="175,304,337,331"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="196,264,242,302,239,306,192,268"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="71,155,262,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,197,169,229,164,229,164,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="104,80,229,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="169,122,169,154,164,154,164,122"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="126,5,207,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="169,48,169,80,164,80,164,48"/>
 </map>

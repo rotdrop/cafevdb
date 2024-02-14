@@ -1,5 +1,7 @@
 <map id="selectOptions" name="selectOptions">
-<area shape="rect" id="node1" title="Emit select options." alt="" coords="320,42,423,67"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html#aadb9cd4b282a085e94eb61753d68beca" title=" " alt="" coords="5,5,272,45"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_util_1_1_navigation.html#a837271ead6442a4f5f535b9e4a1dcbee" title="Simple select option array from flat value array." alt="" coords="67,70,210,95"/>
+<area shape="rect" id="Node000001" title="Emit select options." alt="" coords="319,43,420,69"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html#aadb9cd4b282a085e94eb61753d68beca" title=" " alt="" coords="5,5,271,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="303,50,271,46,271,41,304,45"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_util_1_1_navigation.html#a837271ead6442a4f5f535b9e4a1dcbee" title="Simple select option array from flat value array." alt="" coords="67,72,209,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="304,67,210,79,209,74,303,62"/>
 </map>

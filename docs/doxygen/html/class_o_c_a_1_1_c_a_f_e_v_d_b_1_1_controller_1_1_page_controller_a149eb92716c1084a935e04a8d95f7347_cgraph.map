@@ -1,6 +1,9 @@
 <map id="index" name="index">
-<area shape="rect" id="node1" title="Load the main page of the App." alt="" coords="5,55,59,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html#a24e190f069746909ea1187a6b9a3283a" title="Load a page at the specified offset from the history." alt="" coords="141,5,203,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html#a8cb85c27e0079a7260abb2976bdb1182" title="Load a page and remembers the request parameters in the history." alt="" coords="132,55,212,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html#a642cd75ab82e99734c92a3429edd8569" title=" " alt="" coords="107,104,237,129"/>
+<area shape="rect" id="Node000001" title="Load the main page of the App." alt="" coords="5,56,58,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html#a24e190f069746909ea1187a6b9a3283a" title="Load a page at the specified offset from the history." alt="" coords="140,5,201,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,58,125,32,127,37,59,63"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html#ac9b2ca009fd364976748ef48ec278ef5" title="Load a page and remembers the request parameters in the history." alt="" coords="131,56,210,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,67,115,67,115,72,58,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html#a642cd75ab82e99734c92a3429edd8569" title=" " alt="" coords="106,107,235,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,76,119,99,117,104,57,81"/>
 </map>

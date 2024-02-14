@@ -1,4 +1,5 @@
 <map id="MaintenanceApiController" name="MaintenanceApiController">
-<area shape="rect" id="node1" title="AJAX end&#45;points for an app&#45;maintenance API." alt="" coords="5,79,176,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="37,5,144,31"/>
+<area shape="rect" id="Node000001" title="AJAX end&#45;points for an app&#45;maintenance API." alt="" coords="5,80,176,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="37,5,144,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,48,93,80,88,80,88,48"/>
 </map>

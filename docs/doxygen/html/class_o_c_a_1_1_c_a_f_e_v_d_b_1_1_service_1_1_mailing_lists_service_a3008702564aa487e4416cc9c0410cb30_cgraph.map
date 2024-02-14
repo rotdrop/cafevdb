@@ -1,6 +1,9 @@
 <map id="getConfigurationUrl" name="getConfigurationUrl">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,140,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="188,5,281,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="329,5,401,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="449,5,532,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,139,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="187,5,279,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,16,171,16,171,21,139,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="327,5,398,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="279,16,312,16,312,21,279,21"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="446,5,529,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="399,16,431,16,431,21,399,21"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="SepaBulkTransaction" name="SepaBulkTransaction">
-<area shape="rect" id="node1" title="SepaBulkTransaction." alt="" coords="69,79,216,104"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html" title="Ordinary bank transfer to destination account." alt="" coords="5,152,136,177"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html" title="Debit notes from destination accounts." alt="" coords="161,152,271,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="94,5,191,31"/>
+<area shape="rect" id="Node000001" title="SepaBulkTransaction." alt="" coords="69,80,215,107"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html" title="Ordinary bank transfer to destination account." alt="" coords="5,155,135,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,120,84,156,81,152,117,116"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_note.html" title="Debit notes from destination accounts." alt="" coords="159,155,269,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="167,116,203,152,200,156,163,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="94,5,190,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,48,145,80,139,80,139,48"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="Constants" name="Constants">
-<area shape="rect" id="node1" title="A couple of constants in order to avoid string literals." alt="" coords="5,5,88,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_constants.html" title="General constants for the app." alt="" coords="5,79,88,104"/>
+<area shape="rect" id="Node000001" title="A couple of constants in order to avoid string literals." alt="" coords="5,5,87,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_constants.html" title="General constants for the app." alt="" coords="5,80,87,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="49,48,49,80,43,80,43,48"/>
 </map>

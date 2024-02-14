@@ -1,4 +1,5 @@
 <map id="groupExists" name="groupExists">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,96,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="144,5,245,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,96,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="144,5,244,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,16,128,16,128,21,96,21"/>
 </map>

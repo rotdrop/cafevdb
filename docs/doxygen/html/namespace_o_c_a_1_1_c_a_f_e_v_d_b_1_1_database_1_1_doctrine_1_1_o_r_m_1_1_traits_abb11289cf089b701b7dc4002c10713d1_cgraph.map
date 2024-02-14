@@ -1,4 +1,5 @@
 <map id="isExpired" name="isExpired">
-<area shape="rect" id="node1" title="Return whether this object is expired and is about to be deleted on the next call to delete." alt="" coords="5,5,81,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#ae7c7709308082027ea2b479a7bc6c980" title="Check if the entity has been soft deleted." alt="" coords="129,5,207,31"/>
+<area shape="rect" id="Node000001" title="Return whether this object is expired and is about to be deleted on the next call to delete." alt="" coords="5,5,81,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#ae7c7709308082027ea2b479a7bc6c980" title="Check if the entity has been soft deleted." alt="" coords="129,5,205,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,16,113,16,113,21,81,21"/>
 </map>

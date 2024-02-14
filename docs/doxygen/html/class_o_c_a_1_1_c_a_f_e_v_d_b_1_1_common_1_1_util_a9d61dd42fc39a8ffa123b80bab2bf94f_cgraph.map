@@ -1,4 +1,5 @@
 <map id="implode" name="implode">
-<area shape="rect" id="node1" title="Counter&#45;part to self::explode()." alt="" coords="5,29,72,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a733456b8dde51667bb86ef79e08597a7" title="Escape delimiters in the given value." alt="" coords="120,29,236,55"/>
+<area shape="rect" id="Node000001" title="Counter&#45;part to self::explode()." alt="" coords="5,5,72,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a733456b8dde51667bb86ef79e08597a7" title="Escape delimiters in the given value." alt="" coords="120,5,235,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,16,104,16,104,21,72,21"/>
 </map>

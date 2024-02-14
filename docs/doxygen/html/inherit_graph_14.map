@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html" title="Rudimentary service which just checks if a user belongs to the configured orchestra group and/or is a..." alt="" coords="5,5,148,31"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_storage_interface.html" title="Key&#45;storage interface." alt="" coords="5,31,216,57"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_abstract_asymmetric_key_storage.html" title="Abstract base providing default implementations." alt="" coords="264,31,472,57"/>
+<area shape="poly" id="edge15_Node000000_Node000001" title=" " alt="" coords="231,41,263,41,263,47,231,47"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html" title="Key&#45;storage base&#45;class." alt="" coords="520,31,713,57"/>
+<area shape="poly" id="edge16_Node000001_Node000002" title=" " alt="" coords="488,41,519,41,519,47,488,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_asymmetric_key_storage.html" title="Key&#45;storage for Halite." alt="" coords="772,5,966,32"/>
+<area shape="poly" id="edge17_Node000002_Node000003" title=" " alt="" coords="728,30,771,26,772,31,729,35"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_key_storage.html" title="Key&#45;storage for OpenSSL backend." alt="" coords="761,56,977,83"/>
+<area shape="poly" id="edge18_Node000002_Node000004" title=" " alt="" coords="729,53,761,56,761,61,729,58"/>
 </map>

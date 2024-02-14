@@ -1,7 +1,11 @@
 <map id="getUserId" name="getUserId">
-<area shape="rect" id="node1" title=" " alt="" coords="180,80,259,105"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7edad4866aa3ca9b33d80a94bbca867f" title=" " alt="" coords="19,5,119,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5b0f9418642a2dfbcfde1475c7d10c9d" title=" " alt="" coords="35,55,102,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="5,104,132,129"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab47d7f5da92d211bb6c3a02d2cc5ca07" title=" " alt="" coords="19,153,119,179"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="180,81,258,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7edad4866aa3ca9b33d80a94bbca867f" title=" " alt="" coords="19,5,118,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,75,130,46,105,35,107,30,133,42,185,71"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5b0f9418642a2dfbcfde1475c7d10c9d" title=" " alt="" coords="35,56,102,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,88,102,77,103,72,165,83"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="5,107,132,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="165,106,133,112,132,107,164,101"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab47d7f5da92d211bb6c3a02d2cc5ca07" title=" " alt="" coords="19,157,118,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="185,119,133,148,107,159,105,154,130,143,182,114"/>
 </map>

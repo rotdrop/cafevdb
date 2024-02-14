@@ -1,0 +1,7 @@
+<map id="isBoardMember" name="isBoardMember">
+<area shape="rect" id="Node000001" title="Check whether the given or currently logged in user is a member of the executive board." alt="" coords="5,5,118,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a13cb759047e308ad9b9a05ab45fccddd" title="Return an array with all members of the executive board." alt="" coords="166,5,331,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,16,150,16,150,21,118,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#aae8d36c62eaa47e32dcfba2644e60a53" title="Return the project entity for the executive board." alt="" coords="379,5,531,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="332,16,363,16,363,21,332,21"/>
+</map>

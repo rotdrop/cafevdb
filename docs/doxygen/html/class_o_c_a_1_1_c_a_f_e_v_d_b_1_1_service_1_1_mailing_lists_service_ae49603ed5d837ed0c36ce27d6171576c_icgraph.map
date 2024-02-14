@@ -1,6 +1,9 @@
 <map id="setSubscriptionPreferences" name="setSubscriptionPreferences">
-<area shape="rect" id="node1" title="Set the subscription preferences." alt="" coords="371,31,553,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="244,31,323,56"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b" title="Configure the given list as an announcements&#45;only list." alt="" coords="5,5,196,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="74,55,127,80"/>
+<area shape="rect" id="Node000001" title="Set the subscription preferences." alt="" coords="368,31,549,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="243,31,320,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="352,47,321,47,321,41,352,41"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b" title="Configure the given list as an announcements&#45;only list." alt="" coords="5,5,195,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="227,39,195,35,195,29,227,34"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="74,56,126,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="227,54,127,68,126,63,227,49"/>
 </map>

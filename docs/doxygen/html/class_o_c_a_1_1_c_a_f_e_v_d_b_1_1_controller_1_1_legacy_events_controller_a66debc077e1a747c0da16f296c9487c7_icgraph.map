@@ -1,6 +1,9 @@
 <map id="fixLineBreaks" name="fixLineBreaks">
-<area shape="rect" id="node1" title="Fixes new line breaks (fixes problems with Apple iCal)." alt="" coords="452,5,553,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a2e81591e72e8b5131501fadb6ad98a91" title="Exports an event and convert all times to UTC." alt="" coords="297,5,404,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a6776b2fe4827e91b061b815f7730c89b" title=" " alt="" coords="157,5,249,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#afb2b279685e17177b18b747ea3595482" title=" " alt="" coords="5,5,109,31"/>
+<area shape="rect" id="Node000001" title="Fixes new line breaks (fixes problems with Apple iCal)." alt="" coords="449,5,550,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a2e81591e72e8b5131501fadb6ad98a91" title="Exports an event and convert all times to UTC." alt="" coords="296,5,401,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="434,21,402,21,402,16,434,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a6776b2fe4827e91b061b815f7730c89b" title=" " alt="" coords="157,5,248,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="280,21,248,21,248,16,280,16"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#afb2b279685e17177b18b747ea3595482" title=" " alt="" coords="5,5,109,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="141,21,109,21,109,16,141,16"/>
 </map>

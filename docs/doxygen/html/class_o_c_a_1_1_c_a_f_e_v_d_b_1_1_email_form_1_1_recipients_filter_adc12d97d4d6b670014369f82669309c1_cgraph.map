@@ -1,5 +1,8 @@
 <map id="pushHistory" name="pushHistory">
-<area shape="rect" id="node1" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="5,43,97,68"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="155,5,225,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="145,79,235,104"/>
+<area shape="rect" id="Node000001" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="5,43,97,69"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="154,5,224,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,41,138,30,139,35,98,46"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="145,80,233,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,66,130,75,129,80,96,71"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="165,81,160,71,163,62,173,56,189,53,206,56,215,63,212,67,204,61,189,59,175,61,168,65,166,71,169,78"/>
 </map>

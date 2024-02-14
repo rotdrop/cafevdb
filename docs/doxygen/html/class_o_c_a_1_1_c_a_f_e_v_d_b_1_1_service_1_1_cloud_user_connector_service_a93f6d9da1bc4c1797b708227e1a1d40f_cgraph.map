@@ -1,5 +1,7 @@
 <map id="updateUserSqlViews" name="updateUserSqlViews">
-<area shape="rect" id="node1" title="Update the views interacting with the Nextcloud user_sql backend and update their grants." alt="" coords="5,31,149,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a671fba0b17a311cf25f00baf8fa06912" title=" " alt="" coords="197,5,377,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a8f6f0e60183992c01ae7acad097ac598" title=" " alt="" coords="245,55,329,80"/>
+<area shape="rect" id="Node000001" title="Update the views interacting with the Nextcloud user_sql backend and update their grants." alt="" coords="5,31,149,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a671fba0b17a311cf25f00baf8fa06912" title=" " alt="" coords="197,5,376,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,33,181,29,182,34,149,38"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a8f6f0e60183992c01ae7acad097ac598" title=" " alt="" coords="245,56,328,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,50,229,60,229,65,149,55"/>
 </map>

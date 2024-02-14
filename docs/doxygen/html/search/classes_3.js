@@ -23,9 +23,11 @@ var searchData=
   ['databasestorageutil_20',['DatabaseStorageUtil',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_storage_util.html',1,'OCA::CAFEVDB::Storage']]],
   ['databasetransactionnotactiveexception_21',['DatabaseTransactionNotActiveException',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html',1,'OCA::CAFEVDB::Exceptions']]],
   ['decryptionfailedexception_22',['DecryptionFailedException',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_decryption_failed_exception.html',1,'OCA::CAFEVDB::Exceptions']]],
-  ['defaultoptions_23',['DefaultOptions',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_default_options.html',1,'OCA::CAFEVDB::Database::Legacy::PME']]],
-  ['directorynode_24',['DirectoryNode',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_directory_node.html',1,'OCA::CAFEVDB::Storage::Database']]],
-  ['donothingprogressstatus_25',['DoNothingProgressStatus',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status.html',1,'OCA::CAFEVDB::Common']]],
-  ['donothingreceivablesgenerator_26',['DoNothingReceivablesGenerator',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_do_nothing_receivables_generator.html',1,'OCA::CAFEVDB::Service::Finance']]],
-  ['downloadscontroller_27',['DownloadsController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_downloads_controller.html',1,'OCA::CAFEVDB::Controller']]]
+  ['decryptshareowner_23',['DecryptShareOwner',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_decrypt_share_owner.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['defaultoptions_24',['DefaultOptions',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_default_options.html',1,'OCA::CAFEVDB::Database::Legacy::PME']]],
+  ['deprecationlogger_25',['DeprecationLogger',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_deprecation_logger.html',1,'OCA::CAFEVDB::Database::Doctrine']]],
+  ['disablecloudaccountsbydefault_26',['DisableCloudAccountsByDefault',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_disable_cloud_accounts_by_default.html',1,'OCA::CAFEVDB::Maintenance::Migrations']]],
+  ['donothingprogressstatus_27',['DoNothingProgressStatus',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status.html',1,'OCA::CAFEVDB::Common']]],
+  ['donothingreceivablesgenerator_28',['DoNothingReceivablesGenerator',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_do_nothing_receivables_generator.html',1,'OCA::CAFEVDB::Service::Finance']]],
+  ['downloadscontroller_29',['DownloadsController',['../class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_downloads_controller.html',1,'OCA::CAFEVDB::Controller']]]
 ];

@@ -1,0 +1,7 @@
+<map id="getReadMeFileNames" name="getReadMeFileNames">
+<area shape="rect" id="Node000001" title="Possibly populate and return the array of possible &quot;readMe&quot; variations." alt="" coords="281,63,432,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html#a36a895dca60b6dc997cf09ac1511e83b" title=" " alt="" coords="30,5,208,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,63,208,53,209,48,266,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_abstract_read_me_factory.html#a03465f2df3f1772272183c94b1152d9e" title="Check whether the given file is a ReadMe.md file." alt="" coords="5,88,233,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="265,94,233,100,233,95,265,89"/>
+</map>

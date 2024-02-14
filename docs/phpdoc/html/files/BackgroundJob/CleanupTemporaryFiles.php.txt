@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,9 +42,6 @@ class CleanupTemporaryFiles extends TimedJob
     PlainFileProgressStatus::DATA_DIR,
   ];
 
-  /** @var AppStorage */
-  private $appStorage;
-
   /** @var int Age in seconds after which temporary files will be removed */
   private $oldAge;
 
@@ -53,12 +50,10 @@ class CleanupTemporaryFiles extends TimedJob
     string $appName,
     ITimeFactory $time,
     ICloudConfig $cloudConfig,
-    ILogger $logger,
-    AppStorage $appStorage,
+    protected ILogger $logger,
+    private AppStorage $appStorage,
   ) {
     parent::__construct($time);
-    $this->logger = $logger;
-    $this->appStorage = $appStorage;
     $this->setInterval($cloudConfig->getAppValue($appName, 'backgroundjobs.cleanuptemporaryfiles.interval', 3600));
     $this->oldAge = $cloudConfig->getAppValue($appName, 'backgroundjobs.cleanuptemporaryfiles.oldage', 24*60*60);
   }

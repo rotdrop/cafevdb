@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,24 +38,16 @@ class ProjectWebPagesController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var \OCA\CAFEVDB\Service\ParameterService */
-  private $parameterService;
-
-  /** @var \OCA\CAFEVDB\Service\EventsService */
-  private $projectService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    ProjectService $projectService,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    private ProjectService $projectService,
   ) {
     parent::__construct($appName, $request);
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->projectService = $projectService;
+
     $this->l = $this->l10N();
   }
   // phpcs:enable

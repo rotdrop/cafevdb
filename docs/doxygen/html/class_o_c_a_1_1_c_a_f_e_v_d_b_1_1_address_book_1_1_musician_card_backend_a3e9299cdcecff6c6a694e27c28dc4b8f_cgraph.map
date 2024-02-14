@@ -1,5 +1,7 @@
 <map id="searchCards" name="searchCards">
-<area shape="rect" id="node1" title="{MusicianCard[]}" alt="" coords="5,5,101,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html#ae67e20e0060d08fda2a321db24706055" title="{}" alt="" coords="149,5,243,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html#a485c110595ab2fae9aed67693e23f38f" title="{}" alt="" coords="291,5,405,31"/>
+<area shape="rect" id="Node000001" title="{MusicianCard[]}" alt="" coords="5,5,101,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html#ae67e20e0060d08fda2a321db24706055" title="{}" alt="" coords="149,5,241,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,16,133,16,133,21,101,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html#a485c110595ab2fae9aed67693e23f38f" title="{}" alt="" coords="289,5,402,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="241,16,273,16,273,21,241,21"/>
 </map>

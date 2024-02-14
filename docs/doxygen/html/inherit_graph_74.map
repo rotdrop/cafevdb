@@ -1,7 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="5,55,121,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="169,55,331,80"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status.html" title="Progress&#45;status via database table." alt="" coords="382,5,550,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status.html" title="Dummy implementation doing nothing." alt="" coords="379,55,553,80"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html" title="Progress status with a plain local file as storage." alt="" coords="385,104,547,129"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,115,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_mount_provider.html" title="Mount parts of the database&#45;storage somewhere." alt="" coords="163,5,268,32"/>
+<area shape="poly" id="edge366_Node000000_Node000001" title=" " alt="" coords="130,16,162,16,162,21,130,21"/>
 </map>

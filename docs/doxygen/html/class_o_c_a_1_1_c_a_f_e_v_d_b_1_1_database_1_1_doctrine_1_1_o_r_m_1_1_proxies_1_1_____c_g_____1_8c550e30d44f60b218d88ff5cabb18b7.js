@@ -26,9 +26,11 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "getParent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a95ecaee3537b1ad29b04ef383a57bbae", null ],
     [ "getPathName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#ab15f0f9371dc34e6777a9b7a2b762791", null ],
     [ "getRoot", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#aad5f81bb01a9f12cfb3fc38ca462a90d", null ],
+    [ "getStorage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a2ee306b3cf5ab89be63cfdef2db1000d", null ],
     [ "getSubFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a0b5895eb2553b64335cd4c6748fab275", null ],
     [ "getUpdated", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a6a47ef9c1ef8b9a53111f4fbe177b90c", null ],
     [ "isEmpty", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#aedcc52b3673b8df9425e52f13accb2a1", null ],
+    [ "isRootFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a3fe1afc347cb81adf2ef14b20b557429", null ],
     [ "link", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a55af404f85a391e1ee8b037cf2e74e8f", null ],
     [ "link", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#ab79889c49c31ee9bc3345f756565f816", null ],
     [ "offsetExists", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a2fa83c64b65bfcd6ae01aa378370f012", null ],
@@ -59,5 +61,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "$lazyPropertiesDefaults", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a82a54b09f0505923c0a259f80ed18b42", null ],
     [ "$lazyPropertiesNames", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#af3da67f29849a335b078dacaab10afcc", null ],
     [ "$name", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a58551b63ba97fb35b928f11f36b1fac6", null ],
-    [ "$parent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a2f99dff3131b2428af9f28b2ccd93ee4", null ]
+    [ "$parent", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a2f99dff3131b2428af9f28b2ccd93ee4", null ],
+    [ "$storage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8c550e30d44f60b218d88ff5cabb18b7.html#a0670f92bb9a8b531a1ada8030f4d01c6", null ]
 ];

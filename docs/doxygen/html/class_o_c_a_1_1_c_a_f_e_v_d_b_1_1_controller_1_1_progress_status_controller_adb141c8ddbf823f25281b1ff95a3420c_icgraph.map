@@ -1,5 +1,7 @@
 <map id="progressResponse" name="progressResponse">
-<area shape="rect" id="node1" title=" " alt="" coords="111,31,241,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html#ad9c56458219c1917c2f3fbe9a02b070a" title=" " alt="" coords="5,5,63,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html#a5ac35cd9b27eb36bb68f58f665b440e5" title=" " alt="" coords="14,55,54,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="110,31,240,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html#ad9c56458219c1917c2f3fbe9a02b070a" title=" " alt="" coords="5,5,62,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,32,62,26,63,21,95,27"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html#a5ac35cd9b27eb36bb68f58f665b440e5" title=" " alt="" coords="14,56,53,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,61,54,69,53,63,94,56"/>
 </map>

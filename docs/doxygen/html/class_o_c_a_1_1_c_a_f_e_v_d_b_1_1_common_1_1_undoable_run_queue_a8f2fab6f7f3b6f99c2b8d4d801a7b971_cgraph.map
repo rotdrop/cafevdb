@@ -1,0 +1,5 @@
+<map id="register" name="register">
+<area shape="rect" id="Node000001" title="Register the given action in the run&#45;queue." alt="" coords="5,13,70,40"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html#a3427bb0dbdc6772146fee311824df800" title="Lazy initialization in order to have a more lightweight constructor for the actions and to inject the..." alt="" coords="118,5,293,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,24,102,24,102,29,70,29"/>
+</map>

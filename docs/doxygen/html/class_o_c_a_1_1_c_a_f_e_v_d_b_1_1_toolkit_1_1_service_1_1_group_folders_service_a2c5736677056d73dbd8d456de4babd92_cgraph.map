@@ -1,7 +1,13 @@
 <map id="getFolderById" name="getFolderById">
-<area shape="rect" id="node1" title=" " alt="" coords="5,45,108,70"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="156,37,317,77"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="365,37,527,77"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="575,5,736,45"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="575,69,736,109"/>
+<area shape="rect" id="Node000001" title="Get the shared folder by its id." alt="" coords="5,35,108,61"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="156,5,316,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,37,140,32,141,37,108,42"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="156,56,316,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,54,140,59,140,64,108,59"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="364,56,524,99"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="316,75,348,75,348,80,316,80"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="572,23,733,65"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="524,62,556,57,557,62,525,67"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="572,89,733,132"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="525,87,557,93,556,98,524,93"/>
 </map>

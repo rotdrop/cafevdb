@@ -1,4 +1,5 @@
 <map id="criteriaExpr" name="criteriaExpr">
-<area shape="rect" id="node1" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="5,13,93,38"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#ae987ce50626dd3e4a9b255037433c776" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="141,5,320,45"/>
+<area shape="rect" id="Node000001" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="5,13,93,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#ae987ce50626dd3e4a9b255037433c776" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="141,5,319,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,24,125,24,125,29,93,29"/>
 </map>

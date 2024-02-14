@@ -1,0 +1,7 @@
+<map id="__construct" name="__construct">
+<area shape="rect" id="Node000001" title="Undoable folder rename, optionally ignoring non&#45;existing source folder." alt="" coords="5,21,95,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_folder_create.html#a4a20559544fdf4dcb457e258dc976cf8" title="{Reset initial state.void}" alt="" coords="143,21,193,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,32,127,32,127,37,95,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html#aaf4e41b7d6e58b84e58b6e7650234a5b" title="Create a new unique name for renaming." alt="" coords="241,5,436,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="194,32,225,32,225,37,194,37"/>
+</map>

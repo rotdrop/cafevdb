@@ -1,5 +1,7 @@
 <map id="slugifyFileName" name="slugifyFileName">
-<area shape="rect" id="node1" title=" " alt="" coords="268,60,384,85"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_participant_field_cloud_folder_listener.html#ae8c2f7e758fc6ecdf76269ec0173d4b3" title="Reconstruct the field from the label, assuming the file&#45;name has the format LABEL&#45;JohnDoe...." alt="" coords="5,5,220,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a4d2f0d701bacfd21d282006c86785ba3" title="Avoid duplicated &quot;extensions&quot; in file&#45;names, i.e." alt="" coords="25,84,200,139"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="267,63,382,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_participant_field_cloud_folder_listener.html#ae8c2f7e758fc6ecdf76269ec0173d4b3" title="Reconstruct the field from the label, assuming the file&#45;name has the format LABEL&#45;JohnDoe...." alt="" coords="5,5,219,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="251,64,218,58,220,53,252,59"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#a4d2f0d701bacfd21d282006c86785ba3" title="Avoid duplicated &quot;extensions&quot; in file&#45;names, i.e." alt="" coords="25,88,199,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="252,93,200,103,199,98,251,88"/>
 </map>

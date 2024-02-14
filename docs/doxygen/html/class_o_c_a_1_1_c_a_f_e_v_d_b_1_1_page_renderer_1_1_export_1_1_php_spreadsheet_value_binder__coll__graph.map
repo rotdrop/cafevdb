@@ -1,5 +1,7 @@
 <map id="PhpSpreadsheetValueBinder" name="PhpSpreadsheetValueBinder">
-<area shape="rect" id="node1" title="Special value&#45;binder class with tweaks the standard implementation from PHPExcel a little bit." alt="" coords="48,79,235,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,139,31"/>
-<area shape="rect" id="node3" title=" " alt="" coords="163,5,258,31"/>
+<area shape="rect" id="Node000001" title="Special value&#45;binder class with tweaks the standard implementation from PHPExcel a little bit." alt="" coords="46,80,233,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,138,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,42,130,78,126,81,92,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="162,5,256,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,45,153,81,150,78,185,41"/>
 </map>

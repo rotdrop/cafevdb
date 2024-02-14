@@ -1,9 +1,15 @@
 <map id="headerText" name="headerText">
-<area shape="rect" id="node1" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,141,92,166"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="140,141,216,166"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aab9f60dec77a4ef2a6e6da285185427a" title=" " alt="" coords="274,5,501,45"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7b8022d67f12132e31e2230161afcf46" title=" " alt="" coords="264,69,511,109"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a9dc9d571bb59ca28ec0cc2bd28fe0159" title=" " alt="" coords="271,133,504,173"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a9d19c525d1f80491f1c916ffdaab92f9" title=" " alt="" coords="267,197,507,237"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7f9c4bce2f800cbf5e81b80f1f751fff" title=" " alt="" coords="271,261,503,301"/>
+<area shape="rect" id="Node000001" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,147,91,173"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="139,147,214,173"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,157,123,157,123,163,91,163"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aab9f60dec77a4ef2a6e6da285185427a" title=" " alt="" coords="273,5,498,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="183,145,213,102,235,78,260,58,269,53,272,57,264,62,239,82,218,105,188,148"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7b8022d67f12132e31e2230161afcf46" title=" " alt="" coords="262,72,508,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="210,144,261,124,284,117,285,122,263,129,212,149"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a9dc9d571bb59ca28ec0cc2bd28fe0159" title=" " alt="" coords="269,139,501,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="215,157,254,157,254,163,215,163"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a9d19c525d1f80491f1c916ffdaab92f9" title=" " alt="" coords="266,205,505,248"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="212,171,263,191,285,198,284,203,261,196,210,176"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7f9c4bce2f800cbf5e81b80f1f751fff" title=" " alt="" coords="270,272,501,315"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="188,172,218,215,239,238,264,258,272,263,269,267,260,262,235,242,213,218,183,175"/>
 </map>

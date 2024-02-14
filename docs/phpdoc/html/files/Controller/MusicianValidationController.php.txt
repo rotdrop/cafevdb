@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,21 +52,6 @@ class MusicianValidationController extends Controller
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
 
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
-  protected $pme;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var GeoCodingService */
-  private $geoCodingService;
-
-  /** @var PhoneNumberService */
-  private $phoneNumberService;
-
-  /** @var EntityManager */
-  protected $entityManager;
-
   /** @var MusiciansRepository */
   protected $musiciansRepository;
 
@@ -77,22 +62,15 @@ class MusicianValidationController extends Controller
   public function __construct(
     $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    GeoCodingService $geoCodingService,
-    PhoneNumberService $phoneNumberService,
-    EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    private GeoCodingService $geoCodingService,
+    private PhoneNumberService $phoneNumberService,
+    protected EntityManager $entityManager,
+    protected PHPMyEdit $pme,
   ) {
-
     parent::__construct($appName, $request);
 
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->geoCodingService = $geoCodingService;
-    $this->phoneNumberService = $phoneNumberService;
-    $this->entityManager = $entityManager;
-    $this->pme = $phpMyEdit;
     $this->l = $this->l10N();
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
     $this->dataPrefix = $this->parameterService['dataPrefix']['musicians']??'';

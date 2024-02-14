@@ -1,4 +1,5 @@
 <map id="getRunQueueException" name="getRunQueueException">
-<area shape="rect" id="node1" title="Return only the first – if any – thrown exception during execution of the run&#45;queue." alt="" coords="5,5,165,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_run_queue.html#a4a20559544fdf4dcb457e258dc976cf8" title="Reset the queue in order to be executed again." alt="" coords="213,5,264,31"/>
+<area shape="rect" id="Node000001" title="Return only the first – if any – thrown exception during execution of the run&#45;queue." alt="" coords="5,5,165,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_run_queue.html#a4a20559544fdf4dcb457e258dc976cf8" title="Reset the queue in order to be executed again." alt="" coords="213,5,263,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,16,197,16,197,21,165,21"/>
 </map>

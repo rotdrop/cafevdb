@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2023 Claus-Justus Heine
+ * @copyright 2020-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,13 +41,10 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
  */
 class Version070000Date20211120104235 extends SimpleMigrationStep
 {
-  /** @var IDBConnection */
-  private $connection;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(IDBConnection $connection)
-  {
-    $this->connection = $connection;
+  public function __construct(
+    private IDBConnection $connection,
+  ) {
   }
   // phpcs:enable
 

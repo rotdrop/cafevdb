@@ -1,10 +1,19 @@
 <map id="substituteAnnouncementsMailingList" name="substituteAnnouncementsMailingList">
-<area shape="rect" id="node1" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="5,104,240,129"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ac721d278c1106843d05dc3b9176b5fb9" title=" " alt="" coords="288,5,464,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="319,55,433,80"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a87e968763c59bd64b366af7d5a17598f" title=" " alt="" coords="295,104,457,129"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="317,153,435,179"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a85f86aca4c8ab5404203209c76241c7e" title=" " alt="" coords="309,203,443,228"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="512,55,672,80"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="557,153,627,179"/>
+<area shape="rect" id="Node000001" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="5,107,240,133"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ac721d278c1106843d05dc3b9176b5fb9" title=" " alt="" coords="288,5,463,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,104,211,74,287,42,307,35,308,40,289,46,214,78,152,108"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="318,56,433,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,103,302,81,304,86,193,109"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a87e968763c59bd64b366af7d5a17598f" title=" " alt="" coords="294,107,457,133"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="240,117,279,117,279,123,240,123"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="316,157,435,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="193,131,302,153,301,159,192,137"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a85f86aca4c8ab5404203209c76241c7e" title=" " alt="" coords="309,208,442,235"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="152,132,214,162,289,194,308,200,307,205,287,198,211,166,149,136"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="511,56,670,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="433,67,495,67,495,72,433,72"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="556,157,626,184"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="436,131,541,157,540,162,435,137"/>
+<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="435,168,540,168,540,173,435,173"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="435,205,540,180,541,185,436,210"/>
 </map>

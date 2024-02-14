@@ -1,5 +1,7 @@
 <map id="beforeInsertDoInsertAll" name="beforeInsertDoInsertAll">
-<area shape="rect" id="node1" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="304,45,460,70"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,5,256,45"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,69,234,109"/>
+<area shape="rect" id="Node000001" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="303,47,458,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,5,255,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="287,50,255,46,255,41,288,45"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,72,233,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="288,75,233,82,233,77,287,70"/>
 </map>

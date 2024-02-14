@@ -1,9 +1,17 @@
 <map id="t" name="t">
-<area shape="rect" id="node1" title="Guard against undefined $this&#45;&gt;l." alt="" coords="641,107,680,132"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="104,56,211,81"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,107,56,132"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a8e072029c19d353dc983217e60927514" title=" " alt="" coords="487,107,593,132"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a7010e197d8dce475dfdd443c11dd7ee9" title=" " alt="" coords="506,5,574,31"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a1f29d353d4da2916ea353d956f7f54af" title=" " alt="" coords="489,208,591,233"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="259,5,439,31"/>
+<area shape="rect" id="Node000001" title="Guard against undefined $this&#45;&gt;l." alt="" coords="638,107,676,133"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="103,56,208,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="623,108,589,97,484,80,379,72,283,69,208,70,208,65,283,64,379,67,485,75,590,92,625,103"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,107,55,133"/>
+<area shape="poly" id="edge8_Node000001_Node000003" title=" " alt="" coords="624,138,590,148,560,152,537,152,483,148,233,136,55,124,56,119,233,131,483,143,537,146,560,146,589,143,622,133"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a8e072029c19d353dc983217e60927514" title=" " alt="" coords="483,107,590,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="622,123,590,123,590,117,622,117"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a7010e197d8dce475dfdd443c11dd7ee9" title=" " alt="" coords="503,5,570,32"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="633,97,588,53,561,35,564,30,591,49,637,93"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a1f29d353d4da2916ea353d956f7f54af" title=" " alt="" coords="485,208,588,235"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="637,147,591,191,564,210,561,205,588,187,633,143"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,91,56,113,54,108,106,86"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="256,5,435,32"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="487,21,436,21,436,16,487,16"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="279,39,209,58,208,53,277,34"/>
 </map>

@@ -21,6 +21,7 @@ var dir_16d5409a9de6cd6d4a848c0adf1b8b09 =
     [ "EncryptionKeyException.php", "_encryption_key_exception_8php_source.html", null ],
     [ "EnduserNotificationException.php", "_exceptions_2_enduser_notification_exception_8php_source.html", null ],
     [ "Exception.php", "_exceptions_2_exception_8php_source.html", null ],
+    [ "MigrationException.php", "_migration_exception_8php_source.html", null ],
     [ "MissingProjectsFolderException.php", "_missing_projects_folder_exception_8php_source.html", null ],
     [ "PhpSessionException.php", "_exceptions_2_php_session_exception_8php_source.html", null ],
     [ "ProgressStatusNotFoundException.php", "_progress_status_not_found_exception_8php_source.html", null ],

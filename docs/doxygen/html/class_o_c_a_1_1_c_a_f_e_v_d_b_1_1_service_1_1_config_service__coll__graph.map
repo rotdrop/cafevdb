@@ -1,0 +1,22 @@
+<map id="ConfigService" name="ConfigService">
+<area shape="rect" id="Node000001" title="Configuration do&#45;it&#45;all class." alt="" coords="464,188,567,215"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_app_l10_n.html" title="AppL10N for the sake of dependency injection is defined as registerd service which simply return an i..." alt="" coords="196,11,271,37"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,17,323,18,364,23,404,34,442,54,472,85,493,122,507,158,514,187,509,188,502,160,488,124,467,88,438,58,402,39,363,28,323,23,286,22"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,12,62,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,22,195,22,195,27,77,28"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="77,41,86,43,114,45,143,44,195,34,196,39,144,49,114,51,85,48,76,46"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="179,61,288,88"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="304,73,372,84,408,95,441,111,464,128,483,148,509,186,505,189,479,151,460,132,439,116,406,100,371,90,303,79"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="176,112,291,139"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="307,130,373,142,441,160,493,185,491,190,439,165,371,147,306,136"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="182,163,285,189"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="300,179,464,194,463,199,300,185"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="178,213,289,240"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="304,222,440,212,463,209,464,214,440,217,304,227"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="191,264,276,291"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="292,271,363,261,439,241,468,228,494,213,496,217,471,233,441,247,364,266,292,276"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html" title="Handle some encryption tasks:" alt="" coords="170,315,297,341"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="312,324,376,313,409,303,439,288,460,272,479,252,505,214,509,217,483,255,464,276,441,293,411,308,378,318,313,329"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="202,365,265,392"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="280,380,317,380,359,375,401,364,438,345,467,315,488,279,502,243,509,215,514,216,507,244,493,281,472,318,442,349,403,369,360,381,318,385,280,385"/>
+</map>

@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_error_service.html" title="Generate frontend HTML page with error information." alt="" coords="5,5,100,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,61,57"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_blog.html" title="Cloud blog entity." alt="" coords="141,5,188,32"/>
+<area shape="poly" id="edge222_Node000000_Node000001" title=" " alt="" coords="75,33,140,21,141,26,76,38"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_entities_1_1_progress_status.html" title="Cloud progress status entity." alt="" coords="109,56,220,83"/>
+<area shape="poly" id="edge223_Node000000_Node000002" title=" " alt="" coords="76,50,109,56,108,61,75,55"/>
 </map>

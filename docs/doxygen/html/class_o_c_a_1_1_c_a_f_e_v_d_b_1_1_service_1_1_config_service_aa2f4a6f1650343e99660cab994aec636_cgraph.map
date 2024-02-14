@@ -1,4 +1,5 @@
 <map id="transliterate" name="transliterate">
-<area shape="rect" id="node1" title="Transliterate the given string to the given or default locale." alt="" coords="5,5,96,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a90274967f081f0ac552cc53dcafe3481" title="Get the configured app locale." alt="" coords="144,5,245,31"/>
+<area shape="rect" id="Node000001" title="Transliterate the given string to the given or default locale." alt="" coords="5,5,95,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a90274967f081f0ac552cc53dcafe3481" title="Get the configured app locale." alt="" coords="143,5,243,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,16,127,16,127,21,95,21"/>
 </map>

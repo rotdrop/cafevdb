@@ -22,7 +22,7 @@
  */
 
 /*
- * Copyright (c) 2020, 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Copyright (c) 2020, 2021, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  *               Copied and stripped down for my orchestra admin app.
  *
  * Copyright (c) 2011 Jakob Sack <mail@jakobsack.de>
@@ -89,9 +89,9 @@ class OC_Calendar_Object
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(ConfigService $configService)
-  {
-    $this->configService = $configService;
+  public function __construct(
+    protected ConfigService $configService,
+  ) {
     $this->l = $this->l10n();
   }
   // phpcs:enable
@@ -576,7 +576,7 @@ class OC_Calendar_Object
       $totime = $request['totime'];
     }
     $vevent = $vcalendar->VEVENT;
-    $this->logInfo(get_class($vcalendar));
+    // $this->logInfo(get_class($vcalendar));
     $description = $request["description"];
     $repeat = $request["repeat"];
     if ($repeat != 'doesnotrepeat') {

@@ -1,5 +1,7 @@
 <map id="getSupportingDocumentsFolderName" name="getSupportingDocumentsFolderName">
-<area shape="rect" id="node1" title=" " alt="" coords="5,13,245,38"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="293,13,384,38"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="432,5,600,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,245,40"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="293,13,383,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,24,277,24,277,29,245,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="431,5,598,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="384,24,415,24,415,29,384,29"/>
 </map>

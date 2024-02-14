@@ -1,4 +1,5 @@
 <map id="findLike" name="findLike">
-<area shape="rect" id="node1" title="Find entities by given wild&#45;card criteria." alt="" coords="144,5,211,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="5,5,96,31"/>
+<area shape="rect" id="Node000001" title="Find entities by given wild&#45;card criteria." alt="" coords="144,5,210,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a641a5388b2bb67a31dbabeabf793531a" title="Find one or no entity by given wild&#45;card criteria." alt="" coords="5,5,96,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,21,96,21,96,16,128,16"/>
 </map>

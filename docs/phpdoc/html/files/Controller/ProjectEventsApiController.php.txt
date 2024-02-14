@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,21 +45,16 @@ class ProjectEventsApiController extends OCSController
   const INDEX_BY_PROJECT = 'byProject';
   const INDEX_BY_WEB_PAGE = 'byWebPage';
 
-  /** @var EventsService */
-  private $eventsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ConfigService $configService,
-    EventsService $eventsService,
-    EntityManager $entityManager,
+    protected ConfigService $configService,
+    private EventsService $eventsService,
+    protected EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
-    $this->configService = $configService;
-    $this->eventsService = $eventsService;
-    $this->entityManager = $entityManager;
+
     $this->l = $this->l10n();
     // if (false) {
     //   try {
@@ -94,8 +89,8 @@ class ProjectEventsApiController extends OCSController
     string $indexObject,
     int $objectId,
     string $calendar,
-    string $timezone,
-    string $locale,
+    ?string $timezone,
+    ?string $locale,
   ):DataResponse {
     // OC uses symphony which rawurldecodes the request URL. This
     // implies that in order to pass a slash / we caller must

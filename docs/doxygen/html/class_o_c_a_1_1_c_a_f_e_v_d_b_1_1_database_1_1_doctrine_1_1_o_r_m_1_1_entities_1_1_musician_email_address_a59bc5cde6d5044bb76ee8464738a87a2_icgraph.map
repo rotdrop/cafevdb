@@ -1,5 +1,7 @@
 <map id="getAddress" name="getAddress">
-<area shape="rect" id="node1" title=" " alt="" coords="284,60,372,85"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a9704bd69d117172f3a7a9a7ce6331f11" title="Set email." alt="" coords="31,5,210,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a4ecba685bc5be4068e1c24e871b2f2b5" title="Set the principal email address as address&#45;entity." alt="" coords="5,84,236,139"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="284,63,371,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a9704bd69d117172f3a7a9a7ce6331f11" title="Set email." alt="" coords="31,5,210,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,67,209,55,211,50,269,62"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a4ecba685bc5be4068e1c24e871b2f2b5" title="Set the principal email address as address&#45;entity." alt="" coords="5,88,236,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="269,90,237,97,236,92,268,85"/>
 </map>

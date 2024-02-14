@@ -1,4 +1,5 @@
 <map id="fieldIndex" name="fieldIndex">
-<area shape="rect" id="node1" title="Compute the index into the phpMyEdit field&#45;description data of the given $tableInfo and $column." alt="" coords="5,5,84,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="132,5,268,31"/>
+<area shape="rect" id="Node000001" title="Compute the index into the phpMyEdit field&#45;description data of the given $tableInfo and $column." alt="" coords="5,5,83,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="131,5,266,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,16,115,16,115,21,83,21"/>
 </map>

@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html" title="Mis&#45;use the internal routes of the groupfolders app in order to automatically generate group&#45;shared f..." alt="" coords="5,5,149,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,108,57"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_functions_1_1_bin_to_uuid.html" title="Convert binary UUID to string." alt="" coords="166,5,247,32"/>
+<area shape="poly" id="edge286_Node000000_Node000001" title=" " alt="" coords="122,30,165,23,166,28,123,35"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_functions_1_1_convert_using.html" title="&quot;CONVERT&quot; &quot;(&quot; ArithmeticPrimary AliasResultVariable AliasResultVariable &quot;)&quot;." alt="" coords="156,56,257,83"/>
+<area shape="poly" id="edge287_Node000000_Node000002" title=" " alt="" coords="124,53,156,58,155,63,123,58"/>
 </map>

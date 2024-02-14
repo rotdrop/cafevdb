@@ -1,4 +1,5 @@
 <map id="joinTableClass" name="joinTableClass">
-<area shape="rect" id="node1" title="Complete a possibly incomplete join&#45;table entity class name by looking the parent namespaces of this ..." alt="" coords="5,5,112,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#ae5ef41ecb9d88867f5b89f9bfca5abef" title=" " alt="" coords="160,5,313,31"/>
+<area shape="rect" id="Node000001" title="Complete a possibly incomplete join&#45;table entity class name by looking the parent namespaces of this ..." alt="" coords="5,5,112,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_images_repository.html#ae5ef41ecb9d88867f5b89f9bfca5abef" title=" " alt="" coords="160,5,312,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,16,144,16,144,21,112,21"/>
 </map>

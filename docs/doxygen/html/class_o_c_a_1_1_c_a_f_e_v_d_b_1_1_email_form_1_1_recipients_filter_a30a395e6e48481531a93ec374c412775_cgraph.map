@@ -1,7 +1,12 @@
 <map id="setDefaultHistory" name="setDefaultHistory">
-<area shape="rect" id="node1" title="Compose a default history record for the initial state." alt="" coords="5,55,129,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ceb14e2f27e74da6d3f47217cafac78" title=" " alt="" coords="177,5,312,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="187,55,302,80"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="200,128,289,153"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="360,55,520,80"/>
+<area shape="rect" id="Node000001" title="Compose a default history record for the initial state." alt="" coords="5,56,129,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a9ceb14e2f27e74da6d3f47217cafac78" title=" " alt="" coords="177,5,311,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,53,180,34,181,39,117,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a0835860e0bc6047f3eff6a9941dbbcf4" title=" " alt="" coords="187,56,301,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,67,172,67,172,72,129,72"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="200,131,288,157"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="102,81,197,122,195,127,100,86"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a75227e334f1b3d4bd04bcc2ddf2c9c5d" title=" " alt="" coords="359,56,518,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="301,67,344,67,344,72,301,72"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="213,132,208,122,212,112,224,106,244,104,265,107,276,113,274,118,263,112,244,109,226,111,216,116,213,121,218,129"/>
 </map>

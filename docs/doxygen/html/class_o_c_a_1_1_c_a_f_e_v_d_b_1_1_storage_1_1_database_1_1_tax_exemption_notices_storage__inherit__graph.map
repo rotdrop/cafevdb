@@ -1,0 +1,7 @@
+<map id="TaxExemptionNoticesStorage" name="TaxExemptionNoticesStorage">
+<area shape="rect" id="Node000001" title="Storage implementation for data&#45;base storage, including access to encrypted entities." alt="" coords="5,155,200,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html" title="Storage implementation for data&#45;base storage, including access to encrypted entities." alt="" coords="69,80,136,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,122,105,154,100,154,100,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="45,5,160,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="105,48,105,80,100,80,100,48"/>
+</map>

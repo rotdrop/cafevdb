@@ -1,4 +1,5 @@
 <map id="RequestService" name="RequestService">
-<area shape="rect" id="node1" title="Place server&#45;to&#45;server AJAX calls." alt="" coords="5,79,120,104"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_request_service.html" title="Post to local routes on the same server." alt="" coords="5,5,120,31"/>
+<area shape="rect" id="Node000001" title="Place server&#45;to&#45;server AJAX calls." alt="" coords="20,80,134,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html" title="Mis&#45;use the internal services of the groupfolders app in order to automatically generate group&#45;shared..." alt="" coords="5,5,149,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,48,80,80,74,80,74,48"/>
 </map>

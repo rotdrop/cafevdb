@@ -1,4 +1,5 @@
 <map id="GedmoSluggableListener" name="GedmoSluggableListener">
-<area shape="rect" id="node1" title="Sluggable listener wrapper giving access to the app&#45;container." alt="" coords="5,79,172,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="26,5,151,31"/>
+<area shape="rect" id="Node000001" title="Sluggable listener wrapper giving access to the app&#45;container." alt="" coords="5,80,172,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="26,5,151,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,48,91,80,86,80,86,48"/>
 </map>

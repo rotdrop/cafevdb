@@ -1,4 +1,5 @@
 <map id="getProjectPathPrefix" name="getProjectPathPrefix">
-<area shape="rect" id="node1" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="171,5,313,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ab62a010ed016f8544297f9ffc62f7ab0" title="Get the configured name of the or all or the specified folder." alt="" coords="5,5,123,31"/>
+<area shape="rect" id="Node000001" title="Depending on the type of the project generate the partial project&#45;folder path:" alt="" coords="170,5,311,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_service.html#ab62a010ed016f8544297f9ffc62f7ab0" title="Get the configured name of the or all or the specified folder." alt="" coords="5,5,122,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,21,122,21,122,16,154,16"/>
 </map>

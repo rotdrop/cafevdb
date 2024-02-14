@@ -1,10 +1,17 @@
 <map id="bound" name="bound">
-<area shape="rect" id="node1" title="Test if we a bound to a user." alt="" coords="548,80,605,105"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#abe6eb1d9123c44415874b24b087452e5" title="Check the validity of the encryption key." alt="" coords="356,5,489,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="383,55,462,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ae0e6a2643a679ae23f2975018436da50" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="349,104,496,129"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7b0aa8b8719a53937db5141fbfe039b3" title="Encrypt the given value with the user&#39;s public key." alt="" coords="345,153,500,179"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="197,104,244,129"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#aa164135a7474a6c9d34b7bee20056a4d" title="{}" alt="" coords="5,104,96,129"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a9c5f710d18ae121852e4bdeffe4a6c3d" title="Set the encryption key for the current or the given user." alt="" coords="144,153,297,179"/>
+<area shape="rect" id="Node000001" title="Test if we a bound to a user." alt="" coords="544,81,601,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#abe6eb1d9123c44415874b24b087452e5" title="Check the validity of the encryption key." alt="" coords="354,5,486,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="540,74,495,46,468,35,470,30,498,42,543,69"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="381,56,459,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="529,90,459,78,460,73,529,85"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ae0e6a2643a679ae23f2975018436da50" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="347,107,493,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="530,104,494,110,493,105,529,99"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7b0aa8b8719a53937db5141fbfe039b3" title="Encrypt the given value with the user&#39;s public key." alt="" coords="343,157,496,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="543,120,498,148,470,159,468,154,495,143,540,115"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="196,107,242,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="331,123,242,123,242,117,331,117"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7ab7de782ea52be1cc9a6ea784aad0a1" title="{}" alt="" coords="5,107,95,133"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="181,123,95,123,95,117,181,117"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a9c5f710d18ae121852e4bdeffe4a6c3d" title="Set the encryption key for the current or the given user." alt="" coords="143,157,295,184"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="328,173,295,173,295,168,328,168"/>
 </map>

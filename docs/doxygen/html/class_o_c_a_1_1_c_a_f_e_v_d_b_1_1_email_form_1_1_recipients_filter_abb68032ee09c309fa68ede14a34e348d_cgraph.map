@@ -1,4 +1,6 @@
 <map id="applyHistory" name="applyHistory">
-<area shape="rect" id="node1" title=" " alt="" coords="5,29,100,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="148,29,237,55"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,100,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab5ee0276791cc2947df51b32bc6c7ba6" title=" " alt="" coords="148,29,236,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,40,132,40,132,45,100,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="167,30,163,21,166,11,176,5,192,3,209,5,218,12,215,16,207,10,192,8,178,10,170,14,168,20,172,28"/>
 </map>

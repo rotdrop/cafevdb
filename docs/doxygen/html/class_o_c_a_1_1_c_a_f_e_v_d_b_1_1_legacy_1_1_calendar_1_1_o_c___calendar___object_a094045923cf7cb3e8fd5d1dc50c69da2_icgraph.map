@@ -1,4 +1,5 @@
 <map id="getByMonthDayOptions" name="getByMonthDayOptions">
-<area shape="rect" id="node1" title="Returns the options for an yearly or monthly repeating event which occurs on specific days of the mon..." alt="" coords="169,5,331,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#ad6398ce11e1031b0c411850f0d6e0405" title="Validates a request." alt="" coords="5,5,121,31"/>
+<area shape="rect" id="Node000001" title="Returns the options for an yearly or monthly repeating event which occurs on specific days of the mon..." alt="" coords="169,5,329,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___object.html#ad6398ce11e1031b0c411850f0d6e0405" title="Validates a request." alt="" coords="5,5,121,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,21,121,21,121,16,153,16"/>
 </map>

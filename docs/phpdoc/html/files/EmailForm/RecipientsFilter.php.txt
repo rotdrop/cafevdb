@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -164,37 +164,24 @@ class RecipientsFilter
   private $historyPosition;
   private $historySize;
 
-  /** @var ISession */
-  private $session;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var PHPMyEdit */
-  protected $pme;
-
   /** @var Repositories\MusiciansRepository */
   protected $musiciansRepository;
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    ISession $session,
-    RequestParameterService $parameterService,
-    EntityManager $entityManager,
-    PHPMyEdit $pme,
+    protected ConfigService $configService,
+    private ISession $session,
+    private RequestParameterService $parameterService,
+    protected EntityManager $entityManager,
+    protected PHPMyEdit $pme,
   ) {
-    $this->configService = $configService;
     $this->l = $this->l10n();
-    $this->session = $session;
-    $this->entityManager = $entityManager;
-    $this->pme = $pme;
 
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
     $this->jsonFlags = JSON_FORCE_OBJECT|JSON_HEX_QUOT|JSON_HEX_APOS;
 
-    $this->bind($parameterService);
+    $this->bind();
   }
 
   /**
@@ -203,9 +190,11 @@ class RecipientsFilter
    *
    * @return void
    */
-  public function bind(RequestParameterService $parameterService):void
+  public function bind(?RequestParameterService $parameterService = null):void
   {
-    $this->parameterService = $parameterService;
+    if ($parameterService !== null) {
+      $this->parameterService = $parameterService;
+    }
 
     // Fetch all data submitted by form
     $this->cgiData = $this->parameterService->getParam(self::POST_TAG, []);

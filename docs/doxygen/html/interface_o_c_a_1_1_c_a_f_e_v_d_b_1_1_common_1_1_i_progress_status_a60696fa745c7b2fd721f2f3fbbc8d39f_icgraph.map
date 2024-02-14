@@ -1,7 +1,11 @@
 <map id="update" name="update">
-<area shape="rect" id="node1" title="Update to the given values, where null arguments are simply ignored." alt="" coords="229,139,291,164"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a58e95c1e3550af42d009d6692bc77b25" title="{Add the given amount to the progress&#45;status counter.bool|int Current value of the counter or false i..." alt="" coords="5,5,181,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a54b218bca4b02eacd7ebd688eebdda1d" title="{Set the current value and sync.void}" alt="" coords="5,84,181,139"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a87449bdd364c33ff024d32896342bf31" title="{Set the data value and sync.void}" alt="" coords="5,163,181,217"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a186796ac9898d948be13005f114e45f5" title="{Set the target value and sync.void}" alt="" coords="5,241,181,296"/>
+<area shape="rect" id="Node000001" title="Update to the given values, where null arguments are simply ignored." alt="" coords="229,145,289,172"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a58e95c1e3550af42d009d6692bc77b25" title="{Add the given amount to the progress&#45;status counter.bool|int Current value of the counter or false i..." alt="" coords="5,5,181,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,135,210,106,179,78,162,67,165,62,182,74,214,102,240,131"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a54b218bca4b02eacd7ebd688eebdda1d" title="{Set the current value and sync.void}" alt="" coords="5,88,181,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,150,180,142,182,137,214,145"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a87449bdd364c33ff024d32896342bf31" title="{Set the data value and sync.void}" alt="" coords="5,171,181,229"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="214,172,182,181,180,175,213,167"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html#a186796ac9898d948be13005f114e45f5" title="{Set the target value and sync.void}" alt="" coords="5,253,181,312"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="240,186,214,215,182,243,165,255,162,250,179,239,210,211,236,182"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="getPayment" name="getPayment">
-<area shape="rect" id="node1" title="Get the payment for the specified musician." alt="" coords="5,60,97,85"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="163,5,342,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="145,84,360,139"/>
+<area shape="rect" id="Node000001" title="Get the payment for the specified musician." alt="" coords="5,63,97,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#a12251d0c022e9e21c137a105ff683f13" title="Get id." alt="" coords="163,5,341,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,64,147,54,148,59,98,69"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_composite_payment.html#aabfc34e2707f9ad109ef4ce93abdf56f" title="Get musician." alt="" coords="145,88,359,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,83,130,89,129,95,97,88"/>
 </map>

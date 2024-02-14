@@ -1,0 +1,9 @@
+<map id="DisableCloudAccountsByDefault" name="DisableCloudAccountsByDefault">
+<area shape="rect" id="Node000001" title="Change participantAccess field to enum." alt="" coords="5,155,218,181"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230823120000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="30,229,193,256"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="114,197,114,229,109,229,109,197"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="50,80,173,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,122,114,154,109,154,109,122"/>
+<area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="72,5,151,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,48,114,80,109,80,109,48"/>
+</map>

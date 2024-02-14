@@ -1,5 +1,7 @@
 <map id="newFolder" name="newFolder">
-<area shape="rect" id="node1" title="Create a new folder named $name." alt="" coords="327,5,409,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a43e2b8de357718737d0fa45498269a3f" title="Ensure a folder exists withtout throwing an exception." alt="" coords="181,5,279,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a75a5d99cbfbafad3c439f7a3973974f6" title="Generate a random file." alt="" coords="5,5,133,31"/>
+<area shape="rect" id="Node000001" title="Create a new folder named $name." alt="" coords="325,5,406,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a43e2b8de357718737d0fa45498269a3f" title="Ensure a folder exists withtout throwing an exception." alt="" coords="181,5,277,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,21,277,21,277,16,309,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a75a5d99cbfbafad3c439f7a3973974f6" title="Generate a random file." alt="" coords="5,5,133,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="165,21,133,21,133,16,165,16"/>
 </map>

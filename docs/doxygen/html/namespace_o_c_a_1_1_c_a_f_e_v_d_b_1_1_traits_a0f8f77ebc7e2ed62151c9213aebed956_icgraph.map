@@ -1,5 +1,8 @@
 <map id="di" name="di">
-<area shape="rect" id="node1" title="Dependency injection of $className." alt="" coords="165,43,204,68"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a12530ef8e22b2cc5507292bf7e1bc876" title=" " alt="" coords="18,5,105,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a472bbe777a54645edcf8a79726eca3dc" title=" " alt="" coords="5,79,117,104"/>
+<area shape="rect" id="Node000001" title="Dependency injection of $className." alt="" coords="165,43,203,69"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a12530ef8e22b2cc5507292bf7e1bc876" title=" " alt="" coords="18,5,104,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,48,104,34,106,29,151,43"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a472bbe777a54645edcf8a79726eca3dc" title=" " alt="" coords="5,80,117,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="150,69,108,82,107,77,149,64"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="81,67,74,61,61,59,49,61,42,65,41,71,44,79,39,81,35,71,38,62,47,56,61,53,76,56,84,63"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="increment" name="increment">
-<area shape="rect" id="node1" title="{Add the given amount to the progress&#45;status counter.bool|int Current value of the counter or false i..." alt="" coords="5,45,84,70"/>
-<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#ad926899d7cac34a3f1a90e552d8eb27d" title="Return the cached value of the current state." alt="" coords="132,5,317,45"/>
-<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a60696fa745c7b2fd721f2f3fbbc8d39f" title="Update to the given values, where null arguments are simply ignored." alt="" coords="137,69,313,109"/>
+<area shape="rect" id="Node000001" title="{Add the given amount to the progress&#45;status counter.bool|int Current value of the counter or false i..." alt="" coords="5,47,84,73"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#ad926899d7cac34a3f1a90e552d8eb27d" title="Return the cached value of the current state." alt="" coords="132,5,316,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,50,116,44,117,49,85,55"/>
+<area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html#a60696fa745c7b2fd721f2f3fbbc8d39f" title="Update to the given values, where null arguments are simply ignored." alt="" coords="136,72,312,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="85,65,121,72,120,77,84,70"/>
 </map>

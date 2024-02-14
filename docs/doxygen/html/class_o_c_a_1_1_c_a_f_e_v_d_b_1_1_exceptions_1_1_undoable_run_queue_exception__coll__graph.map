@@ -1,4 +1,5 @@
 <map id="UndoableRunQueueException" name="UndoableRunQueueException">
-<area shape="rect" id="node1" title="Base class for run&#45;queue exceptions." alt="" coords="5,79,203,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="39,5,169,31"/>
+<area shape="rect" id="Node000001" title="Base class for run&#45;queue exceptions." alt="" coords="5,80,202,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="39,5,168,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,48,106,80,101,80,101,48"/>
 </map>

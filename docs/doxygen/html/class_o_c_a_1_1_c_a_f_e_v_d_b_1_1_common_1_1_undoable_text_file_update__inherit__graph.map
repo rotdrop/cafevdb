@@ -1,6 +1,9 @@
 <map id="UndoableTextFileUpdate" name="UndoableTextFileUpdate">
-<area shape="rect" id="node1" title="Update the content of the given text&#45;file with the given content." alt="" coords="19,225,184,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="5,152,197,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="38,79,165,104"/>
-<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="61,5,142,31"/>
+<area shape="rect" id="Node000001" title="Update the content of the given text&#45;file with the given content." alt="" coords="19,229,183,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="5,155,197,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,197,104,229,98,229,98,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="38,80,164,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,122,104,154,98,154,98,122"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="61,5,141,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,48,104,80,98,80,98,48"/>
 </map>

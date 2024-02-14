@@ -1,4 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,80,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal.html" title="Personal settings." alt="" coords="128,5,201,31"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="5,56,121,83"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_progress_status.html" title="Simplistic progress&#45;status interface." alt="" coords="169,56,329,83"/>
+<area shape="poly" id="edge368_Node000000_Node000001" title=" " alt="" coords="137,67,168,67,168,72,137,72"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status.html" title="Progress&#45;status via database table." alt="" coords="380,5,547,32"/>
+<area shape="poly" id="edge369_Node000001_Node000002" title=" " alt="" coords="323,49,403,30,405,35,324,54"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status.html" title="Dummy implementation doing nothing." alt="" coords="377,56,550,83"/>
+<area shape="poly" id="edge370_Node000001_Node000003" title=" " alt="" coords="344,67,377,67,377,72,344,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html" title="Progress status with a plain local file as storage." alt="" coords="383,107,544,133"/>
+<area shape="poly" id="edge371_Node000001_Node000004" title=" " alt="" coords="324,84,405,103,403,109,323,89"/>
 </map>

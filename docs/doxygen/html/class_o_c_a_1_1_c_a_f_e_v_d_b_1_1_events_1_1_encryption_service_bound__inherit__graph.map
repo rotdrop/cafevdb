@@ -1,4 +1,5 @@
 <map id="EncryptionServiceBound" name="EncryptionServiceBound">
-<area shape="rect" id="node1" title="Emitted after the encryption service has been bound to a specific user or group." alt="" coords="5,79,171,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="60,5,116,31"/>
+<area shape="rect" id="Node000001" title="Emitted after the encryption service has been bound to a specific user or group." alt="" coords="5,80,170,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="60,5,115,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,48,90,80,85,80,85,48"/>
 </map>

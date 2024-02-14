@@ -1,4 +1,5 @@
 <map id="filterTranslatableFields" name="filterTranslatableFields">
-<area shape="rect" id="node1" title="Remove &#39;label&#39; from the set of translatable fields if it is the base of file&#45; or folder&#45;names and thu..." alt="" coords="5,5,159,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html#a0d77e83fcdc10863d93cc03c093c1be3" title=" " alt="" coords="207,5,351,31"/>
+<area shape="rect" id="Node000001" title="Remove &#39;label&#39; from the set of translatable fields if it is the base of file&#45; or folder&#45;names and thu..." alt="" coords="5,5,158,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_data_option.html#a0d77e83fcdc10863d93cc03c093c1be3" title=" " alt="" coords="206,5,349,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,16,190,16,190,21,158,21"/>
 </map>

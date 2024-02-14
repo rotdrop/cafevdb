@@ -1,6 +1,9 @@
 <map id="getGroup" name="getGroup">
-<area shape="rect" id="node1" title=" " alt="" coords="196,55,271,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#adeb37b77de6c78ae8303acd786f08ebf" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,5,148,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6" title="Return the dedicated admin&#45;group if it exists." alt="" coords="9,55,144,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4eb4832e8e3774063978db6e58d29edc" title=" " alt="" coords="6,104,147,129"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="195,56,269,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#adeb37b77de6c78ae8303acd786f08ebf" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,5,147,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,55,118,35,120,30,181,50"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6" title="Return the dedicated admin&#45;group if it exists." alt="" coords="9,56,143,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,72,143,72,143,67,179,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4eb4832e8e3774063978db6e58d29edc" title=" " alt="" coords="6,107,146,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="181,89,120,109,118,104,179,84"/>
 </map>

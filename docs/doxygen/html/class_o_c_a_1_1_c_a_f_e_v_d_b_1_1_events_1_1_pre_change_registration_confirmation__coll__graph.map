@@ -1,4 +1,5 @@
 <map id="PreChangeRegistrationConfirmation" name="PreChangeRegistrationConfirmation">
-<area shape="rect" id="node1" title="ORM &#45;&gt; cloud event forwarder." alt="" coords="5,79,236,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="93,5,149,31"/>
+<area shape="rect" id="Node000001" title="ORM &#45;&gt; cloud event forwarder." alt="" coords="5,80,236,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="93,5,148,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,48,123,80,118,80,118,48"/>
 </map>

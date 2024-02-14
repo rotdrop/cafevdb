@@ -5,6 +5,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util =
     [ "arrayMergeTwoRecursive", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9", null ],
     [ "arraySliceKeys", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7", null ],
     [ "camelCaseToDashes", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745", null ],
+    [ "cloneArray", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a74a2b8b04f41f0525f94006017a626cd", null ],
     [ "dashesToCamelCase", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae5c8c04fb41d334be00d1bf1a3b83039", null ],
     [ "dateTime", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a100702e6aa2c767ae77fe04d2db0cac3", null ],
     [ "escapeDelimiter", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a733456b8dde51667bb86ef79e08597a7", null ],

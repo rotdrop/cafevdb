@@ -1,4 +1,5 @@
 <map id="deleteEvent" name="deleteEvent">
-<area shape="rect" id="node1" title=" " alt="" coords="157,5,248,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#afb2b279685e17177b18b747ea3595482" title=" " alt="" coords="5,5,109,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="157,5,247,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#afb2b279685e17177b18b747ea3595482" title=" " alt="" coords="5,5,109,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,21,109,21,109,16,141,16"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="Admin" name="Admin">
-<area shape="rect" id="node1" title="Admin settings class." alt="" coords="43,79,101,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,139,31"/>
+<area shape="rect" id="Node000001" title="Admin settings class." alt="" coords="42,80,101,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,138,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,48,74,80,69,80,69,48"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="getArchiveUrl" name="getArchiveUrl">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,107,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="155,5,248,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="296,5,368,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="416,5,499,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,106,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="154,5,246,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,16,138,16,138,21,106,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="294,5,365,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="246,16,279,16,279,21,246,21"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="413,5,496,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="366,16,398,16,398,21,366,21"/>
 </map>

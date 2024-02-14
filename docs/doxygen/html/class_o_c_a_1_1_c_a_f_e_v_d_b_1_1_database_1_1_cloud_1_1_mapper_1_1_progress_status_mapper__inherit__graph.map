@@ -1,5 +1,7 @@
 <map id="ProgressStatusMapper" name="ProgressStatusMapper">
-<area shape="rect" id="node1" title="Mapper for progress status entities." alt="" coords="5,152,160,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_mapper.html" title="Common mapper base class." alt="" coords="50,79,115,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="41,5,125,31"/>
+<area shape="rect" id="Node000001" title="Mapper for progress status entities." alt="" coords="5,155,160,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_mapper.html" title="Common mapper base class." alt="" coords="50,80,115,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,122,85,154,80,154,80,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="41,5,124,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,48,85,80,80,80,80,48"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="getLastModified" name="getLastModified">
-<area shape="rect" id="node1" title="{Get the time of the last modification for either the address&#45;book or an individual entry...." alt="" coords="5,5,120,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html#a85a38f3986e5ceb33fc7dfd5d53408be" title="{}" alt="" coords="168,5,283,31"/>
+<area shape="rect" id="Node000001" title="{Get the time of the last modification for either the address&#45;book or an individual entry...." alt="" coords="5,5,119,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html#a85a38f3986e5ceb33fc7dfd5d53408be" title="{}" alt="" coords="167,5,280,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,16,151,16,151,21,119,21"/>
 </map>

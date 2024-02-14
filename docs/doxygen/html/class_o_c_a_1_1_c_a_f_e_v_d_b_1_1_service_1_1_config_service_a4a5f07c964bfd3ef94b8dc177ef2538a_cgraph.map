@@ -1,4 +1,7 @@
 <map id="deleteConfigValue" name="deleteConfigValue">
-<area shape="rect" id="node1" title="Delete the value for the given key." alt="" coords="5,5,132,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a40b0e6098c85e4fe46be90feb5346f23" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="180,5,292,31"/>
+<area shape="rect" id="Node000001" title="Delete the value for the given key." alt="" coords="5,5,132,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a40b0e6098c85e4fe46be90feb5346f23" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="180,5,291,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,16,164,16,164,21,132,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a3c0a8ca944cfd5a62a77b1c2cc2b49a8" title=" " alt="" coords="339,5,450,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,16,324,16,324,21,291,21"/>
 </map>

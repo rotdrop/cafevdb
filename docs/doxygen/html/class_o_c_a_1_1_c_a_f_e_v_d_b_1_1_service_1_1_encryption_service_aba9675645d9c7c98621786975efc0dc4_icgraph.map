@@ -1,4 +1,5 @@
 <map id="setAppValue" name="setAppValue">
-<area shape="rect" id="node1" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="164,5,259,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a792774c92dc1796e545ee29374a96402" title="Encrypt the given value and store it in the application settings table of the Cloud." alt="" coords="5,5,116,31"/>
+<area shape="rect" id="Node000001" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="163,5,257,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a792774c92dc1796e545ee29374a96402" title="Encrypt the given value and store it in the application settings table of the Cloud." alt="" coords="5,5,115,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,21,115,21,115,16,147,16"/>
 </map>

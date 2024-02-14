@@ -188,6 +188,12 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_credentialsStorage">$credentialsStorage</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_credentialsStore">$credentialsStore</a>
     <span>
                         &nbsp;: <abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr>            </span>
@@ -200,19 +206,19 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_request">$request</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_request">$request</a>
     <span>
                         &nbsp;: <abbr title="\OCP\IRequest">IRequest</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_secureRandom">$secureRandom</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_secureRandom">$secureRandom</a>
     <span>
                         &nbsp;: <abbr title="\OCP\Security\ISecureRandom">ISecureRandom</abbr>            </span>
 </dt>
@@ -224,7 +230,7 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_tokenProvider">$tokenProvider</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_tokenProvider">$tokenProvider</a>
     <span>
                         &nbsp;: <abbr title="\OC\Authentication\Token\IProvider">IProvider</abbr>            </span>
 </dt>
@@ -256,7 +262,7 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_deleteAuthToken">deleteAuthToken()</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_deleteAuthCookie">deleteAuthCookie()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
@@ -337,10 +343,11 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_deleteAuthCookie">deleteAuthCookie()</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_deleteAuthToken">deleteAuthToken()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
+<dd>Delete any auth token secured with the given passphrase.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_getAuthCookie">getAuthCookie()</a>
@@ -491,9 +498,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -502,6 +509,40 @@ understands those.</dd>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$cookieName</span>
      = <span class="phpdocumentor-signature__default-value">self::DEFAULT_COOKIE_NAME</span></code>
+
+    
+    
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_credentialsStorage">
+        $credentialsStorage
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_credentialsStorage" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">70</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\Authentication\LoginCredentials\IStore">IStore</abbr></span>
+    <span class="phpdocumentor-signature__name">$credentialsStorage</span>
+    </code>
 
     
     
@@ -559,9 +600,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">64</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -585,17 +626,17 @@ understands those.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_logger">
         $logger
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -619,17 +660,17 @@ understands those.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_request">
         $request
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_request" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_request" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/AuthTokenTrait.php"><a href="files/toolkit-traits-authtokentrait.html"><abbr title="Toolkit/Traits/AuthTokenTrait.php">AuthTokenTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -653,17 +694,17 @@ understands those.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_secureRandom">
         $secureRandom
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_secureRandom" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_secureRandom" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/AuthTokenTrait.php"><a href="files/toolkit-traits-authtokentrait.html"><abbr title="Toolkit/Traits/AuthTokenTrait.php">AuthTokenTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -695,9 +736,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -721,17 +762,17 @@ understands those.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_tokenProvider">
         $tokenProvider
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_tokenProvider" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_tokenProvider" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/AuthTokenTrait.php"><a href="files/toolkit-traits-authtokentrait.html"><abbr title="Toolkit/Traits/AuthTokenTrait.php">AuthTokenTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -763,9 +804,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -797,9 +838,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -836,9 +877,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -912,24 +953,24 @@ understands those.</dd>
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_deleteAuthToken">
-        deleteAuthToken()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_deleteAuthToken" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_deleteAuthCookie">
+        deleteAuthCookie()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_deleteAuthCookie" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">117</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the token and its cookie, e.g. at logout time.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">deleteAuthToken</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">deleteAuthCookie</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -953,9 +994,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate and auth-token which seals the login credentials.</p>
@@ -996,9 +1037,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">107</span>
+    <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1550,9 +1591,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/UserScopeService.php"><a href="files/toolkit-service-userscopeservice.html"><abbr title="Toolkit/Service/UserScopeService.php">UserScopeService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1598,23 +1639,24 @@ understands those.</dd>
             -protected
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_deleteAuthCookie">
-        deleteAuthCookie()
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_deleteAuthCookie" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_deleteAuthToken">
+        deleteAuthToken()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_deleteAuthToken" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/AuthTokenTrait.php"><a href="files/toolkit-traits-authtokentrait.html"><abbr title="Toolkit/Traits/AuthTokenTrait.php">AuthTokenTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">139</span>
+    <span class="phpdocumentor-element-found-in__line">157</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Delete any auth token secured with the given passphrase.</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">deleteAuthCookie</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cookieName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">deleteAuthToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$passphrase</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1622,11 +1664,11 @@ understands those.</dd>
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$cookieName</span>
+                <span class="phpdocumentor-signature__argument__name">$passphrase</span>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Unset the cookie with the given name.</p>
+                    <section class="phpdocumentor-description"><p>Token passphrase.</p>
 </section>
 
             </dd>
@@ -1915,13 +1957,14 @@ understands those.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_cookieName">$cookieName<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_credentialsStorage">$credentialsStorage<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_credentialsStore">$credentialsStore<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_lifeTime">$lifeTime<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_request">$request<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_secureRandom">$secureRandom<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_request">$request<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_secureRandom">$secureRandom<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_tokenName">$tokenName<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#property_tokenProvider">$tokenProvider<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_tokenProvider">$tokenProvider<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_userManager">$userManager<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#property_userSession">$userSession<a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html"></li>
                                             </ul>
@@ -1931,7 +1974,7 @@ understands those.</p>
             <li>
                 <ul class="phpdocumentor-list -clean">
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method___construct">__construct()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_deleteAuthToken">deleteAuthToken()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_deleteAuthCookie">deleteAuthCookie()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_getAuthToken">getAuthToken()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_getPassphraseFromCookie">getPassphraseFromCookie()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a></li>
@@ -1943,7 +1986,7 @@ understands those.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-UserScopeService.html#method_setUserScope">setUserScope()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_deleteAuthCookie">deleteAuthCookie()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_deleteAuthToken">deleteAuthToken()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_getAuthCookie">getAuthCookie()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-AuthTokenTrait.html#method_getLoginCredentialsFromToken">getLoginCredentialsFromToken()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>

@@ -1,9 +1,18 @@
 <map id="getFolder" name="getFolder">
-<area shape="rect" id="node1" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="5,45,81,70"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="129,19,233,45"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="424,37,585,77"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="281,19,376,45"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="633,37,795,77"/>
-<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="843,5,1004,45"/>
-<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="843,69,1004,109"/>
+<area shape="rect" id="Node000001" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="5,39,81,65"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="129,13,232,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,42,113,36,114,42,82,48"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="421,56,582,99"/>
+<area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="81,51,406,69,406,75,81,57"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="280,13,373,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="232,24,264,24,264,29,232,29"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="422,5,581,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="374,22,406,20,407,26,374,27"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="374,38,412,49,410,54,373,43"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="630,56,790,99"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="582,75,614,75,614,80,582,80"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="838,23,998,65"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="790,62,822,57,823,62,791,67"/>
+<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="838,89,998,132"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="791,87,823,93,822,98,790,93"/>
 </map>

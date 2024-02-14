@@ -1,5 +1,7 @@
 <map id="inPresidentGroup" name="inPresidentGroup">
-<area shape="rect" id="node1" title="Return true if the logged in user is in the president group." alt="" coords="5,5,128,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a765964a060ee0973544ea2e53718b07c" title="Return true if the logged in user is the president." alt="" coords="176,5,263,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a9594d53af2dfcb1f3bf29420af8f797a" title="Return true if the logged in or given user has a dedicated administrative role for the orchestra." alt="" coords="311,5,483,31"/>
+<area shape="rect" id="Node000001" title="Return true if the logged in user is in the president group." alt="" coords="5,5,127,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a765964a060ee0973544ea2e53718b07c" title="Return true if the logged in user is the president." alt="" coords="175,5,261,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,16,159,16,159,21,127,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a9594d53af2dfcb1f3bf29420af8f797a" title="Return true if the logged in or given user has a dedicated administrative role for the orchestra." alt="" coords="309,5,480,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="261,16,293,16,293,21,261,21"/>
 </map>

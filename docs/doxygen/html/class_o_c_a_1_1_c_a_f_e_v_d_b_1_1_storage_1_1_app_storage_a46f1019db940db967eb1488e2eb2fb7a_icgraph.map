@@ -1,5 +1,7 @@
 <map id="fileExistsInFolder" name="fileExistsInFolder">
-<area shape="rect" id="node1" title=" " alt="" coords="151,31,273,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#ac6bf6b7d24ab36073fa9a34068059fec" title=" " alt="" coords="11,5,97,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#ac3edcd3978ad2679e0d7b127ef404010" title=" " alt="" coords="5,55,103,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="150,31,272,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#ac6bf6b7d24ab36073fa9a34068059fec" title=" " alt="" coords="11,5,96,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,34,96,28,96,23,135,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#ac3edcd3978ad2679e0d7b127ef404010" title=" " alt="" coords="5,56,102,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,59,103,64,102,59,134,54"/>
 </map>

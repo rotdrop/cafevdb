@@ -176,7 +176,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#constant_FILE_METHODS">FILE_METHODS</a>
     <span>
-        &nbsp;= [&#039;setSize&#039;, &#039;getSize&#039;, &#039;setFileData&#039;, &#039;getFileData&#039;, &#039;getMimeType&#039;, &#039;setMimeType&#039;, &#039;getNumberOfLinks&#039;]                            </span>
+        &nbsp;= [&#039;setSize&#039;, &#039;getSize&#039;, &#039;getData&#039;, &#039;setFileData&#039;, &#039;getFileData&#039;, &#039;getMimeType&#039;, &#039;setMimeType&#039;, &#039;getNumberOfLinks&#039;]                            </span>
 </dt>
 
     </dl>
@@ -397,6 +397,12 @@
 <dd>{@inheritDoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getData">getData()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getExtension">getExtension()</a>
     <span>
                                 &nbsp;: null|string    </span>
@@ -407,6 +413,12 @@
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFile">getFile()</a>
     <span>
                                 &nbsp;: null|<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-EncryptedFile.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\EncryptedFile">EncryptedFile</abbr></a>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFileData">getFileData()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\FileData">FileData</abbr></a>    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
@@ -423,11 +435,23 @@
 <dd>{@inheritDoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getMimeType">getMimeType()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getName">getName()</a>
     <span>
                                 &nbsp;: string|null    </span>
 </dt>
 <dd>{@inheritDoc}</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getNumberOfLinks">getNumberOfLinks()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getOrphans">getOrphans()</a>
@@ -457,10 +481,29 @@
 <dd>{@inheritDoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getSize">getSize()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_getStorage">getStorage()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorage.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorage">DatabaseStorage</abbr></a>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getUpdated">getUpdated()</a>
     <span>
                                 &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_isRootFolder">isRootFolder()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>{@inheritDoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_link">link()</a>
@@ -532,11 +575,23 @@
 <dd>Install a file entity</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setFileData">setFileData()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a>    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setId">setId()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>    </span>
 </dt>
 <dd>{@inheritDoc}</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setMimeType">setMimeType()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a>    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setName">setName()</a>
@@ -551,6 +606,12 @@
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a>    </span>
 </dt>
 <dd>{@inheritDoc}</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setSize">setSize()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a>    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setUpdated">setUpdated()</a>
@@ -615,9 +676,9 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">120</span>
+    <span class="phpdocumentor-element-found-in__line">129</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -625,7 +686,7 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">FILE_METHODS</span>
-    = <span class="phpdocumentor-signature__default-value">[&#039;setSize&#039;, &#039;getSize&#039;, &#039;setFileData&#039;, &#039;getFileData&#039;, &#039;getMimeType&#039;, &#039;setMimeType&#039;, &#039;getNumberOfLinks&#039;]</span>
+    = <span class="phpdocumentor-signature__default-value">[&#039;setSize&#039;, &#039;getSize&#039;, &#039;getData&#039;, &#039;setFileData&#039;, &#039;getFileData&#039;, &#039;getMimeType&#039;, &#039;setMimeType&#039;, &#039;getNumberOfLinks&#039;]</span>
 </code>
 
 
@@ -961,9 +1022,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1136,9 +1197,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1973,9 +2034,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">397</span>
+    <span class="phpdocumentor-element-found-in__line">408</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.397" class="phpdocumentor-element-found-in__source" data-line="397" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2086,9 +2147,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">223</span>
+    <span class="phpdocumentor-element-found-in__line">233</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.223" class="phpdocumentor-element-found-in__source" data-line="223" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2118,9 +2179,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">485</span>
+    <span class="phpdocumentor-element-found-in__line">496</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.485" class="phpdocumentor-element-found-in__source" data-line="485" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.496" class="phpdocumentor-element-found-in__source" data-line="496" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2128,6 +2189,38 @@ decorated entity manager.</p>
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getCreated</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getData">
+        getData()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getData" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">0</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getData</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2226,6 +2319,42 @@ decorated entity manager.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getFileData">
+        getFileData()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFileData" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">0</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getFileData</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\FileData">FileData</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\FileData">FileData</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getFileName">
         getFileName()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFileName" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2299,6 +2428,42 @@ decorated entity manager.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getMimeType">
+        getMimeType()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getMimeType" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">0</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getMimeType</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getName">
         getName()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getName" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2334,6 +2499,42 @@ decorated entity manager.</p>
         class="phpdocumentor-element
             -method
             -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getNumberOfLinks">
+        getNumberOfLinks()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getNumberOfLinks" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">0</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getNumberOfLinks</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                     -static                    "
 >
     <h4 class="phpdocumentor-element__name" id="method_getOrphans">
@@ -2344,9 +2545,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">217</span>
+    <span class="phpdocumentor-element-found-in__line">227</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.217" class="phpdocumentor-element-found-in__source" data-line="217" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.227" class="phpdocumentor-element-found-in__source" data-line="227" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2483,6 +2684,82 @@ decorated entity manager.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getSize">
+        getSize()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getSize" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">0</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getSize</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getStorage">
+        getStorage()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_getStorage" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php"><a href="files/database-doctrine-orm-entities-databasestoragedirentry.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageDirEntry.php">DatabaseStorageDirEntry.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">201</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.201" class="phpdocumentor-element-found-in__source" data-line="201" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getStorage</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorage.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorage">DatabaseStorage</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorage.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorage">DatabaseStorage</abbr></a></span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The underlying storage.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getUpdated">
         getUpdated()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getUpdated" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2510,6 +2787,43 @@ decorated entity manager.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_isRootFolder">
+        isRootFolder()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_isRootFolder" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">397</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.397" class="phpdocumentor-element-found-in__source" data-line="397" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">{@inheritDoc}</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">isRootFolder</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
             </section>
 
 </article>
@@ -2574,9 +2888,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">419</span>
+    <span class="phpdocumentor-element-found-in__line">430</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.419" class="phpdocumentor-element-found-in__source" data-line="419" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.430" class="phpdocumentor-element-found-in__source" data-line="430" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2621,9 +2935,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">430</span>
+    <span class="phpdocumentor-element-found-in__line">441</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.430" class="phpdocumentor-element-found-in__source" data-line="430" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.441" class="phpdocumentor-element-found-in__source" data-line="441" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2664,9 +2978,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">441</span>
+    <span class="phpdocumentor-element-found-in__line">452</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.441" class="phpdocumentor-element-found-in__source" data-line="441" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2714,9 +3028,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">452</span>
+    <span class="phpdocumentor-element-found-in__line">463</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.452" class="phpdocumentor-element-found-in__source" data-line="452" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2800,9 +3114,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">233</span>
+    <span class="phpdocumentor-element-found-in__line">243</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.233" class="phpdocumentor-element-found-in__source" data-line="233" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.243" class="phpdocumentor-element-found-in__source" data-line="243" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2842,9 +3156,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">474</span>
+    <span class="phpdocumentor-element-found-in__line">485</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.485" class="phpdocumentor-element-found-in__source" data-line="485" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2971,6 +3285,52 @@ decorated entity manager.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setFileData">
+        setFileData()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setFileData" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">0</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setFileData</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\FileData">FileData</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$data</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-FileData.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\FileData">FileData</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setId">
         setId()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setId" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3009,6 +3369,52 @@ decorated entity manager.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageDirEntry">DatabaseStorageDirEntry</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setMimeType">
+        setMimeType()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setMimeType" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">0</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setMimeType</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mimeType</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$mimeType</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a></span>
             </section>
 
 </article>
@@ -3112,6 +3518,52 @@ decorated entity manager.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setSize">
+        setSize()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setSize" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php"><a href="files/database-doctrine-orm-entities-databasestoragefile.html"><abbr title="Database/Doctrine/ORM/Entities/DatabaseStorageFile.php">DatabaseStorageFile.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">0</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.0" class="phpdocumentor-element-found-in__source" data-line="0" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setSize</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$size</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$size</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-File.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\File">File</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setUpdated">
         setUpdated()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setUpdated" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3120,9 +3572,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">463</span>
+    <span class="phpdocumentor-element-found-in__line">474</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.474" class="phpdocumentor-element-found-in__source" data-line="474" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3163,9 +3615,9 @@ decorated entity manager.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesdatabasestoragefile.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesDatabaseStorageFile.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">408</span>
+    <span class="phpdocumentor-element-found-in__line">419</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#source-view.419" class="phpdocumentor-element-found-in__source" data-line="419" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3527,16 +3979,23 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_cleanupOrphans">cleanupOrphans()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_clearOrphans">clearOrphans()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getCreated">getCreated()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getData">getData()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getExtension">getExtension()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFile">getFile()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFileData">getFileData()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getFileName">getFileName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getId">getId()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getMimeType">getMimeType()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getName">getName()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getNumberOfLinks">getNumberOfLinks()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getOrphans">getOrphans()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getParent">getParent()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getPathName">getPathName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getRoot">getRoot()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getSize">getSize()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageDirEntry.html#method_getStorage">getStorage()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_getUpdated">getUpdated()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_isRootFolder">isRootFolder()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_link">link()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_offsetExists">offsetExists()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_offsetGet">offsetGet()</a></li>
@@ -3547,9 +4006,12 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setCreated">setCreated()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setExtension">setExtension()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setFile">setFile()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setFileData">setFileData()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setId">setId()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setMimeType">setMimeType()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setName">setName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setParent">setParent()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setSize">setSize()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_setUpdated">setUpdated()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_toArray">toArray()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-DatabaseStorageFile.html#method_unlink">unlink()</a></li>

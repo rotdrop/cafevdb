@@ -1,5 +1,9 @@
 <map id="getRoot" name="getRoot">
-<area shape="rect" id="node1" title=" " alt="" coords="607,27,675,53"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a213742d9e35e53456aad8935feb01a94" title="Get financialBalanceDocumentsFolder." alt="" coords="304,5,559,75"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a68fe84419dad9f47730413755f8fd253" title="Recurse to the balance documents folder and return its contents." alt="" coords="5,5,256,75"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="605,67,672,93"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a213742d9e35e53456aad8935feb01a94" title="Get financialBalanceDocumentsFolder." alt="" coords="303,5,557,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="589,74,557,68,558,63,590,69"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html#a2ee306b3cf5ab89be63cfdef2db1000d" title=" " alt="" coords="388,104,472,131"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="590,91,473,112,472,107,589,86"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a68fe84419dad9f47730413755f8fd253" title="Recurse to the balance documents folder and return its contents." alt="" coords="5,5,255,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="287,45,255,45,255,40,287,40"/>
 </map>

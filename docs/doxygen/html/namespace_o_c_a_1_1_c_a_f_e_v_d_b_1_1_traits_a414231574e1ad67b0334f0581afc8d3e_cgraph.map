@@ -1,8 +1,27 @@
 <map id="publishInitialStateForUser" name="publishInitialStateForUser">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,177,105"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="244,5,323,31"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#afda7b5e972ce776bc44742e44e5be0e7" title="Return the currency code for the locale." alt="" coords="232,55,335,80"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a5e680d23a4df2b643783a35165b32d81" title="Return the currency symbol for the locale." alt="" coords="225,104,341,129"/>
-<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a7edad4866aa3ca9b33d80a94bbca867f" title=" " alt="" coords="233,153,333,179"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="389,80,491,105"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,132,177,159"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a10f42c7875a6151887519547ff045907" title=" " alt="" coords="468,5,545,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,129,154,88,188,66,224,48,283,31,345,20,452,14,452,20,345,26,284,36,226,53,190,70,157,92,108,134"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#afda7b5e972ce776bc44742e44e5be0e7" title="Return the currency code for the locale." alt="" coords="658,56,760,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="125,129,172,113,224,99,339,81,454,71,643,66,643,71,454,77,339,87,225,104,173,118,127,134"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a5e680d23a4df2b643783a35165b32d81" title="Return the currency symbol for the locale." alt="" coords="829,107,944,133"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="177,140,813,120,813,125,177,145"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa58d61eef353556bd02376d0ac587ba0" title=" " alt="" coords="225,157,375,184"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="177,153,210,157,209,162,176,158"/>
+<area shape="rect" id="Node000009" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#adac8fad662663420dc8d9b73e0134673" title=" " alt="" coords="637,208,781,235"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="122,157,170,177,225,193,331,210,438,219,538,223,622,222,622,228,538,228,438,225,330,216,224,199,168,182,120,162"/>
+<area shape="rect" id="Node000010" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a7edad4866aa3ca9b33d80a94bbca867f" title=" " alt="" coords="250,259,350,285"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="111,157,161,195,226,238,250,250,247,254,223,242,158,200,107,161"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="992,107,1092,133"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="545,15,620,17,721,23,833,39,890,51,945,67,978,80,1008,96,1005,101,976,85,943,72,889,56,832,44,720,29,620,22,545,21"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="761,70,847,78,944,92,979,100,978,105,944,97,846,83,761,75"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="944,117,976,117,976,123,944,123"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a1fe279ec39675001095beafdf178b811" title="Create the full&#45;path for the sub&#45;folder corresponding to the given config key." alt="" coords="423,157,589,184"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="375,168,407,168,407,173,375,173"/>
+<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa57ee6dad7c7f33cff6983ad79080946" title="Get a possibly encrypted config value." alt="" coords="832,157,941,184"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="590,168,816,168,816,173,590,173"/>
+<area shape="poly" id="edge11_Node000007_Node000009" title=" " alt="" coords="563,182,639,201,637,206,562,187"/>
+<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="929,154,984,136,985,141,931,159"/>
+<area shape="poly" id="edge12_Node000009_Node000008" title=" " alt="" coords="758,205,822,186,823,191,759,210"/>
+<area shape="poly" id="edge15_Node000010_Node000003" title=" " alt="" coords="350,275,462,281,535,281,614,277,698,268,782,252,865,228,943,194,981,169,1014,142,1018,146,985,173,945,198,867,233,783,257,698,273,614,283,535,287,462,287,350,280"/>
 </map>

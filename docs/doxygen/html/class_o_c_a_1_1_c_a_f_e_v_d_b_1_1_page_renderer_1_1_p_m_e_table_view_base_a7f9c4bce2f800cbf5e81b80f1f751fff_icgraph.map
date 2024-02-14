@@ -1,11 +1,19 @@
 <map id="viewOperation" name="viewOperation">
-<area shape="rect" id="node1" title=" " alt="" coords="515,141,620,166"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,5,467,45"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,69,467,109"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,133,467,173"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,197,467,237"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="260,261,467,301"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,5,212,45"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,69,212,109"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,133,212,173"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="512,147,616,173"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,5,464,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="541,136,507,98,463,62,441,51,443,46,465,58,511,94,545,133"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,72,464,115"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="507,144,463,129,429,118,431,113,465,124,508,139"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,139,464,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="497,163,465,163,465,157,497,157"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participants.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,205,464,248"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="508,181,465,196,431,207,429,202,463,191,507,176"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bank_accounts.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="259,272,464,315"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="545,187,511,226,465,262,443,274,441,269,463,258,507,222,541,184"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,5,211,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="243,29,211,29,211,24,243,24"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instruments.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,72,211,115"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="243,96,211,96,211,91,243,91"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,139,211,181"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="243,163,211,163,211,157,243,157"/>
 </map>

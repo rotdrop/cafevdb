@@ -1,4 +1,5 @@
 <map id="HelloWorld" name="HelloWorld">
-<area shape="rect" id="node1" title="Test&#45;command in order to see if the abstract framework is functional." alt="" coords="5,79,91,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="7,5,89,31"/>
+<area shape="rect" id="Node000001" title="Test&#45;command in order to see if the abstract framework is functional." alt="" coords="5,80,90,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="7,5,88,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="50,48,50,80,45,80,45,48"/>
 </map>

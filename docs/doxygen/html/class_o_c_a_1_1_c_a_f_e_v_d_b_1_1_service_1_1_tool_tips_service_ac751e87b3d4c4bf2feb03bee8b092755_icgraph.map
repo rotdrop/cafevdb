@@ -1,6 +1,10 @@
 <map id="count" name="count">
-<area shape="rect" id="node1" title="{}" alt="" coords="244,31,299,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#afa7ed4ea9907527ec2359bd5e03e6bfc" title="Return a translated tool&#45;tip for the given key." alt="" coords="145,31,196,56"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a2fa83c64b65bfcd6ae01aa378370f012" title="{}" alt="" coords="5,5,97,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a3d6a26d211a99287459a423d3965f11f" title="{}" alt="" coords="13,55,89,80"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="243,31,296,57"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="285,17,280,11,270,9,260,11,255,15,254,22,256,29,251,31,248,22,250,13,258,6,270,4,282,7,289,13"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#afa7ed4ea9907527ec2359bd5e03e6bfc" title="Return a translated tool&#45;tip for the given key." alt="" coords="145,31,195,57"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="228,47,196,47,196,41,228,41"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a2fa83c64b65bfcd6ae01aa378370f012" title="{}" alt="" coords="5,5,97,32"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="129,38,96,31,98,26,130,33"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_tool_tips_service.html#a3d6a26d211a99287459a423d3965f11f" title="{}" alt="" coords="13,56,89,83"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="130,55,90,64,89,59,129,50"/>
 </map>

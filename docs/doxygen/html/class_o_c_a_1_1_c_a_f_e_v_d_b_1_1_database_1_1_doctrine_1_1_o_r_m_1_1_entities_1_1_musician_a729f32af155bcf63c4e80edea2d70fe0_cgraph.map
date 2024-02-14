@@ -1,4 +1,5 @@
 <map id="isMemberOf" name="isMemberOf">
-<area shape="rect" id="node1" title="Check whether the given project is contained in projectParticipation." alt="" coords="5,5,99,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a032dfc1126aae81c173ce3406e12e018" title="Return the project&#45;participant entity for the given project or null." alt="" coords="147,5,304,31"/>
+<area shape="rect" id="Node000001" title="Check whether the given project is contained in projectParticipation." alt="" coords="5,5,98,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician.html#a032dfc1126aae81c173ce3406e12e018" title="Return the project&#45;participant entity for the given project or null." alt="" coords="146,5,302,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,16,130,16,130,21,98,21"/>
 </map>

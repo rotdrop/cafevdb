@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -61,26 +61,17 @@ class UploadsController extends Controller
   public const UPLOAD_MODE_LINK = 'link';
   public const UPLOAD_MODE_COPY = 'copy';
 
-  /** @var AppStorage */
-  private $appStorage;
-
-  /** @var UserStorage */
-  private $userStorage;
-
   /** {@inheritdoc} */
   public function __construct(
     $appName,
     IRequest $request,
-    ConfigService $configService,
-    AppStorage $appStorage,
-    UserStorage $userStorage,
+    protected ConfigService $configService,
+    private AppStorage $appStorage,
+    private UserStorage $userStorage,
   ) {
 
     parent::__construct($appName, $request);
 
-    $this->configService = $configService;
-    $this->appStorage = $appStorage;
-    $this->userStorage = $userStorage;
     $this->entityManager = null;
     $this->l = $this->l10N();
   }

@@ -1,5 +1,7 @@
 <map id="isReachable" name="isReachable">
-<area shape="rect" id="node1" title="Check whether the mailing&#45;lists server is configured and reachable." alt="" coords="5,31,100,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a021665eed2f119c5beed4adeaebd8f96" title="Obtain the server configuration, this is rather for testing in order to check the basic connectivity." alt="" coords="148,5,264,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a70860ad31d1b9217e6da0ba4759ad3a3" title=" " alt="" coords="159,55,253,80"/>
+<area shape="rect" id="Node000001" title="Check whether the mailing&#45;lists server is configured and reachable." alt="" coords="5,31,99,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a021665eed2f119c5beed4adeaebd8f96" title="Obtain the server configuration, this is rather for testing in order to check the basic connectivity." alt="" coords="147,5,262,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,34,131,28,132,33,99,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a70860ad31d1b9217e6da0ba4759ad3a3" title=" " alt="" coords="157,56,252,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="99,49,142,56,141,62,99,54"/>
 </map>

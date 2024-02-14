@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,16 +44,11 @@ class RegisterMimeTypes implements IRepairStep
   const MIMETYPE_MAPPING_FILE = 'mimetypemapping.json';
   const MIMETYPE_ALIASES_FILE = 'mimetypealiases.json';
 
-  /** @var string */
-  protected $appName;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    ILogger $logger,
+    protected string $appName,
+    protected ILogger $logger,
   ) {
-    $this->appName = $appName;
-    $this->logger = $logger;
   }
   // phpcs:enable
 

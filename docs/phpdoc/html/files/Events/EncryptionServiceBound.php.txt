@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,14 +29,11 @@ use OCP\EventDispatcher\Event;
 /** Emitted after the encryption service has been bound to a specific user or group. */
 class EncryptionServiceBound extends Event
 {
-  /** @var string */
-  private $userId;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct($userId)
-  {
+  public function __construct(
+    private string $userId,
+  ) {
     parent::__construct();
-    $this->userId = $userId;
   }
   // phpcs:enable
 

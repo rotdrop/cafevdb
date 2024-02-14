@@ -1,9 +1,16 @@
 <map id="isUpdatable" name="isUpdatable">
-<area shape="rect" id="node1" title="{{}}" alt="" coords="5,45,96,70"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#adeb1bc07330c61c5b94a88bc857fa7c2" title="{}" alt="" coords="144,30,312,85"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="576,30,759,85"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5877dd78fbe10fb5f3ee3d25e3fbe11e" title="{}" alt="" coords="360,65,528,105"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="807,5,996,45"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="810,69,993,109"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="1044,62,1235,117"/>
+<area shape="rect" id="Node000001" title="{{}}" alt="" coords="5,47,96,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#adeb1bc07330c61c5b94a88bc857fa7c2" title="{}" alt="" coords="144,31,311,89"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,57,128,57,128,63,96,63"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="574,31,756,89"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="311,54,359,53,526,53,559,54,559,59,526,59,359,59,311,60"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5877dd78fbe10fb5f3ee3d25e3fbe11e" title="{}" alt="" coords="359,68,526,111"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="312,69,344,73,343,78,311,74"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="804,5,992,48"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="756,44,788,40,789,45,756,50"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="807,72,989,115"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="756,70,792,76,791,81,756,76"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="1040,64,1230,123"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="989,91,1024,91,1024,96,989,96"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="526,76,558,71,559,77,527,81"/>
 </map>

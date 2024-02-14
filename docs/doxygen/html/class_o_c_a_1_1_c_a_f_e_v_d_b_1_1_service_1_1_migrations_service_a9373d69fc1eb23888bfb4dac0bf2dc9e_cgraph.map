@@ -1,6 +1,9 @@
 <map id="applyAll" name="applyAll">
-<area shape="rect" id="node1" title="Apply all found migrations, stop when one is failing." alt="" coords="5,5,73,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a926abdf64e718f3405a12bcdaa87be51" title="Ensure all unapplied migrations are loaded." alt="" coords="121,5,304,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a5a9dff6c1ff549453de63b85b2ece1a0" title="Find all unapplied migrations." alt="" coords="352,5,513,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#af398c267dc84e9a97bf2a48a46871dcf" title=" " alt="" coords="561,5,664,31"/>
+<area shape="rect" id="Node000001" title="Apply all found migrations, stop when one is failing." alt="" coords="5,5,73,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a926abdf64e718f3405a12bcdaa87be51" title="Ensure all unapplied migrations are loaded." alt="" coords="121,5,303,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,16,105,16,105,21,73,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a5a9dff6c1ff549453de63b85b2ece1a0" title="Find all unapplied migrations." alt="" coords="351,5,511,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="303,16,335,16,335,21,303,21"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#af398c267dc84e9a97bf2a48a46871dcf" title=" " alt="" coords="559,5,662,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="512,16,544,16,544,21,512,21"/>
 </map>

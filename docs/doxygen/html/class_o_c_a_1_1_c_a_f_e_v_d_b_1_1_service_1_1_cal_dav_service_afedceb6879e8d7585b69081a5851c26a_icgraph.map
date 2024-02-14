@@ -1,7 +1,11 @@
 <map id="refreshCalendarManager" name="refreshCalendarManager">
-<area shape="rect" id="node1" title="Force \OCA\DAV\CalDAV\CalendarManager to be refreshed." alt="" coords="176,80,340,105"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a78d0c710a1daf942261bb03c06797bb5" title="Get a calendar with the given id." alt="" coords="17,5,116,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a6200f98c0237694c00c3b0fa2fd0a2ef" title="Get a calendar with the given display name." alt="" coords="5,55,128,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a557a43cc765f714a460217554dd0e5e8" title="Get or create a calendar." alt="" coords="11,104,122,129"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#aa6fa8b084b8967e7896a7e091ae50868" title="Set the display name." alt="" coords="17,153,116,179"/>
+<area shape="rect" id="Node000001" title="Force \OCA\DAV\CalDAV\CalendarManager to be refreshed." alt="" coords="175,81,338,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a78d0c710a1daf942261bb03c06797bb5" title="Get a calendar with the given id." alt="" coords="17,5,115,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,78,101,35,103,30,208,73"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a6200f98c0237694c00c3b0fa2fd0a2ef" title="Get a calendar with the given display name." alt="" coords="5,56,127,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,84,127,80,127,75,160,79"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a557a43cc765f714a460217554dd0e5e8" title="Get or create a calendar." alt="" coords="11,107,121,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,110,121,115,120,110,159,105"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#aa6fa8b084b8967e7896a7e091ae50868" title="Set the display name." alt="" coords="17,157,115,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="208,117,103,159,101,154,206,112"/>
 </map>

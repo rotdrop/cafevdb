@@ -1,12 +1,21 @@
 <map id="EncryptionException" name="EncryptionException">
-<area shape="rect" id="node1" title="Base class for other exceptions." alt="" coords="289,153,432,179"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_decrypt_exception.html" title=" " alt="" coords="491,5,659,31"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_encrypt_exception.html" title=" " alt="" coords="492,55,659,80"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_decryption_failed_exception.html" title=" " alt="" coords="486,104,665,129"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_failed_exception.html" title=" " alt="" coords="487,153,664,179"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_key_exception.html" title=" " alt="" coords="493,203,658,228"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_failed_exception.html" title=" " alt="" coords="486,252,665,277"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_request_not_found_exception.html" title=" " alt="" coords="480,302,671,342"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="161,153,241,179"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,153,113,179"/>
+<area shape="rect" id="Node000001" title="Base class for other exceptions." alt="" coords="288,157,429,184"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_decrypt_exception.html" title=" " alt="" coords="489,5,656,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="375,143,417,91,445,65,476,42,501,30,503,35,479,46,448,69,421,95,379,146"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_cannot_encrypt_exception.html" title=" " alt="" coords="489,56,656,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="388,145,429,118,476,92,508,81,510,86,478,97,432,122,391,150"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_decryption_failed_exception.html" title=" " alt="" coords="484,107,661,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="432,151,512,131,514,137,434,156"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_failed_exception.html" title=" " alt="" coords="484,157,661,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="445,168,484,168,484,173,445,173"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_key_exception.html" title=" " alt="" coords="490,208,655,235"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="434,186,514,205,512,210,432,191"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_failed_exception.html" title=" " alt="" coords="484,259,661,285"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="391,192,432,219,478,244,510,256,508,261,476,249,429,223,388,196"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_recryption_request_not_found_exception.html" title=" " alt="" coords="477,309,668,352"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="380,195,422,246,449,272,479,295,500,306,497,311,476,300,445,276,418,249,376,198"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="161,157,240,184"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,168,287,168,287,173,256,173"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,157,113,184"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,168,160,168,160,173,128,173"/>
 </map>

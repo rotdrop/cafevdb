@@ -2,7 +2,10 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service =
 [
     [ "adminContact", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a1dba95c68ac062b1f4987c3c61dfa0b9", null ],
     [ "cloudAdminContact", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a386b4fb08b4007d0c43c7d337d90990d", null ],
+    [ "dedicatedBoardMemberParticipant", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a0be55a4885c7fb3d52f6511a4452cdbc", null ],
     [ "executiveBoardMembers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a13cb759047e308ad9b9a05ab45fccddd", null ],
+    [ "executiveBoardProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#aae8d36c62eaa47e32dcfba2644e60a53", null ],
+    [ "getBoardMember", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a704c6157c10be605fb129c98c6f3fd96", null ],
     [ "getGroupAdmins", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a6ad59209699f1ea04a3ce24ab9e112d4", null ],
     [ "getPresident", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a58259e4c7621772baed4e9883b59cc93", null ],
     [ "getSecretary", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a8ada6036f348dbf48c7910c53a774206", null ],
@@ -11,6 +14,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service =
     [ "inPresidentGroup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a717a88ffb195d1b59bb99df780528638", null ],
     [ "inSecretaryGroup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a4add7ffa5ef8592b6143de93c9841cda", null ],
     [ "inTreasurerGroup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a23afca65d8a594e0ba9beec57b4ba58b", null ],
+    [ "isBoardMember", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a954a17ac83ca105ff1dba71a2337f2d9", null ],
     [ "isCloudAdmin", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#aacefac123941e8a70a94d4b79f0368f9", null ],
     [ "isDedicatedBoardMember", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a9594d53af2dfcb1f3bf29420af8f797a", null ],
     [ "isGroupAdmin", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a69a77dad9dc40a4aa832de8d0ed37e9f", null ],

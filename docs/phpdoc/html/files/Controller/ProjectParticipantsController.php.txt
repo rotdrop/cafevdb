@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -78,46 +78,20 @@ class ProjectParticipantsController extends Controller
   const FILE_ACTION_DELETE = 'delete';
   const FILE_ACTION_UPLOAD = 'upload';
 
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
-  protected $pme;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
-
-  /** @var EntityManager */
-  protected $entityManager;
-
-  /** @var StorageFactory */
-  private $storageFactory;
-
   /** {@inheritdoc} */
   public function __construct(
     $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit,
-    ProjectService $projectService,
-    ProjectParticipantFieldsService $participantFieldsService,
-    StorageFactory $storageFactory,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private PHPMyEdit $pme,
+    private ProjectService $projectService,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private StorageFactory $storageFactory,
   ) {
-
     parent::__construct($appName, $request);
 
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->pme = $phpMyEdit;
-    $this->projectService = $projectService;
-    $this->participantFieldsService = $participantFieldsService;
-    $this->storageFactory = $storageFactory;
     $this->l = $this->l10N();
     $this->setDatabaseRepository(Entities\ProjectParticipant::class);
   }
@@ -238,13 +212,20 @@ class ProjectParticipantsController extends Controller
           ));
         }
 
+        /** @var Entities\ProjectParticipant $projectParticipant */
         $projectParticipant = $this->find([ 'project' => $recordId['projectId'], 'musician' => $recordId['musicianId'] ]);
         if (empty($projectParticipant)) {
           return self::grumble($this->l->t("Unable to fetch project-participant with given key %s", print_r($recordId, true)));
         }
 
         $musicianInstruments = [];
-        foreach ($projectParticipant['musician']['instruments'] as $musicianInstrument) {
+        /** @var Entities\MusicianInstrument $musicianInstrument */
+        foreach ($projectParticipant->getMusician()->getInstruments() as $musicianInstrument) {
+          if ($musicianInstrument->isDeleted()) {
+            // already deleted instruments must be omitted here, otherwise the
+            // checks below hinder the undeletion.
+            continue;
+          }
           $musicianInstruments[$musicianInstrument['instrument']['id']] = $musicianInstrument;
         }
         // sort by musician's instrument ranking
@@ -266,10 +247,6 @@ class ProjectParticipantsController extends Controller
         foreach ($this->getDatabaseRepository(Entities\Instrument::class)->findAll() as $instrument) {
           $allInstruments[$instrument['id']] = $instrument;
         }
-
-        $this->logInfo('PRJ INST '.print_r(array_keys($projectInstruments), true));
-        $this->logInfo('MUS INST '.print_r(array_keys($musicianInstruments), true));
-        $this->logInfo('AJX INST '.print_r($instrumentValues, true));
 
         switch ($context) {
           case 'musician':
@@ -594,6 +571,8 @@ class ProjectParticipantsController extends Controller
         $uploads = [];
         foreach ($files as $file) {
 
+          $fileId = -1;
+
           $messages = []; // messages for non-fatal errors
 
           if ($file['error'] != UPLOAD_ERR_OK) {
@@ -768,6 +747,7 @@ class ProjectParticipantsController extends Controller
             switch ($dataType) {
               case FieldDataType::CLOUD_FILE:
               case FieldDataType::CLOUD_FOLDER:
+                $storageBackend = 'cloud';
                 // from the field-name and user-id-slug
                 $optionValue = $pathInfo['basename'];
                 if ($dataType == FieldDataType::CLOUD_FOLDER) {
@@ -796,13 +776,16 @@ class ProjectParticipantsController extends Controller
                   );
                 }
                 $this->entityManager->registerPreCommitAction(function() use (&$file, $filePath, $userStorage) {
-                  $downloadLink = $userStorage->getDownloadLink($filePath);
+                  $cloudFile = $userStorage->get($filePath, useCache: true, throw: true);
+                  $downloadLink = $userStorage->getDownloadLink($cloudFile);
+                  $file['meta']['fileId'] = $cloudFile->getId();
                   $file['meta']['download'] = $downloadLink;
                 });
                 break;
               case FieldDataType::RECEIVABLES:
               case FieldDataType::LIABILITIES:
               case FieldDataType::DB_FILE:
+                $storageBackend = 'db';
 
                 $storage = $this->storageFactory->getProjectParticipantsStorage($participant);
 
@@ -866,6 +849,8 @@ class ProjectParticipantsController extends Controller
                   . '?requesttoken=' . urlencode(\OCP\Util::callRegister())
                   . '&fileName=' . urlencode($filePath);
 
+                $fileId = $dbDocument->getId();
+
                 break;
             }
 
@@ -904,6 +889,8 @@ class ProjectParticipantsController extends Controller
               'baseName' => $pathInfo['basename'],
               'extension' => $pathInfo['extension']?:'',
               'fileName' => $pathInfo['filename'],
+              'fileId' => $fileId,
+              'storageBackend' => $storageBackend,
               'download' => $downloadLink ?? null,
               'filesApp' => $filesAppLink,
               'conflict' => $conflict,
@@ -1121,9 +1108,6 @@ class ProjectParticipantsController extends Controller
       case MailingListsService::STATUS_SUBSCRIBED:
         $subscription = $listsService->getSubscription($listId, $email);
         $preferences = $listsService->getSubscriptionPreferences($listId, $email);
-
-        // \OCP\Util::writeLog('cafevdb', 'SUBSCRIPTION ' . print_r($subscription, true), \OCP\Util::INFO);
-        \OCP\Util::writeLog('cafevdb', 'PREFERENCES ' . print_r($preferences, true), \OCP\Util::INFO);
 
         switch ($preferences[MailingListsService::MEMBER_DELIVERY_STATUS]) {
           case MailingListsService::DELIVERY_STATUS_ENABLED:

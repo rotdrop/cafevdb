@@ -1,7 +1,14 @@
 <map id="InsuranceRates" name="InsuranceRates">
-<area shape="rect" id="node1" title="Table generator for Instruments table." alt="" coords="43,225,157,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="29,152,171,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="5,79,80,104"/>
-<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="61,5,139,31"/>
-<area shape="rect" id="node5" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="104,79,213,104"/>
+<area shape="rect" id="Node000001" title="Table generator for Instruments table." alt="" coords="102,248,215,275"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="88,172,229,199"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,214,161,248,156,248,156,214"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="5,81,80,108"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,116,144,169,140,174,70,120"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="61,5,139,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="83,46,54,83,50,79,79,42"/>
+<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="104,81,213,108"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="121,42,151,79,147,83,117,46"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="161,124,161,171,156,171,156,124"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="237,81,293,108"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="240,120,175,173,172,169,237,116"/>
 </map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\ISettings;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface as ILogger;
@@ -40,47 +39,31 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 class Personal implements ISettings
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const ERROR_TEMPLATE = "errorpage";
 
-  /** @var string */
-  private $appName;
-
-  /** @var string */
-  private $userId;
-
-  /** @var \OCA\CAFEVDB\Service\AuthorizationService */
-  private $authorizationService;
-
-  /** @var \OCP\IUserSession */
-  private $userSession;
-
   /** {@inheritdoc} */
   public function __construct(
-    string $appName,
-    ?string $userId,
-    AuthorizationService $authorizationService,
-    IUserSession $userSession,
-    ILogger $logger,
+    private string $appName,
+    private ?string $userId,
+    private AuthorizationService $authorizationService,
+    private IUserSession $userSession,
+    protected ILogger $logger,
   ) {
-    $this->appName = $appName;
-    $this->userId = $userId;
-    $this->authorizationService = $authorizationService;
-    $this->userSession = $userSession;
-    $this->logger = $logger;
   }
 
   /** {@inheritdoc} */
   public function getForm()
   {
-    if (!$this->authorizationService->authorized($this->userId)) {
-      return new TemplateResponse(
-        $this->appName,
+    if (!$this->authorizationService->authorized($this->userId, AuthorizationService::PERMISSION_FRONTEND)) {
+      return $this->templateResponse(
         self::ERROR_TEMPLATE,
         [
           'error' => 'notamember',
           'userId' => $this->userId,
-        ], 'blank');
+        ],
+      );
     }
     return \OC::$server->query(PersonalForm::class)->getForm();
   }

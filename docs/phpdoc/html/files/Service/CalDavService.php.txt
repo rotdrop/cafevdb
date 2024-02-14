@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,8 @@ use Sabre\DAV;
 
 use OCP\Calendar\IManager as CalendarManager;
 use OCP\Calendar\ICalendar;
+use OCP\Calendar\ICalendarQuery;
+use OCP\Cache\CappedMemoryCache;
 use OCP\Constants;
 
 use OCA\DAV\CalDAV\CalDavBackend;
@@ -55,26 +57,21 @@ class CalDavService
   const WRITE_PERMISSIONS = (Constants::PERMISSION_CREATE|Constants::PERMISSION_UPDATE);
   const URI_SUFFIX = '.ics';
 
-  /** @var CalDavBackend */
-  private $calDavBackend;
-
-  /** @var CalendarManager */
-  private $calendarManager;
-
   /** @var int */
   private $calendarUserId;
 
+  /** @var CappedMemoryCache */
+  private $calendarObjectCache;
+
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    CalendarManager $calendarManager,
-    CalDavBackend $calDavBackend,
+    protected ConfigService $configService,
+    private CalendarManager $calendarManager,
+    private CalDavBackend $calDavBackend,
   ) {
-    $this->configService = $configService;
-    $this->calendarManager = $calendarManager;
-    $this->calDavBackend = $calDavBackend;
     $this->calendarUserId = $this->userId();
     $this->l = $this->l10n();
+    $this->calendarObjectCache = new CappedMemoryCache;
   }
 
   /**
@@ -137,7 +134,7 @@ class CalDavService
   private static function makeGroupShare(string $groupId, bool $readOnly = false):array
   {
     return [
-      'href' => 'principal:principals/groups/'.$groupId,
+      'href' => 'principal:principals/groups/' . $groupId,
       'commonName' => '',
       'summary' => '',
       'readOnly' => $readOnly,
@@ -157,7 +154,7 @@ class CalDavService
     if (empty($calendarInfo)) {
       return null;
     }
-    return new Calendar($this->calDavBackend, $calendarInfo, $this->l10n(), $this->appConfig());
+    return new Calendar($this->calDavBackend, $calendarInfo, $this->l10n(), $this->appConfig(), $this->logger());
   }
 
   /**
@@ -200,10 +197,10 @@ class CalDavService
    */
   public function isGroupSharedCalendar(int $calendarId, string $groupId, bool $readOnly = false):bool
   {
-    $share = self::makeGroupShare($groupId, $readOnly);
+    $targetShare = self::makeGroupShare($groupId, $readOnly);
     $shares = $this->calDavBackend->getShares($calendarId);
     foreach ($shares as $share) {
-      if ($share['href'] === $share['href'] && $share['readOnly'] == $readOnly) {
+      if ($share['href'] === $targetShare['href'] && $share['readOnly'] == $targetShare['readonly']) {
         return true;
       }
     }
@@ -234,6 +231,8 @@ class CalDavService
   }
 
   /**
+   * Just forward to the wrapped calendar manager.
+   *
    * @param string $pattern which should match within the $searchProperties.
    *
    * @param array $searchProperties defines the properties within the query pattern should match.
@@ -339,7 +338,7 @@ class CalDavService
         : $calendarInfo['uri'];
       return [
         'principaluri' => $calendarInfo['principaluri'],
-        'owernuri' => $calendarInfo['uri'],
+        'owneruri' => $calendarInfo['uri'],
         'shareuri' => $userUri,
         'ownerid' => $ownerId,
         'userid' => $this->calendarUserId,
@@ -359,7 +358,8 @@ class CalDavService
     return ($perms & self::WRITE_PERMISSIONS) == self::WRITE_PERMISSIONS;
   }
 
-  /** Get the list of all calendars
+  /**
+   * Get the list of all calendars
    *
    * @param bool $writable If true return only calendars with write access.
    *
@@ -377,6 +377,68 @@ class CalDavService
       $calendars = array_values($calendars);
     }
     return $calendars;
+  }
+
+  /**
+   * Generate the cache key for the calendar object cache
+   *
+   * @param int $calendarId
+   *
+   * @param string $localUri
+   *
+   * @return string
+   */
+  private static function objectCacheKey(int $calendarId, string $localUri):string
+  {
+    return $calendarId . ':' . $localUri;
+  }
+
+  /**
+   * Clear the data for the given object ids.
+   *
+   * @param array|int $calendarId
+   *
+   * @param null|string $localUri
+   *
+   * @return void
+   */
+  private function removeFromCache(array|int $calendarId, ?string $localUri = null):void
+  {
+    if (is_array($calendarId)) {
+      $object = $calendarId;
+      $calendarId = $object['calendarid'];
+      $localUri = str_replace('-deleted.ics', '.ics', $object['uri']);
+    }
+    $this->calendarObjectCache->remove(self::objectCacheKey($calendarId, $localUri));
+  }
+
+  /**
+   * Adds the given calendar data to the cache
+   *
+   * @param array $calendarObject
+   *
+   * @return void
+   */
+  private function addToCache(array $calendarObject):void
+  {
+    $calendarId = $calendarObject['calendarid'];
+    $localUri = $calendarObject['uri'];
+
+    $this->calendarObjectCache->set(self::objectCacheKey($calendarId, $localUri), $calendarObject);
+  }
+
+  /**
+   * Fetch an object from the calendar object cache.
+   *
+   * @param int $calendarId
+   *
+   * @param string $localUri
+   *
+   * @return null|array
+   */
+  private function getFromCache(int $calendarId, string $localUri):?array
+  {
+    return $this->calendarObjectCache->get(self::objectCacheKey($calendarId, $localUri));
   }
 
   /**
@@ -404,6 +466,9 @@ class CalDavService
       $localUri = strtoupper(Uuid::create()->toString()).'.ics';
     }
     $this->calDavBackend->createCalendarObject($calendarId, $localUri, $object);
+
+    $this->removeFromCache($calendarId, $localUri);
+
     return $localUri;
   }
 
@@ -415,7 +480,9 @@ class CalDavService
    *
    * @param int $targetCalendarId
    *
-   * @param array|string $object Either an identifier or an array
+   * @param array|string $object Either an identifier or an array.
+   *
+   * @return void
    *
    * @bug This function used internal APIs.
    */
@@ -436,6 +503,8 @@ class CalDavService
       $object['id'],
       $oldPrincipalUri,
       $newPrincipalUri);
+
+    $this->removeFromCache($sourceCalendarId, $object['uri']);
   }
 
   /**
@@ -459,6 +528,8 @@ class CalDavService
     }
     // $this->logInfo("calId: " . $calendarId . " uri " . $localUri);
     $this->calDavBackend->updateCalendarObject($calendarId, $localUri, $object);
+
+    $this->removeFromCache($calendarId, $localUri);
   }
 
   /**
@@ -481,6 +552,35 @@ class CalDavService
       throw new Exceptions\CalendarEntryNotFoundException($this->l->t('Unable to find calendar entry with identifier "%1$s" in calendar with id "%2$s".', [ $calendarId, $objectIdentifier ]));
     }
     $this->calDavBackend->deleteCalendarObject($calendarId, $localUri);
+
+    $this->removeFromCache($calendarId, $localUri);
+  }
+
+  /**
+   * Restore the given calendar object from the trashbin.
+   *
+   * @param null|int $calendarId
+   *
+   * @param array|string $object Either an identifier or an array.
+   *
+   * @return void
+   *
+   * @bug This function used internal APIs.
+   */
+  public function restoreCalendarObject(
+    ?int $calendarId,
+    array|string $object
+  ):void {
+    if (!is_array($object)) {
+      $objectUri = $object;
+      if (!str_ends_with($objectUri, '-deleted.ics')) {
+        $objectUri = basename($objectUri, '.ics') . '-deleted.ics';
+      }
+      $object = $this->getCalendarObject($calendarId, $objectUri);
+    }
+    $this->calDavBackend->restoreCalendarObject($object);
+
+    $this->removeFromCache($object);
   }
 
   /**
@@ -520,9 +620,78 @@ class CalDavService
     if (empty($localUri)) {
       return null;
     }
-    $result = $this->calDavBackend->getCalendarObject($calendarId, $localUri);
+
+    $result = $this->getFromCache($calendarId, $localUri);
+
     if (!empty($result)) {
-      $result['calendarid'] = $calendarId;
+      return $result;
+    }
+
+    $result = $this->calDavBackend->getCalendarObject($calendarId, $localUri);
+
+    if ($result) {
+      $result['calendardata'] = VCalendarService::getVCalendar($result);
+      $this->addToCache($result);
+    }
+
+    return $result;
+  }
+
+  /**
+   * Find a calendar object matching ALL of the specified categories. This is
+   * different from the NC provided search functions where one can only do a
+   * wildcard search.
+   *
+   * @param array $categories
+   *
+   * @param null|string $userId
+   *
+   * @param array $calendarUris
+   *
+   * @param null|string $type
+   *
+   * @return array The result array contains objects as generated by
+   * getCalendarObject().
+   */
+  public function findCalendarObjectByCategories(
+    array $categories,
+    ?string $userId = null,
+    array $calendarUris = [],
+    ?string $type = null,
+  ):array {
+    $principalUri = 'principals/users/' . ($userId ?? $this->userId());
+    $query = $this->calendarManager->newQuery($principalUri);
+    foreach ($calendarUris as $calendarUri) {
+      $query->addSearchCalendar($calendarUri);
+    }
+    $categories = array_values($categories);
+    if (!empty($categories)) {
+      $firstCategory = $categories[0];
+      $query->addSearchProperty(ICalendarQuery::SEARCH_PROPERTY_CATEGORIES);
+      $query->setSearchPattern($firstCategory);
+    }
+    if (!empty($type)) {
+      $query->addType($type);
+    }
+    $calendarObjects = $this->calendarManager->searchForPrincipal($query);
+    $result = [];
+    foreach ($calendarObjects as $objectInfo) {
+      if (!empty($categories)) {
+        $match = false;
+        foreach ($objectInfo['objects'] as $calendarObject) {
+          if (isset($calendarObject['CATEGORIES'])) {
+            $objectCategories = explode(',', $calendarObject['CATEGORIES'][0][0]);
+            if (empty(array_diff($categories, $objectCategories))) {
+              $match = true;
+              break;
+            }
+          }
+        }
+        if (!$match) {
+          continue;
+        }
+      }
+      $result[] = $this->getCalendarObject($objectInfo['calendar-key'], $objectInfo['uri']);
     }
     return $result;
   }

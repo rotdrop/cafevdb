@@ -1,4 +1,5 @@
 <map id="bind" name="bind">
-<area shape="rect" id="node1" title="{Bind to the given storage object.Create a new object if $id is null.void}" alt="" coords="5,5,52,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status.html#ac95792d19ae51b2fca46c4f69297c813" title="{Synchronize with the underlying storage, i.e.read the data into this instance.void}" alt="" coords="100,5,151,31"/>
+<area shape="rect" id="Node000001" title="{Bind to the given storage object.Create a new object if $id is null.void}" alt="" coords="5,5,51,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_database_progress_status.html#ac95792d19ae51b2fca46c4f69297c813" title="{Synchronize with the underlying storage, i.e.read the data into this instance.void}" alt="" coords="99,5,148,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="51,16,83,16,83,21,51,21"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="EnumProjectTemporalType" name="EnumProjectTemporalType">
-<area shape="rect" id="node1" title=" " alt="" coords="5,152,184,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="53,79,137,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="41,5,148,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,155,183,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="52,80,136,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,122,97,154,91,154,91,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="41,5,147,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="97,48,97,80,91,80,91,48"/>
 </map>

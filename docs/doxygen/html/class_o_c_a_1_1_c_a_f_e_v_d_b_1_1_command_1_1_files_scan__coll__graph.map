@@ -1,4 +1,5 @@
 <map id="FilesScan" name="FilesScan">
-<area shape="rect" id="node1" title="Authenticated files&#45;scan which is thus also able to scan the database&#45;backed mounts." alt="" coords="5,79,85,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="19,5,71,31"/>
+<area shape="rect" id="Node000001" title="Authenticated files&#45;scan which is thus also able to scan the database&#45;backed mounts." alt="" coords="5,80,85,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="19,5,71,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="48,48,48,80,42,80,42,48"/>
 </map>

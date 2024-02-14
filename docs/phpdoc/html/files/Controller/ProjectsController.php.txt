@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,8 @@
  */
 
 namespace OCA\CAFEVDB\Controller;
+
+use DateTime;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -58,31 +60,17 @@ class ProjectsController extends Controller
   const LIST_OPERATION_REOPEN = 'reopen';
   const LIST_OPERATION_DELETE = 'delete';
 
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
-  protected $pme;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var EntityManager */
-  protected $entityManager;
-
   /** {@inheritdoc} */
   public function __construct(
     string $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    EntityManager $entityManager,
-    PHPMyEdit $phpMyEdit,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    protected PHPMyEdit $pme,
   ) {
-
     parent::__construct($appName, $request);
 
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->pme = $phpMyEdit;
     $this->l = $this->l10N();
   }
 
@@ -344,7 +332,7 @@ class ProjectsController extends Controller
             ++$noEmailCount;
             continue; // after all, it is a mailing list ...
           }
-          $displayName = $participant->getMusician()->getPublicName(firstNameFirst: true);
+          $displayName = $participant->getPublicName(firstNameFirst: true);
           try {
             $result = $projectService->ensureMailingListSubscription($participant);
             $newCount += (int)$result;
@@ -403,6 +391,18 @@ class ProjectsController extends Controller
   ];
 
   /**
+   * Return a list of musician ids and their registration.
+   */
+  const GET_PARTICIPANTS = 'participants';
+
+  /**
+   * Return a list of generated fields, optionally filtered by multiplicity or data-type
+   *
+   * APP_URL/PROJECT_ID/participant-fields?multiplicity=MULT&type=TYPE
+   */
+  const GET_PARTICIPANT_FIELDS = 'participant-fields';
+
+  /**
    * @param int $projectId Entity id.
    *
    * @param string $topic Major topic.
@@ -417,6 +417,7 @@ class ProjectsController extends Controller
   {
     /** @var ProjectService $projectService */
     $projectService = $this->di(ProjectService::class);
+    /** @var Entities\Project $project */
     $project = $projectService->findById($projectId);
     if (empty($project)) {
       return self::grumble($this->l->t('Unable to find project with id "%d".', $projectId));
@@ -424,6 +425,46 @@ class ProjectsController extends Controller
     switch ($topic) {
       case '':
         return self::dataResponse($this->flattenProject($project));
+      case self::GET_PARTICIPANT_FIELDS:
+        $multiplicity = $this->parameterService->getParam('multiplicity');
+        $type = $this->parameterService->getParam('type');
+        $data = [];
+        /** @var Entities\ProjectParticipantField $field */
+        foreach ($project->getParticipantFields() as $field) {
+          $fieldType = $field->getDataType();
+          $fieldMultiplicity = $field->getMultiplicity();
+          if (!empty($type) && $fieldType != $type) {
+            continue;
+          }
+          if (!empty($multiplicity) && $fieldMultiplicity != $multiplicity) {
+            continue;
+          }
+          $data[] = [
+            'id' => $field->getId(),
+            'name' => $field->getName(),
+            'untranslatedName' => $field->getUntranslatedName(),
+            'type' => $fieldType,
+            'multiplicity' => $fieldMultiplicity,
+            // more added later when needed
+          ];
+        }
+        usort($data, fn($a, $b) => strcmp($a['name'], $b['name']));
+        return self::dataResponse($data);
+      case self::GET_PARTICIPANTS:
+        $data = [];
+        /** @var Entities\ProjectParticipant $participant */
+        foreach ($project->getParticipants() as $participant) {
+          $musician = $participant->getMusician();
+          $data[] = [
+            'musicianId' => $musician->getId(),
+            'publicName' => $musician->getPublicName(),
+            'personalPublicName' => $musician->getPublicName(firstNameFirst: true),
+            'registration' => $participant->getRegistration(),
+            'deleted' => $participant->getDeleted() === null ? null : $participant->getDeleted()->format(DateTime::W3C),
+          ];
+        }
+        usort($data, fn($a, $b) => strcmp($a['publicName'], $b['publicName']));
+        return self::dataResponse($data);
       case self::GET_PROJECT_SHARE:
         switch ($subTopic) {
           case ProjectService::FOLDER_TYPE_DOWNLOADS:

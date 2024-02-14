@@ -1,4 +1,9 @@
 <map id="LoginNameSlugHandler" name="LoginNameSlugHandler">
-<area shape="rect" id="node1" title="Gedmo slug&#45;handler which converts." alt="" coords="5,79,164,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="13,5,157,31"/>
+<area shape="rect" id="Node000001" title="Gedmo slug&#45;handler which converts." alt="" coords="53,172,211,199"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,149,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,120,126,170,122,173,91,123"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_gedmo_sluggable_listener.html" title="Sluggable listener wrapper giving access to the app&#45;container." alt="" coords="173,81,339,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,119,151,174,148,169,224,115"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="194,5,318,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="258,47,258,81,253,81,253,47"/>
 </map>

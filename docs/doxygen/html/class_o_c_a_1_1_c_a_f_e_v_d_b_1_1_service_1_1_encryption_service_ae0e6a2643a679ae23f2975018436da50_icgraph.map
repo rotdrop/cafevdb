@@ -1,5 +1,7 @@
 <map id="initAppEncryptionKey" name="initAppEncryptionKey">
-<area shape="rect" id="node1" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="239,5,385,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="144,5,191,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#aa164135a7474a6c9d34b7bee20056a4d" title="{}" alt="" coords="5,5,96,31"/>
+<area shape="rect" id="Node000001" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="236,5,382,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="143,5,188,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,21,188,21,188,16,220,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7ab7de782ea52be1cc9a6ea784aad0a1" title="{}" alt="" coords="5,5,95,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,21,95,21,95,16,127,16"/>
 </map>

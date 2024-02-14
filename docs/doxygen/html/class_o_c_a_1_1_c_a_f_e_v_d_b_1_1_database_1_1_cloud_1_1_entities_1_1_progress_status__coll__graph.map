@@ -1,4 +1,5 @@
 <map id="ProgressStatus" name="ProgressStatus">
-<area shape="rect" id="node1" title="Cloud progress status entity." alt="" coords="5,79,117,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="33,5,89,31"/>
+<area shape="rect" id="Node000001" title="Cloud progress status entity." alt="" coords="5,80,117,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="33,5,89,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,48,64,80,58,80,58,48"/>
 </map>

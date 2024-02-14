@@ -1,5 +1,7 @@
 <map id="logQuery" name="logQuery">
-<area shape="rect" id="node1" title="{}" alt="" coords="5,5,80,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#a7929c701d876cbbef86103e9ab6c8b33" title="{}" alt="" coords="128,5,200,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#af811153ae1e03339da641bbc02ff09ac" title=" " alt="" coords="248,5,323,31"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,5,79,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#a7929c701d876cbbef86103e9ab6c8b33" title="{}" alt="" coords="127,5,198,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,16,111,16,111,21,79,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#af811153ae1e03339da641bbc02ff09ac" title=" " alt="" coords="246,5,320,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="198,16,230,16,230,21,198,21"/>
 </map>

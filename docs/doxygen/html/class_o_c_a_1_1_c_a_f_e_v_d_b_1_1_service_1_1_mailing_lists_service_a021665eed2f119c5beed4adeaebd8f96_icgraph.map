@@ -1,4 +1,5 @@
 <map id="getServerConfig" name="getServerConfig">
-<area shape="rect" id="node1" title="Obtain the server configuration, this is rather for testing in order to check the basic connectivity." alt="" coords="148,5,264,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a8d5de58abda0e098176b9382cd8e016e" title="Check whether the mailing&#45;lists server is configured and reachable." alt="" coords="5,5,100,31"/>
+<area shape="rect" id="Node000001" title="Obtain the server configuration, this is rather for testing in order to check the basic connectivity." alt="" coords="147,5,262,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a8d5de58abda0e098176b9382cd8e016e" title="Check whether the mailing&#45;lists server is configured and reachable." alt="" coords="5,5,99,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,21,99,21,99,16,131,16"/>
 </map>

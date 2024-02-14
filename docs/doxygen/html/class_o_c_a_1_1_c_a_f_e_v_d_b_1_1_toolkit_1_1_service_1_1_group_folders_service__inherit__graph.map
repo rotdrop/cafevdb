@@ -1,0 +1,7 @@
+<map id="GroupFoldersService" name="GroupFoldersService">
+<area shape="rect" id="Node000001" title="Mis&#45;use the internal services of the groupfolders app in order to automatically generate group&#45;shared..." alt="" coords="81,5,225,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html" title="Toolkit forwarder service in order to have the app&#39;s L10N instance." alt="" coords="5,80,149,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,45,92,82,88,78,127,41"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_service.html" title="Place server&#45;to&#45;server AJAX calls." alt="" coords="173,80,288,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,41,219,78,215,82,176,45"/>
+</map>

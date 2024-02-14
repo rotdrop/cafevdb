@@ -1,6 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae97923d290216eb1b394ab896c863603", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aa112e69f9313a73ec7816756ef2933de", null ],
     [ "addEmailAlias", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a7256e710e9b1bc7d7a4aa0f6d693f6ac", null ],
     [ "combinedVersion", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4cd47312ba83aa234d85affa07109dc2", null ],
     [ "configureAnnouncementsList", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b", null ],
@@ -30,6 +30,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service =
     [ "setSubscriptionPreferences", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c", null ],
     [ "subscribe", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd", null ],
     [ "templateFolderPath", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adf33bfd785d7a66f647d26ea66770ab2", null ],
+    [ "translationHack", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4785a5297f434973cc0bbef2a45c32c5", null ],
     [ "unsubscribe", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adb5ee6484051ff49357847bc6b203409", null ],
     [ "$listIdByFqdn", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a7d5d48fe6899b6abaf75909b7577fecc", null ],
     [ "$selfLinkBySubscription", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a1953bcd23782987365bc559d0e491c31", null ]

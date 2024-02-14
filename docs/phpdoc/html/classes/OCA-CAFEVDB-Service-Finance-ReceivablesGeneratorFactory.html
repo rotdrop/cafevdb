@@ -113,7 +113,7 @@
     
             <span class="phpdocumentor-element__extends">
             Uses
-                            <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html"><abbr title="\OCA\CAFEVDB\Traits\EntityManagerTrait">EntityManagerTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -176,25 +176,13 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_databaseRepository">$databaseRepository</a>
+    <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_l">$l</a>
     <span>
-                        &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository">EntityRepository</abbr>            </span>
+                        &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_entityClassName">$entityClassName</a>
-    <span>
-                        &nbsp;: string            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_entityManager">$entityManager</a>
-    <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a>            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger</a>
+    <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
@@ -295,210 +283,12 @@ generator class-name is stored in the data-option with Uuid::NIL.</dd>
 <dd>Log a warning message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_classMetadata">classMetadata()</a>
-    <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
-</dt>
-<dd>Obtain the class meta-data for the given or most recently used
-entity class.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_clearDatabaseRepository">clearDatabaseRepository()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-<dd>Clear the cache.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_columnNames">columnNames()</a>
-    <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
-</dt>
-<dd>Obtain the column names of the currently used database entity.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_containsEntity">containsEntity()</a>
-    <span>
-                                &nbsp;: bool    </span>
-</dt>
-<dd>Forward to EntityManager::contains().</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_count">count()</a>
-    <span>
-                                &nbsp;: int    </span>
-</dt>
-<dd>Counts entities by a set of criteria.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_createNamedQuery">createNamedQuery()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Traits\Query">Query</abbr>    </span>
-</dt>
-<dd>Creates a Query from a named query.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_createQuery">createQuery()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Traits\Query">Query</abbr>    </span>
-</dt>
-<dd>Creates a new Query object.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteria">criteria()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr>    </span>
-</dt>
-<dd>Convenience function to generate Collections\Criteria</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteriaExpr">criteriaExpr()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ExpressionBuilder">ExpressionBuilder</abbr>    </span>
-</dt>
-<dd>Convenience function to generate Collections\ExpressionBuilder</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteriaWhere">criteriaWhere()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr>    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_disableFilter">disableFilter()</a>
-    <span>
-                                &nbsp;: bool    </span>
-</dt>
-<dd>Disable the given filter. In contrast to the upstream-method does
-not throw an exception if the filter is not enabled.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_enableFilter">enableFilter()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr>    </span>
-</dt>
-<dd>Enable the given filter.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_expr">expr()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_find">find()</a>
-    <span>
-                                &nbsp;: object|null    </span>
-</dt>
-<dd>Finds an entity by its primary key / identifier.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findAll">findAll()</a>
-    <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
-</dt>
-<dd>Finds all entities in the repository.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findBy">findBy()</a>
-    <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
-</dt>
-<dd>Finds entities by a set of criteria.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findEntity">findEntity()</a>
-    <span>
-                                &nbsp;: object|null    </span>
-</dt>
-<dd>Finds an entity by its primary key / identifier.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findOneBy">findOneBy()</a>
-    <span>
-                                &nbsp;: object|null    </span>
-</dt>
-<dd>Finds a single entity by a set of criteria.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_flush">flush()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-<dd>Flushes all changes to objects that have been queued up to now to the database.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_getDatabaseRepository">getDatabaseRepository()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository">EntityRepository</abbr>    </span>
-</dt>
-<dd>Set and get the given name as the current database target entity.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_getReference">getReference()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-<dd>Gets a reference to the entity identified by the given type and identifier
-without actually loading it, if the entity is not yet loaded.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
 understands those.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_matching">matching()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
-</dt>
-<dd>Select all elements from a selectable that match the expression and
-return a new collection containing these elements.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_persist">persist()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-<dd>Tells the EntityManager to make an instance managed and persistent.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_property">property()</a>
-    <span>
-                                &nbsp;: string    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_queryBuilder">queryBuilder()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCA\CAFEVDB\Traits\QueryBuilder">QueryBuilder</abbr>    </span>
-</dt>
-<dd>Create a QueryBuilder instance</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_refreshEntity">refreshEntity()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-<dd>Forward to EntityManager::refresh(), return the refreshed entity in order
-to allow for &quot;-&gt;&quot; chaining.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_remove">remove()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-<dd>Removes an entity instance.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_setDatabaseRepository">setDatabaseRepository()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-<dd>Set the given name as the current database target entity.</dd>
 
     </dl>
 
@@ -522,9 +312,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -551,9 +341,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -586,94 +376,26 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
             -protected
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="property_databaseRepository">
-        $databaseRepository
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_databaseRepository" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_l">
+        $l
+        <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_l" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository">EntityRepository</abbr></span>
-    <span class="phpdocumentor-signature__name">$databaseRepository</span>
-    </code>
-
-    
-    
-    
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="property_entityClassName">
-        $entityClassName
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_entityClassName" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">44</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">string</span>
-    <span class="phpdocumentor-signature__name">$entityClassName</span>
-    </code>
-
-    
-    
-    
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="property_entityManager">
-        $entityManager
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_entityManager" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">41</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Database-EntityManager.html"><abbr title="\OCA\CAFEVDB\Database\EntityManager">EntityManager</abbr></a></span>
-    <span class="phpdocumentor-signature__name">$entityManager</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
+    <span class="phpdocumentor-signature__name">$l</span>
     </code>
 
     
@@ -690,17 +412,17 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_logger">
         $logger
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -732,9 +454,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -766,9 +488,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -807,15 +529,15 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -837,7 +559,7 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$l10n</span>
+                <span class="phpdocumentor-signature__argument__name">$l</span>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
@@ -863,9 +585,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -909,9 +631,9 @@ to allow for &quot;-&gt;&quot; chaining.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/Finance/ReceivablesGeneratorFactory.php"><a href="files/service-finance-receivablesgeneratorfactory.html"><abbr title="Service/Finance/ReceivablesGeneratorFactory.php">ReceivablesGeneratorFactory.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Construct the generator for the given entity. The
@@ -919,7 +641,7 @@ generator class-name is stored in the data-option with Uuid::NIL.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getGenerator</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$serviceFeeField</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$progressToken</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Service-Finance-IRecurringReceivablesGenerator.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator">IRecurringReceivablesGenerator</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">getGenerator</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-ProjectParticipantField.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField">ProjectParticipantField</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$serviceFeeField</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Common-IProgressStatus.html"><abbr title="\OCA\CAFEVDB\Common\IProgressStatus">IProgressStatus</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$progressStatus</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Service-Finance-IRecurringReceivablesGenerator.html"><abbr title="\OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator">IRecurringReceivablesGenerator</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -934,12 +656,12 @@ generator class-name is stored in the data-option with Uuid::NIL.</p>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$progressToken</span>
-                : <span class="phpdocumentor-signature__argument__return-type">null|mixed</span>
+                <span class="phpdocumentor-signature__argument__name">$progressStatus</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Common-IProgressStatus.html"><abbr title="\OCA\CAFEVDB\Common\IProgressStatus">IProgressStatus</abbr></a></span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional id for communicating
-progress-status to the frontend.</p>
+                    <section class="phpdocumentor-description"><p>Optional progress
+status class in order to give feedback during long running updates.</p>
 </section>
 
             </dd>
@@ -1489,1156 +1211,6 @@ progress-status to the frontend.</p>
             -protected
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_classMetadata">
-        classMetadata()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_classMetadata" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">463</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.463" class="phpdocumentor-element-found-in__source" data-line="463" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Obtain the class meta-data for the given or most recently used
-entity class.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">classMetadata</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The database entity to use.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The class meta-data</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_clearDatabaseRepository">
-        clearDatabaseRepository()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_clearDatabaseRepository" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">54</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Clear the cache.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">clearDatabaseRepository</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_columnNames">
-        columnNames()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_columnNames" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">446</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.446" class="phpdocumentor-element-found-in__source" data-line="446" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Obtain the column names of the currently used database entity.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">columnNames</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The database entity to use.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The column names.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_containsEntity">
-        containsEntity()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_containsEntity" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">320</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.320" class="phpdocumentor-element-found-in__source" data-line="320" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Forward to EntityManager::contains().</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">containsEntity</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entity</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">bool</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_count">
-        count()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_count" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">434</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.434" class="phpdocumentor-element-found-in__source" data-line="434" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Counts entities by a set of criteria.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">count</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$criteria</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The database entity to use.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">int</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The cardinality of the objects that match the given criteria.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_createNamedQuery">
-        createNamedQuery()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_createNamedQuery" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">101</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Creates a Query from a named query.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">createNamedQuery</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Traits\Query">Query</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$name</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Traits\Query">Query</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_createQuery">
-        createQuery()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_createQuery" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">113</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Creates a new Query object.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">createQuery</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dql</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Traits\Query">Query</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$dql</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The DQL string.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Traits\Query">Query</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_criteria">
-        criteria()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteria" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">392</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.392" class="phpdocumentor-element-found-in__source" data-line="392" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Convenience function to generate Collections\Criteria</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">criteria</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_criteriaExpr">
-        criteriaExpr()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteriaExpr" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">402</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.402" class="phpdocumentor-element-found-in__source" data-line="402" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Convenience function to generate Collections\ExpressionBuilder</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">criteriaExpr</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ExpressionBuilder">ExpressionBuilder</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ExpressionBuilder">ExpressionBuilder</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                    -static                    "
->
-    <h4 class="phpdocumentor-element__name" id="method_criteriaWhere">
-        criteriaWhere()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteriaWhere" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">414</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.414" class="phpdocumentor-element-found-in__source" data-line="414" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">criteriaWhere</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$arrayCriteria</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$arrayCriteria</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteriaWhere#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="classes/OCA-CAFEVDB-Database-Doctrine-Util.html#method_criteriaWhere"><abbr title="\OCA\CAFEVDB\Database\Doctrine\Util::criteriaWhere()">Util::criteriaWhere()</abbr></a></span>
-                                        
-                                             
-                                    </dd>
-                                            </dl>
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_disableFilter">
-        disableFilter()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_disableFilter" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">363</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.363" class="phpdocumentor-element-found-in__source" data-line="363" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Disable the given filter. In contrast to the upstream-method does
-not throw an exception if the filter is not enabled.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">disableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$filterName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">bool</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The previous isEnabled() state of the filter.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_enableFilter">
-        enableFilter()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_enableFilter" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">348</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.348" class="phpdocumentor-element-found-in__source" data-line="348" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Enable the given filter.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">enableFilter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$filterName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$state</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">true</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter">SQLFilter</abbr></span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The enabled filter.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_expr">
-        expr()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_expr" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">420</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">expr</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_find">
-        find()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_find" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">261</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.261" class="phpdocumentor-element-found-in__source" data-line="261" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">find</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lockMode</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lockVersion</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">object|null</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$id</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The identifier.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$lockMode</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants
-or NULL if no specific lock mode should be used
-during the search.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$lockVersion</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The lock version.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">object|null</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The entity instance or NULL if the entity can not be found.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_findAll">
-        findAll()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findAll" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">244</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Finds all entities in the repository.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">findAll</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The entities.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_findBy">
-        findBy()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findBy" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">295</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.295" class="phpdocumentor-element-found-in__source" data-line="295" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Finds entities by a set of criteria.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">findBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$offset</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$criteria</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$orderBy</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$limit</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$offset</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The objects.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_findEntity">
-        findEntity()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findEntity" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">280</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Finds an entity by its primary key / identifier.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">findEntity</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lockMode</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lockVersion</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">object|null</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$id</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The identifier.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$lockMode</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>One of the \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\LockMode::* constants
-or NULL if no specific lock mode should be used
-during the search.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$lockVersion</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The lock version.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">object|null</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The entity instance or NULL if the entity can not be found.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_findOneBy">
-        findOneBy()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findOneBy" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">308</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.308" class="phpdocumentor-element-found-in__source" data-line="308" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Finds a single entity by a set of criteria.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">findOneBy</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$orderBy</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">object|null</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$criteria</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$orderBy</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">object|null</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The entity instance or NULL if the entity can not be found.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_flush">
-        flush()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_flush" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">229</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.229" class="phpdocumentor-element-found-in__source" data-line="229" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Flushes all changes to objects that have been queued up to now to the database.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">flush</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">null|object|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-        <section class="phpdocumentor-description"><p>This effectively synchronizes the in-memory state of managed objects with the
-database.</p>
-<p>If an entity is explicitly passed to this method only this entity and
-the cascade-persist semantics + scheduled inserts/removals are synchronized.</p>
-</section>
-
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entity</span>
-                : <span class="phpdocumentor-signature__argument__return-type">null|object|array&lt;string|int, mixed&gt;</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_flush#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\OptimisticLockException">OptimisticLockException</abbr></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>If a version check on an entity that
-makes use of optimistic locking fails.</p>
-</section>
-
-                                    </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Traits\ORMException">ORMException</abbr></span>
-                                                            
-                                             
-                                    </dd>
-                                            </dl>
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_getDatabaseRepository">
-        getDatabaseRepository()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_getDatabaseRepository" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">81</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Set and get the given name as the current database target entity.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">getDatabaseRepository</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository">EntityRepository</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityRepository">EntityRepository</abbr></span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>The repository for the current target
-database entity.</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_getReference">
-        getReference()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_getReference" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">187</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Gets a reference to the entity identified by the given type and identifier
-without actually loading it, if the entity is not yet loaded.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">getReference</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The name of the entity type.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$key</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The entity reference.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_getReference#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Traits\ORMException">ORMException</abbr></span>
-                                                            
-                                             
-                                    </dd>
-                                            </dl>
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
     <h4 class="phpdocumentor-element__name" id="method_mapLogLevels">
         mapLogLevels()
         <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2667,429 +1239,6 @@ understands those.</p>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$level</span>
                 : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_matching">
-        matching()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_matching" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">382</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.382" class="phpdocumentor-element-found-in__source" data-line="382" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Select all elements from a selectable that match the expression and
-return a new collection containing these elements.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">matching</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$criteria</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$criteria</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Criteria">Criteria</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_persist">
-        persist()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_persist" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">208</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.208" class="phpdocumentor-element-found-in__source" data-line="208" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Tells the EntityManager to make an instance managed and persistent.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">persist</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-        <section class="phpdocumentor-description"><p>The entity will be entered into the database at or before transaction
-commit or as a result of the flush operation.</p>
-<p>NOTE: The persist operation always considers entities that are not yet known to
-this EntityManager as NEW. Do not pass detached entities to the persist operation.</p>
-</section>
-
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entity</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The instance to make managed and persistent.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_persist#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Traits\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></span>
-                                                            
-                                             
-                                    </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Traits\ORMException">ORMException</abbr></span>
-                                                            
-                                             
-                                    </dd>
-                                            </dl>
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_property">
-        property()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_property" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">479</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.479" class="phpdocumentor-element-found-in__source" data-line="479" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">property</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$columnName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$columnName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_property#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Database\EntityManager::property">EntityManager::property</abbr></span>
-                                        
-                                             
-                                    </dd>
-                                            </dl>
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_queryBuilder">
-        queryBuilder()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_queryBuilder" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">123</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Create a QueryBuilder instance</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">queryBuilder</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Traits\QueryBuilder">QueryBuilder</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Traits\QueryBuilder">QueryBuilder</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_refreshEntity">
-        refreshEntity()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_refreshEntity" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">333</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Forward to EntityManager::refresh(), return the refreshed entity in order
-to allow for &quot;-&gt;&quot; chaining.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">refreshEntity</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entity</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">mixed</span>
-                    &mdash;
-                <section class="phpdocumentor-description"><p>$entity</p>
-</section>
-
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_remove">
-        remove()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_remove" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">151</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.151" class="phpdocumentor-element-found-in__source" data-line="151" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Removes an entity instance.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">remove</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entity</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$flush</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$hard</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$soft</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-        <section class="phpdocumentor-description"><p>A removed entity will be removed from the database at or before transaction commit
-or as a result of the flush operation.</p>
-</section>
-
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entity</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The entity instance to remove.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$flush</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Initiate a flush if true.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$hard</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Issue a double remove: if $entity is managed by
-Gedmo\SoftDeleteable then this will &quot;hard&quot; (read: finally) delete
-the entity unless it is tagged as &quot;in use&quot; by other means.</p>
-</section>
-
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$soft</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>For entities managed by Gedmo\SoftDeleteable
-first check if this entity is already tagged as &quot;soft deleted&quot;
-and if so do nothing.</p>
-</section>
-
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_remove#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Traits\ORMInvalidArgumentException">ORMInvalidArgumentException</abbr></span>
-                                                            
-                                             
-                                    </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><abbr title="\OCA\CAFEVDB\Traits\ORMException">ORMException</abbr></span>
-                                                            
-                                             
-                                    </dd>
-                                            </dl>
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_setDatabaseRepository">
-        setDatabaseRepository()
-        <a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_setDatabaseRepository" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/EntityManagerTrait.php"><a href="files/traits-entitymanagertrait.html"><abbr title="Traits/EntityManagerTrait.php">EntityManagerTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">67</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Set the given name as the current database target entity.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">setDatabaseRepository</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$entityClassName</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$entityClassName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -3221,10 +1370,8 @@ and if so do nothing.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_databaseRepository">$databaseRepository<a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_entityClassName">$entityClassName<a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#property_entityManager">$entityManager<a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_l">$l<a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_appContainer">$appContainer<a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html#property_generators">$generators<a href="classes/OCA-CAFEVDB-Service-Finance-ReceivablesGeneratorFactory.html"></li>
                                             </ul>
@@ -3244,35 +1391,7 @@ and if so do nothing.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logger">logger()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_classMetadata">classMetadata()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_clearDatabaseRepository">clearDatabaseRepository()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_columnNames">columnNames()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_containsEntity">containsEntity()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_count">count()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_createNamedQuery">createNamedQuery()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_createQuery">createQuery()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteria">criteria()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteriaExpr">criteriaExpr()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_criteriaWhere">criteriaWhere()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_disableFilter">disableFilter()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_enableFilter">enableFilter()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_expr">expr()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_find">find()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findAll">findAll()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findBy">findBy()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findEntity">findEntity()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_findOneBy">findOneBy()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_flush">flush()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_getDatabaseRepository">getDatabaseRepository()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_getReference">getReference()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_matching">matching()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_persist">persist()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_property">property()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_queryBuilder">queryBuilder()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_refreshEntity">refreshEntity()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_remove">remove()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-EntityManagerTrait.html#method_setDatabaseRepository">setDatabaseRepository()</a></li>
                                     </ul>
             </li>
                     </ul>

@@ -8,6 +8,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "getPayments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#ae8d8c6baf83b3e602ac4fcb4620f2dad", null ],
     [ "getProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a5cb158509764d3c0103ece1443f4ee12", null ],
     [ "getProjectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a39a8fd67a14baf0ae8c070ae5022b95c", null ],
+    [ "getPublicName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a2289734c2bdef623da274cd90a2b33f1", null ],
     [ "getRegistration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a2537b6b5b8c5bbad2d80f2f98c9dcd21", null ],
     [ "setDatabaseDocuments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aa3dc79bf58096d6a89838bbb60637342", null ],
     [ "setMusician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#af8edf80cab80ad212b3ef897fe7e3cc9", null ],
@@ -21,7 +22,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "$musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a402a1261eca63ebf5ef4c4af11c1a648", null ],
     [ "$participantFieldsData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#aece492efa5afc59ab224bd5bc3da5e39", null ],
     [ "$payments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a6875ed146a4421bf4d344c51b3119a29", null ],
-    [ "$preUpdateValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#abd1ff190c2c105b5bb3fa350b120fca4", null ],
     [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a0b225308f220616a04f6afc6e41bf50d", null ],
     [ "$projectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#accbaa0fdbf165ec3872151c706374d70", null ],
     [ "$registration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant.html#a9fe7e6924eb25063343eaeefb464ea9b", null ]

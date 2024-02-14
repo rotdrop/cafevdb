@@ -1,9 +1,8 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html#a8aa36f804f18935933c38958848735e0", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html#aa24121cc44f536eff1bdabc04aab44de", null ],
     [ "handlesUrlization", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html#a1c822e14cd92d08288f8781031c32f7e", null ],
     [ "onChangeDecision", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html#a62b51492ebe632d5dad310742c34c22c", null ],
     [ "postSlugBuild", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html#a4f1a9057d3b8bbfd1cbf44089a85915d", null ],
-    [ "validate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html#aab4b7e33a20000fca57c67307774ddc9", null ],
-    [ "$sluggable", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html#a5ad0a1ea1d00c05d1c399397d25cbd6b", null ]
+    [ "validate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html#aab4b7e33a20000fca57c67307774ddc9", null ]
 ];

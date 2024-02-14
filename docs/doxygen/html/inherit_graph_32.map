@@ -1,5 +1,67 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_crypto_factory_interface.html" title="Interface for crypto&#45;factory." alt="" coords="5,31,161,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_crypto_factory.html" title="Factory using the Nextcloud crypto routines as backend." alt="" coords="209,5,348,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_crypto_factory.html" title="Factory class using Halite as encryption backend." alt="" coords="209,55,348,80"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,791,83,817"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller.html" title="AJAX end&#45;points for admin setttings." alt="" coords="154,5,316,32"/>
+<area shape="poly" id="edge37_Node000000_Node000001" title=" " alt="" coords="44,775,53,613,70,381,95,163,111,85,119,59,129,42,152,26,155,30,133,46,124,61,116,87,100,164,75,381,58,613,49,775"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller.html" title="Run background&#45;jobs triggered by AJAX pings from the front&#45;end." alt="" coords="151,56,319,83"/>
+<area shape="poly" id="edge38_Node000000_Node000002" title=" " alt="" coords="44,775,54,622,72,407,97,205,112,133,120,108,129,93,149,78,152,82,133,96,125,111,117,134,102,206,77,407,59,623,50,775"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_blog_controller.html" title="AJAX end&#45;points for the db&#45;app blog." alt="" coords="183,107,287,133"/>
+<area shape="poly" id="edge39_Node000000_Node000003" title=" " alt="" coords="42,775,43,642,53,453,63,356,79,267,100,194,113,165,129,143,153,126,182,118,184,123,156,131,133,147,118,168,105,196,84,268,69,357,58,453,49,642,48,775"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_contacts_controller.html" title="Make the stored personal data accessible for the web&#45;interface." alt="" coords="170,157,300,184"/>
+<area shape="poly" id="edge40_Node000000_Node000004" title=" " alt="" coords="43,775,45,651,56,477,67,388,82,307,102,240,115,214,129,194,147,180,168,172,170,177,149,185,133,198,119,217,107,242,87,308,72,389,61,477,50,651,48,775"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_crypto_controller.html" title="Encryption/Decryption AJAX end&#45;points." alt="" coords="177,208,293,235"/>
+<area shape="poly" id="edge41_Node000000_Node000005" title=" " alt="" coords="43,775,47,660,59,502,70,421,85,347,104,287,116,263,129,245,150,229,175,221,177,226,153,234,133,249,120,266,109,289,90,349,75,422,65,502,52,660,48,775"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_csp_violation_controller.html" title="AJAX endpoints for reporting CSP violation errors." alt="" coords="159,259,311,285"/>
+<area shape="poly" id="edge42_Node000000_Node000006" title=" " alt="" coords="43,775,49,670,62,526,73,454,88,387,106,333,129,296,142,285,158,277,160,282,145,289,133,299,111,335,93,389,79,455,68,527,54,670,49,775"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_downloads_controller.html" title="AJAX end&#45;points for download requests independent from the cloud file&#45;system." alt="" coords="164,309,306,336"/>
+<area shape="poly" id="edge43_Node000000_Node000007" title=" " alt="" coords="44,775,51,679,66,551,77,486,91,428,108,379,129,346,144,334,162,326,165,331,147,339,133,350,113,382,96,429,82,487,71,552,56,680,49,776"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html" title="Controller class for the mass&#45;email form." alt="" coords="165,360,305,387"/>
+<area shape="poly" id="edge44_Node000000_Node000008" title=" " alt="" coords="45,775,53,689,69,576,94,468,110,426,129,397,145,385,163,377,165,382,147,389,133,400,115,428,99,470,75,577,59,689,50,776"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_images_controller.html" title="AJAX end&#45;point for fetch per&#45;user photos." alt="" coords="175,411,295,437"/>
+<area shape="poly" id="edge45_Node000000_Node000009" title=" " alt="" coords="46,775,56,699,73,601,97,508,112,472,129,447,150,433,173,425,175,430,152,438,133,451,117,475,102,510,78,602,61,699,51,776"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_instrument_insurance_controller.html" title="AJAX end&#45;points for instrument insurances." alt="" coords="137,461,333,488"/>
+<area shape="poly" id="edge46_Node000000_Node000010" title=" " alt="" coords="42,775,44,717,56,642,67,603,82,565,102,529,129,498,145,486,148,491,132,502,107,532,87,567,72,605,61,644,50,717,47,775"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html" title="Serves the requests issued by the old OC v8 event popups." alt="" coords="155,512,315,539"/>
+<area shape="poly" id="edge47_Node000000_Node000011" title=" " alt="" coords="44,775,49,726,63,665,88,602,106,574,129,549,153,534,155,538,132,553,111,577,93,605,68,666,55,726,49,775"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_mail_merge_controller.html" title="Make the stored personal data accessible for the web&#45;interface." alt="" coords="166,563,304,589"/>
+<area shape="poly" id="edge48_Node000000_Node000012" title=" " alt="" coords="47,775,55,735,70,688,94,640,110,618,129,599,146,588,165,581,167,586,148,593,132,603,114,622,99,643,75,690,60,737,52,776"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_mailing_lists_controller.html" title="Handle subscription management callbacks." alt="" coords="162,613,308,640"/>
+<area shape="poly" id="edge49_Node000000_Node000013" title=" " alt="" coords="51,775,79,711,101,678,129,650,160,634,163,639,132,654,105,681,83,714,56,777"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_migrations_controller.html" title="AJAX end&#45;points for database migrations." alt="" coords="166,664,304,691"/>
+<area shape="poly" id="edge50_Node000000_Node000014" title=" " alt="" coords="59,776,88,736,108,717,129,700,165,685,167,690,132,705,111,721,92,740,63,779"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musician_validation_controller.html" title="Validation controller for some personal input fields." alt="" coords="142,715,328,741"/>
+<area shape="poly" id="edge51_Node000000_Node000015" title=" " alt="" coords="76,780,130,751,164,739,166,744,132,756,79,784"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musicians_controller.html" title="Make the stored personal data accessible for the web&#45;interface." alt="" coords="167,765,303,792"/>
+<area shape="poly" id="edge52_Node000000_Node000016" title=" " alt="" coords="97,794,166,785,167,790,98,800"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html" title="Main UI entry point providing the front pages." alt="" coords="181,816,289,843"/>
+<area shape="poly" id="edge53_Node000000_Node000017" title=" " alt="" coords="98,808,181,820,180,825,98,814"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_payments_controller.html" title="AJAX endpoint to support maintenance of payments." alt="" coords="167,867,303,893"/>
+<area shape="poly" id="edge54_Node000000_Node000018" title=" " alt="" coords="79,824,132,852,167,864,165,869,130,857,76,828"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller.html" title="AJAX end&#45;points for personal settings." alt="" coords="147,917,323,944"/>
+<area shape="poly" id="edge55_Node000000_Node000019" title=" " alt="" coords="63,829,92,868,111,887,132,903,156,914,153,919,129,908,108,891,88,872,59,832"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_pme_table_controller.html" title="AJAX backends for legacy PME table stuff." alt="" coords="167,968,303,995"/>
+<area shape="poly" id="edge56_Node000000_Node000020" title=" " alt="" coords="56,831,83,894,105,927,132,954,149,964,168,971,166,976,147,969,129,958,101,930,79,897,51,833"/>
+<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html" title="AJAX end&#45;point for progress status." alt="" coords="151,1019,319,1045"/>
+<area shape="poly" id="edge57_Node000000_Node000021" title=" " alt="" coords="52,832,60,871,75,918,99,965,114,986,132,1005,152,1017,149,1022,129,1009,110,990,94,968,70,920,55,873,47,833"/>
+<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html" title="AJAX end&#45;points to manage events linked to projects." alt="" coords="155,1069,315,1096"/>
+<area shape="poly" id="edge58_Node000000_Node000022" title=" " alt="" coords="49,833,55,882,68,942,93,1003,111,1031,132,1055,156,1070,153,1074,129,1059,106,1034,88,1006,63,943,49,882,44,833"/>
+<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_participant_fields_controller.html" title="Ajax end&#45;point to support the definition of project&#45;participant fields." alt="" coords="155,1120,315,1163"/>
+<area shape="poly" id="edge59_Node000000_Node000023" title=" " alt="" coords="48,833,51,890,63,963,73,1002,88,1040,108,1075,133,1106,156,1123,153,1127,129,1110,103,1078,83,1042,68,1003,57,964,45,890,42,833"/>
+<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_participants_controller.html" title="AJAX end&#45;points for project participants." alt="" coords="141,1187,329,1213"/>
+<area shape="poly" id="edge60_Node000000_Node000024" title=" " alt="" coords="51,832,60,912,77,1014,101,1111,116,1148,133,1173,148,1184,144,1188,129,1176,111,1150,96,1112,72,1015,55,913,45,833"/>
+<area shape="rect" id="Node000025" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_web_pages_controller.html" title="AJAX end&#45;points to manage the web&#45;pages via the CMS." alt="" coords="144,1237,326,1264"/>
+<area shape="poly" id="edge61_Node000000_Node000025" title=" " alt="" coords="50,832,58,922,73,1039,98,1151,114,1194,133,1224,147,1235,144,1239,129,1227,109,1197,93,1153,68,1040,53,922,45,833"/>
+<area shape="rect" id="Node000026" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html" title="AJAX controller for projects." alt="" coords="172,1288,298,1315"/>
+<area shape="poly" id="edge62_Node000000_Node000026" title=" " alt="" coords="49,832,56,931,70,1064,81,1131,95,1191,112,1241,133,1274,151,1288,173,1295,171,1300,148,1292,129,1278,107,1243,90,1193,76,1132,65,1065,50,932,44,833"/>
+<area shape="rect" id="Node000027" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_sepa_bulk_transactions_controller.html" title="AJAX backend for managing bank bulk transactions." alt="" coords="131,1339,339,1365"/>
+<area shape="poly" id="edge63_Node000000_Node000027" title=" " alt="" coords="49,833,54,941,67,1089,78,1164,92,1232,110,1287,133,1325,147,1336,144,1340,129,1328,105,1290,87,1233,72,1165,61,1090,48,942,43,833"/>
+<area shape="rect" id="Node000028" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_sepa_debit_mandates_controller.html" title="AJAX endpoints for debit mandates." alt="" coords="137,1389,333,1416"/>
+<area shape="poly" id="edge64_Node000000_Node000028" title=" " alt="" coords="48,833,52,951,64,1114,74,1197,89,1272,108,1334,120,1358,133,1376,146,1387,143,1391,129,1379,115,1360,103,1336,84,1273,69,1198,58,1114,46,951,43,833"/>
+<area shape="rect" id="Node000029" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_tax_exemption_notices_controller.html" title="AJAX endpoint to support maintenance of tax exemption notices." alt="" coords="132,1440,338,1467"/>
+<area shape="poly" id="edge65_Node000000_Node000029" title=" " alt="" coords="48,833,50,960,60,1138,71,1229,86,1312,106,1380,119,1406,133,1426,146,1437,143,1441,129,1430,114,1409,101,1382,81,1313,66,1230,55,1138,44,960,42,833"/>
+<area shape="rect" id="Node000030" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_tool_tips_controller.html" title="Fetch one or multiple tooltip via AJAX." alt="" coords="172,1491,298,1517"/>
+<area shape="poly" id="edge66_Node000000_Node000030" title=" " alt="" coords="47,833,48,969,57,1163,68,1262,83,1353,105,1427,118,1455,133,1477,150,1490,172,1498,170,1503,148,1495,129,1481,113,1458,100,1429,78,1354,62,1263,52,1163,43,969,42,833"/>
+<area shape="rect" id="Node000031" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_uploads_controller.html" title="Simple upload end&#45;point which moved uploaded file to a temporary location in the app&#45;storage area." alt="" coords="172,1541,298,1568"/>
+<area shape="poly" id="edge67_Node000000_Node000031" title=" " alt="" coords="49,833,59,989,76,1209,101,1416,116,1489,125,1513,133,1528,151,1541,172,1549,171,1554,148,1546,129,1531,120,1515,111,1490,96,1417,71,1210,54,989,44,833"/>
+<area shape="rect" id="Node000032" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_validation_controller.html" title="General data validation controller." alt="" coords="168,1592,302,1619"/>
+<area shape="poly" id="edge68_Node000000_Node000032" title=" " alt="" coords="49,832,58,997,75,1235,86,1353,100,1457,115,1536,124,1563,133,1578,149,1591,169,1599,167,1604,146,1596,129,1582,119,1565,110,1538,95,1458,81,1354,69,1235,53,998,44,833"/>
 </map>

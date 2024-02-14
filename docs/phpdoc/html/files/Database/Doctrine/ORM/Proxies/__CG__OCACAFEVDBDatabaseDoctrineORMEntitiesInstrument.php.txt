@@ -460,6 +460,17 @@ class Instrument extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument 
     /**
      * {@inheritDoc}
      */
+    public function getTranslationChangeSet(string $field): ?array
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTranslationChangeSet', [$field]);
+
+        return parent::getTranslationChangeSet($field);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setDeleted(mixed $deleted = NULL): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Instrument
     {
 

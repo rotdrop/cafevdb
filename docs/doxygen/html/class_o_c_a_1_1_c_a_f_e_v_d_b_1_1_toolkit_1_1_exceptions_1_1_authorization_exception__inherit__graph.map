@@ -1,5 +1,7 @@
 <map id="AuthorizationException" name="AuthorizationException">
-<area shape="rect" id="node1" title="Thrown to signal that somethings needs additional authorization." alt="" coords="5,152,161,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_exception.html" title="Exception class abstaction." alt="" coords="43,79,123,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="43,5,123,31"/>
+<area shape="rect" id="Node000001" title="Thrown to signal that somethings needs additional authorization." alt="" coords="5,155,161,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_exception.html" title="Exception class abstaction." alt="" coords="43,80,123,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,122,86,154,80,154,80,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="43,5,123,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="86,48,86,80,80,80,80,48"/>
 </map>

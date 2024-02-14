@@ -1,5 +1,7 @@
 <map id="getClassBaseName" name="getClassBaseName">
-<area shape="rect" id="node1" title=" " alt="" coords="459,20,597,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="248,5,411,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,13,200,53"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="456,21,594,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="247,5,408,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="440,37,409,37,409,32,440,32"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,13,199,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="231,37,199,37,199,32,231,32"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="getName" name="getName">
-<area shape="rect" id="node1" title=" " alt="" coords="280,20,355,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_file.html#afdeebfe3fcf5806fc79c074a6a3a6eb1" title=" " alt="" coords="5,5,232,60"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="279,21,353,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_file.html#afdeebfe3fcf5806fc79c074a6a3a6eb1" title=" " alt="" coords="5,5,231,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="263,37,231,37,231,32,263,32"/>
 </map>

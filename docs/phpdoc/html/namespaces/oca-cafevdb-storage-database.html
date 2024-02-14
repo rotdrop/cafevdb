@@ -109,6 +109,13 @@
 
 
 
+    <h4 id="toc-interfaces">
+        Interfaces
+        <a href="namespaces/oca-cafevdb-storage-database.html#toc-interfaces" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <dl class="phpdocumentor-table-of-contents">
+                    <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/OCA-CAFEVDB-Storage-Database-ReadMeFactoryInterface.html"><abbr title="\OCA\CAFEVDB\Storage\Database\ReadMeFactoryInterface">ReadMeFactoryInterface</abbr></a></dt><dd>Factory interface for generating in-memory README nodes.</dd>    </dl>
 
     <h4 id="toc-classes">
         Classes
@@ -116,15 +123,15 @@
 
     </h4>
     <dl class="phpdocumentor-table-of-contents">
-                    <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-BankTransactionsStorage.html"><abbr title="\OCA\CAFEVDB\Storage\Database\BankTransactionsStorage">BankTransactionsStorage</abbr></a></dt><dd>Storage implementation for data-base storage, including access to
-encrypted entities.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-DirectoryNode.html"><abbr title="\OCA\CAFEVDB\Storage\Database\DirectoryNode">DirectoryNode</abbr></a></dt><dd>Simplistik directory node holding the basename of the directory and
-an optional minimal directory modification time in order to track
-deletions. Normally the directory modification time is just the
-maximum of the entries. This, however, fails to invalidate the
-file-cache of the cloud in case of deletions.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-Factory.html"><abbr title="\OCA\CAFEVDB\Storage\Database\Factory">Factory</abbr></a></dt><dd>Utility class in order to hide the fancy CTOR pattern of the NC storage
-classes.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-MountProvider.html"><abbr title="\OCA\CAFEVDB\Storage\Database\MountProvider">MountProvider</abbr></a></dt><dd>Mount parts of the database-storage somewhere.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-ParticipantsStorageGenerator.html"><abbr title="\OCA\CAFEVDB\Storage\Database\ParticipantsStorageGenerator">ParticipantsStorageGenerator</abbr></a></dt><dd>Internal wrapper class for a couple of closures.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-ProjectBalanceSupportingDocumentsStorage.html"><abbr title="\OCA\CAFEVDB\Storage\Database\ProjectBalanceSupportingDocumentsStorage">ProjectBalanceSupportingDocumentsStorage</abbr></a></dt><dd>Storage implementation for data-base storage, including access to
+                    <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-AbstractReadMeFactory.html"><abbr title="\OCA\CAFEVDB\Storage\Database\AbstractReadMeFactory">AbstractReadMeFactory</abbr></a></dt><dd>Abstract factory baseclass.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-BankTransactionsStorage.html"><abbr title="\OCA\CAFEVDB\Storage\Database\BankTransactionsStorage">BankTransactionsStorage</abbr></a></dt><dd>Storage implementation for data-base storage, including access to
+encrypted entities.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-EmptyDirectoryNode.html"><abbr title="\OCA\CAFEVDB\Storage\Database\EmptyDirectoryNode">EmptyDirectoryNode</abbr></a></dt><dd>This is a placeholder which appears as top-level directory if the storage
+does not hold any
+entries.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-Factory.html"><abbr title="\OCA\CAFEVDB\Storage\Database\Factory">Factory</abbr></a></dt><dd>Utility class in order to hide the fancy CTOR pattern of the NC storage
+classes.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-InMemoryFileNode.html"><abbr title="\OCA\CAFEVDB\Storage\Database\InMemoryFileNode">InMemoryFileNode</abbr></a></dt><dd>Dummy file node which only resides in memory. Its use currently is to provide automatically generated
+ReadMe files.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-MountProvider.html"><abbr title="\OCA\CAFEVDB\Storage\Database\MountProvider">MountProvider</abbr></a></dt><dd>Mount parts of the database-storage somewhere.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-ProjectBalanceSupportingDocumentsStorage.html"><abbr title="\OCA\CAFEVDB\Storage\Database\ProjectBalanceSupportingDocumentsStorage">ProjectBalanceSupportingDocumentsStorage</abbr></a></dt><dd>Storage implementation for data-base storage, including access to
 encrypted entities.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-ProjectParticipantsStorage.html"><abbr title="\OCA\CAFEVDB\Storage\Database\ProjectParticipantsStorage">ProjectParticipantsStorage</abbr></a></dt><dd>Storage implementation for data-base storage, including access to
-encrypted entities.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-Registration.html"><abbr title="\OCA\CAFEVDB\Storage\Database\Registration">Registration</abbr></a></dt><dd>Register some utiltiy services in order to ease dependency injection.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-Storage.html"><abbr title="\OCA\CAFEVDB\Storage\Database\Storage">Storage</abbr></a></dt><dd>Storage implementation for data-base storage, including access to
+encrypted entities.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-ReadMeFactory.html"><abbr title="\OCA\CAFEVDB\Storage\Database\ReadMeFactory">ReadMeFactory</abbr></a></dt><dd>Generate in-memory README nodes.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-Registration.html"><abbr title="\OCA\CAFEVDB\Storage\Database\Registration">Registration</abbr></a></dt><dd>Register some utiltiy services in order to ease dependency injection.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-Storage.html"><abbr title="\OCA\CAFEVDB\Storage\Database\Storage">Storage</abbr></a></dt><dd>Storage implementation for data-base storage, including access to
+encrypted entities.</dd>            <dt class="phpdocumentor-table-of-contents__entry -class"><a href="classes/OCA-CAFEVDB-Storage-Database-TaxExemptionNoticesStorage.html"><abbr title="\OCA\CAFEVDB\Storage\Database\TaxExemptionNoticesStorage">TaxExemptionNoticesStorage</abbr></a></dt><dd>Storage implementation for data-base storage, including access to
 encrypted entities.</dd>    </dl>
 
     <h4 id="toc-traits">
@@ -248,7 +255,8 @@ locale.</dd>    </dl>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
-                                                                                                    <li><a href="namespaces/oca-cafevdb-storage-database.html#toc-classes">Classes</a></li>
+                                                                                <li><a href="namespaces/oca-cafevdb-storage-database.html#toc-interfaces">Interfaces</a></li>
+                                                            <li><a href="namespaces/oca-cafevdb-storage-database.html#toc-classes">Classes</a></li>
                                                             <li><a href="namespaces/oca-cafevdb-storage-database.html#toc-traits">Traits</a></li>
                                                                                                 </ul>
             </li>

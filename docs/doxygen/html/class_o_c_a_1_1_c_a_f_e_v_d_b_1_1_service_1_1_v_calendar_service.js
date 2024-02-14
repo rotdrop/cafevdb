@@ -1,12 +1,11 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6d7f1257d8169b804bcb8d00394b6fc3", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#adfbe2d1539a4c760a771ceead76daa9b", null ],
     [ "addParticipants", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aabb41dada7b7f42283e1fe61bab0a887", null ],
     [ "addRelations", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ae752a1150511a5891f344e73105d901d", null ],
     [ "addVAlarmsFromRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a349505932cfde0b222b7d7ea55fdcf19", null ],
     [ "createVAlarmFromSeconds", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a682d9e191e5fe8147d2e34456ab59e29", null ],
     [ "createVCalendarFromRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6d34de3f2dd321a10c7d917bac13dd27", null ],
-    [ "createVEventFromRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#af29ef0e454ee9f357ef918f183c5d001", null ],
     [ "createVTodoFromRequest", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6fed837c6f053a8cd036ccaf652739fa", null ],
     [ "getAllVObjects", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a01da57a5398426d6331c35796d471f07", null ],
     [ "getCategories", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ab280ff38a117e881c18075805c4dd50f", null ],

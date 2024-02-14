@@ -1,6 +1,9 @@
 <map id="offsetGet" name="offsetGet">
-<area shape="rect" id="node1" title="{}" alt="" coords="5,31,81,56"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#aad6cdb28c78892f790755af76d01dc4e" title=" " alt="" coords="129,5,229,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a2fa83c64b65bfcd6ae01aa378370f012" title="{}" alt="" coords="133,55,225,80"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a6a9f8143f3725e95dbf7f1ff70c78f94" title="Use reflection inspection to export all of the private keys; automatically called on post&#45;load if the..." alt="" coords="277,55,367,80"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,31,81,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#aad6cdb28c78892f790755af76d01dc4e" title=" " alt="" coords="129,5,228,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,34,113,28,114,33,82,40"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a2fa83c64b65bfcd6ae01aa378370f012" title="{}" alt="" coords="133,56,224,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="82,48,118,55,117,61,81,54"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a6a9f8143f3725e95dbf7f1ff70c78f94" title="Use reflection inspection to export all of the private keys; automatically called on post&#45;load if the..." alt="" coords="276,56,364,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="224,67,260,67,260,72,224,72"/>
 </map>

@@ -1,0 +1,9 @@
+<map id="isNonInteractiveRequest" name="isNonInteractiveRequest">
+<area shape="rect" id="Node000001" title="In order to avoid request ping&#45;pong the auto&#45;login should only be attempted for UI logins." alt="" coords="5,31,171,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="219,31,257,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,41,203,41,203,47,171,47"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="330,5,386,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="257,37,314,25,315,30,258,43"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="305,56,410,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="258,45,291,52,290,58,257,51"/>
+</map>

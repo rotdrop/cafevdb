@@ -1,6 +1,9 @@
 <map id="onProjectUpdated" name="onProjectUpdated">
-<area shape="rect" id="node1" title=" " alt="" coords="5,99,132,124"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#af21741991f3f923a2c6932f3545629bf" title=" " alt="" coords="180,5,344,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#a56d8b5b6d841cbdb23634f7a6e19fd64" title=" " alt="" coords="180,84,344,139"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#aa36d0ad33bee7c190d64f0bfcb4ecb79" title=" " alt="" coords="180,163,344,217"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,104,131,131"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#af21741991f3f923a2c6932f3545629bf" title=" " alt="" coords="179,5,342,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,101,176,68,178,73,102,106"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#a56d8b5b6d841cbdb23634f7a6e19fd64" title=" " alt="" coords="179,88,342,147"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,115,163,115,163,120,131,120"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html#aa36d0ad33bee7c190d64f0bfcb4ecb79" title=" " alt="" coords="179,171,342,229"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="102,129,178,162,176,167,100,134"/>
 </map>

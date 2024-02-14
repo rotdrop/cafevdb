@@ -1,4 +1,5 @@
 <map id="findAll" name="findAll">
-<area shape="rect" id="node1" title="Sort by configured sorting column." alt="" coords="171,5,229,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository.html#a595cec098a39ee84dd5814ae799963bf" title="Fetch a short description for all projects." alt="" coords="5,5,123,31"/>
+<area shape="rect" id="Node000001" title="Sort by configured sorting column." alt="" coords="170,5,227,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository.html#a595cec098a39ee84dd5814ae799963bf" title="Fetch a short description for all projects." alt="" coords="5,5,122,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,21,122,21,122,16,154,16"/>
 </map>

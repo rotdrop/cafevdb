@@ -1,6 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#aedbe7e4eb4663ebadebc04cff5118d09", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#ab14333e224accfd7aaac27e45681e8fd", null ],
     [ "addOperation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#aab9f60dec77a4ef2a6e6da285185427a", null ],
     [ "addSlug", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a8a9d6dd0754451d7214ed760a2179bd4", null ],
     [ "beforeAnythingTrimAnything", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a33ebd2cd145951f1fc62fe8bdb24a315", null ],
@@ -30,6 +30,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians =
     [ "findJoinColumnPivot", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a5974458d91d622f2f455643f17af9417", null ],
     [ "getProjectId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#aa36d0ad33bee7c190d64f0bfcb4ecb79", null ],
     [ "getProjectName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af3ccd0a9156a4b7352208653f18aab6f", null ],
+    [ "getTranslationLanguage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a71f870e11d154559adae09425756b2b6", null ],
     [ "headerText", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#aabe24c55e3f00c5c998a4c6338a413bf", null ],
     [ "joinTableField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a52152c1de369b4179e8e391899eca24a", null ],
     [ "joinTableFieldName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#abe18704ee0189ac55323c93db488770c", null ],
@@ -44,7 +45,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians =
     [ "musicianInProjectSql", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#ae8450fe9b8bad3d89c5170dec6a4877b", null ],
     [ "musicianPublicNameSql", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#ac19ecf103a693d2aae0df7f7bfc845e5", null ],
     [ "navigation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a7c872230ae003c93d82e0e6de31f6212", null ],
-    [ "needPhpSession", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a4971c7a07753f11eb8b95ff168d8be64", null ],
     [ "operation", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a2e0ac1c11cc405e1b4fcb8741f3d7462", null ],
     [ "participantFieldDataTypeNames", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a70922014838dcf52b61a93ee8aa38281", null ],
     [ "participantFieldMultiplicityNames", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a27fdf3b277e6c340b90d611c80a3722e", null ],
@@ -69,7 +69,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians =
     [ "$pmeOptions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a7bad09759b948793e31625e0283fe536", null ],
     [ "$projectMode", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#aa6c0bb0550bfd446f02387b3f75d800e", null ],
     [ "$reloadOuterForm", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a0333ce522a2b3a67d5ce227b35439624", null ],
-    [ "COL_QUOTE", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a1a56b10180eb048c2269a445dabb949a", null ],
     [ "CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#aa4863ddb53a08437d57a2d462e84d3d7", null ],
     [ "JOIN_GROUP_BY", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a658b1331fcfe0b7fe0e0d1a782080020", null ],
     [ "JOIN_MASTER", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#ae6c0e0f0d9a06d9418d229ecbc3f83c3", null ],

@@ -1,0 +1,9 @@
+<map id="getUserPermissions" name="getUserPermissions">
+<area shape="rect" id="Node000001" title="Compute the permission mask for the given or the currently logged&#45;on user." alt="" coords="435,55,574,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7ab7de782ea52be1cc9a6ea784aad0a1" title="{}" alt="" coords="221,5,387,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="419,57,387,51,388,46,420,51"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a59a58baa54c7c125ba10520c48d03116" title="Basic check for authorization." alt="" coords="263,88,345,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="420,85,345,97,344,92,419,79"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#af15e33847e0e97e2289ef69be5d944e3" title="{}" alt="" coords="5,80,173,123"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="248,104,173,104,173,99,248,99"/>
+</map>

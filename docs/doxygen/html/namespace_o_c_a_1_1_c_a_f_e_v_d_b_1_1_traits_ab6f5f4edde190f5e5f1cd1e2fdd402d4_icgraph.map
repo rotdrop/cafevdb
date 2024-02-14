@@ -1,9 +1,15 @@
 <map id="getDatabaseRepository" name="getDatabaseRepository">
-<area shape="rect" id="node1" title="Set and get the given name as the current database target entity." alt="" coords="136,129,295,155"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113" title="Counts entities by a set of criteria." alt="" coords="19,5,74,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a53ac2b252066fd57152201418ca9a238" title="Finds an entity by its primary key / identifier." alt="" coords="25,55,68,80"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af92918b0467da12c739883470b4bcc31" title="Finds all entities in the repository." alt="" coords="17,104,76,129"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a94c8ff9bcf707932a5c13d04d16a8e7f" title="Finds entities by a set of criteria." alt="" coords="17,153,76,179"/>
-<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a25792cc13a33a74c4a8ecc7755fd76bc" title="Finds a single entity by a set of criteria." alt="" coords="5,203,88,228"/>
-<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad9829bdefbdf3098ba512082b136ab4e" title="Select all elements from a selectable that match the expression and return a new collection containin..." alt="" coords="9,252,84,277"/>
+<area shape="rect" id="Node000001" title="Set and get the given name as the current database target entity." alt="" coords="136,132,294,159"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a8e12ef5cafdab7b950132867526d1113" title="Counts entities by a set of criteria." alt="" coords="20,5,73,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,124,86,46,69,35,72,30,89,42,188,120"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a53ac2b252066fd57152201418ca9a238" title="Finds an entity by its primary key / identifier." alt="" coords="25,56,68,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,127,67,81,69,76,170,123"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af92918b0467da12c739883470b4bcc31" title="Finds all entities in the repository." alt="" coords="18,107,75,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="120,134,75,127,76,122,121,128"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a94c8ff9bcf707932a5c13d04d16a8e7f" title="Finds entities by a set of criteria." alt="" coords="17,157,76,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="121,162,77,169,76,164,120,157"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a25792cc13a33a74c4a8ecc7755fd76bc" title="Finds a single entity by a set of criteria." alt="" coords="5,208,88,235"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="170,168,79,210,77,205,168,163"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#ad9829bdefbdf3098ba512082b136ab4e" title="Select all elements from a selectable that match the expression and return a new collection containin..." alt="" coords="9,259,84,285"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="188,171,89,249,72,260,69,256,86,245,185,167"/>
 </map>

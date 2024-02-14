@@ -1,6 +1,9 @@
 <map id="AsymmetricCryptorInterface" name="AsymmetricCryptorInterface">
-<area shape="rect" id="node1" title="Just there in order to branch depending on container specialization." alt="" coords="98,79,285,104"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_asymmetric_cryptor.html" title="Asymmetric encryption using the ParagonIE\Halite library." alt="" coords="5,152,175,177"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_cryptor.html" title="Asymmetric encryption using the OpenSSL extension of PHP." alt="" coords="199,152,389,177"/>
-<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_i_cryptor.html" title="Simple wrapper interface." alt="" coords="157,5,226,31"/>
+<area shape="rect" id="Node000001" title="Just there in order to branch depending on container specialization." alt="" coords="98,80,284,107"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_asymmetric_cryptor.html" title="Asymmetric encryption using the ParagonIE\Halite library." alt="" coords="5,155,174,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,118,109,156,106,152,159,114"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_cryptor.html" title="Asymmetric encryption using the OpenSSL extension of PHP." alt="" coords="198,155,389,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="223,114,277,152,274,156,220,118"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_i_cryptor.html" title="Simple wrapper interface." alt="" coords="157,5,225,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,48,194,80,188,80,188,48"/>
 </map>

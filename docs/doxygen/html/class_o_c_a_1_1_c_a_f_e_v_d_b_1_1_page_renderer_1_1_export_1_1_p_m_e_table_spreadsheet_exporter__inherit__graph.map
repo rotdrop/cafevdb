@@ -1,4 +1,5 @@
 <map id="PMETableSpreadsheetExporter" name="PMETableSpreadsheetExporter">
-<area shape="rect" id="node1" title="Export general PME&#45;tables as spread&#45;sheet." alt="" coords="5,79,209,104"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_export_1_1_abstract_spreadsheet_exporter.html" title="Abstract base class for spread&#45;sheet export." alt="" coords="11,5,204,31"/>
+<area shape="rect" id="Node000001" title="Export general PME&#45;tables as spread&#45;sheet." alt="" coords="5,80,209,107"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_export_1_1_abstract_spreadsheet_exporter.html" title="Abstract base class for spread&#45;sheet export." alt="" coords="11,5,203,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,48,110,80,104,80,104,48"/>
 </map>

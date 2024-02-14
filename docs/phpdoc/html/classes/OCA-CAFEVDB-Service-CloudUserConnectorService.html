@@ -123,9 +123,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/Service/CloudUserConnectorService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/Service/CloudUserConnectorService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Manage database-views and grants in order to selectively provide only the
@@ -211,12 +211,6 @@ neccessary information to the ambient cloud system.</p>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_PARTICIPANT_FIELD_ID_TABLES">PARTICIPANT_FIELD_ID_TABLES</a>
-    <span>
-        &nbsp;= [&#039;ProjectParticipantFields&#039; =&gt; [&#039;joinField&#039; =&gt; &#039;id&#039;, &#039;groupBy&#039; =&gt; [&#039;id&#039;]], &#039;ProjectParticipantFieldsDataOptions&#039; =&gt; [&#039;joinField&#039; =&gt; &#039;field_id&#039;, &#039;groupBy&#039; =&gt; [&#039;field_id&#039;, &#039;key&#039;]]]                            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_PERSONALIZED_PREFIX">PERSONALIZED_PREFIX</a>
     <span>
         &nbsp;= &#039;Personalized&#039;                            </span>
@@ -237,7 +231,7 @@ neccessary information to the ambient cloud system.</p>
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_UNRESTRICTED_TABLES">UNRESTRICTED_TABLES</a>
     <span>
-        &nbsp;= [&#039;Instruments&#039;, &#039;InstrumentFamilies&#039;, &#039;instrument_instrument_family&#039;, &#039;TableFieldTranslations&#039;, &#039;GeoContinents&#039;, &#039;GeoCountries&#039;, &#039;GeoPostalCodes&#039;, &#039;GeoPostalCodeTranslations&#039;, &#039;InsuranceBrokers&#039;, &#039;InsuranceRates&#039;]                            </span>
+        &nbsp;= [&#039;Instruments&#039;, &#039;InstrumentFamilies&#039;, &#039;instrument_instrument_family&#039;, &#039;GeoContinents&#039;, &#039;GeoCountries&#039;, &#039;GeoPostalCodes&#039;, &#039;GeoPostalCodeTranslations&#039;, &#039;InsuranceBrokers&#039;, &#039;InsuranceRates&#039;, &#039;ProjectInstrumentationNumbers&#039;, &#039;TableFieldTranslations&#039;]                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -271,11 +265,7 @@ SELECT m.user_id_slug AS uid,
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
 LEFT JOIN Projects p ON p.id = pp.project_id
-WHERE pp.musician_id in
-    (SELECT pp1.musician_id
-     FROM ProjectParticipants pp1
-     LEFT JOIN Projects p1 ON pp1.project_id = p1.id
-     WHERE p1.type = &quot;permanent&quot;)&#039;                            </span>
+WHERE pp.deleted IS NULL&#039;                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
@@ -284,9 +274,7 @@ WHERE pp.musician_id in
         &nbsp;= &#039;CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT m.id AS id,
-       CONVERT(m.user_id_slug USING utf8mb4) AS uid,
-       CONVERT(m.user_id_slug USING utf8mb4) AS username,
+SELECT CONVERT(m.user_id_slug USING utf8mb4) AS uid,
        m.user_passphrase AS password,
        CONCAT_WS(&quot; &quot;, IF(m.nick_name IS NULL
                          OR m.nick_name = &quot;&quot;, m.first_name, m.nick_name), m.sur_name) AS name,
@@ -295,14 +283,10 @@ SELECT m.id AS id,
        NULL AS home,
        COALESCE(m.cloud_account_deactivated, 0) AS inactive,
        IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1, 1, 0) AS disabled,
-       0 AS avatar,
+       1 AS avatar,
        NULL AS salt
 FROM Musicians m
-WHERE m.id in
-    (SELECT pp.musician_id
-     FROM ProjectParticipants pp
-     LEFT JOIN Projects p ON pp.project_id = p.id
-     WHERE p.type = &quot;permanent&quot;)
+WHERE m.email IS NOT NULL AND m.email &lt;&gt; &quot;&quot;
 WITH CHECK OPTION&#039;                            </span>
 </dt>
 
@@ -328,7 +312,7 @@ WITH CHECK OPTION&#039;                            </span>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger</a>
+    <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
@@ -618,9 +602,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -647,9 +631,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -676,9 +660,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">177</span>
+    <span class="phpdocumentor-element-found-in__line">156</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.177" class="phpdocumentor-element-found-in__source" data-line="177" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -705,9 +689,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">176</span>
+    <span class="phpdocumentor-element-found-in__line">155</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.155" class="phpdocumentor-element-found-in__source" data-line="155" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -734,9 +718,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -763,9 +747,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -792,9 +776,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">127</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.127" class="phpdocumentor-element-found-in__source" data-line="127" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -824,35 +808,6 @@ musician views.</dd>
 
 </article>
                     <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_PARTICIPANT_FIELD_ID_TABLES">
-        PARTICIPANT_FIELD_ID_TABLES
-        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_PARTICIPANT_FIELD_ID_TABLES" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">149</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">PARTICIPANT_FIELD_ID_TABLES</span>
-    = <span class="phpdocumentor-signature__default-value">[&#039;ProjectParticipantFields&#039; =&gt; [&#039;joinField&#039; =&gt; &#039;id&#039;, &#039;groupBy&#039; =&gt; [&#039;id&#039;]], &#039;ProjectParticipantFieldsDataOptions&#039; =&gt; [&#039;joinField&#039; =&gt; &#039;field_id&#039;, &#039;groupBy&#039; =&gt; [&#039;field_id&#039;, &#039;key&#039;]]]</span>
-</code>
-
-
-    
-    
-    
-
-</article>
-                    <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_PERSONALIZED_PREFIX">
         PERSONALIZED_PREFIX
         <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_PERSONALIZED_PREFIX" class="headerlink"><i class="fas fa-link"></i></a>
@@ -862,9 +817,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -891,9 +846,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -920,9 +875,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -949,9 +904,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">163</span>
+    <span class="phpdocumentor-element-found-in__line">141</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.141" class="phpdocumentor-element-found-in__source" data-line="141" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -959,7 +914,7 @@ musician views.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">UNRESTRICTED_TABLES</span>
-    = <span class="phpdocumentor-signature__default-value">[&#039;Instruments&#039;, &#039;InstrumentFamilies&#039;, &#039;instrument_instrument_family&#039;, &#039;TableFieldTranslations&#039;, &#039;GeoContinents&#039;, &#039;GeoCountries&#039;, &#039;GeoPostalCodes&#039;, &#039;GeoPostalCodeTranslations&#039;, &#039;InsuranceBrokers&#039;, &#039;InsuranceRates&#039;]</span>
+    = <span class="phpdocumentor-signature__default-value">[&#039;Instruments&#039;, &#039;InstrumentFamilies&#039;, &#039;instrument_instrument_family&#039;, &#039;GeoContinents&#039;, &#039;GeoCountries&#039;, &#039;GeoPostalCodes&#039;, &#039;GeoPostalCodeTranslations&#039;, &#039;InsuranceBrokers&#039;, &#039;InsuranceRates&#039;, &#039;ProjectInstrumentationNumbers&#039;, &#039;TableFieldTranslations&#039;]</span>
 </code>
 
 
@@ -978,9 +933,9 @@ musician views.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.73" class="phpdocumentor-element-found-in__source" data-line="73" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1020,9 +975,9 @@ user-backend. Only projects with active users show up.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1049,9 +1004,9 @@ user-backend. Only projects with active users show up.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">82</span>
+    <span class="phpdocumentor-element-found-in__line">83</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1067,11 +1022,7 @@ SELECT m.user_id_slug AS uid,
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
 LEFT JOIN Projects p ON p.id = pp.project_id
-WHERE pp.musician_id in
-    (SELECT pp1.musician_id
-     FROM ProjectParticipants pp1
-     LEFT JOIN Projects p1 ON pp1.project_id = p1.id
-     WHERE p1.type = &quot;permanent&quot;)&#039;</span>
+WHERE pp.deleted IS NULL&#039;</span>
 </code>
 
 
@@ -1090,9 +1041,9 @@ WHERE pp.musician_id in
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">103</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1103,9 +1054,7 @@ WHERE pp.musician_id in
     = <span class="phpdocumentor-signature__default-value">&#039;CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT m.id AS id,
-       CONVERT(m.user_id_slug USING utf8mb4) AS uid,
-       CONVERT(m.user_id_slug USING utf8mb4) AS username,
+SELECT CONVERT(m.user_id_slug USING utf8mb4) AS uid,
        m.user_passphrase AS password,
        CONCAT_WS(&quot; &quot;, IF(m.nick_name IS NULL
                          OR m.nick_name = &quot;&quot;, m.first_name, m.nick_name), m.sur_name) AS name,
@@ -1114,14 +1063,10 @@ SELECT m.id AS id,
        NULL AS home,
        COALESCE(m.cloud_account_deactivated, 0) AS inactive,
        IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1, 1, 0) AS disabled,
-       0 AS avatar,
+       1 AS avatar,
        NULL AS salt
 FROM Musicians m
-WHERE m.id in
-    (SELECT pp.musician_id
-     FROM ProjectParticipants pp
-     LEFT JOIN Projects p ON pp.project_id = p.id
-     WHERE p.type = &quot;permanent&quot;)
+WHERE m.email IS NOT NULL AND m.email &lt;&gt; &quot;&quot;
 WITH CHECK OPTION&#039;</span>
 </code>
 
@@ -1147,9 +1092,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">130</span>
+    <span class="phpdocumentor-element-found-in__line">121</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.121" class="phpdocumentor-element-found-in__source" data-line="121" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1176,9 +1121,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1213,17 +1158,17 @@ at all.</p>
 >
     <h4 class="phpdocumentor-element__name" id="property_logger">
         $logger
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">174</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.174" class="phpdocumentor-element-found-in__source" data-line="174" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1255,9 +1200,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">183</span>
+    <span class="phpdocumentor-element-found-in__line">173</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.183" class="phpdocumentor-element-found-in__source" data-line="183" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1289,9 +1234,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">201</span>
+    <span class="phpdocumentor-element-found-in__line">162</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.201" class="phpdocumentor-element-found-in__source" data-line="201" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1323,9 +1268,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">168</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.168" class="phpdocumentor-element-found-in__source" data-line="168" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1357,9 +1302,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">204</span>
+    <span class="phpdocumentor-element-found-in__line">165</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.204" class="phpdocumentor-element-found-in__source" data-line="204" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1391,9 +1336,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">198</span>
+    <span class="phpdocumentor-element-found-in__line">178</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.178" class="phpdocumentor-element-found-in__source" data-line="178" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1425,9 +1370,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">180</span>
+    <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.180" class="phpdocumentor-element-found-in__source" data-line="180" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1459,9 +1404,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">189</span>
+    <span class="phpdocumentor-element-found-in__line">176</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.189" class="phpdocumentor-element-found-in__source" data-line="189" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.176" class="phpdocumentor-element-found-in__source" data-line="176" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1493,9 +1438,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">195</span>
+    <span class="phpdocumentor-element-found-in__line">159</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1527,9 +1472,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">192</span>
+    <span class="phpdocumentor-element-found-in__line">177</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.192" class="phpdocumentor-element-found-in__source" data-line="192" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.177" class="phpdocumentor-element-found-in__source" data-line="177" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1561,9 +1506,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">186</span>
+    <span class="phpdocumentor-element-found-in__line">175</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.175" class="phpdocumentor-element-found-in__source" data-line="175" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1600,15 +1545,15 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">210</span>
+    <span class="phpdocumentor-element-found-in__line">171</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.210" class="phpdocumentor-element-found-in__source" data-line="210" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.171" class="phpdocumentor-element-found-in__source" data-line="171" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"><abbr title="\OCA\CAFEVDB\Service\EncryptionService">EncryptionService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$encryptionService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\App\IAppManager">IAppManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appManager</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$cloudConfig</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Service-EncryptionService.html"><abbr title="\OCA\CAFEVDB\Service\EncryptionService">EncryptionService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$encryptionService</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\App\IAppManager">IAppManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appManager</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1637,7 +1582,7 @@ at all.</p>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$l10n</span>
+                <span class="phpdocumentor-signature__argument__name">$l</span>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
@@ -1684,9 +1629,9 @@ at all.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">292</span>
+    <span class="phpdocumentor-element-found-in__line">246</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.292" class="phpdocumentor-element-found-in__source" data-line="292" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check the requirements for this affair, in particular whether the
@@ -1732,9 +1677,9 @@ user_sql backend is enabled, and return an error with status and hints.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">524</span>
+    <span class="phpdocumentor-element-found-in__line">478</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.524" class="phpdocumentor-element-found-in__source" data-line="524" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.478" class="phpdocumentor-element-found-in__source" data-line="478" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Hijack the user-sql backend by flushing pre-computed values into its
@@ -1782,9 +1727,9 @@ config space.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">646</span>
+    <span class="phpdocumentor-element-found-in__line">581</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.646" class="phpdocumentor-element-found-in__source" data-line="646" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.581" class="phpdocumentor-element-found-in__source" data-line="581" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2336,9 +2281,9 @@ config space.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">333</span>
+    <span class="phpdocumentor-element-found-in__line">287</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.287" class="phpdocumentor-element-found-in__source" data-line="287" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the group-id for the given numeric project-id. Note that the
@@ -2384,9 +2329,9 @@ display-name is just the project-name.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">857</span>
+    <span class="phpdocumentor-element-found-in__line">843</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.857" class="phpdocumentor-element-found-in__source" data-line="857" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.843" class="phpdocumentor-element-found-in__source" data-line="843" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the personalized one-row views which give individual orchestra
@@ -2447,9 +2392,9 @@ databse. If null the views are created in the standard databse.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">391</span>
+    <span class="phpdocumentor-element-found-in__line">345</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.391" class="phpdocumentor-element-found-in__source" data-line="391" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.345" class="phpdocumentor-element-found-in__source" data-line="345" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the user-sql views.</p>
@@ -2494,9 +2439,9 @@ databse. If null the views are created in the standard databse.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">624</span>
+    <span class="phpdocumentor-element-found-in__line">559</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.624" class="phpdocumentor-element-found-in__source" data-line="624" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.559" class="phpdocumentor-element-found-in__source" data-line="559" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2536,9 +2481,9 @@ databse. If null the views are created in the standard databse.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">614</span>
+    <span class="phpdocumentor-element-found-in__line">549</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.614" class="phpdocumentor-element-found-in__source" data-line="614" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.549" class="phpdocumentor-element-found-in__source" data-line="549" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">In particular flush potential data-caches after changing data of
@@ -2570,9 +2515,9 @@ the orchestra app.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">817</span>
+    <span class="phpdocumentor-element-found-in__line">803</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.817" class="phpdocumentor-element-found-in__source" data-line="817" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.803" class="phpdocumentor-element-found-in__source" data-line="803" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the personalized one-row views which give individual orchestra
@@ -2633,9 +2578,9 @@ databse. If null the views are created in the standard databse.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">350</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.350" class="phpdocumentor-element-found-in__source" data-line="350" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.304" class="phpdocumentor-element-found-in__source" data-line="304" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Update the views interacting with the Nextcloud user_sql backend and
@@ -2696,9 +2641,9 @@ databse. If null the views are created in the standard databse.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">500</span>
+    <span class="phpdocumentor-element-found-in__line">454</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.500" class="phpdocumentor-element-found-in__source" data-line="500" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.454" class="phpdocumentor-element-found-in__source" data-line="454" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">For the moment this just fills in our own app-config. Idea is to have the
@@ -2792,9 +2737,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">270</span>
+    <span class="phpdocumentor-element-found-in__line">224</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.270" class="phpdocumentor-element-found-in__source" data-line="270" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2843,38 +2788,21 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">582</span>
+    <span class="phpdocumentor-element-found-in__line">536</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.582" class="phpdocumentor-element-found-in__source" data-line="582" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.536" class="phpdocumentor-element-found-in__source" data-line="536" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Clear the backend cache, for use in controllers, back-reportings messages.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">clearUserBackendCache</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Service\RequestService">RequestService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$requestService</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$messages</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">clearUserBackendCache</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$requestService</span>
-                : <span class="phpdocumentor-signature__argument__return-type">null|<a href="classes/OCA-CAFEVDB-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Service\RequestService">RequestService</abbr></a></span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$messages</span>
-                : <span class="phpdocumentor-signature__argument__return-type">null|array&lt;string|int, mixed&gt;</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
+    
     
 
     
@@ -2893,9 +2821,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">668</span>
+    <span class="phpdocumentor-element-found-in__line">603</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.668" class="phpdocumentor-element-found-in__source" data-line="668" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.603" class="phpdocumentor-element-found-in__source" data-line="603" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate the (My-)SQL statements for defining the personalized single-row
@@ -2948,9 +2876,9 @@ musician views.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">422</span>
+    <span class="phpdocumentor-element-found-in__line">376</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.422" class="phpdocumentor-element-found-in__source" data-line="422" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.376" class="phpdocumentor-element-found-in__source" data-line="376" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a config array for the user_sql app &quot;as of now&quot;.</p>
@@ -3019,9 +2947,9 @@ controle.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">260</span>
+    <span class="phpdocumentor-element-found-in__line">214</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.260" class="phpdocumentor-element-found-in__source" data-line="260" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3072,9 +3000,9 @@ controle.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/CloudUserConnectorService.php"><a href="files/service-clouduserconnectorservice.html"><abbr title="Service/CloudUserConnectorService.php">CloudUserConnectorService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">244</span>
+    <span class="phpdocumentor-element-found-in__line">198</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3238,7 +3166,6 @@ controle.</p>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_GROUP_ID_PREFIX">GROUP_ID_PREFIX</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_GROUP_ID_SEPARATOR">GROUP_ID_SEPARATOR</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_MUSICIAN_ID_TABLES">MUSICIAN_ID_TABLES</a></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_PARTICIPANT_FIELD_ID_TABLES">PARTICIPANT_FIELD_ID_TABLES</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_PERSONALIZED_PREFIX">PERSONALIZED_PREFIX</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_REQUIREMENTS_MISSING">REQUIREMENTS_MISSING</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#constant_REQUIREMENTS_OK">REQUIREMENTS_OK</a></li>
@@ -3255,7 +3182,7 @@ controle.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#property_appContainer">$appContainer<a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#property_appDbHost">$appDbHost<a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html#property_appDbName">$appDbName<a href="classes/OCA-CAFEVDB-Service-CloudUserConnectorService.html"></li>

@@ -1,3 +1,21 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fake_l10_n.html" title="This kludge is here as long as our slightly over&#45;engineered &quot;missing&#45;translation&quot; event&#45;handler is in..." alt="" coords="5,5,88,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,132,85,159"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_exception.html" title="Exception class abstaction." alt="" coords="133,132,212,159"/>
+<area shape="poly" id="edge275_Node000000_Node000001" title=" " alt="" coords="100,143,132,143,132,148,100,148"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_exception.html" title="Transparent archive extraction exception." alt="" coords="295,56,418,83"/>
+<area shape="poly" id="edge276_Node000001_Node000002" title=" " alt="" coords="205,121,259,92,294,80,295,85,261,97,208,126"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_authorization_exception.html" title="Thrown to signal that somethings needs additional authorization." alt="" coords="279,107,434,133"/>
+<area shape="poly" id="edge280_Node000001_Node000006" title=" " alt="" coords="227,135,278,128,279,133,228,140"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_enduser_notification_exception.html" title="This exception should provide an error message which informs an end&#45;user about an error." alt="" coords="260,157,453,184"/>
+<area shape="poly" id="edge281_Node000001_Node000007" title=" " alt="" coords="228,150,260,155,259,160,227,156"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_php_session_exception.html" title="Thrown if there is something wrong with the access to the PHP session." alt="" coords="282,208,431,235"/>
+<area shape="poly" id="edge282_Node000001_Node000008" title=" " alt="" coords="208,165,261,194,294,205,292,210,259,198,205,170"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_cannot_open_exception.html" title="Transparent archive extraction exception." alt="" coords="501,5,698,32"/>
+<area shape="poly" id="edge277_Node000002_Node000003" title=" " alt="" coords="433,51,532,30,533,35,434,56"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_not_open_exception.html" title="Transparent archive extraction exception." alt="" coords="512,56,687,83"/>
+<area shape="poly" id="edge278_Node000002_Node000004" title=" " alt="" coords="434,67,511,67,511,72,434,72"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_archive_too_large_exception.html" title="Transparent archive extraction exception." alt="" coords="511,107,688,133"/>
+<area shape="poly" id="edge279_Node000002_Node000005" title=" " alt="" coords="434,83,533,103,532,109,433,88"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_exceptions_1_1_session_still_open_exception.html" title=" " alt="" coords="510,208,689,235"/>
+<area shape="poly" id="edge283_Node000008_Node000009" title=" " alt="" coords="447,219,509,219,509,224,447,224"/>
 </map>

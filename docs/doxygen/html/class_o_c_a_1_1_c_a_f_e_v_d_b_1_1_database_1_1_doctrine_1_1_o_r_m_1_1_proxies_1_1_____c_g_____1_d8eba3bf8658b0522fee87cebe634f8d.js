@@ -20,6 +20,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "getPayments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#ae8d8c6baf83b3e602ac4fcb4620f2dad", null ],
     [ "getProject", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a5cb158509764d3c0103ece1443f4ee12", null ],
     [ "getProjectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a39a8fd67a14baf0ae8c070ae5022b95c", null ],
+    [ "getPublicName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a2289734c2bdef623da274cd90a2b33f1", null ],
     [ "getRegistration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a2537b6b5b8c5bbad2d80f2f98c9dcd21", null ],
     [ "getUpdated", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a6a47ef9c1ef8b9a53111f4fbe177b90c", null ],
     [ "inUse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a2869b48ca2b9174a12d11522fb594067", null ],
@@ -57,7 +58,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "$musician", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a402a1261eca63ebf5ef4c4af11c1a648", null ],
     [ "$participantFieldsData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#aece492efa5afc59ab224bd5bc3da5e39", null ],
     [ "$payments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a6875ed146a4421bf4d344c51b3119a29", null ],
-    [ "$preUpdateValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#abd1ff190c2c105b5bb3fa350b120fca4", null ],
     [ "$project", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a0b225308f220616a04f6afc6e41bf50d", null ],
     [ "$projectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#accbaa0fdbf165ec3872151c706374d70", null ],
     [ "$registration", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d8eba3bf8658b0522fee87cebe634f8d.html#a9fe7e6924eb25063343eaeefb464ea9b", null ]

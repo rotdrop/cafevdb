@@ -1,4 +1,5 @@
 <map id="AfterEncryptionKeyPairChangedListener" name="AfterEncryptionKeyPairChangedListener">
-<area shape="rect" id="node1" title="Perform re&#45;encryption tasks after encryption keys have been changed." alt="" coords="5,79,216,119"/>
-<area shape="rect" id="node2" title=" " alt="" coords="57,5,164,31"/>
+<area shape="rect" id="Node000001" title="Perform re&#45;encryption tasks after encryption keys have been changed." alt="" coords="5,80,215,123"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="57,5,163,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,48,113,80,107,80,107,48"/>
 </map>

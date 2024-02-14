@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html" title="Telephone number validation." alt="" coords="5,5,155,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,56,112,83"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_encryption_controller.html" title="AJAX end&#45;points in order to support encryption." alt="" coords="179,5,319,32"/>
+<area shape="poly" id="edge418_Node000000_Node000001" title=" " alt="" coords="126,49,195,30,197,35,127,54"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_maintenance_api_controller.html" title="AJAX end&#45;points for an app&#45;maintenance API." alt="" coords="164,56,334,83"/>
+<area shape="poly" id="edge419_Node000000_Node000002" title=" " alt="" coords="127,67,163,67,163,72,127,72"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_api_controller.html" title="API for project events." alt="" coords="160,107,338,133"/>
+<area shape="poly" id="edge420_Node000000_Node000003" title=" " alt="" coords="127,85,197,103,195,109,126,90"/>
 </map>

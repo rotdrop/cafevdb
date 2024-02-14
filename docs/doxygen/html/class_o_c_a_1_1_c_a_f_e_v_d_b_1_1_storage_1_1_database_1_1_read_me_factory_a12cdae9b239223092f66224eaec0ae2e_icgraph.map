@@ -1,0 +1,7 @@
+<map id="getReadMeTooltipsKey" name="getReadMeTooltipsKey">
+<area shape="rect" id="Node000001" title="Compute a lookup key for a possible default readme content." alt="" coords="405,5,561,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html#abd4365b3ffd658aab3d1c08ff0ab132e" title="Recurse to the tooltips service and see if there is a default text for the given storage." alt="" coords="174,5,357,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="389,21,358,21,358,16,389,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html#a36a895dca60b6dc997cf09ac1511e83b" title=" " alt="" coords="5,5,126,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="158,21,126,21,126,16,158,16"/>
+</map>

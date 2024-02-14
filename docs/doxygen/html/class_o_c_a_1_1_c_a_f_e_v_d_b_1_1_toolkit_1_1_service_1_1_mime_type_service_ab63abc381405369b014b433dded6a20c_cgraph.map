@@ -1,9 +1,15 @@
 <map id="registerMimeTypeMappings" name="registerMimeTypeMappings">
-<area shape="rect" id="node1" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,45,187,70"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1b1d06b8849380605b6a83ff72dd8689" title=" " alt="" coords="235,45,384,70"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="432,5,593,45"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8e67cfd6a09d264ed60634dd794bb30" title="Log an informational message." alt="" coords="432,69,593,109"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="641,69,803,109"/>
-<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="851,37,1012,77"/>
-<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="851,101,1012,141"/>
+<area shape="rect" id="Node000001" title="Register the needed extension to MIME&#45;type mappings with the Nextcloud server." alt="" coords="5,47,186,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1b1d06b8849380605b6a83ff72dd8689" title=" " alt="" coords="234,47,382,73"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,57,218,57,218,63,186,63"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="430,5,590,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="382,45,414,40,415,45,383,50"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8e67cfd6a09d264ed60634dd794bb30" title="Log an informational message." alt="" coords="430,72,590,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="383,70,415,75,414,80,382,75"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="638,72,799,115"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="590,91,623,91,623,96,590,96"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="847,39,1007,81"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="798,78,831,73,831,78,799,83"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="847,105,1007,148"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="799,103,831,109,831,114,798,109"/>
 </map>

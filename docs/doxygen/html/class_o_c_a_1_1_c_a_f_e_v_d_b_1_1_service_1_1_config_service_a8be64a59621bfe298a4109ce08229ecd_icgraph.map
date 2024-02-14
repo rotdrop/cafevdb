@@ -1,12 +1,22 @@
 <map id="getUser" name="getUser">
-<area shape="rect" id="node1" title=" " alt="" coords="445,179,513,204"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="319,104,397,129"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7b6e5c12813dec3c45ec9531820c539a" title="Install a new user." alt="" coords="324,229,392,255"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6cacbeb3555df4a292566b2e1b9bb574" title="Install a new user id." alt="" coords="168,203,247,228"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7edad4866aa3ca9b33d80a94bbca867f" title=" " alt="" coords="157,5,257,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5b0f9418642a2dfbcfde1475c7d10c9d" title=" " alt="" coords="174,55,241,80"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="144,104,271,129"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab47d7f5da92d211bb6c3a02d2cc5ca07" title=" " alt="" coords="157,153,257,179"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a53fe11e3dd3059d6379dfabaf2fce346" title="Fake execution with other user&#45;id." alt="" coords="25,252,76,277"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab50a6081ca9ae60c52dd1ef10f545a55" title="{}" alt="" coords="5,203,96,228"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="403,196,471,223"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="277,107,355,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="404,188,334,136,337,132,407,184"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7b6e5c12813dec3c45ec9531820c539a" title="Install a new user." alt="" coords="283,259,350,285"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="397,233,345,260,342,256,395,228"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6cacbeb3555df4a292566b2e1b9bb574" title="Install a new user id." alt="" coords="127,208,205,235"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="388,221,295,227,206,229,206,223,295,222,387,216"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7edad4866aa3ca9b33d80a94bbca867f" title=" " alt="" coords="116,5,216,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="290,97,261,71,228,46,206,35,208,30,230,42,264,67,293,93"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5b0f9418642a2dfbcfde1475c7d10c9d" title=" " alt="" coords="133,56,199,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="262,105,199,83,200,78,263,99"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="103,107,229,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="261,123,229,123,229,117,261,117"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab47d7f5da92d211bb6c3a02d2cc5ca07" title=" " alt="" coords="116,157,216,184"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="263,141,208,159,207,154,262,135"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="267,258,205,237,206,232,269,253"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a53fe11e3dd3059d6379dfabaf2fce346" title="Fake execution with other user&#45;id." alt="" coords="5,233,55,260"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="267,270,55,251,56,246,268,265"/>
+<area shape="poly" id="edge8_Node000008_Node000001" title=" " alt="" coords="221,209,315,203,403,202,403,207,315,208,221,214"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="112,234,56,245,55,239,111,229"/>
 </map>

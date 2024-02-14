@@ -199,7 +199,13 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger</a>
+    <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_l">$l</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
@@ -207,7 +213,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_rootFolder">$rootFolder</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\Files\Folder">Folder</abbr>            </span>
+                        &nbsp;: <abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
@@ -231,7 +237,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_userRootFolder">$userRootFolder</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\Files\Folder">Folder</abbr>            </span>
+                        &nbsp;: null|<abbr title="\OCP\Files\Folder">Folder</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -603,9 +609,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">311</span>
+    <span class="phpdocumentor-element-found-in__line">298</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.311" class="phpdocumentor-element-found-in__source" data-line="311" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.298" class="phpdocumentor-element-found-in__source" data-line="298" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -638,9 +644,9 @@ source tree will be deleted.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">293</span>
+    <span class="phpdocumentor-element-found-in__line">280</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.293" class="phpdocumentor-element-found-in__source" data-line="293" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.280" class="phpdocumentor-element-found-in__source" data-line="280" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -670,9 +676,9 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">300</span>
+    <span class="phpdocumentor-element-found-in__line">287</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.300" class="phpdocumentor-element-found-in__source" data-line="300" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.287" class="phpdocumentor-element-found-in__source" data-line="287" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -746,9 +752,9 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -756,6 +762,43 @@ default.</p>
     <span class="phpdocumentor-signature__visibility">protected</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$appName</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>Note that this must not be types as it needs to remain compatible with
+the Nextcloud Controller class.</p>
+</section>
+
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_l">
+        $l
+        <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_l" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">82</span>
+
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.82" class="phpdocumentor-element-found-in__source" data-line="82" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
+    <span class="phpdocumentor-signature__name">$l</span>
     </code>
 
     
@@ -772,17 +815,17 @@ default.</p>
 >
     <h4 class="phpdocumentor-element__name" id="property_logger">
         $logger
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.81" class="phpdocumentor-element-found-in__source" data-line="81" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -814,15 +857,15 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\Folder">Folder</abbr></span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr></span>
     <span class="phpdocumentor-signature__name">$rootFolder</span>
     </code>
 
@@ -882,9 +925,9 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">77</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -916,9 +959,9 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">42</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -950,15 +993,15 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\Folder">Folder</abbr></span>
+        <span class="phpdocumentor-signature__type">null|<abbr title="\OCP\Files\Folder">Folder</abbr></span>
     <span class="phpdocumentor-signature__name">$userRootFolder</span>
     </code>
 
@@ -984,9 +1027,9 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">79</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1018,9 +1061,9 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">74</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.74" class="phpdocumentor-element-found-in__source" data-line="74" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1057,16 +1100,16 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rootFolder</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IUserSession">IUserSession</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userSession</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appContainer</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rootFolder</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1102,7 +1145,7 @@ default.</p>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$l10n</span>
+                <span class="phpdocumentor-signature__argument__name">$l</span>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
@@ -1128,9 +1171,9 @@ default.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">593</span>
+    <span class="phpdocumentor-element-found-in__line">580</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.593" class="phpdocumentor-element-found-in__source" data-line="593" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.580" class="phpdocumentor-element-found-in__source" data-line="580" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Copy $oldPath to $newPath which are interpreted as paths
@@ -1200,9 +1243,9 @@ relative to the user&#039;s folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">331</span>
+    <span class="phpdocumentor-element-found-in__line">318</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.331" class="phpdocumentor-element-found-in__source" data-line="331" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.318" class="phpdocumentor-element-found-in__source" data-line="318" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Copy a source folder tree to a target folder tree.</p>
@@ -1285,9 +1328,9 @@ source file is not copied.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">855</span>
+    <span class="phpdocumentor-element-found-in__line">842</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.855" class="phpdocumentor-element-found-in__source" data-line="855" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.842" class="phpdocumentor-element-found-in__source" data-line="842" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a data-uri from the given file.</p>
@@ -1334,9 +1377,9 @@ source file is not copied.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">485</span>
+    <span class="phpdocumentor-element-found-in__line">472</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.485" class="phpdocumentor-element-found-in__source" data-line="485" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.472" class="phpdocumentor-element-found-in__source" data-line="472" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Gracefully try to delete $path. If $path does not exist, a notice
@@ -1380,9 +1423,9 @@ is written to the log but otherwise the error is ignored.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">618</span>
+    <span class="phpdocumentor-element-found-in__line">605</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.618" class="phpdocumentor-element-found-in__source" data-line="618" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.605" class="phpdocumentor-element-found-in__source" data-line="605" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Make sure the given directory exists. If the given path existis
@@ -1455,9 +1498,9 @@ path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">649</span>
+    <span class="phpdocumentor-element-found-in__line">636</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.649" class="phpdocumentor-element-found-in__source" data-line="649" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.636" class="phpdocumentor-element-found-in__source" data-line="636" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Make sure that all components of the given array exists where each
@@ -1531,9 +1574,9 @@ resulting path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">123</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Walk the given $pathOrFolder and apply the callable to each found node.</p>
@@ -1607,9 +1650,9 @@ receives it as second argument.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">159</span>
+    <span class="phpdocumentor-element-found-in__line">149</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.159" class="phpdocumentor-element-found-in__source" data-line="159" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.149" class="phpdocumentor-element-found-in__source" data-line="149" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1688,9 +1731,9 @@ file is not found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">665</span>
+    <span class="phpdocumentor-element-found-in__line">652</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.665" class="phpdocumentor-element-found-in__source" data-line="665" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.652" class="phpdocumentor-element-found-in__source" data-line="652" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1741,9 +1784,9 @@ subdirectory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">704</span>
+    <span class="phpdocumentor-element-found-in__line">691</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.704" class="phpdocumentor-element-found-in__source" data-line="704" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.691" class="phpdocumentor-element-found-in__source" data-line="691" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get file content by path.</p>
@@ -1794,9 +1837,9 @@ subdirectory.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">728</span>
+    <span class="phpdocumentor-element-found-in__line">715</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.728" class="phpdocumentor-element-found-in__source" data-line="728" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.715" class="phpdocumentor-element-found-in__source" data-line="715" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the underline storage entity if the cloud-path refers to a
@@ -1844,9 +1887,9 @@ db-backed cloud-file.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">772</span>
+    <span class="phpdocumentor-element-found-in__line">759</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.772" class="phpdocumentor-element-found-in__source" data-line="772" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.759" class="phpdocumentor-element-found-in__source" data-line="759" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a DAV download-link for the given node or path-name.</p>
@@ -1917,9 +1960,9 @@ db-backed cloud-file.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">195</span>
+    <span class="phpdocumentor-element-found-in__line">185</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.185" class="phpdocumentor-element-found-in__source" data-line="185" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1978,9 +2021,9 @@ db-backed cloud-file.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">819</span>
+    <span class="phpdocumentor-element-found-in__line">806</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.819" class="phpdocumentor-element-found-in__source" data-line="819" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.806" class="phpdocumentor-element-found-in__source" data-line="806" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a link to the files-app pointing to the parent folder if
@@ -2045,9 +2088,9 @@ open this folder. Otherwise open the parent.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">207</span>
+    <span class="phpdocumentor-element-found-in__line">197</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.207" class="phpdocumentor-element-found-in__source" data-line="207" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.197" class="phpdocumentor-element-found-in__source" data-line="197" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2102,9 +2145,9 @@ open this folder. Otherwise open the parent.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">255</span>
+    <span class="phpdocumentor-element-found-in__line">245</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.255" class="phpdocumentor-element-found-in__source" data-line="255" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the given $pathOrFolder as a zip archive as binary
@@ -2171,9 +2214,9 @@ inside the archive. The default is to strip nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">472</span>
+    <span class="phpdocumentor-element-found-in__line">459</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.472" class="phpdocumentor-element-found-in__source" data-line="472" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.459" class="phpdocumentor-element-found-in__source" data-line="459" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2211,9 +2254,9 @@ inside the archive. The default is to strip nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2251,9 +2294,9 @@ inside the archive. The default is to strip nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2291,30 +2334,42 @@ inside the archive. The default is to strip nothing.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">109</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getUserFolderPath</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getUserFolderPath</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$userId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The user-id. If null then $this-&gt;userId is used.</p>
+</section>
+
+            </dd>
+            </dl>
+
     
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">string</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Just the name of the user folder without recurse to the
+                <section class="phpdocumentor-description"><p>Just the name of the user folder without recursing to the
 file system. Thus the returned folder-name does not neccessarily point to
-an existing folder. The returned path is relative to the root-folder,
-e.g. &quot;jane.doe/files&quot;.</p>
+an existing folder. The returned path is relative to the root-folder
+without a leading slash, e.g. &quot;jane.doe/files&quot;.</p>
 </section>
 
             </section>
@@ -2334,9 +2389,9 @@ e.g. &quot;jane.doe/files&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">136</span>
+    <span class="phpdocumentor-element-found-in__line">126</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.126" class="phpdocumentor-element-found-in__source" data-line="126" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the path relative to user-folder</p>
@@ -2383,9 +2438,9 @@ e.g. &quot;jane.doe/files&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">63</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2423,9 +2478,9 @@ e.g. &quot;jane.doe/files&quot;.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/UserRootFolderTrait.php"><a href="files/toolkit-traits-userrootfoldertrait.html"><abbr title="Toolkit/Traits/UserRootFolderTrait.php">UserRootFolderTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">85</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.85" class="phpdocumentor-element-found-in__source" data-line="85" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the name top-level folder as Folder instance. The folder is
@@ -2985,9 +3040,9 @@ created if it does not exist.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">436</span>
+    <span class="phpdocumentor-element-found-in__line">423</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.436" class="phpdocumentor-element-found-in__source" data-line="436" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.423" class="phpdocumentor-element-found-in__source" data-line="423" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3046,9 +3101,9 @@ created if it does not exist.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">680</span>
+    <span class="phpdocumentor-element-found-in__line">667</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.680" class="phpdocumentor-element-found-in__source" data-line="680" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.667" class="phpdocumentor-element-found-in__source" data-line="667" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Put file content by path. Create $path if it does not exists,
@@ -3105,9 +3160,9 @@ otherwise replace its contents by the given data.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">569</span>
+    <span class="phpdocumentor-element-found-in__line">556</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.569" class="phpdocumentor-element-found-in__source" data-line="569" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.556" class="phpdocumentor-element-found-in__source" data-line="556" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Rename $oldPath to $newPath which are interpreted as paths
@@ -3177,9 +3232,9 @@ relative to the user&#039;s folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">512</span>
+    <span class="phpdocumentor-element-found-in__line">499</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.512" class="phpdocumentor-element-found-in__source" data-line="512" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.499" class="phpdocumentor-element-found-in__source" data-line="499" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Try to restore the given path from the files_trashbin app.</p>
@@ -3264,9 +3319,9 @@ destination file before restoring.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3312,9 +3367,9 @@ destination file before restoring.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">464</span>
+    <span class="phpdocumentor-element-found-in__line">451</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.464" class="phpdocumentor-element-found-in__source" data-line="464" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.451" class="phpdocumentor-element-found-in__source" data-line="451" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Strip the given number of directories from $path. Return the
@@ -3372,9 +3427,9 @@ path-components present.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">116</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3412,9 +3467,9 @@ path-components present.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">124</span>
+    <span class="phpdocumentor-element-found-in__line">114</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3496,9 +3551,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/UserStorage.php"><a href="files/storage-userstorage.html"><abbr title="Storage/UserStorage.php">UserStorage.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">224</span>
+    <span class="phpdocumentor-element-found-in__line">214</span>
 
-            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.224" class="phpdocumentor-element-found-in__source" data-line="224" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Recursively add all files in all sub-directories to the zip archive.</p>
@@ -3671,7 +3726,8 @@ path-names in order to form the archive name.</p>
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-UserRootFolderTrait.html#property_appName">$appName<a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_l">$l<a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_rootFolder">$rootFolder<a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_user">$user<a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Storage-UserStorage.html#property_userFolder">$userFolder<a href="classes/OCA-CAFEVDB-Storage-UserStorage.html"></li>

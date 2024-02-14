@@ -1,4 +1,5 @@
 <map id="reset" name="reset">
-<area shape="rect" id="node1" title="Reset the initial state." alt="" coords="100,5,151,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html#a7b5ddd6a90548a5c5fd2d478be413ec2" title="{Bind to the given storage object.Create a new object if $id is null.void}" alt="" coords="5,5,52,31"/>
+<area shape="rect" id="Node000001" title="Reset the initial state." alt="" coords="99,5,149,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_plain_file_progress_status.html#a7b5ddd6a90548a5c5fd2d478be413ec2" title="{Bind to the given storage object.Create a new object if $id is null.void}" alt="" coords="5,5,51,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,21,51,21,51,16,83,16"/>
 </map>

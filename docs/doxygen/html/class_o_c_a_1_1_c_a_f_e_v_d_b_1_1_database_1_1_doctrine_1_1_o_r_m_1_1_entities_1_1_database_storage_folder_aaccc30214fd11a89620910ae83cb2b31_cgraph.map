@@ -1,6 +1,9 @@
 <map id="getEntryByName" name="getEntryByName">
-<area shape="rect" id="node1" title=" " alt="" coords="5,45,128,70"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e" title="Convenience function." alt="" coords="176,37,356,77"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#af2691c40495d429502e48d4824f0b080" title="Convenience function to generate Collections\Criteria." alt="" coords="404,5,583,45"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#ae987ce50626dd3e4a9b255037433c776" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="404,69,583,109"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,47,127,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#aafe8e2082bd107d572aa76086a06b24e" title="Convenience function." alt="" coords="175,39,354,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,57,159,57,159,63,127,63"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#af2691c40495d429502e48d4824f0b080" title="Convenience function to generate Collections\Criteria." alt="" coords="402,5,580,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="354,44,386,39,387,45,355,49"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_util.html#ae987ce50626dd3e4a9b255037433c776" title="Convenience function to generate CollectionsxpressionBuilder." alt="" coords="402,72,580,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="355,71,387,75,386,81,354,76"/>
 </map>

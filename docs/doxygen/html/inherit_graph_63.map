@@ -1,4 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_i_card_backend.html" title="Bizarre single&#45;implementation interface ..." alt="" coords="5,5,111,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_musician_card_backend.html" title="Generate VCards from the musicians database." alt="" coords="159,5,312,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,157,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_address_book_1_1_address_book_provider.html" title="Kind of factory for our musicians address book." alt="" coords="205,5,352,32"/>
+<area shape="poly" id="edge294_Node000000_Node000001" title=" " alt="" coords="172,16,204,16,204,21,172,21"/>
 </map>

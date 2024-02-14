@@ -1,4 +1,5 @@
 <map id="SepaBulkTransactionAnnouncedListener" name="SepaBulkTransactionAnnouncedListener">
-<area shape="rect" id="node1" title="Listen to renamed and deleted events in order to keep the configured document&#45;templates synchronized ..." alt="" coords="5,79,216,119"/>
-<area shape="rect" id="node2" title=" " alt="" coords="57,5,164,31"/>
+<area shape="rect" id="Node000001" title="Listen to renamed and deleted events in order to keep the configured document&#45;templates synchronized ..." alt="" coords="5,80,216,123"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="58,5,163,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,48,113,80,108,80,108,48"/>
 </map>

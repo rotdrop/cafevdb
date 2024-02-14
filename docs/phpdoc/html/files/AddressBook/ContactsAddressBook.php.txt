@@ -6,7 +6,7 @@ declare(strict_types=1);
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2024 Claus-Justus Heine
  *
  * This file based on ldap_contacts_backend, copyright 2020 Arthur Schiwon
  * <blizzz@arthur-schiwon.de>
@@ -46,28 +46,16 @@ class ContactsAddressBook implements IAddressBook
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var ICardBackend */
-  private $cardBackend;
-
-  /** @var ContactsService */
-  private $contactsService;
-
-  /** @var string */
-  private $uri;
-
   public const DAV_PROPERTY_SOURCE = 'X-CAFEVDB_CONTACTS_ID';
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    ContactsService $contactsService,
-    ICardBackend $cardBackend,
-    ?string $uri = null,
+    protected ConfigService $configService,
+    private ContactsService $contactsService,
+    private ICardBackend $cardBackend,
+    private ?string $uri = null,
   ) {
-    $this->cardBackend = $cardBackend;
     $this->uri = $uri ?? $this->cardBackend->getURI();
-    $this->configService = $configService;
-    $this->contactsService = $contactsService;
     $this->l = $this->l10n();
   }
 

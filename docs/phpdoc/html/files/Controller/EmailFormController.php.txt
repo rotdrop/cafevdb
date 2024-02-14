@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,11 +29,9 @@ use \Mail_RFC822;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\IRequest;
-use OCP\ISession;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IURLGenerator;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
@@ -62,49 +60,19 @@ class EmailFormController extends Controller
 
   const TOPIC_UNSPECIFIC = 'general';
 
-  /** @var ISession */
-  private $session;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var IURLGenerator */
-  private $urlGenerator;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var PageNavigation */
-  private $pageNavigation;
-
-  /** @var PHPMyEdit */
-  private $pme;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
   /** {@inheritdoc} */
   public function __construct(
     string $appName,
     IRequest $request,
-    ISession $session,
-    IAppContainer $appContainer,
-    IURLGenerator $urlGenerator,
-    RequestParameterService $parameterService,
-    PageNavigation $pageNavigation,
-    ConfigService $configService,
-    ProjectService $projectService,
-    PHPMyEdit $pme
+    private IAppContainer $appContainer,
+    private IURLGenerator $urlGenerator,
+    private RequestParameterService $parameterService,
+    private PageNavigation $pageNavigation,
+    protected ConfigService $configService,
+    private ProjectService $projectService,
+    private PHPMyEdit $pme
   ) {
     parent::__construct($appName, $request);
-    $this->session = $session;
-    $this->appContainer = $appContainer;
-    $this->urlGenerator = $urlGenerator;
-    $this->parameterService = $parameterService;
-    $this->pageNavigation = $pageNavigation;
-    $this->configService = $configService;
-    $this->projectService = $projectService;
-    $this->pme = $pme;
     $this->l = $this->l10N();
   }
 
@@ -128,7 +96,6 @@ class EmailFormController extends Controller
    * @return DataResponse
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function webForm(
     ?int $projectId = null,
@@ -165,6 +132,7 @@ class EmailFormController extends Controller
 
     $templateParameters = [
       'appName' => $this->appName(),
+      'appNameTag' => 'app-' . $this->appName,
       'urlGenerator' => $this->urlGenerator,
       'dateTimeFormatter' => $this->appContainer->get(IDateTimeFormatter::class),
       'dateTimeZone' => $this->getDateTimeZone(),
@@ -210,7 +178,7 @@ class EmailFormController extends Controller
       'composerFormData' => $composer->formData(),
       // Needed for the recipient selection
       'recipientsFormData' => $recipientsFilter->formData(),
-      'filterHistory' => $recipientsFilter->filterHistory(), // Session Usage!
+      'filterHistory' => $recipientsFilter->filterHistory(),
       'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
       'basicRecipientsSet' => $recipientsFilter->basicRecipientsSet(),
       'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
@@ -223,14 +191,10 @@ class EmailFormController extends Controller
       'toolTips' => $this->toolTipsService(),
     ];
 
-    // Close the session ONLY AFTER fetching the filter history
-    $this->session->close();
-
-    $html = (new TemplateResponse(
-      $this->appName,
+    $html = $this->templateResponse(
       'emailform/form',
       $templateParameters,
-      'blank'))->render();
+    )->render();
 
     $responseData = [
       'contents' => $html,
@@ -258,11 +222,10 @@ class EmailFormController extends Controller
       'dateTimeZone' => $this->getDateTimeZone(),
     ];
 
-    $tmpl = new TemplateResponse(
-      $this->appName,
+    $tmpl = $this->templateResponse(
       'emailform/part.stored-email-options',
       $templateParamters,
-      'blank');
+    );
     return $tmpl->render();
   }
 
@@ -282,11 +245,10 @@ class EmailFormController extends Controller
       'dateTimeZone' => $this->getDateTimeZone(),
     ];
 
-    $tmpl = new TemplateResponse(
-      $this->appName,
+    $tmpl = $this->templateResponse(
       'emailform/part.sent-email-options',
       $templateParameters,
-      'blank');
+    );
     return $tmpl->render();
   }
 
@@ -301,12 +263,9 @@ class EmailFormController extends Controller
    *
    * @param null|string $projectName Name of a linked project, if any.
    *
-   * @todo Close the PHP session if no longer needed.
-   *
    * @return DataResponse
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function composer(
     string $operation,
@@ -333,10 +292,6 @@ class EmailFormController extends Controller
     $composer = $this->appContainer->get(Composer::class);
     $recipientsFilter = $composer->getRecipientsFilter();
 
-    if ($operation != 'load') {
-      $this->session->close();
-    }
-
     if (isset($requestData['singleItem'])) {
       $requestData['errorStatus'] = false;
       $requestData['diagnostics'] = '';
@@ -357,8 +312,7 @@ class EmailFormController extends Controller
           $caption = $diagnostics['caption'];
 
           $roles = $this->appContainer->get(OrganizationalRolesService::class);
-          $tmpl = new TemplateResponse(
-            $this->appName,
+          $tmpl = $this->templateResponse(
             'emailform/part.emailform.statuspage',
             [
               'projectName' => $projectName,
@@ -368,7 +322,7 @@ class EmailFormController extends Controller
               'dateTimeFormatter' => $this->dateTimeFormatter(),
               'urlGenerator' => $this->urlGenerator,
             ],
-            'blank');
+          );
           $messageText = $tmpl->render();
 
           // Update list of drafts after sending the message (draft has
@@ -383,17 +337,17 @@ class EmailFormController extends Controller
             $previewMessages = $composer->previewMessages();
             $templateParameters = [
               'appName' => $this->appName,
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'messages' => $previewMessages,
               'urlGenerator' => $this->urlGenerator,
               'requesttoken' => \OCP\Util::callRegister(),
             ];
-            $html = (new TemplateResponse(
-              $this->appName,
+            $html = $this->templateResponse(
               'emailform/part.emailform.preview',
               $templateParameters,
-              'blank'))->render();
+            )->render();
             if ($composer->errorStatus()) {
               $requestData['errorStatus'] = $composer->errorStatus();
               $requestData['diagnostics'] = $composer->statusDiagnostics();
@@ -445,11 +399,10 @@ class EmailFormController extends Controller
 
               'toolTips' => $this->toolTipsService(),
             ];
-            $elementData = (new TemplateResponse(
-              $this->appName,
+            $elementData = $this->templateResponse(
               'emailform/part.emailform.composer',
               $templateParameters,
-              'blank'))->render();
+            )->render();
             break;
           case 'element':
             $formElements = $requestData['formElement'];
@@ -505,6 +458,7 @@ class EmailFormController extends Controller
 
             $templateParameters = [
               'appName' =>  $this->appName(),
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
@@ -532,11 +486,10 @@ class EmailFormController extends Controller
               'toolTips' => $this->toolTipsService(),
             ];
 
-            $msgData = (new TemplateResponse(
-              $this->appName,
+            $msgData = $this->templateResponse(
               'emailform/part.emailform.composer',
               $templateParameters,
-              'blank'))->render();
+            )->render();
 
             $requestData['composerForm'] = $msgData;
 
@@ -544,6 +497,7 @@ class EmailFormController extends Controller
             $filterHistory = $recipientsFilter->filterHistory();
             $templateParameters = [
               'appName' => $this->appName(),
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               // Needed for the recipient selection
@@ -559,11 +513,10 @@ class EmailFormController extends Controller
               'toolTips' => $this->toolTipsService(),
             ];
 
-            $rcptData = (new TemplateResponse(
-              $this->appName,
+            $rcptData = $this->templateResponse(
               'emailform/part.emailform.recipients',
               $templateParameters,
-              'blank'))->render();
+            )->render();
 
             $requestData['recipientsForm'] = $rcptData;
 
@@ -617,8 +570,6 @@ class EmailFormController extends Controller
             // "reload" the composer and recipients filter
             $composer->bind($this->parameterService);
 
-            $this->session->close();
-
             $requestData['errorStatus'] = $composer->errorStatus();
             $requestData['diagnostics'] = $composer->statusDiagnostics();
 
@@ -630,6 +581,7 @@ class EmailFormController extends Controller
 
             $templateParameters = [
               'appName' =>  $this->appName(),
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               'urlGenerator' => $this->urlGenerator,
@@ -659,11 +611,10 @@ class EmailFormController extends Controller
               'toolTips' => $this->toolTipsService(),
             ];
 
-            $msgData = (new TemplateResponse(
-              $this->appName,
+            $msgData = $this->templateResponse(
               'emailform/part.emailform.composer',
               $templateParameters,
-              'blank'))->render();
+            )->render();
 
             $requestData['composerForm'] = $msgData;
 
@@ -671,6 +622,7 @@ class EmailFormController extends Controller
             $filterHistory = $recipientsFilter->filterHistory();
             $templateParameters = [
               'appName' => $this->appName(),
+              'appNameTag' => 'app-' . $this->appName,
               'projectName' => $projectName,
               'projectId' => $projectId,
               // Needed for the recipient selection
@@ -688,11 +640,10 @@ class EmailFormController extends Controller
               'toolTips' => $this->toolTipsService(),
             ];
 
-            $rcptData = (new TemplateResponse(
-              $this->appName,
+            $rcptData = $this->templateResponse(
               'emailform/part.emailform.recipients',
               $templateParameters,
-              'blank'))->render();
+            )->render();
 
             $requestData['composerForm'] = $msgData;
             $requestData['recipientsForm'] = $rcptData;
@@ -780,8 +731,7 @@ class EmailFormController extends Controller
       $caption = $requestData['diagnostics']['caption'];
 
       $roles = $this->appContainer->get(OrganizationalRolesService::class);
-      $messageText = (new TemplateResponse(
-        $this->appName,
+      $messageText = $this->templateResponse(
         'emailform/part.emailform.statuspage',
         [
           'projectName' => $projectName,
@@ -791,7 +741,7 @@ class EmailFormController extends Controller
           'dateTimeFormatter' => $this->dateTimeFormatter(),
           'urlGenerator' => $this->urlGenerator,
         ],
-        'blank'))->render();
+      )->render();
 
       return self::grumble([
         'operation' => $operation,
@@ -827,10 +777,7 @@ class EmailFormController extends Controller
    *
    * @return DataResponse
    *
-   * @todo Close the PHP session if no longer needed.
-   *
    * @NoAdminRequired
-   * @UseSession
    */
   public function recipientsFilter(
     ?int $projectId,
@@ -838,8 +785,6 @@ class EmailFormController extends Controller
     ?int $bulkTransactionId,
   ):DataResponse {
     $recipientsFilter = $this->appContainer->query(RecipientsFilter::class);
-
-    $this->session->close();
 
     $filterHistory = $recipientsFilter->filterHistory();
 
@@ -853,6 +798,7 @@ class EmailFormController extends Controller
 
       $templateParameters = [
         'appName' => $this->appName(),
+        'appNameTag' => 'app-' . $this->appName,
         'projectName' => $projectName,
         'projectId' => $projectId,
         'bulkTransactionId' => $bulkTransactionId,
@@ -871,11 +817,10 @@ class EmailFormController extends Controller
         'toolTips' => $this->toolTipsService(),
       ];
 
-      $contents = (new TemplateResponse(
-        $this->appName,
+      $contents = $this->templateResponse(
         'emailform/part.emailform.recipients',
         $templateParameters,
-        'blank'))->render();
+      )->render();
 
       return self::dataResponse([
         'projectName' => $projectName,
@@ -893,26 +838,23 @@ class EmailFormController extends Controller
     $recipientsChoices = $recipientsFilter->emailRecipientsChoices();
     $recipientsOptions = PageNavigation::selectOptions($recipientsChoices);
 
-    $missingEmailAddresses = (new TemplateResponse(
-      $this->appName,
-        'emailform/part.broken-email-addresses', [
-          'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
-        ],
-      'blank'))->render();
+    $missingEmailAddresses = $this->templateResponse(
+      'emailform/part.broken-email-addresses', [
+        'missingEmailAddresses' => $recipientsFilter->missingEmailAddresses(),
+      ],
+    )->render();
 
-    $instrumentsFilter = (new TemplateResponse(
-      $this->appName,
+    $instrumentsFilter = $this->templateResponse(
       'emailform/part.instruments-filter', [
         'instrumentsFilter' => $recipientsFilter->instrumentsFilter(),
       ],
-      'blank'))->render();
+    )->render();
 
-    $memberStatusFilter = (new TemplateResponse(
-      $this->appName,
+    $memberStatusFilter = $this->templateResponse(
       'emailform/part.member-status-filter', [
         'memberStatusFilter' => $recipientsFilter->memberStatusFilter(),
       ],
-      'blank'))->render();
+    )->render();
 
     return self::dataResponse([
       'projectName' => $projectName,
@@ -1017,11 +959,10 @@ class EmailFormController extends Controller
 
         // $phpMailer = new \OCA\CAFEVDB\CommonPHPMailer(true); could validate addresses here
 
-        $html = (new TemplateResponse(
-          $this->appName,
+        $html = $this->templateResponse(
           'emailform/addressbook',
           [ 'emailOptions' => $selectOptions ],
-          'blank'))->render();
+        )->render();
 
         return self::dataResponse([ 'contents' => $html ]);
 
@@ -1075,7 +1016,6 @@ class EmailFormController extends Controller
    * @return DataResponse
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function attachment(string $source):DataResponse
   {
@@ -1084,8 +1024,6 @@ class EmailFormController extends Controller
     $postMaxSize = \OCP\Util::computerFileSize(ini_get('post_max_size'));
     $maxUploadFileSize = min($uploadMaxFileSize, $postMaxSize);
     $maxHumanFileSize = \OCP\Util::humanFileSize($maxUploadFileSize);
-
-    $this->session->close();
 
     switch ($source) {
       case AttachmentOrigin::CLOUD:

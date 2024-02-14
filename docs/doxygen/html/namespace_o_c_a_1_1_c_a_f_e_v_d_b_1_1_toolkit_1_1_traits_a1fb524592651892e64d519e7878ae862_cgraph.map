@@ -1,6 +1,9 @@
 <map id="logFatal" name="logFatal">
-<area shape="rect" id="node1" title="Log a fatal error message." alt="" coords="5,31,73,56"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="121,31,160,56"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="233,5,290,31"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="208,55,315,80"/>
+<area shape="rect" id="Node000001" title="Log a fatal error message." alt="" coords="5,31,73,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="121,31,159,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,41,105,41,105,47,73,47"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="232,5,288,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="159,37,216,25,217,30,160,43"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="207,56,312,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="160,45,193,52,192,58,159,51"/>
 </map>

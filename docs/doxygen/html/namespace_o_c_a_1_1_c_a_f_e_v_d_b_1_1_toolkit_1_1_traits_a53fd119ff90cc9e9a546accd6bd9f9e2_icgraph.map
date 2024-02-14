@@ -1,0 +1,5 @@
+<map id="deleteAuthToken" name="deleteAuthToken">
+<area shape="rect" id="Node000001" title="Delete any auth token secured with the given passphrase." alt="" coords="236,21,354,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html#a32093fe0abe4f324af6bda53cb2a2a07" title="Delete the token and its cookie, e.g." alt="" coords="5,5,188,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,37,188,37,188,32,220,32"/>
+</map>

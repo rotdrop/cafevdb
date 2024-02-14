@@ -1,4 +1,5 @@
 <map id="asUuid" name="asUuid">
-<area shape="rect" id="node1" title="Convert &quot;anything&quot; to a UuidInterface." alt="" coords="133,5,196,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html#abe0023be27947544f89e5c3ba934fe74" title="Convert &quot;anything&quot; to a binary UUID representation." alt="" coords="5,5,85,31"/>
+<area shape="rect" id="Node000001" title="Convert &quot;anything&quot; to a UuidInterface." alt="" coords="133,5,195,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html#abe0023be27947544f89e5c3ba934fe74" title="Convert &quot;anything&quot; to a binary UUID representation." alt="" coords="5,5,85,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,21,85,21,85,16,117,16"/>
 </map>

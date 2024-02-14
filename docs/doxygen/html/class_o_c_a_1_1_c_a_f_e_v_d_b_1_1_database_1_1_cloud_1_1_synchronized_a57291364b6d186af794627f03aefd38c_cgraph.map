@@ -1,5 +1,7 @@
 <map id="attach" name="attach">
-<area shape="rect" id="node1" title="Obtain object from database if it is &quot;clean&quot;, if it is dirty or new (no id) then create or update the..." alt="" coords="5,31,64,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8c152f6ef1c779ffd79d5c7ee4d37721" title=" " alt="" coords="112,5,167,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a1ba50cbde423b0b17031ea550a599ae8" title=" " alt="" coords="118,55,161,80"/>
+<area shape="rect" id="Node000001" title="Obtain object from database if it is &quot;clean&quot;, if it is dirty or new (no id) then create or update the..." alt="" coords="5,31,63,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8c152f6ef1c779ffd79d5c7ee4d37721" title=" " alt="" coords="111,5,164,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,34,95,26,96,31,63,40"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a1ba50cbde423b0b17031ea550a599ae8" title=" " alt="" coords="116,56,159,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="63,48,102,58,100,63,62,54"/>
 </map>

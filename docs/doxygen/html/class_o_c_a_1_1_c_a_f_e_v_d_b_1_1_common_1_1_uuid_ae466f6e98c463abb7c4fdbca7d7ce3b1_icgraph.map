@@ -1,4 +1,5 @@
 <map id="uuid1" name="uuid1">
-<area shape="rect" id="node1" title="{}" alt="" coords="112,5,165,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html#a239b1c70258014a86569483c2d009de6" title="Create a default Uuid." alt="" coords="5,5,64,31"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="111,5,163,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_uuid.html#a239b1c70258014a86569483c2d009de6" title="Create a default Uuid." alt="" coords="5,5,63,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,21,63,21,63,16,95,16"/>
 </map>

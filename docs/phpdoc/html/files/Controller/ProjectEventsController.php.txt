@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,8 +29,8 @@ use Throwable;
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\TemplateResponse;
 
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\EventsService;
@@ -45,29 +45,17 @@ class ProjectEventsController extends Controller
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var \OCA\CAFEVDB\Service\ParameterService */
-  private $parameterService;
-
-  /** @var \OCA\CAFEVDB\Service\EventsService */
-  private $eventsService;
-
-  /** @var \OCA\CAFEVDB\Service\CalDavService */
-  private $calDavService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    EventsService $eventsService,
-    CalDavService $calDavService,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    private EventsService $eventsService,
+    private CalDavService $calDavService,
   ) {
     parent::__construct($appName, $request);
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->eventsService = $eventsService;
-    $this->calDavService = $calDavService;
+
     $this->l = $this->l10N();
   }
   // phpcs:enable
@@ -149,7 +137,7 @@ class ProjectEventsController extends Controller
           $eventUri = $eventIdentifier['uri'];
           $recurrenceId = $eventIdentifier['recurrenceId'];
 
-          $category = EventsService::getAbsenceCategory($this->appL10n());
+          $category = $this->eventsService->getRecordAbsenceCategory();
           if ($enable) {
             $removals = [];
             $additions = [ $category ];
@@ -158,6 +146,7 @@ class ProjectEventsController extends Controller
             $additions = [];
           }
 
+          $projectEvents = [];
           switch ($scope) {
             case 'series':
               $recurrenceId = null;
@@ -165,13 +154,16 @@ class ProjectEventsController extends Controller
             case 'single':
               try {
                 $this->eventsService->changeCategories(
-                  $projectId,
                   $calendarId,
                   $eventUri,
                   $recurrenceId,
                   additions: $additions,
                   removals: $removals,
                 );
+                $projectEvents = $this->eventsService->getProjectEvent($projectId, $eventUri, $recurrenceId);
+                if (!is_array($projectEvents)) {
+                  $projectEvents = [ $projectEvents ];
+                }
               } catch (Exceptions\CalendarEntryNotFoundException $e) {
                 // ignore
               }
@@ -188,12 +180,15 @@ class ProjectEventsController extends Controller
                 foreach (array_keys($uris) as $eventUri) {
                   try {
                     $this->eventsService->changeCategories(
-                      $projectId,
                       $calendarId,
                       $eventUri,
                       recurrenceId: null,
                       additions: $additions,
                       removals: $removals,
+                    );
+                    $projectEvents = array_merge(
+                      $projectEvents,
+                      $this->eventsService->getProjectEvent($projectId, $eventUri, $recurrenceId),
                     );
                   } catch (Exceptions\CalendarEntryNotFoundException $e) {
                     // ignore
@@ -202,6 +197,11 @@ class ProjectEventsController extends Controller
               }
               break;
           }
+          /** @var Entities\ProjectEvent $projectEvent */
+          foreach ($projectEvents as $projectEvent) {
+            $this->eventsService->ensureAbsenceField($projectEvent, !$enable, flush: false);
+          }
+          $this->eventsService->flushDatabase();
           break;
         case 'select':
           $template = 'project-events/eventslisting';
@@ -333,10 +333,11 @@ class ProjectEventsController extends Controller
 
       $templateParameters = [
         'appName' => $this->appName,
+        'appNameTag' => 'app-' . $this->appName,
         'projectId' => $projectId,
         'projectName' => $projectName,
         'cssClass' => 'projectevents',
-        'locale' => $this->getLocale(),
+        'localeSymbol' => $this->getLocale(),
         'timezone' => $this->getTimeZone(),
         'events' => $events,
         'eventMatrix' => $eventMatrix,
@@ -347,11 +348,9 @@ class ProjectEventsController extends Controller
         'requesttoken' => \OCP\Util::callRegister(),
         'wikinamespace' => $this->getAppValue('wikinamespace'),
       ];
-      $response = new TemplateResponse(
-        $this->appName(),
+      $response = $this->templateResponse(
         $template,
         $templateParameters,
-        'blank'
       );
 
       $response->addHeader('X-'.$this->appName().'-project-id', $projectId);

@@ -460,6 +460,17 @@ class DatabaseStorageFolder extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\
     /**
      * {@inheritDoc}
      */
+    public function isRootFolder(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isRootFolder', []);
+
+        return parent::isRootFolder();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function __toString(): string
     {
 

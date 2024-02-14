@@ -1,6 +1,9 @@
 <map id="preUpdate" name="preUpdate">
-<area shape="rect" id="node1" title="{}" alt="" coords="5,55,88,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#af56683d8e11661ee630aca7f0867e58c" title="Protect against re&#45;entrance when the preRemove() handler causes changes to the entity." alt="" coords="143,5,223,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#ab9528fbc5c6e98007d3c3ab72c1d8c45" title="{}" alt="" coords="143,55,224,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#aea285424b7f093607c4c2a108847e97e" title="Protect against re&#45;entrance when the preRemove() handler causes changes to the entity." alt="" coords="136,104,231,129"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,56,87,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#af56683d8e11661ee630aca7f0867e58c" title="Protect against re&#45;entrance when the preRemove() handler causes changes to the entity." alt="" coords="142,5,221,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,53,129,35,130,40,85,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#ab9528fbc5c6e98007d3c3ab72c1d8c45" title="{}" alt="" coords="141,56,222,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="87,67,125,67,125,72,87,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_sepa_bulk_transaction_entity_listener.html#aea285424b7f093607c4c2a108847e97e" title="Protect against re&#45;entrance when the preRemove() handler causes changes to the entity." alt="" coords="135,107,228,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="85,81,130,98,129,103,83,86"/>
 </map>

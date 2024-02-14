@@ -1,4 +1,5 @@
 <map id="timeStamp" name="timeStamp">
-<area shape="rect" id="node1" title="Call ConfigService::formatTimeStamp() with the current date and time." alt="" coords="5,5,91,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="139,5,240,31"/>
+<area shape="rect" id="Node000001" title="Call ConfigService::formatTimeStamp() with the current date and time." alt="" coords="5,5,90,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="138,5,238,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,16,122,16,122,21,90,21"/>
 </map>

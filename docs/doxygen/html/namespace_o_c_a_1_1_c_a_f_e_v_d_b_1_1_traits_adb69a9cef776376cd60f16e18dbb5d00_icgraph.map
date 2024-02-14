@@ -1,4 +1,5 @@
 <map id="getDateTimeZone" name="getDateTimeZone">
-<area shape="rect" id="node1" title="Get the current timezone." alt="" coords="151,5,277,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa8518bbd35b1dd404c870053c7a7d714" title="Return the current time&#45;zone string." alt="" coords="5,5,103,31"/>
+<area shape="rect" id="Node000001" title="Get the current timezone." alt="" coords="150,5,275,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa8518bbd35b1dd404c870053c7a7d714" title="Return the current time&#45;zone string." alt="" coords="5,5,102,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,21,102,21,102,16,134,16"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="setUserEncryptionKey" name="setUserEncryptionKey">
-<area shape="rect" id="node1" title=" " alt="" coords="213,5,367,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_maintenance_api_controller.html#a648875b48705fabdae3c839935046783" title="Distribute the encryption key to all users by storing them in their personal preferences,..." alt="" coords="5,5,165,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="213,5,365,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_maintenance_api_controller.html#a648875b48705fabdae3c839935046783" title="Distribute the encryption key to all users by storing them in their personal preferences,..." alt="" coords="5,5,165,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,21,165,21,165,16,197,16"/>
 </map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,6 +56,7 @@ use OCA\CAFEVDB\Constants;
 class ProjectParticipantFields extends PMETableViewBase
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'project-participant-fields';
   const TABLE = self::PROJECT_PARTICIPANT_FIELDS_TABLE;
@@ -99,6 +100,9 @@ class ProjectParticipantFields extends PMETableViewBase
     DataType::DATETIME => 12,
   ];
 
+  /** @var string */
+  protected static $toolTipsPrefix = 'page-renderer:participant-fields:definition';
+
   /**
    * @var string
    * SQL sub-query in order to join with   self::FIELD_TRANSLATIONS_TABLE
@@ -138,31 +142,19 @@ class ProjectParticipantFields extends PMETableViewBase
     ],
   ];
 
-  /** @var InstrumentationService */
-  private $instrumentationService;
-
-  /** @var FuzzyInput */
-  private $fuzzyInput;
-
-  /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
     RequestParameterService $requestParameters,
     EntityManager $entityManager,
     PHPMyEdit $phpMyEdit,
-    InstrumentationService $instrumentationService,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    FuzzyInputService $fuzzyInput,
-    ProjectParticipantFieldsService $participantFieldsService,
+    private InstrumentationService $instrumentationService,
+    private FuzzyInputService $fuzzyInput,
+    private ProjectParticipantFieldsService $participantFieldsService,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
-    $this->instrumentationService = $instrumentationService;
-    $this->fuzzyInput = $fuzzyInput;
-    $this->participantFieldsService = $participantFieldsService;
   }
   // phpcs:enable
 
@@ -362,13 +354,27 @@ class ProjectParticipantFields extends PMETableViewBase
         'sort' => true,
         'tooltip' => $this->toolTipsService['participant-fields-field-name'],
       ],
-      $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name')
+      $this->makeFieldTranslationFddValues($this->joinStructure[self::TABLE], 'name') //
     );
 
     $opts['fdd']['name']['sql'] = self::ifFileSystemEntry('$main_table.$field_name', $opts['fdd']['name']['sql']);
 
+    $opts['fdd']['deleted'] = array_merge(
+      $this->defaultFDD['deleted'], [
+        'tab' => [ 'id' => 'tab-all' ],
+        'name' => $this->l->t('Deleted'),
+        'css'      => [ 'postfix' => [ 'participant-field-disabled', ], ],
+        'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
+        'dateformat' => 'medium',
+        'timeformat' => 'short',
+        'maxlen' => 19,
+        'input' => ($this->showDisabled) ? 'T' : 'RH',
+      ]);
+    Util::unsetValue($opts['fdd']['deleted']['css']['postfix'], 'date');
+    $opts['fdd']['deleted']['css']['postfix'][] = 'datetime';
+
     $opts['fdd']['usage'] = [
-      'tab' => [ 'id' => [ 'miscinfo' ] ],
+      'tab' => [ 'id' => [ 'miscinfo', 'definition' ] ],
       'name' => $this->l->t('#Usage'),
       'sql' => 'COUNT(DISTINCT '.$joinTables[self::DATA_TABLE].'.musician_id)',
       'css' => [ 'postfix' => [ 'participant-fields-usage', ], ],
@@ -380,16 +386,7 @@ class ProjectParticipantFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['participant-fields-usage'],
     ];
 
-    $opts['fdd']['deleted'] = array_merge(
-      $this->defaultFDD['deleted'], [
-        'tab' => [ 'id' => 'miscinfo' ],
-        'name' => $this->l->t('Deleted'),
-        'css'      => [ 'postfix' => [ 'participant-field-disabled', ], ],
-        'tooltip'  => $this->toolTipsService['participant-fields-disabled'],
-        'input' => ($this->showDisabled) ? 'T' : 'RH',
-      ]);
-
-    $opts['fdd']['multiplicity'] =[
+    $opts['fdd']['multiplicity'] = [
       'name'    => $this->l->t('Multiplicity'),
       'tab' => [ 'id' => 'definition' ],
       'select'  => 'D',
@@ -403,6 +400,26 @@ class ProjectParticipantFields extends PMETableViewBase
       }, Multiplicity::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-multiplicity'],
       'valueData' => array_map('json_encode', $this->participantFieldsService->multiplicityTypeMask()),
+      'display|ACP' => [
+        'attributes' => function($op, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return [
+            'data-field-usage' => $usage,
+          ];
+        },
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return '<input id="pme-field-multiplicity-lock"
+' . ($usage > 0 ? 'checked' : '') . '
+       type="checkbox"
+       class="pme-input pme-select-lock"
+/>
+<label for="pme-field-multiplicity-lock"
+       class="pme-input pme-select-lock lock-unlock tooltip-auto"
+       title="' . $this->toolTipsService[self::$toolTipsPrefix . ':multiplicity:lock'] . '"
+></label>';
+        },
+      ],
     ];
 
     // $dataTypeIndex = count($opts['fdd']);
@@ -419,6 +436,26 @@ class ProjectParticipantFields extends PMETableViewBase
         return [ $tag, $this->toolTipsService['participant-field-data-type' . ':' . $tag] ];
       }, DataType::toArray()),
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
+      'display|ACP' => [
+        'attributes' => function($op, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return [
+            'data-field-usage' => $usage,
+          ];
+        },
+        'postfix' => function($op, $pos, $k, $row, $pme) {
+          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          return '<input id="pme-field-data-type-lock"
+' . ($usage > 0 ? 'checked' : '') . '
+       type="checkbox"
+       class="pme-input pme-select-lock"
+/>
+<label for="pme-field-data-type-lock"
+       class="pme-input pme-select-lock lock-unlock tooltip-auto"
+       title="' . $this->toolTipsService[self::$toolTipsPrefix . ':data-type:lock'] . '"
+></label>';
+        },
+      ],
     ];
 
     $opts['fdd']['due_date'] = Util::arrayMergeRecursive(
@@ -1360,9 +1397,24 @@ __EOT__;
    */
   public function beforeDeleteTrigger(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
-    $this->participantFieldsService->deleteField($pme->rec);
+    $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+
+    /*** @var Entities\ProjectParticipantField $field */
+    $field = $this->legacyRecordToEntity($pme->rec);
+    /** @var Entities\ProjectEvent $projectEvent */
+    $projectEvent = $field->getProjectEvent();
+    if ($field->usage() == 1 && !empty($field->getProjectEvent())) {
+      // if the logged in user decides to delete this field (again) then we
+      // should not hinder it too much ...
+      $projectEvent->setAbsenceField(null);
+      $field->setProjectEvent(null);
+    }
+
+    $this->participantFieldsService->deleteField($field);
 
     $changed = []; // disable PME delete query
+
+    $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $filterState);
 
     return true; // but run further triggers if appropriate
   }
@@ -1381,12 +1433,13 @@ __EOT__;
    * Generate a row given values and index for the "change" view
    * corresponding to the multi-choice fields.
    *
-   * @param mixed $value One row of the form as returned form
-   * self::explodeDataOptions().
+   * @param mixed $value One row of the form as returned from
+   * \OCA\CAFEVDB\Service\ProjectParticipantFieldsService::explodeDataOptions().
    *
-   * @param integer $index A unique row number.
    *
-   * @param null|boolean $used Whether the DB already contains data
+   * @param int $index A unique row number.
+   *
+   * @param boolean $used Whether the DB already contains data
    * records referring to this item.
    *
    * @param string $dataType Curent data-type in order to establish some
@@ -1394,160 +1447,18 @@ __EOT__;
    *
    * @return string HTML data for one row.
    */
-  public function dataOptionInputRowHtml(mixed $value, int $index, bool $used, ?string $dataType = null):string
+  public function dataOptionInputRowHtml(mixed $value, int $index, bool $used, ?string $dataType):string
   {
-    $pfx = $this->pme->cgiDataName('data_options');
-    // $key = $value['key'];
-    $deleted = !empty($value['deleted']);
-    $data = ''
-          .' data-index="'.$index.'"' // real index
-          .' data-used="'.($used ? 'used' : 'unused').'"'
-          .' data-deleted="'.$value['deleted'].'"';
-    $html = '';
-    $html .= '
-    <tr'
-    .' class="data-line'
-    .' data-options'
-    .' '.($deleted ? 'deleted' : 'active')
-    .'"'
-    .' '.$data.'>';
-    $html .= '<td class="operations">
-  <input
-    class="operation delete-undelete"
-    title="'.$this->toolTipsService['participant-fields-data-options:delete-undelete'].'"
-    type="button"/>
-  <input
-    class="operation regenerate only-multiplicity-recurring"
-    title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate'].'"
-    '.($deleted ? ' disabled' : '').'
-    type="button"/>
-    </td>';
-    // key
-    $prop = 'key';
-    $cssClass = self::OPTION_DATA_SHOW_MASK[$prop]??[];
-    $cssClass[] = 'field-' . $prop;
-    $cssClass = implode(' ', $cssClass);
-    $html .= '<td class="'.$cssClass.'">'
-          .'<input'
-          .($used || $deleted || true ? ' readonly="readonly"' : '')
-          .' type="text"'
-          .' class="'.$cssClass.'"'
-          .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
-          .' title="'.$value[$prop].'"'
-          .' size="5"'
-          .' maxlength="'.strlen($value[$prop]).'"'
-          .'/>'
-          .'<input'
-          .' type="hidden"'
-          .' class="field-deleted"'
-          .' name="'.$pfx.'['.$index.'][deleted]"'
-          .' value="'.$value['deleted'].'"'
-          .'/>'
-          .'</td>';
-    // label
-    $prop = 'label';
-    $cssClass = 'field-' . $prop;
-    $html .= '<td class="'.$cssClass.'">'
-          .'<input'
-          .($deleted ? ' readonly="readonly"' : '')
-          .' class="'.$cssClass.'"'
-          .' spellcheck="true"'
-          .' type="text"'
-          .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
-          .' size="16"'
-          .' maxlength="32"'
-          .'/>'
-          .'</td>';
-    // data
-    $prop = 'data';
-    $cssClass = self::OPTION_DATA_SHOW_MASK[$prop]??[];
-    $cssClass[] = 'field-' . $prop;
-    $cssClass = implode(' ', $cssClass);
-    $size = self::OPTION_DATA_INPUT_SIZE[$dataType]??self::OPTION_DATA_INPUT_SIZE['default'];
-    $fieldValue = $value[$prop];
-    if (!empty($fieldValue)) {
-      switch ($dataType) {
-        case DataType::DATE:
-          $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
-          $fieldValue = $this->dateTimeFormatter()->formatDate($date, 'medium');
-          break;
-        case DataType::DATETIME:
-          $date = DateTime::parse($fieldValue, $this->getDateTimeZone());
-          $fieldValue = $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-          break;
-      }
-    }
-    $html .= '<td class="'.$cssClass.'"><input'
-      .($deleted ? ' readonly="readonly"' : '')
-      .' class="'.$cssClass.'"'
-      .' type="text"'
-      .' name="'.$pfx.'['.$index.']['.$prop.']"'
-      .' value="'.$fieldValue.'"'
-      .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
-      .' size="'.$size.'"'
-      .'/></td>';
-    // deposit
-    $prop = 'deposit';
-    $cssClass = implode(
-      ' ',
-      array_merge(
-        self::OPTION_DATA_SHOW_MASK[$prop]??[], [
-          'field-'.$prop,
-          'not-multiplicity-simple-set-deposit-due-date-required',
-          'not-multiplicity-single-set-deposit-due-date-required',
-          'not-multiplicity-groupofpeople-set-deposit-due-date-required',
-          'set-deposit-due-date-required',
-          'not-data-type-receivables-hidden',
-          'not-data-type-liabilities-hidden',
-        ])
-    );
-    $html .= '<td class="'.$cssClass.'"><input'
-          .($deleted ? ' readonly="readonly"' : '')
-          .' class="'.$cssClass.'"'
-          .' type="number"'
-          .' step="0.01"'
-          .' required'
-          .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
-          .' maxlength="8"'
-          .' size="9"'
-          .'/></td>';
-    // limit
-    $prop = 'limit';
-    $cssClass = implode(' ', array_merge(['field-' . $prop], self::OPTION_DATA_SHOW_MASK[$prop]));
-    $html .= '<td class="'.$cssClass.'"><input'
-          .($deleted ? ' readonly="readonly"' : '')
-          .' class="'.$cssClass.'"'
-          .' type="number"'
-          .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' value="'.$value[$prop].'"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
-          .' maxlength="8"'
-          .' size="9"'
-          .'/></td>';
-    // tooltip
-    $prop = 'tooltip';
-    $cssClass = 'field-'.$prop;
-    $html .= '<td class="'.$cssClass.'">'
-          .'<textarea'
-          .($deleted ? ' readonly="readonly"' : '')
-          .' class="'.$cssClass.'"'
-          .' name="'.$pfx.'['.$index.']['.$prop.']"'
-          .' title="'.$this->toolTipsService['participant-fields-data-options:'.$prop].'"'
-          .' cols="32"'
-          .' rows="1"'
-          .'>'
-          .$value[$prop]
-          .'</textarea>'
-          .'</td>';
-    // finis
-    $html .= '
-    </tr>';
-    return $html;
+    return $this->templateResponse(
+      'fragments/participant-fields/recurring-receivable-definition-input-row', [
+        'rowData' => $value,
+        'index' => $index,
+        'used' => $used,
+        'dataType' => $dataType,
+        'inputName' => $this->pme->cgiDataName('data_options'),
+        'toolTips' => $this->toolTipsService,
+      ],
+    )->render();
   }
 
   /**
@@ -1568,165 +1479,17 @@ __EOT__;
    */
   private function dataOptionGeneratorHtml(?int $fieldId, int $numberOfOptions, mixed $generatorItem):string
   {
-    $pfx = $this->pme->cgiDataName('data_options');
-    $html = '
-<tr class="data-line data-options placeholder active multiplicity-recurring-hidden"
-    data-field-id="'.$fieldId.'"
-    data-index="'.$numberOfOptions.'"
->
-  <td class="placeholder" colspan="6">
-    <input
-      class="field-label"
-      spellcheck="true"
-      type="text"
-      name="'.$pfx.'[-1][label]"
-      value=""
-      title="'.$this->toolTipsService['participant-fields-data-options:placeholder'].'"
-      placeholder="'.$this->l->t('new option').'"
-      size="33"
-      maxlength="32"
-    />';
-    foreach (['key', 'data', 'deposit', 'limit', 'tooltip'] as $prop) {
-      $html .= '
-    <input
-      class="field-'.$prop.'"
-      type="hidden"
-      name="'.$pfx.'[-1]['.$prop.']"
-      value=""
-    />';
-    }
-    $html .= '
-  </td>
-</tr>';
-    $generator = $generatorItem['data']??null;
-    $availableUpdateStrategies = IRecurringReceivablesGenerator::UPDATE_STRATEGIES;
-    $generatorSlug = '';
-    if (!empty($generator)) {
-      $availableUpdateStrategies = $generator::updateStrategyChoices();
-      $generatorSlug = $generator::slug();
-    }
-    $updateStrategies = [ [ 'value' => '', 'name' => '', 'class' => 'hidden', ], ];
-    foreach (IRecurringReceivablesGenerator::UPDATE_STRATEGIES as $tag) {
-      $flags = 0;
-      if ($tag == IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION) {
-        $flags |= PageNavigation::SELECTED;
-      }
-      if (array_search($tag, $availableUpdateStrategies) === false) {
-        $flags |= PageNavigation::DISABLED;
-        $flags &= ~PageNavigation::SELECTED; // don't select disabled options
-      } elseif (count($availableUpdateStrategies) == 1) {
-        $flags |= PageNavigation::SELECTED; // select the only available option.
-      }
-      $option = [
-        'value' => $tag,
-        'name' => $this->l->t($tag),
-        'flags' => $flags,
-        'title' => $this->toolTipsService['participant-fields-recurring-data:update-strategy:'.$tag],
-      ];
-      $updateStrategies[] = $option;
-    }
-    $updateStrategies = PageNavigation::selectOptions($updateStrategies);
-    $generators = $this->participantFieldsService->recurringReceivablesGenerators();
-    $cssClass = implode(' ', [
-      'data-line',
-      'data-options',
-      'generator',
-      'active',
-      'default-hidden',
-      'not-multiplicity-recurring-hidden',
-      'update-strategy-count-' . count($availableUpdateStrategies),
-    ]);
-    $html .= '
-<tr
-  class="'.$cssClass.'"
-  data-generator-slug="'.$generatorSlug.'"
-  data-generators=\'' . json_encode(
-    array_merge(
-      array_map([ $this->l, 't' ], array_keys($generators)),
-      array_values($generators)
-    )) . '\'
-  data-field-id="'.$fieldId.'"
-  data-available-update-strategies=\''.json_encode($availableUpdateStrategies).'\'
->
-  <td class="operations">
-    <input
-      class="operation regenerate-all"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:regenerate-all:everybody'].'"
-      type="button"
-      '.(empty($generator) || empty($fieldId) ? 'disabled' : '').'
-    />
-    <input
-      class="operation generator-run"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:generator-run'].'"
-      type="button"
-      '.(empty($generator) || empty($fieldId) ? 'disabled' : '').'
-    />
-  </td>
-  <td class="generator" colspan="5">
-    <label for="recurring-receivables-update-strategy" class="recurring-receivables-update-strategy">
-      '.$this->l->t('In case of Conflict').'
-    </label>
-    <select
-      id="recurring-receivables-update-strategy"
-      required
-      data-default-value="'.IRecurringReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION.'"
-      class="recurring-multiplicity-required recurring-receivables-update-strategy"
-      name="recurringReceivablesUpdateStrategy"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:update-strategy'].'"
-    >
-'
-      . $updateStrategies
-      . '
-    </select>
-    <input
-      class="field-data recurring-multiplicity-required"
-      spellcheck="true"
-      type="text"
-      name="'.$pfx.'[-1][data]"
-      value="'.$generator.'"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:generator'].'"
-      placeholder="'.$this->l->t('field generator').'"
-      size="33"
-      maxlength="1024"
-      '.(empty($generator) ? '' : 'readonly="readonly"').'
-    />';
-    foreach (['key', 'limit', 'deposit', 'label', 'tooltip'] as $prop) {
-      $value = ($generatorItem[$prop]??'');
-      if (empty($value) && $prop == 'key') {
-        $value = Uuid::NIL;
-      }
-      if (empty($value) && $prop == 'label') {
-        $value = IRecurringReceivablesGenerator::GENERATOR_LABEL;
-      }
-      if ($prop == 'limit') {
-        // $value is stored as Unix time-stamp, convert it to locale
-        // date.
-        $value = $this->dateTimeFormatter()->formatDate($value, 'medium');
-        $html .= '
-    <input
-      class="field-'.$prop.'"
-      type="text"
-      name="'.$pfx.'[-1]['.$prop.']"
-      value="'.$value.'"
-      title="'.$this->toolTipsService['participant-fields-recurring-data:generator-startdate'].'"
-      placeholder="'.$this->l->t('start date').'"
-      size="10"
-      maxlength="10"
-    />';
-      } else {
-        $html .= '
-    <input
-      class="field-'.$prop.'"
-      type="hidden"
-      name="'.$pfx.'[-1]['.$prop.']"
-      value="'.$value.'"
-    />';
-      }
-    }
-    $html .= '
-  </td>
-</tr>';
-    return $html;
+    return $this->templateResponse(
+      'fragments/participant-fields/recurring-receivable-definition-generator-row', [
+        'fieldId' => $fieldId,
+        'generatorItem' => $generatorItem,
+        'generators' => $this->participantFieldsService->recurringReceivablesGenerators(),
+        'numberOfOptions' => $numberOfOptions,
+        'inputName' => $this->pme->cgiDataName('data_options'),
+        'toolTips' => $this->toolTipsService,
+        'dateTimeFormatter' => $this->dateTimeFormatter(),
+      ],
+    )->render();
   }
 
   /**
@@ -1810,19 +1573,20 @@ __EOT__;
   </div>
   <nav class="field-display-options dropdown-content dropdown-dropup dropdown-align-right">
     <ul class="menu-list">
-      <li class="menu-item show-deleted tooltip-left" title="'.$showDeletedTip.'">
+      <li class="menu-item show-deleted tooltip-left" title="' . $showDeletedTip . '">
         <label class="show-deleted menu-item" for="data-options-show-deleted">
           <input type="checkbox"
                  name="show-deleted"
                  class="show-deleted checkbox"
                  value="show"
                  id="data-options-show-deleted"
+                 ' . ($this->showDisabled ? 'checked' : '') . '
           />
           <img class="show-deleted checkmark"
                alt=""
                src="'.$this->urlGenerator()->imagePath('core', 'actions/checkmark.svg').'"
           >
-          '.$showDeletedLabel.'
+          ' . $showDeletedLabel . '
         </label>
       </li>
       <li class="menu-item show-data tooltip-left" title="'.$showDataTip.'">
@@ -1877,6 +1641,7 @@ __EOT__;
         $cssClass[] = 'recurring-' . $slug . '-' . ($value ? 'en' : 'dis') . 'abled';
       }
     }
+    $cssClass[] = $this->showDisabled ? 'show-deleted' : 'hide-deleted';
 
     $cssClass = implode(' ', $cssClass);
     $html .= '<table

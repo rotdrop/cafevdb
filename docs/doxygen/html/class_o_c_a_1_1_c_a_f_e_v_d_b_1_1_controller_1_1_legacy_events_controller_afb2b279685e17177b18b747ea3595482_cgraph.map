@@ -1,13 +1,24 @@
 <map id="serviceSwitch" name="serviceSwitch">
-<area shape="rect" id="node1" title=" " alt="" coords="5,129,109,155"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a76774ba8d11d25ceb3c894f192362413" title=" " alt="" coords="167,5,258,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#aa0af854aeaaf83b040b29d006e79fa0a" title=" " alt="" coords="174,55,251,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a450a21c4fa0b70707a5fd8aaf6a96466" title="Edit an existing event." alt="" coords="159,104,266,129"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a6776b2fe4827e91b061b815f7730c89b" title=" " alt="" coords="167,153,259,179"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a6c83e799d4a9e5c85e69f5980f3ed41a" title=" " alt="" coords="173,203,253,228"/>
-<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a8760a80191af6b0890768e015fd317e6" title=" " alt="" coords="157,252,268,277"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#aa6de6a8a34ec5b29770b561cef8da649" title=" " alt="" coords="320,104,419,129"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a2e81591e72e8b5131501fadb6ad98a91" title="Exports an event and convert all times to UTC." alt="" coords="316,153,423,179"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a66debc077e1a747c0da16f296c9487c7" title="Fixes new line breaks (fixes problems with Apple iCal)." alt="" coords="487,128,589,153"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#ab7d3c1c71289090ef10741bd4be4331a" title="Serializes the VEVENT/VTODO/VJOURNAL with UTC dates." alt="" coords="471,177,605,203"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,132,109,159"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a76774ba8d11d25ceb3c894f192362413" title=" " alt="" coords="166,5,257,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,130,104,88,155,42,162,37,165,42,158,46,108,91,71,133"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#aa0af854aeaaf83b040b29d006e79fa0a" title=" " alt="" coords="173,56,250,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="84,129,155,92,166,87,168,92,158,97,86,134"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a450a21c4fa0b70707a5fd8aaf6a96466" title="Edit an existing event." alt="" coords="158,107,265,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="109,134,142,129,143,134,110,139"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a6776b2fe4827e91b061b815f7730c89b" title=" " alt="" coords="166,157,257,184"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="110,151,151,158,150,163,109,156"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a6c83e799d4a9e5c85e69f5980f3ed41a" title=" " alt="" coords="172,208,251,235"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="86,157,158,194,168,199,166,203,155,198,84,162"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a8760a80191af6b0890768e015fd317e6" title=" " alt="" coords="157,259,266,285"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="71,158,108,199,158,245,165,249,162,253,155,249,104,203,67,161"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#aa6de6a8a34ec5b29770b561cef8da649" title=" " alt="" coords="318,107,415,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="265,117,303,117,303,123,265,123"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="254,154,308,136,310,141,256,159"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a2e81591e72e8b5131501fadb6ad98a91" title="Exports an event and convert all times to UTC." alt="" coords="314,157,419,184"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="258,168,298,168,298,173,258,173"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a66debc077e1a747c0da16f296c9487c7" title="Fixes new line breaks (fixes problems with Apple iCal)." alt="" coords="484,132,584,159"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="419,160,468,153,469,158,420,165"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#ab7d3c1c71289090ef10741bd4be4331a" title="Serializes the VEVENT/VTODO/VJOURNAL with UTC dates." alt="" coords="467,183,601,209"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="420,176,452,181,451,186,419,181"/>
 </map>

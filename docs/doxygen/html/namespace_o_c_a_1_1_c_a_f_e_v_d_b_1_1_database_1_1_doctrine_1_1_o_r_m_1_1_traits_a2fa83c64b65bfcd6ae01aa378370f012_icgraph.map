@@ -1,7 +1,11 @@
 <map id="offsetExists" name="offsetExists">
-<area shape="rect" id="node1" title="{}" alt="" coords="268,31,360,56"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a3d6a26d211a99287459a423d3965f11f" title="{}" alt="" coords="144,5,220,31"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#abd3a144f8df4dea56d1ac58da5bc762a" title="{}" alt="" coords="145,55,219,80"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a658defb34762c8f40085aec87e16ba1a" title=" " alt="" coords="19,5,83,31"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a1bb2b81cc0daac39879f608d2a9ede38" title="{}" alt="" coords="5,55,96,80"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="266,31,357,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a3d6a26d211a99287459a423d3965f11f" title="{}" alt="" coords="143,5,218,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="250,35,218,29,219,23,251,30"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#abd3a144f8df4dea56d1ac58da5bc762a" title="{}" alt="" coords="143,56,218,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="251,58,219,65,218,60,250,53"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a658defb34762c8f40085aec87e16ba1a" title=" " alt="" coords="18,5,82,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,21,82,21,82,16,127,16"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_traits.html#a1bb2b81cc0daac39879f608d2a9ede38" title="{}" alt="" coords="5,56,95,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="127,72,95,72,95,67,127,67"/>
 </map>

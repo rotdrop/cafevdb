@@ -1,5 +1,7 @@
 <map id="EnduserNotificationException" name="EnduserNotificationException">
-<area shape="rect" id="node1" title="This exception should provide an error message which informs an end&#45;user about an error." alt="" coords="5,152,200,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="63,79,143,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="49,5,157,31"/>
+<area shape="rect" id="Node000001" title="This exception should provide an error message which informs an end&#45;user about an error." alt="" coords="5,155,199,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="62,80,142,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,122,105,154,99,154,99,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="48,5,156,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="105,48,105,80,99,80,99,48"/>
 </map>

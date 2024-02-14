@@ -1,6 +1,9 @@
 <map id="getCategoryOptions" name="getCategoryOptions">
-<area shape="rect" id="node1" title="returns the categories of the vcategories object" alt="" coords="5,31,144,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#a4c5656d6a34fbce12f67fd3690511dcb" title="returns the vcategories object of the user" alt="" coords="192,31,304,56"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#aeb8ce2eb142ff02f9202bea87d5fd42c" title="returns the default categories of ownCloud" alt="" coords="352,5,497,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#ad078676a127692237148a2c8a569b420" title="Scan events for categories." alt="" coords="368,55,481,80"/>
+<area shape="rect" id="Node000001" title="returns the categories of the vcategories object" alt="" coords="5,31,143,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#a4c5656d6a34fbce12f67fd3690511dcb" title="returns the vcategories object of the user" alt="" coords="191,31,302,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,41,175,41,175,47,143,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#aeb8ce2eb142ff02f9202bea87d5fd42c" title="returns the default categories of ownCloud" alt="" coords="350,5,494,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="302,33,335,29,335,34,303,39"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_legacy_1_1_calendar_1_1_o_c___calendar___app.html#ad078676a127692237148a2c8a569b420" title="Scan events for categories." alt="" coords="366,56,478,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="303,49,351,56,350,62,302,55"/>
 </map>

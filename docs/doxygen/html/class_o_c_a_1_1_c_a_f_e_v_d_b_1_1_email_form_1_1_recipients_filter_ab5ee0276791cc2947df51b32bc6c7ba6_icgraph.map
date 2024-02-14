@@ -1,10 +1,23 @@
 <map id="filterHistory" name="filterHistory">
-<area shape="rect" id="node1" title=" " alt="" coords="669,107,759,132"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#abb68032ee09c309fa68ede14a34e348d" title=" " alt="" coords="355,5,449,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="239,107,307,132"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab85bd7c01c06a6b1507047bfd28f941c" title="Load the history from the session data." alt="" coords="358,157,446,183"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#adc12d97d4d6b670014369f82669309c1" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="513,107,605,132"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a30a395e6e48481531a93ec374c412775" title="Compose a default history record for the initial state." alt="" coords="497,208,621,233"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ae40c9dafec946961dfd72815f6764fb8" title=" " alt="" coords="144,107,191,132"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1a3fa621489e73c7386685aa0e152c30" title="{}" alt="" coords="5,107,96,132"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="665,107,753,133"/>
+<area shape="poly" id="edge6_Node000001_Node000001" title=" " alt="" coords="735,94,726,88,709,85,693,87,685,92,683,97,687,105,682,107,678,98,681,88,692,82,709,80,728,83,738,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#abb68032ee09c309fa68ede14a34e348d" title=" " alt="" coords="351,5,446,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="682,98,652,74,616,53,572,39,527,29,446,21,446,16,528,24,574,33,618,48,655,69,685,94"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="236,107,303,133"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="652,105,617,97,542,89,484,89,352,104,304,114,303,108,351,99,484,83,543,84,617,92,653,99"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ab85bd7c01c06a6b1507047bfd28f941c" title="Load the history from the session data." alt="" coords="355,157,442,184"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="651,140,618,148,524,162,443,170,442,165,523,157,616,143,650,135"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#adc12d97d4d6b670014369f82669309c1" title="Push the current filter selection onto the undo&#45;history stack." alt="" coords="510,107,601,133"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="650,123,602,123,602,117,650,117"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a30a395e6e48481531a93ec374c412775" title="Compose a default history record for the initial state." alt="" coords="494,208,617,235"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="682,145,618,192,586,210,584,205,616,187,678,141"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="365,43,353,53,288,108,284,104,350,49,362,39"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a977b1615a5175561d17eebf08eca7a08" title=" " alt="" coords="143,107,188,133"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="220,123,188,123,188,117,220,117"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a5e6588671446c37e33137cae8265c389" title="{}" alt="" coords="5,107,95,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="127,123,95,123,95,117,127,117"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="348,154,303,136,305,131,350,149"/>
+<area shape="poly" id="edge10_Node000007_Node000003" title=" " alt="" coords="494,123,304,123,304,117,494,117"/>
+<area shape="poly" id="edge12_Node000008_Node000003" title=" " alt="" coords="478,226,414,218,381,210,350,198,328,185,308,168,279,135,283,132,312,164,331,180,353,194,383,205,415,213,478,220"/>
+<area shape="poly" id="edge13_Node000008_Node000006" title=" " alt="" coords="496,205,441,187,443,182,498,200"/>
 </map>

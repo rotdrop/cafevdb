@@ -1,7 +1,11 @@
 <map id="patchMember" name="patchMember">
-<area shape="rect" id="node1" title="Patch the membership config for the given email address." alt="" coords="5,5,107,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="155,5,267,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="315,5,408,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="456,5,528,31"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="576,5,659,31"/>
+<area shape="rect" id="Node000001" title="Patch the membership config for the given email address." alt="" coords="5,5,106,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="154,5,265,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,16,138,16,138,21,106,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="313,5,405,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,16,297,16,297,21,265,21"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="453,5,525,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="406,16,438,16,438,21,406,21"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="573,5,655,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="525,16,557,16,557,21,525,21"/>
 </map>

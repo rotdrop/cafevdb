@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,15 +58,6 @@ class PHPMyEdit extends LegacyPHPMyEdit
   /** @var Connection */
   private $connection;
 
-  /** @var RequestParameterService */
-  private $request;
-
-  /** @var IDateTimeZone */
-  private $dateTimeZone;
-
-  /** @var IDateTimeFormatter */
-  private $dateTimeFormatter;
-
   private $defaultOptions;
 
   private $affectedRows = 0;
@@ -113,26 +104,20 @@ class PHPMyEdit extends LegacyPHPMyEdit
    * friends does something useful.
    */
   public function __construct(
-    EntityManager $entityManager,
+    protected EntityManager $entityManager,
     IOptions $options,
-    RequestParameterService $request,
-    ILogger $logger,
-    IL10N $l10n,
-    IDateTimeZone $dateTimeZone,
-    IDateTimeFormatter $dateTimeFormatter,
+    private RequestParameterService $request,
+    protected ILogger $logger,
+    protected IL10N $l,
+    private IDateTimeZone $dateTimeZone,
+    private IDateTimeFormatter $dateTimeFormatter,
   ) {
-    $this->entityManager = $entityManager;
     $this->connection = $this->entityManager->getConnection();
     if (empty($this->connection)) {
       $loggedIn = \OC::$server->query(\OCP\IUserSession::class)->isLoggedIn();
       throw new RuntimeException('Database connection is empty , user logged in: ' . (int)$loggedIn);
     }
     $this->dbh = $this->connection;
-    $this->request = $request;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->dateTimeZone = $dateTimeZone;
-    $this->dateTimeFormatter = $dateTimeFormatter;
     $this->debug = false;
 
     $this->overrideOptions = [

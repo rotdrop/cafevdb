@@ -1,5 +1,7 @@
 <map id="ensureFolder" name="ensureFolder">
-<area shape="rect" id="node1" title="Ensure a folder exists withtout throwing an exception." alt="" coords="5,31,103,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a330e8edf0ecc220b330e6e6c37058e49" title="Get the folder with name $name." alt="" coords="154,5,230,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a31956852c940764b8b48f73a7c547c67" title="Create a new folder named $name." alt="" coords="151,55,233,80"/>
+<area shape="rect" id="Node000001" title="Ensure a folder exists withtout throwing an exception." alt="" coords="5,31,102,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a330e8edf0ecc220b330e6e6c37058e49" title="Get the folder with name $name." alt="" coords="153,5,228,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,32,137,26,138,31,103,38"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_app_storage.html#a31956852c940764b8b48f73a7c547c67" title="Create a new folder named $name." alt="" coords="150,56,231,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,50,135,56,134,62,102,56"/>
 </map>

@@ -1,4 +1,6 @@
 <map id="touch" name="touch">
-<area shape="rect" id="node1" title="{}" alt="" coords="108,29,163,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a4572a171f5a258fb746f2ec694f377ee" title="{}" alt="" coords="5,29,60,55"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="107,29,160,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a4572a171f5a258fb746f2ec694f377ee" title="{}" alt="" coords="5,29,59,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,45,59,45,59,40,91,40"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="48,16,42,10,32,8,22,10,17,14,16,20,18,28,13,30,10,20,12,11,20,5,32,3,45,5,52,12"/>
 </map>

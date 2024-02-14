@@ -1,4 +1,5 @@
 <map id="AssociationSlugHandler" name="AssociationSlugHandler">
-<area shape="rect" id="node1" title="Simple slug&#45;handler which updates a field of an associated entity." alt="" coords="5,79,167,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="14,5,158,31"/>
+<area shape="rect" id="Node000001" title="Simple slug&#45;handler which updates a field of an associated entity." alt="" coords="5,80,166,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="14,5,157,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,48,88,80,83,80,83,48"/>
 </map>

@@ -1,0 +1,5 @@
+<map id="setMusicianInstrument" name="setMusicianInstrument">
+<area shape="rect" id="Node000001" title="Set musicianInstrument." alt="" coords="5,5,159,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_instrument.html#a3b3ec75dc4a258baf0bf6e5d1fdc11ec" title="Get instrument." alt="" coords="207,5,308,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,16,191,16,191,21,159,21"/>
+</map>

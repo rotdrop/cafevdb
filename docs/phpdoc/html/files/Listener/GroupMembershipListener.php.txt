@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2023 Claus-Justus Heine
+ * @copyright 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,18 +28,26 @@ use Throwable;
 
 use OCP\Group\Events\UserAddedEvent;
 use OCP\Group\Events\UserRemovedEvent;
+use OCP\Group\Events\BeforeUserAddedEvent;
+
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig as ICloudConfig;
 use OCP\Accounts\IAccount;
 use OCP\Accounts\IAccountManager;
-use OCP\Accounts\IAccountProperty;
-use OCP\Accounts\IAccountPropertyCollection;
+use OCP\IGroupManager;
+use OCP\Group\ISubAdmin as SubAdminManager;
+use OCP\IUserManager;
+use OCP\User\Backend\ICreateUserBackend;
+use OCP\IUserBackend;
 use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\AuthorizationService;
+use OCA\CAFEVDB\Service\CloudAccountsService;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -47,28 +55,28 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 /**
  * Do something special if the membership to the orchestra group changes.
+ *
+ * @todo
  */
 class GroupMembershipListener implements IEventListener
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  const EVENT = [ UserAddedEvent::class, UserRemovedEvent::class ];
-
-  /** @var IAppContainer */
-  private $appContainer;
+  const EVENT = [ UserAddedEvent::class, UserRemovedEvent::class, BeforeUserAddedEvent::class ];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(IAppContainer $appContainer)
-  {
-    $this->appContainer = $appContainer;
+  public function __construct(
+    private IAppContainer $appContainer,
+  ) {
   }
   // phpcs:enable
 
   /** {@inheritdoc} */
   public function handle(Event $event):void
   {
-    if (!($event instanceof UserAddedEvent) && !($event instanceof UserRemovedEvent)) {
+    $eventClass = get_class($event);
+    if (!in_array($eventClass, self::EVENT)) {
       return;
     }
 
@@ -85,86 +93,107 @@ class GroupMembershipListener implements IEventListener
       return;
     }
 
+    $adminGroupId = $orchestraGroupId . ConfigService::ADMIN_GROUP_SUFFIX;
+    $managementGroupId = $orchestraGroupId . AuthorizationService::MANAGEMENT_GROUP_SUFFIX;
+
+    /** @var CloudAccountsService $cloudAccountsService */
+    $cloudAccountsService = $this->appContainer->get(CloudAccountsService::class);
+
     $group = $event->getGroup();
-    if ($group->getGID() != $orchestraGroupId) {
-      return;
-    }
-
-    $user = $event->getUser();
-
-    /** @var IAccountManager $accountManager */
-    $accountManager = $this->appContainer->get(IAccountManager::class);
-    $account = $accountManager->getAccount($user);
-
-    /** @var EncryptionService $encryptionService */
-    $encryptionService = $this->appContainer->get(EncryptionService::class);
-
-    list(, $emailFromDomain) = array_pad(explode('@', $encryptionService->getConfigValue(ConfigService::EMAIL_FORM_ADDRESS_KEY)), null, 2);
-    if (empty($emailFromDomain)) {
-      return;
-    }
-
-    $userId = $user->getUID();
-
-    $personalizedOrchestraEmail = $userId. '@' . $emailFromDomain;
-
-    $emailCollection = $account->getPropertyCollection(IAccountManager::COLLECTION_EMAIL);
-
-    $emailProperty = $emailCollection->getPropertyByValue($personalizedOrchestraEmail);
-
     try {
-      if ($event instanceof UserAddedEvent) {
-        if (empty($emailProperty)) {
-          $executiveBoardProjectId = $encryptionService->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY);
-          if ($executiveBoardProjectId >= 0) {
-            return;
+      switch ($group->getGID()) {
+        default:
+          break;
+        case $adminGroupId:
+          $user = $event->getUser();
+          switch ($eventClass) {
+            case UserAddedEvent::class:
+              $cloudAccountsService->addGroupSubAdmin($user);
+              break;
+            case UserRemovedEvent::class:
+              $cloudAccountsService->removeGroupSubAdmin($user);
+              break;
+            case BeforeUserAddedEvent::class:
+              // nothing
+              break;
           }
-          $this->entityManager = $this->appContainer->get(EntityManager::class);
+          break;
+        case $managementGroupId:
+          $user = $event->getUser();
+          $userId = $user->getUID();
 
-          $repository = $this->getDatabaseRepository(Entities\ProjectParticipant::class);
+          /** @var OrganizationalRolesService $rolesService */
+          $rolesService = $this->appContainer->get(OrganizationalRolesService::class);
 
-          /** @var Entities\ProjectParticipant $boardMember */
-          $boardMember = $repository->findOneBy([
-            'project' => $executiveBoardProjectId,
-            'musician.userIdSlug' => $userId,
-          ]);
-          if (empty($boardMember)) {
-            // only enforce the email-address for executive board members
-            return;
-          }
+          $boardMember = $rolesService->getBoardMember($userId);
 
-          // add it to the cloud account s.t. email provisioning may work ...
-          $emailCollection->addPropertyWithDefaults($personalizedOrchestraEmail);
+          /** @var EncryptionService $encryptionService */
+          $encryptionService = $this->appContainer->get(EncryptionService::class);
+          list(, $emailFromDomain) = array_pad(explode('@', $encryptionService->getConfigValue(ConfigService::EMAIL_FORM_ADDRESS_KEY)), null, 2);
+
+          /** @var IAccountManager $accountManager */
+          $accountManager = $this->appContainer->get(IAccountManager::class);
+          $account = $accountManager->getAccount($user);
+
+          $personalizedOrchestraEmail = $userId. '@' . $emailFromDomain;
+          $emailCollection = $account->getPropertyCollection(IAccountManager::COLLECTION_EMAIL);
           $emailProperty = $emailCollection->getPropertyByValue($personalizedOrchestraEmail);
-          $emailProperty->setLocallyVerified(IAccountManager::VERIFIED);
-          $emailProperty->setVerified(IAccountManager::VERIFIED);
-          $accountManager->updateAccount($account);
 
-          // add it to the database as well
-          $boardMember->getMusician()->addEmailAddress($personalizedOrchestraEmail);
-          $this->flush();
-        }
-      } else {
-        // remove in any case from the cloud user's emails
-        if (!empty($emailProperty)) {
-          $emailCollection->removeProperty($emailProperty);
-          $accountManager->updateAccount($account);
-        }
+          switch (true) {
+            case ($event instanceof BeforeUserAddedEvent):
+              // make in particular sure that the person is also added to
+              // the configured orchestra user backend
+              $orchestraUserAndGroupBackend = $cloudConfig->getAppValue($appName, ConfigService::USER_AND_GROUP_BACKEND_KEY);
+              if (!empty($orchestraUserAndGroupBackend)) {
+                $cloudAccountsService->addUserToBackend($user, $orchestraUserAndGroupBackend);
+              }
+              break;
+            case ($event instanceof UserAddedEvent):
+              $cloudAccountsService->promoteGroupMembership($user, $group);
 
-        /** @var Entities\ProjectParticipant $boardMember */
-        $boardMember = $repository->findOneBy([
-          'project' => $executiveBoardProjectId,
-          'musician.userIdSlug' => $userId,
-        ]);
-        if (empty($boardMember)) {
-          return;
-        }
+              if (empty($boardMember)) {
+                $executiveBoardProject = $rolesService->executiveBoardProject();
+                $cloudAccountsService->addCloudUserToProject($user, $executiveBoardProject);
+              }
 
-        // the person must not remain a member of the executive board
-        /** @var ProjectService $projectService */
-        $projectService = $this->appContainer->get(ProjectService::class);
-        $projectService->deleteProjectParticipant($boardMember);
-      }
+              if (empty($emailProperty)) {
+                // add it to the cloud account s.t. email provisioning may work ...
+                $emailCollection->addPropertyWithDefaults($personalizedOrchestraEmail);
+                $emailProperty = $emailCollection->getPropertyByValue($personalizedOrchestraEmail);
+                $emailProperty->setLocallyVerified(IAccountManager::VERIFIED);
+                $emailProperty->setVerified(IAccountManager::VERIFIED);
+                $accountManager->updateAccount($account);
+
+                // add it to the database as well
+                $boardMember->getMusician()->addEmailAddress($personalizedOrchestraEmail);
+                $this->flush();
+              }
+
+              // message tagging on shared email accounts is really really
+              // annoying as it troubles also all other users. Would be nice if
+              // this could be a per-account setting -- or if Dovecot would
+              // maintain message tags on a per user basis in shared folders.
+              $cloudConfig->setUserValue($userId, 'mail', 'tag-classified-messages', 'false');
+              break;
+            case ($event instanceof UserRemovedEvent):
+              // core already removes the user from all backends
+
+              // remove in any case from the cloud user's emails
+              if (!empty($emailProperty)) {
+                $emailCollection->removeProperty($emailProperty);
+                $accountManager->updateAccount($account);
+              }
+              if (!empty($boardMember)) {
+                // the person must not remain a member of the executive board
+                /** @var ProjectService $projectService */
+                $projectService = $this->appContainer->get(ProjectService::class);
+                $projectService->deleteProjectParticipant($boardMember);
+              }
+              // @todo
+              // We could also remove the user from the orchestra backend, but ...
+              break;
+          }
+      } // switch
     } catch (Throwable $t) {
       try {
         $this->logger = $this->appContainer->get(ILogger::class);
@@ -173,7 +202,6 @@ class GroupMembershipListener implements IEventListener
         // ignore
       }
     }
-
     return;
   }
 }

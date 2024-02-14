@@ -1,5 +1,7 @@
 <map id="generateEvent" name="generateEvent">
-<area shape="rect" id="node1" title="Exports an event and convert all times to UTC." alt="" coords="5,31,112,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a66debc077e1a747c0da16f296c9487c7" title="Fixes new line breaks (fixes problems with Apple iCal)." alt="" coords="177,5,278,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#ab7d3c1c71289090ef10741bd4be4331a" title="Serializes the VEVENT/VTODO/VJOURNAL with UTC dates." alt="" coords="160,55,295,80"/>
+<area shape="rect" id="Node000001" title="Exports an event and convert all times to UTC." alt="" coords="5,31,111,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a66debc077e1a747c0da16f296c9487c7" title="Fixes new line breaks (fixes problems with Apple iCal)." alt="" coords="175,5,276,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,33,159,26,160,31,111,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#ab7d3c1c71289090ef10741bd4be4331a" title="Serializes the VEVENT/VTODO/VJOURNAL with UTC dates." alt="" coords="159,56,292,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,49,144,54,143,60,111,55"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="isGroupSharedCalendar" name="isGroupSharedCalendar">
-<area shape="rect" id="node1" title="Test if the given calendar is shared with the given group." alt="" coords="193,5,353,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a2e9d51a42cd379a76cf2918a15fe3f37" title="Share the given calendar with a group." alt="" coords="5,5,145,31"/>
+<area shape="rect" id="Node000001" title="Test if the given calendar is shared with the given group." alt="" coords="193,5,352,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a2e9d51a42cd379a76cf2918a15fe3f37" title="Share the given calendar with a group." alt="" coords="5,5,145,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,21,145,21,145,16,177,16"/>
 </map>

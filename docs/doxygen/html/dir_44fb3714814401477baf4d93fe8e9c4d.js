@@ -32,6 +32,7 @@ var dir_44fb3714814401477baf4d93fe8e9c4d =
     [ "ProjectWebPagesController.php", "_project_web_pages_controller_8php_source.html", null ],
     [ "SepaBulkTransactionsController.php", "_sepa_bulk_transactions_controller_8php_source.html", null ],
     [ "SepaDebitMandatesController.php", "_sepa_debit_mandates_controller_8php_source.html", null ],
+    [ "TaxExemptionNoticesController.php", "_tax_exemption_notices_controller_8php_source.html", null ],
     [ "ToolTipsController.php", "_tool_tips_controller_8php_source.html", null ],
     [ "UploadsController.php", "_uploads_controller_8php_source.html", null ],
     [ "ValidationController.php", "_validation_controller_8php_source.html", null ]

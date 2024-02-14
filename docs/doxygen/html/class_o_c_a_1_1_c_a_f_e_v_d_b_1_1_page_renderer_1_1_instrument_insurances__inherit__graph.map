@@ -1,7 +1,12 @@
 <map id="InstrumentInsurances" name="InstrumentInsurances">
-<area shape="rect" id="node1" title="Render the instrument insurances of the club&#45;members." alt="" coords="26,225,174,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="29,152,171,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="5,79,80,104"/>
-<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="61,5,139,31"/>
-<area shape="rect" id="node5" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="104,79,213,104"/>
+<area shape="rect" id="Node000001" title="Render the instrument insurances of the club&#45;members." alt="" coords="26,229,174,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html" title="Base for phpMyEdit based table&#45;views." alt="" coords="30,155,170,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,197,103,229,97,229,97,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html" title="Abstract base HTML renderer." alt="" coords="5,80,80,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="64,117,92,153,88,156,60,121"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_renderer.html" title="HTML Renderer interface." alt="" coords="61,5,139,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="83,46,54,81,50,78,78,43"/>
+<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_i_page_renderer.html" title="Page&#45;renderer interface." alt="" coords="104,80,213,107"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="122,43,150,78,146,81,118,46"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="141,121,112,156,108,153,137,117"/>
 </map>

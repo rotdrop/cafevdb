@@ -21,5 +21,6 @@ var dir_e2c3e1d0aad77febd6e1cddd8a51891c =
     [ "Registration.php", "_page_renderer_2_registration_8php_source.html", null ],
     [ "Renderer.php", "_renderer_8php_source.html", null ],
     [ "SepaBankAccounts.php", "_sepa_bank_accounts_8php_source.html", null ],
-    [ "SepaBulkTransactions.php", "_sepa_bulk_transactions_8php_source.html", null ]
+    [ "SepaBulkTransactions.php", "_sepa_bulk_transactions_8php_source.html", null ],
+    [ "TaxExemptionNotices.php", "_tax_exemption_notices_8php_source.html", null ]
 ];

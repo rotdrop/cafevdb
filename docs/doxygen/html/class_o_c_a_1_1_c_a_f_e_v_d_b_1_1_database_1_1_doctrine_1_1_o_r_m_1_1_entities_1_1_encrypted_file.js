@@ -4,6 +4,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
     [ "addDatabaseStorageDirEntry", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a4af17492e45f70c666db85c0f506f47a", null ],
     [ "addOwner", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a2c46956a30b29141fd3b93833d3f94e2", null ],
     [ "getBaseName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#aed7e3b8a6e4982e6a901631e542af895", null ],
+    [ "getData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a669b1e3e06514d94f8c7084e879c78ae", null ],
     [ "getDatabaseStorageDirEntries", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a4f707459392027991ad49be08b62e605", null ],
     [ "getDataHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#a15553787019384178d395ab7e8e4e4b2", null ],
     [ "getDirName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#ad72ee41de5e475eeef1b10a8a5d47b85", null ],

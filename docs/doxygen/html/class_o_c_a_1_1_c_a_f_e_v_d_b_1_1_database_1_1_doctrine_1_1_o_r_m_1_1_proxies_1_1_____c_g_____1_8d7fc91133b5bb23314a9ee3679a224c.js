@@ -21,6 +21,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "getProjectInstrumentationNumbers", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html#a07e50849ebeca3568acdeab647f8b6ae", null ],
     [ "getProjectInstruments", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html#a39a8fd67a14baf0ae8c070ae5022b95c", null ],
     [ "getSortOrder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html#af31b5ed3a2aa6a5ec810793e2bf1ce59", null ],
+    [ "getTranslationChangeSet", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html#a2620f93fc8b5247b04f9645b281e01f3", null ],
     [ "getUntranslatedName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html#a134779d1bdcaffdd8e64fd47ba7ba9d1", null ],
     [ "inUse", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html#a2869b48ca2b9174a12d11522fb594067", null ],
     [ "isDeleted", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html#ae7c7709308082027ea2b479a7bc6c980", null ],

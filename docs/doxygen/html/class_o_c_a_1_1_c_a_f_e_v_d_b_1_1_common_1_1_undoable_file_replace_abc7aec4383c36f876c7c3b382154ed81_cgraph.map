@@ -1,4 +1,5 @@
 <map id="do" name="do">
-<area shape="rect" id="node1" title="{Do something.void}" alt="" coords="5,20,44,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html#a9d8ac3ab9c2a02c50e22cc2393aaf61f" title="Remove multipled slashes." alt="" coords="92,5,288,60"/>
+<area shape="rect" id="Node000001" title="{Do something.void}" alt="" coords="5,21,44,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html#a9d8ac3ab9c2a02c50e22cc2393aaf61f" title="Remove multipled slashes." alt="" coords="92,5,287,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,32,76,32,76,37,44,37"/>
 </map>

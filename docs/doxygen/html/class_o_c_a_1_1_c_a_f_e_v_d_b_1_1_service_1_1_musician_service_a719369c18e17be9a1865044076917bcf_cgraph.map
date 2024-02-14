@@ -1,4 +1,5 @@
 <map id="getSlugPostfix" name="getSlugPostfix">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,112,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html#a4bdc907f686e63542b0175ea3d7aadf2" title="Convert a user&#45;id to a file&#45;name&#45;part avoiding &quot;duplicate&quot; extensions, i.e." alt="" coords="160,5,315,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,112,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_musician_service.html#a4bdc907f686e63542b0175ea3d7aadf2" title="Convert a user&#45;id to a file&#45;name&#45;part avoiding &quot;duplicate&quot; extensions, i.e." alt="" coords="160,5,313,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,16,144,16,144,21,112,21"/>
 </map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,6 @@ use OCP\AppFramework\Middleware;
 use OCP\AppFramework\Utility\IControllerMethodReflector;
 use OCP\IL10N;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\TemplateResponse;
 use OC\AppFramework\Middleware\Security\Exceptions\NotAdminException;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -39,24 +38,14 @@ use OCA\CAFEVDB\Service\ConfigService;
  */
 class SubadminMiddleware extends Middleware
 {
-  /** @var ConfigService */
-  protected $configService;
-
-  /** @var IControllerMethodReflector */
-  protected $reflector;
-
-  /** @var IL10N */
-  private $l;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IControllerMethodReflector $reflector,
-    ConfigService $configService,
-    IL10N $l
+    protected IControllerMethodReflector $reflector,
+    protected ConfigService $configService,
+    protected IL10N $l
   ) {
-    $this->reflector = $reflector;
-    $this->configService = $configService;
-    $this->l = $l;
   }
   // phpcs:enable
 
@@ -73,7 +62,7 @@ class SubadminMiddleware extends Middleware
       }
     }
     if ($this->reflector->hasAnnotation('ServiceAccountRequired')) {
-      if ($this->configService->getUserId() != $this->configService->getConfigValue('shareowner')) {
+      if ($this->configService->getUserId() != $this->configService->getConfigValue(ConfigService::SHAREOWNER_KEY)) {
         throw new NotAdminException($this->l->t('Logged in user account must be the service-account of the orchester app'));
       }
     }
@@ -87,7 +76,7 @@ class SubadminMiddleware extends Middleware
   public function afterException($controller, $methodName, \Exception $exception)
   {
     if ($exception instanceof NotAdminException) {
-      $response = new TemplateResponse('core', '403', [], 'guest');
+      $response = $this->templateResponse('403', [], self::RENDER_AS_GUEST, appName: 'core');
       $response->setStatus(Http::STATUS_FORBIDDEN);
       return $response;
     }

@@ -1,5 +1,7 @@
 <map id="printRecords" name="printRecords">
-<area shape="rect" id="node1" title="Debugging utility." alt="" coords="104,31,200,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#a9744e3ac80d00ec56c2b9e5e7005d79f" title="Fetch the history record at $offset." alt="" coords="5,5,56,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#a48ace8aac8446061445ec0b1cdef0f25" title="Add a history snapshot." alt="" coords="5,55,56,80"/>
+<area shape="rect" id="Node000001" title="Debugging utility." alt="" coords="104,31,199,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#a9744e3ac80d00ec56c2b9e5e7005d79f" title="Fetch the history record at $offset." alt="" coords="5,5,56,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,33,55,26,56,21,89,28"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#a48ace8aac8446061445ec0b1cdef0f25" title="Add a history snapshot." alt="" coords="6,56,55,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="89,60,56,67,55,62,88,55"/>
 </map>

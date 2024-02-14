@@ -1,4 +1,5 @@
 <map id="personalizedViewName" name="personalizedViewName">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,164,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a8f6f0e60183992c01ae7acad097ac598" title=" " alt="" coords="212,5,296,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,164,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a8f6f0e60183992c01ae7acad097ac598" title=" " alt="" coords="212,5,295,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,16,196,16,196,21,164,21"/>
 </map>

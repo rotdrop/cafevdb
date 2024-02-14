@@ -346,6 +346,17 @@ class ProjectParticipant extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Pro
     /**
      * {@inheritDoc}
      */
+    public function getPublicName(bool $firstNameFirst = false): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPublicName', [$firstNameFirst]);
+
+        return parent::getPublicName($firstNameFirst);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function preUpdate(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreUpdateEventArgs $event)
     {
 

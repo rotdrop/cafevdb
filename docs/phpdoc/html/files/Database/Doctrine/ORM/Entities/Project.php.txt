@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="Projects", uniqueConstraints={@ORM\UniqueConstraint(columns={"name"})})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectsRepository")
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectEntityListener"})
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
@@ -54,6 +55,9 @@ class Project implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\UnusedTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+
+  private const DATE_FORMAT = 'Ymd';
 
   /**
    * @var int
@@ -95,6 +99,27 @@ class Project implements \ArrayAccess
   private $mailingListId;
 
   /**
+   * @var \DateTimeImmutable
+   *
+   * Optional registration start date. If not set then the online registration
+   * is NOT available.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationStartDate;
+
+  /**
+   * @var \DateTimeImmutable
+   *
+   * Optional registration deadline. If null then the date one day before the
+   * first rehearsal is used, if set. Otherwise no registration dead-line is
+   * imposed.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationDeadline;
+
+  /**
    * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", orphanRemoval=true, fetch="EXTRA_LAZY")
    */
   private $instrumentationNumbers;
@@ -118,7 +143,7 @@ class Project implements \ArrayAccess
   private $participantFieldsData;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project", index_by="musician_id")
    */
   private $participants;
 
@@ -324,6 +349,66 @@ class Project implements \ArrayAccess
   public function getMailingListId():?string
   {
     return $this->mailingListId;
+  }
+
+  /**
+   * Sets registrationStartDate.
+   *
+   * @param string|int|DateTimeInterface $registrationStartDate
+   *
+   * @return Project
+   */
+  public function setRegistrationStartDate(mixed $registrationStartDate):Project
+  {
+    if (empty($registrationStartDate)) {
+      $this->registrationStartDate = null;
+    } else {
+      $registrationStartDate = self::convertToDateTime($registrationStartDate);
+      if (empty($this->registrationStartDate) || $this->registrationStartDate->format(self::DATE_FORMAT) != $registrationStartDate->format(self::DATE_FORMAT)) {
+        $this->registrationStartDate = $registrationStartDate;
+      }
+    }
+    return $this;
+  }
+
+  /**
+   * Returns registrationStartDate.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationStartDate():?DateTimeInterface
+  {
+    return $this->registrationStartDate;
+  }
+
+  /**
+   * Sets registrationDeadline.
+   *
+   * @param string|int|DateTimeInterface $registrationDeadline
+   *
+   * @return Project
+   */
+  public function setRegistrationDeadline(mixed $registrationDeadline):Project
+  {
+    if (empty($registrationDeadline)) {
+      $this->registrationDeadline = null;
+    } else {
+      $registrationDeadline = self::convertToDateTime($registrationDeadline);
+      if (empty($this->registrationDeadline) || $this->registrationDeadline->format(self::DATE_FORMAT) != $registrationDeadline->format(self::DATE_FORMAT)) {
+        $this->registrationDeadline = $registrationDeadline;
+      }
+    }
+    return $this;
+  }
+
+  /**
+   * Returns registrationDeadline.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationDeadline():?DateTimeInterface
+  {
+    return $this->registrationDeadline;
   }
 
   /**

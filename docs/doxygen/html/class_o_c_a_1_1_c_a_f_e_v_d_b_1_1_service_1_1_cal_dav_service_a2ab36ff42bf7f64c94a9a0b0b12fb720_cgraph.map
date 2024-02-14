@@ -1,4 +1,5 @@
 <map id="getCalendars" name="getCalendars">
-<area shape="rect" id="node1" title="Get the list of all calendars." alt="" coords="5,5,104,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a5270ea266daa5e257b69e0fb3804b3c8" title=" " alt="" coords="152,5,271,31"/>
+<area shape="rect" id="Node000001" title="Get the list of all calendars." alt="" coords="5,5,104,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a5270ea266daa5e257b69e0fb3804b3c8" title=" " alt="" coords="152,5,269,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,16,136,16,136,21,104,21"/>
 </map>

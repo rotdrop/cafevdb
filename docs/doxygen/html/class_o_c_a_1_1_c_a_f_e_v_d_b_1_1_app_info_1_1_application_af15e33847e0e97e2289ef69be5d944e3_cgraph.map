@@ -1,4 +1,7 @@
 <map id="boot" name="boot">
-<area shape="rect" id="node1" title="{}" alt="" coords="5,20,52,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a8021dbb46c192641c85416c68d99fc66" title="Basic check for authorization." alt="" coords="100,5,267,60"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,21,52,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a59a58baa54c7c125ba10520c48d03116" title="Basic check for authorization." alt="" coords="100,5,266,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,32,84,32,84,37,52,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a84cedb02222eaf941859e8f91e6a9591" title="Compute the permission mask for the given or the currently logged&#45;on user." alt="" coords="314,5,480,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="267,32,299,32,299,37,267,37"/>
 </map>

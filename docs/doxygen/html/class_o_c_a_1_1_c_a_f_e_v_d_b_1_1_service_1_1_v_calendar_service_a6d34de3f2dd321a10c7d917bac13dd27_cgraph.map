@@ -1,8 +1,5 @@
 <map id="createVCalendarFromRequest" name="createVCalendarFromRequest">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,204,105"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#af29ef0e454ee9f357ef918f183c5d001" title=" " alt="" coords="252,55,432,80"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6fed837c6f053a8cd036ccaf652739fa" title=" " alt="" coords="255,104,429,129"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#aabb41dada7b7f42283e1fe61bab0a887" title="Add one or multiple participans to the given VTodo or VEvent." alt="" coords="509,5,621,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#ae752a1150511a5891f344e73105d901d" title="Add one or multiple relations to the given VTodo or VEvent." alt="" coords="516,55,615,80"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a349505932cfde0b222b7d7ea55fdcf19" title="Add one or multiple alarms to the given VTodo or VEvent." alt="" coords="480,104,651,129"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,203,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_v_calendar_service.html#a6fed837c6f053a8cd036ccaf652739fa" title=" " alt="" coords="251,5,424,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,16,235,16,235,21,203,21"/>
 </map>

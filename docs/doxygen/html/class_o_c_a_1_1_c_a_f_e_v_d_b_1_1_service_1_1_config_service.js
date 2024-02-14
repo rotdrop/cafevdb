@@ -1,6 +1,6 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab50a6081ca9ae60c52dd1ef10f545a55", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a08d8f42933f05caeeee112e5fba61bd5", null ],
     [ "appPrefix", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a800878a5bfb9a4bf43480fe938d7b475", null ],
     [ "computeHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8ba7d099001824ef56f56c7ddcaa9d74", null ],
     [ "currencyIsoCode", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8a1ab7bc9d21948223187b45cb724603", null ],
@@ -13,7 +13,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service =
     [ "encrypt", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a9027ef82dcfb0d54a78e1cfeab05b0e6", null ],
     [ "encryptConfigValues", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a241ca6802fbc0627ec7c9baee0d3fc35", null ],
     [ "encryptionKeyValid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a36f6754a5d7be1b744afc9c434e2448f", null ],
-    [ "encryptionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a753a0c5fa9ab0a7aad9e5626571a35f0", null ],
     [ "findAvailableLanguages", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ad92071cb5d6c6d6a1101759e91092563", null ],
     [ "findAvailableLocales", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a26747f0608b7ec77a0024680d847b02b", null ],
     [ "floatValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a36b4b01cbb88f7176a72e268695c0d6f", null ],
@@ -31,14 +30,17 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service =
     [ "getCloudConfig", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a3c0a8ca944cfd5a62a77b1c2cc2b49a8", null ],
     [ "getConfigValue", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7f3eb9937785e05b6d3e638fc187072c", null ],
     [ "getDateTimeZone", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a40c1b03af72c7ab938c22e2c249dc272", null ],
+    [ "getEncryptionService", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a962ab21e9952e773558800c77a0dfe2d", null ],
     [ "getGroup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2218693785fc68082d77740cc716623", null ],
     [ "getGroupId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a80ff7d4e6101b55bc46ce120b838b98d", null ],
     [ "getGroupManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ae2621cc27b1048071816b69caf9b945a", null ],
     [ "getGroupSubAdmins", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#adeb37b77de6c78ae8303acd786f08ebf", null ],
     [ "getIcon", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a278a55b3129c24c2077ea6093cf06f6e", null ],
     [ "getL10n", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7c1c3836d124a6882145c1136ab369ef", null ],
+    [ "getL10NFactory", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aca2f9f0cf0c4fc6751b4c7b9521f0f8b", null ],
     [ "getLanguage", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ad50ea5d1877a5adc2e231dc935b7bffc", null ],
     [ "getLocale", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ae705742d573e516c783122fb4a0e1aea", null ],
+    [ "getSecureRandom", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a1a98a3b795fb6376cc24826460e80bf7", null ],
     [ "getSubAdminGroup", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6", null ],
     [ "getSubAdminGroupId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2b39aa8d6ef6b2cf9db10c10954687b", null ],
     [ "getSubAdminManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a817433e9c288c80f59cde99b9ce2725e", null ],
@@ -69,6 +71,5 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service =
     [ "transliterate", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2f4a6f1650343e99660cab994aec636", null ],
     [ "verifyHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#af2197000ac5cbb14eb16df8e2861dc70", null ],
     [ "$encryptionCache", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaed05a8ddbfba4943c739e336e8551f5", null ],
-    [ "$l", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ad06dc63419f6d4f7f6f617e95e088f91", null ],
     [ "$user", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a53d538621473eb122e15b5e5d609e2b1", null ]
 ];

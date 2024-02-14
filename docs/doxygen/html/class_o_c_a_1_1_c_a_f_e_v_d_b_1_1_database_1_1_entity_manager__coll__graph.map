@@ -1,4 +1,5 @@
 <map id="EntityManager" name="EntityManager">
-<area shape="rect" id="node1" title="Use this as the actual EntityManager in order to be able to construct it without a Factory and to def..." alt="" coords="33,79,140,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,168,31"/>
+<area shape="rect" id="Node000001" title="Use this as the actual EntityManager in order to be able to construct it without a Factory and to def..." alt="" coords="34,80,139,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,168,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,48,89,80,84,80,84,48"/>
 </map>

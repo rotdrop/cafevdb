@@ -13,6 +13,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxie
     [ "getBaseName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html#aed7e3b8a6e4982e6a901631e542af895", null ],
     [ "getBaseName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html#a73bef8d4c52ef40e5871cb0988783b8c", null ],
     [ "getCreated", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html#a2e5f89472e1b21900245da46a52cf428", null ],
+    [ "getData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html#a669b1e3e06514d94f8c7084e879c78ae", null ],
     [ "getDataHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html#a15553787019384178d395ab7e8e4e4b2", null ],
     [ "getDirName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html#ad72ee41de5e475eeef1b10a8a5d47b85", null ],
     [ "getExtension", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_d0defa97fb66a7c8d36d3fed3a953ecd.html#a4504cfb725c7aa7ce5a0151f688ac734", null ],

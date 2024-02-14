@@ -1,9 +1,12 @@
 <map id="shortenCamelCaseString" name="shortenCamelCaseString">
-<area shape="rect" id="node1" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="5,92,173,117"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="221,5,368,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae5c8c04fb41d334be00d1bf1a3b83039" title="Take any dashed or &quot;underscored&quot; lower&#45;case string and convert to camel&#45;case." alt="" coords="221,55,368,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a0bef3dc2eedd594dab3a84b15d183c36" title="A preg_explode() wrapper with some extra features." alt="" coords="261,128,328,153"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9d61dd42fc39a8ffa123b80bab2bf94f" title="Counter&#45;part to self::explode()." alt="" coords="261,201,328,227"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="416,128,547,153"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a733456b8dde51667bb86ef79e08597a7" title="Escape delimiters in the given value." alt="" coords="423,201,539,227"/>
+<area shape="rect" id="Node000001" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="5,56,173,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ad0eafdbd4c7b28f69670834a69715745" title="Take an camel&#45;case string and convert to lower&#45;case with dashes or underscores between the words." alt="" coords="221,5,367,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,53,222,34,223,39,147,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae5c8c04fb41d334be00d1bf1a3b83039" title="Take any dashed or &quot;underscored&quot; lower&#45;case string and convert to camel&#45;case." alt="" coords="221,56,367,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,67,206,67,206,72,173,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a0bef3dc2eedd594dab3a84b15d183c36" title="A preg_explode() wrapper with some extra features." alt="" coords="261,131,327,157"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="129,81,247,125,246,130,127,86"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="262,132,256,122,260,112,273,106,294,104,316,107,328,113,325,118,314,112,294,109,275,111,264,116,262,121,267,129"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="415,131,544,157"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="327,141,399,141,399,147,327,147"/>
 </map>

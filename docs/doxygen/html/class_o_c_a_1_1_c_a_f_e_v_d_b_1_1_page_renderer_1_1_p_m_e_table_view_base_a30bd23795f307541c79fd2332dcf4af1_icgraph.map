@@ -1,5 +1,7 @@
 <map id="setTemplate" name="setTemplate">
-<area shape="rect" id="node1" title=" " alt="" coords="260,45,353,70"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#abb6dc20fd4bda3d7d1ad9c2988a07e4e" title="Disable project mode." alt="" coords="5,5,212,45"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a6cd3a2e74c2968a4203223b2450c8d55" title="Enable the project&#45;mode which is used to add new participants to a project." alt="" coords="5,69,212,109"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="259,47,351,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#abb6dc20fd4bda3d7d1ad9c2988a07e4e" title="Disable project mode." alt="" coords="5,5,211,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,52,211,47,211,41,244,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#a6cd3a2e74c2968a4203223b2450c8d55" title="Enable the project&#45;mode which is used to add new participants to a project." alt="" coords="5,72,211,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,73,211,79,211,73,243,68"/>
 </map>

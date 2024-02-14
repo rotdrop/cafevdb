@@ -1,4 +1,5 @@
 <map id="currencyIsoCode" name="currencyIsoCode">
-<area shape="rect" id="node1" title=" " alt="" coords="147,5,268,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaeb05cf94149de0821a30628a8c7bcef" title="Convert $value to a currency value in the given or the user&#39;s locale." alt="" coords="5,5,99,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="146,5,266,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaeb05cf94149de0821a30628a8c7bcef" title="Convert $value to a currency value in the given or the user&#39;s locale." alt="" coords="5,5,98,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,21,98,21,98,16,130,16"/>
 </map>

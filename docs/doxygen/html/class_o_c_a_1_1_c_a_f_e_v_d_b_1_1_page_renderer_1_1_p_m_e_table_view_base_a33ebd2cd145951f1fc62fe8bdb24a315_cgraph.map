@@ -1,4 +1,5 @@
 <map id="beforeAnythingTrimAnything" name="beforeAnythingTrimAnything">
-<area shape="rect" id="node1" title="The phpMyEdit instance calls the triggers (callbacks) with the following arguments:" alt="" coords="5,13,192,38"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a420255eaf134f40b32155f8138cde030" title="Normalize spaces and commas after and before spaces." alt="" coords="240,5,416,45"/>
+<area shape="rect" id="Node000001" title="The phpMyEdit instance calls the triggers (callbacks) with the following arguments:" alt="" coords="5,13,191,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a420255eaf134f40b32155f8138cde030" title="Normalize spaces and commas after and before spaces." alt="" coords="239,5,414,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,24,223,24,223,29,191,29"/>
 </map>

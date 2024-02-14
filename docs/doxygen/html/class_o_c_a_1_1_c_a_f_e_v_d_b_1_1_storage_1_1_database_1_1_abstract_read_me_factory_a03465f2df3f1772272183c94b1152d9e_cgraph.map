@@ -1,0 +1,7 @@
+<map id="isReadMe" name="isReadMe">
+<area shape="rect" id="Node000001" title="Check whether the given file is a ReadMe.md file." alt="" coords="5,59,86,85"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory_interface.html#aaa4d63f35d4d463ec5961fa42a35e9be" title="Possibly populate and return the array of possible &quot;readMe&quot; variations." alt="" coords="134,5,363,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,62,118,56,119,61,86,67"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_storage_util.html#ade1f0ad55d73154b794bc0db4ca0e866" title="Strip upload extensions from a path, they look like .ocTransferIdXXXXXXXXXX.part." alt="" coords="151,88,346,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="86,77,136,86,135,91,85,82"/>
+</map>

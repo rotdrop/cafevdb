@@ -1,4 +1,5 @@
 <map id="LogEntry" name="LogEntry">
-<area shape="rect" id="node1" title="OCA\CAFEVDB\Database\Doctrine\ORMntitiesLogEntryogEntity." alt="" coords="29,79,104,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,128,31"/>
+<area shape="rect" id="Node000001" title="OCA\CAFEVDB\Database\Doctrine\ORMntitiesLogEntryogEntity." alt="" coords="30,80,103,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,128,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,48,69,80,64,80,64,48"/>
 </map>

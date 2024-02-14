@@ -1,7 +1,11 @@
 <map id="setUserBase" name="setUserBase">
-<area shape="rect" id="node1" title="Programmatically set the user base, e.g." alt="" coords="5,31,104,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a91325e5bf1c1dafd989c072cdd289f7e" title="Decode the check&#45;boxes which select the set of users we consider basically." alt="" coords="152,31,289,56"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="361,5,432,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a37ce309e4090903297fa1c705634537d" title="The default user base." alt="" coords="337,55,456,80"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a180e59b5c87d178df0b6929526f2c38a" title=" " alt="" coords="504,55,624,80"/>
+<area shape="rect" id="Node000001" title="Programmatically set the user base, e.g." alt="" coords="5,31,103,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a91325e5bf1c1dafd989c072cdd289f7e" title="Decode the check&#45;boxes which select the set of users we consider basically." alt="" coords="151,31,287,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,41,135,41,135,47,103,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="359,5,429,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="287,31,344,23,344,28,288,37"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a37ce309e4090903297fa1c705634537d" title="The default user base." alt="" coords="335,56,453,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="288,51,320,56,319,61,287,57"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a180e59b5c87d178df0b6929526f2c38a" title=" " alt="" coords="501,56,621,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="454,67,486,67,486,72,454,72"/>
 </map>

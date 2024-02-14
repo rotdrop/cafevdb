@@ -1,5 +1,7 @@
 <map id="BlogMapper" name="BlogMapper">
-<area shape="rect" id="node1" title="Mapper for the blog entities." alt="" coords="5,152,96,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_mapper.html" title="Common mapper base class." alt="" coords="18,79,83,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="9,5,93,31"/>
+<area shape="rect" id="Node000001" title="Mapper for the blog entities." alt="" coords="5,155,96,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_mapper.html" title="Common mapper base class." alt="" coords="18,80,83,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,122,53,154,48,154,48,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="9,5,92,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="53,48,53,80,48,80,48,48"/>
 </map>

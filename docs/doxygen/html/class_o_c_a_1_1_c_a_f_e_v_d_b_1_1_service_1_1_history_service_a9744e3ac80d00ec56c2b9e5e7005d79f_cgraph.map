@@ -1,4 +1,5 @@
 <map id="fetch" name="fetch">
-<area shape="rect" id="node1" title="Fetch the history record at $offset." alt="" coords="5,5,56,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#ab84f77a9408f0b4743765d9f723efa13" title="Debugging utility." alt="" coords="104,5,200,31"/>
+<area shape="rect" id="Node000001" title="Fetch the history record at $offset." alt="" coords="5,5,56,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#ab84f77a9408f0b4743765d9f723efa13" title="Debugging utility." alt="" coords="104,5,199,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,16,88,16,88,21,56,21"/>
 </map>

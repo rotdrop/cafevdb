@@ -1,7 +1,11 @@
 <map id="exportEvent" name="exportEvent">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,97,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#aa6de6a8a34ec5b29770b561cef8da649" title=" " alt="" coords="149,5,248,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a2e81591e72e8b5131501fadb6ad98a91" title="Exports an event and convert all times to UTC." alt="" coords="145,55,252,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a66debc077e1a747c0da16f296c9487c7" title="Fixes new line breaks (fixes problems with Apple iCal)." alt="" coords="317,29,418,55"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#ab7d3c1c71289090ef10741bd4be4331a" title="Serializes the VEVENT/VTODO/VJOURNAL with UTC dates." alt="" coords="300,79,435,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,97,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#aa6de6a8a34ec5b29770b561cef8da649" title=" " alt="" coords="149,5,246,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,33,133,27,134,32,97,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a2e81591e72e8b5131501fadb6ad98a91" title="Exports an event and convert all times to UTC." alt="" coords="145,56,250,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,49,130,55,129,60,97,55"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a66debc077e1a747c0da16f296c9487c7" title="Fixes new line breaks (fixes problems with Apple iCal)." alt="" coords="315,31,415,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="250,59,299,51,299,57,251,64"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#ab7d3c1c71289090ef10741bd4be4331a" title="Serializes the VEVENT/VTODO/VJOURNAL with UTC dates." alt="" coords="298,81,431,108"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="251,75,283,80,282,85,250,80"/>
 </map>

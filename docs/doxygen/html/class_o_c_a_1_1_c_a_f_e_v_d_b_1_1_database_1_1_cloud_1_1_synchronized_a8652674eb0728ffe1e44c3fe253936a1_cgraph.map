@@ -1,6 +1,10 @@
 <map id="merge" name="merge">
-<area shape="rect" id="node1" title="Update multiple properties and write them through to the database if we are in $attached state." alt="" coords="5,29,64,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a57291364b6d186af794627f03aefd38c" title="Obtain object from database if it is &quot;clean&quot;, if it is dirty or new (no id) then create or update the..." alt="" coords="112,55,171,80"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8c152f6ef1c779ffd79d5c7ee4d37721" title=" " alt="" coords="219,5,273,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a1ba50cbde423b0b17031ea550a599ae8" title=" " alt="" coords="225,55,267,80"/>
+<area shape="rect" id="Node000001" title="Update multiple properties and write them through to the database if we are in $attached state." alt="" coords="5,31,63,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a57291364b6d186af794627f03aefd38c" title="Obtain object from database if it is &quot;clean&quot;, if it is dirty or new (no id) then create or update the..." alt="" coords="111,56,168,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,48,96,56,95,61,62,53"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8c152f6ef1c779ffd79d5c7ee4d37721" title=" " alt="" coords="216,5,269,32"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="63,38,201,21,201,26,63,43"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="167,53,201,36,203,41,169,58"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a1ba50cbde423b0b17031ea550a599ae8" title=" " alt="" coords="222,56,264,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="168,67,206,67,206,72,168,72"/>
 </map>

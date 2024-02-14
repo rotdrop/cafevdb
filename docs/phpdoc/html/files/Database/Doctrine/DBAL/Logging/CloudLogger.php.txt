@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,12 +39,6 @@ class CloudLogger implements SQLLogger
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var IEventDispatcher */
-  private $eventDispatcher;
-
-  /** @var \OCA\CAFEVDB\Service\EncryptionService */
-  private $encryptionService;
-
   /** @var bool */
   private $enabled;
 
@@ -56,15 +50,11 @@ class CloudLogger implements SQLLogger
 
   /** {@inheritdoc} */
   public function __construct(
-    EncryptionService $encryptionService,
-    IEventDispatcher $eventDispatcher,
-    ILogger $logger,
-    IL10N $l10n,
+    private EncryptionService $encryptionService,
+    private IEventDispatcher $eventDispatcher,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->encryptionService = $encryptionService;
-    $this->eventDispatcher = $eventDispatcher;
-    $this->logger = $logger;
-    $this->l = $l10n;
     $this->enabled = false;
     if ($this->encryptionService->bound()) {
       $debugMode = $this->encryptionService->getConfigValue('debugmode', 0);

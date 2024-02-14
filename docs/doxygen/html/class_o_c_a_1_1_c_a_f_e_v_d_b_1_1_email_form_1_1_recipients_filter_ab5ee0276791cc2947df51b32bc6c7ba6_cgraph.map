@@ -1,3 +1,4 @@
 <map id="filterHistory" name="filterHistory">
-<area shape="rect" id="node1" title=" " alt="" coords="5,29,95,55"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,94,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="33,29,32,12,39,5,50,3,61,5,67,12,63,15,58,10,49,8,41,10,37,14,38,29"/>
 </map>

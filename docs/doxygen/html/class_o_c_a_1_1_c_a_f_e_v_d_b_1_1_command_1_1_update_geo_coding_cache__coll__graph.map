@@ -1,4 +1,5 @@
 <map id="UpdateGeoCodingCache" name="UpdateGeoCodingCache">
-<area shape="rect" id="node1" title="Selectively update the GeoCoding cache from various remote sources." alt="" coords="5,79,172,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="47,5,130,31"/>
+<area shape="rect" id="Node000001" title="Selectively update the GeoCoding cache from various remote sources." alt="" coords="5,80,172,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="48,5,129,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,48,91,80,86,80,86,48"/>
 </map>

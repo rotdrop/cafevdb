@@ -1,0 +1,29 @@
+<map id="__construct" name="__construct">
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,191,95,217"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="203,157,249,184"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,193,187,175,188,180,96,198"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_authorization_service.html#a84cedb02222eaf941859e8f91e6a9591" title="Compute the permission mask for the given or the currently logged&#45;on user." alt="" coords="143,208,309,267"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="96,210,128,216,127,221,95,215"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ae0e6a2643a679ae23f2975018436da50" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="357,107,503,133"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="248,163,358,135,359,140,250,168"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a830652bacd2fe88b917967c2db01e092" title=" " alt="" coords="377,208,484,235"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="250,174,362,202,361,207,248,179"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ad340ac2983f99f3d7695db636ec83c6d" title="Initialize the per&#45;user public/private key pair, which inparticular is used to propagate the app&#39;s en..." alt="" coords="374,157,486,184"/>
+<area shape="poly" id="edge12_Node000002_Node000012" title=" " alt="" coords="249,168,359,168,359,173,249,173"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ac00a76ffe038ef8a433357bd4114bb52" title="Test if we a bound to a user." alt="" coords="599,5,656,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="449,104,494,73,550,42,584,28,585,33,552,46,497,78,452,108"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7f3eb9937785e05b6d3e638fc187072c" title="Fetch the value for the given key and possibly decrypt it." alt="" coords="573,56,682,83"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="485,103,557,85,558,90,486,109"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a89044dae403670e1950421f9500ab7e4" title=" " alt="" coords="551,157,704,184"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="486,131,558,150,557,155,485,137"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#af00d9a637dd0c0e25a62685bad893023" title=" " alt="" coords="585,107,670,133"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="504,117,570,117,570,123,504,123"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="781,81,876,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="683,74,766,84,765,89,682,79"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#adb19126b250726643c9e37b9a15dc6f2" title="Get and decrypt an personal &#39;user&#39; value encrypted with the public key of key&#45;pair." alt="" coords="752,157,905,184"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="704,168,736,168,736,173,704,173"/>
+<area shape="poly" id="edge11_Node000010_Node000006" title=" " alt="" coords="484,224,533,226,589,223,647,213,702,194,718,183,727,172,736,158,750,143,789,114,793,119,753,147,740,161,731,175,721,187,705,198,648,218,589,228,533,231,484,230"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#aef02d325583d49207e4852023acf572d" title=" " alt="" coords="554,259,701,285"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="485,232,558,252,557,257,484,238"/>
+<area shape="poly" id="edge13_Node000012_Node000007" title=" " alt="" coords="487,168,536,168,536,173,487,173"/>
+</map>

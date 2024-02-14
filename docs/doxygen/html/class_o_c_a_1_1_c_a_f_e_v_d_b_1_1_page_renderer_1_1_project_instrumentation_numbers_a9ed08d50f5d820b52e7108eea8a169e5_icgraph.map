@@ -1,4 +1,5 @@
 <map id="shortTitle" name="shortTitle">
-<area shape="rect" id="node1" title="{string Short title for heading. }" alt="" coords="140,5,216,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,5,92,31"/>
+<area shape="rect" id="Node000001" title="{string Short title for heading. }" alt="" coords="139,5,214,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#aabe24c55e3f00c5c998a4c6338a413bf" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,5,91,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,21,91,21,91,16,123,16"/>
 </map>

@@ -1,0 +1,9 @@
+<map id="getSecretary" name="getSecretary">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,101,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a0be55a4885c7fb3d52f6511a4452cdbc" title=" " alt="" coords="149,5,369,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,16,133,16,133,21,101,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a13cb759047e308ad9b9a05ab45fccddd" title="Return an array with all members of the executive board." alt="" coords="417,5,582,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="369,16,401,16,401,21,369,21"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#aae8d36c62eaa47e32dcfba2644e60a53" title="Return the project entity for the executive board." alt="" coords="630,5,783,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="583,16,615,16,615,21,583,21"/>
+</map>

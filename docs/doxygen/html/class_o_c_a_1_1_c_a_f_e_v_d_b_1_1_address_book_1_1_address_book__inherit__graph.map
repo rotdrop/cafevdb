@@ -1,4 +1,5 @@
 <map id="AddressBook" name="AddressBook">
-<area shape="rect" id="node1" title="Cloud&#45; and CardDAV address&#45;book integration." alt="" coords="29,79,129,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,153,31"/>
+<area shape="rect" id="Node000001" title="Cloud&#45; and CardDAV address&#45;book integration." alt="" coords="29,80,129,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,153,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,48,82,80,76,80,76,48"/>
 </map>

@@ -3,7 +3,7 @@
  * Orchestra member, musician and project management application.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 trait CryptoTrait
 {
   /** @var EntityManager */
-  protected $entityManager;
+  protected EntityManager $entityManager;
 
   /** @var Transformable\Transformer\TransformerInterface */
   protected $encryptionTransformer;

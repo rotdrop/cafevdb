@@ -1,4 +1,5 @@
 <map id="setSequence" name="setSequence">
-<area shape="rect" id="node1" title="Set sequence." alt="" coords="5,5,104,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a2dc77fa12c2a97f848e70a207ed60b5a" title="See that the mandate&#45;sequence is reflected by the mandate reference." alt="" coords="152,5,319,31"/>
+<area shape="rect" id="Node000001" title="Set sequence." alt="" coords="5,5,103,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a2dc77fa12c2a97f848e70a207ed60b5a" title="See that the mandate&#45;sequence is reflected by the mandate reference." alt="" coords="151,5,317,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,16,135,16,135,21,103,21"/>
 </map>

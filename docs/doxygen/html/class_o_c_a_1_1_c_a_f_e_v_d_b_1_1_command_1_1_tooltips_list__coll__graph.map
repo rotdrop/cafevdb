@@ -1,4 +1,5 @@
 <map id="TooltipsList" name="TooltipsList">
-<area shape="rect" id="node1" title="Command to list all registered tooltips." alt="" coords="5,79,93,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="8,5,91,31"/>
+<area shape="rect" id="Node000001" title="Command to list all registered tooltips." alt="" coords="5,80,93,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,5,90,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,48,52,80,46,80,46,48"/>
 </map>

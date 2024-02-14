@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
- * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectParticipantEntityListener"})
  */
 class ProjectParticipant implements \ArrayAccess
 {
@@ -122,12 +122,14 @@ class ProjectParticipant implements \ArrayAccess
   private $databaseDocuments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct()
+  public function __construct(?Musician $musician = null, ?Project $project = null)
   {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
+    $this->musician = $musician;
+    $this->project = $project;
   }
   // phpcs:enable
 
@@ -313,47 +315,17 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * @var null|array
+   * Get the cooked display-name, taking nick-name into account and
+   * just using $displayName if that set.
    *
-   * The array of changed field values.
+   * @param bool $firstNameFirst If true return "FIRSTNAME LASTNAME" rather
+   * than "LASTNAME, FIRSTNAME".
+   *
+   * @return string
    */
-  private $preUpdateValue = [];
-
-  /**
-   * @param Event\PreUpdateEventArgs $event
-   *
-   * @return void
-   *
-   * @ORM\PreUpdate
-   */
-  public function preUpdate(Event\PreUpdateEventArgs $event)
+  public function getPublicName(bool $firstNameFirst = false):string
   {
-    $field = 'registration';
-    if ($event->hasChangedField($field)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $oldValue = $event->getOldValue($field);
-      $entityManager->dispatchEvent(new Events\PreChangeRegistrationConfirmation($this, !empty($oldValue), !empty($event->getNewValue($field))));
-      $this->preUpdateValue[$field] = $oldValue;
-    }
-  }
-
-  /**
-   * @param Event\LifecycleEventArgs $event
-   *
-   * @return void
-   *
-   * @ORM\PostUpdate
-   */
-  public function postUpdate(Event\LifecycleEventArgs $event)
-  {
-    $field = 'registration';
-    if (array_key_exists($field, $this->preUpdateValue)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostChangeRegistrationConfirmation($this, !empty($this->preUpdateValue[$field])));
-      unset($this->preUpdateValue[$field]);
-    }
+    return $this->musician->getPublicName($firstNameFirst);
   }
 
   /**

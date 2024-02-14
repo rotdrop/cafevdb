@@ -1,11 +1,21 @@
 <map id="extractInstrumentRanking" name="extractInstrumentRanking">
-<area shape="rect" id="node1" title="The ranking of the mussician&#39;s instruments is implicitly stored in the order of the instrument ids." alt="" coords="5,137,177,163"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="509,5,566,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="252,56,375,81"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a0bef3dc2eedd594dab3a84b15d183c36" title="A preg_explode() wrapper with some extra features." alt="" coords="225,130,401,170"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="245,195,381,220"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#aa61d3de43b26061a4d0097306931c64f" title="Remove all whitespace." alt="" coords="225,245,401,285"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="449,55,625,95"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="449,130,625,170"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a420255eaf134f40b32155f8138cde030" title="Normalize spaces and commas after and before spaces." alt="" coords="449,245,625,285"/>
+<area shape="rect" id="Node000001" title="The ranking of the mussician&#39;s instruments is implicitly stored in the order of the instrument ids." alt="" coords="5,139,177,165"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a586e3ce7bc155a85dae0bbe3149e4181" title="Be noisy if debugging is enabled." alt="" coords="508,5,564,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,136,151,88,185,62,224,42,295,21,369,11,437,9,492,12,492,17,437,15,369,17,296,26,226,46,188,66,154,92,106,140"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a0160798c24d6bddc98d5192235a59982" title=" " alt="" coords="251,56,374,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,136,224,92,244,85,246,90,226,97,122,141"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a0bef3dc2eedd594dab3a84b15d183c36" title="A preg_explode() wrapper with some extra features." alt="" coords="225,131,400,173"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="177,149,209,149,209,155,177,155"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#abe18704ee0189ac55323c93db488770c" title="The name of the field&#45;descriptor for a join&#45;table field referencing a master&#45;join&#45;table." alt="" coords="245,197,380,224"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="145,163,245,190,244,195,143,168"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#aa61d3de43b26061a4d0097306931c64f" title="Remove all whitespace." alt="" coords="225,248,400,291"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="113,164,163,197,226,234,237,239,235,244,223,238,160,202,110,168"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="373,53,492,26,493,31,375,58"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a709d772c597d8bc18d170300a8cabbb7" title=" " alt="" coords="448,56,623,99"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="374,69,433,71,432,76,374,74"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="270,131,269,121,276,112,290,106,312,104,336,106,350,113,348,117,335,112,312,109,291,111,279,116,274,122,275,130"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="448,131,623,173"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="400,149,433,149,433,155,400,155"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a420255eaf134f40b32155f8138cde030" title="Normalize spaces and commas after and before spaces." alt="" coords="448,248,623,291"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="400,267,433,267,433,272,400,272"/>
 </map>

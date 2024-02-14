@@ -1,0 +1,7 @@
+<map id="getBoardMember" name="getBoardMember">
+<area shape="rect" id="Node000001" title="Get the database entity for the matching executive board member." alt="" coords="5,5,126,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a13cb759047e308ad9b9a05ab45fccddd" title="Return an array with all members of the executive board." alt="" coords="174,5,339,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,16,158,16,158,21,126,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#aae8d36c62eaa47e32dcfba2644e60a53" title="Return the project entity for the executive board." alt="" coords="387,5,539,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,16,371,16,371,21,340,21"/>
+</map>

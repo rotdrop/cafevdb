@@ -1,6 +1,9 @@
 <map id="getFiles" name="getFiles">
-<area shape="rect" id="node1" title=" " alt="" coords="487,5,555,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="259,5,439,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="104,5,211,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,5,56,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="483,5,551,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="256,5,435,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="467,21,436,21,436,16,467,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="103,5,208,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="240,21,208,21,208,16,240,16"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="reset" name="reset">
-<area shape="rect" id="node1" title="{Reset initial state.void}" alt="" coords="144,5,195,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_replace.html#adde6143eb452b4936d4860554891a453" title=" " alt="" coords="5,5,96,31"/>
+<area shape="rect" id="Node000001" title="{Reset initial state.void}" alt="" coords="143,5,193,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_replace.html#a89e8d2f485fac0a3923d2adbb76bf9a1" title=" " alt="" coords="5,5,95,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,21,95,21,95,16,127,16"/>
 </map>

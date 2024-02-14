@@ -1,4 +1,5 @@
 <map id="InstrumentInsuranceController" name="InstrumentInsuranceController">
-<area shape="rect" id="node1" title="AJAX end&#45;points for instrument insurances." alt="" coords="5,79,203,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="65,5,143,31"/>
+<area shape="rect" id="Node000001" title="AJAX end&#45;points for instrument insurances." alt="" coords="5,80,202,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="65,5,142,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,48,106,80,101,80,101,48"/>
 </map>

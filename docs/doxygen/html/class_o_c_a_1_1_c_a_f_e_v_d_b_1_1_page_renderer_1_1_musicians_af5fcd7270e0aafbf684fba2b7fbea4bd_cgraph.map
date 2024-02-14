@@ -1,5 +1,7 @@
 <map id="beforeDeleteTrigger" name="beforeDeleteTrigger">
-<area shape="rect" id="node1" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,20,141,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a05ff3063af06ba0e1c19849c99234b1c" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="189,5,419,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7366f4cd17cfac976a1b643f34542bcb" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="467,5,696,60"/>
+<area shape="rect" id="Node000001" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,21,141,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a05ff3063af06ba0e1c19849c99234b1c" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="189,5,417,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,32,173,32,173,37,141,37"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a7366f4cd17cfac976a1b643f34542bcb" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="465,5,693,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="417,32,450,32,450,37,417,37"/>
 </map>

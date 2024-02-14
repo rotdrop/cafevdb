@@ -1,7 +1,11 @@
 <map id="getConfigValue" name="getConfigValue">
-<area shape="rect" id="node1" title="Fetch the value for the given key and possibly decrypt it." alt="" coords="433,31,544,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#abe6eb1d9123c44415874b24b087452e5" title="Check the validity of the encryption key." alt="" coords="245,5,379,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ae0e6a2643a679ae23f2975018436da50" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="239,55,385,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="144,55,191,80"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#aa164135a7474a6c9d34b7bee20056a4d" title="{}" alt="" coords="5,55,96,80"/>
+<area shape="rect" id="Node000001" title="Fetch the value for the given key and possibly decrypt it." alt="" coords="430,31,540,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#abe6eb1d9123c44415874b24b087452e5" title="Check the validity of the encryption key." alt="" coords="243,5,375,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="415,37,375,31,376,26,415,31"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ae0e6a2643a679ae23f2975018436da50" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="236,56,382,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="415,57,383,61,382,56,414,51"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="143,56,188,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="220,72,188,72,188,67,220,67"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7ab7de782ea52be1cc9a6ea784aad0a1" title="{}" alt="" coords="5,56,95,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="127,72,95,72,95,67,127,67"/>
 </map>

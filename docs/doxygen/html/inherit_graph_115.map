@@ -1,4 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,135,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_undoable_run_queue_exception.html" title="Base class for run&#45;queue exceptions." alt="" coords="183,5,380,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,89,57"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_mapper.html" title="Common mapper base class." alt="" coords="137,31,201,57"/>
+<area shape="poly" id="edge439_Node000000_Node000001" title=" " alt="" coords="104,41,136,41,136,47,104,47"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html" title="Mapper for the blog entities." alt="" coords="281,5,371,32"/>
+<area shape="poly" id="edge440_Node000001_Node000002" title=" " alt="" coords="216,34,280,23,281,29,217,39"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_progress_status_mapper.html" title="Mapper for progress status entities." alt="" coords="249,56,403,83"/>
+<area shape="poly" id="edge441_Node000001_Node000003" title=" " alt="" coords="217,49,249,54,248,60,216,54"/>
 </map>

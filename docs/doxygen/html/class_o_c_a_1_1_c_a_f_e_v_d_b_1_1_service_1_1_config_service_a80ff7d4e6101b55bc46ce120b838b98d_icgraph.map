@@ -1,11 +1,20 @@
 <map id="getGroupId" name="getGroupId">
-<area shape="rect" id="node1" title=" " alt="" coords="391,129,477,155"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2218693785fc68082d77740cc716623" title=" " alt="" coords="232,55,307,80"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2b39aa8d6ef6b2cf9db10c10954687b" title="Return the id of the dedicated admin&#45;group which contains all sub&#45;admins." alt="" coords="196,104,343,129"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a91b3e30d8e8967102637db98afc8ce42" title=" " alt="" coords="224,153,315,179"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5b0f9418642a2dfbcfde1475c7d10c9d" title=" " alt="" coords="236,203,303,228"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#adeb37b77de6c78ae8303acd786f08ebf" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,5,148,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6" title="Return the dedicated admin&#45;group if it exists." alt="" coords="9,104,144,129"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4eb4832e8e3774063978db6e58d29edc" title=" " alt="" coords="6,55,147,80"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="13,153,140,179"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="388,132,473,159"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2218693785fc68082d77740cc716623" title=" " alt="" coords="230,56,305,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="394,126,339,97,304,83,306,78,341,92,396,122"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2b39aa8d6ef6b2cf9db10c10954687b" title="Return the id of the dedicated admin&#45;group which contains all sub&#45;admins." alt="" coords="195,107,340,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="372,139,340,134,341,129,373,134"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a91b3e30d8e8967102637db98afc8ce42" title=" " alt="" coords="222,157,313,184"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="373,157,313,166,313,161,372,152"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5b0f9418642a2dfbcfde1475c7d10c9d" title=" " alt="" coords="234,208,301,235"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="396,169,341,198,302,214,300,209,339,194,394,164"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#adeb37b77de6c78ae8303acd786f08ebf" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,5,147,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="214,58,129,35,130,30,216,53"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6" title="Return the dedicated admin&#45;group if it exists." alt="" coords="9,107,143,133"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="216,86,130,109,129,103,214,80"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4eb4832e8e3774063978db6e58d29edc" title=" " alt="" coords="6,56,146,83"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="214,72,147,72,147,67,214,67"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="179,123,143,123,143,117,179,117"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="13,157,139,184"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="200,141,130,159,129,154,199,135"/>
 </map>

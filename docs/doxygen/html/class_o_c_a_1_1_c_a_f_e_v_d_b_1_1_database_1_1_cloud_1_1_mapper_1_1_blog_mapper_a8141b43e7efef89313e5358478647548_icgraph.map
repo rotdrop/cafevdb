@@ -1,4 +1,6 @@
 <map id="findThreadTree" name="findThreadTree">
-<area shape="rect" id="node1" title="Generate a complex tree structure reflecting the message threads." alt="" coords="180,29,289,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a021c7a67206f271d83d48044c1bacfd1" title="Generate a complex tree structure reflecting the message threads." alt="" coords="5,29,132,55"/>
+<area shape="rect" id="Node000001" title="Generate a complex tree structure reflecting the message threads." alt="" coords="180,29,288,56"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="262,16,252,10,234,8,217,10,208,15,206,20,210,28,205,30,200,21,204,11,215,5,234,3,254,5,264,12"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a021c7a67206f271d83d48044c1bacfd1" title="Generate a complex tree structure reflecting the message threads." alt="" coords="5,29,132,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,45,132,45,132,40,164,40"/>
 </map>

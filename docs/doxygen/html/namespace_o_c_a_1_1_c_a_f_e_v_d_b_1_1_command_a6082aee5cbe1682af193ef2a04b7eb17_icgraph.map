@@ -1,6 +1,9 @@
 <map id="authenticate" name="authenticate">
-<area shape="rect" id="node1" title="{}" alt="" coords="236,92,329,117"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,5,188,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_files_scan.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,85,188,125"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_hello_world.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,149,188,189"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="236,96,328,123"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_database_sanitizers.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,5,188,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,92,170,67,172,62,234,87"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_files_scan.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,88,188,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,112,188,112,188,107,220,107"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_hello_world.html#ab31c72b72ddaf7116db5d84c055d3c0b" title="{}" alt="" coords="5,155,188,197"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="229,131,159,157,157,152,227,126"/>
 </map>

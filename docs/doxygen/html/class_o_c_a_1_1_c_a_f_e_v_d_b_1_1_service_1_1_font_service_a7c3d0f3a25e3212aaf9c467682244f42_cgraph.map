@@ -1,5 +1,8 @@
 <map id="purgeFontsFolder" name="purgeFontsFolder">
-<area shape="rect" id="node1" title="Delete all files in the app&#39;s font folder and clear all cache entries." alt="" coords="5,5,128,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a1548029c9c58b03ee3a95f9d5c143920" title=" " alt="" coords="368,5,477,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a77513dce29558f6d1474fb786b9ef885" title=" " alt="" coords="176,31,320,56"/>
+<area shape="rect" id="Node000001" title="Delete all files in the app&#39;s font folder and clear all cache entries." alt="" coords="5,5,128,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a1548029c9c58b03ee3a95f9d5c143920" title=" " alt="" coords="367,5,475,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,16,352,16,352,21,128,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a77513dce29558f6d1474fb786b9ef885" title=" " alt="" coords="176,31,319,57"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,25,160,29,160,34,128,30"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="319,31,351,26,352,31,320,36"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="scanFontsFolder" name="scanFontsFolder">
-<area shape="rect" id="node1" title="Scan the app&#39;s fonts folder and return the contents grouped by font family." alt="" coords="545,5,664,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#ad4a3b7b4eedfc6652afc11bd2f63a89e" title="Obtain the cached contents of the font&#45;folder, grouped by family." alt="" coords="355,5,497,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a4f12fbd8873025e70264e416c3cb9308" title="Check whether the given font." alt="" coords="196,5,307,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a5e7ba34cff754351f6d70869594408fa" title="Return the chosen font&#45;default if it is available and set, otherwise one of the installed fonts." alt="" coords="5,5,148,31"/>
+<area shape="rect" id="Node000001" title="Scan the app&#39;s fonts folder and return the contents grouped by font family." alt="" coords="544,5,663,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#ad4a3b7b4eedfc6652afc11bd2f63a89e" title="Obtain the cached contents of the font&#45;folder, grouped by family." alt="" coords="354,5,496,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="529,21,497,21,497,16,529,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a4f12fbd8873025e70264e416c3cb9308" title="Check whether the given font." alt="" coords="196,5,306,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="338,21,306,21,306,16,338,16"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a5e7ba34cff754351f6d70869594408fa" title="Return the chosen font&#45;default if it is available and set, otherwise one of the installed fonts." alt="" coords="5,5,148,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="180,21,148,21,148,16,180,16"/>
 </map>

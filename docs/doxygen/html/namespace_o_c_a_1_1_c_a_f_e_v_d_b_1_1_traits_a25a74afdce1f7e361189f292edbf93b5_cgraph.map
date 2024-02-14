@@ -1,5 +1,7 @@
 <map id="getSystemValue" name="getSystemValue">
-<area shape="rect" id="node1" title="Forward to OCP\IConfig::getSystemValue()." alt="" coords="5,5,123,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af54ebe390d4ed866494389c6b62e5a97" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="171,5,261,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="309,5,411,31"/>
+<area shape="rect" id="Node000001" title="Forward to OCP\IConfig::getSystemValue()." alt="" coords="5,5,122,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#af54ebe390d4ed866494389c6b62e5a97" title="Return the stored config&#45;service of the embedding cloud container." alt="" coords="170,5,260,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,16,154,16,154,21,122,21"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="308,5,408,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="260,16,292,16,292,21,260,21"/>
 </map>

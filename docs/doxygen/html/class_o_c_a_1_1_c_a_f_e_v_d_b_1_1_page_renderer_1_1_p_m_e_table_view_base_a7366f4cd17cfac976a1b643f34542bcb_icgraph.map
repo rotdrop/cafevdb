@@ -1,6 +1,9 @@
 <map id="legacyRecordToEntityId" name="legacyRecordToEntityId">
-<area shape="rect" id="node1" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="499,31,660,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a55f854e5c60ee53f8fc408fbd4127ac1" title="This trigger simply deletes the given entity and prevents the legacy PHPMyEdit class to do the deleti..." alt="" coords="260,5,451,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a05ff3063af06ba0e1c19849c99234b1c" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="280,55,431,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,47,212,87"/>
+<area shape="rect" id="Node000001" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="497,31,657,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a55f854e5c60ee53f8fc408fbd4127ac1" title="This trigger simply deletes the given entity and prevents the legacy PHPMyEdit class to do the deleti..." alt="" coords="259,5,449,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="482,36,449,32,450,27,482,31"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a05ff3063af06ba0e1c19849c99234b1c" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="279,56,429,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="482,57,429,64,429,58,482,52"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,48,211,91"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="264,72,211,72,211,67,264,67"/>
 </map>

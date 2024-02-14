@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html" title="Page history via PHP session." alt="" coords="5,5,113,31"/>
+<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html" title="Mis&#45;use the internal services of the groupfolders app in order to automatically generate group&#45;shared..." alt="" coords="5,31,149,57"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_group_folders_service.html" title="Toolkit forwarder service in order to have the app&#39;s L10N instance." alt="" coords="197,5,340,32"/>
+<area shape="poly" id="edge288_Node000000_Node000001" title=" " alt="" coords="164,30,196,25,197,31,165,35"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_service.html" title="Place server&#45;to&#45;server AJAX calls." alt="" coords="211,56,326,83"/>
+<area shape="poly" id="edge289_Node000000_Node000002" title=" " alt="" coords="164,53,211,59,210,64,164,58"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="rename" name="rename">
-<area shape="rect" id="node1" title="Rename $fromPath to $to." alt="" coords="104,31,169,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html#abc7aec4383c36f876c7c3b382154ed81" title="{Do something.void}" alt="" coords="11,5,50,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html#a0347027efc0e46047792065615ac94eb" title="{Undo that what was done by do().void}" alt="" coords="5,55,56,80"/>
+<area shape="rect" id="Node000001" title="Rename $fromPath to $to." alt="" coords="103,31,167,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html#abc7aec4383c36f876c7c3b382154ed81" title="{Do something.void}" alt="" coords="11,5,49,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,35,49,26,50,21,88,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html#a0347027efc0e46047792065615ac94eb" title="{Undo that what was done by do().void}" alt="" coords="5,56,55,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="88,58,56,66,54,61,87,53"/>
 </map>

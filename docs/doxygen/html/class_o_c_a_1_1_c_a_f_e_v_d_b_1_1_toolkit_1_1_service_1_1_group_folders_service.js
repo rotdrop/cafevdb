@@ -10,6 +10,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_serv
     [ "fetchFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c", null ],
     [ "getFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a4d4c99de2d9c451fa1e4f4cb2123fb04", null ],
     [ "getFolderById", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a2c5736677056d73dbd8d456de4babd92", null ],
+    [ "getRootFolderStorageId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a0287649d77801b440d6e9055c775b283", null ],
     [ "removeGroupFromFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a130acafc8f95b3c267c2353c2a5ec76f", null ],
     [ "removeManagerFromFolder", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#af683f3e3910aa34f238c4336211d1a77", null ],
     [ "searchFolders", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab053279bea70dd2be3ff1676354fd041", null ],

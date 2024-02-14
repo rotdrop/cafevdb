@@ -1,5 +1,7 @@
 <map id="getStorageModificationTime" name="getStorageModificationTime">
-<area shape="rect" id="node1" title="Get the overall modification time of the entire storage as Unix time&#45;stamp." alt="" coords="268,5,452,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae16b6afbab9462a9af681b9393af361e" title="{}" alt="" coords="145,5,220,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae949e0991a703081d8b1c95f871e5025" title="{}" alt="" coords="5,5,97,31"/>
+<area shape="rect" id="Node000001" title="Get the overall modification time of the entire storage as Unix time&#45;stamp." alt="" coords="267,5,450,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae16b6afbab9462a9af681b9393af361e" title="{}" alt="" coords="145,5,219,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="252,21,220,21,220,16,252,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae949e0991a703081d8b1c95f871e5025" title="{}" alt="" coords="5,5,97,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="129,21,97,21,97,16,129,16"/>
 </map>

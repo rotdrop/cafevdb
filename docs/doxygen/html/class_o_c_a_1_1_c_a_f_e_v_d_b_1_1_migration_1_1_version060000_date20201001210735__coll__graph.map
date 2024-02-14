@@ -1,4 +1,5 @@
 <map id="Version060000Date20201001210735" name="Version060000Date20201001210735">
-<area shape="rect" id="node1" title="Auto&#45;generated migration step: Please modify to your needs!" alt="" coords="5,79,240,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="51,5,194,31"/>
+<area shape="rect" id="Node000001" title="Auto&#45;generated migration step: Please modify to your needs!" alt="" coords="5,80,239,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="51,5,193,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,48,125,80,119,80,119,48"/>
 </map>

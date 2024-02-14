@@ -2,6 +2,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entiti
 [
     [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image.html#aaf100bae45f31ed0228010f7ae2bf8ff", null ],
     [ "getBaseName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image.html#aed7e3b8a6e4982e6a901631e542af895", null ],
+    [ "getData", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image.html#a669b1e3e06514d94f8c7084e879c78ae", null ],
     [ "getDataHash", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image.html#a15553787019384178d395ab7e8e4e4b2", null ],
     [ "getDirName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image.html#ad72ee41de5e475eeef1b10a8a5d47b85", null ],
     [ "getExtension", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image.html#a4504cfb725c7aa7ce5a0151f688ac734", null ],

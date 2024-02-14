@@ -1,5 +1,7 @@
 <map id="getLoginCredentialsFromToken" name="getLoginCredentialsFromToken">
-<area shape="rect" id="node1" title="Try to fetch the login&#45;credentials contained in the auth token which is secured with the given passwo..." alt="" coords="5,31,208,56"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="256,5,353,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="276,55,333,80"/>
+<area shape="rect" id="Node000001" title="Try to fetch the login&#45;credentials contained in the auth token which is secured with the given passwo..." alt="" coords="5,31,207,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="255,5,351,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,28,239,24,239,29,208,34"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="275,56,331,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,54,260,61,259,66,207,60"/>
 </map>

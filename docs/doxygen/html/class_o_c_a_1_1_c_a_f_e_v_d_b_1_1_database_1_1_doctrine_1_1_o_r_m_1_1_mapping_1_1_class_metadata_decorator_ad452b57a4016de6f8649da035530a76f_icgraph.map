@@ -1,4 +1,6 @@
 <map id="debug" name="debug">
-<area shape="rect" id="node1" title=" " alt="" coords="184,29,241,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a77ab9505ae36ef5969a69fac19fb3090" title="Update the inverse side of an association after auto&#45;installing $targetEntity into $entity (the ownin..." alt="" coords="5,29,136,55"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="183,29,239,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="234,16,226,10,211,8,197,10,189,14,187,20,191,28,186,30,182,21,185,11,195,5,211,3,228,5,237,12"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_mapping_1_1_class_metadata_decorator.html#a77ab9505ae36ef5969a69fac19fb3090" title="Update the inverse side of an association after auto&#45;installing $targetEntity into $entity (the ownin..." alt="" coords="5,29,135,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="167,45,135,45,135,40,167,40"/>
 </map>

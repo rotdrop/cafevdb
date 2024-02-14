@@ -1,14 +1,49 @@
 <map id="AbstractMigration" name="AbstractMigration">
-<area shape="rect" id="node1" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="132,127,256,153"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_drop_bank_account_columns.html" title="Change participantAccess field to enum." alt="" coords="315,5,506,45"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_access_enum.html" title="Change participantAccess field to enum." alt="" coords="315,70,506,95"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_drop_unused_columns.html" title="Change participantAccess field to enum." alt="" coords="318,120,503,160"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_fields_add_liabilities.html" title="Change participantAccess field to enum." alt="" coords="313,185,509,210"/>
-<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_project_events_add_absence_fields.html" title="Change participantAccess field to enum." alt="" coords="304,234,517,259"/>
-<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="5,127,84,153"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230227090000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="565,13,729,38"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206204000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="565,70,729,95"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206203000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="565,127,729,153"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230207133000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="565,185,729,210"/>
-<area shape="rect" id="node12" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230330110000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="565,234,729,259"/>
+<area shape="rect" id="Node000001" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="132,267,255,293"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_project_registration_deadline.html" title="Change participantAccess field to enum." alt="" coords="313,5,519,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,251,208,205,228,148,258,91,278,65,301,42,320,30,323,35,305,46,282,68,262,94,232,150,213,206,202,252"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_add_run_count_to_migration_records.html" title="Change participantAccess field to enum." alt="" coords="307,56,526,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="201,251,214,214,236,171,264,129,301,93,322,81,325,86,305,97,268,132,240,174,219,217,206,253"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_explode_function.html" title="Remember the id of a mailing list." alt="" coords="338,107,495,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="207,252,244,196,271,167,302,143,336,128,338,133,304,148,274,171,248,199,211,255"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_create_tax_exemption_notices.html" title="Remember the id of a mailing list." alt="" coords="322,157,510,184"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="217,254,255,222,302,194,333,182,335,187,304,198,258,227,221,258"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_disable_cloud_accounts_by_default.html" title="Change participantAccess field to enum." alt="" coords="310,208,522,235"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="251,259,302,244,349,233,350,238,304,249,252,264"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_drop_bank_account_columns.html" title="Change participantAccess field to enum." alt="" coords="322,259,511,301"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="271,277,321,277,321,283,271,283"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_access_enum.html" title="Change participantAccess field to enum." alt="" coords="322,325,511,352"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="252,296,304,311,350,322,349,327,302,316,251,301"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_field_drop_unused_columns.html" title="Change participantAccess field to enum." alt="" coords="324,376,508,419"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="222,302,259,333,304,362,330,373,328,378,302,366,256,337,218,306"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_participant_fields_add_liabilities.html" title="Change participantAccess field to enum." alt="" coords="319,443,514,469"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="209,306,246,369,273,401,304,428,327,440,324,445,302,433,269,405,241,372,204,309"/>
+<area shape="rect" id="Node000021" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_project_events_add_absence_fields.html" title="Change participantAccess field to enum." alt="" coords="310,493,522,520"/>
+<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="204,308,217,347,238,394,267,440,305,479,324,490,321,495,301,483,262,444,233,396,212,349,199,309"/>
+<area shape="rect" id="Node000023" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_sanitize_database_storage_identifiers.html" title="Change participantAccess field to enum." alt="" coords="303,544,529,571"/>
+<area shape="poly" id="edge22_Node000001_Node000023" title=" " alt="" coords="201,308,211,357,230,417,261,478,281,506,305,530,323,541,320,546,301,534,277,510,256,481,225,419,206,358,196,309"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="5,267,84,293"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,277,131,277,131,283,99,283"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230502230000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,5,741,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="535,16,577,16,577,21,535,21"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240122170000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,56,741,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="542,67,577,67,577,72,542,72"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214010000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,107,741,133"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="510,117,577,117,577,123,510,123"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240206153000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,157,741,184"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="526,168,577,168,577,173,526,173"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230823120000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,208,741,235"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="538,219,577,219,577,224,538,224"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230227090000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,267,741,293"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="527,277,577,277,577,283,527,283"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206204000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,325,741,352"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="527,336,577,336,577,341,527,341"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206203000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,384,741,411"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="524,395,577,395,577,400,524,400"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230207133000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,443,741,469"/>
+<area shape="poly" id="edge19_Node000019_Node000020" title=" " alt="" coords="530,453,577,453,577,459,530,459"/>
+<area shape="rect" id="Node000022" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230330110000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,493,741,520"/>
+<area shape="poly" id="edge21_Node000021_Node000022" title=" " alt="" coords="538,504,577,504,577,509,538,509"/>
+<area shape="rect" id="Node000024" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20240214013000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="577,544,741,571"/>
+<area shape="poly" id="edge23_Node000023_Node000024" title=" " alt="" coords="545,555,577,555,577,560,545,560"/>
 </map>

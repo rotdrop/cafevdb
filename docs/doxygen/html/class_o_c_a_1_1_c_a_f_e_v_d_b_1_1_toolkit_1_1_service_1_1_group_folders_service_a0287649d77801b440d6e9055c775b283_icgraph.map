@@ -1,0 +1,18 @@
+<map id="getRootFolderStorageId" name="getRootFolderStorageId">
+<area shape="rect" id="Node000001" title=" " alt="" coords="596,81,755,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="450,56,543,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="580,84,543,79,544,73,581,79"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a2c5736677056d73dbd8d456de4babd92" title="Get the shared folder by its id." alt="" coords="445,107,548,133"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="581,111,549,115,548,110,580,106"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="294,5,397,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="439,53,387,35,389,30,441,48"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab053279bea70dd2be3ff1676354fd041" title="Return all shared folders matching the given regexp." alt="" coords="294,56,397,83"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="434,72,398,72,398,67,434,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="159,5,234,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="278,21,235,21,235,16,278,16"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ab6b826e4a8edcd655850277fbb5e9e74" title="Create a shared folder and set appropriate permissions." alt="" coords="5,56,99,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="145,39,93,58,91,53,143,34"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#ad4fb86c5bb03d98824c51cfe67154a56" title=" " alt="" coords="147,56,246,83"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="278,72,246,72,246,67,278,67"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="430,122,298,115,146,97,97,86,98,81,147,92,299,110,430,116"/>
+</map>

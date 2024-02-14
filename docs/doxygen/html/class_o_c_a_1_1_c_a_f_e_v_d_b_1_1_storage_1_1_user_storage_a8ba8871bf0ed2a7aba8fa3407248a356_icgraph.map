@@ -1,6 +1,9 @@
 <map id="ensureFolder" name="ensureFolder">
-<area shape="rect" id="node1" title="Make sure the given directory exists." alt="" coords="184,55,281,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#ae00d3fd376a5852334619ba68bf4cbb2" title="Make sure the all components of the given array exists where each following component is chained to t..." alt="" coords="5,5,136,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#ada1aeefc7aee3dd0391dd02e26bd5af1" title=" " alt="" coords="13,55,128,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#aa5f378c63a7d9fa6f2dd69b5a852c7e0" title="Put file content by path." alt="" coords="27,104,114,129"/>
+<area shape="rect" id="Node000001" title="Make sure the given directory exists." alt="" coords="184,56,280,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#ae00d3fd376a5852334619ba68bf4cbb2" title="Make sure that all components of the given array exists where each following component is chained to ..." alt="" coords="5,5,136,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,53,115,35,116,30,173,48"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#ada1aeefc7aee3dd0391dd02e26bd5af1" title=" " alt="" coords="14,56,127,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,72,127,72,127,67,168,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html#aa5f378c63a7d9fa6f2dd69b5a852c7e0" title="Put file content by path." alt="" coords="28,107,113,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,90,115,109,113,104,172,85"/>
 </map>

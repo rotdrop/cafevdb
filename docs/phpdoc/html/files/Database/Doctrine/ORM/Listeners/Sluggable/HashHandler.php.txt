@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,15 +44,10 @@ class HashHandler implements SlugHandlerInterface
    */
   private $hashAlgorithm;
 
-  /**
-   * @var SluggableListener
-   */
-  protected $sluggable;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(SluggableListener $sluggable)
-  {
-    $this->sluggable = $sluggable;
+  public function __construct(
+    protected SluggableListener $sluggable,
+  ) {
     $this->hashAlgorithm = 'md5';
     $this->sluggable->setTransliterator(fn($slug) => $slug);
   }

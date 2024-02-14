@@ -1,5 +1,7 @@
 <map id="setSharedPrivateValue" name="setSharedPrivateValue">
-<area shape="rect" id="node1" title="Encrypt and set one private value." alt="" coords="225,31,380,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#a22a96c82433bbb57a5effd86174fdb7e" title="Delete one private value." alt="" coords="6,5,177,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#ac7caf4a9037561d1a75fd08568df9d06" title="Recrypt all shared private values with a new key." alt="" coords="5,55,177,80"/>
+<area shape="rect" id="Node000001" title="Encrypt and set one private value." alt="" coords="225,31,378,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#a22a96c82433bbb57a5effd86174fdb7e" title="Delete one private value." alt="" coords="6,5,176,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,36,176,32,177,26,210,30"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#ac7caf4a9037561d1a75fd08568df9d06" title="Recrypt all shared private values with a new key." alt="" coords="5,56,177,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,58,178,62,177,56,209,52"/>
 </map>

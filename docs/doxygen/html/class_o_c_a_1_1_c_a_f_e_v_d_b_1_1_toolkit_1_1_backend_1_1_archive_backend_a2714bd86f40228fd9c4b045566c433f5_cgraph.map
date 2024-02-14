@@ -1,4 +1,5 @@
 <map id="open" name="open">
-<area shape="rect" id="node1" title="{}" alt="" coords="5,20,56,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_formats.html#adc591104b34d61e56698d5a2d843b031" title="Fetch all drivers matching the given abilities." alt="" coords="104,5,277,60"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,21,55,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_backend_1_1_archive_formats.html#adc591104b34d61e56698d5a2d843b031" title="Fetch all drivers matching the given abilities." alt="" coords="103,5,275,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,32,87,32,87,37,55,37"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="getUserTopLevelFolder" name="getUserTopLevelFolder">
-<area shape="rect" id="node1" title="Return the name top&#45;level folder as Folder instance." alt="" coords="5,5,161,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="209,5,341,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad1ceaa136377a6a4e4de64a249daefff" title=" " alt="" coords="389,5,493,31"/>
+<area shape="rect" id="Node000001" title="Return the name top&#45;level folder as Folder instance." alt="" coords="5,5,161,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#acde6e347f6701fb57e1028789f979f8e" title=" " alt="" coords="209,5,340,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,16,193,16,193,21,161,21"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad1ceaa136377a6a4e4de64a249daefff" title=" " alt="" coords="388,5,491,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,16,373,16,373,21,340,21"/>
 </map>

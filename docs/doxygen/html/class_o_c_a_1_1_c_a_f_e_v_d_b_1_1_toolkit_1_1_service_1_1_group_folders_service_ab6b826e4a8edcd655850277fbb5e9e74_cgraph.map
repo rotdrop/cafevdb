@@ -1,13 +1,28 @@
 <map id="createFolder" name="createFolder">
-<area shape="rect" id="node1" title="Create a shared folder and set appropriate permissions." alt="" coords="5,80,100,105"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a8148448c37311dced215dca1c67a66e0" title="Add a single group to the given shared folder." alt="" coords="155,5,283,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a3f43811af00573cb21e27cb201c49623" title=" " alt="" coords="148,55,291,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="181,104,257,129"/>
-<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a2c5736677056d73dbd8d456de4babd92" title=" " alt="" coords="339,155,442,180"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="339,53,443,79"/>
-<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="633,97,795,137"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="491,53,585,79"/>
-<area shape="rect" id="node8" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="843,97,1004,137"/>
-<area shape="rect" id="node9" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="1052,65,1213,105"/>
-<area shape="rect" id="node10" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="1052,129,1213,169"/>
+<area shape="rect" id="Node000001" title="Create a shared folder and set appropriate permissions." alt="" coords="5,81,99,108"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a8148448c37311dced215dca1c67a66e0" title="Add a single group to the given shared folder." alt="" coords="154,5,282,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,78,146,42,160,36,162,41,148,46,78,83"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a3f43811af00573cb21e27cb201c49623" title=" " alt="" coords="147,56,289,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="99,85,131,80,132,85,100,90"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a4d4c99de2d9c451fa1e4f4cb2123fb04" title="Obtain the shared folder data for the given mount&#45;point." alt="" coords="180,107,256,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="100,99,165,109,165,115,99,104"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a2c5736677056d73dbd8d456de4babd92" title="Get the shared folder by its id." alt="" coords="488,157,591,184"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="74,106,108,126,147,143,234,161,322,171,405,173,473,172,473,178,405,179,322,176,233,167,146,148,105,131,72,111"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a7e14d6479c6ecacdf6ec831270d1b99b" title=" " alt="" coords="337,107,440,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="256,117,321,117,321,123,256,123"/>
+<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="639,91,799,133"/>
+<area shape="poly" id="edge11_Node000004_Node000008" title=" " alt="" coords="255,107,337,92,408,86,464,85,591,92,624,95,623,100,590,97,464,90,408,91,337,97,256,113"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#acb65d3f859f30837e4b9f7ea14b88b9c" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="493,107,586,133"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="441,117,478,117,478,123,441,123"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="639,157,799,184"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="588,131,656,150,654,155,586,136"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="587,115,623,114,623,119,587,121"/>
+<area shape="rect" id="Node000009" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="847,91,1007,133"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="799,109,831,109,831,115,799,115"/>
+<area shape="rect" id="Node000010" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="1055,57,1216,100"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="1007,97,1039,91,1040,97,1008,102"/>
+<area shape="rect" id="Node000011" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="1055,124,1216,167"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="1008,122,1040,127,1039,133,1007,127"/>
+<area shape="poly" id="edge13_Node000012_Node000007" title=" " alt="" coords="591,168,624,168,624,173,591,173"/>
+<area shape="poly" id="edge14_Node000012_Node000008" title=" " alt="" coords="582,154,636,136,638,141,584,159"/>
 </map>

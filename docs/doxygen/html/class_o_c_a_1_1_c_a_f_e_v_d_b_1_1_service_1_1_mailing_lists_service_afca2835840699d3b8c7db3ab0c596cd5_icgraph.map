@@ -1,11 +1,25 @@
 <map id="getSubscription" name="getSubscription">
-<area shape="rect" id="node1" title="Find the basic information about a subscription for the given email." alt="" coords="624,111,736,136"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b" title="Configure the given list as an announcements&#45;only list." alt="" coords="5,136,196,162"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae62eae7d1bae43dae28edc191f40da81" title="Fetch the subscription preferences." alt="" coords="393,36,576,62"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a80b3751e479bc6620f7007cdd019869b" title="Return a brief status for the requested list and email address." alt="" coords="409,86,560,111"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a56dd65a95afc760129f3e87827317339" title="Patch the membership config for the given email address." alt="" coords="244,136,345,162"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="393,187,576,212"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adb5ee6484051ff49357847bc6b203409" title="Unsubscribe the given email&#45;address." alt="" coords="439,236,531,262"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="255,186,334,211"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="74,186,127,211"/>
+<area shape="rect" id="Node000001" title="Find the basic information about a subscription for the given email." alt="" coords="711,136,823,163"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a9dcedfe5d7713b75758ec7098197aa8b" title="Configure the given list as an announcements&#45;only list." alt="" coords="5,187,195,214"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="751,124,716,71,692,45,662,25,615,10,576,10,534,18,482,26,413,27,358,28,306,35,244,60,200,89,163,124,112,188,108,185,159,121,197,85,241,55,305,30,358,22,413,22,482,20,534,13,575,5,616,5,664,20,695,41,720,67,755,121"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae62eae7d1bae43dae28edc191f40da81" title="Fetch the subscription preferences." alt="" coords="482,35,663,62"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="735,129,701,105,662,83,619,65,621,60,665,78,703,101,738,124"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_participants_controller.html#a51746b27963d94b96e7519f4c78a571c" title="Fetch the delivery states for the given email." alt="" coords="243,70,434,128"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="701,135,663,127,544,112,434,105,435,100,545,107,664,122,703,129"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a80b3751e479bc6620f7007cdd019869b" title="Return a brief status for the requested list and email address." alt="" coords="498,136,647,163"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="696,152,648,152,648,147,696,147"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a56dd65a95afc760129f3e87827317339" title="Patch the membership config for the given email address." alt="" coords="288,187,389,214"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="703,170,664,178,514,195,389,202,389,196,514,189,663,172,701,164"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="482,238,663,264"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="738,175,703,198,665,221,621,239,619,234,662,216,701,194,735,170"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#adb5ee6484051ff49357847bc6b203409" title="Unsubscribe the given email&#45;address." alt="" coords="527,288,618,315"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="753,178,717,229,693,256,665,278,643,290,619,297,618,292,641,285,662,274,689,252,713,226,749,175"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="493,68,435,81,434,76,492,63"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="492,135,434,122,435,117,493,130"/>
+<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="272,203,195,203,195,198,272,198"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="300,238,377,264"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="467,254,378,254,378,248,467,248"/>
+<area shape="poly" id="edge11_Node000008_Node000002" title=" " alt="" coords="284,242,166,217,167,212,285,237"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad9ddb4782eae69fecac300b4851f524a" title="Just send an invitation." alt="" coords="74,238,126,264"/>
+<area shape="poly" id="edge12_Node000008_Node000009" title=" " alt="" coords="284,254,127,254,127,248,284,248"/>
 </map>

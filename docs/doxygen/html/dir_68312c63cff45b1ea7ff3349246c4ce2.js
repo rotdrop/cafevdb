@@ -1,16 +1,32 @@
 var dir_68312c63cff45b1ea7ff3349246c4ce2 =
 [
     [ "AbstractMigration.php", "_abstract_migration_8php_source.html", null ],
+    [ "AddProjectRegistrationDeadline.php", "_add_project_registration_deadline_8php_source.html", null ],
+    [ "AddRunCountToMigrationRecords.php", "_add_run_count_to_migration_records_8php_source.html", null ],
+    [ "CreateExplodeFunction.php", "_create_explode_function_8php_source.html", null ],
+    [ "CreateTaxExemptionNotices.php", "_create_tax_exemption_notices_8php_source.html", null ],
+    [ "DecryptShareOwner.php", "_decrypt_share_owner_8php_source.html", null ],
+    [ "DisableCloudAccountsByDefault.php", "_disable_cloud_accounts_by_default_8php_source.html", null ],
+    [ "GroupSharedOrchestraFolder.php", "_group_shared_orchestra_folder_8php_source.html", null ],
     [ "InitialDatabaseSetup.php", "_initial_database_setup_8php_source.html", null ],
     [ "ParticipantDropBankAccountColumns.php", "_participant_drop_bank_account_columns_8php_source.html", null ],
     [ "ParticipantFieldAccessEnum.php", "_participant_field_access_enum_8php_source.html", null ],
     [ "ParticipantFieldDropUnusedColumns.php", "_participant_field_drop_unused_columns_8php_source.html", null ],
     [ "ParticipantFieldsAddLiabilities.php", "_participant_fields_add_liabilities_8php_source.html", null ],
     [ "ProjectEventsAddAbsenceFields.php", "_project_events_add_absence_fields_8php_source.html", null ],
+    [ "SanitizeDatabaseStorageIdentifiers.php", "_sanitize_database_storage_identifiers_8php_source.html", null ],
     [ "Version00000000000000.php", "_version00000000000000_8php_source.html", null ],
     [ "Version20230206203000.php", "_version20230206203000_8php_source.html", null ],
     [ "Version20230206204000.php", "_version20230206204000_8php_source.html", null ],
     [ "Version20230207133000.php", "_version20230207133000_8php_source.html", null ],
     [ "Version20230227090000.php", "_version20230227090000_8php_source.html", null ],
-    [ "Version20230330110000.php", "_version20230330110000_8php_source.html", null ]
+    [ "Version20230330110000.php", "_version20230330110000_8php_source.html", null ],
+    [ "Version20230502230000.php", "_version20230502230000_8php_source.html", null ],
+    [ "Version20230504190000.php", "_version20230504190000_8php_source.html", null ],
+    [ "Version20230823120000.php", "_version20230823120000_8php_source.html", null ],
+    [ "Version20240121190000.php", "_version20240121190000_8php_source.html", null ],
+    [ "Version20240122170000.php", "_version20240122170000_8php_source.html", null ],
+    [ "Version20240206153000.php", "_version20240206153000_8php_source.html", null ],
+    [ "Version20240214010000.php", "_version20240214010000_8php_source.html", null ],
+    [ "Version20240214013000.php", "_version20240214013000_8php_source.html", null ]
 ];

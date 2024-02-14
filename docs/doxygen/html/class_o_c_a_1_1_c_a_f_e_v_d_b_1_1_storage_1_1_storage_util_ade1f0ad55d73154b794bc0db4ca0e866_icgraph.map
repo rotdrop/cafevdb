@@ -1,0 +1,5 @@
+<map id="uploadBasename" name="uploadBasename">
+<area shape="rect" id="Node000001" title="Strip upload extensions from a path, they look like .ocTransferIdXXXXXXXXXX.part." alt="" coords="281,21,402,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_abstract_read_me_factory.html#a03465f2df3f1772272183c94b1152d9e" title="Check whether the given file is a ReadMe.md file." alt="" coords="5,5,233,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,37,233,37,233,32,265,32"/>
+</map>

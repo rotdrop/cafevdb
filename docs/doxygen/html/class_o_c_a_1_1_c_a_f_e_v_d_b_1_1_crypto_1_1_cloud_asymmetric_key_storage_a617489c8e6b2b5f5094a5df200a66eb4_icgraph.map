@@ -1,4 +1,5 @@
 <map id="createKeyPair" name="createKeyPair">
-<area shape="rect" id="node1" title="Create a key&#45;pair, but don&#39;t store it." alt="" coords="172,5,276,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#ab5f2576425cc58141382946e399e8520" title="{Initialize a private/public key&#45;pair by either retreiving it from the config&#45;space or generating a n..." alt="" coords="5,5,124,31"/>
+<area shape="rect" id="Node000001" title="Create a key&#45;pair, but don&#39;t store it." alt="" coords="171,5,274,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#ab5f2576425cc58141382946e399e8520" title="{Initialize a private/public key&#45;pair by either retreiving it from the config&#45;space or generating a n..." alt="" coords="5,5,123,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,21,123,21,123,16,155,16"/>
 </map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2023, 2024, Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,13 +31,14 @@ use Throwable;
 use OC\Files\Mount\MountPoint;
 
 use OCP\Files\Config\IMountProvider;
-use OCP\Files\Storage\IStorageFactory;
 use OCP\Files\FileInfo;
+use OCP\Files\Storage\IStorageFactory;
 use OCP\IUser;
+use OCP\IUserSession;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
@@ -49,9 +50,6 @@ use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * Mount parts of the database-storage somewhere.
- *
- * @todo This is just a dummy for now in order to test the integration
- * with the surrounding cloud.
  */
 class MountProvider implements IMountProvider
 {
@@ -61,27 +59,18 @@ class MountProvider implements IMountProvider
 
   const MOUNT_TYPE = 'cafevdb-database';
 
-  /** @var OrganizationalRolesService */
-  private $organizationalRolesService;
-
-  /** @var Factory */
-  private $storageFactory;
-
   /** @var int */
   private static $recursionLevel = 0;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    OrganizationalRolesService $organizationalRolesService,
-    EntityManager $entityManager,
-    Factory $storageFactory,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private AuthorizationService $authorizationService,
+    private Factory $storageFactory,
+    private IUserSession $userSession,
   ) {
-    $this->configService = $configService;
-    $this->organizationalRolesService = $organizationalRolesService;
     $this->l = $this->l10n();
-    $this->entityManager = $entityManager;
-    $this->storageFactory = $storageFactory;
   }
   // phpcs:enable
 
@@ -111,7 +100,13 @@ class MountProvider implements IMountProvider
   {
     $userId = $user->getUID();
 
-    if (!$this->inGroup($userId)) {
+    if ($this->userSession->isLoggedIn())  {
+      $this->logDebug('No one is logged in.');
+      return [];
+    }
+
+    if (!$this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FILESYSTEM)) {
+      $this->logDebug('User is not authorized: ' . $userId);
       return [];
     }
 
@@ -122,6 +117,7 @@ class MountProvider implements IMountProvider
     }
 
     if ($userId == $this->shareOwnerId()) {
+      $this->logDebug('Skipping virutal mounts for the shareholder: ' . $userId);
       // do not try to establish virtual mounts for the dummy user
       return [];
     }
@@ -161,8 +157,8 @@ class MountProvider implements IMountProvider
     $mounts = [];
     $bulkLoadStorageIds = [];
 
-    if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
-      // block for non-treasurers
+    if ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FINANCE)) {
+      // allow only treasurers or similar folk
 
       $storage = $this->storageFactory->getBankTransactionsStorage();
       $bulkLoadStorageIds[] = $storage->getId();
@@ -177,6 +173,35 @@ class MountProvider implements IMountProvider
         [
           'filesystem_check_changes' => 1,
           'readonly' => true,
+          'previews' => true,
+          'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
+        ]
+      ) extends MountPoint
+      {
+        /** {@inheritdoc} */
+        public function getMountType()
+        {
+          return MountProvider::MOUNT_TYPE;
+        }
+      };
+
+      // allow only treasurers or similar folk
+
+      $storage = $this->storageFactory->getTaxExemptionNoticesStorage();
+      $bulkLoadStorageIds[] = $storage->getId();
+
+      $mounts[] = new class(
+        storage: $storage,
+        mountpoint: '/' . $userId
+        . '/files'
+        . $this->getTaxExemptionNoticesPath(),
+        mountId: null,
+        loader: $loader,
+        mountProvider: MountProvider::class,
+        mountOptions: [
+          'filesystem_check_changes' => 1,
+          'readonly' => false,
           'previews' => true,
           'enable_sharing' => false, // cannot work, mount needs DB access
           'authenticated' => true,
@@ -205,8 +230,8 @@ class MountProvider implements IMountProvider
       return [];
     }
 
-    if ($this->organizationalRolesService->isTreasurer($userId, allowGroupAccess: true)) {
-      // block for non-treasurers
+    if ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FINANCE)) {
+      // allow only treasurers or similar folk
 
       /** @var Entities\Project $project */
       foreach ($projects as $project) {

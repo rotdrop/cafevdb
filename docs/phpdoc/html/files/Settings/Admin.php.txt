@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,14 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use OCP\AppFramework\Http\TemplateResponse;
+use Throwable;
+
 use OCP\Settings\IDelegatedSettings;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Services\IInitialState;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Service\FontService;
@@ -41,11 +43,15 @@ use OCA\CAFEVDB\Constants;
 class Admin implements IDelegatedSettings
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = "admin-settings";
 
   const PERSONAL_APP_SETTINGS_LINK = 'personalAppSettingsLink';
   const ORCHESTRA_USER_GROUP_KEY = 'orchestraUserGroup';
+  const ORCHESTRA_USER_GROUP_ADMINS_KEY = self::ORCHESTRA_USER_GROUP_KEY . 'Admins';
+  const DEFAULT_USER_AND_GROUP_BACKEND = 'Database';
+  const USER_AND_GROUP_BACKEND_KEY = ConfigService::USER_AND_GROUP_BACKEND_KEY;
   const WIKI_NAME_SPACE_KEY = 'wikiNameSpace';
   const WIKI_VERSION = 'wikiVersion';
   const CLOUD_USER_BACKEND_CONFIG_KEY = 'cloudUserBackendConfig';
@@ -55,6 +61,9 @@ class Admin implements IDelegatedSettings
   const SETTINGS_PROPERTIES = 'settingsProperties';
   const IS_ADMIN = 'isAdmin';
   const IS_SUB_ADMIN = 'isSubAdmin';
+  const USER_AND_GROUP_BACKENDS = 'userAndGroupBackends';
+  const AUTHORIZATION_GROUP_SUFFIXES = AuthorizationService::GROUP_SUFFIX_LIST;
+  const AUTHORIZATION_GROUP_SUFFIXES_KEY = 'authorizationGroupSuffixes';
 
   const DELEGATABLE = 'delegatable';
   const ADMIN_ONLY = 'admin_only';
@@ -64,41 +73,17 @@ class Admin implements IDelegatedSettings
     self::CLOUD_USER_BACKEND_CONFIG_KEY => self::ADMIN_ONLY,
   ];
 
-  /** @var AssetService */
-  private $assetService;
-
-  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
-  private $wikiRPC;
-
-  /** @var IAppManager */
-  private $appManager;
-
-  /** @var IInitialState */
-  private $initialState;
-
-  /** @var CloudUserConnectorService */
-  private $cloudUserConnector;
-
-  /** @var FontService */
-  private $fontService;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    AssetService $assetService,
-    IInitialState $initialState,
-    WikiRPC $wikiRPC,
-    IAppManager $appManager,
-    CloudUserConnectorService $cloudUserConnector,
-    FontService $fontService,
+    protected ConfigService $configService,
+    private AssetService $assetService,
+    private IInitialState $initialState,
+    private WikiRPC $wikiRPC,
+    private IAppManager $appManager,
+    private CloudUserConnectorService $cloudUserConnector,
+    private FontService $fontService,
   ) {
-    $this->configService = $configService;
-    $this->assetService = $assetService;
-    $this->initialState = $initialState;
-    $this->wikiRPC = $wikiRPC;
-    $this->appManager = $appManager;
-    $this->cloudUserConnector = $cloudUserConnector;
-    $this->fontService = $fontService;
+    $this->l = $this->l10n();
   }
   // phpcs:enable
 
@@ -115,8 +100,36 @@ class Admin implements IDelegatedSettings
     $isAdmin = $this->groupManager()->isAdmin($this->userId());
     $isSubAdmin = $this->isSubAdminOfGroup();
 
+    $userBackends = array_values(
+      array_filter(
+        array_map(
+          function ($backend) {
+            try {
+              return $backend->getBackendName();
+            } catch (Throwable) {
+              return null;
+          }
+          },
+          $this->userManager()->getBackends(),
+        )));
+    $groupBackends = array_values(
+      array_filter(
+        array_map(
+          function ($backend) {
+            try {
+              return $backend->getBackendName();
+            } catch (Throwable) {
+              return null;
+            }
+          },
+          $this->groupManager()->getBackends(),
+        )));
+    $userAndGroupBackends = array_intersect($userBackends, $groupBackends);
+
+    $this->logInfo('BACKEND U / G ' . print_r($userAndGroupBackends, true));
+
     $configData = [
-      self::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue('usergroup'),
+      self::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigService::USER_GROUP_KEY),
       self::PERSONAL_APP_SETTINGS_LINK => $personalAppSettingsLink,
       self::WIKI_NAME_SPACE_KEY => $this->getAppValue('wikinamespace'),
       self::WIKI_VERSION => $this->wikiRPC->version(),
@@ -129,19 +142,21 @@ class Admin implements IDelegatedSettings
       self::SETTINGS_PROPERTIES => self::SETTINGS_PROPERTY_VALUES,
       self::IS_ADMIN => $isAdmin,
       self::IS_SUB_ADMIN => $isSubAdmin,
+      self::USER_AND_GROUP_BACKENDS => $userAndGroupBackends,
+      self::AUTHORIZATION_GROUP_SUFFIXES_KEY => self::AUTHORIZATION_GROUP_SUFFIXES,
     ];
 
     $this->initialState->provideInitialState('adminConfig', $configData);
 
-    return new TemplateResponse(
-      $this->appName(),
-      self::TEMPLATE, [
-        'appName' => $this->appName(),
+    return $this->templateResponse(
+      self::TEMPLATE,
+      [
         'assets' => [
           Constants::JS => $this->assetService->getJSAsset(self::TEMPLATE),
           Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
-      ]);
+      ],
+    );
   }
 
   /** {@inheritdoc} */

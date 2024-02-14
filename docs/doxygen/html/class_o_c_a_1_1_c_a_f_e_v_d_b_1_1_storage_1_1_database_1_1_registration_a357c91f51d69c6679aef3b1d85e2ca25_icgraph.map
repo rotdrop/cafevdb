@@ -1,4 +1,5 @@
 <map id="register" name="register">
-<area shape="rect" id="node1" title="Static service registration routine." alt="" coords="221,13,287,38"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#abb1951bb9876ed3fd04f8fb965344651" title="{}" alt="" coords="5,5,173,45"/>
+<area shape="rect" id="Node000001" title="Static service registration routine." alt="" coords="221,13,285,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#abb1951bb9876ed3fd04f8fb965344651" title="{}" alt="" coords="5,5,173,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,29,173,29,173,24,205,24"/>
 </map>

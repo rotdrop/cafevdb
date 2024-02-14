@@ -1,4 +1,5 @@
 <map id="editEventForm" name="editEventForm">
-<area shape="rect" id="node1" title="Edit an existing event." alt="" coords="5,5,112,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#aa6de6a8a34ec5b29770b561cef8da649" title=" " alt="" coords="160,5,259,31"/>
+<area shape="rect" id="Node000001" title="Edit an existing event." alt="" coords="5,5,112,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#aa6de6a8a34ec5b29770b561cef8da649" title=" " alt="" coords="160,5,257,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,16,144,16,144,21,112,21"/>
 </map>

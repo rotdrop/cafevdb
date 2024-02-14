@@ -1,7 +1,11 @@
 <map id="announcementsMailingList" name="announcementsMailingList">
-<area shape="rect" id="node1" title=" " alt="" coords="521,31,697,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="322,5,390,31"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a29389bb5db716e59f8a94e5083f8b58e" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="239,55,473,80"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#ae40c9dafec946961dfd72815f6764fb8" title=" " alt="" coords="144,5,191,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1a3fa621489e73c7386685aa0e152c30" title="{}" alt="" coords="5,5,96,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="518,31,694,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1909f4b7f8129c7790cb75de2ffbe1e4" title="Parse the CGI stuff and compute the list of selected musicians, either for the initial form setup as ..." alt="" coords="320,5,387,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="503,36,387,25,387,19,503,31"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a29389bb5db716e59f8a94e5083f8b58e" title="Substitute the recipients by the announcements mailing list if possible." alt="" coords="236,56,470,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="503,57,471,60,470,55,502,52"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a977b1615a5175561d17eebf08eca7a08" title=" " alt="" coords="143,5,188,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="304,21,189,21,189,16,304,16"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a5e6588671446c37e33137cae8265c389" title="{}" alt="" coords="5,5,95,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="127,21,95,21,95,16,127,16"/>
 </map>

@@ -1,11 +1,21 @@
 <map id="getAppValue" name="getAppValue">
-<area shape="rect" id="node1" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="592,131,687,156"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7f3eb9937785e05b6d3e638fc187072c" title="Fetch the value for the given key and possibly decrypt it." alt="" coords="433,55,544,80"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a830652bacd2fe88b917967c2db01e092" title=" " alt="" coords="435,105,543,131"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a1f48aaa908602738d288b9d217083719" title="Restore a potential backup e.g." alt="" coords="247,156,377,181"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a792774c92dc1796e545ee29374a96402" title="Encrypt the given value and store it in the application settings table of the Cloud." alt="" coords="433,207,544,232"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#abe6eb1d9123c44415874b24b087452e5" title="Check the validity of the encryption key." alt="" coords="245,5,379,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ae0e6a2643a679ae23f2975018436da50" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="239,55,385,80"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="144,80,191,105"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#aa164135a7474a6c9d34b7bee20056a4d" title="{}" alt="" coords="5,80,96,105"/>
+<area shape="rect" id="Node000001" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="588,132,682,159"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7f3eb9937785e05b6d3e638fc187072c" title="Fetch the value for the given key and possibly decrypt it." alt="" coords="430,56,540,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="594,126,538,97,515,86,518,81,541,92,597,122"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a830652bacd2fe88b917967c2db01e092" title=" " alt="" coords="431,107,539,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="572,137,539,132,539,126,573,132"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a1f48aaa908602738d288b9d217083719" title="Restore a potential backup e.g." alt="" coords="244,157,374,184"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="572,153,375,168,374,163,572,147"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a792774c92dc1796e545ee29374a96402" title="Encrypt the given value and store it in the application settings table of the Cloud." alt="" coords="430,208,540,235"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="594,169,514,210,512,205,592,164"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#abe6eb1d9123c44415874b24b087452e5" title="Check the validity of the encryption key." alt="" coords="243,5,375,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="420,54,357,35,359,30,422,48"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#ae0e6a2643a679ae23f2975018436da50" title="Initialize the global symmetric app encryption key used to encrypt shared data." alt="" coords="236,56,382,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="415,72,383,72,383,67,415,67"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a4efe39e6059783c9439d484de8bf2590" title="Bind $this to the given userId and password, for instance during listeners for password&#45;change etc." alt="" coords="143,81,188,108"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="221,88,189,93,188,88,220,82"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_encryption_service.html#a7ab7de782ea52be1cc9a6ea784aad0a1" title="{}" alt="" coords="5,81,95,108"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="127,97,95,97,95,92,127,92"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="416,117,188,99,189,94,416,112"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="422,141,359,159,357,154,420,136"/>
 </map>

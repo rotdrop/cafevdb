@@ -67,10 +67,10 @@ class Project extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project implem
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'year', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'name', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'type', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'mailingListId', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'instrumentationNumbers', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'webPages', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantFields', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantFieldsData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participants', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'sepaDebitMandates', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'compositePayments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantInstruments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'calendarEvents', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'sentEmail', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'financialBalanceDocumentsStorage', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'keys', 'created', 'updated', 'deleted'];
+            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'year', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'name', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'type', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'mailingListId', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'registrationStartDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'registrationDeadline', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'instrumentationNumbers', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'webPages', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantFields', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantFieldsData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participants', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'sepaDebitMandates', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'compositePayments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantInstruments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'calendarEvents', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'sentEmail', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'financialBalanceDocumentsStorage', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'keys', 'created', 'updated', 'deleted'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'year', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'name', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'type', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'mailingListId', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'instrumentationNumbers', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'webPages', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantFields', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantFieldsData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participants', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'sepaDebitMandates', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'compositePayments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantInstruments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'calendarEvents', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'sentEmail', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'financialBalanceDocumentsStorage', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'keys', 'created', 'updated', 'deleted'];
+        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'year', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'name', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'type', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'mailingListId', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'registrationStartDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'registrationDeadline', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'instrumentationNumbers', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'webPages', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantFields', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantFieldsData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participants', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'sepaDebitMandates', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'compositePayments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'participantInstruments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'calendarEvents', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'sentEmail', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'financialBalanceDocumentsStorage', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project' . "\0" . 'keys', 'created', 'updated', 'deleted'];
     }
 
     /**
@@ -292,6 +292,50 @@ class Project extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project implem
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getMailingListId', []);
 
         return parent::getMailingListId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRegistrationStartDate(mixed $registrationStartDate): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setRegistrationStartDate', [$registrationStartDate]);
+
+        return parent::setRegistrationStartDate($registrationStartDate);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRegistrationStartDate(): ?\DateTimeInterface
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRegistrationStartDate', []);
+
+        return parent::getRegistrationStartDate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRegistrationDeadline(mixed $registrationDeadline): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setRegistrationDeadline', [$registrationDeadline]);
+
+        return parent::setRegistrationDeadline($registrationDeadline);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRegistrationDeadline(): ?\DateTimeInterface
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRegistrationDeadline', []);
+
+        return parent::getRegistrationDeadline();
     }
 
     /**

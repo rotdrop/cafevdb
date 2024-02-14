@@ -1,5 +1,8 @@
 <map id="fetchInstrumentsFilter" name="fetchInstrumentsFilter">
-<area shape="rect" id="node1" title="Fetch the instruments filter from the CGI parameters." alt="" coords="5,5,155,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="369,5,440,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="203,31,321,56"/>
+<area shape="rect" id="Node000001" title="Fetch the instruments filter from the CGI parameters." alt="" coords="5,5,154,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a1497fe5acb2403ca1873ec2fd4b790fe" title="Fetch a CGI&#45;variable out of the form&#45;select name&#45;space." alt="" coords="368,5,438,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,16,353,16,353,21,154,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_email_form_1_1_recipients_filter.html#a2765950b3322c101496bb711b89709ed" title=" " alt="" coords="202,31,320,57"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,26,187,31,186,36,154,32"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="320,31,352,25,353,30,321,36"/>
 </map>

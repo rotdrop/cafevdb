@@ -1,5 +1,7 @@
 <map id="TranslationLocationsRepository" name="TranslationLocationsRepository">
-<area shape="rect" id="node1" title="Repository for in&#45;source&#45;file location of to&#45;be&#45;translated strings." alt="" coords="5,152,211,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="49,79,167,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="49,5,167,31"/>
+<area shape="rect" id="Node000001" title="Repository for in&#45;source&#45;file location of to&#45;be&#45;translated strings." alt="" coords="5,155,210,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="48,80,167,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,122,110,154,105,154,105,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="48,5,167,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,48,110,80,105,80,105,48"/>
 </map>

@@ -1,0 +1,5 @@
+<map id="getLegacyTaxExemptionNoticeFileName" name="getLegacyTaxExemptionNoticeFileName">
+<area shape="rect" id="Node000001" title="PME&#45;legacy." alt="" coords="267,13,469,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_tax_exemption_notices_storage.html#a22888a8a388ef585e0bc8eafae0c4702" title="Parse the filename of the given path and extract the tax type and the assessment period." alt="" coords="5,5,219,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="251,37,219,37,219,32,251,32"/>
+</map>

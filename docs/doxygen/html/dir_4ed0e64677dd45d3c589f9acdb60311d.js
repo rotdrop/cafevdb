@@ -2,10 +2,12 @@ var dir_4ed0e64677dd45d3c589f9acdb60311d =
 [
     [ "Finance", "dir_095beb5f4e18b81796dd7ad907492db1.html", "dir_095beb5f4e18b81796dd7ad907492db1" ],
     [ "L10N", "dir_718fc60ab4da3117448c9e361e79a629.html", "dir_718fc60ab4da3117448c9e361e79a629" ],
+    [ "AppMTimeService.php", "_app_m_time_service_8php_source.html", null ],
     [ "AssetService.php", "_asset_service_8php_source.html", null ],
     [ "AuthorizationService.php", "_authorization_service_8php_source.html", null ],
     [ "CalDavService.php", "_cal_dav_service_8php_source.html", null ],
     [ "CardDavService.php", "_card_dav_service_8php_source.html", null ],
+    [ "CloudAccountsService.php", "_cloud_accounts_service_8php_source.html", null ],
     [ "CloudUserConnectorService.php", "_cloud_user_connector_service_8php_source.html", null ],
     [ "ConfigCheckService.php", "_config_check_service_8php_source.html", null ],
     [ "ConfigService.php", "_config_service_8php_source.html", null ],
@@ -16,6 +18,7 @@ var dir_4ed0e64677dd45d3c589f9acdb60311d =
     [ "FontService.php", "_font_service_8php_source.html", null ],
     [ "FuzzyInputService.php", "_fuzzy_input_service_8php_source.html", null ],
     [ "GeoCodingService.php", "_geo_coding_service_8php_source.html", null ],
+    [ "GroupFoldersService.php", "_service_2_group_folders_service_8php_source.html", null ],
     [ "HistoryService.php", "_history_service_8php_source.html", null ],
     [ "ImagesService.php", "_images_service_8php_source.html", null ],
     [ "InstrumentationService.php", "_instrumentation_service_8php_source.html", null ],
@@ -31,6 +34,7 @@ var dir_4ed0e64677dd45d3c589f9acdb60311d =
     [ "RequestParameterService.php", "_request_parameter_service_8php_source.html", null ],
     [ "RequestService.php", "_service_2_request_service_8php_source.html", null ],
     [ "SimpleSharingService.php", "_simple_sharing_service_8php_source.html", null ],
+    [ "ToolTipsDataService.php", "_tool_tips_data_service_8php_source.html", null ],
     [ "ToolTipsService.php", "_tool_tips_service_8php_source.html", null ],
     [ "UrlGeneratorService.php", "_url_generator_service_8php_source.html", null ],
     [ "VCalendarService.php", "_v_calendar_service_8php_source.html", null ]

@@ -1,4 +1,5 @@
 <map id="find" name="find">
-<area shape="rect" id="node1" title=" " alt="" coords="233,20,276,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a6ebf791fae9f0ef01d34249d40a103f2" title="Modify a note." alt="" coords="5,5,185,60"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="233,21,275,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a6ebf791fae9f0ef01d34249d40a103f2" title="Modify a note." alt="" coords="5,5,185,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,37,185,37,185,32,217,32"/>
 </map>

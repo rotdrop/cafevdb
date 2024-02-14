@@ -1,6 +1,9 @@
 <map id="DatabaseEntityNotFoundException" name="DatabaseEntityNotFoundException">
-<area shape="rect" id="node1" title="Thrown if an entity could not be found." alt="" coords="5,225,232,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="51,152,187,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="79,79,159,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="65,5,173,31"/>
+<area shape="rect" id="Node000001" title="Thrown if an entity could not be found." alt="" coords="5,229,232,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="51,155,186,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,197,121,229,116,229,116,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="79,80,158,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,122,121,154,116,154,116,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="65,5,172,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="121,48,121,80,116,80,116,48"/>
 </map>

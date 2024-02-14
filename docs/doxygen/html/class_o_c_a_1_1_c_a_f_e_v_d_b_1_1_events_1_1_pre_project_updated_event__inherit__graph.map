@@ -1,5 +1,7 @@
 <map id="PreProjectUpdatedEvent" name="PreProjectUpdatedEvent">
-<area shape="rect" id="node1" title="Dispatched before flushing entities to the data&#45;base." alt="" coords="5,152,172,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html" title="Dispatched after flushing entities to the data&#45;base, but before the final commit." alt="" coords="15,79,162,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="61,5,117,31"/>
+<area shape="rect" id="Node000001" title="Dispatched before flushing entities to the data&#45;base." alt="" coords="5,155,171,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_project_updated_event.html" title="Dispatched after flushing entities to the data&#45;base, but before the final commit." alt="" coords="15,80,161,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,122,91,154,85,154,85,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="60,5,116,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,48,91,80,85,80,85,48"/>
 </map>

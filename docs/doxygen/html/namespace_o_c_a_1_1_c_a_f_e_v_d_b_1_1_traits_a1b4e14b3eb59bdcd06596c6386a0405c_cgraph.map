@@ -1,5 +1,7 @@
 <map id="defaultUserIdSlug" name="defaultUserIdSlug">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,132,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa2f4a6f1650343e99660cab994aec636" title="Transliterate the given string to the given or default locale." alt="" coords="180,5,271,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="319,5,420,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,131,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa2f4a6f1650343e99660cab994aec636" title="Transliterate the given string to the given or default locale." alt="" coords="179,5,268,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,16,163,16,163,21,131,21"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="316,5,416,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="269,16,301,16,301,21,269,21"/>
 </map>

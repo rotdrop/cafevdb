@@ -1,6 +1,9 @@
 <map id="find" name="find">
-<area shape="rect" id="node1" title=" " alt="" coords="219,31,261,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a5234e2ee74d02ed9cdf5e867d1492795" title="{}" alt="" coords="113,5,169,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a57291364b6d186af794627f03aefd38c" title="Obtain object from database if it is &quot;clean&quot;, if it is dirty or new (no id) then create or update the..." alt="" coords="112,55,171,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8652674eb0728ffe1e44c3fe253936a1" title="Update multiple properties and write them through to the database if we are in $attached state." alt="" coords="5,55,64,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="216,31,258,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a5234e2ee74d02ed9cdf5e867d1492795" title="{}" alt="" coords="112,5,167,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,37,167,28,168,23,202,32"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a57291364b6d186af794627f03aefd38c" title="Obtain object from database if it is &quot;clean&quot;, if it is dirty or new (no id) then create or update the..." alt="" coords="111,56,168,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,56,169,65,168,59,200,51"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8652674eb0728ffe1e44c3fe253936a1" title="Update multiple properties and write them through to the database if we are in $attached state." alt="" coords="5,56,63,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="95,72,63,72,63,67,95,67"/>
 </map>

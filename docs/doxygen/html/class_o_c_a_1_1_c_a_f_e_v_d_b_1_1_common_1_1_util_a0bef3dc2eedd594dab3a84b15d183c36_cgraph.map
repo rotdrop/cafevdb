@@ -1,4 +1,6 @@
 <map id="explode" name="explode">
-<area shape="rect" id="node1" title="A preg_explode() wrapper with some extra features." alt="" coords="5,29,72,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="120,29,251,55"/>
+<area shape="rect" id="Node000001" title="A preg_explode() wrapper with some extra features." alt="" coords="5,29,72,56"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="13,30,9,21,12,11,22,5,39,3,56,5,66,12,63,16,54,10,38,8,24,10,16,14,14,20,18,28"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a33027424113469f92dd6e70bcd90953f" title="Un&#45;escape delimiters in the given value." alt="" coords="120,29,249,56"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="72,40,104,40,104,45,72,45"/>
 </map>

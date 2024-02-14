@@ -1,4 +1,5 @@
 <map id="getUserToScan" name="getUserToScan">
-<area shape="rect" id="node1" title="Find a storage which have unindexed files and return a user with access to the storage." alt="" coords="93,5,205,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_scan_files.html#a18d2a946352dbb406e37562313adc78c" title="{}" alt="" coords="5,5,45,31"/>
+<area shape="rect" id="Node000001" title="Find a storage which have unindexed files and return a user with access to the storage." alt="" coords="93,5,204,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_scan_files.html#a18d2a946352dbb406e37562313adc78c" title="{}" alt="" coords="5,5,45,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,21,45,21,45,16,77,16"/>
 </map>

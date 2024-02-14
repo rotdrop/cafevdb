@@ -1,11 +1,20 @@
 <map id="invite" name="invite">
-<area shape="rect" id="node1" title="Just send an invitation." alt="" coords="5,34,59,60"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="107,34,185,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="635,34,728,60"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="260,34,389,60"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="233,84,416,109"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="776,34,848,60"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="896,34,979,60"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4cd47312ba83aa234d85affa07109dc2" title="MAJOR.MINOR.REVISION." alt="" coords="464,34,587,60"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="469,84,581,109"/>
+<area shape="rect" id="Node000001" title="Just send an invitation." alt="" coords="5,34,58,60"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#aae6bb5b400c885119ac384eb304b42dd" title="Subscribe a victim to the email&#45;list." alt="" coords="106,34,183,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,44,90,44,90,50,58,50"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afee0c31807c7ddcd4265d994df850134" title="Ensure that the given string is a list&#45;id, if it is a FQDN then try to retrieve the list&#45;id." alt="" coords="630,34,722,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="183,31,231,19,329,7,406,3,484,7,582,19,619,26,618,32,581,24,483,12,406,8,329,12,231,24,184,36"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ad654c2587cb078497126748b25639556" title=" " alt="" coords="258,34,386,60"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="184,44,242,44,242,50,184,50"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae49603ed5d837ed0c36ce27d6171576c" title="Set the subscription preferences." alt="" coords="231,84,412,111"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="184,56,232,70,257,77,256,82,230,75,183,61"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#ae79714b9375ce65edd9c71e2d97e06ab" title="Fetch the list&#45;id of the given list." alt="" coords="770,34,841,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="722,44,755,44,755,50,722,50"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a651ae4ad1c33811d0e985204bd2e35b8" title=" " alt="" coords="889,34,972,60"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="842,44,874,44,874,50,842,50"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a4cd47312ba83aa234d85affa07109dc2" title="MAJOR.MINOR.REVISION." alt="" coords="460,34,582,60"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="386,44,445,44,445,50,386,50"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#afca2835840699d3b8c7db3ab0c596cd5" title="Find the basic information about a subscription for the given email." alt="" coords="465,84,577,111"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="413,95,450,95,450,100,413,100"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="563,81,617,63,619,68,565,86"/>
 </map>

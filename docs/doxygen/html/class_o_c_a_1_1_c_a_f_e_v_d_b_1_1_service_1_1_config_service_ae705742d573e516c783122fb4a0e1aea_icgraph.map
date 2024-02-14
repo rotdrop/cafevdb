@@ -1,8 +1,14 @@
 <map id="getLocale" name="getLocale">
-<area shape="rect" id="node1" title="Return the locale as string, e.g." alt="" coords="208,128,287,153"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a36b4b01cbb88f7176a72e268695c0d6f" title="Convert a float value in the given or default locale." alt="" coords="43,5,122,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ad50ea5d1877a5adc2e231dc935b7bffc" title="Return the language part of the current or given locale." alt="" coords="35,55,131,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aebf35da354e45247c2ee85031bfa3a82" title=" " alt="" coords="11,128,155,153"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4c1dc0e4e1b0686a92c0f6486e91b7c6" title=" " alt="" coords="5,177,160,203"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaeb05cf94149de0821a30628a8c7bcef" title="Convert $value to a currency value in the given or the user&#39;s locale." alt="" coords="36,227,129,252"/>
+<area shape="rect" id="Node000001" title="Return the locale as string, e.g." alt="" coords="207,131,284,157"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a36b4b01cbb88f7176a72e268695c0d6f" title="Convert a float value in the given or default locale." alt="" coords="43,5,121,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,119,196,82,157,46,120,30,123,25,160,42,200,78,230,116"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ad50ea5d1877a5adc2e231dc935b7bffc" title="Return the language part of the current or given locale." alt="" coords="34,56,130,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,125,158,97,129,86,131,81,160,92,211,120"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aebf35da354e45247c2ee85031bfa3a82" title=" " alt="" coords="10,131,154,157"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="191,147,154,147,154,141,191,141"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4c1dc0e4e1b0686a92c0f6486e91b7c6" title=" " alt="" coords="5,181,159,208"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="193,163,128,183,127,178,191,158"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaeb05cf94149de0821a30628a8c7bcef" title="Convert $value to a currency value in the given or the user&#39;s locale." alt="" coords="36,232,128,259"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="223,171,195,197,160,222,130,236,127,231,157,218,191,193,220,167"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="109,118,100,112,82,109,65,111,56,116,54,121,58,129,54,131,49,122,52,112,64,106,82,104,102,107,112,113"/>
 </map>

@@ -35,6 +35,7 @@ use OCP\Calendar\ICalendar;
 use OCP\SystemTag\ISystemTagManager;
 use OCP\SystemTag\TagAlreadyExistsException;
 use OCP\SystemTag\TagNotFoundException;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -53,8 +54,8 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAccessPermission as AccessPermission;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Create all participant sub-folder for each project. */
 class ProjectEvents extends Command
@@ -63,18 +64,14 @@ class ProjectEvents extends Command
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IL10N $l10n,
-    IUserManager $userManager,
-    IUserSession $userSession,
-    IAppContainer $appContainer,
+    protected string $appName,
+    protected IL10N $l,
+    protected ILogger $logger,
+    protected IUserManager $userManager,
+    protected IUserSession $userSession,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct();
-    $this->appName = $appName;
-    $this->l = $l10n;
-    $this->userManager = $userManager;
-    $this->userSession = $userSession;
-    $this->appContainer = $appContainer;
   }
   // phpcs:enable
 
@@ -254,10 +251,12 @@ class ProjectEvents extends Command
     $split = 0;
     $deleted = 0;
     $systemTags = 0;
+    $fieldPermissions = 0;
 
     $appL10n = $configService->getAppL10n();
     $systemCategories = [
-      EventsService::getAbsenceCategory($appL10n),
+      $eventsService->getRecordAbsenceCategory(),
+      $eventsService->getProjectRegistrationCategory(),
     ];
     foreach ($calendars as $calendarUri) {
       $systemCategories[] = $appL10n->t($calendarUri);
@@ -328,7 +327,10 @@ class ProjectEvents extends Command
                 ]),
                 OutputInterface::VERBOSITY_VERBOSE
               );
-              $this->remove($projectEvent, hard: true, flush: true);
+              if (!empty($projectEvent->getAbsenceField())) {
+                $projectEvent->getAbsenceField()->setProjectEvent(null);
+              }
+              $this->remove($projectEvent, hard: true, flush: true, useTransaction: true);
             } else {
               $output->writeln(
                 $this->l->t('Would hard-remove soft-deleted event "%1$s@%2$s" from project "%3$s" (dry-run)', [
@@ -343,8 +345,29 @@ class ProjectEvents extends Command
         if ($projectEvent->getType() != 'VEVENT') {
           continue;
         }
+
         $recurrenceId = $projectEvent->getRecurrenceId();
-        $event = $eventsService->fetchEvent($project, $eventUri, $recurrenceId);
+        $event = $eventsService->getEventData($projectEvent);
+
+        if (empty($event)) {
+          // Try to fetch the event directly from the calendar. This can
+          // happen if a repeating event had been added without recording its
+          // siblings.
+          $eventData = $calDavService->getCalendarObject($calendarId, $eventUri);
+          if (!empty($eventData)) {
+            $eventData['calendaruri'] = $calendarUri;
+            // $this->logInfo('EVENT DATA ' . print_r($eventData, true));
+            if (!$dry) {
+              $this->logInfo('SYNC');
+              $eventsService->syncCalendarObject($eventData);
+              $output->writeln($this->l->t('Synchronizing event "%s".', $eventUri));
+            } else {
+              $output->writeln($this->l->t('Would synchronize event "%s" (dry run).', $eventUri));
+            }
+            continue;
+          }
+        }
+
         if (empty($event)) {
           ++$orphans;
           if (!empty($recurrenceId)) {
@@ -371,7 +394,10 @@ class ProjectEvents extends Command
                 ]),
                 OutputInterface::VERBOSITY_VERBOSE
               );
-              $this->remove($projectEvent, hard: true, flush: true);
+              if (!empty($projectEvent->getAbsenceField())) {
+                $projectEvent->getAbsenceField()->setProjectEvent(null);
+              }
+              $this->remove($projectEvent, hard: true, flush: true, useTransaction: true);
             } else {
               $output->writeln(
                 $this->l->t('Would remove orphan event "%1$s@%2$s" from project "%3$s" (dry-run)', [
@@ -408,7 +434,7 @@ class ProjectEvents extends Command
                     ]),
                     OutputInterface::VERBOSITY_VERBOSE
                   );
-                  $eventsService->changeCategories($project, $calendarId, $eventUri, recurrenceId: null, additions: [ $projectName ]);
+                  $eventsService->changeCategories($calendarId, $eventUri, recurrenceId: null, additions: [ $projectName ]);
                 }
                 break;
               case 'unregister':
@@ -427,15 +453,21 @@ class ProjectEvents extends Command
                     ]),
                     OutputInterface::VERBOSITY_VERBOSE
                   );
-                  $this->remove($projectEvent, hard: true, flush: true);
+                  if (!empty($projectEvent->getAbsenceField())) {
+                    $projectEvent->getAbsenceField()->setProjectEvent(null);
+                  }
+                  $this->remove($projectEvent, hard: true, flush: true, useTransaction: true);
                 }
                 break;
             }
           } // categories check
 
+          // the project registration period must not be split
+          $isRegistrationEvent = $eventsService->isProjectRegistrationEvent($categories);
+
           // check for non-repeating multi-day events and potentially reattach them
           $hours = ($event['end']->getTimestamp() - $event['start']->getTimestamp()) / 3600;
-          if (empty($event['recurrenceId']) && (($event['allday'] && $hours > 36) || $hours > 48)) {
+          if (!$isRegistrationEvent && (empty($event['recurrenceId']) && (($event['allday'] && $hours > 36) || $hours > 48))) {
             if ($fix == 'split') {
               ++$split;
               if ($dry) {
@@ -458,6 +490,27 @@ class ProjectEvents extends Command
                 $calDavService->updateCalendarObject($calendarId, $eventUri, $vCalendar);
               }
             }
+          }
+        }
+
+        // if the project-event is still "alive" at this point, then make sure
+        // that any associated ProjectParticipantField entity has public read
+        // access. This is needed by the members app.
+        $absenceField = $projectEvent->getAbsenceField();
+        if (!empty($absenceField) && $absenceField->getParticipantAccess() == AccessPermission::NONE) {
+          ++$fieldPermissions;
+          if ($dry) {
+            $output->writeln(
+              $this->l->t('Would allow public read access for absence-field "%1$s" (dry-run).', $absenceField->getName()),
+              OutputInterface::VERBOSITY_VERBOSE,
+            );
+          } else {
+            $absenceField->setParticipantAccess(AccessPermission::READ);
+            $this->flush();
+            $output->writeln(
+              $this->l->t('Allowing public read access for absence-field "%1$s".', $absenceField->getName()),
+              OutputInterface::VERBOSITY_VERBOSE,
+            );
           }
         }
       } // loop over registered events
@@ -518,7 +571,7 @@ class ProjectEvents extends Command
                     ]),
                     OutputInterface::VERBOSITY_VERBOSE
                   );
-                  $eventsService->changeCategories($project, $calendarId, $eventUri, recurrenceId: null, removals: [ $projectName ]);
+                  $eventsService->changeCategories($calendarId, $eventUri, recurrenceId: null, removals: [ $projectName ]);
                 }
                 break;
               case 'reattach':
@@ -639,6 +692,14 @@ class ProjectEvents extends Command
         $output->writeln($this->l->t('Would have created %d missing system-tags (dry-run).', $systemTags));
       } else {
         $output->writeln($this->l->t('Created %d missing system-tags.', $systemTags));
+      }
+    }
+
+    if ($fieldPermissions > 0) {
+      if ($dry) {
+        $output->writeln($this->l->t('Would have allowed read access to %d absence-fields (dry-run).', $fieldPermissions));
+      } else {
+        $output->writeln($this->l->t('Allowed read access to %d absence-fields.', $fieldPermissions));
       }
     }
 

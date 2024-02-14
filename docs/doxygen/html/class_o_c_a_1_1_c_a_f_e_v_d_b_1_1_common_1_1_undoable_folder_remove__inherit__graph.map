@@ -1,7 +1,11 @@
 <map id="UndoableFolderRemove" name="UndoableFolderRemove">
-<area shape="rect" id="node1" title="Remove the given node, which must be a folder." alt="" coords="35,299,198,324"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html" title="Remove the given path which may either point to a file or folder." alt="" coords="5,225,228,251"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="21,152,213,177"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="53,79,180,104"/>
-<area shape="rect" id="node5" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="76,5,157,31"/>
+<area shape="rect" id="Node000001" title="Remove the given node, which must be a folder." alt="" coords="36,304,197,331"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_system_node_remove.html" title="Remove the given path which may either point to a file or folder." alt="" coords="5,229,228,256"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,272,119,304,114,304,114,272"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="21,155,212,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,197,119,229,114,229,114,197"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="54,80,179,107"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="119,122,119,154,114,154,114,122"/>
+<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="76,5,157,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="119,48,119,80,114,80,114,48"/>
 </map>

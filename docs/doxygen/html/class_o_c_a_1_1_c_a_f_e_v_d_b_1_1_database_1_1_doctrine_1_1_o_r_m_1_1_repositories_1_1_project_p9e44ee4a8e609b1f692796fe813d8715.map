@@ -1,5 +1,7 @@
 <map id="ProjectParticipantFieldDataRepository" name="ProjectParticipantFieldDataRepository">
-<area shape="rect" id="node1" title="Repository for extra fields data." alt="" coords="5,152,187,192"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="37,79,155,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="37,5,155,31"/>
+<area shape="rect" id="Node000001" title="Repository for extra fields data." alt="" coords="5,155,186,197"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="36,80,155,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,122,98,154,93,154,93,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="36,5,155,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,48,98,80,93,80,93,48"/>
 </map>

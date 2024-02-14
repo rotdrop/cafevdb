@@ -1,4 +1,5 @@
 <map id="enableProjectMode" name="enableProjectMode">
-<area shape="rect" id="node1" title="Enable the project&#45;mode which is used to add new participants to a project." alt="" coords="5,13,139,38"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a30bd23795f307541c79fd2332dcf4af1" title=" " alt="" coords="187,5,407,45"/>
+<area shape="rect" id="Node000001" title="Enable the project&#45;mode which is used to add new participants to a project." alt="" coords="5,13,138,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a30bd23795f307541c79fd2332dcf4af1" title=" " alt="" coords="186,5,405,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,24,170,24,170,29,138,29"/>
 </map>

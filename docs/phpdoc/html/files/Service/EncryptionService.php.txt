@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,7 +88,11 @@ class EncryptionService
     'enabled',
     'installed_version',
     'types',
-    'usergroup', // cloud-admin setting
+    ConfigService::USER_GROUP_KEY, // cloud-admin setting
+    ConfigService::USER_AND_GROUP_BACKEND_KEY, // backend to use for the orchestra group
+    ConfigService::SHAREOWNER_KEY, // needed as calendar principal in the member's app
+    ConfigService::SHARED_FOLDER, // needed by some listeners in order to bail out early
+    ConfigService::PROJECT_PARTICIPANTS_FOLDER, // needed by some listeners in order to bail out early
     'wikinamespace', // cloud-admin setting
     'cspfailuretoken', // for public post route
     'configlock', // better kept open
@@ -101,22 +105,7 @@ class EncryptionService
     self::USER_ENCRYPTION_KEY_KEY,
   ];
 
-  /** @var string */
-  private $appName;
-
-  /** @var IConfig */
-  private $containerConfig;
-
-  /** @var IHasher */
-  private $hasher;
-
-  /** @var IEventDispatcher */
-  private $eventDispatcher;
-
-  /** @var Crypto\AsymmetricKeyService */
-  private $asymKeyService;
-
-  /** @var Crypto\CloudSymmetricCryptor */
+  /** @var Crypto\SymmetricCryptorInterface */
   private $appCryptor;
 
   /** @var Crypto\AsymmetricCryptorInterface */
@@ -133,25 +122,20 @@ class EncryptionService
 
   /** {@inheritdoc} */
   public function __construct(
-    string $appName,
+    private string $appName,
+    private IConfig $containerConfig,
+    private Crypto\AsymmetricKeyService $asymKeyService,
+    private IHasher $hasher,
+    private IEventDispatcher $eventDispatcher,
+    protected ILogger $logger,
     AuthorizationService $authorization,
-    IConfig $containerConfig,
     IUserSession $userSession,
-    Crypto\AsymmetricKeyService $asymKeyService,
     Crypto\CryptoFactoryInterface $cryptoFactory,
-    IHasher $hasher,
     ICredentialsStore $credentialsStore,
-    IEventDispatcher $eventDispatcher,
-    ILogger $logger,
-    IL10N $l10n,
+    // private IL10N $l,
   ) {
-    $this->appName = $appName;
-    $this->containerConfig = $containerConfig;
-    $this->asymKeyService = $asymKeyService;
     $this->appCryptor = $cryptoFactory->getSymmetricCryptor();
-    $this->hasher = $hasher;
-    $this->eventDispatcher = $eventDispatcher;
-    $this->logger = $logger;
+
     $this->l = new FakeL10N(); // $l10n;
 
     try {
@@ -160,7 +144,7 @@ class EncryptionService
       //$this->logException($t);
       $userId = null;
     }
-    if (!$authorization->authorized($userId)) {
+    if ($authorization->getUserPermissions($userId) === AuthorizationService::PERMISSION_NONE) {
       return;
     }
     try {
@@ -297,7 +281,7 @@ class EncryptionService
    */
   public function initAppKeyPair(bool $forceNewKeyPair = false):void
   {
-    $group = $this->getAppValue('usergroup');
+    $group = $this->getAppValue(ConfigService::USER_GROUP_KEY);
     $encryptionKey = $this->getAppEncryptionKey();
     if (empty($group) || empty($encryptionKey)) {
       $this->logDebug('Cannot initialize encryption key-pair without user-group and encryption key');
@@ -330,7 +314,7 @@ class EncryptionService
    */
   public function restoreAppKeyPair():void
   {
-    $group = $this->getAppValue('usergroup');
+    $group = $this->getAppValue(ConfigService::USER_GROUP_KEY);
     $encryptionKey = $this->getAppEncryptionKey();
     if (empty($group) || empty($encryptionKey)) {
       $this->logDebug('Cannot restore encryption key-pair without user-group and encryption key');
@@ -596,9 +580,19 @@ class EncryptionService
     }
     $value  = $this->getAppValue($key, $default);
 
-    if (!empty($value) && ($value !== $default) && array_search($key, self::NEVER_ENCRYPT) === false) {
+    if (in_array($key, self::NEVER_ENCRYPT) && $this->appCryptor->isEncrypted($value) === false) {
+      // short-cut, no need to bail out or complain. The "not enecrypted"
+      // check is necessary for the case that items are added to the
+      // NEVER_ENCRYPT list.
+      return $value;
+    }
+
+    if (!empty($value) && ($value !== $default)) {
       // null is error or uninitialized, string '' means no encryption
       if ($this->appCryptor->getEncryptionKey() === null) {
+        if ($this->appCryptor->isEncrypted($value) === false) {
+          return $value;
+        }
         if (!empty($this->userId)) {
           $message = $this->l->t('Decryption requested for user "%s", but not configured, empty encryption key.', $this->userId);
           throw new Exceptions\EncryptionKeyException($message);
@@ -607,7 +601,7 @@ class EncryptionService
         return false;
       }
       try {
-        $value  = $this->appCryptor->decrypt($value);
+        $value = $this->appCryptor->decrypt($value);
       } catch (\Throwable $t) {
         throw new Exceptions\DecryptionFailedException($this->l->t('Unable to decrypt value "%s" for "%s"', [$value, $key]), $t->getCode(), $t);
       }
@@ -636,8 +630,12 @@ class EncryptionService
     if (!$ignoreLock && !empty($this->getAppValue(self::CONFIG_LOCK_KEY))) {
       throw new Exceptions\ConfigLockedException('Configuration locked, not storing value for config-key ' . $key);
     }
+    if (in_array($key, self::NEVER_ENCRYPT)) {
+      $this->setAppValue($key, $value);
+      return true;
+    }
     $encryptionKey = $this->appCryptor->getEncryptionKey();
-    if (!empty($encryptionKey) && array_search($key, self::NEVER_ENCRYPT) === false) {
+    if ($encryptionKey !== '') {
       if ($encryptionKey === null) {
         // null is error or uninitialized, string '' means no encryption
         if (!empty($this->userId)) {

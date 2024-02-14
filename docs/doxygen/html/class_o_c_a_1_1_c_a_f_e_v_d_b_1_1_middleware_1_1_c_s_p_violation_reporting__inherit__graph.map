@@ -1,4 +1,5 @@
 <map id="CSPViolationReporting" name="CSPViolationReporting">
-<area shape="rect" id="node1" title="Sends CSP reports to a dedicated addresss for debugging." alt="" coords="5,79,161,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="39,5,127,31"/>
+<area shape="rect" id="Node000001" title="Sends CSP reports to a dedicated addresss for debugging." alt="" coords="5,80,161,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="39,5,127,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,48,86,80,80,80,80,48"/>
 </map>

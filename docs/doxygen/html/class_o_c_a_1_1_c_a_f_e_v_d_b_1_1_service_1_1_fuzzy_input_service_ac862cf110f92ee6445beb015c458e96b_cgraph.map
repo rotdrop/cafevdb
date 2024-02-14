@@ -1,4 +1,5 @@
 <map id="storageValue" name="storageValue">
-<area shape="rect" id="node1" title="Parse a storage user input value and return its value in bytes." alt="" coords="5,5,103,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fuzzy_input_service.html#a096ad0e1ff19fbf99eccf6cc147fce20" title="Try to parse a floating point value." alt="" coords="151,5,229,31"/>
+<area shape="rect" id="Node000001" title="Parse a storage user input value and return its value in bytes." alt="" coords="5,5,102,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_fuzzy_input_service.html#a096ad0e1ff19fbf99eccf6cc147fce20" title="Try to parse a floating point value." alt="" coords="150,5,228,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,16,134,16,134,21,102,21"/>
 </map>

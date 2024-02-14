@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,6 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -68,7 +67,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+use OCA\Redaxo\Service\RPC as WebPagesRPC;
 use OCA\RoundCube\Service\Config as RoundCubeConfig;
 
 /** AJAX end-points for personal settings. */
@@ -92,79 +91,27 @@ class PersonalSettingsController extends Controller
     ],
   ];
 
-  /** @var Personal */
-  private $personalSettings;
-
-  /** @var ConfigCheckService */
-  private $configCheckService;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var CalDavService */
-  private $calDavService;
-
-  /** @var TranslationService */
-  private $translationService;
-
-  /** @var WikiRPC */
-  private $wikiRPC;
-
-  /** @var WebPagesRPC */
-  private $webPagesRPC;
-
-  /** @var PhoneNumberService */
-  private $phoneNumberService;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var UserStorage */
-  private $userStorage;
-
-  /** @var FuzzyInputService */
-  private $fuzzyInputService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    IAppContainer $appContainer,
-    RequestParameterService $parameterService,
-    ConfigService $configService,
-    Personal $personalSettings,
-    ConfigCheckService $configCheckService,
-    PhoneNumberService $phoneNumberService,
-    FinanceService $financeService,
-    ProjectService $projectService,
-    CalDavService $calDavService,
-    TranslationService $translationService,
-    FuzzyInputService $fuzzyInputService,
-    UserStorage $userStorage,
-    WikiRPC $wikiRPC,
-    WebPagesRPC $webPagesRPC,
+    private IAppContainer $appContainer,
+    private RequestParameterService $parameterService,
+    protected ConfigService $configService,
+    private Personal $personalSettings,
+    private ConfigCheckService $configCheckService,
+    private PhoneNumberService $phoneNumberService,
+    private FinanceService $financeService,
+    private ProjectService $projectService,
+    private CalDavService $calDavService,
+    private TranslationService $translationService,
+    private FuzzyInputService $fuzzyInputService,
+    private UserStorage $userStorage,
+    private WikiRPC $wikiRPC,
+    private WebPagesRPC $webPagesRPC,
   ) {
     parent::__construct($appName, $request);
-    $this->appContainer = $appContainer;
-    $this->parameterService = $parameterService;
-    $this->configService = $configService;
-    $this->configCheckService = $configCheckService;
-    $this->personalSettings = $personalSettings;
-    $this->phoneNumberService = $phoneNumberService;
-    $this->financeService = $financeService;
-    $this->projectService = $projectService;
-    $this->calDavService = $calDavService;
-    $this->translationService = $translationService;
-    $this->fuzzyInputService = $fuzzyInputService;
-    $this->userStorage = $userStorage;
-    $this->wikiRPC = $wikiRPC;
-    $this->webPagesRPC = $webPagesRPC;
+
     $this->l = $this->l10N();
   }
   // phpcs:enable
@@ -311,10 +258,8 @@ class PersonalSettingsController extends Controller
    *
    * @NoAdminRequired
    * @SubAdminRequired
-   * _AT_UseSession
    *
    * @bug This function is too big.
-   * @todo decrease usage of session. Where is it needed?
    */
   public function setApp(string $parameter, mixed $value):Http\Response
   {
@@ -548,18 +493,18 @@ class PersonalSettingsController extends Controller
         $this->setConfigValue($parameter, $realValue);
         return self::valueResponse($realValue, $this->l->t(' "%s" set to "%s".', [$parameter, $realValue]));
         break;
-      case 'shareowner':
-        if (!isset($value['shareowner'])
+      case ConfigService::SHAREOWNER_KEY:
+        if (!isset($value[ConfigService::SHAREOWNER_KEY])
             || !isset($value['shareowner-saved'])
             || !isset($value['shareowner-force'])) {
           return self::grumble($this->l->t('Invalid request parameters: ') . print_r($value, true));
         }
-        $uid = $value['shareowner'];
+        $uid = $value[ConfigService::SHAREOWNER_KEY];
         $savedUid = $value['shareowner-saved'];
         $force = filter_var($value['shareowner-force'], FILTER_VALIDATE_BOOLEAN, ['flags' => FILTER_NULL_ON_FAILURE]);
 
         // first check consistency of $savedUid with stored UID.
-        $confUid = $this->getConfigValue('shareowner', '');
+        $confUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY, '');
         if ($confUid != $savedUid) {
           return self::grumble($this->l->t(
             'Submitted "%s" != "%s" (stored)', [ $savedUid, $confUid ]));
@@ -1029,7 +974,7 @@ class PersonalSettingsController extends Controller
         break;
 
       case 'shareownerpassword':
-        $shareOwnerUid = $this->getConfigValue('shareowner');
+        $shareOwnerUid = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
         if (empty($shareOwnerUid)) {
           return self::grumble($this->l->t('Please create the share-owner user first.'));
         }
@@ -1112,11 +1057,11 @@ class PersonalSettingsController extends Controller
           'message' => $messages,
         ]);
       case 'sharedfolder':
-        $appGroup = $this->getConfigValue('usergroup');
+        $appGroup = $this->getConfigValue(ConfigService::USER_GROUP_KEY);
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
         }
-        $shareOwner = $this->getConfigValue('shareowner');
+        $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
         if (empty($shareOwner)) {
           return self::grumble($this->l->t('Share-owner is not set.'));
         }
@@ -1187,11 +1132,11 @@ class PersonalSettingsController extends Controller
       case ConfigService::TRANSACTIONS_FOLDER:
       case ConfigService::BALANCES_FOLDER:
       case ConfigService::PROJECTS_FOLDER:
-        $appGroup = $this->getConfigValue('usergroup');
+        $appGroup = $this->getConfigValue(ConfigService::USER_GROUP_KEY);
         if (empty($appGroup)) {
           return self::grumble($this->l->t('App user-group is not set.'));
         }
-        $shareOwner = $this->getConfigValue('shareowner');
+        $shareOwner = $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
         if (empty($shareOwner)) {
           return self::grumble($this->l->t('Share-owner is not set.'));
         }
@@ -1228,6 +1173,7 @@ class PersonalSettingsController extends Controller
             return self::valueResponse($real, $this->l->t('Participants downloads-folder set to "%s".', $real));
           case ConfigService::BALANCES_FOLDER:
           case ConfigService::TRANSACTIONS_FOLDER:
+          case ConfigService::TAX_OFFICE_IN_TRAY_FOLDER:
             $prefixFolder = $this->getConfigValue(ConfigService::FINANCE_FOLDER);
             if (empty($prefixFolder)) {
               return self::grumble(
@@ -1252,15 +1198,27 @@ class PersonalSettingsController extends Controller
                 // don't care
                 $this->logException($t);
               }
-              if ($parameter == ConfigService::POSTBOX_FOLDER) {
-                try {
-                  $url = $this->configCheckService->checkLinkSharedFolder(
-                    $sharedFolder . $prefixFolder . $real
-                  );
-                  $this->setConfigValue($parameter . 'ShareLink', $url);
-                } catch (Throwable $t) {
-                  $this->logException($t);
-                }
+              switch ($parameter) {
+                case ConfigService::POSTBOX_FOLDER:
+                  try {
+                    $url = $this->configCheckService->checkLinkSharedFolder(
+                      $sharedFolder . $prefixFolder . $real
+                    );
+                    $this->setConfigValue($parameter . 'ShareLink', $url);
+                  } catch (Throwable $t) {
+                    $this->logException($t);
+                  }
+                  break;
+                case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
+                  $skeletonPaths = $this->projectService->getProjectSkeletonPaths();
+                  foreach ($skeletonPaths as $skeletonPath) {
+                    $this->configCheckService->checkProjectFolder($skeletonPath);
+                  }
+                  break;
+                case ConfigService::FINANCE_FOLDER:
+                  $taxOfficeFolder = $this->getTaxAuthoritiesPath();
+                  $this->configCheckService->checkProjectFolder($taxOfficeFolder);
+                  break;
               }
               return self::dataResponse([
                 'value' => $real,
@@ -1279,15 +1237,28 @@ class PersonalSettingsController extends Controller
             } catch (Throwable $t) {
               // don't care
             }
-            if ($parameter == ConfigService::POSTBOX_FOLDER) {
-              try {
-                $url = $this->configCheckService->checkLinkSharedFolder(
-                  $sharedFolder . UserStorage::PATH_SEP . $prefixFolder . $real
-                );
-                $this->setConfigValue($parameter . 'ShareLink', $url);
-              } catch (Throwable $t) {
-                $this->logException($t);
-              }
+
+            switch ($parameter) {
+              case ConfigService::POSTBOX_FOLDER:
+                try {
+                  $url = $this->configCheckService->checkLinkSharedFolder(
+                    $sharedFolder . UserStorage::PATH_SEP . $prefixFolder . $real
+                  );
+                  $this->setConfigValue($parameter . 'ShareLink', $url);
+                } catch (Throwable $t) {
+                  $this->logException($t);
+                }
+                break;
+              case ConfigService::DOCUMENT_TEMPLATES_FOLDER:
+                $skeletonPaths = $this->projectService->getProjectSkeletonPaths();
+                foreach ($skeletonPaths as $skeletonPath) {
+                  $this->configCheckService->checkProjectFolder($skeletonPath);
+                }
+                break;
+              case ConfigService::FINANCE_FOLDER:
+                $taxOfficeFolder = $this->getTaxAuthoritiesPath();
+                $this->configCheckService->checkProjectFolder($taxOfficeFolder);
+                break;
             }
             return self::dataResponse([
               'value' => $actual,
@@ -1305,6 +1276,28 @@ class PersonalSettingsController extends Controller
               'Failure checking folder "%s", caught an exception "%s".',
               [ $prefixFolder . $real, $e->getMessage() ]));
         }
+      case ConfigService::TAX_OFFICE_IN_TRAY_FOLDER:
+        return $this->setSimpleConfigValue($parameter, $value);
+      case ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE:
+        $real = trim($value);
+        $translatedFromYear = $this->l->t('FROM_YEAR');
+        $translatedToYear = $this->l->t('TO_YEAR');
+        $found = 0;
+        foreach (['from', 'to'] as $limit) {
+          foreach ([${$limit . 'Year'}, ${'translated' . ucfirst($limit) . 'Year'}] as $required) {
+            $required = '{' . $required . '}';
+            if (strpos($real, $required) !== false) {
+              ++$found;
+              break;
+            }
+          }
+        }
+        if ($found !== 2) {
+          return self::grumble($this->l->t('The tax-excemption-notice template must contain both, the from-year as well as the to-year placeholders ("{%1$s}", "{%2$s}").', [
+            $translatedFromYear, $translatedToYear,
+          ]));
+        }
+        return $this->setSimpleConfigValue($parameter, $value);
       case 'concertscalendar':
       case 'rehearsalscalendar':
       case 'othercalendar':
@@ -1954,17 +1947,20 @@ class PersonalSettingsController extends Controller
   private function generateLocaleInfo(?string $scope = null):string
   {
     $scope = $scope ?? 'personal';
-    $locale = $scope == 'personal' ? $this->getLocale() : $this->appLocale();
+    $localeSymbol = $scope == 'personal' ? $this->getLocale() : $this->appLocale();
     $templateParameters = [
       'dateTimeZone' => $this->getDateTimeZone(),
-      'locale' => $locale,
-      'currencyCode' => $this->currencyCode($locale),
-      'currencySymbol' => $this->currencySymbol($locale),
+      'localeSymbol' => $localeSymbol,
+      'currencyCode' => $this->currencyCode($localeSymbol),
+      'currencySymbol' => $this->currencySymbol($localeSymbol),
       'l10n' => $scope == 'personal' ? $this->l : $this->appL10n(),
       'dateTimeFormatter' => $this->dateTimeFormatter(),
     ];
 
-    $tmpl = new TemplateResponse($this->appName, 'settings/part.locale-info', $templateParameters, 'blank');
+    $tmpl = $this->templateResponse(
+      'settings/part.locale-info',
+      $templateParameters,
+    );
     return $tmpl->render();
   }
 
@@ -2210,7 +2206,7 @@ class PersonalSettingsController extends Controller
       $this->setConfigValue($key, $realValue);
 
       if (preg_match('/.*password.*/i', $key)) {
-        $realValue = '••••••••';
+        $reportValue = $realValue = $realValue[0] . '••••••••';
       }
       return self::dataResponse(
         $responseData = Util::arrayMergeRecursive([

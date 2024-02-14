@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,15 +37,6 @@ use OCP\EventDispatcher\Event;
  */
 class PostChangeSepaBulkTransactionSubmitDate extends Event
 {
-  /** @var EntityManager */
-  private $entityManager;
-
-  /** @var Entities\SepaBulkTransaction */
-  private $entity;
-
-  /** @var DateTimeInterface */
-  private $oldValue;
-
   /**
    * @param EntityManager $entityManager Decorated ORM entity manager.
    *
@@ -54,13 +45,10 @@ class PostChangeSepaBulkTransactionSubmitDate extends Event
    * @param null|DateTimeInterface $oldValue Old entity value.
    */
   public function __construct(
-    EntityManager $entityManager,
-    Entities\SepaBulkTransaction $entity,
-    ?DateTimeInterface $oldValue,
+    private EntityManager $entityManager,
+    private Entities\SepaBulkTransaction $entity,
+    private ?DateTimeInterface $oldValue,
   ) {
-    $this->entityManager = $entityManager;
-    $this->entity = $entity;
-    $this->oldValue = $oldValue;
   }
 
   /**

@@ -1,4 +1,5 @@
 <map id="DatabaseStorageDirEntry" name="DatabaseStorageDirEntry">
-<area shape="rect" id="node1" title="Generic directory entry for a database&#45;backed file." alt="" coords="5,79,176,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="42,5,139,31"/>
+<area shape="rect" id="Node000001" title="Generic directory entry for a database&#45;backed file." alt="" coords="5,80,176,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="42,5,139,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,48,93,80,88,80,88,48"/>
 </map>

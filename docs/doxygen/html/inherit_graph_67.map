@@ -1,5 +1,19 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,100,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_admin_section.html" title="Admin settings for the app." alt="" coords="155,5,258,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_settings_1_1_personal_section.html" title="Personal app&#45;settings." alt="" coords="148,55,265,80"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_i_cryptor.html" title="Simple wrapper interface." alt="" coords="5,107,74,133"/>
+<area shape="rect" id="Node000001" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_cryptor_interface.html" title="Just there in order to branch depending on container specialization." alt="" coords="122,56,307,83"/>
+<area shape="poly" id="edge298_Node000000_Node000001" title=" " alt="" coords="88,102,121,92,161,81,162,86,122,97,89,107"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_seal_cryptor.html" title="Use the encryption service provided by the ambient cloud software." alt="" coords="169,107,260,133"/>
+<area shape="poly" id="edge301_Node000000_Node000004" title=" " alt="" coords="89,117,169,117,169,123,89,123"/>
+<area shape="rect" id="Node000005" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_symmetric_cryptor_interface.html" title="Just there in order to branch depending on container specialization." alt="" coords="125,157,304,184"/>
+<area shape="poly" id="edge302_Node000000_Node000005" title=" " alt="" coords="89,133,122,143,162,154,161,159,121,148,88,138"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_asymmetric_cryptor.html" title="Asymmetric encryption using the ParagonIE\Halite library." alt="" coords="373,5,541,32"/>
+<area shape="poly" id="edge299_Node000001_Node000002" title=" " alt="" coords="296,50,389,30,390,35,297,55"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_cryptor.html" title="Asymmetric encryption using the OpenSSL extension of PHP." alt="" coords="362,56,552,83"/>
+<area shape="poly" id="edge300_Node000001_Node000003" title=" " alt="" coords="323,67,361,67,361,72,323,72"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_symmetric_cryptor.html" title="Use the encryption service provided by the ambient cloud software." alt="" coords="376,107,537,133"/>
+<area shape="poly" id="edge303_Node000005_Node000006" title=" " alt="" coords="296,151,389,131,390,137,297,156"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_symmetric_cryptor.html" title="Use libsodium through Halite." alt="" coords="376,157,537,184"/>
+<area shape="poly" id="edge304_Node000005_Node000007" title=" " alt="" coords="319,168,376,168,376,173,319,173"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_halite_symmetric_stream_cryptor.html" title="Like HaliteSymmetricCryptor, but use the stream&#45;versions which work on chunks of 1M and thus scale be..." alt="" coords="355,208,558,235"/>
+<area shape="poly" id="edge305_Node000005_Node000008" title=" " alt="" coords="297,185,390,205,389,210,296,190"/>
 </map>

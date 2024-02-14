@@ -1,5 +1,7 @@
 <map id="generateMusicianPersonalizedViewsStatements" name="generateMusicianPersonalizedViewsStatements">
-<area shape="rect" id="node1" title="Generate the (My&#45;)SQL statements for defining the personalized single&#45;row musician views." alt="" coords="5,5,204,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a891ee9425b9ec2b464cd8d38c8f5bc9a" title=" " alt="" coords="252,13,411,38"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a8f6f0e60183992c01ae7acad097ac598" title=" " alt="" coords="459,13,543,38"/>
+<area shape="rect" id="Node000001" title="Generate the (My&#45;)SQL statements for defining the personalized single&#45;row musician views." alt="" coords="5,5,204,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a891ee9425b9ec2b464cd8d38c8f5bc9a" title=" " alt="" coords="252,13,410,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,24,236,24,236,29,204,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a8f6f0e60183992c01ae7acad097ac598" title=" " alt="" coords="458,13,541,40"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="410,24,443,24,443,29,410,29"/>
 </map>

@@ -1,12 +1,23 @@
 <map id="hasUpdated" name="hasUpdated">
-<area shape="rect" id="node1" title="{}" alt="" coords="5,57,97,83"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae16b6afbab9462a9af681b9393af361e" title="{}" alt="" coords="145,57,220,83"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="551,32,677,57"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a9d7ac9f8614357ce6b7358708b9ab040" title=" " alt="" coords="268,32,460,57"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a8eb3e49592d26a52be7e8987722d1aa3" title="Get the overall modification time of the entire storage as Unix time&#45;stamp." alt="" coords="272,131,456,156"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5877dd78fbe10fb5f3ee3d25e3fbe11e" title="{}" alt="" coords="337,81,391,107"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="768,7,844,32"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="771,56,841,81"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="892,56,1059,81"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae5a252c76f3eca6363a55691f69dd932" title="Return the overall modification time of the entire storage." alt="" coords="508,131,720,156"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,57,97,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae16b6afbab9462a9af681b9393af361e" title="{}" alt="" coords="145,57,219,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,67,129,67,129,73,97,73"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="550,31,674,58"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="198,54,229,33,266,17,341,4,417,5,488,13,548,25,547,30,487,18,416,10,341,10,268,22,231,38,201,58"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a9d7ac9f8614357ce6b7358708b9ab040" title=" " alt="" coords="267,31,458,58"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="219,62,251,58,252,63,220,67"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a8eb3e49592d26a52be7e8987722d1aa3" title="Get the overall modification time of the entire storage as Unix time&#45;stamp." alt="" coords="271,133,454,159"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="204,81,233,100,268,118,286,125,284,130,266,123,231,105,201,86"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5877dd78fbe10fb5f3ee3d25e3fbe11e" title="{}" alt="" coords="337,82,389,109"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="220,73,322,87,321,92,219,78"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="766,6,841,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="674,34,750,24,751,29,675,39"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="769,57,838,83"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="675,50,754,61,753,66,674,56"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="889,57,1054,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="838,67,873,67,873,73,838,73"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="459,42,534,42,534,47,459,47"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae5a252c76f3eca6363a55691f69dd932" title="Return the overall modification time of the entire storage." alt="" coords="506,133,718,159"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="455,143,491,143,491,149,455,149"/>
+<area shape="poly" id="edge11_Node000010_Node000003" title=" " alt="" coords="389,87,534,58,535,63,390,93"/>
 </map>

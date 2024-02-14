@@ -1,10 +1,19 @@
 <map id="filetype" name="filetype">
-<area shape="rect" id="node1" title="{}" alt="" coords="5,31,69,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5877dd78fbe10fb5f3ee3d25e3fbe11e" title="{}" alt="" coords="332,5,385,31"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae93aaa5a52d031b9df08764bda508255" title="{}" alt="" coords="117,56,173,81"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="433,31,559,56"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="607,5,683,31"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="610,55,679,80"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="731,55,897,80"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ad22e004288b7149fe24fb166f4cff9ee" title="{}" alt="" coords="221,56,284,81"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,31,69,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a5877dd78fbe10fb5f3ee3d25e3fbe11e" title="{}" alt="" coords="330,5,383,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,39,315,19,315,25,70,44"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ae93aaa5a52d031b9df08764bda508255" title="{}" alt="" coords="117,56,172,83"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="70,49,102,57,101,62,69,54"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#a7ec90cd17ef214d5fe4280b13d7c144a" title="Fetch the file entity corresponding to file&#45;name." alt="" coords="431,31,555,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="383,21,416,27,415,32,382,26"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ab721841df814a2337039d39cc03da82a" title=" " alt="" coords="603,5,678,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="555,31,587,25,588,30,556,36"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#aa8e4fc68bcf28c10413b664b7d89ae81" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="607,56,675,83"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="556,52,592,58,591,64,555,57"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="726,56,892,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="675,67,711,67,711,72,675,72"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ad22e004288b7149fe24fb166f4cff9ee" title="{}" alt="" coords="220,56,282,83"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="172,67,204,67,204,72,172,72"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="279,53,315,35,318,40,282,58"/>
+<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="282,63,415,49,416,55,283,69"/>
 </map>

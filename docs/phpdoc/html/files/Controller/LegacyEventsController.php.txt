@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,9 +33,7 @@ use Sabre\VObject\Component\VCalendar;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
-use OCP\ISession;
 use OCP\Constants;
 
 use OCA\CAFEVDB\Service\ConfigService;
@@ -64,54 +62,20 @@ class LegacyEventsController extends Controller
   const SUBTOPIC_DELETE = 'delete';
   const SUBTOPIC_EXPORT = 'export';
 
-  /** @var ISession */
-  private $session;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var ConfigCheckService */
-  private $configCheckService;
-
-  /** @var CalDavService */
-  private $calDavService;
-
-  /** @var VCalendarService */
-  private $vCalendarService;
-
-  /** @var OC_Calendar_Object */
-  private $ocCalendarObject;
-
-  /** @var ToolTipsService */
-  protected $toolTipsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ConfigService $configService,
-    ConfigCheckService $configCheckService,
-    RequestParameterService $parameterService,
-    ProjectService $projectService,
-    CalDavService $calDavService,
-    VCalendarService $vCalendarService,
-    ToolTipsService $toolTipsService,
-    ISession $session,
+    protected ConfigService $configService,
+    private ConfigCheckService $configCheckService,
+    private RequestParameterService $parameterService,
+    private ProjectService $projectService,
+    private CalDavService $calDavService,
+    private VCalendarService $vCalendarService,
+    private EventsService $eventsService,
+    protected ToolTipsService $toolTipsService,
   ) {
     parent::__construct($appName, $request);
-
-    $this->configService = $configService;
-    $this->configCheckService = $configCheckService;
-    $this->parameterService = $parameterService;
-    $this->projectService = $projectService;
-    $this->calDavService = $calDavService;
-    $this->vCalendarService = $vCalendarService;
-    $this->ocCalendarObject = $vCalendarService->legacyEventObject();
-    $this->toolTipsService = $toolTipsService;
-    $this->session = $session;
 
     $this->l = $this->l10N();
   }
@@ -125,7 +89,6 @@ class LegacyEventsController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function serviceSwitch(string $topic, string $subTopic):Http\Response
   {
@@ -135,7 +98,6 @@ class LegacyEventsController extends Controller
           case self::SUBTOPIC_NEW:
             return $this->newEventForm();
           case self::SUBTOPIC_EDIT:
-            $this->session->close();
             return $this->editEventForm($subTopic);
           case self::SUBTOPIC_CLONE:
             return $this->editEventForm($subTopic);
@@ -144,7 +106,6 @@ class LegacyEventsController extends Controller
         }
         break;
       case 'actions':
-        $this->session->close();
         switch ($subTopic) {
           case self::SUBTOPIC_NEW:
             return $this->newEvent();
@@ -159,7 +120,6 @@ class LegacyEventsController extends Controller
         }
         break;
       default:
-        $this->session->close();
         break;
     }
     return self::grumble($this->l->t("unknown service requested: `%s/%s'.", [$topic, $subTopic]));
@@ -188,7 +148,7 @@ class LegacyEventsController extends Controller
     $categories = $projectName . ',' . $this->appL10n()->t($eventKind);
     if (EventsService::absenceFieldsDefault($eventKind)) {
       // request generation of absence fields.
-      $categories .= ',' . EventsService::getAbsenceCategory($this->appL10n());
+      $categories .= ',' . $this->eventsService->getRecordAbsenceCategory();
     }
 
     $protectCategories = $this->parameterService->getParam('protectCategories', self::READONLY_CATEGORIES);
@@ -201,7 +161,6 @@ class LegacyEventsController extends Controller
 
     // make sure that the calendar exists and is writable
     $newId = $this->configCheckService->checkSharedCalendar($calendarUri, $calendarName, $calendarId);
-    $this->session->close();
 
     if ($newId == false) {
       return self::grumble($this->l->t('Cannot access calendar: `%s\'', [$calendarUri]));
@@ -266,11 +225,11 @@ class LegacyEventsController extends Controller
     $repeatByWeekNoOptions = $this->ocCalendarObject->getByWeekNoOptions();
     $repeatByMonthDayOptions = $this->ocCalendarObject->getByMonthDayOptions();
 
-    return new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       'legacy/calendar/part.newevent',
       [
         'appName' => $this->appName(),
+        'appNameTag' => 'app-' . $this->appName,
         'toolTips' => $this->toolTipsService,
 
         'requesttoken' => \OCP\Util::callRegister(),
@@ -320,7 +279,7 @@ class LegacyEventsController extends Controller
         'duration' => $duration,
         'default_duration' => $defaultEventDuration,
       ],
-      'blank');
+    );
   }
 
   /**
@@ -344,7 +303,7 @@ class LegacyEventsController extends Controller
     if ($data['calendarid'] != $calendarId) {
       return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
     }
-    $object = \Sabre\VObject\Reader::read($data['calendardata']);
+    $object = VCalendarService::getVCalendar($data);
     $calendar = $this->calDavService->calendarById($calendarId);
     if (empty($calendar)) {
       return self::grumble($this->l->t("Unable to access calendar with id `%s'.", [$calendarId]));
@@ -603,6 +562,7 @@ class LegacyEventsController extends Controller
 
     $templateParameters = [
       'appName' => $this->appName(),
+      'appNameTag' => 'app-' . $this->appName,
       'toolTips' => $this->toolTipsService,
 
       'requestoken' => \OCP\Util::callRegister(),
@@ -701,11 +661,10 @@ class LegacyEventsController extends Controller
     $templateParameters = array_merge($templateParameters, $repeatParameters);
 
     $this->logError("returning template " . $template);
-    return new TemplateResponse(
-      $this->appName(),
+    return $this->templateResponse(
       $template,
       $templateParameters,
-      'blank');
+    );
   }
 
   /** @return Http\Response */
@@ -743,8 +702,7 @@ class LegacyEventsController extends Controller
     if (empty($data)) {
       return self::grumble($this->l->t("Could not fetch object `%s' from calendar `%s'.", [$uri, $calendarId]));
     }
-    $this->logError(print_r($data, true));
-    $vCalendar = \Sabre\VObject\Reader::read($data['calendardata']);
+    $vCalendar = $data['calendardata'];
     $lastModifiedSubmitted = $this->parameterService['lastmodified'];
     $lastModified = $vCalendar->VEVENT->__get('LAST-MODIFIED');
     if ($lastModified && $lastModifiedSubmitted != $lastModified->getDateTime()->format('U')) {
@@ -789,7 +747,7 @@ class LegacyEventsController extends Controller
     if ($data['calendarid'] != $calendarId) {
       return self::grumble($this->l->t("Submitted calendar id `%s' and stored id `%s' for object `%s' do not match.", [$calendarId, $data['calendarid'], $uri]));
     }
-    $object = \Sabre\VObject\Reader::read($data['calendardata']);
+    $object = $data['calendardata'];
     $calendar = $this->calDavService->calendarById($calendarId);
     if (empty($calendar)) {
       return self::grumble(

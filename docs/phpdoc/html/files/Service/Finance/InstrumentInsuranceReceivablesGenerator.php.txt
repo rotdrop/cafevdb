@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,37 +53,24 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityTranslationTrait;
 
-  /** @var InstrumentInsuranceService */
-  private $insuranceService;
-
   /** @var Repositories\InstrumentInsurancesRepository */
   private $insurancesRepository;
-
-  /** @var StorageFactory */
-  private $storageFactory;
-
-  /** @var ToolTipsService */
-  protected $toolTipsService;
 
   /** @var \DateTimeZone */
   private $timeZone;
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    InstrumentInsuranceService $insuranceService,
-    ToolTipsService $toolTipsService,
+    protected ConfigService $configService,
+    private InstrumentInsuranceService $insuranceService,
+    private ToolTipsService $toolTipsService,
+    private StorageFactory $storageFactory,
     EntityManager $entityManager,
     ProgressStatusService $progressStatusService,
-    StorageFactory $storageFactory,
   ) {
     parent::__construct($entityManager, $progressStatusService);
 
-    $this->insuranceService = $insuranceService;
-    $this->configService = $configService;
-    $this->storageFactory = $storageFactory;
     $this->l = $this->l10n();
-    $this->toolTipsService = $toolTipsService;
 
     $this->insurancesRepository = $this->getDatabaseRepository(Entities\InstrumentInsurance::class);
     $this->timeZone = $this->getDateTimeZone();
@@ -207,10 +194,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
       $fee = $this->insuranceService->insuranceFee($musician, $referenceDate, $dueInterval);
 
       // Generate the overview letter as supporting document
-      // @todo: use new OpenDocument stuff
       $overview = $this->insuranceService->musicianOverview($musician, $referenceDate);
-      $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
-      $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
     } else {
       if (0 == count($this->insuranceService->billableInsurances($musician))) {
         // bail out early, DO NOT ADD an opening balance
@@ -240,6 +224,8 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
 
         if (!$openingBalance) {
           // store overview letter
+          $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
+          $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
           $supportingDocumentFile = new Entities\EncryptedFile(
             $overviewFilename, $overviewLetter, 'application/pdf', $musician);
           $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
@@ -280,7 +266,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
         }
       }
       if (!$skipped) {
-        if ($fee == 0.0) {
+        if (!$openingBalance && $fee == 0.0) {
           // remove current option
           $this->remove($datum);
           $this->remove($datum);
@@ -290,27 +276,31 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
           $project->getParticipantFieldsData()->removeElement($datum);
           $removed = true;
         } else {
-          /** @var Entities\DatabaseStorageFile $supportingDocument */
-          $supportingDocument = $datum->getSupportingDocument();
-          if (empty($supportingDocument)) {
-            // create overview letter
-            $supportingDocumentFile = new Entities\EncryptedFile(
-              fileName: $overviewFilename,
-              data: $overviewLetter,
-              mimeType: 'application/pdf',
-              owner: $musician
-            );
-            $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
-            $datum->setSupportingDocument($supportingDocument);
-          } elseif (true || $fee != $datum->getOptionValue()) {
-            // @todo only update letter if fee changes?
-            $supportingDocument
-              ->setName($overviewFilename)
-              ->getFile()
-              ->setFileName($overviewFilename)
-              ->setMimeType('application/pdf')
-              ->setSize(strlen($overviewLetter))
-              ->getFileData()->setData($overviewLetter);
+          if (!$openingBalance) {
+            $overviewFilename = $this->insuranceService->musicianOverviewFileName($overview);
+            $overviewLetter = $this->insuranceService->musicianOverviewLetter($overview);
+            /** @var Entities\DatabaseStorageFile $supportingDocument */
+            $supportingDocument = $datum->getSupportingDocument();
+            if (empty($supportingDocument)) {
+              // create overview letter
+              $supportingDocumentFile = new Entities\EncryptedFile(
+                fileName: $overviewFilename,
+                data: $overviewLetter,
+                mimeType: 'application/pdf',
+                owner: $musician
+              );
+              $supportingDocument = $fileSystemStorage->addFieldDatumDocument($datum, $supportingDocumentFile, flush: false);
+              $datum->setSupportingDocument($supportingDocument);
+            } elseif (true || $fee != $datum->getOptionValue()) {
+              // @todo only update letter if fee changes?
+              $supportingDocument
+                ->setName($overviewFilename)
+                ->getFile()
+                ->setFileName($overviewFilename)
+                ->setMimeType('application/pdf')
+                ->setSize(strlen($overviewLetter))
+                ->getFileData()->setData($overviewLetter);
+            }
           }
           // just update current data to the computed value
           if ($datum->isDeleted()) {

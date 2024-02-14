@@ -126,9 +126,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.36" class="phpdocumentor-element-found-in__source" data-line="36" data-modal="source-view" data-src="files/Service/ToolTipsService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/Service/ToolTipsService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Tool-tips management with translations.</p>
@@ -164,12 +164,18 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_PARAGRAPH">PARAGRAPH</a>
+    <span>
+        &nbsp;= &#039;&lt;p class=&quot;tooltip-paragraph&quot;&gt;&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_SUB_KEY_SEP">SUB_KEY_SEP</a>
     <span>
         &nbsp;= &#039;:&#039;                            </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
     <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_SUBKEY_PREFIXES">SUBKEY_PREFIXES</a>
     <span>
         &nbsp;= [&#039;pme&#039;]                            </span>
@@ -185,7 +191,19 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger</a>
+    <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_appContainer">$appContainer</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_l">$l</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
@@ -203,12 +221,6 @@
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_l">$l</a>
-    <span>
-                        &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_lastKey">$lastKey</a>
     <span>
                         &nbsp;: string            </span>
@@ -218,12 +230,6 @@
     <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_lastToolTip">$lastToolTip</a>
     <span>
                         &nbsp;: string            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_toolTipsData">$toolTipsData</a>
-    <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
 </dt>
 
     </dl>
@@ -376,14 +382,6 @@ call.</dd>
 understands those.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#method_makeToolTips">makeToolTips()</a>
-    <span>
-                                &nbsp;: void    </span>
-</dt>
-<dd>Generate the tooltips-data. This is primarily not static because the
-translation function is not static.</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#method_preProcessKey">preProcessKey()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -404,6 +402,35 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
 
         </h3>
                     <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PARAGRAPH">
+        PARAGRAPH
+        <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_PARAGRAPH" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PARAGRAPH</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;&lt;p class=&quot;tooltip-paragraph&quot;&gt;&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_SUB_KEY_SEP">
         SUB_KEY_SEP
         <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_SUB_KEY_SEP" class="headerlink"><i class="fas fa-link"></i></a>
@@ -413,9 +440,9 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -432,7 +459,7 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     
 
 </article>
-                    <article class="phpdocumentor-element -constant -public ">
+                    <article class="phpdocumentor-element -constant -private ">
     <h4 class="phpdocumentor-element__name" id="constant_SUBKEY_PREFIXES">
         SUBKEY_PREFIXES
         <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_SUBKEY_PREFIXES" class="headerlink"><i class="fas fa-link"></i></a>
@@ -442,14 +469,14 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">42</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-signature phpdocumentor-code ">
-    <span class="phpdocumentor-signature__visibility">public</span>
+    <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">SUBKEY_PREFIXES</span>
     = <span class="phpdocumentor-signature__default-value">[&#039;pme&#039;]</span>
@@ -477,19 +504,87 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
             -protected
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="property_logger">
-        $logger
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_appContainer">
+        $appContainer
+        <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_appContainer" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">61</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\AppFramework\IAppContainer">IAppContainer</abbr></span>
+    <span class="phpdocumentor-signature__name">$appContainer</span>
+    </code>
+
+    
+    
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_l">
+        $l
+        <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_l" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">62</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
+    <span class="phpdocumentor-signature__name">$l</span>
+    </code>
+
+    
+    
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_logger">
+        $logger
+        <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">63</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -521,9 +616,9 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -555,9 +650,9 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">57</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -566,40 +661,6 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
         <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
     <span class="phpdocumentor-signature__name">$failedKeys</span>
      = <span class="phpdocumentor-signature__default-value">[]</span></code>
-
-    
-    
-    
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="property_l">
-        $l
-        <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_l" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">44</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
-    <span class="phpdocumentor-signature__name">$l</span>
-    </code>
 
     
     
@@ -623,9 +684,9 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -657,9 +718,9 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -668,40 +729,6 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$lastToolTip</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
-
-    
-    
-    
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="property_toolTipsData">
-        $toolTipsData
-        <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_toolTipsData" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">47</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
-    <span class="phpdocumentor-signature__name">$toolTipsData</span>
-    </code>
 
     
     
@@ -730,9 +757,9 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -787,9 +814,9 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">131</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -824,9 +851,9 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">83</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Enable debug-messages.</p>
@@ -878,9 +905,9 @@ disabled debug-mode.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">198</span>
+    <span class="phpdocumentor-element-found-in__line">189</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.189" class="phpdocumentor-element-found-in__source" data-line="189" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return a translated tool-tip for the given key.</p>
@@ -936,9 +963,9 @@ disabled debug-mode.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">114</span>
+    <span class="phpdocumentor-element-found-in__line">107</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.114" class="phpdocumentor-element-found-in__source" data-line="114" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the array of failed tooltip-searches after the last successful
@@ -974,9 +1001,9 @@ call.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">103</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the argument of ToolTipsService::fetch($key) of the most recent call.</p>
@@ -1525,9 +1552,9 @@ call.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">138</span>
+    <span class="phpdocumentor-element-found-in__line">129</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1572,9 +1599,9 @@ call.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">144</span>
+    <span class="phpdocumentor-element-found-in__line">135</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.144" class="phpdocumentor-element-found-in__source" data-line="144" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1615,9 +1642,9 @@ call.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">150</span>
+    <span class="phpdocumentor-element-found-in__line">141</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.141" class="phpdocumentor-element-found-in__source" data-line="141" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1665,9 +1692,9 @@ call.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">156</span>
+    <span class="phpdocumentor-element-found-in__line">147</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.156" class="phpdocumentor-element-found-in__source" data-line="156" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1708,9 +1735,9 @@ call.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">124</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return all tooltips contained in this class.</p>
@@ -1781,40 +1808,6 @@ understands those.</p>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_makeToolTips">
-        makeToolTips()
-        <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#method_makeToolTips" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">249</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.249" class="phpdocumentor-element-found-in__source" data-line="249" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-        <p class="phpdocumentor-summary">Generate the tooltips-data. This is primarily not static because the
-translation function is not static.</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">makeToolTips</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -private
-                                                        "
->
     <h4 class="phpdocumentor-element__name" id="method_preProcessKey">
         preProcessKey()
         <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#method_preProcessKey" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1823,9 +1816,9 @@ translation function is not static.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/ToolTipsService.php"><a href="files/service-tooltipsservice.html"><abbr title="Service/ToolTipsService.php">ToolTipsService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">169</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.169" class="phpdocumentor-element-found-in__source" data-line="169" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Pre-process the given $key. If a key starts with a known prefix, but has
@@ -1972,6 +1965,7 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_PARAGRAPH">PARAGRAPH</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_SUB_KEY_SEP">SUB_KEY_SEP</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#constant_SUBKEY_PREFIXES">SUBKEY_PREFIXES</a></li>
                                             </ul>
@@ -1980,13 +1974,13 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_appContainer">$appContainer<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_l">$l<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_debug">$debug<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_failedKeys">$failedKeys<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_l">$l<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_lastKey">$lastKey<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_lastToolTip">$lastToolTip<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#property_toolTipsData">$toolTipsData<a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html"></li>
                                             </ul>
                 </li>
             
@@ -2013,7 +2007,6 @@ a &#039;-&#039; as separator, then replace all dashes by our standard separator.
                                             <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#method_offsetUnset">offsetUnset()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#method_toolTips">toolTips()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#method_makeToolTips">makeToolTips()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-ToolTipsService.html#method_preProcessKey">preProcessKey()</a></li>
                                     </ul>
             </li>

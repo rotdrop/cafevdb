@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,6 @@ namespace OCA\CAFEVDB\EmailForm;
 
 use \DateTimeImmutable;
 use \DateTimeInterface;
-use ZipStream\ZipStream;
 use \stdClass;
 use \Net_IMAP;
 use \Mail_RFC822;
@@ -422,32 +421,8 @@ Störung.';
   private $executionStatus; // false on error
   private $diagnostics; // mixed, depends on operation
 
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var RecipientsFilter */
-  private $recipientsFilter;
-
-  /** @var EventsService */
-  private $eventsService;
-
-  /** @var ProjectParticipantFieldsService */
-  private $participantFieldsService;
-
-  /** @var ProgressStatusService */
-  private $progressStatusService;
-
-  /** @var SimpleSharingService */
-  private $simpleSharingService;
-
   /** @var OrganizationalRolesService */
   private $organizationalRolesService;
-
-  /** @var AppStorage */
-  private $appStorage;
-
-  /** @var UserStorage */
-  private $userStorage;
 
   /** @var int */
   private $progressToken;
@@ -487,27 +462,18 @@ Störung.';
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    RequestParameterService $parameterService,
-    EventsService $eventsService,
-    RecipientsFilter $recipientsFilter,
-    EntityManager $entityManager,
-    ProjectParticipantFieldsService $participantFieldsService,
-    ProgressStatusService $progressStatusService,
-    SimpleSharingService $simpleSharingService,
-    OrganizationalRolesService $organizationRolesService,
-    AppStorage $appStorage,
-    UserStorage $userStorage,
+    protected ConfigService $configService,
+    private RequestParameterService $parameterService,
+    private EventsService $eventsService,
+    private RecipientsFilter $recipientsFilter,
+    private EntityManager $entityManager,
+    private ProjectParticipantFieldsService $participantFieldsService,
+    private ProgressStatusService $progressStatusService,
+    private SimpleSharingService $simpleSharingService,
+    private OrganizationalRolesService $organizationRolesService,
+    private AppStorage $appStorage,
+    private UserStorage $userStorage,
   ) {
-    $this->configService = $configService;
-    $this->eventsService = $eventsService;
-    $this->progressStatusService = $progressStatusService;
-    $this->simpleSharingService = $simpleSharingService;
-    $this->organizationalRolesService = $organizationRolesService;
-    $this->appStorage = $appStorage;
-    $this->userStorage = $userStorage;
-    $this->entityManager = $entityManager;
-    $this->participantFieldsService = $participantFieldsService;
     $this->l = $this->l10N();
 
     $this->constructionMode = $this->getConfigValue('emailtestmode') !== 'off';
@@ -2622,13 +2588,14 @@ Störung.';
         'total' =>  $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD],
         'active' => $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT],
       ]);
-      $phpMailer->setProgressCallback(function($current, $total) use ($progressStatus) {
-        $oldTime = $progressStatus->getLastModified()->getTimestamp();
+      $oldTime = time();
+      $phpMailer->setProgressCallback(function($current, $total) use ($progressStatus, &$oldTime) {
         $nowTime = time();
         if ($current >= $total
             || ($current - $progressStatus->getCurrent() >= self::PROGRESS_CHUNK_SIZE
                 && $nowTime - $oldTime >= self::PROGRESS_THROTTLE_SECONDS)) {
           $progressStatus->update($current, $total);
+          $oldTime = $nowTime;
         }
       });
 
@@ -2772,7 +2739,7 @@ Störung.';
     }
 
     /** @var Entities\SentEmail $sentEmail */
-    $sentEmail = $this->sentEmail($logMessage, allowDuplicates: $allowDuplicates);
+    $sentEmail = $this->sentEmail($logMessage, messageId: $messageId, allowDuplicates: $allowDuplicates);
     if (!$sentEmail) {
       return false;
     }
@@ -2782,18 +2749,18 @@ Störung.';
       $phpMailer->MessageID = $messageId;
     }
     if (!empty($references)) {
-      if (is_string($references)) {
-        // the id of the master-copy
-        $sentEmail->setReferencing($this->getReference(Entities\SentEmail::class, $references));
-      } else {
+      if (is_array($references)) {
+        // install the bidirectional "reference" relationships into the
+        // SentEmail entities.
         $references = array_merge($references, $this->referencing);
         sort($references);
+        $referencedBy = $sentEmail->getReferencedBy();
         foreach ($references as $reference) {
-          // Adding references unfortunately is not enough, ORM does not match
-          // "un-flushed" newly persisted objects with reference
-          // objects. However, find() does work and obtains the managed object.
           $referencing = $this->getDatabaseRepository(Entities\SentEmail::class)->find($reference);
-          $sentEmail->getReferencedBy()->set($reference, $referencing);
+          if (empty($referencing)) {
+            continue;
+          }
+          $referencedBy->set($reference, $referencing);
           $referencing->setReferencing($sentEmail);
         }
       }
@@ -2972,17 +2939,41 @@ Störung.';
    * Log the sent message to the data base if it is new. Return false
    * if this is a duplicate, true otherwise.
    *
-   * @param SentEmailDTO $logMessage The email-message to record in the DB.
+   * @param null|SentEmailDTO $logMessage The email-message to record in the DB.
+   *
+   * @param null|string $messageId Mesage id if known. If given the entity
+   * manager is queried for an existing managed entity, otherwise a new entity
+   * is generated.
    *
    * @param bool $allowDuplicates Whether or not to check for
    * duplicates. This is currently never set to true.
    *
    * @return bool|Entities\SentEmail
    */
-  private function sentEmail(SentEmailDTO $logMessage, bool $allowDuplicates = false)
-  {
-    /** @var Entities\SentEmail $sentEmail */
-    $sentEmail = new Entities\SentEmail;
+  private function sentEmail(
+    ?SentEmailDTO $logMessage,
+    ?string $messageId = null,
+    bool $allowDuplicates = false,
+  ) {
+    if (empty($messageId) && empty($logMessage)) {
+      return false;
+    }
+
+    if (!empty($messageId)) {
+      $sentEmail = $this->getDatabaseRepository(Entities\SentEmail::class)->find($messageId);
+    }
+    if (empty($sentEmail)) {
+      /** @var Entities\SentEmail $sentEmail */
+      $sentEmail = new Entities\SentEmail;
+      if (!empty($messageId)) {
+        $sentEmail->setMessageId($messageId);
+        $this->persist($sentEmail);
+      }
+    }
+
+    if (empty($logMessage)) {
+      return $sentEmail;
+    }
 
     // Construct one MD5 for recipients subject and html-text
     $bulkRecipients = array_map(function($pair) {
@@ -4559,6 +4550,7 @@ Störung.';
         $this->remove($draftId, true);
       } catch (\Throwable $t) {
         $this->entityManager->reopen();
+        $this->clearDatabaseRepository();
         $this->logException($t);
         $this->diagnostics[self::DIAGNOSTICS_CAPTION] = $this->l->t(
           'Deleting draft with id %d failed: %s',
@@ -5479,7 +5471,9 @@ Störung.';
       $flatIdentifier = EventsService::makeFlatIdentifier($event);
       $events[$flatIdentifier] = $event;
     }
-    $this->logInfo('EVENTS ' . print_r($events, true));
+    if (count($events) > 0) {
+      $this->logInfo('EVENTS ' . print_r($events, true));
+    }
 
     return $events;
   }

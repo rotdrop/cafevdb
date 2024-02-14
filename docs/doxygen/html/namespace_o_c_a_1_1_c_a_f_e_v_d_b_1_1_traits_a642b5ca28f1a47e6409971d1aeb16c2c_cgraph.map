@@ -1,7 +1,12 @@
 <map id="getFinanceFolderPath" name="getFinanceFolderPath">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,155,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a1fe279ec39675001095beafdf178b811" title="Create the full&#45;path for the sub&#45;folder corresponding to the given config key." alt="" coords="203,5,369,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa57ee6dad7c7f33cff6983ad79080946" title="Get a possibly encrypted config value." alt="" coords="609,5,720,31"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#adac8fad662663420dc8d9b73e0134673" title=" " alt="" coords="417,31,561,56"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="768,5,869,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,154,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a1fe279ec39675001095beafdf178b811" title="Create the full&#45;path for the sub&#45;folder corresponding to the given config key." alt="" coords="202,5,368,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,16,186,16,186,21,154,21"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa57ee6dad7c7f33cff6983ad79080946" title="Get a possibly encrypted config value." alt="" coords="607,5,717,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="368,16,592,16,592,21,368,21"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#adac8fad662663420dc8d9b73e0134673" title=" " alt="" coords="416,31,559,57"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="368,26,401,31,400,36,368,32"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="765,5,865,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="717,16,749,16,749,21,717,21"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="559,31,591,26,592,31,560,36"/>
 </map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,20 +56,14 @@ class DatabaseSanitizers extends Command
 
   /** {@inheritdoc} */
   public function __construct(
-    string $appName,
-    IL10N $l10n,
-    ILogger $logger,
-    IUserManager $userManager,
-    IUserSession $userSession,
-    IAppContainer $appContainer,
+    protected string $appName,
+    protected IL10N $l,
+    protected ILogger $logger,
+    protected IUserManager $userManager,
+    protected IUserSession $userSession,
+    protected IAppContainer $appContainer,
   ) {
     parent::__construct();
-    $this->appName = $appName;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->userManager = $userManager;
-    $this->userSession = $userSession;
-    $this->appContainer = $appContainer;
   }
 
   /** {@inheritdoc} */
@@ -161,11 +155,10 @@ class DatabaseSanitizers extends Command
       if (count($sanitizers) > 1) {
         $section0 = $output->section();
         $progress0 = new ProgressBar($section0);
-        $progress2 = new ProgressBar($section2);
         $section2 = $output->section();
+        $progress2 = new ProgressBar($section2);
       }
       $section1 = $output->section();
-
       $progress1 = new ProgressBar($section1);
 
       $repository = $this->getDatabaseRepository($entityClass);

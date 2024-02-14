@@ -1,4 +1,5 @@
 <map id="CalendarObjectCreatedEventListener" name="CalendarObjectCreatedEventListener">
-<area shape="rect" id="node1" title="Act on newly created events and tasks." alt="" coords="5,79,197,119"/>
-<area shape="rect" id="node2" title=" " alt="" coords="48,5,155,31"/>
+<area shape="rect" id="Node000001" title="Act on newly created events and tasks." alt="" coords="5,80,197,123"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="48,5,154,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,48,104,80,98,80,98,48"/>
 </map>

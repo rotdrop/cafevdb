@@ -31,7 +31,6 @@ var dir_bdb67f317cde52bd786341338dd4486f =
     [ "Musician.php", "_musician_8php_source.html", null ],
     [ "MusicianEmailAddress.php", "_musician_email_address_8php_source.html", null ],
     [ "MusicianInstrument.php", "_musician_instrument_8php_source.html", null ],
-    [ "MusicianPhoto.php", "_musician_photo_8php_source.html", null ],
     [ "MusicianRowAccessToken.php", "_musician_row_access_token_8php_source.html", null ],
     [ "Project.php", "_project_8php_source.html", null ],
     [ "ProjectEvent.php", "_database_2_doctrine_2_o_r_m_2_entities_2_project_event_8php_source.html", null ],
@@ -50,6 +49,7 @@ var dir_bdb67f317cde52bd786341338dd4486f =
     [ "SepaDebitMandate.php", "_sepa_debit_mandate_8php_source.html", null ],
     [ "SepaDebitNote.php", "_sepa_debit_note_8php_source.html", null ],
     [ "TableFieldTranslation.php", "_table_field_translation_8php_source.html", null ],
+    [ "TaxExemptionNotice.php", "_tax_exemption_notice_8php_source.html", null ],
     [ "Translation.php", "_translation_8php_source.html", null ],
     [ "TranslationKey.php", "_translation_key_8php_source.html", null ],
     [ "TranslationLocation.php", "_translation_location_8php_source.html", null ]

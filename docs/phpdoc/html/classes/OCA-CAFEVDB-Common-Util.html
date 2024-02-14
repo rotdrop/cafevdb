@@ -232,6 +232,14 @@ or underscores between the words. First letter may or may not
 be upper case.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Common-Util.html#method_cloneArray">cloneArray()</a>
+    <span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Semi deep clone of an array: entries which are objects will be cloned,
+entries which are arrays will be recursed into by this function.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a>
     <span>
                                 &nbsp;: null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
@@ -860,6 +868,60 @@ be upper case.</p>
             -public
                                     -static                    "
 >
+    <h4 class="phpdocumentor-element__name" id="method_cloneArray">
+        cloneArray()
+        <a href="classes/OCA-CAFEVDB-Common-Util.html#method_cloneArray" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">702</span>
+
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.702" class="phpdocumentor-element-found-in__source" data-line="702" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Semi deep clone of an array: entries which are objects will be cloned,
+entries which are arrays will be recursed into by this function.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">cloneArray</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$array</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$array</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>To be cloned array.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The cloned event.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
     <h4 class="phpdocumentor-element__name" id="method_convertToDateTime">
         convertToDateTime()
         <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1057,9 +1119,9 @@ camel-case.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">709</span>
+    <span class="phpdocumentor-element-found-in__line">730</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.709" class="phpdocumentor-element-found-in__source" data-line="709" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.730" class="phpdocumentor-element-found-in__source" data-line="730" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Quick and dirty convenience function which combines
@@ -1532,9 +1594,9 @@ into an array of the shape
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">789</span>
+    <span class="phpdocumentor-element-found-in__line">810</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.789" class="phpdocumentor-element-found-in__source" data-line="789" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.810" class="phpdocumentor-element-found-in__source" data-line="810" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Decode an file-upload error into some &quot;readable&quot; error string.</p>
@@ -2272,9 +2334,9 @@ be shortened. This also means that the target-length may not be reached.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Common/Util.php"><a href="files/common-util.html"><abbr title="Common/Util.php">Util.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">766</span>
+    <span class="phpdocumentor-element-found-in__line">787</span>
 
-            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.766" class="phpdocumentor-element-found-in__source" data-line="766" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Common-Util.html#source-view.787" class="phpdocumentor-element-found-in__source" data-line="787" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Turn a php $_FILES array of the form
@@ -2633,6 +2695,7 @@ integer.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Common-Util.html#method_arrayMergeRecursive">arrayMergeRecursive()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Common-Util.html#method_arraySliceKeys">arraySliceKeys()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Common-Util.html#method_camelCaseToDashes">camelCaseToDashes()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Common-Util.html#method_cloneArray">cloneArray()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Common-Util.html#method_dashesToCamelCase">dashesToCamelCase()</a></li>

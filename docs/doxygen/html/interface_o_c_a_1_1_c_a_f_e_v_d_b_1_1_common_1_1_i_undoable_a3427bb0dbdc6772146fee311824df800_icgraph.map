@@ -1,0 +1,5 @@
+<map id="initialize" name="initialize">
+<area shape="rect" id="Node000001" title="Lazy initialization in order to have a more lightweight constructor for the actions and to inject the..." alt="" coords="243,13,311,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_run_queue.html#a8f2fab6f7f3b6f99c2b8d4d801a7b971" title="Register the given action in the run&#45;queue." alt="" coords="5,5,195,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="227,29,195,29,195,24,227,24"/>
+</map>

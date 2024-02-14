@@ -1,5 +1,7 @@
 <map id="validate" name="validate">
-<area shape="rect" id="node1" title="{{bool Return \true if the entity is ok to the judgement of this sanitizer, \false otherwise...." alt="" coords="5,52,72,77"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#ad60c68165a8e9716714c651edc2dd159" title=" " alt="" coords="120,5,317,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#a6cfd3fa108b089d483f43cf4142d9e68" title=" " alt="" coords="169,84,268,109"/>
+<area shape="rect" id="Node000001" title="{{bool Return \true if the entity is ok to the judgement of this sanitizer, \false otherwise...." alt="" coords="5,55,72,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_abstract_sanitizer.html#ad60c68165a8e9716714c651edc2dd159" title=" " alt="" coords="120,5,316,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,59,104,53,105,58,73,65"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#a6cfd3fa108b089d483f43cf4142d9e68" title=" " alt="" coords="169,88,267,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,71,154,87,153,92,72,77"/>
 </map>

@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_user_storage.html" title="Some tweaks to for the user&#45;folder stuff." alt="" coords="5,5,100,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,92,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html" title="DBAL logger implementation which logs to the cloud log." alt="" coords="140,5,234,32"/>
+<area shape="poly" id="edge455_Node000000_Node000001" title=" " alt="" coords="107,16,139,16,139,21,107,21"/>
 </map>

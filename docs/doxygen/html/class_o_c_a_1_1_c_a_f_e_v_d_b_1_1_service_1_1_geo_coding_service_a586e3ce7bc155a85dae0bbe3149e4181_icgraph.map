@@ -1,5 +1,8 @@
 <map id="debug" name="debug">
-<area shape="rect" id="node1" title="Issue a debug message." alt="" coords="144,31,201,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#a13c667bf5fd906e644b8100ce9a39a36" title="{}" alt="" coords="5,5,96,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#a87a5fd15c7f6e49e644d23142b01a40f" title="Recurse to the backend and place one single request." alt="" coords="18,55,83,80"/>
+<area shape="rect" id="Node000001" title="Issue a debug message." alt="" coords="143,31,199,57"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="190,17,184,12,171,9,159,11,152,16,151,22,154,29,149,31,146,22,148,13,157,6,171,4,186,7,194,13"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#ae336ff85cdf42a37302f84ea0b7c79e8" title="{}" alt="" coords="5,5,95,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,38,95,31,96,25,128,32"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_geo_coding_service.html#a87a5fd15c7f6e49e644d23142b01a40f" title="Recurse to the backend and place one single request." alt="" coords="18,56,82,83"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="128,56,83,65,82,60,127,50"/>
 </map>

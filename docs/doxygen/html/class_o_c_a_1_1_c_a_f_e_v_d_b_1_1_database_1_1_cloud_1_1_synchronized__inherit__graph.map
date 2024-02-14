@@ -1,5 +1,7 @@
 <map id="Synchronized" name="Synchronized">
-<area shape="rect" id="node1" title="A synchronized is a tuple of an entity and a mapper which writes all data straight through to the dat..." alt="" coords="50,79,151,104"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized_1_1_synchronized_progress_status.html" title=" " alt="" coords="5,152,196,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="59,5,143,31"/>
+<area shape="rect" id="Node000001" title="A synchronized is a tuple of an entity and a mapper which writes all data straight through to the dat..." alt="" coords="50,80,151,107"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized_1_1_synchronized_progress_status.html" title=" " alt="" coords="5,155,196,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="103,122,103,154,98,154,98,122"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="59,5,142,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,48,103,80,98,80,98,48"/>
 </map>

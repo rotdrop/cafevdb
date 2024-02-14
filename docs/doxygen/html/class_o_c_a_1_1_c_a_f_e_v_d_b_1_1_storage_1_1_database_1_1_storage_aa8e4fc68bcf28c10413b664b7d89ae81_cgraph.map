@@ -1,4 +1,5 @@
 <map id="pathInfo" name="pathInfo">
-<area shape="rect" id="node1" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="5,5,75,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="123,5,289,31"/>
+<area shape="rect" id="Node000001" title="Slightly modified pathinfo() function which also normalized directories before computing the componen..." alt="" coords="5,5,74,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_storage.html#ac5c1b62ecc9eb2ebe08f1e8c7ee2b283" title="Attach self::PATH_SEPARATOR to the dirname if it is not the root directory." alt="" coords="122,5,287,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,16,106,16,106,21,74,21"/>
 </map>

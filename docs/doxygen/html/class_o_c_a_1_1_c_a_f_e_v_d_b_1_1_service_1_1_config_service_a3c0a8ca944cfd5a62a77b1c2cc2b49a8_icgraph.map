@@ -1,4 +1,43 @@
 <map id="getCloudConfig" name="getCloudConfig">
-<area shape="rect" id="node1" title=" " alt="" coords="155,5,267,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaa19b71fc606d80d93ed6fe8af77e82f" title=" " alt="" coords="5,5,107,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="737,181,848,208"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a40b0e6098c85e4fe46be90feb5346f23" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="577,5,689,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="776,169,740,108,716,75,687,46,670,35,673,30,690,42,720,72,745,105,781,166"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaa19b71fc606d80d93ed6fe8af77e82f" title=" " alt="" coords="583,56,683,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="768,172,732,134,687,97,667,85,670,81,690,92,736,130,772,168"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aaad6d13926282013d0965a2f6ab3df85" title=" " alt="" coords="587,131,679,157"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="733,179,677,160,678,155,734,173"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="586,181,680,208"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="721,197,681,197,681,192,721,192"/>
+<area shape="rect" id="Node000018" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7edad4866aa3ca9b33d80a94bbca867f" title=" " alt="" coords="583,232,683,259"/>
+<area shape="poly" id="edge19_Node000001_Node000018" title=" " alt="" coords="734,216,678,234,677,229,733,211"/>
+<area shape="rect" id="Node000019" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aba9675645d9c7c98621786975efc0dc4" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="586,283,680,309"/>
+<area shape="poly" id="edge20_Node000001_Node000019" title=" " alt="" coords="764,220,690,273,668,284,666,280,687,268,761,216"/>
+<area shape="rect" id="Node000020" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ab47d7f5da92d211bb6c3a02d2cc5ca07" title=" " alt="" coords="583,333,683,360"/>
+<area shape="poly" id="edge21_Node000001_Node000020" title=" " alt="" coords="777,223,741,273,717,299,690,323,672,335,669,331,687,319,713,296,737,269,773,220"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4a5f07c964bfd3ef94b8dc177ef2538a" title="Delete the value for the given key." alt="" coords="396,5,522,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="562,21,522,21,522,16,562,16"/>
+<area shape="poly" id="edge7_Node000005_Node000005" title=" " alt="" coords="660,118,650,112,633,109,617,111,608,116,606,121,610,129,605,131,601,122,604,112,615,106,633,104,652,107,663,113"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#acfd177d26300298d7c2758fe04ee615b" title="Fetch all config values and decrypt them." alt="" coords="388,80,529,107"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="572,129,506,110,508,105,573,124"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a241ca6802fbc0627ec7c9baee0d3fc35" title="Flush all configuration values to the database, possibly encrypting them.T his is only meant for use ..." alt="" coords="388,131,529,157"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="572,147,529,147,529,141,572,141"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a80ff7d4e6101b55bc46ce120b838b98d" title=" " alt="" coords="416,181,501,208"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="570,197,502,197,502,192,570,192"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2218693785fc68082d77740cc716623" title=" " alt="" coords="230,105,305,132"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="401,178,387,172,339,146,304,133,306,128,341,142,389,167,403,173"/>
+<area shape="rect" id="Node000014" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#aa2b39aa8d6ef6b2cf9db10c10954687b" title="Return the id of the dedicated admin&#45;group which contains all sub&#45;admins." alt="" coords="195,156,340,183"/>
+<area shape="poly" id="edge14_Node000009_Node000014" title=" " alt="" coords="400,190,340,182,341,176,401,184"/>
+<area shape="rect" id="Node000016" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a91b3e30d8e8967102637db98afc8ce42" title=" " alt="" coords="222,207,313,233"/>
+<area shape="poly" id="edge17_Node000009_Node000016" title=" " alt="" coords="401,205,313,217,313,211,400,200"/>
+<area shape="rect" id="Node000017" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a5b0f9418642a2dfbcfde1475c7d10c9d" title=" " alt="" coords="234,257,301,284"/>
+<area shape="poly" id="edge18_Node000009_Node000017" title=" " alt="" coords="414,217,341,248,302,262,300,257,339,243,412,212"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#adeb37b77de6c78ae8303acd786f08ebf" title="Return all the sub&#45;admins of the given or the configured orchestra group." alt="" coords="5,55,147,81"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="214,108,129,85,130,79,216,102"/>
+<area shape="rect" id="Node000012" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8c408b160c3fecad5096a23d49209fa6" title="Return the dedicated admin&#45;group if it exists." alt="" coords="9,156,143,183"/>
+<area shape="poly" id="edge12_Node000010_Node000012" title=" " alt="" coords="216,135,130,158,129,153,214,130"/>
+<area shape="rect" id="Node000013" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a4eb4832e8e3774063978db6e58d29edc" title=" " alt="" coords="6,105,146,132"/>
+<area shape="poly" id="edge13_Node000010_Node000013" title=" " alt="" coords="214,121,147,121,147,116,214,116"/>
+<area shape="poly" id="edge15_Node000014_Node000012" title=" " alt="" coords="179,172,143,172,143,167,179,167"/>
+<area shape="rect" id="Node000015" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ac4ad7078760328d6a49ad2ddb251b8fb" title="Check if the currently logged in or given user&#45;id belongs to the dedicated sub&#45;admin group." alt="" coords="13,207,139,233"/>
+<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="200,190,130,209,129,203,199,185"/>
 </map>

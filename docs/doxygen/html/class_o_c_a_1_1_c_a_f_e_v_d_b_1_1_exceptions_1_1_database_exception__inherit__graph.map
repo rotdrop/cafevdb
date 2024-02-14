@@ -1,13 +1,23 @@
 <map id="DatabaseException" name="DatabaseException">
-<area shape="rect" id="node1" title="Base&#45;class for database exceptions." alt="" coords="289,206,425,231"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html" title="Thrown during generation of the cloud&#45;user connector views." alt="" coords="489,5,690,45"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_found_exception.html" title="Thrown if an entity could not be found." alt="" coords="476,70,703,95"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_unique_exception.html" title="Thrown if more than one entity is found when there should be only one." alt="" coords="473,119,705,145"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_inconsistent_value_exception.html" title="Thrown if inconsistencies are detected." alt="" coords="499,169,680,209"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html" title="Thrown if a field has an incompatible type for the operation." alt="" coords="488,234,691,259"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html" title="Thrown during database migrations." alt="" coords="495,283,684,309"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html" title="Thrown when trying to mute data which should not be muted." alt="" coords="494,333,685,358"/>
-<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html" title="Thrown when trying to fiddle with an active transaction but there is none." alt="" coords="487,383,691,423"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="161,206,241,231"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,206,113,231"/>
+<area shape="rect" id="Node000001" title="Base&#45;class for database exceptions." alt="" coords="288,211,423,237"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_cloud_connector_view_exception.html" title="Thrown during generation of the cloud&#45;user connector views." alt="" coords="487,5,687,48"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="367,195,406,126,435,89,470,58,490,46,492,51,473,62,439,93,410,129,371,198"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_found_exception.html" title="Thrown if an entity could not be found." alt="" coords="474,72,700,99"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="374,197,414,151,441,128,470,108,497,97,499,102,473,113,444,132,418,155,378,200"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_entity_not_unique_exception.html" title="Thrown if more than one entity is found when there should be only one." alt="" coords="471,123,703,149"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="389,200,427,178,470,159,508,147,509,153,472,164,430,183,392,205"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_inconsistent_value_exception.html" title="Thrown if inconsistencies are detected." alt="" coords="497,173,677,216"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="438,211,496,203,497,209,439,216"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_invalid_field_exception.html" title="Thrown if a field has an incompatible type for the operation." alt="" coords="486,240,688,267"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="439,232,486,238,485,243,438,237"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_migration_exception.html" title="Thrown during database migrations." alt="" coords="493,291,681,317"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="396,242,472,276,512,288,510,293,470,281,394,247"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_readonly_exception.html" title="Thrown when trying to mute data which should not be muted." alt="" coords="492,341,682,368"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="379,247,420,289,445,310,473,327,501,338,499,343,470,332,442,314,416,293,375,251"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_transaction_not_active_exception.html" title="Thrown when trying to fiddle with an active transaction but there is none." alt="" coords="485,392,689,435"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="372,250,412,315,440,349,473,378,493,389,490,394,470,382,436,353,407,318,368,253"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="161,211,240,237"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,221,288,221,288,227,256,227"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,211,113,237"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,221,160,221,160,227,128,227"/>
 </map>

@@ -1,0 +1,11 @@
+<map id="TaxExemptionNotice" name="TaxExemptionNotice">
+<area shape="rect" id="Node000001" title="Record notices of tax exemption from the corporate income tax (or other taxes)." alt="" coords="172,96,315,123"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,122,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,37,219,93,217,98,102,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="146,5,242,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,44,239,94,234,97,206,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="266,5,322,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="282,47,253,97,248,94,277,44"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="347,5,476,32"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="385,44,337,74,282,98,280,93,334,70,382,39"/>
+</map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,23 +56,13 @@ class InstrumentInsuranceService
   /** @var Repositories\InstrumentInsurancesRepository */
   private $insurancesRepository;
 
-  /** @var OrganizationalRolesService */
-  private $orgaRolesService;
-
-  /** @var OpenDocumentFiller */
-  private $documentFiller;
-
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    EntityManager $entityManager,
-    OrganizationalRolesService $orgaRolesService,
-    OpenDocumentFiller $documentFiller,
+    protected ConfigService $configService,
+    protected EntityManager $entityManager,
+    private OrganizationalRolesService $orgaRolesService,
+    private OpenDocumentFiller $documentFiller,
   ) {
-    $this->configService = $configService;
-    $this->entityManager = $entityManager;
-    $this->orgaRolesService = $orgaRolesService;
-    $this->documentFiller = $documentFiller;
     $this->l = $this->l10n();
     $this->insurancesRepository = $this->getDatabaseRepository(self::ENTITY);
   }

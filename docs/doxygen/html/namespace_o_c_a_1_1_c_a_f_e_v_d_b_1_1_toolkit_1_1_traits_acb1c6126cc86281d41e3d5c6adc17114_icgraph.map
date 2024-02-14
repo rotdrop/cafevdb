@@ -1,4 +1,5 @@
 <map id="getAuthCookie" name="getAuthCookie">
-<area shape="rect" id="node1" title="Get or generate a cookie, e.g." alt="" coords="156,5,264,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#aaa8017e1895f612bf3c22f75f20705d0" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="5,5,108,31"/>
+<area shape="rect" id="Node000001" title="Get or generate a cookie, e.g." alt="" coords="155,5,262,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#aaa8017e1895f612bf3c22f75f20705d0" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="5,5,107,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,21,107,21,107,16,139,16"/>
 </map>

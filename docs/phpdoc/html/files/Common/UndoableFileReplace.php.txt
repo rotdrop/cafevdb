@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,18 +39,6 @@ use OCA\CAFEVDB\Storage\UserStorage;
  */
 class UndoableFileReplace extends AbstractFileSystemUndoable
 {
-  /** @var string|callable */
-  protected $name;
-
-  /** @var string */
-  protected $content;
-
-  /** @var string */
-  protected $oldName;
-
-  /** @var bool */
-  protected $gracefully;
-
   /** @var bool */
   protected $restoreOldName;
 
@@ -61,20 +49,20 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
   protected $doneInterval;
 
   /**
-   * @param string|callable $name The name of the new file.
+   * @param string|Closure $name The name of the new file.
    *
    * @param string $content The content to place into the file system with name $name.
    *
-   * @param null|string|callable $oldName A name of an old file to replace.
+   * @param null|string|Closure $oldName A name of an old file to replace.
    *
    * @param bool $gracefully
    */
-  public function __construct(mixed $name, string $content, mixed $oldName = null, bool $gracefully = false)
-  {
-    $this->name = $name;
-    $this->content = $content;
-    $this->oldName = $oldName;
-    $this->gracefully = $gracefully;
+  public function __construct(
+    protected string|Closure $name,
+    protected string $content,
+    protected null|string|Closure $oldName = null,
+    protected bool $gracefully = false,
+  ) {
     $this->reset();
   }
 
@@ -88,12 +76,12 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
   public function do():void
   {
     $startTime = $this->timeFactory->getTime();
-    if (is_callable($this->name)) {
+    if ($this->name instanceof Closure) {
       $this->name = call_user_func($this->name);
     }
     $this->name = self::normalizePath($this->name);
     if ($this->oldName) {
-      if (is_callable($this->oldName)) {
+      if ($this->oldName instanceof Closure) {
         $this->oldName = call_user_func($this->oldName);
       }
       $this->oldName = self::normalizePath($this->oldName);

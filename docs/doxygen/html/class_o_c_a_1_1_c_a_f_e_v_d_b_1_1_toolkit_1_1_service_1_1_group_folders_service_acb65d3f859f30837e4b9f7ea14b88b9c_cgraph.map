@@ -1,7 +1,13 @@
 <map id="fetchFolders" name="fetchFolders">
-<area shape="rect" id="node1" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="5,45,100,70"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="148,37,309,77"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="357,37,519,77"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="567,5,728,45"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="567,69,728,109"/>
+<area shape="rect" id="Node000001" title="Fetch and cache all shared folders from the groupfolders app." alt="" coords="5,35,99,61"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_group_folders_service.html#a0287649d77801b440d6e9055c775b283" title=" " alt="" coords="147,5,307,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,38,131,32,132,37,99,43"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a4d87f4e47d18fb535d235414c357f821" title="Log a debug message." alt="" coords="147,56,307,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="99,53,132,59,131,64,99,58"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="355,56,515,99"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="307,75,339,75,339,80,307,80"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="563,23,724,65"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="515,62,547,57,548,62,516,67"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="563,89,724,132"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="516,87,548,93,547,98,515,93"/>
 </map>

@@ -1,6 +1,10 @@
 <map id="render" name="render">
-<area shape="rect" id="node1" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,69,64,94"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="127,29,303,69"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="112,93,319,133"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="367,29,565,69"/>
+<area shape="rect" id="Node000001" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,71,63,97"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a3ad8a4109147715b8c5573d1dbdb2d3d" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="126,29,301,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,76,110,67,111,72,64,81"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#aa55b0bcba8682486d2ad67ca15019ab5" title="Run underlying table&#45;manager (phpMyEdit for now)." alt="" coords="111,96,316,139"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="64,87,96,93,95,98,63,92"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="364,29,561,72"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="302,48,348,48,348,53,302,53"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="416,29,414,19,422,10,438,5,463,3,489,5,505,11,503,16,488,10,463,8,439,10,425,15,419,21,421,28"/>
 </map>

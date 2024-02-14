@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service;
 
+use Throwable;
 use Exception;
 use DateTimeImmutable;
 
@@ -39,10 +40,11 @@ use OCP\IAddressBook;
 use OCP\Constants;
 use OCP\Image;
 use OCP\IL10N;
+use OCP\IAvatarManager;
+use OCP\IAvatar;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Musician;
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\Util;
 
@@ -54,23 +56,16 @@ class ContactsService
 
   const VCARD_VERSION = '4.0';
 
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var IContactsManager */
-  private $contactsManager;
+  const AVATAR_SIZE = 256;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    IContactsManager $contactsManager,
-    IAppContainer $appContainer,
-    EntityManager $entityManager,
+    protected ConfigService $configService,
+    private IContactsManager $contactsManager,
+    private IAvatarManager $avatarManager,
+    private IAppContainer $appContainer,
+    protected EntityManager $entityManager,
   ) {
-    $this->configService = $configService;
-    $this->contactsManager = $contactsManager;
-    $this->appContainer = $appContainer;
-    $this->entityManager = $entityManager;
     $this->l = $this->configService->getAppL10n();
   }
   // phpcs:enable
@@ -307,7 +302,7 @@ class ContactsService
   public function importCardData(array $cardData, bool $preferWork = true):?Entities\Musician
   {
     // $version = $cardData['VERSION'];
-    $entity = new Musician();
+    $entity = new Entities\Musician();
     if (!empty($cardData['N'])) {
         // we honour only surname and prename, and give a damn in
         // particular on title madness.
@@ -394,20 +389,20 @@ class ContactsService
         $address = explode(';', $address);
 
         $poBox = $address[0]; // or so it seems ...
-        $this->logInfo('POBOX ' . $poBox);
+        // $this->logInfo('POBOX ' . $poBox);
         $entity['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
         // if the first word or the last word of the street start with a
         // digit, then we treat it as the street-number. This should hack most
         // of the cases for _us_ ...
-        $this->logInfo('STREET IS ' . $street);
+        // $this->logInfo('STREET IS "' . $street . '"');
         $lastWord = substr($street, strrpos($street, ' ') + 1);
         $firstWord = substr($street, 0, strpos($street, ' '));
-        $this->logInfo('LAST FIRST' . $lastWord . ' / ' . $firstWord);
-        if (ctype_digit($lastWord[0])) {
+        // $this->logInfo('LAST FIRST' . $lastWord . ' / ' . $firstWord);
+        if (!empty($lastWord) && ctype_digit($lastWord[0])) {
           $streetNumber = $lastWord;
           $street = substr($street, 0, -strlen($lastWord)-1);
-        } elseif (ctype_digit($firstWord[0])) {
+        } elseif (!empty($firstWord) && ctype_digit($firstWord[0])) {
           $streetNumber = $firstWord;
           $street = substr($street, strlen($firstWord) + 1);
         } else {
@@ -488,7 +483,7 @@ class ContactsService
       // fetch the image data, we only support data-uri ATM
       if (preg_match('|^(VALUE=uri:)?data:(image/[^;]+);base64\\\?,|', $value, $matches)) {
         // $mimeType = $matches[1];
-        $imageData = base64_decode(substr($entity['photo'], strlen($matches[0])));
+        $imageData = base64_decode(substr($value, strlen($matches[0])));
         $havePhoto = true;
       } elseif (str_starts_with($value, 'VALUE=uri:')) {
         $url = substr($value, strlen('VALUE=uri:'));
@@ -498,7 +493,8 @@ class ContactsService
         $havePhoto = true;
       }
 
-      if ($havePhoto) {
+      if (false && $havePhoto) {
+        // @todo Perhaps import as cloud avatar image, keep the code until this is decided.
         $image = new Image;
         $image->loadFromData($imageData);
 
@@ -516,7 +512,7 @@ class ContactsService
   /**
    * Export the stored data for one musician as vCard.
    *
-   * @param Musician $musician One row from the musician table.
+   * @param Entities\Musician $musician One row from the musician table.
    *
    * @param string $version vCard version -- which must be one
    * supported by \\Sabre\\VObject. Defaults to 3.0 for compatibility
@@ -525,7 +521,7 @@ class ContactsService
    *
    * @return VCard
    */
-  public function export(Musician $musician, string $version = self::VCARD_VERSION):?VCard
+  public function export(Entities\Musician $musician, string $version = self::VCARD_VERSION):?VCard
   {
     $textProperties = array('FN', 'N', 'CATEGORIES', 'ADR', 'NOTE');
     $uuid = (string)(isset($musician['uuid']) ? $musician['uuid'] : $this->generateUUID());
@@ -567,7 +563,7 @@ class ContactsService
       $vcard->add('BDAY', $birthDay);
     }
     if (!empty($musician['updated'])) {
-      $vcard->add('REV', (Util::dateTime($musician['updated']))->format(\DateTime::W3C));
+      $vcard->add('REV', gmdate('Ymd\THis\Z', Util::dateTime($musician['updated'])->getTimestamp()));
     }
     $countryNames = $this->geoCodingService()->countryNames('en');
     if (!isset($countryNames[$musician['country']])) {
@@ -588,33 +584,21 @@ class ContactsService
       ],
       [ 'TYPE' => 'home' ]);
 
-    $photo = null;
-    if (!empty($musician['photo'])) {
-      if ($musician['photo'] instanceof Entities\MusicianPhoto) {
-        $image = $musician['photo']->getImage(); //  ['image'];
-        $photo = [
-          'data' => $image->getFileData()->getData('base64'),
-          'mimeType' => $image->getMimeType(), //['mimeType'],
-        ];
-
-      } elseif (is_string($musician['photo'])
-                 && preg_match('|^data:(image/[^;]+);base64\\\?,|', $musician['photo'], $matches)) {
-        // data uri
-        $mimeType = $matches[1];
-        $imageData = substr($musician['photo'], strlen($matches[0]));
-        $photo = [
-          'mimeType' => $mimeType,
-          'data' => $imageData,
-        ];
-      } else {
-        throw new Exception('Strange photo value');
+    if (!$musician->getCloudAccountDeactivated()) {
+      /** @var IAvatar $avatar */
+      try {
+        $avatar = $this->avatarManager->getAvatar($musician->getUserIdSlug());
+      } catch (Throwable $t) {
+        $avatar = null;
       }
 
-      if (!empty($photo['data'])) {
-        $mimeType = $photo['mimeType'];
-        $data = $photo['data'];
+      if ($avatar) {
+        /** @var \OCP\IImage $image */
+        $image = $avatar->get(self::AVATAR_SIZE);
+        $mimeType = $image->mimeType();
+        $data = $image->data();
         if ($version == '4.0') {
-          $vcard->add('PHOTO', 'data:'.$mimeType.';base64,'.$data);
+          $vcard->add('PHOTO', 'data:' . $mimeType . ';base64,' . base64_encode($data));
         } else {
           $type = Util::explode('/', $mimeType);
           $type = strtoupper(array_pop($type));

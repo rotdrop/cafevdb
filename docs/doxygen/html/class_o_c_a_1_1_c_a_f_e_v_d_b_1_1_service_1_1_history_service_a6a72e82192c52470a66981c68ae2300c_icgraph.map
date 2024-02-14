@@ -1,5 +1,7 @@
 <map id="validateRecords" name="validateRecords">
-<area shape="rect" id="node1" title="Validate all history records." alt="" coords="215,5,331,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#a209c2a40ceaef87a5f2e66954aeefc19" title="Validate the given history records, return false on error." alt="" coords="100,5,167,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#a4dcaa8f72c8423d4de25a9e87fa6f3e4" title="Load the history state." alt="" coords="5,5,52,31"/>
+<area shape="rect" id="Node000001" title="Validate all history records." alt="" coords="213,5,328,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#a209c2a40ceaef87a5f2e66954aeefc19" title="Validate the given history records, return false on error." alt="" coords="99,5,165,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,21,165,21,165,16,197,16"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_history_service.html#a4dcaa8f72c8423d4de25a9e87fa6f3e4" title="Load the history state." alt="" coords="5,5,51,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,21,51,21,51,16,83,16"/>
 </map>

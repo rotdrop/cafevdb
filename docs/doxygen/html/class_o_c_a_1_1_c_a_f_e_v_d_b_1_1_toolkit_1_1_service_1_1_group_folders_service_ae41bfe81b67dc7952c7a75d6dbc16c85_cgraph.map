@@ -1,4 +1,5 @@
 <map id="changeMountPoint" name="changeMountPoint">
-<area shape="rect" id="node1" title="Change the given group&#45;shared folder – given by its old mount&#45;point – to a new mount&#45;point." alt="" coords="5,13,136,38"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="184,5,345,45"/>
+<area shape="rect" id="Node000001" title="Change the given group&#45;shared folder – given by its old mount&#45;point – to a new mount&#45;point." alt="" coords="5,13,135,40"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="183,5,343,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,24,167,24,167,29,135,29"/>
 </map>

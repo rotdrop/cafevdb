@@ -1,6 +1,9 @@
 <map id="CannotDecryptException" name="CannotDecryptException">
-<area shape="rect" id="node1" title=" " alt="" coords="5,225,173,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html" title="Base class for other exceptions." alt="" coords="18,152,161,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="49,79,129,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="35,5,143,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,229,173,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_encryption_exception.html" title="Base class for other exceptions." alt="" coords="18,155,160,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,197,92,229,86,229,86,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="49,80,129,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,122,92,154,86,154,86,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="35,5,143,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="92,48,92,80,86,80,86,48"/>
 </map>

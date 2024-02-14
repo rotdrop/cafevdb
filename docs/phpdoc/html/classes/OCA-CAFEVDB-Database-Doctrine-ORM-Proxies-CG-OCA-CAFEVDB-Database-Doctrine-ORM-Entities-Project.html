@@ -167,6 +167,19 @@
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#constant_DATE_FORMAT">DATE_FORMAT</a>
+    <span>
+        &nbsp;= &#039;Ymd&#039;                            </span>
+</dt>
+
+    </dl>
 
 
 <h4 id="toc-properties">
@@ -287,6 +300,18 @@
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_payments">$payments</a>
     <span>
                         &nbsp;: mixed            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationDeadline">$registrationDeadline</a>
+    <span>
+                        &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationStartDate">$registrationStartDate</a>
+    <span>
+                        &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -418,10 +443,31 @@
 <dd>{@inheritDoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a>
+    <span>
+                                &nbsp;: null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Set</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
+</dt>
+<dd>Ensure a valid date.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getCalendarEvents">getCalendarEvents()</a>
@@ -535,6 +581,20 @@ an empty collection if there is no such folder.</dd>
                                 &nbsp;: <abbr title="\OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection">Collection</abbr>    </span>
 </dt>
 <dd>Get payments.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationDeadline">getRegistrationDeadline()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Returns registrationDeadline.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationStartDate">getRegistrationStartDate()</a>
+    <span>
+                                &nbsp;: <abbr title="\DateTimeImmutable">DateTimeImmutable</abbr>    </span>
+</dt>
+<dd>Returns registrationStartDate.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getSentEmail">getSentEmail()</a>
@@ -726,6 +786,20 @@ an empty collection if there is no such folder.</dd>
 <dd>Set payments.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationDeadline">setRegistrationDeadline()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>    </span>
+</dt>
+<dd>Sets registrationDeadline.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationStartDate">setRegistrationStartDate()</a>
+    <span>
+                                &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>    </span>
+</dt>
+<dd>Sets registrationStartDate.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setSentEmail">setSentEmail()</a>
     <span>
                                 &nbsp;: <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a>    </span>
@@ -816,6 +890,42 @@ automatically called on post-load if the entity used lifecycle-callbacks.</dd>
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_DATE_FORMAT">
+        DATE_FORMAT
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#constant_DATE_FORMAT" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">60</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">DATE_FORMAT</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;Ymd&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+            </section>
 
         
     <section class="phpdocumentor-properties">
@@ -1133,9 +1243,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">148</span>
+    <span class="phpdocumentor-element-found-in__line">173</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.173" class="phpdocumentor-element-found-in__source" data-line="173" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1183,9 +1293,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">133</span>
+    <span class="phpdocumentor-element-found-in__line">158</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.158" class="phpdocumentor-element-found-in__source" data-line="158" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1233,9 +1343,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">162</span>
+    <span class="phpdocumentor-element-found-in__line">187</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.187" class="phpdocumentor-element-found-in__source" data-line="187" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1283,9 +1393,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">69</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1349,9 +1459,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">125</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.125" class="phpdocumentor-element-found-in__source" data-line="125" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1433,9 +1543,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">99</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.99" class="phpdocumentor-element-found-in__source" data-line="99" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1485,9 +1595,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">79</span>
+    <span class="phpdocumentor-element-found-in__line">83</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.79" class="phpdocumentor-element-found-in__source" data-line="79" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1535,9 +1645,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">113</span>
+    <span class="phpdocumentor-element-found-in__line">138</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1603,9 +1713,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">143</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.118" class="phpdocumentor-element-found-in__source" data-line="118" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1653,9 +1763,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">143</span>
+    <span class="phpdocumentor-element-found-in__line">168</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.143" class="phpdocumentor-element-found-in__source" data-line="143" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.168" class="phpdocumentor-element-found-in__source" data-line="168" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1703,9 +1813,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">123</span>
+    <span class="phpdocumentor-element-found-in__line">148</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.123" class="phpdocumentor-element-found-in__source" data-line="123" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1729,7 +1839,7 @@ initialization process and an array of ordered parameters that were passed to th
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>(targetEntity=&quot;ProjectParticipant&quot;, mappedBy=&quot;project&quot;)</p>
+                                                 <section class="phpdocumentor-description"><p>(targetEntity=&quot;ProjectParticipant&quot;, mappedBy=&quot;project&quot;, index_by=&quot;musician_id&quot;)</p>
 </section>
 
                                     </dd>
@@ -1753,9 +1863,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">138</span>
+    <span class="phpdocumentor-element-found-in__line">163</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1793,6 +1903,113 @@ initialization process and an array of ordered parameters that were passed to th
             -private
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="property_registrationDeadline">
+        $registrationDeadline
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationDeadline" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">120</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.120" class="phpdocumentor-element-found-in__source" data-line="120" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+    <span class="phpdocumentor-signature__name">$registrationDeadline</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>Optional registration deadline. If null then the date one day before the
+first rehearsal is used, if set. Otherwise no registration dead-line is
+imposed.</p>
+</section>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationDeadline#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\Column</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;date_immutable&quot;, nullable=true)</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_registrationStartDate">
+        $registrationStartDate
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationStartDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">109</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.109" class="phpdocumentor-element-found-in__source" data-line="109" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+    <span class="phpdocumentor-signature__name">$registrationStartDate</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>Optional registration start date. If not set then the online registration
+is NOT available.</p>
+</section>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationStartDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">ORM\Column</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(type=&quot;date_immutable&quot;, nullable=true)</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="property_sentEmail">
         $sentEmail
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_sentEmail" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1803,9 +2020,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">155</span>
+    <span class="phpdocumentor-element-found-in__line">180</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.155" class="phpdocumentor-element-found-in__source" data-line="155" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.180" class="phpdocumentor-element-found-in__source" data-line="180" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1853,9 +2070,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">128</span>
+    <span class="phpdocumentor-element-found-in__line">153</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.128" class="phpdocumentor-element-found-in__source" data-line="128" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.153" class="phpdocumentor-element-found-in__source" data-line="153" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1903,9 +2120,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1953,9 +2170,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">131</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.131" class="phpdocumentor-element-found-in__source" data-line="131" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2012,9 +2229,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Entities/Project.php"><a href="files/database-doctrine-orm-entities-project.html"><abbr title="Database/Doctrine/ORM/Entities/Project.php">Project.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.76" class="phpdocumentor-element-found-in__source" data-line="76" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2624,9 +2841,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">597</span>
+    <span class="phpdocumentor-element-found-in__line">641</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.597" class="phpdocumentor-element-found-in__source" data-line="597" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.641" class="phpdocumentor-element-found-in__source" data-line="641" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -2686,6 +2903,123 @@ initialization process and an array of ordered parameters that were passed to th
             -public
                                     -static                    "
 >
+    <h4 class="phpdocumentor-element__name" id="method_convertToDateTime">
+        convertToDateTime()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">53</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Set</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToDateTime</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|int|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$dateTime</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|<abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_convertToTimezoneDate">
+        convertToTimezoneDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">90</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Reinterprete the date portion of a \DateTimeInterface object at time 00:00:00 in another time-zone.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">convertToTimezoneDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$timeZone</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$date</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$timeZone</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\DateTimeZone">DateTimeZone</abbr></span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">todo</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Rework time-zone stuff.</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
     <h4 class="phpdocumentor-element__name" id="method_create">
         create()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2720,6 +3054,53 @@ initialization process and an array of ordered parameters that were passed to th
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_ensureDate">
+        ensureDate()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/DateTimeTrait.php"><a href="files/toolkit-traits-datetimetrait.html"><abbr title="Toolkit/Traits/DateTimeTrait.php">DateTimeTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">41</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Ensure a valid date.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">ensureDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dateTime</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$dateTime</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|<abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeInterface">DateTimeInterface</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_getCalendarEvents">
@@ -2730,9 +3111,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">575</span>
+    <span class="phpdocumentor-element-found-in__line">619</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.575" class="phpdocumentor-element-found-in__source" data-line="575" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.619" class="phpdocumentor-element-found-in__source" data-line="619" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get calendarEvents.</p>
@@ -2767,9 +3148,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">465</span>
+    <span class="phpdocumentor-element-found-in__line">509</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.465" class="phpdocumentor-element-found-in__source" data-line="465" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.509" class="phpdocumentor-element-found-in__source" data-line="509" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get compositePayments.</p>
@@ -2804,9 +3185,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">674</span>
+    <span class="phpdocumentor-element-found-in__line">718</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.674" class="phpdocumentor-element-found-in__source" data-line="674" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.718" class="phpdocumentor-element-found-in__source" data-line="718" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2837,9 +3218,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">718</span>
+    <span class="phpdocumentor-element-found-in__line">762</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.718" class="phpdocumentor-element-found-in__source" data-line="718" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.762" class="phpdocumentor-element-found-in__source" data-line="762" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -2870,9 +3251,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">520</span>
+    <span class="phpdocumentor-element-found-in__line">564</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.520" class="phpdocumentor-element-found-in__source" data-line="520" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.564" class="phpdocumentor-element-found-in__source" data-line="564" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get financialBalanceDocumentsFolder.</p>
@@ -2907,9 +3288,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">509</span>
+    <span class="phpdocumentor-element-found-in__line">553</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.509" class="phpdocumentor-element-found-in__source" data-line="509" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.553" class="phpdocumentor-element-found-in__source" data-line="553" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get financialBalanceDocumentsStorage.</p>
@@ -2944,9 +3325,9 @@ initialization process and an array of ordered parameters that were passed to th
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">531</span>
+    <span class="phpdocumentor-element-found-in__line">575</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.531" class="phpdocumentor-element-found-in__source" data-line="531" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.575" class="phpdocumentor-element-found-in__source" data-line="575" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Recurse to the balance documents folder and return its contents. Return
@@ -3019,9 +3400,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">421</span>
+    <span class="phpdocumentor-element-found-in__line">465</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.421" class="phpdocumentor-element-found-in__source" data-line="421" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.465" class="phpdocumentor-element-found-in__source" data-line="465" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get instrumentationNumbers.</p>
@@ -3130,9 +3511,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">333</span>
+    <span class="phpdocumentor-element-found-in__line">377</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.377" class="phpdocumentor-element-found-in__source" data-line="377" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participantFields.</p>
@@ -3167,9 +3548,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">355</span>
+    <span class="phpdocumentor-element-found-in__line">399</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.355" class="phpdocumentor-element-found-in__source" data-line="355" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.399" class="phpdocumentor-element-found-in__source" data-line="399" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participantFieldsData.</p>
@@ -3204,9 +3585,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">553</span>
+    <span class="phpdocumentor-element-found-in__line">597</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.553" class="phpdocumentor-element-found-in__source" data-line="553" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.597" class="phpdocumentor-element-found-in__source" data-line="597" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participantInstruments.</p>
@@ -3241,9 +3622,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">377</span>
+    <span class="phpdocumentor-element-found-in__line">421</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.377" class="phpdocumentor-element-found-in__source" data-line="377" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.421" class="phpdocumentor-element-found-in__source" data-line="421" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get participants.</p>
@@ -3278,9 +3659,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">443</span>
+    <span class="phpdocumentor-element-found-in__line">487</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.443" class="phpdocumentor-element-found-in__source" data-line="443" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.487" class="phpdocumentor-element-found-in__source" data-line="487" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get payments.</p>
@@ -3307,6 +3688,80 @@ an empty collection if there is no such folder.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getRegistrationDeadline">
+        getRegistrationDeadline()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationDeadline" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">333</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.333" class="phpdocumentor-element-found-in__source" data-line="333" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Returns registrationDeadline.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getRegistrationDeadline</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getRegistrationStartDate">
+        getRegistrationStartDate()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationStartDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">311</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.311" class="phpdocumentor-element-found-in__source" data-line="311" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Returns registrationStartDate.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getRegistrationStartDate</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\DateTimeImmutable">DateTimeImmutable</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getSentEmail">
         getSentEmail()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getSentEmail" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3315,9 +3770,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">487</span>
+    <span class="phpdocumentor-element-found-in__line">531</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.487" class="phpdocumentor-element-found-in__source" data-line="487" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.531" class="phpdocumentor-element-found-in__source" data-line="531" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sentEmail.</p>
@@ -3352,9 +3807,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">399</span>
+    <span class="phpdocumentor-element-found-in__line">443</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.399" class="phpdocumentor-element-found-in__source" data-line="399" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.443" class="phpdocumentor-element-found-in__source" data-line="443" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get sepaDebitMandates.</p>
@@ -3426,9 +3881,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">696</span>
+    <span class="phpdocumentor-element-found-in__line">740</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.696" class="phpdocumentor-element-found-in__source" data-line="696" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.740" class="phpdocumentor-element-found-in__source" data-line="740" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3463,9 +3918,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">311</span>
+    <span class="phpdocumentor-element-found-in__line">355</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.311" class="phpdocumentor-element-found-in__source" data-line="311" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.355" class="phpdocumentor-element-found-in__source" data-line="355" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get webPages.</p>
@@ -3537,9 +3992,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">762</span>
+    <span class="phpdocumentor-element-found-in__line">806</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.762" class="phpdocumentor-element-found-in__source" data-line="762" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.806" class="phpdocumentor-element-found-in__source" data-line="806" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3574,9 +4029,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">729</span>
+    <span class="phpdocumentor-element-found-in__line">773</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.729" class="phpdocumentor-element-found-in__source" data-line="729" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.773" class="phpdocumentor-element-found-in__source" data-line="773" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3611,9 +4066,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">740</span>
+    <span class="phpdocumentor-element-found-in__line">784</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.740" class="phpdocumentor-element-found-in__source" data-line="740" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.784" class="phpdocumentor-element-found-in__source" data-line="784" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3648,9 +4103,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">619</span>
+    <span class="phpdocumentor-element-found-in__line">663</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.619" class="phpdocumentor-element-found-in__source" data-line="619" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.663" class="phpdocumentor-element-found-in__source" data-line="663" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3695,9 +4150,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">630</span>
+    <span class="phpdocumentor-element-found-in__line">674</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.630" class="phpdocumentor-element-found-in__source" data-line="630" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.674" class="phpdocumentor-element-found-in__source" data-line="674" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3738,9 +4193,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">641</span>
+    <span class="phpdocumentor-element-found-in__line">685</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.641" class="phpdocumentor-element-found-in__source" data-line="641" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.685" class="phpdocumentor-element-found-in__source" data-line="685" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3788,9 +4243,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">652</span>
+    <span class="phpdocumentor-element-found-in__line">696</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.652" class="phpdocumentor-element-found-in__source" data-line="652" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.696" class="phpdocumentor-element-found-in__source" data-line="696" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3831,9 +4286,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">564</span>
+    <span class="phpdocumentor-element-found-in__line">608</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.564" class="phpdocumentor-element-found-in__source" data-line="564" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.608" class="phpdocumentor-element-found-in__source" data-line="608" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set calendarEvents.</p>
@@ -3878,9 +4333,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">454</span>
+    <span class="phpdocumentor-element-found-in__line">498</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.454" class="phpdocumentor-element-found-in__source" data-line="454" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.498" class="phpdocumentor-element-found-in__source" data-line="498" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set compositePayments.</p>
@@ -3925,9 +4380,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">663</span>
+    <span class="phpdocumentor-element-found-in__line">707</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.663" class="phpdocumentor-element-found-in__source" data-line="663" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.707" class="phpdocumentor-element-found-in__source" data-line="707" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -3968,9 +4423,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">707</span>
+    <span class="phpdocumentor-element-found-in__line">751</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.707" class="phpdocumentor-element-found-in__source" data-line="707" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.751" class="phpdocumentor-element-found-in__source" data-line="751" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -4015,9 +4470,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">498</span>
+    <span class="phpdocumentor-element-found-in__line">542</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.498" class="phpdocumentor-element-found-in__source" data-line="498" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.542" class="phpdocumentor-element-found-in__source" data-line="542" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set financialBalanceDocumentsStorage</p>
@@ -4111,9 +4566,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">410</span>
+    <span class="phpdocumentor-element-found-in__line">454</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.410" class="phpdocumentor-element-found-in__source" data-line="410" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.454" class="phpdocumentor-element-found-in__source" data-line="454" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set instrumentationNumbers.</p>
@@ -4252,9 +4707,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">322</span>
+    <span class="phpdocumentor-element-found-in__line">366</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participantFields.</p>
@@ -4299,9 +4754,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">344</span>
+    <span class="phpdocumentor-element-found-in__line">388</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.344" class="phpdocumentor-element-found-in__source" data-line="344" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.388" class="phpdocumentor-element-found-in__source" data-line="388" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participantFieldsData.</p>
@@ -4346,9 +4801,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">542</span>
+    <span class="phpdocumentor-element-found-in__line">586</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.542" class="phpdocumentor-element-found-in__source" data-line="542" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.586" class="phpdocumentor-element-found-in__source" data-line="586" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participantInstruments.</p>
@@ -4393,9 +4848,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">366</span>
+    <span class="phpdocumentor-element-found-in__line">410</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.410" class="phpdocumentor-element-found-in__source" data-line="410" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set participants.</p>
@@ -4440,9 +4895,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">432</span>
+    <span class="phpdocumentor-element-found-in__line">476</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.476" class="phpdocumentor-element-found-in__source" data-line="476" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set payments.</p>
@@ -4479,6 +4934,100 @@ an empty collection if there is no such folder.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_setRegistrationDeadline">
+        setRegistrationDeadline()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationDeadline" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">322</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Sets registrationDeadline.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setRegistrationDeadline</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$registrationDeadline</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$registrationDeadline</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setRegistrationStartDate">
+        setRegistrationStartDate()
+        <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationStartDate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">300</span>
+
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.300" class="phpdocumentor-element-found-in__source" data-line="300" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Sets registrationStartDate.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setRegistrationStartDate</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$registrationStartDate</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$registrationStartDate</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\Project">Project</abbr></a></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setSentEmail">
         setSentEmail()
         <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setSentEmail" class="headerlink"><i class="fas fa-link"></i></a>
@@ -4487,9 +5036,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">476</span>
+    <span class="phpdocumentor-element-found-in__line">520</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.476" class="phpdocumentor-element-found-in__source" data-line="476" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.520" class="phpdocumentor-element-found-in__source" data-line="520" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sentEmail.</p>
@@ -4534,9 +5083,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">388</span>
+    <span class="phpdocumentor-element-found-in__line">432</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.388" class="phpdocumentor-element-found-in__source" data-line="388" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.432" class="phpdocumentor-element-found-in__source" data-line="432" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set sepaDebitMandates.</p>
@@ -4628,9 +5177,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">685</span>
+    <span class="phpdocumentor-element-found-in__line">729</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.685" class="phpdocumentor-element-found-in__source" data-line="685" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.729" class="phpdocumentor-element-found-in__source" data-line="729" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -4671,9 +5220,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">300</span>
+    <span class="phpdocumentor-element-found-in__line">344</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.300" class="phpdocumentor-element-found-in__source" data-line="300" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.344" class="phpdocumentor-element-found-in__source" data-line="344" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set webPages.</p>
@@ -4765,9 +5314,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">608</span>
+    <span class="phpdocumentor-element-found-in__line">652</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.608" class="phpdocumentor-element-found-in__source" data-line="608" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.652" class="phpdocumentor-element-found-in__source" data-line="652" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -4802,9 +5351,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">751</span>
+    <span class="phpdocumentor-element-found-in__line">795</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.751" class="phpdocumentor-element-found-in__source" data-line="751" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.795" class="phpdocumentor-element-found-in__source" data-line="795" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritDoc}</p>
@@ -4839,9 +5388,9 @@ an empty collection if there is no such folder.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php"><a href="files/database-doctrine-orm-proxies-cg-ocacafevdbdatabasedoctrineormentitiesproject.html"><abbr title="Database/Doctrine/ORM/Proxies/__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php">__CG__OCACAFEVDBDatabaseDoctrineORMEntitiesProject.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">586</span>
+    <span class="phpdocumentor-element-found-in__line">630</span>
 
-            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.586" class="phpdocumentor-element-found-in__source" data-line="586" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#source-view.630" class="phpdocumentor-element-found-in__source" data-line="630" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the number of &quot;serious&quot; items which &quot;use&quot; this entity. For
@@ -5116,10 +5665,17 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                        <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#toc-constants">Constants</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#toc-properties">Properties</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#constant_DATE_FORMAT">DATE_FORMAT</a></li>
+                                            </ul>
+                </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
@@ -5143,6 +5699,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_participantInstruments">$participantInstruments<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_participants">$participants<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_payments">$payments<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationDeadline">$registrationDeadline<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_registrationStartDate">$registrationStartDate<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_sentEmail">$sentEmail<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_sepaDebitMandates">$sepaDebitMandates<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#property_type">$type<a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html"></li>
@@ -5167,7 +5725,10 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method___sleep">__sleep()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method___toString">__toString()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method___wakeup">__wakeup()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToDateTime">convertToDateTime()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_convertToTimezoneDate">convertToTimezoneDate()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Traits-FactoryTrait.html#method_create">create()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-DateTimeTrait.html#method_ensureDate">ensureDate()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getCalendarEvents">getCalendarEvents()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getCompositePayments">getCompositePayments()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getCreated">getCreated()</a></li>
@@ -5184,6 +5745,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getParticipantInstruments">getParticipantInstruments()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getParticipants">getParticipants()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getPayments">getPayments()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationDeadline">getRegistrationDeadline()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getRegistrationStartDate">getRegistrationStartDate()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getSentEmail">getSentEmail()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getSepaDebitMandates">getSepaDebitMandates()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_getType">getType()</a></li>
@@ -5211,6 +5774,8 @@ automatically called on post-load if the entity used lifecycle-callbacks.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setParticipantInstruments">setParticipantInstruments()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setParticipants">setParticipants()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setPayments">setPayments()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationDeadline">setRegistrationDeadline()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setRegistrationStartDate">setRegistrationStartDate()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setSentEmail">setSentEmail()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setSepaDebitMandates">setSepaDebitMandates()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Proxies-CG-OCA-CAFEVDB-Database-Doctrine-ORM-Entities-Project.html#method_setType">setType()</a></li>

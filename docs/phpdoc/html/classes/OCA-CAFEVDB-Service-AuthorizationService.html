@@ -123,9 +123,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Service/AuthorizationService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Service/AuthorizationService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Rudimentary service which just checks if a user belongs to the
@@ -149,6 +149,179 @@ contact informations for the group-admins.</p>
 
 
 
+<h4 id="toc-constants">
+    Constants
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ADDRESSBOOK">ADDRESSBOOK</a>
+    <span>
+        &nbsp;= &#039;addressbook&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ADDRESSBOOK_GROUP_SUFFIX">ADDRESSBOOK_GROUP_SUFFIX</a>
+    <span>
+        &nbsp;= &#039;-&#039; . self::ADDRESSBOOK                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ALL_GROUP_SUFFIX">ALL_GROUP_SUFFIX</a>
+    <span>
+        &nbsp;= &#039;&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_CALENDAR">CALENDAR</a>
+    <span>
+        &nbsp;= &#039;calendar&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_CALENDAR_GROUP_SUFFIX">CALENDAR_GROUP_SUFFIX</a>
+    <span>
+        &nbsp;= &#039;-&#039; . self::CALENDAR                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_EMAIL">EMAIL</a>
+    <span>
+        &nbsp;= &#039;email&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_EMAIL_GROUP_SUFFIX">EMAIL_GROUP_SUFFIX</a>
+    <span>
+        &nbsp;= &#039;-&#039; . self::EMAIL                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FILESYSTEM">FILESYSTEM</a>
+    <span>
+        &nbsp;= &#039;filesystem&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FILESYSTEM_GROUP_SUFFIX">FILESYSTEM_GROUP_SUFFIX</a>
+    <span>
+        &nbsp;= &#039;-&#039; . self::FILESYSTEM                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FINANCE">FINANCE</a>
+    <span>
+        &nbsp;= &#039;finance&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FINANCE_GROUP_SUFFIX">FINANCE_GROUP_SUFFIX</a>
+    <span>
+        &nbsp;= &#039;-&#039; . self::FINANCE                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FRONTEND">FRONTEND</a>
+    <span>
+        &nbsp;= &#039;frontend&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FRONTEND_GROUP_SUFFIX">FRONTEND_GROUP_SUFFIX</a>
+    <span>
+        &nbsp;= &#039;-&#039; . self::FRONTEND                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_GROUP_SUFFIX_LIST">GROUP_SUFFIX_LIST</a>
+    <span>
+        &nbsp;= [self::PERMISSION_ALL =&gt; self::ALL_GROUP_SUFFIX, self::PERMISSION_FRONTEND =&gt; self::FRONTEND_GROUP_SUFFIX, self::PERMISSION_ADDRESSBOOK =&gt; self::ADDRESSBOOK_GROUP_SUFFIX, self::PERMISSION_FILESYSTEM =&gt; self::FILESYSTEM_GROUP_SUFFIX, self::PERMISSION_CALENDAR =&gt; self::CALENDAR_GROUP_SUFFIX, self::PERMISSION_FINANCE =&gt; self::FINANCE_GROUP_SUFFIX, self::PERMISSION_MANAGEMENT =&gt; self::MANAGEMENT_GROUP_SUFFIX, self::PERMISSION_EMAIL =&gt; self::EMAIL_GROUP_SUFFIX]                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_IMPLIED_PERMISSIONS">IMPLIED_PERMISSIONS</a>
+    <span>
+        &nbsp;= [
+    self::PERMISSION_ALL =&gt; 0,
+    self::PERMISSION_MANAGEMENT =&gt; self::PERMISSION_ALL,
+    self::PERMISSION_FRONTEND =&gt; self::PERMISSION_ALL,
+    // but that may change ...
+    self::PERMISSION_ADDRESSBOOK =&gt; 0,
+    self::PERMISSION_FILESYSTEM =&gt; 0,
+    self::PERMISSION_CALENDAR =&gt; 0,
+    self::PERMISSION_FINANCE =&gt; self::PERMISSION_FILESYSTEM,
+    self::PERMISSION_EMAIL =&gt; 0,
+]                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_MANAGEMENT">MANAGEMENT</a>
+    <span>
+        &nbsp;= &#039;management&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_MANAGEMENT_GROUP_SUFFIX">MANAGEMENT_GROUP_SUFFIX</a>
+    <span>
+        &nbsp;= &#039;-&#039; . self::MANAGEMENT                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_ADDRESSBOOK">PERMISSION_ADDRESSBOOK</a>
+    <span>
+        &nbsp;= 1 &lt;&lt; 1                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_ALL">PERMISSION_ALL</a>
+    <span>
+        &nbsp;= self::PERMISSION_FRONTEND | self::PERMISSION_ADDRESSBOOK | self::PERMISSION_FILESYSTEM | self::PERMISSION_CALENDAR | self::PERMISSION_FINANCE | self::PERMISSION_MANAGEMENT | self::PERMISSION_EMAIL                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_CALENDAR">PERMISSION_CALENDAR</a>
+    <span>
+        &nbsp;= 1 &lt;&lt; 3                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_EMAIL">PERMISSION_EMAIL</a>
+    <span>
+        &nbsp;= 1 &lt;&lt; 6                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FILESYSTEM">PERMISSION_FILESYSTEM</a>
+    <span>
+        &nbsp;= 1 &lt;&lt; 2                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FINANCE">PERMISSION_FINANCE</a>
+    <span>
+        &nbsp;= 1 &lt;&lt; 4                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FRONTEND">PERMISSION_FRONTEND</a>
+    <span>
+        &nbsp;= 1 &lt;&lt; 0                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_MANAGEMENT">PERMISSION_MANAGEMENT</a>
+    <span>
+        &nbsp;= 1 &lt;&lt; 5                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_NONE">PERMISSION_NONE</a>
+    <span>
+        &nbsp;= 0                            </span>
+</dt>
+
+    </dl>
 
 
 <h4 id="toc-properties">
@@ -158,7 +331,13 @@ contact informations for the group-admins.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger</a>
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_config">$config</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\IConfig">IConfig</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
@@ -166,13 +345,7 @@ contact informations for the group-admins.</p>
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_appName">$appName</a>
     <span>
-                        &nbsp;: string            </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_config">$config</a>
-    <span>
-                        &nbsp;: <abbr title="\OCP\IConfig">IConfig</abbr>            </span>
+                        &nbsp;: string|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -188,9 +361,15 @@ contact informations for the group-admins.</p>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userGroup">$userGroup</a>
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userGroupId">$userGroupId</a>
     <span>
                         &nbsp;: string            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userId">$userId</a>
+    <span>
+                        &nbsp;: string|null            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -218,8 +397,14 @@ contact informations for the group-admins.</p>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>Basic check for authorization. Just check if the orchestra group
-is configured and the given user id is a member of it.</dd>
+<dd>Basic check for authorization. Permissions are granted on the basis of group memberships.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_getUserPermissions">getUserPermissions()</a>
+    <span>
+                                &nbsp;: int    </span>
+</dt>
+<dd>Compute the permission mask for the given or the currently logged-on user.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_isAdmin">isAdmin()</a>
@@ -285,6 +470,13 @@ orchestra group.</dd>
 <dd>Log a warning message.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_logPermissions">logPermissions()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Log a textual description of the given permission bit-mask.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a>
     <span>
                                 &nbsp;: mixed    </span>
@@ -298,6 +490,782 @@ understands those.</dd>
 
 
         
+    <section class="phpdocumentor-constants">
+        <h3 class="phpdocumentor-elements__header" id="constants">
+            Constants
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_ADDRESSBOOK">
+        ADDRESSBOOK
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ADDRESSBOOK" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">47</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">ADDRESSBOOK</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;addressbook&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_ADDRESSBOOK_GROUP_SUFFIX">
+        ADDRESSBOOK_GROUP_SUFFIX
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ADDRESSBOOK_GROUP_SUFFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">56</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">ADDRESSBOOK_GROUP_SUFFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;-&#039; . self::ADDRESSBOOK</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_ALL_GROUP_SUFFIX">
+        ALL_GROUP_SUFFIX
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ALL_GROUP_SUFFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">53</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">ALL_GROUP_SUFFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CALENDAR">
+        CALENDAR
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_CALENDAR" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">49</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CALENDAR</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;calendar&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_CALENDAR_GROUP_SUFFIX">
+        CALENDAR_GROUP_SUFFIX
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_CALENDAR_GROUP_SUFFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">58</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">CALENDAR_GROUP_SUFFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;-&#039; . self::CALENDAR</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EMAIL">
+        EMAIL
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_EMAIL" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">51</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">EMAIL</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;email&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_EMAIL_GROUP_SUFFIX">
+        EMAIL_GROUP_SUFFIX
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_EMAIL_GROUP_SUFFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">60</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">EMAIL_GROUP_SUFFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;-&#039; . self::EMAIL</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_FILESYSTEM">
+        FILESYSTEM
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FILESYSTEM" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">48</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">FILESYSTEM</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;filesystem&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_FILESYSTEM_GROUP_SUFFIX">
+        FILESYSTEM_GROUP_SUFFIX
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FILESYSTEM_GROUP_SUFFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">57</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.57" class="phpdocumentor-element-found-in__source" data-line="57" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">FILESYSTEM_GROUP_SUFFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;-&#039; . self::FILESYSTEM</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_FINANCE">
+        FINANCE
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FINANCE" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">50</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">FINANCE</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;finance&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_FINANCE_GROUP_SUFFIX">
+        FINANCE_GROUP_SUFFIX
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FINANCE_GROUP_SUFFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">59</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">FINANCE_GROUP_SUFFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;-&#039; . self::FINANCE</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_FRONTEND">
+        FRONTEND
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FRONTEND" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">46</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">FRONTEND</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;frontend&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_FRONTEND_GROUP_SUFFIX">
+        FRONTEND_GROUP_SUFFIX
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FRONTEND_GROUP_SUFFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">55</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">FRONTEND_GROUP_SUFFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;-&#039; . self::FRONTEND</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_GROUP_SUFFIX_LIST">
+        GROUP_SUFFIX_LIST
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_GROUP_SUFFIX_LIST" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">84</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+    <span class="phpdocumentor-signature__name">GROUP_SUFFIX_LIST</span>
+    = <span class="phpdocumentor-signature__default-value">[self::PERMISSION_ALL =&gt; self::ALL_GROUP_SUFFIX, self::PERMISSION_FRONTEND =&gt; self::FRONTEND_GROUP_SUFFIX, self::PERMISSION_ADDRESSBOOK =&gt; self::ADDRESSBOOK_GROUP_SUFFIX, self::PERMISSION_FILESYSTEM =&gt; self::FILESYSTEM_GROUP_SUFFIX, self::PERMISSION_CALENDAR =&gt; self::CALENDAR_GROUP_SUFFIX, self::PERMISSION_FINANCE =&gt; self::FINANCE_GROUP_SUFFIX, self::PERMISSION_MANAGEMENT =&gt; self::MANAGEMENT_GROUP_SUFFIX, self::PERMISSION_EMAIL =&gt; self::EMAIL_GROUP_SUFFIX]</span>
+</code>
+
+
+    
+        <section class="phpdocumentor-description"><p>Mapping between permission classes and group suffixes. The mapping is
+1-1, the overlap is handled by self::IMPLIED_PERMISSIONS.</p>
+</section>
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_IMPLIED_PERMISSIONS">
+        IMPLIED_PERMISSIONS
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_IMPLIED_PERMISSIONS" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">100</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+    <span class="phpdocumentor-signature__name">IMPLIED_PERMISSIONS</span>
+    = <span class="phpdocumentor-signature__default-value">[
+    self::PERMISSION_ALL =&gt; 0,
+    self::PERMISSION_MANAGEMENT =&gt; self::PERMISSION_ALL,
+    self::PERMISSION_FRONTEND =&gt; self::PERMISSION_ALL,
+    // but that may change ...
+    self::PERMISSION_ADDRESSBOOK =&gt; 0,
+    self::PERMISSION_FILESYSTEM =&gt; 0,
+    self::PERMISSION_CALENDAR =&gt; 0,
+    self::PERMISSION_FINANCE =&gt; self::PERMISSION_FILESYSTEM,
+    self::PERMISSION_EMAIL =&gt; 0,
+]</span>
+</code>
+
+
+    
+        <section class="phpdocumentor-description"><p>Some permissions may imply other permissions.</p>
+</section>
+
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_MANAGEMENT">
+        MANAGEMENT
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_MANAGEMENT" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">45</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">MANAGEMENT</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;management&#039;</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_MANAGEMENT_GROUP_SUFFIX">
+        MANAGEMENT_GROUP_SUFFIX
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_MANAGEMENT_GROUP_SUFFIX" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">54</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.54" class="phpdocumentor-element-found-in__source" data-line="54" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">MANAGEMENT_GROUP_SUFFIX</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;-&#039; . self::MANAGEMENT</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_ADDRESSBOOK">
+        PERMISSION_ADDRESSBOOK
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_ADDRESSBOOK" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">64</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.64" class="phpdocumentor-element-found-in__source" data-line="64" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_ADDRESSBOOK</span>
+    = <span class="phpdocumentor-signature__default-value">1 &lt;&lt; 1</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_ALL">
+        PERMISSION_ALL
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_ALL" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">70</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_ALL</span>
+    = <span class="phpdocumentor-signature__default-value">self::PERMISSION_FRONTEND | self::PERMISSION_ADDRESSBOOK | self::PERMISSION_FILESYSTEM | self::PERMISSION_CALENDAR | self::PERMISSION_FINANCE | self::PERMISSION_MANAGEMENT | self::PERMISSION_EMAIL</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_CALENDAR">
+        PERMISSION_CALENDAR
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_CALENDAR" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">66</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_CALENDAR</span>
+    = <span class="phpdocumentor-signature__default-value">1 &lt;&lt; 3</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_EMAIL">
+        PERMISSION_EMAIL
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_EMAIL" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">69</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.69" class="phpdocumentor-element-found-in__source" data-line="69" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_EMAIL</span>
+    = <span class="phpdocumentor-signature__default-value">1 &lt;&lt; 6</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_FILESYSTEM">
+        PERMISSION_FILESYSTEM
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FILESYSTEM" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">65</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_FILESYSTEM</span>
+    = <span class="phpdocumentor-signature__default-value">1 &lt;&lt; 2</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_FINANCE">
+        PERMISSION_FINANCE
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FINANCE" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">67</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_FINANCE</span>
+    = <span class="phpdocumentor-signature__default-value">1 &lt;&lt; 4</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_FRONTEND">
+        PERMISSION_FRONTEND
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FRONTEND" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">63</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_FRONTEND</span>
+    = <span class="phpdocumentor-signature__default-value">1 &lt;&lt; 0</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_MANAGEMENT">
+        PERMISSION_MANAGEMENT
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_MANAGEMENT" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">68</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_MANAGEMENT</span>
+    = <span class="phpdocumentor-signature__default-value">1 &lt;&lt; 5</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_PERMISSION_NONE">
+        PERMISSION_NONE
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_NONE" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">62</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
+    <span class="phpdocumentor-signature__name">PERMISSION_NONE</span>
+    = <span class="phpdocumentor-signature__default-value">0</span>
+</code>
+
+
+    
+    
+    
+
+</article>
+            </section>
 
         
     <section class="phpdocumentor-properties">
@@ -313,19 +1281,53 @@ understands those.</dd>
             -protected
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="property_logger">
-        $logger
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_config">
+        $config
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_config" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IConfig">IConfig</abbr></span>
+    <span class="phpdocumentor-signature__name">$config</span>
+    </code>
+
+    
+    
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_logger">
+        $logger
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">140</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -357,50 +1359,16 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">134</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">string</span>
+        <span class="phpdocumentor-signature__type">string|null</span>
     <span class="phpdocumentor-signature__name">$appName</span>
-    </code>
-
-    
-    
-    
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="property_config">
-        $config
-        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_config" class="headerlink"><i class="fas fa-link"></i></a>
-
-        <span class="phpdocumentor-element__modifiers">
-                                </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">56</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IConfig">IConfig</abbr></span>
-    <span class="phpdocumentor-signature__name">$config</span>
     </code>
 
     
@@ -425,9 +1393,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">138</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.138" class="phpdocumentor-element-found-in__source" data-line="138" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -459,9 +1427,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">139</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.139" class="phpdocumentor-element-found-in__source" data-line="139" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -483,9 +1451,9 @@ understands those.</dd>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="property_userGroup">
-        $userGroup
-        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userGroup" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_userGroupId">
+        $userGroupId
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userGroupId" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
@@ -493,16 +1461,52 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">116</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.59" class="phpdocumentor-element-found-in__source" data-line="59" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.116" class="phpdocumentor-element-found-in__source" data-line="116" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
-    <span class="phpdocumentor-signature__name">$userGroup</span>
+    <span class="phpdocumentor-signature__name">$userGroupId</span>
+    </code>
+
+    
+        <section class="phpdocumentor-description"><p>The group id of cloud users which are allowed to access the backend services like file-system etc.</p>
+</section>
+
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_userId">
+        $userId
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userId" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">135</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.135" class="phpdocumentor-element-found-in__source" data-line="135" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">string|null</span>
+    <span class="phpdocumentor-signature__name">$userId</span>
     </code>
 
     
@@ -527,9 +1531,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">137</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -566,15 +1570,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">133</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$config</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IUserManager">IUserManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IGroupManager">IGroupManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$groupManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Group\ISubAdmin">ISubAdmin</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$groupSubAdminManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$appName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IConfig">IConfig</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$config</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IUserManager">IUserManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IGroupManager">IGroupManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$groupManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Group\ISubAdmin">ISubAdmin</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$groupSubAdminManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -583,10 +1587,19 @@ understands those.</dd>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$appName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$userId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Current logged on user id or null.</p>
+</section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$config</span>
@@ -621,14 +1634,9 @@ understands those.</dd>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$l10n</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>In order to satisfy LoggerTrait.</p>
+</section>
+
             </dd>
             </dl>
 
@@ -650,17 +1658,16 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
+    <span class="phpdocumentor-element-found-in__line">230</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.230" class="phpdocumentor-element-found-in__source" data-line="230" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Basic check for authorization. Just check if the orchestra group
-is configured and the given user id is a member of it.</p>
+        <p class="phpdocumentor-summary">Basic check for authorization. Permissions are granted on the basis of group memberships.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">authorized</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">authorized</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$requestedPermissions</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">self::PERMISSION_ALL</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -673,6 +1680,15 @@ is configured and the given user id is a member of it.</p>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Id of the user to check.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$requestedPermissions</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">self::PERMISSION_ALL</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The permissions to check for. Defaults to everything.</p>
 </section>
 
             </dd>
@@ -696,25 +1712,24 @@ is configured and the given user id is a member of it.</p>
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_isAdmin">
-        isAdmin()
-        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_isAdmin" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_getUserPermissions">
+        getUserPermissions()
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_getUserPermissions" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">103</span>
+    <span class="phpdocumentor-element-found-in__line">199</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.199" class="phpdocumentor-element-found-in__source" data-line="199" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
-        <p class="phpdocumentor-summary">Check whether the given user-id is a sub-admin for the configured
-orchestra group.</p>
+        <p class="phpdocumentor-summary">Compute the permission mask for the given or the currently logged-on user.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">isAdmin</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">getUserPermissions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -723,7 +1738,63 @@ orchestra group.</p>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$userId</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The user-id to check, if null use the user-id of
+the currently logged-on user.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The bit-mask of permissions, based on the group-memberships
+of the user.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_isAdmin">
+        isAdmin()
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_isAdmin" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">245</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.245" class="phpdocumentor-element-found-in__source" data-line="245" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Check whether the given user-id is a sub-admin for the configured
+orchestra group.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">isAdmin</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$userId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Id of the user to check.</p>
@@ -1264,6 +2335,66 @@ orchestra group.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_logPermissions">
+        logPermissions()
+        <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_logPermissions" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/AuthorizationService.php"><a href="files/service-authorizationservice.html"><abbr title="Service/AuthorizationService.php">AuthorizationService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">157</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#source-view.157" class="phpdocumentor-element-found-in__source" data-line="157" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Log a textual description of the given permission bit-mask.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">logPermissions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissions</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logLevel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">OCPILogger::INFO</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$userId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The user-id to check, if null use the user-id of
+the currently logged-on user.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$permissions</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$logLevel</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">OCPILogger::INFO</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_mapLogLevels">
         mapLogLevels()
         <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1407,20 +2538,53 @@ understands those.</p>
             <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
             <li>
                 <ul class="phpdocumentor-list -clean">
+                                        <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#toc-constants">Constants</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#toc-properties">Properties</a></li>
                                                             <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#toc-methods">Methods</a></li>
                                     </ul>
             </li>
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ADDRESSBOOK">ADDRESSBOOK</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ADDRESSBOOK_GROUP_SUFFIX">ADDRESSBOOK_GROUP_SUFFIX</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_ALL_GROUP_SUFFIX">ALL_GROUP_SUFFIX</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_CALENDAR">CALENDAR</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_CALENDAR_GROUP_SUFFIX">CALENDAR_GROUP_SUFFIX</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_EMAIL">EMAIL</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_EMAIL_GROUP_SUFFIX">EMAIL_GROUP_SUFFIX</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FILESYSTEM">FILESYSTEM</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FILESYSTEM_GROUP_SUFFIX">FILESYSTEM_GROUP_SUFFIX</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FINANCE">FINANCE</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FINANCE_GROUP_SUFFIX">FINANCE_GROUP_SUFFIX</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FRONTEND">FRONTEND</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_FRONTEND_GROUP_SUFFIX">FRONTEND_GROUP_SUFFIX</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_GROUP_SUFFIX_LIST">GROUP_SUFFIX_LIST</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_IMPLIED_PERMISSIONS">IMPLIED_PERMISSIONS</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_MANAGEMENT">MANAGEMENT</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_MANAGEMENT_GROUP_SUFFIX">MANAGEMENT_GROUP_SUFFIX</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_ADDRESSBOOK">PERMISSION_ADDRESSBOOK</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_ALL">PERMISSION_ALL</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_CALENDAR">PERMISSION_CALENDAR</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_EMAIL">PERMISSION_EMAIL</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FILESYSTEM">PERMISSION_FILESYSTEM</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FINANCE">PERMISSION_FINANCE</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_FRONTEND">PERMISSION_FRONTEND</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_MANAGEMENT">PERMISSION_MANAGEMENT</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#constant_PERMISSION_NONE">PERMISSION_NONE</a></li>
+                                            </ul>
+                </li>
             
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_appName">$appName<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_config">$config<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_appName">$appName<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_groupManager">$groupManager<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_groupSubAdminManager">$groupSubAdminManager<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userGroup">$userGroup<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userGroupId">$userGroupId<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userId">$userId<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#property_userManager">$userManager<a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html"></li>
                                             </ul>
                 </li>
@@ -1430,6 +2594,7 @@ understands those.</p>
                 <ul class="phpdocumentor-list -clean">
                                             <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method___construct">__construct()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_authorized">authorized()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_getUserPermissions">getUserPermissions()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_isAdmin">isAdmin()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logDebug">logDebug()</a></li>
@@ -1439,6 +2604,7 @@ understands those.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logger">logger()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logInfo">logInfo()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_logWarn">logWarn()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Service-AuthorizationService.html#method_logPermissions">logPermissions()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
                                     </ul>
             </li>

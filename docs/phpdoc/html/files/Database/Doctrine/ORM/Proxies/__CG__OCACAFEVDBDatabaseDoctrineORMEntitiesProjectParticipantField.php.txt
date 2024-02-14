@@ -67,10 +67,10 @@ class ProjectParticipantField extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entitie
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'name', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'untranslatedName', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'multiplicity', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dataType', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dataOptions', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dueDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'depositDueDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'defaultValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'tooltip', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'tab', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'untranslatedTab', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'displayOrder', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'encrypted', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'participantAccess', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'fieldData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'preUpdatePosted', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'locale', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'translationChangeSet', 'deleted'];
+            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'name', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'untranslatedName', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'multiplicity', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dataType', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dataOptions', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dueDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'depositDueDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'defaultValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'tooltip', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'tab', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'untranslatedTab', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'displayOrder', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'encrypted', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'participantAccess', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'fieldData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'projectEvent', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'locale', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'translationChangeSet', 'deleted'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'name', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'untranslatedName', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'multiplicity', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dataType', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dataOptions', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dueDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'depositDueDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'defaultValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'tooltip', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'tab', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'untranslatedTab', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'displayOrder', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'encrypted', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'participantAccess', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'fieldData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'preUpdatePosted', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'locale', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'translationChangeSet', 'deleted'];
+        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'id', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'project', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'name', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'untranslatedName', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'multiplicity', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dataType', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dataOptions', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'dueDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'depositDueDate', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'defaultValue', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'tooltip', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'tab', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'untranslatedTab', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'displayOrder', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'encrypted', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'participantAccess', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'fieldData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'projectEvent', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'locale', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantField' . "\0" . 'translationChangeSet', 'deleted'];
     }
 
     /**
@@ -627,45 +627,23 @@ class ProjectParticipantField extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entitie
     /**
      * {@inheritDoc}
      */
-    public function setReaders($readers): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField
+    public function setProjectEvent(?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent $projectEvent): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setReaders', [$readers]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setProjectEvent', [$projectEvent]);
 
-        return parent::setReaders($readers);
+        return parent::setProjectEvent($projectEvent);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getReaders()
+    public function getProjectEvent(): ?\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectEvent
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getReaders', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getProjectEvent', []);
 
-        return parent::getReaders();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setWriters($writers): \OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipantField
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setWriters', [$writers]);
-
-        return parent::setWriters($writers);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getWriters()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getWriters', []);
-
-        return parent::getWriters();
+        return parent::getProjectEvent();
     }
 
     /**
@@ -688,50 +666,6 @@ class ProjectParticipantField extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entitie
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'filterTranslatableFields', [$fields]);
 
         return parent::filterTranslatableFields($fields);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function prePersist(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs $event)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'prePersist', [$event]);
-
-        return parent::prePersist($event);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function preRemove(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs $event)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'preRemove', [$event]);
-
-        return parent::preRemove($event);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function preUpdate(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreUpdateEventArgs $event)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'preUpdate', [$event]);
-
-        return parent::preUpdate($event);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function postUpdate(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs $event)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'postUpdate', [$event]);
-
-        return parent::postUpdate($event);
     }
 
     /**
@@ -820,6 +754,17 @@ class ProjectParticipantField extends \OCA\CAFEVDB\Database\Doctrine\ORM\Entitie
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocale', []);
 
         return parent::getLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTranslationChangeSet(string $field): ?array
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTranslationChangeSet', [$field]);
+
+        return parent::getTranslationChangeSet($field);
     }
 
     /**

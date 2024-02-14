@@ -1,4 +1,5 @@
 <map id="enable" name="enable">
-<area shape="rect" id="node1" title="Enable logging." alt="" coords="116,5,176,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html#a16808469c0e5706a0896364c0a776004" title="Disable logging." alt="" coords="5,5,68,31"/>
+<area shape="rect" id="Node000001" title="Enable logging." alt="" coords="116,5,175,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_logging_1_1_cloud_logger.html#a16808469c0e5706a0896364c0a776004" title="Disable logging." alt="" coords="5,5,68,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,21,68,21,68,16,100,16"/>
 </map>

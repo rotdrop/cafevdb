@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright , 2021, 2022,  Claus-Justus Heine
+ * @copyright 2021-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,8 +86,8 @@ use OCA\CAFEVDB\Constants;
 class ParticipantFieldCloudFolderListener implements IEventListener
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-  // use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\UserRootFolderTrait;
 
   const EVENT = [
     NodeRenamedEvent::class,
@@ -119,11 +119,12 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   /** @var IUser */
   private $user;
 
-  /** @var string */
-  private $appName;
-
-  /** @var IAppContainer */
-  private $appContainer;
+  /**
+   * @var string
+   *
+   * Must remain untyped.
+   */
+  protected $appName;
 
   /** @var Repositories\ProjectParticipantFieldsRepository */
   private $fieldsRepository;
@@ -158,9 +159,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    */
   private $musicians = [];
 
-  /** @var IRootFolder */
-  private $rootFolder;
-
   /**
    * @var string
    *
@@ -170,9 +168,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
   private $ignoreCreatedPaths = [];
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(IAppContainer $appContainer)
-  {
-    $this->appContainer = $appContainer;
+  public function __construct(
+    private IAppContainer $appContainer,
+  ) {
   }
   // phpcs:enable
 
@@ -265,24 +263,25 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       return; // something went wrong
     }
 
-    $userFolder = $this->rootFolder->getUserFolderPath($this->user->getUID());
-
-    // Bail out if the folder being worked on is actually the
-    // top-level user-folder
-    foreach ($nodes as $key => $nodeInfo) {
-      if ($nodeInfo[self::NODE_FULL_PATH] == $userFolder) {
-        return;
-      }
-    }
-
+    $userFolder = Constants::PATH_SEPARATOR . $this->getUserFolderPath($this->user->getUID());
+    $sharedFolderPath = $this->getSharedFolderPath();
     $projectsPath = $this->getProjectsFolderPath();
 
     // strip the user-folder and match with the projects path
     foreach ($nodes as $key => &$nodeInfo) {
+      if ($nodeInfo[self::NODE_FULL_PATH] == $userFolder) {
+        unset($nodes[$key]);
+        continue;
+      }
       $nodePath = self::matchPrefixDirectory($nodeInfo[self::NODE_FULL_PATH], $userFolder);
+      if (self::matchPrefixDirectory($nodePath, $sharedFolderPath) === null) {
+        unset($nodes[$key]);
+        continue;
+      }
       $postFixPath = self::matchPrefixDirectory($nodePath, $projectsPath);
       if ($postFixPath === null) {
         unset($nodes[$key]);
+        continue;
       }
       $nodeInfo[self::NODE_FULL_PATH] = $nodePath;
       $nodeInfo[self::NODE_PARTIAL_PATH] = $postFixPath;
@@ -340,6 +339,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
     unset($nodeInfo); // break reference
 
     $this->initializeDatabaseAccess();
+    if (!$this->entityManager->connected()) {
+      return;
+    }
     if ($this->entityManager->isOwnTransactionActive()) {
       return; // perhaps move this more to the top ...
     }
@@ -470,7 +472,6 @@ class ParticipantFieldCloudFolderListener implements IEventListener
               $fieldDatum->setDeleted(null);
               $this->persist($fieldDatum);
               if ($finalBaseName != $baseName) { // THIS CANNOT HAPPEN?
-                $this->logInfo('WHY SHOULD EVER BE "' . $finalBaseName . '" BE DIFFERENT FROM "' . $baseName . '"?');
                 $this->entityManager->registerPreCommitAction(
                   new UndoableFileRename(
                     $folderName . Constants::PATH_SEP . $baseName,
@@ -536,7 +537,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
                 if (empty($files)) {
                   $this->remove($fieldDatum, hard: true);
                 } else {
-                  $fieldDatum->setOptionValue(json_encode($files));
+                  $fieldDatum->setOptionValue(json_encode(array_values($files)));
                   $fieldDatum->setDeleted(null);
                 }
               }
@@ -584,11 +585,13 @@ class ParticipantFieldCloudFolderListener implements IEventListener
    * @param string $folderPrefix The folder-prefix to compare the
    * first part of the string to.
    *
-   * @return null|string The sub-string after remove the $folderPrefix
+   * @return null|string The sub-string after removing the $folderPrefix
    * or null if $folderPrefix is not the first part of the string.
    */
   private static function matchPrefixDirectory(?string $path, string $folderPrefix)
   {
+    $path = ltrim((string)$path, Constants::PATH_SEP);
+    $folderPrefix = ltrim((string)$folderPrefix, Constants::PATH_SEP);
     $prefixLen = strlen($folderPrefix);
     if (substr($path, 0, $prefixLen) == $folderPrefix) {
       return substr($path, $prefixLen);
@@ -699,7 +702,7 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
     /** @var AuthorizationService $authorizationService */
     $authorizationService = $this->appContainer->get(AuthorizationService::class);
-    if (!$authorizationService->authorized($this->user->getUID())) {
+    if (!$authorizationService->authorized($this->user->getUID(), AuthorizationService::PERMISSION_FILESYSTEM)) {
       return false;
     }
 
@@ -709,6 +712,11 @@ class ParticipantFieldCloudFolderListener implements IEventListener
 
     $this->configService = $this->appContainer->get(ConfigService::class);
     if (empty($this->configService)) {
+      return false;
+    }
+
+    if (!$this->encryptionService()->bound()) {
+      // until we decide to handle this in another way
       return false;
     }
 
@@ -731,6 +739,9 @@ class ParticipantFieldCloudFolderListener implements IEventListener
       return;
     }
     $this->entityManager = $this->appContainer->get(EntityManager::class);
+    if (!$this->entityManager->connected()) {
+      return;
+    }
     $this->fieldsRepository = $this->getDatabaseRepository(Entities\ProjectParticipantField::class);
     $this->fieldDataRepository = $this->getDatabaseRepository(Entities\ProjectParticipantFieldDatum::class);
     $this->musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);

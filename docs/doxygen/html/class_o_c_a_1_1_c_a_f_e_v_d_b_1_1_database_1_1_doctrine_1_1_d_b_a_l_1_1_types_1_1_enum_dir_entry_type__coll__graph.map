@@ -1,5 +1,7 @@
 <map id="EnumDirEntryType" name="EnumDirEntryType">
-<area shape="rect" id="node1" title=" " alt="" coords="5,152,137,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="29,79,113,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="18,5,125,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,155,137,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_type.html" title="Base enum&#45;type class." alt="" coords="29,80,113,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,122,74,154,68,154,68,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="18,5,124,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,48,74,80,68,80,68,48"/>
 </map>

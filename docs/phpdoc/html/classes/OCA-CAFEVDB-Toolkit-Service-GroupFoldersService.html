@@ -124,12 +124,12 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">39</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.35" class="phpdocumentor-element-found-in__source" data-line="35" data-modal="source-view" data-src="files/Toolkit/Service/GroupFoldersService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/Toolkit/Service/GroupFoldersService.php.txt"></a>
     </aside>
 
-            <p class="phpdocumentor-summary">Mis-use the internal routes of the groupfolders app in order to
+            <p class="phpdocumentor-summary">Mis-use the internal services of the groupfolders app in order to
 automatically generate group-shared folder structures.</p>
 
 
@@ -231,21 +231,33 @@ automatically generate group-shared folder structures.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_logger">$logger</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_l">$l</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_folderManager">$folderManager</a>
     <span>
-                        &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>            </span>
+                        &nbsp;: <abbr title="\OCA\GroupFolders\Folder\FolderManager">FolderManager</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_requestService">$requestService</a>
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_l">$l</a>
     <span>
-                        &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\RequestService">RequestService</abbr></a>            </span>
+                        &nbsp;: <abbr title="\OCP\IL10N">IL10N</abbr>|null            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_mountProvider">$mountProvider</a>
+    <span>
+                        &nbsp;: <abbr title="\OCA\GroupFolders\Mount\MountProvider">MountProvider</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_rootFolder">$rootFolder</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr>            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
@@ -315,6 +327,7 @@ to a new mount-point.</dd>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
+<dd>Get the shared folder by its id. The folder must exist</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_log">log()</a>
@@ -400,7 +413,7 @@ to a new mount-point.</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#method_setL10N">setL10N()</a>
     <span>
-                                &nbsp;: <a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\RequestService">RequestService</abbr></a>    </span>
+                                &nbsp;: <abbr title="\OCA\CAFEVDB\Toolkit\Service\GroupFOldersService">GroupFOldersService</abbr>    </span>
 </dt>
 <dd>Set the localization to use.</dd>
 
@@ -431,6 +444,12 @@ understands those.</dd>
 </dt>
 <dd>Fetch and cache all shared folders from the groupfolders app.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#method_getRootFolderStorageId">getRootFolderStorageId()</a>
+    <span>
+                                &nbsp;: null|int    </span>
+</dt>
+
     </dl>
 
 
@@ -453,9 +472,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -482,9 +501,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">43</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.39" class="phpdocumentor-element-found-in__source" data-line="39" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.43" class="phpdocumentor-element-found-in__source" data-line="43" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -511,9 +530,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">51</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -540,9 +559,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.56" class="phpdocumentor-element-found-in__source" data-line="56" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -569,9 +588,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.52" class="phpdocumentor-element-found-in__source" data-line="52" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -598,9 +617,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.50" class="phpdocumentor-element-found-in__source" data-line="50" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -627,9 +646,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -656,9 +675,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.51" class="phpdocumentor-element-found-in__source" data-line="51" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -685,9 +704,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.44" class="phpdocumentor-element-found-in__source" data-line="44" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -714,9 +733,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">42</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.42" class="phpdocumentor-element-found-in__source" data-line="42" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -743,9 +762,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">41</span>
+    <span class="phpdocumentor-element-found-in__line">45</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -780,17 +799,17 @@ understands those.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_logger">
         $logger
-        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_logger" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/LoggerTrait.php"><a href="files/toolkit-traits-loggertrait.html"><abbr title="Toolkit/Traits/LoggerTrait.php">LoggerTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">87</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.38" class="phpdocumentor-element-found-in__source" data-line="38" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.87" class="phpdocumentor-element-found-in__source" data-line="87" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -798,6 +817,40 @@ understands those.</dd>
     <span class="phpdocumentor-signature__visibility">protected</span>
         <span class="phpdocumentor-signature__type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr></span>
     <span class="phpdocumentor-signature__name">$logger</span>
+    </code>
+
+    
+    
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_folderManager">
+        $folderManager
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_folderManager" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">89</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.89" class="phpdocumentor-element-found-in__source" data-line="89" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCA\GroupFolders\Folder\FolderManager">FolderManager</abbr></span>
+    <span class="phpdocumentor-signature__name">$folderManager</span>
     </code>
 
     
@@ -822,16 +875,50 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">91</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.91" class="phpdocumentor-element-found-in__source" data-line="91" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr></span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IL10N">IL10N</abbr>|null</span>
     <span class="phpdocumentor-signature__name">$l</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+    
+    
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_mountProvider">
+        $mountProvider
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_mountProvider" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">90</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.90" class="phpdocumentor-element-found-in__source" data-line="90" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCA\GroupFolders\Mount\MountProvider">MountProvider</abbr></span>
+    <span class="phpdocumentor-signature__name">$mountProvider</span>
     </code>
 
     
@@ -846,9 +933,9 @@ understands those.</dd>
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="property_requestService">
-        $requestService
-        <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_requestService" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="property_rootFolder">
+        $rootFolder
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_rootFolder" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
@@ -856,16 +943,16 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\RequestService">RequestService</abbr></a></span>
-    <span class="phpdocumentor-signature__name">$requestService</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr></span>
+    <span class="phpdocumentor-signature__name">$rootFolder</span>
     </code>
 
     
@@ -890,9 +977,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">83</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -908,7 +995,12 @@ understands those.</dd>
   'id' =&gt; ID,
   'mount_point' =&gt; MOUNT_POINT,
   'groups' =&gt; [
-    GROUP_ID =&gt; PERMISSIONS,
+    GROUP_ID =&gt; [
+      'displayName' =&gt; GROUP_ID
+      'permissions' =&gt; PERMISSIONS,
+      'type' =&gt; 'group',
+      ...
+    ],
   ],
   'quota' =&gt; -3,
   'size' =&gt; SIZE,
@@ -945,15 +1037,15 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">86</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\RequestService">RequestService</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$requestService</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Psr\Log\LoggerInterface">LoggerInterface</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logger</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rootFolder</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\GroupFolders\Folder\FolderManager">FolderManager</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$folderManager</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\GroupFolders\Mount\MountProvider">MountProvider</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mountProvider</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -968,14 +1060,28 @@ understands those.</dd>
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$requestService</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\RequestService">RequestService</abbr></a></span>
+                <span class="phpdocumentor-signature__argument__name">$rootFolder</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Files\IRootFolder">IRootFolder</abbr></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$l10n</span>
+                <span class="phpdocumentor-signature__argument__name">$folderManager</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\GroupFolders\Folder\FolderManager">FolderManager</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$mountProvider</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCA\GroupFolders\Mount\MountProvider">MountProvider</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$l</span>
                 : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
@@ -1001,9 +1107,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">282</span>
+    <span class="phpdocumentor-element-found-in__line">279</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.282" class="phpdocumentor-element-found-in__source" data-line="282" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.279" class="phpdocumentor-element-found-in__source" data-line="279" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Add a single group to the given shared folder. This is a no-op if the
@@ -1066,9 +1172,9 @@ group including matching permissions is already there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">395</span>
+    <span class="phpdocumentor-element-found-in__line">384</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.395" class="phpdocumentor-element-found-in__source" data-line="395" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.384" class="phpdocumentor-element-found-in__source" data-line="384" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1122,9 +1228,9 @@ group including matching permissions is already there.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">461</span>
+    <span class="phpdocumentor-element-found-in__line">444</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.461" class="phpdocumentor-element-found-in__source" data-line="461" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.444" class="phpdocumentor-element-found-in__source" data-line="444" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Change the given group-shared folder -- given by its old mount-point --
@@ -1191,9 +1297,9 @@ as well.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">246</span>
+    <span class="phpdocumentor-element-found-in__line">247</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.247" class="phpdocumentor-element-found-in__source" data-line="247" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a shared folder and set appropriate permissions</p>
@@ -1261,9 +1367,9 @@ the parent folders.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">195</span>
+    <span class="phpdocumentor-element-found-in__line">196</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.195" class="phpdocumentor-element-found-in__source" data-line="195" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.196" class="phpdocumentor-element-found-in__source" data-line="196" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1303,9 +1409,9 @@ the parent folders.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">146</span>
+    <span class="phpdocumentor-element-found-in__line">147</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.147" class="phpdocumentor-element-found-in__source" data-line="147" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Obtain the shared folder data for the given mount-point.</p>
@@ -1362,12 +1468,13 @@ null if the folder is not found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">210</span>
+    <span class="phpdocumentor-element-found-in__line">213</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.210" class="phpdocumentor-element-found-in__source" data-line="210" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.213" class="phpdocumentor-element-found-in__source" data-line="213" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Get the shared folder by its id. The folder must exist</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getFolderById</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
@@ -1972,9 +2079,9 @@ null if the folder is not found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">409</span>
+    <span class="phpdocumentor-element-found-in__line">398</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.409" class="phpdocumentor-element-found-in__source" data-line="409" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.398" class="phpdocumentor-element-found-in__source" data-line="398" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2028,9 +2135,9 @@ null if the folder is not found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">162</span>
+    <span class="phpdocumentor-element-found-in__line">163</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.162" class="phpdocumentor-element-found-in__source" data-line="162" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return all shared folders matching the given regexp.</p>
@@ -2082,9 +2189,9 @@ null if the folder is not found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">423</span>
+    <span class="phpdocumentor-element-found-in__line">412</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.423" class="phpdocumentor-element-found-in__source" data-line="423" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.412" class="phpdocumentor-element-found-in__source" data-line="412" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2138,16 +2245,16 @@ null if the folder is not found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">101</span>
+    <span class="phpdocumentor-element-found-in__line">103</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.101" class="phpdocumentor-element-found-in__source" data-line="101" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.103" class="phpdocumentor-element-found-in__source" data-line="103" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Set the localization to use.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setL10N</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\RequestService">RequestService</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">setL10N</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IL10N">IL10N</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$l10n</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Toolkit\Service\GroupFOldersService">GroupFOldersService</abbr></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2167,7 +2274,7 @@ null if the folder is not found.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/OCA-CAFEVDB-Toolkit-Service-RequestService.html"><abbr title="\OCA\CAFEVDB\Toolkit\Service\RequestService">RequestService</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCA\CAFEVDB\Toolkit\Service\GroupFOldersService">GroupFOldersService</abbr></span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>$this.</p>
 </section>
@@ -2233,9 +2340,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">342</span>
+    <span class="phpdocumentor-element-found-in__line">337</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.342" class="phpdocumentor-element-found-in__source" data-line="342" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.337" class="phpdocumentor-element-found-in__source" data-line="337" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2296,9 +2403,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">129</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.129" class="phpdocumentor-element-found-in__source" data-line="129" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2338,9 +2445,9 @@ understands those.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">113</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
-            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.113" class="phpdocumentor-element-found-in__source" data-line="113" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.115" class="phpdocumentor-element-found-in__source" data-line="115" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fetch and cache all shared folders from the groupfolders app.</p>
@@ -2356,6 +2463,46 @@ understands those.</p>
     
 
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getRootFolderStorageId">
+        getRootFolderStorageId()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#method_getRootFolderStorageId" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Service/GroupFoldersService.php"><a href="files/toolkit-service-groupfoldersservice.html"><abbr title="Toolkit/Service/GroupFoldersService.php">GroupFoldersService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">476</span>
+
+            <a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#source-view.476" class="phpdocumentor-element-found-in__source" data-line="476" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">getRootFolderStorageId</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|int</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|int</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>The storage id of the root folder.</p>
+</section>
+
+            </section>
+
 </article>
             </section>
 
@@ -2487,9 +2634,11 @@ understands those.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_folderManager">$folderManager<a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_l">$l<a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html"></li>
-                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_requestService">$requestService<a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_mountProvider">$mountProvider<a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_rootFolder">$rootFolder<a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#property_sharedFolders">$sharedFolders<a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html"></li>
                                             </ul>
                 </li>
@@ -2522,6 +2671,7 @@ understands those.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#method_changeFolderManager">changeFolderManager()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#method_ensureFolders">ensureFolders()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#method_fetchFolders">fetchFolders()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Service-GroupFoldersService.html#method_getRootFolderStorageId">getRootFolderStorageId()</a></li>
                                     </ul>
             </li>
                     </ul>

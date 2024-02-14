@@ -1,5 +1,7 @@
 <map id="ensureMigrationsAreLoaded" name="ensureMigrationsAreLoaded">
-<area shape="rect" id="node1" title="Ensure all unapplied migrations are loaded." alt="" coords="5,5,188,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a5a9dff6c1ff549453de63b85b2ece1a0" title="Find all unapplied migrations." alt="" coords="236,5,397,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#af398c267dc84e9a97bf2a48a46871dcf" title=" " alt="" coords="445,5,548,31"/>
+<area shape="rect" id="Node000001" title="Ensure all unapplied migrations are loaded." alt="" coords="5,5,188,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#a5a9dff6c1ff549453de63b85b2ece1a0" title="Find all unapplied migrations." alt="" coords="236,5,396,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,16,220,16,220,21,188,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html#af398c267dc84e9a97bf2a48a46871dcf" title=" " alt="" coords="444,5,546,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="396,16,429,16,429,21,396,21"/>
 </map>

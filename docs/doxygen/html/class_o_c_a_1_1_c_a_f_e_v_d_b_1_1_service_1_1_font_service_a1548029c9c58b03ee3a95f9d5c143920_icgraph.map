@@ -1,11 +1,23 @@
 <map id="getFontsFolder" name="getFontsFolder">
-<area shape="rect" id="node1" title=" " alt="" coords="911,51,1020,77"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a607337401225854431cb0f7f9605d3d8" title=" " alt="" coords="545,26,671,51"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a6b55501d93b01c9bb65dea8c403db037" title="Populate the true&#45;type fonts folder with font&#45;files from the system or from other sources (download?..." alt="" coords="356,26,496,51"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a77513dce29558f6d1474fb786b9ef885" title=" " alt="" coords="719,77,863,102"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a7c3d0f3a25e3212aaf9c467682244f42" title="Delete all files in the app&#39;s font folder and clear all cache entries." alt="" coords="547,177,669,202"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a11370c328f78412deb89ea3a113e01dc" title="Scan the app&#39;s fonts folder and return the contents grouped by font family." alt="" coords="549,127,667,153"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#ad4a3b7b4eedfc6652afc11bd2f63a89e" title="Obtain the cached contents of the font&#45;folder, grouped by family." alt="" coords="355,127,497,153"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a4f12fbd8873025e70264e416c3cb9308" title="Check whether the given font." alt="" coords="196,127,307,153"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a5e7ba34cff754351f6d70869594408fa" title="Return the chosen font&#45;default if it is available and set, otherwise one of the installed fonts." alt="" coords="5,127,148,153"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="908,51,1016,77"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a607337401225854431cb0f7f9605d3d8" title=" " alt="" coords="544,25,669,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="892,62,669,46,669,40,893,57"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a6b55501d93b01c9bb65dea8c403db037" title="Populate the true&#45;type fonts folder with font&#45;files from the system or from other sources (download?..." alt="" coords="356,25,495,52"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="906,48,859,36,772,19,703,10,633,9,545,16,480,27,479,22,544,11,633,4,703,5,773,14,861,31,908,43"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a77513dce29558f6d1474fb786b9ef885" title=" " alt="" coords="717,76,860,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="893,77,861,82,860,76,892,72"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a7c3d0f3a25e3212aaf9c467682244f42" title="Delete all files in the app&#39;s font folder and clear all cache entries." alt="" coords="545,177,668,204"/>
+<area shape="poly" id="edge12_Node000001_Node000005" title=" " alt="" coords="924,88,861,117,757,153,665,179,663,174,756,148,859,112,922,83"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="528,41,495,41,495,36,528,36"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="722,74,656,55,658,50,724,69"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="701,85,544,67,484,55,486,50,545,61,702,80"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="757,114,670,168,645,179,643,174,667,163,754,110"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a11370c328f78412deb89ea3a113e01dc" title="Scan the app&#39;s fonts folder and return the contents grouped by font family." alt="" coords="547,127,666,153"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="724,110,658,129,656,124,722,105"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#ad4a3b7b4eedfc6652afc11bd2f63a89e" title="Obtain the cached contents of the font&#45;folder, grouped by family." alt="" coords="354,127,496,153"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="532,143,497,143,497,137,532,137"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a4f12fbd8873025e70264e416c3cb9308" title="Check whether the given font." alt="" coords="196,127,306,153"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="338,143,306,143,306,137,338,137"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a5e7ba34cff754351f6d70869594408fa" title="Return the chosen font&#45;default if it is available and set, otherwise one of the installed fonts." alt="" coords="5,127,148,153"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="180,143,148,143,148,137,180,137"/>
 </map>

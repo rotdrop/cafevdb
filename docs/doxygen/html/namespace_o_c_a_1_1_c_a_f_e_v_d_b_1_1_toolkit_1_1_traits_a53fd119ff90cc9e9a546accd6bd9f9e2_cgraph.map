@@ -1,5 +1,7 @@
 <map id="deleteAuthToken" name="deleteAuthToken">
-<area shape="rect" id="node1" title="Delete any auth token secured with the given passphrase." alt="" coords="5,31,124,56"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="172,5,269,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="192,55,249,80"/>
+<area shape="rect" id="Node000001" title="Delete any auth token secured with the given passphrase." alt="" coords="5,31,124,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="172,5,268,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,32,156,26,157,32,124,37"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="192,56,248,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="124,51,176,60,176,65,124,56"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="sentEmails" name="sentEmails">
-<area shape="rect" id="node1" title="Return a list of previously sent emails related to the current project." alt="" coords="260,20,347,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#ad575431e75a3b54458acb30654aa7f8b" title="Regenerate the sent&#45;email options after e.g." alt="" coords="5,5,212,60"/>
+<area shape="rect" id="Node000001" title="Return a list of previously sent emails related to the current project." alt="" coords="260,21,346,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html#ad575431e75a3b54458acb30654aa7f8b" title="Regenerate the sent&#45;email options after e.g." alt="" coords="5,5,212,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,37,212,37,212,32,244,32"/>
 </map>

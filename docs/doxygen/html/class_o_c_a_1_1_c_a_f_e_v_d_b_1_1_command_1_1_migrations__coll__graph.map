@@ -1,0 +1,7 @@
+<map id="Migrations" name="Migrations">
+<area shape="rect" id="Node000001" title="Database (and non&#45;database) migration management." alt="" coords="69,96,151,123"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,87,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,43,103,94,99,97,62,46"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_migrations_service.html" title="Manage database migrations." alt="" coords="111,5,237,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,46,121,97,117,94,154,43"/>
+</map>

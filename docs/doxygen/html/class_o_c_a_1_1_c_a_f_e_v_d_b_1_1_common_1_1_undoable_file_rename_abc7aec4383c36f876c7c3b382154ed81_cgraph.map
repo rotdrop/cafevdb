@@ -1,5 +1,7 @@
 <map id="do" name="do">
-<area shape="rect" id="node1" title="{Do something.void}" alt="" coords="5,52,44,77"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html#a9d8ac3ab9c2a02c50e22cc2393aaf61f" title="Remove multipled slashes." alt="" coords="92,5,288,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html#a6036b2b6898da1490a4ffe2e9539e227" title="Rename $fromPath to $to." alt="" coords="157,84,223,109"/>
+<area shape="rect" id="Node000001" title="{Do something.void}" alt="" coords="5,55,44,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html#a9d8ac3ab9c2a02c50e22cc2393aaf61f" title="Remove multipled slashes." alt="" coords="92,5,287,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="43,62,76,55,77,60,44,67"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_undoable_file_rename.html#a6036b2b6898da1490a4ffe2e9539e227" title="Rename $fromPath to $to." alt="" coords="157,88,222,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="44,69,143,89,141,94,43,74"/>
 </map>

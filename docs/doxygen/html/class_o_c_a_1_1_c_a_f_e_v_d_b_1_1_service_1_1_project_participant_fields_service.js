@@ -12,6 +12,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_ser
     [ "getFileSystemFieldName", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#add9792a8ef2eec858f3ba15f6ba7f293", null ],
     [ "getFileSystemOptionLabel", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#a6d0342d984759e9ab087ecd66fa6fa1f", null ],
     [ "implodeDataOptions", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#afc41f438b390f411f7c7579a9997f907", null ],
+    [ "isSupportedMultiplicityTransition", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#a67ac1ff3fe43e6367caf458041feead7", null ],
     [ "isSupportedType", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#a39a356382f98d93680593247d8639d9a", null ],
     [ "monetaryFields", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#af42342855853d605c35b487c58cdab7a", null ],
     [ "multiplicityTypeMask", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#a92f9437ca7f03862211f8e0b67c39496", null ],

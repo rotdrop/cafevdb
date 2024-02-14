@@ -1,5 +1,7 @@
 <map id="getBankTransactionsFolderName" name="getBankTransactionsFolderName">
-<area shape="rect" id="node1" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="5,13,221,38"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="269,13,360,38"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="408,5,576,45"/>
+<area shape="rect" id="Node000001" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="5,13,221,40"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#ac9a30d52a63b1426a994fc3146facfba" title=" " alt="" coords="269,13,359,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,24,253,24,253,29,221,29"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_app_info_1_1_application.html#a50bb03229a4b4114dd9c4bdd734e3cb3" title="Static query of a service through the app container." alt="" coords="407,5,574,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="360,24,391,24,391,29,360,29"/>
 </map>

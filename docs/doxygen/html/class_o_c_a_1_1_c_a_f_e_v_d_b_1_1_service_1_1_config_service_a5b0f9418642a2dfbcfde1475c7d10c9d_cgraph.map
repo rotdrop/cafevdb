@@ -1,7 +1,26 @@
 <map id="inGroup" name="inGroup">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,72,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a80ff7d4e6101b55bc46ce120b838b98d" title=" " alt="" coords="120,5,207,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="124,55,203,80"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="255,5,349,31"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8be64a59621bfe298a4109ce08229ecd" title=" " alt="" coords="268,55,336,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,67,72,93"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a80ff7d4e6101b55bc46ce120b838b98d" title=" " alt="" coords="139,9,225,36"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,64,131,40,133,45,73,69"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#ae2621cc27b1048071816b69caf9b945a" title=" " alt="" coords="120,67,244,93"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="72,77,104,77,104,83,72,83"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a05f6aa1ffae6295260d9f1cca016bf33" title=" " alt="" coords="143,129,221,156"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="72,91,137,120,134,125,70,96"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6c2a8487a2ff84a0fa4530de4d61d83b" title="A short&#45;cut, redirecting to the stock functions for the app." alt="" coords="292,8,386,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="225,20,277,19,277,25,225,25"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a3c0a8ca944cfd5a62a77b1c2cc2b49a8" title=" " alt="" coords="437,5,549,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="387,18,421,17,421,23,387,23"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8be64a59621bfe298a4109ce08229ecd" title=" " alt="" coords="306,155,373,181"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="222,146,291,158,290,163,221,152"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a9645249ef330a927cede315afee62d5a" title=" " alt="" coords="434,56,552,83"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="357,152,433,99,451,88,454,93,436,104,360,156"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a8e80f766c9aa0f817b358aa67422985a" title=" " alt="" coords="715,132,829,159"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="373,155,434,143,504,137,575,135,699,138,699,143,575,140,505,142,435,148,374,161"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a6cacbeb3555df4a292566b2e1b9bb574" title="Install a new user id." alt="" coords="454,157,532,184"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="373,173,438,176,438,181,373,179"/>
+<area shape="poly" id="edge10_Node000010_Node000007" title=" " alt="" coords="454,165,389,163,389,158,454,159"/>
+<area shape="rect" id="Node000011" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7b6e5c12813dec3c45ec9531820c539a" title="Install a new user." alt="" coords="600,157,667,184"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="533,168,585,168,585,173,533,173"/>
+<area shape="poly" id="edge12_Node000011_Node000007" title=" " alt="" coords="600,186,552,199,493,204,434,199,387,188,389,182,435,193,493,199,551,193,599,181"/>
+<area shape="poly" id="edge13_Node000011_Node000009" title=" " alt="" coords="667,162,699,156,700,161,668,167"/>
 </map>

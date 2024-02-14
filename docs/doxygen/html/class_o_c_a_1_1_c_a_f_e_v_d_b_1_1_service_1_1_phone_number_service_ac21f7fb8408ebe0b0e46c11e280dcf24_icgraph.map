@@ -1,4 +1,5 @@
 <map id="translateNumberType" name="translateNumberType">
-<area shape="rect" id="node1" title="Lazy initializer for the number&#45;type&#45;to&#45;locale conversion." alt="" coords="132,5,279,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#ab5d979416900f9fed11ab7285356c356" title="Return new&#45;line formatted meta&#45;data for the current or the given number and region." alt="" coords="5,5,84,31"/>
+<area shape="rect" id="Node000001" title="Lazy initializer for the number&#45;type&#45;to&#45;locale conversion." alt="" coords="132,5,277,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_phone_number_service.html#ab5d979416900f9fed11ab7285356c356" title="Return new&#45;line formatted meta&#45;data for the current or the given number and region." alt="" coords="5,5,84,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,21,84,21,84,16,116,16"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="SubAdminEventListener" name="SubAdminEventListener">
-<area shape="rect" id="node1" title="Track changes in sub&#45;admins and act accordingly." alt="" coords="5,79,168,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="33,5,140,31"/>
+<area shape="rect" id="Node000001" title="Track changes in sub&#45;admins and act accordingly." alt="" coords="5,80,167,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="33,5,139,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,48,89,80,83,80,83,48"/>
 </map>

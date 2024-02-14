@@ -1,0 +1,7 @@
+<map id="headerText" name="headerText">
+<area shape="rect" id="Node000001" title="{Header text informations.Display in popup in order not to bloat the small header space...." alt="" coords="5,43,91,69"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_renderer.html#a43a5cdd6bbe5188ecab5682ac230de5f" title="{string }" alt="" coords="139,5,344,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,47,123,42,123,47,92,52"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_tax_exemption_notices.html#a9ed08d50f5d820b52e7108eea8a169e5" title="{string Short title for heading. }" alt="" coords="204,72,279,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="92,60,189,75,188,80,91,65"/>
+</map>

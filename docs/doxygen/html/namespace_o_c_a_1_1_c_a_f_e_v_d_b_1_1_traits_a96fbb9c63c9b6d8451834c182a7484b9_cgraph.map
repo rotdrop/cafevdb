@@ -1,8 +1,15 @@
 <map id="getBankTransactionsPath" name="getBankTransactionsPath">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,177,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa57ee6dad7c7f33cff6983ad79080946" title="Get a possibly encrypted config value." alt="" coords="829,31,940,56"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a642b5ca28f1a47e6409971d1aeb16c2c" title=" " alt="" coords="225,31,375,56"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="988,31,1089,56"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a1fe279ec39675001095beafdf178b811" title="Create the full&#45;path for the sub&#45;folder corresponding to the given config key." alt="" coords="423,31,589,56"/>
-<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#adac8fad662663420dc8d9b73e0134673" title=" " alt="" coords="637,81,781,107"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,177,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#aa57ee6dad7c7f33cff6983ad79080946" title="Get a possibly encrypted config value." alt="" coords="827,31,936,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,11,296,7,446,6,612,10,779,23,811,27,811,33,778,28,612,16,446,11,296,13,177,17"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a642b5ca28f1a47e6409971d1aeb16c2c" title=" " alt="" coords="225,31,373,57"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,26,210,30,209,36,177,32"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a4bb87734b0f297c2a6d2095820942c48" title="Return the stored config&#45;service for convenience." alt="" coords="984,31,1084,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="936,41,968,41,968,47,936,47"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#a1fe279ec39675001095beafdf178b811" title="Create the full&#45;path for the sub&#45;folder corresponding to the given config key." alt="" coords="421,31,587,57"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="373,41,405,41,405,47,373,47"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="588,41,811,41,811,47,588,47"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_traits.html#adac8fad662663420dc8d9b73e0134673" title=" " alt="" coords="635,81,779,108"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="561,55,637,74,635,80,560,61"/>
+<area shape="poly" id="edge7_Node000006_Node000002" title=" " alt="" coords="755,78,817,60,819,65,756,83"/>
 </map>

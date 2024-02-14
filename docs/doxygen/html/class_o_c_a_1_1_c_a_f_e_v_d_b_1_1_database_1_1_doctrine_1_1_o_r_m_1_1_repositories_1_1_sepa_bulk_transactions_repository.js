@@ -2,5 +2,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_reposi
 [
     [ "findByCreationYear", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository.html#a1fef548817ac1146baa52acb3f900323", null ],
     [ "getEntityManager", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository.html#ae2b0e1dbe7640aefaf7d54c6a94d08fe", null ],
+    [ "isCalendarObjectUsed", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository.html#a69dc357aa9cce8f801221dadfdd273a2", null ],
     [ "sepaTransactionDataModificationTime", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_sepa_bulk_transactions_repository.html#aaac1873402c30002764cbe4b09441deb", null ]
 ];

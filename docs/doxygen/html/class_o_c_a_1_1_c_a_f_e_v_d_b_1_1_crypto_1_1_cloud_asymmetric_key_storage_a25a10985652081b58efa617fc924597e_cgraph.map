@@ -1,5 +1,7 @@
 <map id="setPrivateKeyPassphrase" name="setPrivateKeyPassphrase">
-<area shape="rect" id="node1" title="{Change the the passphrase of the given unlocked private&#45;key.void}" alt="" coords="5,31,179,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#ae61ebfee1a8558f30b68dbd4c3a6d76e" title="Serialize key to string for storage in whatever storage backend." alt="" coords="230,5,323,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#aafad48628125d0a5bcbbe6e1fddbe1ea" title=" " alt="" coords="227,55,327,80"/>
+<area shape="rect" id="Node000001" title="{Change the the passphrase of the given unlocked private&#45;key.void}" alt="" coords="5,31,178,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#ae61ebfee1a8558f30b68dbd4c3a6d76e" title="Serialize key to string for storage in whatever storage backend." alt="" coords="229,5,322,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,29,213,24,214,30,178,35"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#aafad48628125d0a5bcbbe6e1fddbe1ea" title=" " alt="" coords="226,56,325,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,53,210,58,210,63,178,59"/>
 </map>

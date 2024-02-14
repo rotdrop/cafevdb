@@ -3,7 +3,7 @@
  * A collection of reusable traits classes for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,20 +35,25 @@ use OCP\Files\NotFoundException as FileNotFoundException;
  */
 trait UserRootFolderTrait
 {
-  /** @var string */
+  /**
+   * @var string
+   *
+   * Note that this must not be types as it needs to remain compatible with
+   * the Nextcloud Controller class.
+   */
   protected $appName;
 
   /** @var string */
-  protected $userId;
+  protected string $userId;
 
   /** @var IRootFolder */
-  protected $rootFolder;
+  protected IRootFolder $rootFolder;
 
-  /** @var Folder */
-  protected $userRootFolder;
+  /** @var null|Folder */
+  protected ?Folder $userRootFolder;
 
-  /** @var Folder */
-  protected $userFolder;
+  /** @var null|Folder */
+  protected ?Folder $userFolder;
 
   /** @return Folder The user-folder*/
   public function getUserFolder():Folder
@@ -94,14 +99,16 @@ trait UserRootFolderTrait
   }
 
   /**
-   * @return string Just the name of the user folder without recurse to the
+   * @param null|string $userId The user-id. If null then $this->userId is used.
+   *
+   * @return string Just the name of the user folder without recursing to the
    * file system. Thus the returned folder-name does not neccessarily point to
-   * an existing folder. The returned path is relative to the root-folder,
-   * e.g. "jane.doe/files".
+   * an existing folder. The returned path is relative to the root-folder
+   * without a leading slash, e.g. "jane.doe/files".
    */
-  public function getUserFolderPath():string
+  public function getUserFolderPath(?string $userId = null):string
   {
-    return $this->userId . Constants::PATH_SEPARATOR . Constants::USER_FOLDER_PREFIX;
+    return ($userId ?? $this->userId) . Constants::PATH_SEPARATOR . Constants::USER_FOLDER_PREFIX;
   }
 
   /**

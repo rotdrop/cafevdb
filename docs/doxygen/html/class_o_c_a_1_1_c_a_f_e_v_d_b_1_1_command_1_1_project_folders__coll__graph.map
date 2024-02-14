@@ -1,4 +1,5 @@
 <map id="ProjectFolders" name="ProjectFolders">
-<area shape="rect" id="node1" title="Create all participant sub&#45;folder for each project." alt="" coords="5,79,112,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="17,5,100,31"/>
+<area shape="rect" id="Node000001" title="Create all participant sub&#45;folder for each project." alt="" coords="5,80,111,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="17,5,99,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,48,61,80,55,80,55,48"/>
 </map>

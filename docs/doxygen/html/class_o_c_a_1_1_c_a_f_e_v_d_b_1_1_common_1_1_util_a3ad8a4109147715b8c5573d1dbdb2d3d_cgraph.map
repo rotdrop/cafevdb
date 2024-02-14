@@ -1,4 +1,6 @@
 <map id="arrayMergeRecursive" name="arrayMergeRecursive">
-<area shape="rect" id="node1" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="5,29,152,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="200,29,371,55"/>
+<area shape="rect" id="Node000001" title="Merge $arrays recursively where later arguments in the list override the values of previous arguments..." alt="" coords="5,29,151,56"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a9396752fa41df5ffcd301d52263367f9" title="Inner work&#45;horse for arrayMergeRecursive." alt="" coords="199,29,368,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,40,183,40,183,45,151,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="249,30,242,21,247,11,261,5,283,3,308,5,321,12,318,16,306,10,283,8,262,10,250,15,248,20,253,27"/>
 </map>

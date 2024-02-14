@@ -1,4 +1,5 @@
 <map id="untranslateBracedTemplate" name="untranslateBracedTemplate">
-<area shape="rect" id="node1" title="Translate the braced placeholders contained in the given $template to the array keys supplied by the ..." alt="" coords="5,5,185,31"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a7556b32a9aa3e3ff839961d124336316" title="Translate the braced placeholders contained in the given $template to the array values supplied by th..." alt="" coords="233,5,400,31"/>
+<area shape="rect" id="Node000001" title="Translate the braced placeholders contained in the given $template to the array keys supplied by the ..." alt="" coords="5,5,185,32"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a7556b32a9aa3e3ff839961d124336316" title="Translate the braced placeholders contained in the given $template to the array values supplied by th..." alt="" coords="233,5,398,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,16,217,16,217,21,185,21"/>
 </map>

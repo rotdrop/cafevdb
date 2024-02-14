@@ -1,34 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,745,84,771"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_admin_settings_controller.html" title="AJAX end&#45;points for admin setttings." alt="" coords="155,5,318,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_background_job_controller.html" title="Run background&#45;jobs triggered by AJAX pings from the front&#45;end." alt="" coords="153,55,321,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_blog_controller.html" title="AJAX end&#45;points for the db&#45;app blog." alt="" coords="185,104,289,129"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_contacts_controller.html" title="Make the stored personal data accessible for the web&#45;interface." alt="" coords="171,153,302,179"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_crypto_controller.html" title="Encryption/Decryption AJAX end&#45;points." alt="" coords="178,203,295,228"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_csp_violation_controller.html" title="AJAX endpoints for reporting CSP violation errors." alt="" coords="161,252,313,277"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_downloads_controller.html" title="AJAX end&#45;points for download requests independent from the cloud file&#45;system." alt="" coords="165,301,308,327"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_email_form_controller.html" title="Controller class for the mass&#45;email form." alt="" coords="166,351,307,376"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_images_controller.html" title="AJAX end&#45;point for fetch per&#45;user photos." alt="" coords="176,400,297,425"/>
-<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_instrument_insurance_controller.html" title="AJAX end&#45;points for instrument insurances." alt="" coords="138,449,335,475"/>
-<area shape="rect" id="node12" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html" title="Serves the requests issued by the old OC v8 event popups." alt="" coords="156,499,317,524"/>
-<area shape="rect" id="node13" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_mail_merge_controller.html" title="Make the stored personal data accessible for the web&#45;interface." alt="" coords="167,548,306,573"/>
-<area shape="rect" id="node14" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_mailing_lists_controller.html" title="Handle subscription management callbacks." alt="" coords="163,597,310,623"/>
-<area shape="rect" id="node15" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_migrations_controller.html" title="AJAX end&#45;points for database migrations." alt="" coords="167,647,306,672"/>
-<area shape="rect" id="node16" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musician_validation_controller.html" title="Validation controller for some personal input fields." alt="" coords="143,696,330,721"/>
-<area shape="rect" id="node17" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_musicians_controller.html" title="Make the stored personal data accessible for the web&#45;interface." alt="" coords="168,745,305,771"/>
-<area shape="rect" id="node18" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_page_controller.html" title="Main UI entry point providing the front pages." alt="" coords="183,795,291,820"/>
-<area shape="rect" id="node19" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_payments_controller.html" title="AJAX endpoint to support maintenance of payments." alt="" coords="168,844,305,869"/>
-<area shape="rect" id="node20" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller.html" title="AJAX end&#45;points for personal settings." alt="" coords="148,893,325,919"/>
-<area shape="rect" id="node21" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_pme_table_controller.html" title="AJAX backends for legacy PME table stuff." alt="" coords="169,943,305,968"/>
-<area shape="rect" id="node22" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_progress_status_controller.html" title="AJAX end&#45;point for progress status." alt="" coords="153,992,321,1017"/>
-<area shape="rect" id="node23" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_events_controller.html" title="AJAX end&#45;points to manage events linked to projects." alt="" coords="157,1041,317,1067"/>
-<area shape="rect" id="node24" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_participant_fields_controller.html" title="Ajax end&#45;point to support the definition of project&#45;participant fields." alt="" coords="157,1091,317,1131"/>
-<area shape="rect" id="node25" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_participants_controller.html" title="AJAX end&#45;points for project participants." alt="" coords="143,1156,331,1181"/>
-<area shape="rect" id="node26" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_web_pages_controller.html" title="AJAX end&#45;points to manage the web&#45;pages via the CMS." alt="" coords="145,1205,328,1231"/>
-<area shape="rect" id="node27" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_projects_controller.html" title="AJAX controller for projects." alt="" coords="173,1255,300,1280"/>
-<area shape="rect" id="node28" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_sepa_bulk_transactions_controller.html" title="AJAX backend for managing bank bulk transactions." alt="" coords="132,1304,341,1329"/>
-<area shape="rect" id="node29" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_sepa_debit_mandates_controller.html" title="AJAX endpoints for debit mandates." alt="" coords="139,1353,335,1379"/>
-<area shape="rect" id="node30" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_tool_tips_controller.html" title="Fetch one or multiple tooltip via AJAX." alt="" coords="173,1403,300,1428"/>
-<area shape="rect" id="node31" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_uploads_controller.html" title="Simple upload end&#45;point which moved uploaded file to a temporary location in the app&#45;storage area." alt="" coords="173,1452,300,1477"/>
-<area shape="rect" id="node32" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_validation_controller.html" title="General data validation controller." alt="" coords="169,1501,304,1527"/>
+<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits_1_1_constants.html" title="A couple of constants in order to avoid string literals." alt="" coords="5,5,87,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_constants.html" title="General constants for the app." alt="" coords="135,5,216,32"/>
+<area shape="poly" id="edge36_Node000000_Node000001" title=" " alt="" coords="102,16,134,16,134,21,102,21"/>
 </map>

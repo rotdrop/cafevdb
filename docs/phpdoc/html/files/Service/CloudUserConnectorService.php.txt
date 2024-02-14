@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ use OCP\IL10N;
 use OCP\App\IAppManager;
 use OCP\AppFramework\IAppContainer;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Connection;
 use OCA\CAFEVDB\Exceptions;
 
@@ -87,11 +88,7 @@ SELECT m.user_id_slug AS uid,
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
 LEFT JOIN Projects p ON p.id = pp.project_id
-WHERE pp.musician_id in
-    (SELECT pp1.musician_id
-     FROM ProjectParticipants pp1
-     LEFT JOIN Projects p1 ON pp1.project_id = p1.id
-     WHERE p1.type = "permanent")';
+WHERE pp.deleted IS NULL';
   // WITH CHECK OPTION. But view is not updatable. Ok.
 
   /**
@@ -106,9 +103,7 @@ WHERE pp.musician_id in
   const USER_SQL_USER_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT m.id AS id,
-       CONVERT(m.user_id_slug USING utf8mb4) AS uid,
-       CONVERT(m.user_id_slug USING utf8mb4) AS username,
+SELECT CONVERT(m.user_id_slug USING utf8mb4) AS uid,
        m.user_passphrase AS password,
        CONCAT_WS(" ", IF(m.nick_name IS NULL
                          OR m.nick_name = "", m.first_name, m.nick_name), m.sur_name) AS name,
@@ -117,15 +112,11 @@ SELECT m.id AS id,
        NULL AS home,
        COALESCE(m.cloud_account_deactivated, 0) AS inactive,
        IF(m.deleted IS NOT NULL OR m.cloud_account_disabled = 1, 1, 0) AS disabled,
-       0 AS avatar,
+       1 AS avatar,
        NULL AS salt
 FROM Musicians m
-WHERE m.id in
-    (SELECT pp.musician_id
-     FROM ProjectParticipants pp
-     LEFT JOIN Projects p ON pp.project_id = p.id
-     WHERE p.type = "permanent")
-WITH CHECK OPTION';
+WHERE m.email IS NOT NULL AND m.email <> ""
+WITH CHECK OPTION'; // But view is not updatable. Ok.
 
   const USER_SQL_VIEWS = [
     'User' => self::USER_SQL_USER_VIEW,
@@ -146,56 +137,26 @@ WITH CHECK OPTION';
     'EncryptedFileOwners' => 'musician_id',
     'MusicianEmailAddresses' => 'musician_id',
   ];
-  const PARTICIPANT_FIELD_ID_TABLES = [
-    'ProjectParticipantFields' => [
-      'joinField' => 'id',
-      'groupBy' => [
-        'id',
-      ],
-    ],
-    'ProjectParticipantFieldsDataOptions' => [
-      'joinField' => 'field_id',
-      'groupBy' => [
-        'field_id', 'key',
-      ],
-    ],
-  ];
+
   const UNRESTRICTED_TABLES = [
     'Instruments',
     'InstrumentFamilies',
     'instrument_instrument_family',
-    'TableFieldTranslations',
     'GeoContinents',
     'GeoCountries',
     'GeoPostalCodes',
     'GeoPostalCodeTranslations',
     'InsuranceBrokers',
     'InsuranceRates',
+    'ProjectInstrumentationNumbers',
+    'TableFieldTranslations',
   ];
 
   const GRANT_SELECT = 'GRANT SELECT ON %1$s TO %2$s@\'localhost\'';
   const GRANT_FIELD_UPDATE = 'GRANT UPDATE (%3$s) ON %1$s TO %2$s@\'localhost\'';
 
-  /** @var string */
-  private $appName;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var IL10N */
-  private $l;
-
-  /** @var IConfig */
-  private $cloudConfig;
-
-  /** @var EncryptionService */
-  private $encryptionService;
-
   /** @var Connection */
   private $connection;
-
-  /** @var IAppManager */
-  private $appManager;
 
   /** @var string */
   private $appDbHost;
@@ -208,21 +169,14 @@ WITH CHECK OPTION';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
-    IConfig $cloudConfig,
-    EncryptionService $encryptionService,
-    IAppManager $appManager,
+    private string $appName,
+    private IAppContainer $appContainer,
+    protected ILogger $logger,
+    private IL10N $l,
+    private IConfig $cloudConfig,
+    private EncryptionService $encryptionService,
+    private IAppManager $appManager,
   ) {
-    $this->appName = $appName;
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->cloudConfig = $cloudConfig;
-    $this->appManager = $appManager;
-    $this->encryptionService = $encryptionService;
     if ($this->encryptionService->bound()) {
       $this->connection = $this->appContainer->get(Connection::class);
       $this->appDbName = $this->encryptionService->getConfigValue('dbname');
@@ -453,7 +407,7 @@ WITH CHECK OPTION';
       'db.table.user' => $this->viewName(null, self::USER_SQL_PREFIX, 'User'),
       'db.table.user.column.active' => 'inactive',
       'opt.reverse_active' => true,
-      'db.table.user.column.avatar' => null,
+      'db.table.user.column.avatar' => 'avatar',
       'db.table.user.column.disabled' => 'disabled',
       'db.table.user.column.email' => 'email',
       'db.table.user.column.home' => 'home',
@@ -462,7 +416,7 @@ WITH CHECK OPTION';
       'db.table.user.column.quota' => 'quota',
       'db.table.user.column.salt' => null,
       'db.table.user.column.uid' => 'uid',
-      'db.table.user.column.username' => 'username',
+      'db.table.user.column.username' => null,
       'db.table.user_group' => $this->viewName(null, self::USER_SQL_PREFIX, 'UserGroup'),
       'db.table.user_group.column.gid' => 'gid',
       'db.table.user_group.column.uid' => 'uid',
@@ -548,13 +502,13 @@ WITH CHECK OPTION';
     }
     $this->logInfo('USER SQL POST PARAMS ' . print_r($cloudUserBackendParams, true));
 
+    // try also to clear the cache after and before changing the configuration
+    $this->clearUserBackendCache();
+
     $messages = [];
 
     /** @var RequestService $requestService */
     $requestService = $this->appContainer->get(RequestService::class);
-
-    // try also to clear the cache after and before changing the configuration
-    $this->clearUserBackendCache($requestService, $messages);
 
     $route = implode('.', [
       self::CLOUD_USER_BACKEND,
@@ -562,10 +516,10 @@ WITH CHECK OPTION';
       'saveProperties',
     ]);
     $result = $requestService->postToRoute($route, requestData: $cloudUserBackendParams, postType: RequestService::URL_ENCODED);
-    $messages[] = $result['message']??$this->l->t('"%s" configuration may have succeeded.', self::CLOUD_USER_BACKEND);
+    $messages[] = $result['message'] ?? $this->l->t('"%s" configuration may have succeeded.', self::CLOUD_USER_BACKEND);
 
     // try also to clear the cache after and before changing the configuration
-    $this->clearUserBackendCache($requestService, $messages);
+    $this->clearUserBackendCache();
 
     return $messages;
   }
@@ -579,27 +533,8 @@ WITH CHECK OPTION';
    *
    * @return void
    */
-  private function clearUserBackendCache(?RequestService $requestService = null, ?array &$messages = null):void
+  private function clearUserBackendCache():void
   {
-    // /** @var RequestService $requestService */
-    // $requestService = $this->appContainer->get(RequestService::class);
-    // $route = implode('.', [
-    //   self::CLOUD_USER_BACKEND,
-    //   'settings',
-    //   'clearCache',
-    // ]);
-    // try {
-    //   $result = $requestService->postToRoute($route);
-    //   $messages[] = $result['message']??$this->l->t('Clearing "%s"\'s cache may have succeeded.', self::CLOUD_USER_BACKEND);
-    // } catch (\Throwable $t) {
-    //   // essentially ignore ...
-    //   $this->logError($t);
-    //   $messages[] = $this->l->t('An attempt to clear the cache of the "%1$s"-app has failed: %2$s.', [
-    //     self::CLOUD_USER_BACKEND,
-    //     $t->getMessage(),
-    //   ]);
-    // }
-    $messages = $messages ?? [];
     /** @var \OCA\UserSQL\Cache $userBackendCache */
     $userBackendCache = $this->appContainer->get(\OCA\UserSQL\Cache::class);
     $userBackendCache->clear();
@@ -709,8 +644,9 @@ SELECT t.* FROM " . $table . " t
     $memberProjectId = $this->encryptionService->getConfigValue('memberProjectId', -1);
     $executiveBoardProjectId = $this->encryptionService->getConfigValue('executiveBoardProjectId', -1);
 
+    // for the sake of the project-registration page all projects are
+    // exported, they are not so secret BTW.
     $table = 'Projects';
-    $column = 'id';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
     $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
@@ -719,9 +655,36 @@ AS
 SELECT t.*,
   (t.id = " . $memberProjectId . ") AS club_members,
   (t.id = " . $executiveBoardProjectId . ") AS executive_board
-  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipants') . " pppv
+  FROM " . $table . " t
+  WHERE t.type = '" . ProjectType::TEMPORARY . "' OR t.type = '" . ProjectType::PERMANENT . "'";
+
+    // Export also the mapping to the web-pages maintained in the CMS.
+    $table = 'ProjectWebPages';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " .  $this->personalizedViewName($dataBaseName, 'Projects') . " p
   INNER JOIN " . $table . " t
-    ON t." . $column . " = pppv.project_id
+    ON  t.project_id = p.id
+  GROUP BY t.project_id, t.article_id";
+
+    // Unconditionally add all fields which are configured to be exposed. This
+    // is needed by the project-registration form which exposes those fields
+    // to the participants in spe.
+    $table = 'ProjectParticipantFields';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " .  $this->personalizedViewName($dataBaseName, 'Projects') . " p
+  INNER JOIN " . $table . " t
+    ON  t.project_id = p.id
+  WHERE t.participant_access <> 'none'
   GROUP BY t.id";
 
     $table = 'ProjectParticipantFieldsData';
@@ -733,22 +696,32 @@ VIEW " . $viewName . "
 AS
 SELECT t.* FROM " . $table . " t
     INNER JOIN ProjectParticipantFields ppf
-      ON t.field_id = ppf.id AND ppf.participant_access <> 0
+      ON t.field_id = ppf.id AND ppf.participant_access <> 'none'
     WHERE t." . $column . " = " . $accessFunction;
 
-    foreach (self::PARTICIPANT_FIELD_ID_TABLES as $table => $joinInfo) {
-      $viewName = $this->personalizedViewName($dataBaseName, $table);
-      $statement = "CREATE OR REPLACE
+    $table = 'ProjectParticipantFieldsDataOptions';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW " . $viewName . "
 AS
 SELECT t.*
-  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFieldsData'). " pppfdv
+  FROM " . $this->personalizedViewName($dataBaseName, 'ProjectParticipantFields') . " ppf
   INNER JOIN " . $table . " t
-    ON t." . $joinInfo['joinField'] . " = pppfdv.field_id
-  GROUP BY " . implode(', ', array_map(fn($field) => 't.' . $field, $joinInfo['groupBy']));
-      $statements[$viewName] = $statement;
-    }
+    ON t.field_id = ppf.id
+  GROUP BY t.field_id, t.key";
+
+    // we also need the project events, however, only rehearsals and concerts
+
+    $table = 'ProjectEvents';
+    $calendarUris = array_keys(array_filter(ConfigService::CALENDARS, fn($info) => $info['public'] == true));
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.* FROM " . $table . " t
+WHERE t.calendar_uri IN ('" . implode("','", $calendarUris) . "')";
 
     $table = 'InstrumentInsurances';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -775,7 +748,7 @@ VIEW " . $viewName . "
 AS
 SELECT t.*
   FROM " . $table . " t
-  WHERE t.id in (
+  WHERE t.id IN (
     SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
       UNION
     SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
@@ -790,6 +763,19 @@ SELECT t.*
   FROM " . $this->personalizedViewName($dataBaseName, 'Files'). " fv
   INNER JOIN " . $table . " t
     ON t.file_id = fv.id";
+
+    $table = 'DatabaseStorageDirEntries';
+    $viewName = $this->personalizedViewName($dataBaseName, $table);
+    $statements[$viewName] = "CREATE OR REPLACE
+SQL SECURITY DEFINER
+VIEW " . $viewName . "
+AS
+SELECT t.*
+  FROM " . $table . " t
+  WHERE t.file_id IS NULL OR t.file_id IN (
+    SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
+      UNION
+    SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
 
     foreach (self::UNRESTRICTED_TABLES as $table) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);

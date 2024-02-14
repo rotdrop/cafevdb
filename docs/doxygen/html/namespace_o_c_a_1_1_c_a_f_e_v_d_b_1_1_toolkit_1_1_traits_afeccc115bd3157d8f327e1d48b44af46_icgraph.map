@@ -1,6 +1,9 @@
 <map id="getCommonPath" name="getCommonPath">
-<area shape="rect" id="node1" title=" " alt="" coords="691,20,811,45"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="459,5,643,60"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="248,5,411,60"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,13,200,53"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="687,21,807,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a2e9079a65d5beb0113b23bf5fac58125" title="Return the name of the top&#45;level folder for the case that there is only a single folder at folder nes..." alt="" coords="456,5,639,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="672,37,640,37,640,32,672,32"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#adb7197696a0127bef42768cfb61ec66b" title=" " alt="" coords="247,5,408,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="441,37,408,37,408,32,441,32"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb" title=" " alt="" coords="5,13,199,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="231,37,199,37,199,32,231,32"/>
 </map>

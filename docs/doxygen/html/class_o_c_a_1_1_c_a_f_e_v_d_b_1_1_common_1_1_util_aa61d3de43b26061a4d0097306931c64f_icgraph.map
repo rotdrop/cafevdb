@@ -1,6 +1,9 @@
 <map id="removeSpaces" name="removeSpaces">
-<area shape="rect" id="node1" title="Remove all whitespace." alt="" coords="559,60,668,85"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a882a0897b82d354409342d1c195c2f4d" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="272,5,499,60"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ac4930892b628989ea570c18ef64c0b4b" title="The ranking of the mussician&#39;s instruments is implicitly stored in the order of the instrument ids." alt="" coords="260,84,511,139"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,13,212,53"/>
+<area shape="rect" id="Node000001" title="Remove all whitespace." alt="" coords="557,63,665,89"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a882a0897b82d354409342d1c195c2f4d" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="271,5,497,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="541,66,497,58,498,53,542,61"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ac4930892b628989ea570c18ef64c0b4b" title="The ranking of the mussician&#39;s instruments is implicitly stored in the order of the instrument ids." alt="" coords="259,88,509,147"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="542,91,510,97,509,92,541,86"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,13,211,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="255,37,211,37,211,32,255,32"/>
 </map>

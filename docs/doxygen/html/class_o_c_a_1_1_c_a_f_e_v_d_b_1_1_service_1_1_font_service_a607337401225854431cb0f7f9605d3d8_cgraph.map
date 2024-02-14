@@ -1,5 +1,8 @@
 <map id="findOfficeFontFile" name="findOfficeFontFile">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,131,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a1548029c9c58b03ee3a95f9d5c143920" title=" " alt="" coords="371,5,480,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a77513dce29558f6d1474fb786b9ef885" title=" " alt="" coords="179,31,323,56"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,130,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a1548029c9c58b03ee3a95f9d5c143920" title=" " alt="" coords="369,5,477,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,16,353,16,353,21,130,21"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a77513dce29558f6d1474fb786b9ef885" title=" " alt="" coords="178,31,321,57"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,25,162,29,162,34,130,30"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="321,31,353,26,354,31,322,36"/>
 </map>

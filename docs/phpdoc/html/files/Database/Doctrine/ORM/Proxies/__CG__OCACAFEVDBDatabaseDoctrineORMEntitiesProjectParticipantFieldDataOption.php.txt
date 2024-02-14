@@ -67,10 +67,10 @@ class ProjectParticipantFieldDataOption extends \OCA\CAFEVDB\Database\Doctrine\O
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'field', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'key', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'label', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'untranslatedLabel', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'data', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'deposit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'limit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'tooltip', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'fieldData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'preUpdatePosted', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'locale', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'translationChangeSet', 'deleted', 'created', 'updated'];
+            return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'field', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'key', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'label', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'untranslatedLabel', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'data', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'deposit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'limit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'tooltip', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'fieldData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'locale', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'translationChangeSet', 'deleted', 'created', 'updated'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'field', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'key', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'label', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'untranslatedLabel', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'data', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'deposit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'limit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'tooltip', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'fieldData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'preUpdatePosted', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'locale', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'translationChangeSet', 'deleted', 'created', 'updated'];
+        return ['__isInitialized__', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'field', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'key', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'label', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'untranslatedLabel', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'data', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'deposit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'limit', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'tooltip', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'fieldData', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'payments', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'keys', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'locale', '' . "\0" . 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipantFieldDataOption' . "\0" . 'translationChangeSet', 'deleted', 'created', 'updated'];
     }
 
     /**
@@ -451,23 +451,12 @@ class ProjectParticipantFieldDataOption extends \OCA\CAFEVDB\Database\Doctrine\O
     /**
      * {@inheritDoc}
      */
-    public function preUpdate(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\PreUpdateEventArgs $event)
+    public function __toString(): string
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'preUpdate', [$event]);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, '__toString', []);
 
-        return parent::preUpdate($event);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function postUpdate(\OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event\LifecycleEventArgs $event)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'postUpdate', [$event]);
-
-        return parent::postUpdate($event);
+        return parent::__toString();
     }
 
     /**
@@ -545,6 +534,17 @@ class ProjectParticipantFieldDataOption extends \OCA\CAFEVDB\Database\Doctrine\O
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocale', []);
 
         return parent::getLocale();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTranslationChangeSet(string $field): ?array
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTranslationChangeSet', [$field]);
+
+        return parent::getTranslationChangeSet($field);
     }
 
     /**

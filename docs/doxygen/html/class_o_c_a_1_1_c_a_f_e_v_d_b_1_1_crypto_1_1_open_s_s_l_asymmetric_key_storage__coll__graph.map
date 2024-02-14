@@ -1,6 +1,9 @@
 <map id="OpenSSLAsymmetricKeyStorage" name="OpenSSLAsymmetricKeyStorage">
-<area shape="rect" id="node1" title="Key&#45;storage for OpenSSL backend." alt="" coords="5,225,221,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html" title="Key&#45;storage base&#45;class." alt="" coords="16,152,211,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_abstract_asymmetric_key_storage.html" title="Abstract base providing default implementations." alt="" coords="9,79,218,104"/>
-<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_storage_interface.html" title="Key&#45;storage interface." alt="" coords="8,5,219,31"/>
+<area shape="rect" id="Node000001" title="Key&#45;storage for OpenSSL backend." alt="" coords="5,229,221,256"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html" title="Key&#45;storage base&#45;class." alt="" coords="16,155,210,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,197,116,229,110,229,110,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_abstract_asymmetric_key_storage.html" title="Abstract base providing default implementations." alt="" coords="9,80,217,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,122,116,154,110,154,110,122"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_storage_interface.html" title="Key&#45;storage interface." alt="" coords="8,5,218,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="116,48,116,80,110,80,110,48"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="generateKeyPair" name="generateKeyPair">
-<area shape="rect" id="node1" title="{Initialize a private/public key&#45;pair by either retreiving it from the config&#45;space or generating a n..." alt="" coords="5,55,124,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a617489c8e6b2b5f5094a5df200a66eb4" title="Create a key&#45;pair, but don&#39;t store it." alt="" coords="172,5,276,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#ae61ebfee1a8558f30b68dbd4c3a6d76e" title="Serialize key to string for storage in whatever storage backend." alt="" coords="177,55,271,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#aafad48628125d0a5bcbbe6e1fddbe1ea" title=" " alt="" coords="174,104,274,129"/>
+<area shape="rect" id="Node000001" title="{Initialize a private/public key&#45;pair by either retreiving it from the config&#45;space or generating a n..." alt="" coords="5,56,123,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a617489c8e6b2b5f5094a5df200a66eb4" title="Create a key&#45;pair, but don&#39;t store it." alt="" coords="171,5,274,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,53,163,35,165,40,109,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#ae61ebfee1a8558f30b68dbd4c3a6d76e" title="Serialize key to string for storage in whatever storage backend." alt="" coords="176,56,269,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,67,161,67,161,72,123,72"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#aafad48628125d0a5bcbbe6e1fddbe1ea" title=" " alt="" coords="173,107,272,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="109,81,165,99,163,104,107,86"/>
 </map>

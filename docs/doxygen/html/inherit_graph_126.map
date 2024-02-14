@@ -1,6 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,55,149,80"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html" title="Simple slug&#45;handler which updates a field of an associated entity." alt="" coords="197,5,359,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_hash_handler.html" title="Gedmo slug handler which simply computes a hash as slug." alt="" coords="229,55,327,80"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_login_name_slug_handler.html" title="Gedmo slug&#45;handler which converts." alt="" coords="199,104,357,129"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,134,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_undoable_run_queue_exception.html" title="Base class for run&#45;queue exceptions." alt="" coords="182,5,378,32"/>
+<area shape="poly" id="edge445_Node000000_Node000001" title=" " alt="" coords="150,16,181,16,181,21,150,21"/>
 </map>

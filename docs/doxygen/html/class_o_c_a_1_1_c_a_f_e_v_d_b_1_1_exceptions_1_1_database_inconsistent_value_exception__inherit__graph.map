@@ -1,6 +1,9 @@
 <map id="DatabaseInconsistentValueException" name="DatabaseInconsistentValueException">
-<area shape="rect" id="node1" title="Thrown if inconsistencies are detected." alt="" coords="5,225,187,265"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="28,152,164,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="56,79,136,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="42,5,150,31"/>
+<area shape="rect" id="Node000001" title="Thrown if inconsistencies are detected." alt="" coords="5,229,186,272"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_database_exception.html" title="Base&#45;class for database exceptions." alt="" coords="28,155,163,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,197,98,229,93,229,93,197"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="56,80,135,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,122,98,154,93,154,93,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="42,5,149,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="98,48,98,80,93,80,93,48"/>
 </map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,13 +39,11 @@ use OCA\CAFEVDB\PageRenderer\Util\PhpSpreadsheetValueBinder;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\IAppContainer;
 use OCP\IUserSession;
 use OCP\IRequest;
-use OCP\ISession;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 use OCP\ITempManager;
@@ -59,7 +57,6 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
-use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 
 /** AJAX backends for legacy PME table stuff. */
 class PmeTableController extends Controller
@@ -67,65 +64,23 @@ class PmeTableController extends Controller
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
-  /** @var ISession */
-  private $session;
-
-  /** @var HistoryService */
-  private $historyService;
-
-  /** @var ParameterService */
-  private $parameterService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var \OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit */
-  protected $pme;
-
-  /** @var string */
-  private $userId;
-
-  /** @var IL10N */
-  protected $l;
-
-  /** @var ILogger */
-  protected $logger;
-
-  /** @var \OCP\AppFramework\IAppContainer */
-  private $appContainer;
-
-  /** @var \OCP\ITempManager */
-  private $tempManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
-    ISession $session,
-    IAppContainer $appContainer,
-    ConfigService $configService,
-    HistoryService $historyService,
-    RequestParameterService $parameterService,
-    ProjectService $projectService,
-    PHPMyEdit $phpMyEdit,
-    ITempManager $tempManager,
-    $userId,
-    IL10N $l10n,
-    ILogger $logger,
+    private IAppContainer $appContainer,
+    protected ConfigService $configService,
+    private HistoryService $historyService,
+    private RequestParameterService $parameterService,
+    private ProjectService $projectService,
+    protected PHPMyEdit $pme,
+    private ITempManager $tempManager,
+    private $userId,
+    protected ILogger $logger,
   ) {
     parent::__construct($appName, $request);
 
-    $this->session = $session;
-    $this->appContainer = $appContainer;
-    $this->parameterService = $parameterService;
-    $this->projectService = $projectService;
-    $this->historyService = $historyService;
-    $this->configService = $configService;
-    $this->pme = $phpMyEdit;
-    $this->tempManager = $tempManager;
-    $this->logger = $logger;
-    $this->userId = $userId;
-    $this->l = $l10n;
+    $this->l = $this->l10n();
   }
   // phpcs:enable
 
@@ -137,7 +92,6 @@ class PmeTableController extends Controller
    * @return Http\DataResponse
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function serviceSwitch(string $topic):Http\Response
   {
@@ -145,7 +99,6 @@ class PmeTableController extends Controller
       case 'load':
         return $this->load();
       case 'export':
-        $this->session->close();
         return $this->export();
     }
     return self::grumble($this->l->t('Unknown Request: "%s".', $topic));
@@ -158,7 +111,7 @@ class PmeTableController extends Controller
    */
   private function load():Http\Response
   {
-    $this->logInfo('Start');
+    $this->logDebug('Start');
     try {
       $templateRenderer = $this->parameterService->getParam('templateRenderer');
       $template = $this->parameterService->getParam('template');
@@ -184,10 +137,6 @@ class PmeTableController extends Controller
       // $renderer->navigation(false); NOPE, navigation is needed, number of query records may change.
 
       if ($dialogMode || $reloadAction) {
-        if (!$renderer->needPhpSession()) {
-          $this->logInfo('Closing session');
-          $this->session->close();
-        }
         $historyAction = PageController::HISTORY_ACTION_LOAD;
       } else {
         $this->historyService->push($this->parameterService->getParams());
@@ -202,21 +151,15 @@ class PmeTableController extends Controller
         'recordId' => $this->pme->getCGIRecordId(),
       ];
 
-      $response = new PreRenderedTemplateResponse($this->appName, $template, $templateParameters, 'blank');
+      $response = $this->templateResponse(
+        $template,
+        $templateParameters,
+      );
 
       $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
 
-      if ($renderer->needPhpSession()) {
-        $response->preRender();
-      }
-
       if (!$dialogMode && !$reloadAction) {
         $this->historyService->store();
-      }
-
-      if (!$this->session->isClosed()) {
-        $this->logInfo('Closing session');
-        $this->session->close();
       }
 
       return $response;

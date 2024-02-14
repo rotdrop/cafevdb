@@ -1,6 +1,9 @@
 <map id="getAuthToken" name="getAuthToken">
-<area shape="rect" id="node1" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="5,55,108,80"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#acb1c6126cc86281d41e3d5c6adc17114" title="Get or generate a cookie, e.g." alt="" coords="156,5,264,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="161,55,259,80"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="181,104,239,129"/>
+<area shape="rect" id="Node000001" title="Fetch the login credentials from the credentials store and generate a login&#45;token from it." alt="" coords="5,56,107,83"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#acb1c6126cc86281d41e3d5c6adc17114" title="Get or generate a cookie, e.g." alt="" coords="155,5,262,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,53,151,35,152,40,99,58"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="160,56,257,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="107,67,145,67,145,72,107,72"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="180,107,237,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="99,81,166,103,164,108,98,86"/>
 </map>

@@ -1,5 +1,9 @@
 <map id="getSubscriptionRequest" name="getSubscriptionRequest">
-<area shape="rect" id="node1" title="Get or check for a pending invitation (=== email confirmation request) for the given subscription&#45;add..." alt="" coords="235,31,396,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a80b3751e479bc6620f7007cdd019869b" title="Return a brief status for the requested list and email address." alt="" coords="21,5,171,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a0fee216c2f18c3e73b3ef43f97bf4329" title="Dispose any pending subscription request with the given action." alt="" coords="5,55,187,80"/>
+<area shape="rect" id="Node000001" title="Get or check for a pending invitation (=== email confirmation request) for the given subscription&#45;add..." alt="" coords="473,47,633,73"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a80b3751e479bc6620f7007cdd019869b" title="Return a brief status for the requested list and email address." alt="" coords="260,21,410,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="457,52,410,46,410,41,458,46"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_mailing_lists_service.html#a0fee216c2f18c3e73b3ef43f97bf4329" title="Dispose any pending subscription request with the given action." alt="" coords="245,72,425,99"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="458,74,426,77,425,72,457,68"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_project_participants_controller.html#a51746b27963d94b96e7519f4c78a571c" title="Fetch the delivery states for the given email." alt="" coords="5,5,197,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="244,37,197,37,197,32,244,32"/>
 </map>

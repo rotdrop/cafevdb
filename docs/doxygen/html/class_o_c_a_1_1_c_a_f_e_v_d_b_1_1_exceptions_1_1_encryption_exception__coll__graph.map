@@ -1,5 +1,7 @@
 <map id="EncryptionException" name="EncryptionException">
-<area shape="rect" id="node1" title="Base class for other exceptions." alt="" coords="5,152,148,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="37,79,117,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="23,5,131,31"/>
+<area shape="rect" id="Node000001" title="Base class for other exceptions." alt="" coords="5,155,147,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="36,80,116,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,122,79,154,73,154,73,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="22,5,130,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,48,79,80,73,80,73,48"/>
 </map>

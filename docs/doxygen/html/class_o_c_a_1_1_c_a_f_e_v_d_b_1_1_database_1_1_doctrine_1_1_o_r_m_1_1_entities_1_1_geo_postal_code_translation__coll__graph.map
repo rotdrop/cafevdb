@@ -1,4 +1,5 @@
 <map id="GeoPostalCodeTranslation" name="GeoPostalCodeTranslation">
-<area shape="rect" id="node1" title="GeoPostalCodeTranslation." alt="" coords="5,79,184,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="46,5,143,31"/>
+<area shape="rect" id="Node000001" title="GeoPostalCodeTranslation." alt="" coords="5,80,183,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="46,5,142,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,48,97,80,91,80,91,48"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="link" name="link">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,48,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html#a85d275788b74387e8e0c7f21bd335979" title=" " alt="" coords="96,5,175,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,47,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_dir_entry.html#a85d275788b74387e8e0c7f21bd335979" title=" " alt="" coords="95,5,172,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,16,79,16,79,21,47,21"/>
 </map>

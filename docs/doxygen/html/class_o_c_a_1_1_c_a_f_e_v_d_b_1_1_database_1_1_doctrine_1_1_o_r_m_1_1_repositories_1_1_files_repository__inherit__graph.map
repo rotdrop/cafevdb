@@ -1,6 +1,9 @@
 <map id="FilesRepository" name="FilesRepository">
-<area shape="rect" id="node1" title="Entity&#45;repository for file enitites." alt="" coords="35,152,148,177"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_encrypted_files_repository.html" title="Entity&#45;repository for encrypted file enitites." alt="" coords="5,225,177,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="32,79,151,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="32,5,151,31"/>
+<area shape="rect" id="Node000001" title="Entity&#45;repository for file enitites." alt="" coords="35,155,147,181"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_encrypted_files_repository.html" title="Entity&#45;repository for encrypted file enitites." alt="" coords="5,229,177,256"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="94,197,94,229,88,229,88,197"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="32,80,150,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,122,94,154,88,154,88,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="32,5,150,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,48,94,80,88,80,88,48"/>
 </map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,9 @@ use OCP\IUserSession;
 use OCP\IUserManager;
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\IRootFolder;
-use OC\Metadata\MetadataManager;
+use OC\FilesMetadata\FilesMetadataManager;
+use OCP\EventDispatcher\IEventDispatcher;
+use Psr\Log\LoggerInterface;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,33 +44,46 @@ class FilesScan extends \OCA\Files\Command\Scan
 {
   use AuthenticatedCommandTrait;
 
-  /** {@inheritdoc} */
+  /**
+   * @param string $appName Needed by AuthenticatedCommandTrait.
+   * @param IL10N $l Needed by AuthenticatedCommandTrait.
+   * @param IUserManager $userManager Trait and parent.
+   * @param IUserSession $userSession Trait.
+   * @param IAppContainer $appContainer Trait.
+   * @param IRootFolder $rootFolder Parent.
+   * @param FilesMetadataManager $filesMetadataManager Parent.
+   * @param IEventDispatcher $eventDispatcher Parent.
+   * @parma LoggerInterface $logger Parent.
+   */
   public function __construct(
-    string $appName,
-    IL10N $l10n,
-    IUserManager $userManager,
-    IUserSession $userSession,
-    IAppContainer $appContainer,
+    protected string $appName,
+    protected IL10N $l,
+    protected IUserManager $userManager,
+    protected IUserSession $userSession,
+    protected IAppContainer $appContainer,
     IRootFolder $rootFolder,
-    MetadataManager $metadataManager,
+    FilesMetadataManager $filesMetadataManager,
+    IEventDispatcher $eventDispatcher,
+    LoggerInterface $logger,
   ) {
-    parent::__construct($userManager, $rootFolder, $metadataManager);
-    $this->appName = $appName;
-    $this->l = $l10n;
-    $this->userManager = $userManager;
-    $this->userSession = $userSession;
-    $this->appContainer = $appContainer;
+    parent::__construct(
+      userManager: $userManager,
+      rootFolder: $rootFolder,
+      filesMetadataManager: $filesMetadataManager,
+      eventDispatcher: $eventDispatcher,
+      logger: $logger,
+    );
   }
 
   /** {@inheritdoc} */
-  protected function configure()
+  protected function configure():void
   {
     parent::configure();
     $this->setName('cafevdb:files-scan');
   }
 
   /** {@inheritdoc} */
-  protected function execute(InputInterface $input, OutputInterface $output): int
+  protected function execute(InputInterface $input, OutputInterface $output):int
   {
     $result = $this->authenticate($input, $output);
     if ($result != 0) {

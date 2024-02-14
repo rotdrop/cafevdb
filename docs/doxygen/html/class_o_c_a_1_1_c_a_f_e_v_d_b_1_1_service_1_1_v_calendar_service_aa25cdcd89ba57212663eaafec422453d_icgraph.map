@@ -1,17 +1,5 @@
 <map id="getVCalendar" name="getVCalendar">
-<area shape="rect" id="node1" title=" " alt="" coords="803,237,904,262"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ab266e1b2f40afdf180bc9de4f3a06708" title="Export the given events in ICAL format." alt="" coords="549,5,741,45"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#adb10e26ac6192b69880597d9384f9685" title="Augment the database entity by calendar data." alt="" coords="555,69,736,109"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a89595fb1b45135568c26cc3cd895fb1b" title="Inject a new event into the given calendar." alt="" coords="559,133,732,173"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3bc5b15a2fa8fffd6b6b075b0e70c81a" title="Inject a new task into the given calendar." alt="" coords="562,197,729,237"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a65acaff5b7ab74125bbfabf6cc45c3cc" title=" " alt="" coords="536,261,755,301"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a9c5b6c8d51d88794475b33331e1afa98" title="Parse the respective event data and make sure the ProjectEvents table is uptodate." alt="" coords="548,326,743,381"/>
-<area shape="rect" id="node13" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aea891e648fce8ad16b530a23c9eda30c" title="Unconditionally unregister the given event with the given project, and remove the project&#45;name from t..." alt="" coords="562,405,729,445"/>
-<area shape="rect" id="node15" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a459aa81a2ad196007a6b53e6c03bf4b1" title="Update the calendar entry contained in $object, i.e." alt="" coords="542,470,749,525"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a2167926c53943f936dd0d8cfb9794449" title="Fetch the list of events associated with $projectId." alt="" coords="295,37,462,77"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ae8618eeab47bb92ae141f68b7d5ea72f" title="Fetch one specific event and convert start and end to DateTime, also determine allDay." alt="" coords="289,101,468,141"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a8beeaea47449131186f3182d74a639de" title="Return event data for given project id and calendar id." alt="" coords="5,37,221,77"/>
-<area shape="rect" id="node11" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#a3b6658ae82665c492cf28af4e6277831" title=" " alt="" coords="269,247,488,302"/>
-<area shape="rect" id="node12" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ad0dad4413ad713821f2a1be6a76fd888" title=" " alt="" coords="269,326,488,381"/>
-<area shape="rect" id="node14" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#aa0ac3177e93f6493517061766988cb27" title=" " alt="" coords="271,405,486,445"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="272,21,372,48"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_events_service.html#ac6edede4ce08a8617f8ea03fc0404710" title=" " alt="" coords="5,5,224,64"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,37,224,37,224,32,256,32"/>
 </map>

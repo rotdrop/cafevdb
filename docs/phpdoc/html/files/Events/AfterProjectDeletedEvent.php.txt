@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,13 +32,6 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectT
 class AfterProjectDeletedEvent extends ProjectEvent
 {
   /**
-   * @var bool
-   *
-   * Set to true if the project was kept but disabled.
-   */
-  private $disabled;
-
-  /**
    * @param int $projectId
    *
    * @param string $projectName
@@ -47,17 +40,17 @@ class AfterProjectDeletedEvent extends ProjectEvent
    *
    * @param ProjectType $projectType
    *
-   * @param bool $disabled
+   * @param bool $disabled Set to true if the project was kept but disabled.
    */
   public function __construct(
     int $projectId,
     string $projectName,
     int $projectYear,
     ProjectType $projectType,
-    bool $disabled
+    private bool $disabled
   ) {
     parent::__construct($projectId, $projectName, $projectYear, $projectType);
-    $this->diabled = $disabled;
+    $this->disabled = $disabled;
   }
 
   /** @return bool */

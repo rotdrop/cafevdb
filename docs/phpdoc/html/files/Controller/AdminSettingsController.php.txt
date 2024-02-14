@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,24 +51,20 @@ class AdminSettingsController extends Controller
     AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY,
   ];
 
+
   public const FONT_CACHE_UPDATE = 'update'; // scan for new entries
   public const FONT_CACHE_RESCAN = 'rescan'; // == purge + update
   public const FONT_CACHE_PURGE = 'purge'; // just remove everything
-
-  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
-  private $wikiRPC;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ConfigService $configService,
-    WikiRPC $wikiRPC,
+    protected ConfigService $configService,
+    private WikiRPC $wikiRPC,
   ) {
     parent::__construct($appName, $request);
 
-    $this->configService = $configService;
-    $this->wikiRPC = $wikiRPC;
     $this->wikiRPC->errorReporting(WikiRPC::ON_ERROR_THROW);
     $this->l = $this->l10N();
   }
@@ -87,10 +83,13 @@ class AdminSettingsController extends Controller
   {
     $value = null;
     switch ($parameter) {
-      case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
-        $value = $this->getAppValue('usergroup');
+      case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
+        $value = $this->getAppValue(ConfigService::USER_AND_GROUP_BACKEND_KEY, AdminSettings::DEFAULT_USER_AND_GROUP_BACKEND);
         break;
-      case AdminSettings::ORCHESTRA_USER_GROUP_KEY . 'Admins':
+      case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
+        $value = $this->getAppValue(ConfigService::USER_GROUP_KEY);
+        break;
+      case AdminSettings::ORCHESTRA_USER_GROUP_ADMINS_KEY:
         $admins = $this->configService->getGroupSubAdmins();
         $value = [];
         /** @var \OCP\IUser $admin */
@@ -104,27 +103,25 @@ class AdminSettingsController extends Controller
       case AdminSettings::CLOUD_USER_BACKEND_CONFIG_KEY:
         $value = $this->di(CloudUserConnectorService::class)->haveCloudUserBackendConfig();
         break;
-      case FontService::TTF_FONTS_FOLDER_CONFIG:
+      case FontService::OFFICE_FONTS_FOLDER_CONFIG:
         /** @var FontService $fontService */
         $fontService = $this->di(CloudUserConnectorService::class);
         $value = $fontService->getFontsFolderName();
         break;
-      case AdminSettings::TRUE_TYPE_FONTS:
+      case AdminSettings::OFFICE_FONTS:
         /** @var FontService $fontService */
-        $fontService = $this->di(CloudUserConnectorService::class);
+        $fontService = $this->di(FontService::class);
         $value = $fontService->getFontFolderEntries();
         break;
-      case FontService::DEFAULT_OFFICE_FONT:
+      case FontService::DEFAULT_OFFICE_FONT_CONFIG:
         /** @var FontService $fontService */
-        $fontService = $this->di(CloudUserConnectorService::class);
+        $fontService = $this->di(FontService::class);
         $value = $fontService->getDefaultFontName();
         break;
+      default:
+        return new DataResponse([ 'key' => $parameter ], Http::STATUS_NOT_FOUND);
     }
-    if ($value != null) {
-      return new DataResponse([ 'value' => $value ]);
-    } else {
-      return new DataResponse([ 'key' => $parameter ], Http::STATUS_NOT_FOUND);
-    }
+    return new DataResponse([ 'value' => $value ]);
   }
 
   /**
@@ -176,18 +173,31 @@ class AdminSettingsController extends Controller
   private function post(string $parameter, mixed $value = null, ?string $operation = null):DataResponse
   {
     $wikiNameSpace = $this->getAppValue('wikinamespace');
-    $orchestraUserGroup = $this->getAppValue('usergroup');
+    $orchestraUserGroup = $this->getAppValue(ConfigService::USER_GROUP_KEY);
     try {
       switch ($parameter) {
+        case AdminSettings::USER_AND_GROUP_BACKEND_KEY:
+          // @todo something has to be done if this is really set to something
+          // and we want to support that.
+          $this->setAppValue(AdminSettings::USER_AND_GROUP_BACKEND_KEY, $value);
+          $result = [
+            'messages' => [
+              'transient' => [
+                $this->l->t('Setting user and group backend to "%s". Please have a look at the action-menu for additional actions.', [$value]),
+              ],
+            ],
+          ];
+          return self::dataResponse($result);
+          break;
         case AdminSettings::ORCHESTRA_USER_GROUP_KEY:
           $realValue = trim($value);
           if (!empty($orchestraUserGroup) && !empty($wikiNameSpace)) {
             $this->revokeWikiAccess($wikiNameSpace, $orchestraUserGroup);
           }
           $orchestraUserGroup = $realValue;
-          $this->setAppValue('usergroup', $orchestraUserGroup);
+          $this->setAppValue(ConfigService::USER_GROUP_KEY, $orchestraUserGroup);
           $result = [
-            'orchestraUserGroup' => $orchestraUserGroup,
+            $parameter => $orchestraUserGroup,
           ];
           if (empty($wikiNameSpace)) {
             $wikiNameSpace = $orchestraUserGroup;
@@ -204,7 +214,7 @@ class AdminSettingsController extends Controller
           ];
           return self::dataResponse($result);
 
-        case AdminSettings::ORCHESTRA_USER_GROUP_KEY . 'Admins':
+        case AdminSettings::ORCHESTRA_USER_GROUP_ADMINS_KEY:
           if (!is_array($value)) {
             return self::grumble($this->l->t('Expecting a list of user-ids.'));
           }

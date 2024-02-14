@@ -6,7 +6,7 @@
  * later. See the COPYING file.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Claus-Justus Heine 2014-2022
+ * @copyright Claus-Justus Heine 2014-2024
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,12 +25,11 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use Throwable;
 use OutOfBoundsException;
 
 use OCP\IRequest;
-use OCP\ISession;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
@@ -47,13 +46,13 @@ use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\MigrationsService;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
-use OCA\CAFEVDB\Response\PreRenderedTemplateResponse;
 
 /** Main UI entry point providing the front pages. */
 class PageController extends Controller
@@ -67,39 +66,6 @@ class PageController extends Controller
   public const HISTORY_ACTION_LOAD = 'load';
   public const HISTORY_ACTION_PUSH = 'push';
 
-  /** @var ISession */
-  private $session;
-
-  /** @var IL10N */
-  protected $l;
-
-  /** @var HistoryService */
-  private $historyService;
-
-  /** @var RequestParameterService */
-  private $parameterService;
-
-  /** @var ToolTipsService */
-  protected $toolTipsService;
-
-  /** @var ConfigCheckService */
-  private $configCheckService;
-
-  /** @var \OCA\CAFEVDB\Service\OrganizationalRolesService */
-  private $organizationalRolesService;
-
-  /** @var \OCP\IURLGenerator */
-  private $urlGenerator;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var OCA\CAFEVDB\PageRenderer\Util\Navigation */
-  private $pageNavigation;
-
-  /** @var AssetService */
-  private $assetService;
-
   /** @var array
    *
    * Result of ConfigCheckService.
@@ -110,34 +76,22 @@ class PageController extends Controller
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ISession $session,
-    IAppContainer $appContainer,
-    AssetService $assetService,
-    ConfigService $configService,
-    HistoryService $historyService,
-    OrganizationalRolesService $organizationalRolesService,
-    RequestParameterService $parameterService,
-    ToolTipsService $toolTipsService,
-    PageNavigation $pageNavigation,
-    IInitialStateService $initialStateService,
-    ConfigCheckService $configCheckService,
-    \OCP\IURLGenerator $urlGenerator,
+    private IAppContainer $appContainer,
+    private AssetService $assetService,
+    protected ConfigService $configService,
+    protected HistoryService $historyService,
+    private OrganizationalRolesService $organizationalRolesService,
+    private AuthorizationService $authorizationService,
+    private RequestParameterService $parameterService,
+    protected ToolTipsService $toolTipsService,
+    private PageNavigation $pageNavigation,
+    protected IInitialStateService $initialStateService,
+    private ConfigCheckService $configCheckService,
+    private \OCP\IURLGenerator $urlGenerator,
   ) {
 
     parent::__construct($appName, $request);
 
-    $this->session = $session;
-    $this->appContainer = $appContainer;
-    $this->assetService = $assetService;
-    $this->configService = $configService;
-    $this->historyService = $historyService;
-    $this->parameterService = $parameterService;
-    $this->toolTipsService = $toolTipsService;
-    $this->pageNavigation = $pageNavigation;
-    $this->initialStateService = $initialStateService;
-    $this->organizationalRolesService = $organizationalRolesService;
-    $this->configCheckService = $configCheckService;
-    $this->urlGenerator = $urlGenerator;
     $this->l = $this->l10N();
 
     // See if we are configured
@@ -153,20 +107,18 @@ class PageController extends Controller
    * @NoAdminRequired
    * @NoGroupMemberRequired
    * @NoCSRFRequired
-   * @UseSession
    */
   public function index():Http\Response
   {
     if ($this->parameterService->getParam('history', '') == 'discard') {
       $this->historyService->push([]);
       $this->historyService->store();
-      $this->session->close();
       return new Http\RedirectResponse($this->urlGenerator->linkTo($this->appName, ''));
     }
     if ($this->shouldLoadHistory()) {
-      return $this->history(0, 'user');
+      return $this->history(0, self::RENDER_AS_USER);
     } else {
-      return $this->remember('user');
+      return $this->remember(self::RENDER_AS_USER);
     }
   }
 
@@ -245,7 +197,6 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function history(int $level = 0, string $renderAs = 'blank'):Http\Response
   {
@@ -279,13 +230,12 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
-   * @UseSession
    */
-  public function remember(string $renderAs = 'user'):Http\Response
+  public function remember(string $renderAs = self::RENDER_AS_USER):Http\Response
   {
     $this->historyService->push($this->parameterService->getParams());
     return $this->loader(
-      $this->parameterService->getParam('renderAs', 'user'),
+      $this->parameterService->getParam('renderAs', self::RENDER_AS_USER),
       $this->parameterService['template'],
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
@@ -299,12 +249,11 @@ class PageController extends Controller
    *
    * @NoAdminRequired
    * @NoCSRFRequired
-   * @UseSession
    */
   public function debug():Http\Response
   {
     return $this->loader(
-      'user',
+      self::RENDER_AS_USER,
       'maintenance/debug', // template
       $this->parameterService['projectName'],
       $this->parameterService['projectId'],
@@ -331,7 +280,6 @@ class PageController extends Controller
    * @return Http\Response
    *
    * @NoAdminRequired
-   * @UseSession
    */
   public function loader(
     string $renderAs,
@@ -344,6 +292,12 @@ class PageController extends Controller
 
     // Initial state injecton for JS
     $this->publishInitialStateForUser($this->userId());
+
+    $this->initialStateService->provideInitialState(
+      $this->appName,
+      'iFrameContentScript',
+      $this->assetService->getJSAsset('iframe-content-script'),
+    );
 
     // The most important ...
     $encrkey = $this->getAppEncryptionKey();
@@ -362,15 +316,15 @@ class PageController extends Controller
 
     $this->toolTipsService->debug(!!($debugMode & ConfigService::DEBUG_TOOLTIPS));
 
-    if (!$this->inGroup()) {
-      return new TemplateResponse(
-        $this->appName(),
+    if (!$this->authorizationService->authorized(null, AuthorizationService::PERMISSION_FRONTEND)) {
+      return $this->templateResponse(
         'errorpage',
         [
           'error' => 'notamember',
           'userId' => $this->userId(),
         ],
-        'user');
+        self::RENDER_AS_USER,
+      );
     };
 
     $template = $this->getTemplate($template, $renderAs);
@@ -400,16 +354,17 @@ class PageController extends Controller
 
       //'l' => $this->l,
       'appName' => $this->appName,
+      'appNameTag' => 'app-' . $this->appName,
 
       'configcheck' => $this->configCheck,
       'orchestra' => $this->getConfigValue('orchestra'),
       'wikinamespace' => $this->getAppValue('wikinamespace'),
-      'usergroup' => $this->groupId(),
-      'shareowner' => $this->getConfigValue('shareowner'),
+      ConfigService::USER_GROUP_KEY => $this->groupId(),
+      ConfigService::SHAREOWNER_KEY => $this->getConfigValue(ConfigService::SHAREOWNER_KEY),
       'sharedfolder' => $this->getConfigValue('sharedfolder'),
       'database' => $this->getConfigValue('database'),
       'groupadmin' => $this->isSubAdminOfGroup(),
-      'user' => $this->userId(),
+      self::RENDER_AS_USER => $this->userId(),
       'expertMode' => $expertMode,
       'financeMode' => $financeMode,
       'showToolTips' => $showToolTips,
@@ -423,7 +378,7 @@ class PageController extends Controller
       'projectName' => $projectName,
       'projectId' => $projectId,
       'musicianId' => $musicianId,
-      'locale' => $this->getLocale(),
+      'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
       'timezone' => $this->getTimezone(),
       'requesttoken' => \OCP\Util::callRegister(),
       'restorehistory' => $restoreHist,
@@ -435,8 +390,12 @@ class PageController extends Controller
     ];
 
     // renderAs = admin, user, blank
-    // $renderAs = 'user';
-    $response = new PreRenderedTemplateResponse($this->appName, $template, $templateParameters, $renderAs);
+    // $renderAs = self::RENDER_AS_USER;
+    $response = $this->templateResponse(
+      $template,
+      $templateParameters,
+      $renderAs,
+    );
 
     // @todo: we need this only for some site like DokuWiki and CMS
     $policy = new ContentSecurityPolicy();
@@ -446,18 +405,9 @@ class PageController extends Controller
 
     $response->addHeader('X-'.$this->appName.'-history-action', $historyAction);
 
-    if ($renderer->needPhpSession() && $renderAs !== 'user') {
-      $response->preRender();
-    }
-
-    // ok no exception, so flush the history to the session, when we
-    // got so far.
     try {
       $this->historyService->store();
-      if (!$renderer->needPhpSession() || $renderAs !== 'user') {
-        $this->session->close();
-      }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       // log, but ignore otherwise
       $this->logException($t);
     }
@@ -480,7 +430,7 @@ class PageController extends Controller
     if (empty($template) || $template == self::HOME_TEMPLATE) {
       $template = self::DEFAULT_TEMPLATE;
     }
-    if ($renderAs === 'user') {
+    if ($renderAs === self::RENDER_AS_USER) {
       $blogMapper = \OC::$server->query(BlogMapper::class);
       if ($blogMapper->notificationPending($this->userId())) {
         $template = 'blog/blog';

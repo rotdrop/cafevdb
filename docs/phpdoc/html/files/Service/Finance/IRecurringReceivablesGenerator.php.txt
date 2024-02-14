@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2021, 2022 Claus-Justus Heine
+ * @copyright 2021, 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use DateTimeInterface;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Common\IProgressStatus;
 use \DateTimeImmutable as DateTime;
 
 /**
@@ -114,7 +115,14 @@ interface IRecurringReceivablesGenerator
    *
    * The option value should be protected in the per-musician view
    */
-  const UI_PROTECTED_VALUE = (1 << 2);
+  const UI_PROTECTED_VALUE = (1 << 3);
+
+  /**
+   * @var int
+   *
+   * Only bulk-updates without progress bar
+   */
+  const UI_NO_PROGRESS = (1 << 4);
 
   /**
    * @var array flags controlling the user interaction
@@ -170,13 +178,12 @@ interface IRecurringReceivablesGenerator
    *
    * @param Entities\ProjectParticipantField $serviceFeeField
    *
-   * @param mixed $progressToken Optional token which identifies an
-   * instance of \OCA\CAFEVDB\Common\IProgressStatus in order to give
-   * feedback during long running updates.
+   * @param null|IProgressStatus $progressStatus Optional progress
+   * status class in order to give feedback during long running updates.
    *
    * @return void
    */
-  public function bind(Entities\ProjectParticipantField $serviceFeeField, mixed $progressToken = null):void;
+  public function bind(Entities\ProjectParticipantField $serviceFeeField, ?IProgressStatus $progressStatus = null):void;
 
   /**
    * Update the list of receivables for the bound service-fee field,

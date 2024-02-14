@@ -1,0 +1,15 @@
+<map id="executiveBoardMembers" name="executiveBoardMembers">
+<area shape="rect" id="Node000001" title="Return an array with all members of the executive board." alt="" coords="417,107,582,133"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a0be55a4885c7fb3d52f6511a4452cdbc" title=" " alt="" coords="149,56,369,83"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="417,105,325,86,326,81,418,100"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a704c6157c10be605fb129c98c6f3fd96" title="Get the database entity for the matching executive board member." alt="" coords="199,107,319,133"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="401,123,319,123,319,117,401,117"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a954a17ac83ca105ff1dba71a2337f2d9" title="Check whether the given or currently logged in user is a member of the executive board." alt="" coords="203,157,315,184"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="419,140,316,161,315,156,417,134"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a58259e4c7621772baed4e9883b59cc93" title=" " alt="" coords="6,5,100,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,54,100,33,101,28,188,49"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a8ada6036f348dbf48c7910c53a774206" title=" " alt="" coords="5,56,101,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="133,72,101,72,101,67,133,67"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#acd02402643b391e657040ddf7e1c2613" title=" " alt="" coords="6,107,100,133"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="182,89,149,97,101,110,100,105,148,92,180,84"/>
+</map>

@@ -1,6 +1,10 @@
 <map id="groupShareCalendar" name="groupShareCalendar">
-<area shape="rect" id="node1" title="Share the given calendar with a group." alt="" coords="5,56,145,81"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a73af2c12aae06cdd9242151cfbdb94be" title="Test if the given calendar is shared with the given group." alt="" coords="193,5,353,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ae15d4de248635c80289eb846492d31e2" title=" " alt="" coords="401,31,524,56"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a95d471e2ffc087c4a6e55a8416cd7d59" title="Create a new calendar object." alt="" coords="220,107,327,132"/>
+<area shape="rect" id="Node000001" title="Share the given calendar with a group." alt="" coords="5,56,145,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a73af2c12aae06cdd9242151cfbdb94be" title="Test if the given calendar is shared with the given group." alt="" coords="193,5,352,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,53,202,34,203,39,131,58"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#ae15d4de248635c80289eb846492d31e2" title=" " alt="" coords="400,31,522,57"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="145,62,384,46,384,52,145,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a95d471e2ffc087c4a6e55a8416cd7d59" title="Create a new calendar object." alt="" coords="220,107,325,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="131,81,205,100,204,105,129,86"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="353,27,385,31,384,36,352,32"/>
 </map>

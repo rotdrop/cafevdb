@@ -123,9 +123,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.40" class="phpdocumentor-element-found-in__source" data-line="40" data-modal="source-view" data-src="files/Service/SimpleSharingService.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Service/SimpleSharingService.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Support class for the creating cloud shared, currently only web-links can
@@ -157,7 +157,7 @@ be generated.</p>
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -property -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#property_configService">$configService</a>
+    <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#property_configService">$configService</a>
     <span>
                         &nbsp;: <a href="classes/OCA-CAFEVDB-Service-ConfigService.html"><abbr title="\OCA\CAFEVDB\Service\ConfigService">ConfigService</abbr></a>            </span>
 </dt>
@@ -178,6 +178,12 @@ be generated.</p>
     <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#property_shareManager">$shareManager</a>
     <span>
                         &nbsp;: <abbr title="\OCP\Share\IManager">IManager</abbr>            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#property_urlGenerator">$urlGenerator</a>
+    <span>
+                        &nbsp;: <abbr title="\OCP\IURLGenerator">IURLGenerator</abbr>            </span>
 </dt>
 
     </dl>
@@ -311,6 +317,13 @@ setting their expiration time to the current or the given time.</dd>
     <span>
                                 &nbsp;: null|false|<abbr title="\DateTimeInterface">DateTimeInterface</abbr>    </span>
 </dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#method_groupShareNode">groupShareNode()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Create a simple group-share (default read-only)</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#method_linkShare">linkShare()</a>
@@ -628,6 +641,18 @@ key.</dd>
 <dd>Forward to OCP\IConfig::getSystemValueString().</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTaxAuthoritiesPath">getTaxAuthoritiesPath()</a>
+    <span>
+                                &nbsp;: null|string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTaxExemptionNoticesPath">getTaxExemptionNoticesPath()</a>
+    <span>
+                                &nbsp;: null|string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTimeStamp">getTimeStamp()</a>
     <span>
                                 &nbsp;: int    </span>
@@ -639,6 +664,12 @@ key.</dd>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Return the current time-zone string</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getUserSession">getUserSession()</a>
+    <span>
+                                &nbsp;: <abbr title="\OCP\IUserSession">IUserSession</abbr>    </span>
+</dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getUserValue">getUserValue()</a>
@@ -844,12 +875,6 @@ transformations.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_userSession">userSession()</a>
-    <span>
-                                &nbsp;: <abbr title="\OCP\IUserSession">IUserSession</abbr>    </span>
-</dt>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_verifyHash">verifyHash()</a>
     <span>
                                 &nbsp;: bool    </span>
@@ -884,17 +909,17 @@ transformations.</dd>
 >
     <h4 class="phpdocumentor-element__name" id="property_configService">
         $configService
-        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#property_configService" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#property_configService" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
                                 </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">47</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.47" class="phpdocumentor-element-found-in__source" data-line="47" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -926,9 +951,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">68</span>
+    <span class="phpdocumentor-element-found-in__line">70</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.70" class="phpdocumentor-element-found-in__source" data-line="70" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -960,9 +985,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">67</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.65" class="phpdocumentor-element-found-in__source" data-line="65" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.67" class="phpdocumentor-element-found-in__source" data-line="67" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -994,9 +1019,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1004,6 +1029,40 @@ transformations.</dd>
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type"><abbr title="\OCP\Share\IManager">IManager</abbr></span>
     <span class="phpdocumentor-signature__name">$shareManager</span>
+    </code>
+
+    
+    
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_urlGenerator">
+        $urlGenerator
+        <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#property_urlGenerator" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">49</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type"><abbr title="\OCP\IURLGenerator">IURLGenerator</abbr></span>
+    <span class="phpdocumentor-signature__name">$urlGenerator</span>
     </code>
 
     
@@ -1033,9 +1092,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -1090,9 +1149,9 @@ transformations.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.88" class="phpdocumentor-element-found-in__source" data-line="88" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored config-service of the embedding cloud
@@ -1128,9 +1187,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">75</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.77" class="phpdocumentor-element-found-in__source" data-line="77" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the stored config-service for convenience.</p>
@@ -1165,9 +1224,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">936</span>
+    <span class="phpdocumentor-element-found-in__line">964</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.936" class="phpdocumentor-element-found-in__source" data-line="936" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.964" class="phpdocumentor-element-found-in__source" data-line="964" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency code for the locale.</p>
@@ -1212,9 +1271,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">948</span>
+    <span class="phpdocumentor-element-found-in__line">976</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.948" class="phpdocumentor-element-found-in__source" data-line="948" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.976" class="phpdocumentor-element-found-in__source" data-line="976" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the currency symbol for the locale.</p>
@@ -1259,9 +1318,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">563</span>
+    <span class="phpdocumentor-element-found-in__line">565</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.563" class="phpdocumentor-element-found-in__source" data-line="563" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.565" class="phpdocumentor-element-found-in__source" data-line="565" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1323,9 +1382,9 @@ container.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">208</span>
+    <span class="phpdocumentor-element-found-in__line">203</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.208" class="phpdocumentor-element-found-in__source" data-line="208" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.203" class="phpdocumentor-element-found-in__source" data-line="203" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete all shares of the respective user of the respective type of the given file-system node by
@@ -1391,9 +1450,9 @@ setting their expiration time to the current time.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">364</span>
+    <span class="phpdocumentor-element-found-in__line">366</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.364" class="phpdocumentor-element-found-in__source" data-line="364" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.366" class="phpdocumentor-element-found-in__source" data-line="366" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the value for the given key.</p>
@@ -1436,9 +1495,9 @@ setting their expiration time to the current time.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">232</span>
+    <span class="phpdocumentor-element-found-in__line">227</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.232" class="phpdocumentor-element-found-in__source" data-line="232" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.227" class="phpdocumentor-element-found-in__source" data-line="227" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Delete the given share.</p>
@@ -1490,9 +1549,9 @@ carries the token as last path component.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">168</span>
+    <span class="phpdocumentor-element-found-in__line">163</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.168" class="phpdocumentor-element-found-in__source" data-line="168" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.163" class="phpdocumentor-element-found-in__source" data-line="163" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Expire all shares of the respective user of the respective type of the given file-system node by
@@ -1567,9 +1626,9 @@ setting their expiration time to the current or the given time.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">256</span>
+    <span class="phpdocumentor-element-found-in__line">251</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.256" class="phpdocumentor-element-found-in__source" data-line="256" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.251" class="phpdocumentor-element-found-in__source" data-line="251" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Expire just the given share.</p>
@@ -1634,9 +1693,9 @@ null if the share cannot be found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">900</span>
+    <span class="phpdocumentor-element-found-in__line">928</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.900" class="phpdocumentor-element-found-in__source" data-line="900" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.928" class="phpdocumentor-element-found-in__source" data-line="928" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1697,9 +1756,9 @@ null if the share cannot be found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">910</span>
+    <span class="phpdocumentor-element-found-in__line">938</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.910" class="phpdocumentor-element-found-in__source" data-line="910" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.938" class="phpdocumentor-element-found-in__source" data-line="938" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1748,9 +1807,9 @@ null if the share cannot be found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">978</span>
+    <span class="phpdocumentor-element-found-in__line">1006</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.978" class="phpdocumentor-element-found-in__source" data-line="978" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1006" class="phpdocumentor-element-found-in__source" data-line="1006" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert a float value in the given or default locale.</p>
@@ -1809,9 +1868,9 @@ null if the share cannot be found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">376</span>
+    <span class="phpdocumentor-element-found-in__line">378</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.376" class="phpdocumentor-element-found-in__source" data-line="376" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.378" class="phpdocumentor-element-found-in__source" data-line="378" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Would rather belong to the EncryptionService.</p>
@@ -1858,9 +1917,9 @@ null if the share cannot be found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">338</span>
+    <span class="phpdocumentor-element-found-in__line">340</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.338" class="phpdocumentor-element-found-in__source" data-line="338" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.340" class="phpdocumentor-element-found-in__source" data-line="340" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get a possibly encrypted config value.</p>
@@ -1923,9 +1982,9 @@ null if the share cannot be found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">747</span>
+    <span class="phpdocumentor-element-found-in__line">775</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.747" class="phpdocumentor-element-found-in__source" data-line="747" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.775" class="phpdocumentor-element-found-in__source" data-line="775" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1963,9 +2022,9 @@ null if the share cannot be found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">286</span>
+    <span class="phpdocumentor-element-found-in__line">281</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.286" class="phpdocumentor-element-found-in__source" data-line="286" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.281" class="phpdocumentor-element-found-in__source" data-line="281" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2008,6 +2067,89 @@ carries the token as last path component.</p>
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_groupShareNode">
+        groupShareNode()
+        <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#method_groupShareNode" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">323</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.323" class="phpdocumentor-element-found-in__source" data-line="323" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Create a simple group-share (default read-only)</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">groupShareNode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Files\Node">Node</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$node</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$groupId</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$target</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissions</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">OCPConstants::PERMISSION_READ</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sharedByOwner</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$node</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\Files\Node">Node</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$groupId</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$target</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The targer location in the file-space of the
+consumer.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$permissions</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">OCPConstants::PERMISSION_READ</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Default read-only.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$sharedByOwner</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Pretend this was shared by the owner of the
+node instead of the currently logged in user.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_linkShare">
         linkShare()
         <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#method_linkShare" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2016,9 +2158,9 @@ carries the token as last path component.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">75</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.75" class="phpdocumentor-element-found-in__source" data-line="75" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create a link-share for the given file-system node. If the node is
@@ -2111,9 +2253,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.104" class="phpdocumentor-element-found-in__source" data-line="104" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.106" class="phpdocumentor-element-found-in__source" data-line="106" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2147,9 +2289,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">962</span>
+    <span class="phpdocumentor-element-found-in__line">990</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.962" class="phpdocumentor-element-found-in__source" data-line="962" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.990" class="phpdocumentor-element-found-in__source" data-line="990" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Convert $value to a currency value in the given or default locale.</p>
@@ -2201,9 +2343,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">352</span>
+    <span class="phpdocumentor-element-found-in__line">354</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.352" class="phpdocumentor-element-found-in__source" data-line="352" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.354" class="phpdocumentor-element-found-in__source" data-line="354" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2273,9 +2415,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">924</span>
+    <span class="phpdocumentor-element-found-in__line">952</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.924" class="phpdocumentor-element-found-in__source" data-line="924" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.952" class="phpdocumentor-element-found-in__source" data-line="952" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Transliterate the given string to the given or default locale</p>
@@ -2327,9 +2469,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">140</span>
+    <span class="phpdocumentor-element-found-in__line">142</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.140" class="phpdocumentor-element-found-in__source" data-line="140" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.142" class="phpdocumentor-element-found-in__source" data-line="142" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2363,9 +2505,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">110</span>
+    <span class="phpdocumentor-element-found-in__line">112</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.110" class="phpdocumentor-element-found-in__source" data-line="110" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2399,9 +2541,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">100</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.98" class="phpdocumentor-element-found-in__source" data-line="98" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.100" class="phpdocumentor-element-found-in__source" data-line="100" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2435,9 +2577,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">858</span>
+    <span class="phpdocumentor-element-found-in__line">886</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.858" class="phpdocumentor-element-found-in__source" data-line="858" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.886" class="phpdocumentor-element-found-in__source" data-line="886" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2471,9 +2613,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">128</span>
+    <span class="phpdocumentor-element-found-in__line">130</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.128" class="phpdocumentor-element-found-in__source" data-line="128" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.130" class="phpdocumentor-element-found-in__source" data-line="130" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2507,9 +2649,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">134</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.134" class="phpdocumentor-element-found-in__source" data-line="134" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.136" class="phpdocumentor-element-found-in__source" data-line="136" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2543,9 +2685,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">322</span>
+    <span class="phpdocumentor-element-found-in__line">324</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.322" class="phpdocumentor-element-found-in__source" data-line="322" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.324" class="phpdocumentor-element-found-in__source" data-line="324" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2595,9 +2737,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1095</span>
+    <span class="phpdocumentor-element-found-in__line">1123</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1095" class="phpdocumentor-element-found-in__source" data-line="1095" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1123" class="phpdocumentor-element-found-in__source" data-line="1123" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2631,9 +2773,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">784</span>
+    <span class="phpdocumentor-element-found-in__line">812</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.784" class="phpdocumentor-element-found-in__source" data-line="784" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.812" class="phpdocumentor-element-found-in__source" data-line="812" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2667,9 +2809,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">299</span>
+    <span class="phpdocumentor-element-found-in__line">301</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.299" class="phpdocumentor-element-found-in__source" data-line="299" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.301" class="phpdocumentor-element-found-in__source" data-line="301" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2719,9 +2861,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">240</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.238" class="phpdocumentor-element-found-in__source" data-line="238" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.240" class="phpdocumentor-element-found-in__source" data-line="240" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -2764,9 +2906,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">122</span>
+    <span class="phpdocumentor-element-found-in__line">124</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.122" class="phpdocumentor-element-found-in__source" data-line="122" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.124" class="phpdocumentor-element-found-in__source" data-line="124" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Dependency injection of $className.</p>
@@ -2807,9 +2949,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">289</span>
+    <span class="phpdocumentor-element-found-in__line">291</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.289" class="phpdocumentor-element-found-in__source" data-line="289" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.291" class="phpdocumentor-element-found-in__source" data-line="291" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2859,9 +3001,9 @@ share if it exists.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">279</span>
+    <span class="phpdocumentor-element-found-in__line">281</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.279" class="phpdocumentor-element-found-in__source" data-line="279" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.281" class="phpdocumentor-element-found-in__source" data-line="281" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check the validity of the encryption key. In order to do so we fetch
@@ -2934,9 +3076,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">244</span>
+    <span class="phpdocumentor-element-found-in__line">246</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.244" class="phpdocumentor-element-found-in__source" data-line="244" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.246" class="phpdocumentor-element-found-in__source" data-line="246" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -2970,9 +3112,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">802</span>
+    <span class="phpdocumentor-element-found-in__line">830</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.802" class="phpdocumentor-element-found-in__source" data-line="802" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.830" class="phpdocumentor-element-found-in__source" data-line="830" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -3038,9 +3180,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">831</span>
+    <span class="phpdocumentor-element-found-in__line">859</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.831" class="phpdocumentor-element-found-in__source" data-line="831" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.859" class="phpdocumentor-element-found-in__source" data-line="859" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Work around NC annoyingly not accepting \DateTimeInterface</p>
@@ -3113,9 +3255,9 @@ key matches our key, then we accept the key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1029</span>
+    <span class="phpdocumentor-element-found-in__line">1057</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1029" class="phpdocumentor-element-found-in__source" data-line="1029" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1057" class="phpdocumentor-element-found-in__source" data-line="1057" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format the given date according to $format and $timeZone to a
@@ -3176,9 +3318,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1041</span>
+    <span class="phpdocumentor-element-found-in__line">1069</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1041" class="phpdocumentor-element-found-in__source" data-line="1041" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1069" class="phpdocumentor-element-found-in__source" data-line="1069" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3212,9 +3354,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">250</span>
+    <span class="phpdocumentor-element-found-in__line">252</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.250" class="phpdocumentor-element-found-in__source" data-line="250" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.252" class="phpdocumentor-element-found-in__source" data-line="252" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3248,9 +3390,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">212</span>
+    <span class="phpdocumentor-element-found-in__line">214</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.212" class="phpdocumentor-element-found-in__source" data-line="212" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.214" class="phpdocumentor-element-found-in__source" data-line="214" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -3302,9 +3444,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">685</span>
+    <span class="phpdocumentor-element-found-in__line">687</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.685" class="phpdocumentor-element-found-in__source" data-line="685" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.687" class="phpdocumentor-element-found-in__source" data-line="687" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3342,9 +3484,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">574</span>
+    <span class="phpdocumentor-element-found-in__line">576</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.574" class="phpdocumentor-element-found-in__source" data-line="574" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.576" class="phpdocumentor-element-found-in__source" data-line="576" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3378,9 +3520,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">580</span>
+    <span class="phpdocumentor-element-found-in__line">582</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.580" class="phpdocumentor-element-found-in__source" data-line="580" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.582" class="phpdocumentor-element-found-in__source" data-line="582" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3414,9 +3556,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">759</span>
+    <span class="phpdocumentor-element-found-in__line">787</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.759" class="phpdocumentor-element-found-in__source" data-line="759" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.787" class="phpdocumentor-element-found-in__source" data-line="787" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the current timezone</p>
@@ -3461,9 +3603,9 @@ using the default time-zone if none is specified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">636</span>
+    <span class="phpdocumentor-element-found-in__line">638</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.636" class="phpdocumentor-element-found-in__source" data-line="636" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.638" class="phpdocumentor-element-found-in__source" data-line="638" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the full path to the document templates folder.</p>
@@ -3526,9 +3668,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">592</span>
+    <span class="phpdocumentor-element-found-in__line">594</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.592" class="phpdocumentor-element-found-in__source" data-line="592" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.594" class="phpdocumentor-element-found-in__source" data-line="594" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3562,9 +3704,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">586</span>
+    <span class="phpdocumentor-element-found-in__line">588</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.586" class="phpdocumentor-element-found-in__source" data-line="586" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.588" class="phpdocumentor-element-found-in__source" data-line="588" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3598,9 +3740,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">677</span>
+    <span class="phpdocumentor-element-found-in__line">679</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.677" class="phpdocumentor-element-found-in__source" data-line="677" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.679" class="phpdocumentor-element-found-in__source" data-line="679" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3638,9 +3780,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">701</span>
+    <span class="phpdocumentor-element-found-in__line">703</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.701" class="phpdocumentor-element-found-in__source" data-line="701" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.703" class="phpdocumentor-element-found-in__source" data-line="703" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3678,9 +3820,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">516</span>
+    <span class="phpdocumentor-element-found-in__line">518</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.516" class="phpdocumentor-element-found-in__source" data-line="516" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.518" class="phpdocumentor-element-found-in__source" data-line="518" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return all the sub-admins of the given or the configured orchestra group.</p>
@@ -3727,9 +3869,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">868</span>
+    <span class="phpdocumentor-element-found-in__line">896</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.868" class="phpdocumentor-element-found-in__source" data-line="868" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.896" class="phpdocumentor-element-found-in__source" data-line="896" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3773,9 +3915,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">852</span>
+    <span class="phpdocumentor-element-found-in__line">880</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.852" class="phpdocumentor-element-found-in__source" data-line="852" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.880" class="phpdocumentor-element-found-in__source" data-line="880" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the locale.</p>
@@ -3820,9 +3962,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">741</span>
+    <span class="phpdocumentor-element-found-in__line">769</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.741" class="phpdocumentor-element-found-in__source" data-line="741" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.769" class="phpdocumentor-element-found-in__source" data-line="769" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3860,9 +4002,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">733</span>
+    <span class="phpdocumentor-element-found-in__line">761</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.733" class="phpdocumentor-element-found-in__source" data-line="733" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.761" class="phpdocumentor-element-found-in__source" data-line="761" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3900,9 +4042,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">717</span>
+    <span class="phpdocumentor-element-found-in__line">719</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.717" class="phpdocumentor-element-found-in__source" data-line="717" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.719" class="phpdocumentor-element-found-in__source" data-line="719" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3940,9 +4082,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">669</span>
+    <span class="phpdocumentor-element-found-in__line">671</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.669" class="phpdocumentor-element-found-in__source" data-line="669" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.671" class="phpdocumentor-element-found-in__source" data-line="671" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -3980,9 +4122,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">598</span>
+    <span class="phpdocumentor-element-found-in__line">600</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.598" class="phpdocumentor-element-found-in__source" data-line="598" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.600" class="phpdocumentor-element-found-in__source" data-line="600" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4016,9 +4158,9 @@ dirname part of the path.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">611</span>
+    <span class="phpdocumentor-element-found-in__line">613</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.611" class="phpdocumentor-element-found-in__source" data-line="611" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.613" class="phpdocumentor-element-found-in__source" data-line="613" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Create the full-path for the sub-folder corresponding to the given config
@@ -4064,9 +4206,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1112</span>
+    <span class="phpdocumentor-element-found-in__line">1140</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1112" class="phpdocumentor-element-found-in__source" data-line="1112" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1140" class="phpdocumentor-element-found-in__source" data-line="1140" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValue().</p>
@@ -4114,9 +4256,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1126</span>
+    <span class="phpdocumentor-element-found-in__line">1154</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1126" class="phpdocumentor-element-found-in__source" data-line="1126" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1154" class="phpdocumentor-element-found-in__source" data-line="1154" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueBool().</p>
@@ -4168,9 +4310,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1140</span>
+    <span class="phpdocumentor-element-found-in__line">1168</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1140" class="phpdocumentor-element-found-in__source" data-line="1140" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1168" class="phpdocumentor-element-found-in__source" data-line="1168" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueInt()</p>
@@ -4222,9 +4364,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1154</span>
+    <span class="phpdocumentor-element-found-in__line">1182</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1154" class="phpdocumentor-element-found-in__source" data-line="1154" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1182" class="phpdocumentor-element-found-in__source" data-line="1182" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Forward to OCP\IConfig::getSystemValueString().</p>
@@ -4268,6 +4410,86 @@ key.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getTaxAuthoritiesPath">
+        getTaxAuthoritiesPath()
+        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTaxAuthoritiesPath" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">735</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.735" class="phpdocumentor-element-found-in__source" data-line="735" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getTaxAuthoritiesPath</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Return the full path to the financial balances folder</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getTaxExemptionNoticesPath">
+        getTaxExemptionNoticesPath()
+        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTaxExemptionNoticesPath" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">748</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.748" class="phpdocumentor-element-found-in__source" data-line="748" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getTaxExemptionNoticesPath</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Return the full path to the financial balances folder</p>
+</section>
+
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getTimeStamp">
         getTimeStamp()
         <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTimeStamp" class="headerlink"><i class="fas fa-link"></i></a>
@@ -4276,9 +4498,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1035</span>
+    <span class="phpdocumentor-element-found-in__line">1063</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1035" class="phpdocumentor-element-found-in__source" data-line="1035" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1063" class="phpdocumentor-element-found-in__source" data-line="1063" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4316,9 +4538,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">771</span>
+    <span class="phpdocumentor-element-found-in__line">799</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.771" class="phpdocumentor-element-found-in__source" data-line="771" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.799" class="phpdocumentor-element-found-in__source" data-line="799" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the current time-zone string</p>
@@ -4355,6 +4577,42 @@ key.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getUserSession">
+        getUserSession()
+        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getUserSession" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">148</span>
+
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.148" class="phpdocumentor-element-found-in__source" data-line="148" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getUserSession</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\IUserSession">IUserSession</abbr></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\IUserSession">IUserSession</abbr></span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getUserValue">
         getUserValue()
         <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getUserValue" class="headerlink"><i class="fas fa-link"></i></a>
@@ -4363,9 +4621,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">184</span>
+    <span class="phpdocumentor-element-found-in__line">186</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.184" class="phpdocumentor-element-found-in__source" data-line="184" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4425,9 +4683,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">470</span>
+    <span class="phpdocumentor-element-found-in__line">472</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.470" class="phpdocumentor-element-found-in__source" data-line="470" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.472" class="phpdocumentor-element-found-in__source" data-line="472" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4475,9 +4733,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">480</span>
+    <span class="phpdocumentor-element-found-in__line">482</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.480" class="phpdocumentor-element-found-in__source" data-line="480" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.482" class="phpdocumentor-element-found-in__source" data-line="482" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4523,9 +4781,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">460</span>
+    <span class="phpdocumentor-element-found-in__line">462</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.460" class="phpdocumentor-element-found-in__source" data-line="460" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.462" class="phpdocumentor-element-found-in__source" data-line="462" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4563,9 +4821,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">164</span>
+    <span class="phpdocumentor-element-found-in__line">166</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.164" class="phpdocumentor-element-found-in__source" data-line="164" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.166" class="phpdocumentor-element-found-in__source" data-line="166" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4599,9 +4857,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">996</span>
+    <span class="phpdocumentor-element-found-in__line">1024</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.996" class="phpdocumentor-element-found-in__source" data-line="996" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1024" class="phpdocumentor-element-found-in__source" data-line="1024" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Format a bytes value with &quot;readable&quot; postfix.</p>
@@ -4667,9 +4925,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">492</span>
+    <span class="phpdocumentor-element-found-in__line">494</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.492" class="phpdocumentor-element-found-in__source" data-line="492" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.494" class="phpdocumentor-element-found-in__source" data-line="494" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4724,9 +4982,9 @@ key.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">549</span>
+    <span class="phpdocumentor-element-found-in__line">551</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.549" class="phpdocumentor-element-found-in__source" data-line="549" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.551" class="phpdocumentor-element-found-in__source" data-line="551" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check if the currently logged in or given user-id belongs to the
@@ -4772,9 +5030,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">504</span>
+    <span class="phpdocumentor-element-found-in__line">506</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.504" class="phpdocumentor-element-found-in__source" data-line="504" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.506" class="phpdocumentor-element-found-in__source" data-line="506" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4829,9 +5087,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">94</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.94" class="phpdocumentor-element-found-in__source" data-line="94" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4865,9 +5123,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">878</span>
+    <span class="phpdocumentor-element-found-in__line">906</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.878" class="phpdocumentor-element-found-in__source" data-line="878" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.906" class="phpdocumentor-element-found-in__source" data-line="906" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4911,9 +5169,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">888</span>
+    <span class="phpdocumentor-element-found-in__line">916</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.888" class="phpdocumentor-element-found-in__source" data-line="888" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.916" class="phpdocumentor-element-found-in__source" data-line="916" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -4957,9 +5215,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">260</span>
+    <span class="phpdocumentor-element-found-in__line">262</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.260" class="phpdocumentor-element-found-in__source" data-line="260" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.262" class="phpdocumentor-element-found-in__source" data-line="262" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5001,9 +5259,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">226</span>
+    <span class="phpdocumentor-element-found-in__line">228</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.226" class="phpdocumentor-element-found-in__source" data-line="226" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.228" class="phpdocumentor-element-found-in__source" data-line="228" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">A short-cut, redirecting to the stock functions for the app.</p>
@@ -5055,9 +5313,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">418</span>
+    <span class="phpdocumentor-element-found-in__line">420</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.418" class="phpdocumentor-element-found-in__source" data-line="418" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.420" class="phpdocumentor-element-found-in__source" data-line="420" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a new user.</p>
@@ -5106,9 +5364,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">406</span>
+    <span class="phpdocumentor-element-found-in__line">408</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.406" class="phpdocumentor-element-found-in__source" data-line="406" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.408" class="phpdocumentor-element-found-in__source" data-line="408" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Install a new user id.</p>
@@ -5159,9 +5417,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">198</span>
+    <span class="phpdocumentor-element-found-in__line">200</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.198" class="phpdocumentor-element-found-in__source" data-line="198" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.200" class="phpdocumentor-element-found-in__source" data-line="200" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5221,9 +5479,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">449</span>
+    <span class="phpdocumentor-element-found-in__line">451</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.449" class="phpdocumentor-element-found-in__source" data-line="449" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.451" class="phpdocumentor-element-found-in__source" data-line="451" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5257,9 +5515,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">441</span>
+    <span class="phpdocumentor-element-found-in__line">443</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.441" class="phpdocumentor-element-found-in__source" data-line="441" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.443" class="phpdocumentor-element-found-in__source" data-line="443" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5297,9 +5555,9 @@ dedicated sub-admin group.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1167</span>
+    <span class="phpdocumentor-element-found-in__line">1195</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1167" class="phpdocumentor-element-found-in__source" data-line="1167" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1195" class="phpdocumentor-element-found-in__source" data-line="1195" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Check whether the current config-setting for debug contains the provided
@@ -5345,9 +5603,9 @@ flags.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">536</span>
+    <span class="phpdocumentor-element-found-in__line">538</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.536" class="phpdocumentor-element-found-in__source" data-line="536" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.538" class="phpdocumentor-element-found-in__source" data-line="538" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the dedicated admin-group if it exists.</p>
@@ -5382,9 +5640,9 @@ flags.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">526</span>
+    <span class="phpdocumentor-element-found-in__line">528</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.526" class="phpdocumentor-element-found-in__source" data-line="526" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.528" class="phpdocumentor-element-found-in__source" data-line="528" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Return the id of the dedicated admin-group which contains all sub-admins</p>
@@ -5419,9 +5677,9 @@ flags.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">172</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.170" class="phpdocumentor-element-found-in__source" data-line="170" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.172" class="phpdocumentor-element-found-in__source" data-line="172" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5455,9 +5713,9 @@ flags.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">435</span>
+    <span class="phpdocumentor-element-found-in__line">437</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.435" class="phpdocumentor-element-found-in__source" data-line="435" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.437" class="phpdocumentor-element-found-in__source" data-line="437" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Fake execution with other user-id. Note that this function will
@@ -5520,9 +5778,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1011</span>
+    <span class="phpdocumentor-element-found-in__line">1039</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1011" class="phpdocumentor-element-found-in__source" data-line="1011" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1039" class="phpdocumentor-element-found-in__source" data-line="1039" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Call ConfigService::formatTimeStamp() with the current date and time.</p>
@@ -5574,9 +5832,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1077</span>
+    <span class="phpdocumentor-element-found-in__line">1105</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1077" class="phpdocumentor-element-found-in__source" data-line="1077" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1105" class="phpdocumentor-element-found-in__source" data-line="1105" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5610,9 +5868,9 @@ exception.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1054</span>
+    <span class="phpdocumentor-element-found-in__line">1082</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1054" class="phpdocumentor-element-found-in__source" data-line="1054" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.1082" class="phpdocumentor-element-found-in__source" data-line="1082" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Search for translation variants by trying several camel-case
@@ -5658,9 +5916,9 @@ transformations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">152</span>
+    <span class="phpdocumentor-element-found-in__line">154</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.152" class="phpdocumentor-element-found-in__source" data-line="152" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.154" class="phpdocumentor-element-found-in__source" data-line="154" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5694,9 +5952,9 @@ transformations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">388</span>
+    <span class="phpdocumentor-element-found-in__line">390</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.388" class="phpdocumentor-element-found-in__source" data-line="388" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.390" class="phpdocumentor-element-found-in__source" data-line="390" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5742,9 +6000,9 @@ transformations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">394</span>
+    <span class="phpdocumentor-element-found-in__line">396</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.394" class="phpdocumentor-element-found-in__source" data-line="394" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.396" class="phpdocumentor-element-found-in__source" data-line="396" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5778,9 +6036,9 @@ transformations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">158</span>
+    <span class="phpdocumentor-element-found-in__line">160</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.158" class="phpdocumentor-element-found-in__source" data-line="158" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.160" class="phpdocumentor-element-found-in__source" data-line="160" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5806,42 +6064,6 @@ transformations.</p>
             -protected
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_userSession">
-        userSession()
-        <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_userSession" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">146</span>
-
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.146" class="phpdocumentor-element-found-in__source" data-line="146" data-modal="source-view" data-src="files/.txt"></a>
-    </aside>
-
-    
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">userSession</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\OCP\IUserSession">IUserSession</abbr></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\OCP\IUserSession">IUserSession</abbr></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                        "
->
     <h4 class="phpdocumentor-element__name" id="method_verifyHash">
         verifyHash()
         <a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_verifyHash" class="headerlink"><i class="fas fa-link"></i></a>
@@ -5850,9 +6072,9 @@ transformations.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Traits/ConfigTrait.php"><a href="files/traits-configtrait.html"><abbr title="Traits/ConfigTrait.php">ConfigTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">312</span>
+    <span class="phpdocumentor-element-found-in__line">314</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.312" class="phpdocumentor-element-found-in__source" data-line="312" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.314" class="phpdocumentor-element-found-in__source" data-line="314" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -5912,9 +6134,9 @@ be verified.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Service/SimpleSharingService.php"><a href="files/service-simplesharingservice.html"><abbr title="Service/SimpleSharingService.php">SimpleSharingService.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">302</span>
+    <span class="phpdocumentor-element-found-in__line">297</span>
 
-            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.302" class="phpdocumentor-element-found-in__source" data-line="302" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#source-view.297" class="phpdocumentor-element-found-in__source" data-line="297" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -6063,10 +6285,11 @@ be verified.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Properties</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#property_configService">$configService<a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#property_configService">$configService<a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#property_l">$l<a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#property_toolTipsService">$toolTipsService<a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#property_shareManager">$shareManager<a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#property_urlGenerator">$urlGenerator<a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html"></li>
                                             </ul>
                 </li>
             
@@ -6091,6 +6314,7 @@ be verified.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getConfigValue">getConfigValue()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getIcon">getIcon()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#method_getLinkExpirationDate">getLinkExpirationDate()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#method_groupShareNode">groupShareNode()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#method_linkShare">linkShare()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_logger">logger()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_moneyValue">moneyValue()</a></li>
@@ -6139,8 +6363,11 @@ be verified.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getSystemValueBool">getSystemValueBool()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getSystemValueInt">getSystemValueInt()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getSystemValueString">getSystemValueString()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTaxAuthoritiesPath">getTaxAuthoritiesPath()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTaxExemptionNoticesPath">getTaxExemptionNoticesPath()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTimeStamp">getTimeStamp()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getTimezone">getTimezone()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getUserSession">getUserSession()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_getUserValue">getUserValue()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_group">group()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_groupExists">groupExists()</a></li>
@@ -6172,7 +6399,6 @@ be verified.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_user">user()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_userId">userId()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_userManager">userManager()</a></li>
-                                            <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_userSession">userSession()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Traits-ConfigTrait.html#method_verifyHash">verifyHash()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Service-SimpleSharingService.html#method_getShareFromUrl">getShareFromUrl()</a></li>
                                     </ul>

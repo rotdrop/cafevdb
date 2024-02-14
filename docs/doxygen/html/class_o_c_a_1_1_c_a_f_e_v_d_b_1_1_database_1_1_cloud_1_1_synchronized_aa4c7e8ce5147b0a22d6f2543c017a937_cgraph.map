@@ -1,4 +1,5 @@
 <map id="detach" name="detach">
-<area shape="rect" id="node1" title="Remove the wrapped entity from the database." alt="" coords="5,5,67,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8c152f6ef1c779ffd79d5c7ee4d37721" title=" " alt="" coords="115,5,169,31"/>
+<area shape="rect" id="Node000001" title="Remove the wrapped entity from the database." alt="" coords="5,5,66,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_synchronized.html#a8c152f6ef1c779ffd79d5c7ee4d37721" title=" " alt="" coords="114,5,167,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,16,98,16,98,21,66,21"/>
 </map>

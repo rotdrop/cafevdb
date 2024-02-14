@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2020, 2021, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,25 +44,17 @@ class CardDavService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
 
-  /** @var CardDavBackend */
-  private $cardDavBackend;
-
-  /** @var \OCP\AddressBook\IManager */
-  private $addressBookManager;
-
   /** @var int */
   private $contactsUserId;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ConfigService $configService,
-    \OCP\Contacts\IManager $addressBookManager,
-    CardDavBackend $cardDavBackend,
+    protected ConfigService $configService,
+    private \OCP\Contacts\IManager $addressBookManager,
+    private CardDavBackend $cardDavBackend,
   ) {
-    $this->configService = $configService;
-    $this->addressBookManager = $addressBookManager;
-    $this->cardDavBackend = $cardDavBackend;
     $this->contactsUserId = $this->userId();
+    $this->l = $this->l10n();
   }
   // phpcs:enable
 

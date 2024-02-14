@@ -1,4 +1,5 @@
 <map id="validate" name="validate">
-<area shape="rect" id="node1" title="{{bool Return \true if the entity is ok to the judgement of this sanitizer, \false otherwise...." alt="" coords="161,5,228,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#ab6f35bf773b3e078c9f9acd8e4f8de84" title="{{Call sanitize(SANITIZE_PERSIST, $flush).void\SanitizerException}}" alt="" coords="5,5,113,31"/>
+<area shape="rect" id="Node000001" title="{{bool Return \true if the entity is ok to the judgement of this sanitizer, \false otherwise...." alt="" coords="161,5,227,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_sanitizers_1_1_google_mail_sanitizer.html#ab6f35bf773b3e078c9f9acd8e4f8de84" title="{{Call sanitize(SANITIZE_PERSIST, $flush).void\SanitizerException}}" alt="" coords="5,5,113,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,21,113,21,113,16,145,16"/>
 </map>

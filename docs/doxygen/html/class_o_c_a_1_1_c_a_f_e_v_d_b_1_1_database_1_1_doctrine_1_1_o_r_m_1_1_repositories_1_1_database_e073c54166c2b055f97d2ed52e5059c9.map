@@ -1,6 +1,9 @@
 <map id="DatabaseStorageFoldersRepository" name="DatabaseStorageFoldersRepository">
-<area shape="rect" id="node1" title="Database repository for DatabaseStorageDirEntry entities." alt="" coords="5,240,235,265"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_database_storage_dir_entries_repository.html" title="Database repository for DatabaseStorageDirEntry entities." alt="" coords="29,152,211,192"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="61,79,179,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="61,5,179,31"/>
+<area shape="rect" id="Node000001" title="Database repository for DatabaseStorageDirEntry entities." alt="" coords="5,245,234,272"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_database_storage_dir_entries_repository.html" title="Database repository for DatabaseStorageDirEntry entities." alt="" coords="29,155,210,197"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,213,122,245,117,245,117,213"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_entity_repository.html" title="Base class for all of our repositories." alt="" coords="60,80,179,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,122,122,154,117,154,117,122"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="60,5,179,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="122,48,122,80,117,80,117,48"/>
 </map>

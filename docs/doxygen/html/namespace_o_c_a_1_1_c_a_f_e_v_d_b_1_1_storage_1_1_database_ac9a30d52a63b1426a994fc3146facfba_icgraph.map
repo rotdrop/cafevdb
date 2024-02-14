@@ -1,8 +1,17 @@
 <map id="getAppL10n" name="getAppL10n">
-<area shape="rect" id="node1" title=" " alt="" coords="293,104,384,129"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#aa75ac3ff7b3dbe439f60f976ae64669c" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="17,5,233,31"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a500c86bb6c2ba2499fa7483b57cf0638" title="Get the name of the sub&#45;folder holding hard&#45;copies of debit&#45;mandates." alt="" coords="26,55,225,80"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#aca493be719cd1bd0b6768d6fcf09991a" title="Get the name of the per&#45;participant document folder." alt="" coords="36,104,215,129"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a3705793e74052e05461d75092eaf5cc3" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="34,153,217,179"/>
-<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a5e944e99f6ed7901c8c872001e002e76" title=" " alt="" coords="5,203,245,228"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="293,157,383,184"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#aa75ac3ff7b3dbe439f60f976ae64669c" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="17,5,233,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="322,145,291,93,269,68,243,46,221,35,223,30,246,42,273,64,295,90,327,142"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a500c86bb6c2ba2499fa7483b57cf0638" title="Get the name of the sub&#45;folder holding hard&#45;copies of debit&#45;mandates." alt="" coords="26,56,224,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="312,148,281,121,243,97,214,86,215,81,246,92,284,117,315,144"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#aca493be719cd1bd0b6768d6fcf09991a" title="Get the name of the per&#45;participant document folder." alt="" coords="36,107,214,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="277,156,244,148,194,137,195,131,245,143,278,151"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a3705793e74052e05461d75092eaf5cc3" title="Get the name of the sub&#45;folder containing supporting documents for bank&#45;transactions." alt="" coords="34,157,216,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="277,173,217,173,217,168,277,168"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a5e944e99f6ed7901c8c872001e002e76" title=" " alt="" coords="5,208,245,235"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="278,190,245,199,195,210,194,205,244,193,277,185"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a7e7e1ed1b1f9d55ea9f3363c0a58fc55" title="Get the name of the folder containing tax office related stuff." alt="" coords="28,259,222,285"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="315,197,284,225,246,249,215,261,214,256,243,244,281,220,312,193"/>
+<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database.html#a7642eba5052fdc3992be3b29d014ead8" title="Get the name of the folder containing tax exemption notices." alt="" coords="6,309,244,336"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="327,199,295,251,273,277,246,300,223,311,221,306,243,295,269,274,291,248,322,197"/>
 </map>

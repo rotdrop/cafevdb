@@ -1,6 +1,7 @@
 var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event =
 [
-    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a4e1a3c2425df4982503482aaa5b61e99", null ],
+    [ "__construct", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a86a3267b6d0ac6d859fd5a1d37d9ce23", null ],
+    [ "__toString", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a7516ca30af0db3cdbf9a7739b48ce91d", null ],
     [ "getAbsenceField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a2eb4b960cd8795cd2eff389b8d7cae93", null ],
     [ "getCalendarId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#ac4d702ec1211ab25348fec21f04d8188", null ],
     [ "getCalendarUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a92930507b623a17a38dbc9d5ef8efea3", null ],
@@ -27,7 +28,6 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event =
     [ "$absenceField", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a5aa25580807c828da0b488338bdf41b5", null ],
     [ "$calendarId", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a499b24dd0f86c4cf497f7f6366119fd2", null ],
     [ "$calendarUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a3901f1a4299c399d9710f191132318e7", null ],
-    [ "$disabled", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a2595d398b3eacc539ff63d403af97dd4", null ],
     [ "$eventUid", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a857bf60955f2de6a96453618218d4a53", null ],
     [ "$eventUri", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a407a07bb9eaa464190fa04d7e7b7283c", null ],
     [ "$id", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a3587bd00e5602c1800515b6f9ffbebc5", null ],

@@ -1,4 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_bulk_transaction_exporter.html" title="Extremely generic debit&#45;note exporter." alt="" coords="5,13,175,38"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_aq_banking_bulk_transaction_exporter.html" title="Generate AqBanking data&#45;sets for submission to the bank." alt="" coords="223,5,401,45"/>
+<area shape="rect" id="Node000000" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_html2_text.html" title="Html to text converter." alt="" coords="5,5,87,32"/>
 </map>

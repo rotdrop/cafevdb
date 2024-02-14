@@ -1,4 +1,5 @@
 <map id="CspViolationController" name="CspViolationController">
-<area shape="rect" id="node1" title="AJAX endpoints for reporting CSP violation errors." alt="" coords="5,79,157,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="42,5,121,31"/>
+<area shape="rect" id="Node000001" title="AJAX endpoints for reporting CSP violation errors." alt="" coords="5,80,157,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="42,5,120,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,48,84,80,78,80,78,48"/>
 </map>

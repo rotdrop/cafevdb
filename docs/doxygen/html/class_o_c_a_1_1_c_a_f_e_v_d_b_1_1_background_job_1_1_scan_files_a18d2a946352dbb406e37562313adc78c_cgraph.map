@@ -1,5 +1,7 @@
 <map id="run" name="run">
-<area shape="rect" id="node1" title="{}" alt="" coords="5,31,45,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_scan_files.html#ad96a963cd4332dd43709f1e93807cab1" title="Find a storage which have unindexed files and return a user with access to the storage." alt="" coords="93,5,205,31"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_scan_files.html#a6a832c72ed05fa0b747e6651dc984638" title=" " alt="" coords="105,55,193,80"/>
+<area shape="rect" id="Node000001" title="{}" alt="" coords="5,31,45,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_scan_files.html#ad96a963cd4332dd43709f1e93807cab1" title="Find a storage which have unindexed files and return a user with access to the storage." alt="" coords="93,5,204,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="45,37,77,31,78,36,46,43"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_background_job_1_1_scan_files.html#a6a832c72ed05fa0b747e6651dc984638" title=" " alt="" coords="105,56,192,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="46,45,90,55,89,60,45,51"/>
 </map>

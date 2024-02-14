@@ -1,4 +1,5 @@
 <map id="isSecretary" name="isSecretary">
-<area shape="rect" id="node1" title="Return true if the logged in user is the secretary." alt="" coords="5,5,93,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a9594d53af2dfcb1f3bf29420af8f797a" title="Return true if the logged in or given user has a dedicated administrative role for the orchestra." alt="" coords="141,5,313,31"/>
+<area shape="rect" id="Node000001" title="Return true if the logged in user is the secretary." alt="" coords="5,5,93,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a9594d53af2dfcb1f3bf29420af8f797a" title="Return true if the logged in or given user has a dedicated administrative role for the orchestra." alt="" coords="141,5,312,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,16,125,16,125,21,93,21"/>
 </map>

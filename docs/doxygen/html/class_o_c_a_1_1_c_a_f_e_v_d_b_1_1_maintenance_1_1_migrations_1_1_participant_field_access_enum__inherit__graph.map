@@ -1,6 +1,9 @@
 <map id="ParticipantFieldAccessEnum" name="ParticipantFieldAccessEnum">
-<area shape="rect" id="node1" title="Change participantAccess field to enum." alt="" coords="5,152,196,177"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206204000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="19,225,183,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="39,79,163,104"/>
-<area shape="rect" id="node3" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="61,5,140,31"/>
+<area shape="rect" id="Node000001" title="Change participantAccess field to enum." alt="" coords="5,155,195,181"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_version20230206204000.html" title="Wrapper class which gives the migration a proper sequence number and redirects to the actual implemen..." alt="" coords="18,229,182,256"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="103,197,103,229,97,229,97,197"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_migrations_1_1_abstract_migration.html" title="Abstract migration class, the derived classes have to fill AbstractMigration::$sql." alt="" coords="38,80,162,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,122,103,154,97,154,97,122"/>
+<area shape="rect" id="Node000003" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_maintenance_1_1_i_migration.html" title="Uni&#45;directional migrations for the orchestra DB." alt="" coords="61,5,139,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,48,103,80,97,80,97,48"/>
 </map>

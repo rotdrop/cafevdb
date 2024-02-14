@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,23 +42,13 @@ class ProgressStatusService
   //static private $progressStatusImplementation = DatabaseProgressStatus::class;
   private static $progressStatusImplementation = PlainFileProgressStatus::class;
 
-  /** @var string */
-  private $appName;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
   // phpcs:disabled Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName,
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
+    private $appName,
+    private IAppContainer $appContainer,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->appName = $appName;
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 

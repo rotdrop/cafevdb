@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,20 +44,15 @@ class MigrationsController extends Controller
   const LATEST_MIGRATION = 'latest';
   const MIGRATION_DESCRIPTION = 'description';
 
-  /** @var MigrationsService */
-  private $migrationsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    ConfigService $configService,
-    MigrationsService $migrationsService,
+    protected ConfigService $configService,
+    private MigrationsService $migrationsService,
   ) {
     parent::__construct($appName, $request);
 
-    $this->configService = $configService;
-    $this->migrationsService = $migrationsService;
     $this->l = $this->l10N();
   }
   // phpcs:enable

@@ -1,5 +1,7 @@
 <map id="generateMusicianPersonalizedViewsStatements" name="generateMusicianPersonalizedViewsStatements">
-<area shape="rect" id="node1" title="Generate the (My&#45;)SQL statements for defining the personalized single&#45;row musician views." alt="" coords="245,37,444,77"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a10e78d362d26b66ba16cfd97a46499da" title="Delete the personalized one&#45;row views which give individual orchestra members access to just their ow..." alt="" coords="5,5,197,45"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#ab8482f7cd6afd7290823d6bfafe1c2a3" title="Update the personalized one&#45;row views which give individual orchestra members access to just their ow..." alt="" coords="7,69,195,109"/>
+<area shape="rect" id="Node000001" title="Generate the (My&#45;)SQL statements for defining the personalized single&#45;row musician views." alt="" coords="245,39,443,81"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#a10e78d362d26b66ba16cfd97a46499da" title="Delete the personalized one&#45;row views which give individual orchestra members access to just their ow..." alt="" coords="5,5,197,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,47,197,42,197,37,229,42"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cloud_user_connector_service.html#ab8482f7cd6afd7290823d6bfafe1c2a3" title="Update the personalized one&#45;row views which give individual orchestra members access to just their ow..." alt="" coords="7,72,195,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,78,196,83,195,78,229,73"/>
 </map>

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,12 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use \DateTimeInterface;
-use \DateTimeZone;
-use \DateInterval;
-use \DateTimeImmutable;
-use \Exception;
-use \InvalidArgumentException;
+use DateTimeInterface;
+use DateTimeZone;
+use DateInterval;
+use DateTimeImmutable;
+use Exception;
+use InvalidArgumentException;
 
 use Sabre\VObject;
 use Sabre\VObject\Component\VCalendar;
@@ -47,9 +47,6 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 class VCalendarService
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-
-  /** @var OC_Calendar_Object */
-  private $legacyCalendarObject;
 
   const VTODO = VCalendarType::VTODO;
   const VEVENT = VCalendarType::VEVENT;
@@ -70,11 +67,9 @@ class VCalendarService
 
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    OC_Calendar_Object $legacyCalendarObject,
+    protected ConfigService $configService,
+    private OC_Calendar_Object $legacyCalendarObject,
   ) {
-    $this->configService = $configService;
-    $this->legacyCalendarObject = $legacyCalendarObject;
   }
 
   /**
@@ -165,6 +160,32 @@ class VCalendarService
    */
   private function createVEventFromRequest(mixed $objectData):?VCalendar
   {
+    if (!isset($objectData['repeat'])) {
+      $objectData['repeat'] = 'doesnotrepeat';
+    }
+    /** @var DateTimeInterface $start */
+    $start = $objectData['start'] ?? null;
+    if ($start instanceof DateTimeInterface) {
+      $timezone = $this->getDateTimeZone($start->getTimestamp());
+      $start = $start->setTimezone($timezone);
+      $objectData['from'] = $objectData['start']->format('d-m-Y');
+      if (!isset($objectData['allday'])) {
+        $objectData['fromtime'] = $start->format('H:i:s');
+      }
+    }
+    /** @var DateTimeInterface $start */
+    $end = $objectData['end'] ?? null;
+    if ($end instanceof DateTimeInterface) {
+      $timezone = $this->getDateTimeZone($end->getTimestamp());
+      $end = $end->setTimezone($timezone);
+      $objectData['to'] = $objectData['end']->format('d-m-Y');
+      if (!isset($objectData['allday'])) {
+        $objectData['totime'] = $end->format('H:i:s');
+      }
+    }
+    if (is_array($objectData['categories'])) {
+      $objectData['categories'] = implode(',', $objectData['categories']);
+    }
     $vObject = $this->legacyCalendarObject->createVCalendarFromRequest($objectData);
     if (empty($vObject) || empty($vObject->VEVENT)) {
       return $vObject;
@@ -300,7 +321,7 @@ class VCalendarService
       return;
     }
     $alarmData = is_array($objectData['alarm']) ? $objectData['alarm'] : [ $objectData['alarm'] ?? null ];
-    $this->logInfo('ALRAM DATA ' . print_r($alarmData, true));
+    $this->logDebug('ALARM DATA ' . print_r($alarmData, true));
     foreach ($alarmData as $alarmDatum) {
       if (is_array($alarmDatum)) {
         foreach ($alarmDatum as $related => $seconds) {

@@ -1,4 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,57,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_command_1_1_files_scan.html" title="Authenticated files&#45;scan which is thus also able to scan the database&#45;backed mounts." alt="" coords="105,5,185,31"/>
+<area shape="rect" id="Node000000" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory_interface.html" title="Factory interface for generating in&#45;memory README nodes." alt="" coords="5,5,171,32"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_abstract_read_me_factory.html" title="Abstract factory baseclass." alt="" coords="219,5,382,32"/>
+<area shape="poly" id="edge443_Node000000_Node000001" title=" " alt="" coords="186,16,218,16,218,21,186,21"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html" title="Generate in&#45;memory README nodes." alt="" coords="430,5,544,32"/>
+<area shape="poly" id="edge444_Node000001_Node000002" title=" " alt="" coords="398,16,429,16,429,21,398,21"/>
 </map>

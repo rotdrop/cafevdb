@@ -26,16 +26,24 @@ var NAVTREE =
 [
   [ "CamerataDB", "index.html", [
     [ "Auto-generated cafevdb Documentation", "index.html", "index" ],
-    [ "Changelog", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__c_h_a_n_g_e_l_o_g.html", [
-      [ "[1.0.0] - 2022-11-15", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__c_h_a_n_g_e_l_o_g.html#autotoc_md1", null ]
+    [ "Changelog", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2lib_2_toolkit_2_c_h_a_n_g_e_l_o_g.html", [
+      [ "[1.0.0] - 2022-11-15", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2lib_2_toolkit_2_c_h_a_n_g_e_l_o_g.html#autotoc_md1", null ]
     ] ],
-    [ "nextcloud-app-toolkit", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html", [
-      [ "Description", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md3", null ],
-      [ "Setup", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md4", [
-        [ "Direct Use as GIT Sub-Repo", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md5", null ],
-        [ "Indirect \"Scoped\" Use", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md6", null ]
+    [ "nextcloud-app-toolkit", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2lib_2_toolkit_2_r_e_a_d_m_e.html", [
+      [ "Description", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2lib_2_toolkit_2_r_e_a_d_m_e.html#autotoc_md3", null ],
+      [ "Setup", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2lib_2_toolkit_2_r_e_a_d_m_e.html#autotoc_md4", [
+        [ "Direct Use as GIT Sub-Repo", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2lib_2_toolkit_2_r_e_a_d_m_e.html#autotoc_md5", null ],
+        [ "Indirect \"Scoped\" Use", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2lib_2_toolkit_2_r_e_a_d_m_e.html#autotoc_md6", null ]
       ] ],
-      [ "Why", "md__var_www_dev1_htdocs_nextcloud_git_25_apps_cafevdb_lib__toolkit__r_e_a_d_m_e.html#autotoc_md7", null ]
+      [ "Why", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2lib_2_toolkit_2_r_e_a_d_m_e.html#autotoc_md7", null ]
+    ] ],
+    [ "Changelog", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2src_2toolkit_2_c_h_a_n_g_e_l_o_g.html", [
+      [ "[1.0.0] - 2022-11-15", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2src_2toolkit_2_c_h_a_n_g_e_l_o_g.html#autotoc_md9", null ]
+    ] ],
+    [ "nextcloud-app-toolkit-js", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2src_2toolkit_2_r_e_a_d_m_e.html", [
+      [ "Description", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2src_2toolkit_2_r_e_a_d_m_e.html#autotoc_md11", null ],
+      [ "Setup", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2src_2toolkit_2_r_e_a_d_m_e.html#autotoc_md12", null ],
+      [ "Why", "md__2var_2www_2dev1_2htdocs_2nextcloud-git-28_2apps_2cafevdb_2src_2toolkit_2_r_e_a_d_m_e.html#autotoc_md13", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Bug List", "bug.html", null ],
@@ -67,36 +75,37 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_____c_g_____o_c_a_c_a_f_e_v_d_b_database_doctrine_o_r_m_entities_composite_payment_8php_source.html",
-"_html2_text_8php_source.html",
-"_time_stamp_trait_8php_source.html",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_do_nothing_progress_status.html#ad926899d7cac34a3f1a90e552d8eb27d",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_personal_settings_controller.html#af42dd383ee4030d2a5143f16f1ef2d80",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_d_b_a_l_1_1_types_1_1_enum_member_status.html#a74e4a42aa78ab1ebdc5715544dfd193e",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_encrypted_file.html#ad72ee41de5e475eeef1b10a8a5d47b85",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_instrument_insurance.html#afd5f4d644accd8db79a758f4fc96cf79",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project.html#a58551b63ba97fb35b928f11f36b1fac6",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field_datum.html#a222dfbdf28e944d58d77dcba96c67a0c",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_debit_mandate.html#a7de00915e9098aebefe5d8cb966afd34",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_044377ec73fec532eff87d782d0f968f.html#a59aee6e89465b48f014699f41b521f87",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_1077b41e053c851613b4aa2b20a2517b.html#a3587bd00e5602c1800515b6f9ffbebc5",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html#a0528a676fd90bed6001890249d726953",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_6ef50b47521aceb1959204fca53f7eb5.html#abac5166bb251aa43d10d4849b67d683d",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_a3b893e5ba1d84ab716313249f964e0a.html#ac59eecbef9a8d94b3c0948ce371742d5",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404.html#ab2be34f7276e53a7c3dba4fc065537de",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#ae0f312b2af755e89b486191469bddcdd",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#a5e186c5bc8073d195a08e40f7e7a88df",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_before_project_deleted_event.html#a499b24dd0f86c4cf497f7f6366119fd2",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_participant_field_cloud_folder_listener.html#aa4cbeca302f7fbbce4e0e056acf54025",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_insurances.html#a43a5cdd6bbe5188ecab5682ac230de5f",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_rates.html#aab9f60dec77a4ef2a6e6da285185427a",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#a0333ce522a2b3a67d5ce227b35439624",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_projects.html#a166d2dbd24c4913a9461c5813bbb4232",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_cal_dav_service.html#a2e9d51a42cd379a76cf2918a15fe3f37",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_finance_service.html#a0737f8084808e52569058ee53506cf5e",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_project_participant_fields_service.html#a1f9675c79cf0a214a9de751a1d632669",
-"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_balance_supporting_documents_storage.html#a1ca869d721a349a2b5efaaca3dffc49d",
-"dir_75f19d213c59298a071ca25c46499954.html",
-"modalizer_8js_source.html"
+"_group_member_middleware_8php_source.html",
+"_storage_util_8php_source.html",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html#abc7aec4383c36f876c7c3b382154ed81",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_controller_1_1_legacy_events_controller.html#a76774ba8d11d25ceb3c894f192362413",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_cloud_1_1_mapper_1_1_blog_mapper.html#a6ebf791fae9f0ef01d34249d40a103f2",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_database_storage_folder.html#ab15f0f9371dc34e6777a9b7a2b762791",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_image_file_data.html#ab2d82c4ef8c784c3f903bdef82e36a8f",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_musician_email_address.html",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_project_participant_field.html#ac08d43a8323aca11a6c71f04d6f9355f",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_entities_1_1_sepa_bank_transfer.html#ac79670cd30ec3c78ad97a8b8f50218b7",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_login_name_slug_handler.html#a4f1a9057d3b8bbfd1cbf44089a85915d",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_0bcff1787a1aa68e85d1db95554b7d37.html#abc243d57d1fccdc03bbec3dffa69d291",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_389417a9a340c4ecc358794ee9fb00d5.html#a56ba4043ce9c4a168e72cd8e8f516682",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_4045ad3d1799dd17c3639bac4a84c2a1.html#afac740a48a9d28e8f5fa65c47d226b48",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_8d7fc91133b5bb23314a9ee3679a224c.html#a5782c4b12fa8f4cb4b4f73c198079ab0",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_ca19055342d984fd4c383245d0c57404.html#a348d80f841ef3fd4d89ef3a41e7373e7",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_proxies_1_1_____c_g_____1_e74dae599808494abd10ae71fb6bd580.html#a26399a5a34a9641854d7db49000c829a",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_repositories_1_1_projects_repository.html#a595cec098a39ee84dd5814ae799963bf",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_events_1_1_after_project_deleted_event.html#a225b224960205939e3b9e490c868b590",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_listener_1_1_mailing_lists_auto_responses_listener.html",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_instrument_families.html#a0b54c9d3801b331b75487ef78d98c06b",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_insurance_brokers.html#a8e8ff5ddc43c843880a597dd3ece1ff6",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ae6c0e0f0d9a06d9418d229ecbc3f83c3",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_payments.html#a2e0ac1c11cc405e1b4fcb8741f3d7462",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_sepa_bulk_transactions.html#a5974458d91d622f2f455643f17af9417",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_config_service.html#a7b6e5c12813dec3c45ec9531820c539a",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_font_service.html#a607337401225854431cb0f7f9605d3d8",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_request_parameter_service.html",
+"class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_project_balance_supporting_documents_storage.html#ae16b6afbab9462a9af681b9393af361e",
+"dir_1d55e205456b9767ef2d205f6fcc9362.html",
+"interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_finance_1_1_i_recurring_receivables_generator.html#a54792b75ff728b792f40c9072ca716eb"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

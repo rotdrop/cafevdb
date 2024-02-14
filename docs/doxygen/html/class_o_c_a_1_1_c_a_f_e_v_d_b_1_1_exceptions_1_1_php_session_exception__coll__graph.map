@@ -1,5 +1,7 @@
 <map id="PhpSessionException" name="PhpSessionException">
-<area shape="rect" id="node1" title="Base for other exceptions." alt="" coords="5,152,156,177"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="41,79,121,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="27,5,135,31"/>
+<area shape="rect" id="Node000001" title="Base for other exceptions." alt="" coords="5,155,155,181"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_exceptions_1_1_exception.html" title="General abstraction base&#45;class." alt="" coords="40,80,120,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,122,83,154,77,154,77,122"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="26,5,134,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,48,83,80,77,80,77,48"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="UserLoggedOutEventListener" name="UserLoggedOutEventListener">
-<area shape="rect" id="node1" title="Perform necessary tasks at logout time." alt="" coords="5,79,199,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="49,5,155,31"/>
+<area shape="rect" id="Node000001" title="Perform necessary tasks at logout time." alt="" coords="5,80,198,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="49,5,154,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,48,104,80,99,80,99,48"/>
 </map>

@@ -10,6 +10,7 @@ var class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service =
     [ "getFileStream", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#a1f29d353d4da2916ea353d956f7f54af", null ],
     [ "getLocalPath", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#aae68fae6f583c93d3a128adf3ebd18a7", null ],
     [ "getSizeLimit", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#acde7ef454ef904a7ff3c59f51e491558", null ],
+    [ "isOpen", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ac21d0b99fadc55cd5e0b06aeecc73d26", null ],
     [ "open", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ad1d53e5cbdc6d39c917e86f2ae794aeb", null ],
     [ "setL10N", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#af90f86d01e7d58d8929f5b654a9ecaa5", null ],
     [ "setSizeLimit", "class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_archive_service.html#ae8ccdc43698cdebeb934548ef7875c82", null ],

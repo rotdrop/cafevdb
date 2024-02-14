@@ -1,9 +1,15 @@
 <map id="storageValue" name="storageValue">
-<area shape="rect" id="node1" title="Parse a storage user input value and return its value in bytes." alt="" coords="5,31,103,56"/>
-<area shape="rect" id="node2" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad6fe802e02722fba4dbf037b5542237f" title="Try to parse a floating point value." alt="" coords="151,5,229,31"/>
-<area shape="rect" id="node4" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8e67cfd6a09d264ed60634dd794bb30" title="Log an informational message." alt="" coords="159,55,221,80"/>
-<area shape="rect" id="node3" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="277,5,356,31"/>
-<area shape="rect" id="node5" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="297,55,336,80"/>
-<area shape="rect" id="node6" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="429,29,486,55"/>
-<area shape="rect" id="node7" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="404,79,511,104"/>
+<area shape="rect" id="Node000001" title="Parse a storage user input value and return its value in bytes." alt="" coords="5,31,102,57"/>
+<area shape="rect" id="Node000002" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad6fe802e02722fba4dbf037b5542237f" title="Try to parse a floating point value." alt="" coords="150,5,228,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,32,134,26,135,31,102,38"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8e67cfd6a09d264ed60634dd794bb30" title="Log an informational message." alt="" coords="159,56,219,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="102,50,144,58,143,64,101,56"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ad532b661eb33c3e755bd3fa8ff1bd7af" title="Return the locale as string, e.g." alt="" coords="276,5,353,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="228,16,260,16,260,21,228,21"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="295,56,334,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="219,67,280,67,280,72,219,72"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="426,31,482,57"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="334,63,410,49,411,54,335,69"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="401,81,507,108"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="335,70,386,80,385,85,334,75"/>
 </map>

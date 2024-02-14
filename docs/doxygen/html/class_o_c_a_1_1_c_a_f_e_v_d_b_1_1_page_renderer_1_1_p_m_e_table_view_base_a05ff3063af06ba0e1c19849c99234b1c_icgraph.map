@@ -1,4 +1,5 @@
 <map id="legacyRecordToEntity" name="legacyRecordToEntity">
-<area shape="rect" id="node1" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="260,13,411,38"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,5,212,45"/>
+<area shape="rect" id="Node000001" title="Convert the given legacy PHPMyEdit record id as given by the member variable PHPMyEdit::rec to someth..." alt="" coords="259,13,408,40"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_musicians.html#af5fcd7270e0aafbf684fba2b7fbea4bd" title="This is a phpMyEdit before&#45;SOMETHING trigger." alt="" coords="5,5,211,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,29,211,29,211,24,243,24"/>
 </map>

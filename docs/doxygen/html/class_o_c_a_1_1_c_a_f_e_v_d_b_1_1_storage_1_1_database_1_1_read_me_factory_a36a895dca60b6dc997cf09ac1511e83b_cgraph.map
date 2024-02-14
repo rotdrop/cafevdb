@@ -1,0 +1,12 @@
+<map id="generateReadMe" name="generateReadMe">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,72,126,99"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html#abd4365b3ffd658aab3d1c08ff0ab132e" title="Recurse to the tooltips service and see if there is a default text for the given storage." alt="" coords="197,5,380,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,69,173,41,202,34,203,39,174,47,100,74"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory_interface.html#aaa4d63f35d4d463ec5961fa42a35e9be" title="Possibly populate and return the array of possible &quot;readMe&quot; variations." alt="" coords="174,56,403,115"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="126,83,158,83,158,88,126,88"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_empty_directory_node.html#a2ee306b3cf5ab89be63cfdef2db1000d" title=" " alt="" coords="185,163,392,221"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="97,97,213,153,210,158,94,102"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_storage_1_1_database_1_1_read_me_factory.html#a12cdae9b239223092f66224eaec0ae2e" title="Compute a lookup key for a possible default readme content." alt="" coords="451,5,607,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="380,16,436,16,436,21,380,21"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="244,162,245,152,253,144,268,138,288,136,312,139,326,145,324,150,310,144,288,141,269,143,256,148,250,154,250,163"/>
+</map>

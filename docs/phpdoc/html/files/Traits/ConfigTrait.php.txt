@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,6 +50,8 @@ use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Common\Util;
 
+use OCA\CAFEVDB\Constants;
+
 /**
  * Too big a traits class to forward most of the ConfigService methods to the
  * using class.
@@ -59,13 +61,13 @@ trait ConfigTrait
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var ConfigService */
-  protected $configService;
+  protected ConfigService $configService;
 
   /** @var ToolTipsService */
-  protected $toolTipsService;
+  protected ToolTipsService $toolTipsService;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /**
    * Return the stored config-service for convenience.
@@ -143,7 +145,7 @@ trait ConfigTrait
   }
 
   /** @return IUserSession */
-  protected function userSession():IUserSession
+  protected function getUserSession():IUserSession
   {
     return $this->configService->getUserSession();
   }
@@ -243,7 +245,7 @@ trait ConfigTrait
   /** @return EncryptionService */
   protected function encryptionService():EncryptionService
   {
-    return $this->configService->encryptionService();
+    return $this->configService->getEncryptionService();
   }
 
   /** @return null|string */
@@ -440,7 +442,7 @@ trait ConfigTrait
   /** @return null|string the User id of the share-owner, if configured. */
   protected function shareOwnerId():?string
   {
-    return $this->getConfigValue('shareowner');
+    return $this->getConfigValue(ConfigService::SHAREOWNER_KEY);
   }
 
   /**
@@ -618,7 +620,7 @@ trait ConfigTrait
     if (empty($subFolder)) {
       return null;
     }
-    return '/' . $sharedFolder . '/' . $subFolder;
+    return Constants::PATH_SEP . $sharedFolder . Constants::PATH_SEP . $subFolder;
   }
 
   /**
@@ -660,7 +662,7 @@ trait ConfigTrait
       }
       $pathComponents[] = $dirName ? '' : $templateFileName ;
     }
-    return implode('/', $pathComponents);
+    return implode(Constants::PATH_SEP, $pathComponents);
   }
 
   /**
@@ -692,7 +694,7 @@ trait ConfigTrait
     if (empty($transactionsFolder)) {
       return null;
     }
-    return $financeFolder . '/' . $transactionsFolder;
+    return $financeFolder . Constants::PATH_SEP . $transactionsFolder;
   }
 
   /**
@@ -708,7 +710,7 @@ trait ConfigTrait
     if (empty($balancesFolder)) {
       return null;
     }
-    return $financeFolder . '/' . $balancesFolder;
+    return $financeFolder . Constants::PATH_SEP . $balancesFolder;
   }
 
   /**
@@ -724,7 +726,33 @@ trait ConfigTrait
     if (empty($projectsFolder)) {
       return null;
     }
-    return $balancesFolder . '/' . $projectsFolder;
+    return $balancesFolder . Constants::PATH_SEP . $projectsFolder;
+  }
+
+  /**
+   * @return null|string Return the full path to the financial balances folder
+   */
+  protected function getTaxAuthoritiesPath():?string
+  {
+    $financeFolder = $this->getFinanceFolderPath();
+    if (empty($financeFolder)) {
+      return null;
+    }
+    $taxAuthoritiesFolder = $this->appL10n()->t('tax-authorities');
+    return $financeFolder . Constants::PATH_SEP . $taxAuthoritiesFolder;
+  }
+
+  /**
+   * @return null|string Return the full path to the financial balances folder
+   */
+  protected function getTaxExemptionNoticesPath():?string
+  {
+    $taxAuthoritiesFolder = $this->getTaxAuthoritiesPath();
+    if (empty($taxAuthoritiesFolder)) {
+      return null;
+    }
+    $taxExemptionNoticesFolder = $this->appL10n()->t('exemption-notices');
+    return $taxAuthoritiesFolder . Constants::PATH_SEP . $taxExemptionNoticesFolder;
   }
 
   /**

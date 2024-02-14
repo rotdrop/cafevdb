@@ -1,0 +1,22 @@
+<map id="getSupportedArchiveMimeTypes" name="getSupportedArchiveMimeTypes">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,121,215,148"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_mime_type_service.html#a1b1d06b8849380605b6a83ff72dd8689" title=" " alt="" coords="269,45,417,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,118,284,75,286,80,154,123"/>
+<area shape="rect" id="Node000004" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab8e67cfd6a09d264ed60634dd794bb30" title="Log an informational message." alt="" coords="471,72,631,115"/>
+<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="215,122,455,100,456,105,216,128"/>
+<area shape="rect" id="Node000008" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a90f07ed512379da471e822b7471b72fc" title="Log an error." alt="" coords="471,139,631,181"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="215,138,456,152,455,157,215,143"/>
+<area shape="rect" id="Node000009" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a1cf05ff14f22eb60dd635484e8f09109" title="Log a warning message." alt="" coords="263,197,423,240"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="150,146,268,189,266,194,148,151"/>
+<area shape="rect" id="Node000003" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a6d05693fe567b9d34daf71eb6c8aecb4" title=" " alt="" coords="471,5,631,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="417,45,455,39,456,44,418,50"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="418,68,456,75,455,80,417,74"/>
+<area shape="rect" id="Node000005" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a15cbaddba041ee5582b2bec28a58c7c9" title="Log the given message at the specified level." alt="" coords="679,139,840,181"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="621,113,677,131,675,136,619,118"/>
+<area shape="rect" id="Node000006" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#a97e3b3adabf67bc7d3650ed14214ddaa" title="Return the stored logger class." alt="" coords="888,105,1048,148"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="839,145,872,139,872,145,840,150"/>
+<area shape="rect" id="Node000007" href="$namespace_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_traits.html#ab690a84fb4e720f43308bc354c392bee" title="Map PSR log&#45;levels to ILogger log&#45;levels as the PsrLoggerAdapter only understands those." alt="" coords="888,172,1048,215"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="840,170,872,175,872,181,839,175"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="631,157,664,157,664,163,631,163"/>
+<area shape="poly" id="edge11_Node000009_Node000005" title=" " alt="" coords="423,213,523,205,631,191,668,183,669,188,632,196,523,210,423,218"/>
+</map>

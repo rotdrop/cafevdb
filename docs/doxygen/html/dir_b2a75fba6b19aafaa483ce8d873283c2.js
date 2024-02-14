@@ -11,6 +11,7 @@ var dir_b2a75fba6b19aafaa483ce8d873283c2 =
     [ "EnumParticipantFieldMultiplicity.php", "_enum_participant_field_multiplicity_8php_source.html", null ],
     [ "EnumProjectTemporalType.php", "_enum_project_temporal_type_8php_source.html", null ],
     [ "EnumSepaTransaction.php", "_enum_sepa_transaction_8php_source.html", null ],
+    [ "EnumTaxType.php", "_enum_tax_type_8php_source.html", null ],
     [ "EnumType.php", "_enum_type_8php_source.html", null ],
     [ "EnumVCalendarType.php", "_enum_v_calendar_type_8php_source.html", null ],
     [ "UuidType.php", "_uuid_type_8php_source.html", null ]

@@ -115,7 +115,7 @@
     
             <span class="phpdocumentor-element__extends">
             Uses
-                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-CloudAdminTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\CloudAdminTrait">CloudAdminTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Traits-ContactsTrait.html"><abbr title="\OCA\CAFEVDB\Traits\ContactsTrait">ContactsTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html"><abbr title="\OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait">DatabaseStorageNodeNameTrait</abbr></a>                    </span>
+                            <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\LoggerTrait">LoggerTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ApiRequestTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\ApiRequestTrait">ApiRequestTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Toolkit-Traits-CloudAdminTrait.html"><abbr title="\OCA\CAFEVDB\Toolkit\Traits\CloudAdminTrait">CloudAdminTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Traits-ContactsTrait.html"><abbr title="\OCA\CAFEVDB\Traits\ContactsTrait">ContactsTrait</abbr></a>,                             <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html"><abbr title="\OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait">DatabaseStorageNodeNameTrait</abbr></a>                    </span>
     </h2>
 
 <div class="phpdocumentor-label-line">
@@ -126,9 +126,9 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/FilesHooksListener.php"><a href="files/listener-fileshookslistener.html"><abbr title="Listener/FilesHooksListener.php">FilesHooksListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">55</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/Listener/FilesHooksListener.php.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/Listener/FilesHooksListener.php.txt"></a>
     </aside>
 
             <p class="phpdocumentor-summary">Listener for hooking up an additional context menu entry.</p>
@@ -164,15 +164,15 @@
 </h4>
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#constant_BASENAME">BASENAME</a>
+    <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#constant_ASSET_BASENAME">ASSET_BASENAME</a>
     <span>
-        &nbsp;= &#039;files-hooks&#039;                            </span>
+        &nbsp;= [\OCA\Files\Event\LoadAdditionalScriptsEvent::class =&gt; [\OCA\CAFEVDB\Constants::JS =&gt; &#039;files-hooks&#039;, \OCA\CAFEVDB\Constants::CSS =&gt; null], \OCA\Files\Event\LoadSidebar::class =&gt; [\OCA\CAFEVDB\Constants::JS =&gt; &#039;files-sidebar-hooks&#039;, \OCA\CAFEVDB\Constants::CSS =&gt; &#039;files-sidebar-hooks&#039;]]                            </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#constant_EVENT">EVENT</a>
     <span>
-        &nbsp;= \OCA\Files\Event\LoadAdditionalScriptsEvent::class                            </span>
+        &nbsp;= [\OCA\Files\Event\LoadAdditionalScriptsEvent::class, \OCA\Files\Event\LoadSidebar::class]                            </span>
 </dt>
 
     </dl>
@@ -211,7 +211,13 @@
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#property_handled">$handled</a>
     <span>
-                        &nbsp;: mixed            </span>
+                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#property_initialStateEmitted">$initialStateEmitted</a>
+    <span>
+                        &nbsp;: bool            </span>
 </dt>
 
     </dl>
@@ -360,6 +366,13 @@ bank-transactions.</dd>
 <dd>PME-legacy.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyTaxExemptionNoticeFileName">getLegacyTaxExemptionNoticeFileName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>PME-legacy.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getPaymentRecordFileName">getPaymentRecordFileName()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -381,12 +394,41 @@ bank-transactions.</dd>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxAuthoritiesFolderName">getTaxAuthoritiesFolderName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Get the name of the folder containing tax office related stuff.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxExemptionNoticeFileName">getTaxExemptionNoticeFileName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Generate a file-name for the given tax exemption notice</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxExemptionNoticesFolderName">getTaxExemptionNoticesFolderName()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Get the name of the folder containing tax exemption notices.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>Map PSR log-levels to ILogger log-levels as the PsrLoggerAdapter only
 understands those.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ApiRequestTrait.html#method_isNonInteractiveRequest">isNonInteractiveRequest()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>In order to avoid request ping-pong the auto-login should only be
+attempted for UI logins.</dd>
 
     </dl>
 
@@ -401,26 +443,26 @@ understands those.</dd>
 
         </h3>
                     <article class="phpdocumentor-element -constant -public ">
-    <h4 class="phpdocumentor-element__name" id="constant_BASENAME">
-        BASENAME
-        <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#constant_BASENAME" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="constant_ASSET_BASENAME">
+        ASSET_BASENAME
+        <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#constant_ASSET_BASENAME" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/FilesHooksListener.php"><a href="files/listener-fileshookslistener.html"><abbr title="Listener/FilesHooksListener.php">FilesHooksListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.55" class="phpdocumentor-element-found-in__source" data-line="55" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.68" class="phpdocumentor-element-found-in__source" data-line="68" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
-    <span class="phpdocumentor-signature__name">BASENAME</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;files-hooks&#039;</span>
+    <span class="phpdocumentor-signature__name">ASSET_BASENAME</span>
+    = <span class="phpdocumentor-signature__default-value">[\OCA\Files\Event\LoadAdditionalScriptsEvent::class =&gt; [\OCA\CAFEVDB\Constants::JS =&gt; &#039;files-hooks&#039;, \OCA\CAFEVDB\Constants::CSS =&gt; null], \OCA\Files\Event\LoadSidebar::class =&gt; [\OCA\CAFEVDB\Constants::JS =&gt; &#039;files-sidebar-hooks&#039;, \OCA\CAFEVDB\Constants::CSS =&gt; &#039;files-sidebar-hooks&#039;]]</span>
 </code>
 
 
@@ -439,9 +481,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/FilesHooksListener.php"><a href="files/listener-fileshookslistener.html"><abbr title="Listener/FilesHooksListener.php">FilesHooksListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">53</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.53" class="phpdocumentor-element-found-in__source" data-line="53" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.63" class="phpdocumentor-element-found-in__source" data-line="63" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -449,7 +491,7 @@ understands those.</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">EVENT</span>
-    = <span class="phpdocumentor-signature__default-value">\OCA\Files\Event\LoadAdditionalScriptsEvent::class</span>
+    = <span class="phpdocumentor-signature__default-value">[\OCA\Files\Event\LoadAdditionalScriptsEvent::class, \OCA\Files\Event\LoadSidebar::class]</span>
 </code>
 
 
@@ -484,9 +526,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.45" class="phpdocumentor-element-found-in__source" data-line="45" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -588,9 +630,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/FilesHooksListener.php"><a href="files/listener-fileshookslistener.html"><abbr title="Listener/FilesHooksListener.php">FilesHooksListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.58" class="phpdocumentor-element-found-in__source" data-line="58" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.93" class="phpdocumentor-element-found-in__source" data-line="93" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -622,16 +664,50 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/FilesHooksListener.php"><a href="files/listener-fileshookslistener.html"><abbr title="Listener/FilesHooksListener.php">FilesHooksListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">60</span>
+    <span class="phpdocumentor-element-found-in__line">80</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.60" class="phpdocumentor-element-found-in__source" data-line="60" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.80" class="phpdocumentor-element-found-in__source" data-line="80" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
+        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
     <span class="phpdocumentor-signature__name">$handled</span>
+     = <span class="phpdocumentor-signature__default-value">[\OCA\Files\Event\LoadAdditionalScriptsEvent::class =&gt; false, \OCA\Files\Event\LoadSidebar::class =&gt; false]</span></code>
+
+    
+    
+    
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="property_initialStateEmitted">
+        $initialStateEmitted
+        <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#property_initialStateEmitted" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Listener/FilesHooksListener.php"><a href="files/listener-fileshookslistener.html"><abbr title="Listener/FilesHooksListener.php">FilesHooksListener.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">86</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.86" class="phpdocumentor-element-found-in__source" data-line="86" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">bool</span>
+    <span class="phpdocumentor-signature__name">$initialStateEmitted</span>
      = <span class="phpdocumentor-signature__default-value">false</span></code>
 
     
@@ -661,9 +737,9 @@ understands those.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/FilesHooksListener.php"><a href="files/listener-fileshookslistener.html"><abbr title="Listener/FilesHooksListener.php">FilesHooksListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">66</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.66" class="phpdocumentor-element-found-in__source" data-line="66" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.92" class="phpdocumentor-element-found-in__source" data-line="92" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -706,9 +782,9 @@ small CTOR footprint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Listener/FilesHooksListener.php"><a href="files/listener-fileshookslistener.html"><abbr title="Listener/FilesHooksListener.php">FilesHooksListener.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">72</span>
+    <span class="phpdocumentor-element-found-in__line">102</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.102" class="phpdocumentor-element-found-in__source" data-line="102" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">{@inheritdoc}</p>
@@ -732,6 +808,22 @@ small CTOR footprint.</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#method_handle#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">SuppressWarnings</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>(PHPMD.Superglobals)</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
     
 </article>
@@ -1313,9 +1405,9 @@ small CTOR footprint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">48</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.48" class="phpdocumentor-element-found-in__source" data-line="48" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.49" class="phpdocumentor-element-found-in__source" data-line="49" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1349,9 +1441,9 @@ small CTOR footprint.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">84</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.83" class="phpdocumentor-element-found-in__source" data-line="83" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.84" class="phpdocumentor-element-found-in__source" data-line="84" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the name of the sub-folder containing supporting documents for
@@ -1467,9 +1559,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">182</span>
+    <span class="phpdocumentor-element-found-in__line">203</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.182" class="phpdocumentor-element-found-in__source" data-line="182" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.203" class="phpdocumentor-element-found-in__source" data-line="203" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a file-name for a hard-copy of the given debit-mandate.</p>
@@ -1521,9 +1613,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">150</span>
+    <span class="phpdocumentor-element-found-in__line">171</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.150" class="phpdocumentor-element-found-in__source" data-line="150" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.171" class="phpdocumentor-element-found-in__source" data-line="171" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the name of the sub-folder holding hard-copies of debit-mandates</p>
@@ -1562,9 +1654,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.61" class="phpdocumentor-element-found-in__source" data-line="61" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.62" class="phpdocumentor-element-found-in__source" data-line="62" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the name of the per-participant document folder</p>
@@ -1603,9 +1695,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">165</span>
+    <span class="phpdocumentor-element-found-in__line">186</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.165" class="phpdocumentor-element-found-in__source" data-line="165" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.186" class="phpdocumentor-element-found-in__source" data-line="186" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">PME-legacy.</p>
@@ -1657,9 +1749,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">112</span>
+    <span class="phpdocumentor-element-found-in__line">133</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.112" class="phpdocumentor-element-found-in__source" data-line="112" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.133" class="phpdocumentor-element-found-in__source" data-line="133" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">PME-legacy.</p>
@@ -1710,6 +1802,74 @@ bank-transactions.</p>
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getLegacyTaxExemptionNoticeFileName">
+        getLegacyTaxExemptionNoticeFileName()
+        <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyTaxExemptionNoticeFileName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">221</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.221" class="phpdocumentor-element-found-in__source" data-line="221" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">PME-legacy.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getLegacyTaxExemptionNoticeFileName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumTaxType.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType">EnumTaxType</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$taxType</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$assessmentPeriodStart</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$assessmentPeriodEnd</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$extension</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$taxType</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|<a href="classes/OCA-CAFEVDB-Database-Doctrine-DBAL-Types-EnumTaxType.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType">EnumTaxType</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$assessmentPeriodStart</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$assessmentPeriodEnd</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$extension</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getPaymentRecordFileName">
         getPaymentRecordFileName()
         <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getPaymentRecordFileName" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1718,9 +1878,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">137</span>
+    <span class="phpdocumentor-element-found-in__line">158</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.137" class="phpdocumentor-element-found-in__source" data-line="137" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.158" class="phpdocumentor-element-found-in__source" data-line="158" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Generate a file-name for the given composite payment.</p>
@@ -1772,9 +1932,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.95" class="phpdocumentor-element-found-in__source" data-line="95" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.96" class="phpdocumentor-element-found-in__source" data-line="96" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
         <p class="phpdocumentor-summary">Get the name of the sub-folder containing supporting documents for
@@ -1810,9 +1970,9 @@ bank-transactions.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">72</span>
 
-            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.71" class="phpdocumentor-element-found-in__source" data-line="71" data-modal="source-view" data-src="files/.txt"></a>
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.72" class="phpdocumentor-element-found-in__source" data-line="72" data-modal="source-view" data-src="files/.txt"></a>
     </aside>
 
     
@@ -1834,6 +1994,134 @@ bank-transactions.</p>
 documents.</p>
 </section>
 
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getTaxAuthoritiesFolderName">
+        getTaxAuthoritiesFolderName()
+        <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxAuthoritiesFolderName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">107</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.107" class="phpdocumentor-element-found-in__source" data-line="107" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get the name of the folder containing tax office related stuff.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getTaxAuthoritiesFolderName</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getTaxExemptionNoticeFileName">
+        getTaxExemptionNoticeFileName()
+        <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxExemptionNoticeFileName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">248</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.248" class="phpdocumentor-element-found-in__source" data-line="248" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Generate a file-name for the given tax exemption notice</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getTaxExemptionNoticeFileName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice">TaxExemptionNotice</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$taxExemptionNotice</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$extension</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$taxExemptionNotice</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/OCA-CAFEVDB-Database-Doctrine-ORM-Entities-TaxExemptionNotice.html"><abbr title="\OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice">TaxExemptionNotice</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$extension</span>
+                : <span class="phpdocumentor-signature__argument__return-type">null|string</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getTaxExemptionNoticesFolderName">
+        getTaxExemptionNoticesFolderName()
+        <a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxExemptionNoticesFolderName" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Storage/Database/DatabaseStorageNodeNameTrait.php"><a href="files/storage-database-databasestoragenodenametrait.html"><abbr title="Storage/Database/DatabaseStorageNodeNameTrait.php">DatabaseStorageNodeNameTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">117</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.117" class="phpdocumentor-element-found-in__source" data-line="117" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">Get the name of the folder containing tax exemption notices.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getTaxExemptionNoticesFolderName</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
             </section>
 
 </article>
@@ -1880,6 +2168,61 @@ understands those.</p>
     
 
     
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_isNonInteractiveRequest">
+        isNonInteractiveRequest()
+        <a href="classes/OCA-CAFEVDB-Toolkit-Traits-ApiRequestTrait.html#method_isNonInteractiveRequest" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Toolkit/Traits/ApiRequestTrait.php"><a href="files/toolkit-traits-apirequesttrait.html"><abbr title="Toolkit/Traits/ApiRequestTrait.php">ApiRequestTrait.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">46</span>
+
+            <a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#source-view.46" class="phpdocumentor-element-found-in__source" data-line="46" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">In order to avoid request ping-pong the auto-login should only be
+attempted for UI logins.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">isNonInteractiveRequest</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IRequest">IRequest</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$request</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logLevel</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">LogLevel::DEBUG</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$request</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><abbr title="\OCP\IRequest">IRequest</abbr></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$logLevel</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">LogLevel::DEBUG</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
             </section>
 
@@ -1994,7 +2337,7 @@ understands those.</p>
                             <li class="phpdocumentor-on-this-page-section__title">Constants</li>
                 <li>
                     <ul class="phpdocumentor-list -clean">
-                                                    <li><a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#constant_BASENAME">BASENAME</a></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#constant_ASSET_BASENAME">ASSET_BASENAME</a></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#constant_EVENT">EVENT</a></li>
                                             </ul>
                 </li>
@@ -2007,6 +2350,7 @@ understands those.</p>
                                                     <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#property_logger">$logger<a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#property_appContainer">$appContainer<a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html"></li>
                                                     <li><a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#property_handled">$handled<a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html"></li>
+                                                    <li><a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html#property_initialStateEmitted">$initialStateEmitted<a href="classes/OCA-CAFEVDB-Listener-FilesHooksListener.html"></li>
                                             </ul>
                 </li>
             
@@ -2033,10 +2377,15 @@ understands those.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getDocumentsFolderName">getDocumentsFolderName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyDebitMandateFileName">getLegacyDebitMandateFileName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyPaymentRecordFileName">getLegacyPaymentRecordFileName()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getLegacyTaxExemptionNoticeFileName">getLegacyTaxExemptionNoticeFileName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getPaymentRecordFileName">getPaymentRecordFileName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getReceivablesFolderName">getReceivablesFolderName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getSupportingDocumentsFolderName">getSupportingDocumentsFolderName()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxAuthoritiesFolderName">getTaxAuthoritiesFolderName()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxExemptionNoticeFileName">getTaxExemptionNoticeFileName()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Storage-Database-DatabaseStorageNodeNameTrait.html#method_getTaxExemptionNoticesFolderName">getTaxExemptionNoticesFolderName()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-LoggerTrait.html#method_mapLogLevels">mapLogLevels()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Toolkit-Traits-ApiRequestTrait.html#method_isNonInteractiveRequest">isNonInteractiveRequest()</a></li>
                                     </ul>
             </li>
                     </ul>

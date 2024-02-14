@@ -128,7 +128,7 @@
             <a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#source-view.41" class="phpdocumentor-element-found-in__source" data-line="41" data-modal="source-view" data-src="files/Crypto/HaliteSymmetricStreamCryptor.php.txt"></a>
     </aside>
 
-            <p class="phpdocumentor-summary">Lik HaliteSymmetricCryptor, but use the stream-versions which work on
+            <p class="phpdocumentor-summary">Like HaliteSymmetricCryptor, but use the stream-versions which work on
 chunks of 1M and thus scale better for large data than the non-streamed
 versions. Implementation uses php://memory which involves copying the data
 yet another time. However, the non-streamed versions use that
@@ -240,6 +240,13 @@ again.</p>
                                 &nbsp;: null|string    </span>
 </dt>
 <dd>Fetch the installed encryption key, if any.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#method_isEncrypted">isEncrypted()</a>
+    <span>
+                                &nbsp;: bool|null    </span>
+</dt>
+<dd>{@inheritdoc}</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#method_setEncryptionKey">setEncryptionKey()</a>
@@ -626,6 +633,53 @@ unencrypted and just be passed through.</dd>
         class="phpdocumentor-element
             -method
             -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_isEncrypted">
+        isEncrypted()
+        <a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#method_isEncrypted" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="Crypto/HaliteSymmetricStreamCryptor.php"><a href="files/crypto-halitesymmetricstreamcryptor.html"><abbr title="Crypto/HaliteSymmetricStreamCryptor.php">HaliteSymmetricStreamCryptor.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">179</span>
+
+            <a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#source-view.179" class="phpdocumentor-element-found-in__source" data-line="179" data-modal="source-view" data-src="files/.txt"></a>
+    </aside>
+
+        <p class="phpdocumentor-summary">{@inheritdoc}</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">isEncrypted</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$data</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
                                                         "
 >
     <h4 class="phpdocumentor-element__name" id="method_setEncryptionKey">
@@ -808,6 +862,7 @@ unencrypted and just be passed through.</p>
                                             <li><a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#method_decrypt">decrypt()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#method_encrypt">encrypt()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#method_getEncryptionKey">getEncryptionKey()</a></li>
+                                            <li><a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#method_isEncrypted">isEncrypted()</a></li>
                                             <li><a href="classes/OCA-CAFEVDB-Crypto-HaliteSymmetricStreamCryptor.html#method_setEncryptionKey">setEncryptionKey()</a></li>
                                     </ul>
             </li>

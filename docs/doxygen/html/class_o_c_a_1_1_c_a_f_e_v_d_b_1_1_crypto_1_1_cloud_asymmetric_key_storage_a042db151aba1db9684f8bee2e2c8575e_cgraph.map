@@ -1,6 +1,11 @@
 <map id="getKeyPair" name="getKeyPair">
-<area shape="rect" id="node1" title="{Retrieve an existing private/public key pair from the key&#45;storage.array&lt;string, string&gt; [ &#39;privateEn..." alt="" coords="5,29,92,55"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a234d412fd67a827e1ef76aee0263a985" title="{Retrieve an existing pulic key from the key&#45;storage.mixed|null Public key or null if none is found...." alt="" coords="140,29,239,55"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a22f229329d340dcd3fb629e91c9b95b9" title=" " alt="" coords="290,5,390,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a63312920564297d50e6f355d9c3c6e9b" title="Decode the raw data fetch from whatever storage backend." alt="" coords="287,55,393,80"/>
+<area shape="rect" id="Node000001" title="{Retrieve an existing private/public key pair from the key&#45;storage.array&lt;string, string&gt; [ &#39;privateEn..." alt="" coords="5,31,91,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a234d412fd67a827e1ef76aee0263a985" title="{Retrieve an existing pulic key from the key&#45;storage.mixed|null Public key or null if none is found...." alt="" coords="139,31,237,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,41,123,41,123,47,91,47"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a22f229329d340dcd3fb629e91c9b95b9" title=" " alt="" coords="289,5,388,32"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="89,28,138,16,208,11,273,12,273,17,208,16,139,21,90,33"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_cloud_asymmetric_key_storage.html#a63312920564297d50e6f355d9c3c6e9b" title="Decode the raw data fetch from whatever storage backend." alt="" coords="285,68,391,95"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="92,55,139,67,206,75,270,78,269,84,206,80,138,72,91,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="237,33,273,27,274,32,238,38"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="238,54,271,62,269,67,237,59"/>
 </map>

@@ -1,6 +1,11 @@
 <map id="UndoableFileReplace" name="UndoableFileReplace">
-<area shape="rect" id="node1" title="Replace one file by another, maintaining an undo history in the cloud." alt="" coords="28,225,175,251"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="5,152,197,177"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="38,79,165,104"/>
-<area shape="rect" id="node4" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="61,5,142,31"/>
+<area shape="rect" id="Node000001" title="Replace one file by another, maintaining an undo history in the cloud." alt="" coords="81,248,226,275"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_file_system_undoable.html" title="Base for file&#45;system related IUndoable implementations." alt="" coords="58,172,249,199"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,214,156,248,151,248,151,214"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_abstract_undoable.html" title="Default implementation for some methods." alt="" coords="5,81,131,108"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,117,143,170,139,173,89,121"/>
+<area shape="rect" id="Node000004" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_i_undoable.html" title="Simplistic do&#45;undo interface in order to be stacked into a do&#45;undo&#45;list." alt="" coords="28,5,108,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="71,47,71,81,65,81,65,47"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="155,81,211,108"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="176,124,160,172,155,171,171,122"/>
 </map>

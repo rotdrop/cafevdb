@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,6 +36,7 @@ use OCP\IL10N;
 use OCP\Image;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 
 /**
  * Check for authorization and supply contact information for several
@@ -43,6 +44,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
  */
 class OrganizationalRolesService
 {
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\CloudAdminTrait;
 
@@ -68,11 +70,12 @@ class OrganizationalRolesService
     self::TREASURER_ROLE,
   ];
 
+  private ?Entities\Project $executiveBoardProjectEntity = null;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(ConfigService $configService)
-  {
-    $this->configService = $configService;
-    $this->groupManager = $this->groupManager(); // for CloudAdminTrait
+  public function __construct(
+    protected ConfigService $configService,
+  ) {
     $this->l = $this->l10n();
   }
   // phpcs:enable
@@ -167,15 +170,18 @@ class OrganizationalRolesService
    */
   public function executiveBoardProject():?Entities\Project
   {
-    /** @var ProjectService $projectService */
-    $projectService = $this->di(ProjectService::class);
-    return $projectService->findById($this->getExecutiveBoardProjectId());
+    if (!empty($this->executiveBoardProjectEntity)) {
+      return $this->executiveBoardProjectEntity;
+    }
+    $this->entityManager = $this->appContainer()->get(EntityManager::class);
+    $this->executiveBoardProjectEntity = $this->getDatabaseRepository(Entities\Project::class)->find($this->getExecutiveBoardProjectId());
+    return $this->executiveBoardProjectEntity;
   }
 
   /**
    * Return an array with all members of the executive board.
    *
-   * @return Entities\ProjectParticipant[]
+   * @return Collection
    */
   public function executiveBoardMembers():Collection
   {
@@ -197,10 +203,8 @@ class OrganizationalRolesService
     if (empty($musicianId)) {
       return null;
     }
-    /** @var ProjectService $projectService */
-    $projectService = $this->di(ProjectService::class);
-    return $projectService->findParticipant(
-      $this->getExecutiveBoardProjectId(), $musicianId);
+    $participants = $this->executiveBoardMembers();
+    return $participants->containsKey($musicianId) ? $participants->get($musicianId) : null;
   }
 
   /**
@@ -278,6 +282,31 @@ class OrganizationalRolesService
   public function getPresident():?Entities\ProjectParticipant
   {
     return $this->dedicatedBoardMemberParticipant(self::PRESIDENT_ROLE);
+  }
+
+  /**
+   * Check whether the given or currently logged in user is a member of the
+   * executive board.
+   *
+   * @param string $uid
+   *
+   * @return bool
+   */
+  public function isBoardMember(string $uid):bool
+  {
+    return $this->executiveBoardMembers()->exists(fn(Entities\ProjectParticipant $member) => $member->getUserIdSlug() == $uid);
+  }
+
+  /**
+   * Get the database entity for the matching executive board member.
+   *
+   * @param string $uid
+   *
+   * @return null|Entities\ProjectParticipant
+   */
+  public function getBoardMember(string $uid):?Entities\ProjectParticipant
+  {
+    return $this->executiveBoardMembers()->findFirst(fn(Entities\ProjectParticipant $member) => $member->getUserIdSlug() == $uid);
   }
 
   /**
@@ -441,6 +470,7 @@ class OrganizationalRolesService
    */
   public function cloudAdminContact(bool $implode = false)
   {
+    $this->groupManager = $this->groupManager(); // for CloudAdminTrait
     return $this->getCloudAdminContacts($implode);
   }
 

@@ -1,6 +1,9 @@
 <map id="recryptSharedPrivateData" name="recryptSharedPrivateData">
-<area shape="rect" id="node1" title="Recrypt all shared private values with a new key." alt="" coords="5,31,177,56"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#ad69e2fbbcaf3d8dc94c6dc087f5416f3" title="Return the entire encrypted config&#45;space." alt="" coords="227,5,378,31"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#ab252d3289232306724a1e579d2b9ac25" title="Encrypt and set one private value." alt="" coords="225,55,380,80"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#a32f61ea261107431a8863c0cafe8901d" title="Fetch and decrypt one private value." alt="" coords="428,5,583,31"/>
+<area shape="rect" id="Node000001" title="Recrypt all shared private values with a new key." alt="" coords="5,31,177,57"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#ad69e2fbbcaf3d8dc94c6dc087f5416f3" title="Return the entire encrypted config&#45;space." alt="" coords="227,5,376,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,31,211,27,212,32,177,36"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#ab252d3289232306724a1e579d2b9ac25" title="Encrypt and set one private value." alt="" coords="225,56,378,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,52,210,56,209,61,176,57"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_service.html#a32f61ea261107431a8863c0cafe8901d" title="Fetch and decrypt one private value." alt="" coords="426,5,579,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="377,16,411,16,411,21,377,21"/>
 </map>

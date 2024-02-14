@@ -1,4 +1,5 @@
 <map id="AbstractAsymmetricKeyStorage" name="AbstractAsymmetricKeyStorage">
-<area shape="rect" id="node1" title="Abstract base providing default implementations." alt="" coords="6,79,215,104"/>
-<area shape="rect" id="node2" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_storage_interface.html" title="Key&#45;storage interface." alt="" coords="5,5,216,31"/>
+<area shape="rect" id="Node000001" title="Abstract base providing default implementations." alt="" coords="6,80,215,107"/>
+<area shape="rect" id="Node000002" href="$interface_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_asymmetric_key_storage_interface.html" title="Key&#45;storage interface." alt="" coords="5,5,216,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,48,113,80,108,80,108,48"/>
 </map>

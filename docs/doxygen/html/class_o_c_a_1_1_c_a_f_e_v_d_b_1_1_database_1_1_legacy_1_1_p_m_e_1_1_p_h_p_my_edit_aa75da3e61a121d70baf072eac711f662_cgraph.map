@@ -1,4 +1,5 @@
 <map id="clearQueryLog" name="clearQueryLog">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,112,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#af811153ae1e03339da641bbc02ff09ac" title=" " alt="" coords="160,5,235,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,111,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_legacy_1_1_p_m_e_1_1_p_h_p_my_edit.html#af811153ae1e03339da641bbc02ff09ac" title=" " alt="" coords="159,5,233,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,16,143,16,143,21,111,21"/>
 </map>

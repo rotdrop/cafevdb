@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,28 +42,22 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
-  /** @var ToolTipsService */
-  protected $toolTipsService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     EntityManager $entityManager,
     ProgressStatusService $progressStatusService,
-    ToolTipsService $toolTipsService,
-    ILogger $logger,
-    IL10N $l10n,
+    protected ToolTipsService $toolTipsService,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
     parent::__construct($entityManager, $progressStatusService);
-    $this->toolTipsService = $toolTipsService;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 
   /** {@inheritdoc} */
   public static function uiFlags():int
   {
-    return self::UI_EDITABLE_LABEL|self::UI_EDITABLE_VALUE;
+    return self::UI_EDITABLE_LABEL|self::UI_EDITABLE_VALUE|self::UI_NO_PROGRESS;
   }
 
   /** {@inheritdoc} */
@@ -146,6 +140,11 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
    */
   public function updateParticipant(Entities\ProjectParticipant $participant, ?Entities\ProjectParticipantFieldDataOption $receivable, $updateStrategy = self::UPDATE_STRATEGY_EXCEPTION):array
   {
+    $musician = $participant->getMusician();
+    $musicianId = $musician->getId();
+    $musicianName = $musician->getPublicName(firstNameFirst: true);
+    $receivables = [];
+
     $added = 0;
     $removed = 0;
 
@@ -174,29 +173,39 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
       fn(Entities\ProjectParticipantFieldDatum $datum) => empty($datum->getDataOption()->getLabel()));
 
     if (!empty($receivable)) {
+      $receivableKey = (string)$receivable->getKey();
+      $receivableLabel = $receivable->getLabel();
+      $receivables[$receivableKey] = $receivableLabel;
+
       // dedicated receivables update ... just update this one
 
       /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
-      $fieldData = $receivable->getMusicianFieldData($participant->getMusician());
+      $fieldData = $receivable->getMusicianFieldData($musician);
       foreach ($fieldData as $fieldDatum) {
         if (empty($fieldDatum->getOptionValue()) && $emptyFieldData->count() > 1) {
           $this->remove($fieldDatum);
           $this->remove($fieldDatum);
           $participantFieldsData->removeElement($fieldDatum);
-          $participant->getMusician()->getProjectParticipantFieldsData()->removeElement($fieldDatum);
+          $musician->getProjectParticipantFieldsData()->removeElement($fieldDatum);
           $fieldDatum->getDataOption()->getFieldData()->removeElement($fieldDatum);
           $emptyFieldData->removeElement($fieldDatum);
           ++$removed;
         }
       }
 
-      return [
-        'added' => $added,
-        'removed' => $removed,
-        'changed' => 0, // never
-        'skipped' => 0,
-        'notices' => [],
-      ];
+      if (!$emptyFieldData->isEmpty()) {
+        return [
+          'added' => $added,
+          'removed' => $removed,
+          'changed' => 0, // never
+          'skipped' => 0,
+          'notices' => [],
+          'musicians' => [
+            $musicianId => $musicianName,
+          ],
+          'receivables' => $receivables,
+        ];
+      }
     }
 
     // then remove all but one empty option
@@ -238,11 +247,11 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
         }
         $this->logInfo('Check option ' . (string)$fieldOption->getKey());
         if ($fieldOption->getMusicianFieldData($participant->getMusician())->isEmpty()) {
-          $this->logInfo('Found unbound option ' . (string)$fieldOption->getKey() . ' for musician ' . $participant->getMusician()->getPublicName());
+          $this->logInfo('Found unbound option ' . (string)$fieldOption->getKey() . ' for musician ' . $participant->getPublicName());
           $emptyFieldOption = $fieldOption;
           break;
         } else {
-          $this->logInfo('Option ' . (string)$fieldOption->getKey() . ' already used by musician ' . $participant->getMusician()->getPublicName());
+          $this->logInfo('Option ' . (string)$fieldOption->getKey() . ' already used by musician ' . $participant->getPublicName());
         }
       }
 
@@ -265,6 +274,11 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
 
       // use it, add empty data to musician
       $added += $this->subscribeParticipant($participant, $emptyFieldOption);
+
+      $receivable = $emptyFieldOption;
+      $receivableKey = (string)$receivable->getKey();
+      $receivableLabel = $receivable->getLabel();
+      $receivables[$receivableKey] = $receivableLabel;
     }
 
     return [
@@ -273,6 +287,10 @@ class ManuallyGeneratedReceivablesGenerator extends AbstractReceivablesGenerator
       'changed' => 0, // never
       'skipped' => 0,
       'notices' => [],
+      'musicians' => [
+        $musicianId => $musicianName,
+      ],
+      'receivables' => $receivables,
     ];
   }
 

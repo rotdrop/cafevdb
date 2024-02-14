@@ -1,4 +1,5 @@
 <map id="ProjectInstrumentationNumber" name="ProjectInstrumentationNumber">
-<area shape="rect" id="node1" title="ProjectInstrumentationNumber." alt="" coords="5,79,204,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="56,5,153,31"/>
+<area shape="rect" id="Node000001" title="ProjectInstrumentationNumber." alt="" coords="5,80,204,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="56,5,153,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,48,107,80,102,80,102,48"/>
 </map>

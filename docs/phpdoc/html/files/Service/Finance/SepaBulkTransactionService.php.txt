@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use Throwable;
 use RuntimeException;
 use InvalidArgumentException;
 use DateTimeImmutable;
@@ -136,30 +137,15 @@ class SepaBulkTransactionService
   const SUBJECT_ITEM_SEPARATOR = ', ';
   const SUBJECT_OPTION_SEPARATOR = ': ';
 
-  /** @var IAppContainer */
-  protected $appContainer;
-
-  /** @var FinanceService */
-  private $financeService;
-
-  /** @var EventsService */
-  private $eventsService;
-
   /** {@inheritdoc} */
   public function __construct(
-    EntityManager $entityManager,
-    FinanceService $financeService,
-    EventsService $eventsService,
-    IAppContainer $appContainer,
-    ILogger $logger,
-    IL10N $l10n,
+    protected EntityManager $entityManager,
+    private FinanceService $financeService,
+    private EventsService $eventsService,
+    private IAppContainer $appContainer,
+    protected ILogger $logger,
+    protected IL10N $l,
   ) {
-    $this->entityManager = $entityManager;
-    $this->financeService = $financeService;
-    $this->eventsService = $eventsService;
-    $this->appContainer = $appContainer;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
 
   /**
@@ -188,7 +174,7 @@ class SepaBulkTransactionService
         $submissionTaskUri = $bulkTransaction->getSubmissionTaskUri();
         $submissionTask = $this->financeService->findFinanceCalendarEntry($submissionTaskUri);
         if (!empty($submissionTask)) {
-          $stash = [ self::SUBMISSION_TASK => $this->eventsService->cloneCalendarEntry($submissionTask) ];
+          $stash = [ self::SUBMISSION_TASK => Util::cloneArray($submissionTask) ];
           if (empty($submitDate) || $submitDate > $now) {
             $this->eventsService->setCalendarTaskStatus($submissionTask, percentComplete: 0);
           } else {
@@ -205,7 +191,7 @@ class SepaBulkTransactionService
         $submissionEventUri = $bulkTransaction->getSubmissionEventUri();
         $submissionEvent = $this->financeService->findFinanceCalendarEntry($submissionEventUri);
         if (!empty($submissionEvent)) {
-          $stash = [ self::SUBMISSION_EVENT => $this->eventsService->cloneCalendarEntry($submissionEvent) ];
+          $stash = [ self::SUBMISSION_EVENT => Util::cloneArray($submissionEvent) ];
           if (empty($submitDate) || $submitDate > $now) {
             $this->logInfo('SUBMIT > NOW ' . print_r($submitDate, true) . ' ' . print_r($now, true));
             // leave as is for the moment
@@ -652,7 +638,7 @@ class SepaBulkTransactionService
         foreach (array_filter($objectIds) as $objectId) {
           $calendarObject = $this->financeService->findFinanceCalendarEntry($objectId);
           if (!empty($calendarObject)) {
-            $calendarObjects[$eventKind][$objectType] = $this->eventsService->cloneCalendarEntry($calendarObject);
+            $calendarObjects[$eventKind][$objectType] = Util::cloneArray($calendarObject);
             break;
           }
         }
@@ -723,7 +709,7 @@ class SepaBulkTransactionService
       $this->remove($bulkTransaction, flush: true);
       $this->entityManager->commit();
 
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->entityManager->rollback();
       throw new Exceptions\DatabaseException(
         $this->l->t('Failed to remove bulk-transaction with id %d', $bulkTransaction->getId()),
@@ -757,7 +743,7 @@ class SepaBulkTransactionService
       try {
         $this->flush();
         $this->entityManager->commit();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->logException($t);
         $this->entityManager->rollback();
         throw new Exceptions\DatabaseException(
@@ -866,7 +852,7 @@ class SepaBulkTransactionService
         $bulkTransaction->addTransactionData($document);
         $this->flush();
         $this->entityManager->commit();
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $this->entityManager->rollback();
         throw new Exceptions\DatabaseException(
           $this->l->t(

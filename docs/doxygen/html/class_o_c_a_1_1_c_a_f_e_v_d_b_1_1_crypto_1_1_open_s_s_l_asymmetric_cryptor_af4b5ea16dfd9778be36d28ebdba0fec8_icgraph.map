@@ -1,4 +1,5 @@
 <map id="setPrivateKey" name="setPrivateKey">
-<area shape="rect" id="node1" title="{AsymmetricCryptorInterface $this}" alt="" coords="144,5,248,31"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_cryptor.html#ab0e4079df42a5b6924b715b57fd66040" title=" " alt="" coords="5,5,96,31"/>
+<area shape="rect" id="Node000001" title="{AsymmetricCryptorInterface $this}" alt="" coords="143,5,246,32"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_crypto_1_1_open_s_s_l_asymmetric_cryptor.html#ab0e4079df42a5b6924b715b57fd66040" title=" " alt="" coords="5,5,95,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,21,95,21,95,16,127,16"/>
 </map>

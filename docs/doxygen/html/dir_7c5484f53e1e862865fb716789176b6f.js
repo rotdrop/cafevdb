@@ -15,7 +15,6 @@ var dir_7c5484f53e1e862865fb716789176b6f =
     [ "InstrumentInsurancesRepository.php", "_instrument_insurances_repository_8php_source.html", null ],
     [ "InstrumentsRepository.php", "_instruments_repository_8php_source.html", null ],
     [ "LogEntriesRepository.php", "_log_entries_repository_8php_source.html", null ],
-    [ "MusicianPhotosRepository.php", "_musician_photos_repository_8php_source.html", null ],
     [ "MusiciansRepository.php", "_musicians_repository_8php_source.html", null ],
     [ "ProjectEventsRepository.php", "_project_events_repository_8php_source.html", null ],
     [ "ProjectInstrumentationNumbersRepository.php", "_project_instrumentation_numbers_repository_8php_source.html", null ],
@@ -29,6 +28,7 @@ var dir_7c5484f53e1e862865fb716789176b6f =
     [ "SepaBankAccountsRepository.php", "_sepa_bank_accounts_repository_8php_source.html", null ],
     [ "SepaBulkTransactionsRepository.php", "_sepa_bulk_transactions_repository_8php_source.html", null ],
     [ "SepaDebitMandatesRepository.php", "_sepa_debit_mandates_repository_8php_source.html", null ],
+    [ "TaxExemptionNoticesRepository.php", "_tax_exemption_notices_repository_8php_source.html", null ],
     [ "TranslationKeysRepository.php", "_translation_keys_repository_8php_source.html", null ],
     [ "TranslationLocationsRepository.php", "_translation_locations_repository_8php_source.html", null ],
     [ "TranslationsRepository.php", "_translations_repository_8php_source.html", null ]

@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_toolkit_1_1_service_1_1_user_scope_service.html" title="Set the current user and optionally also its login credentials from auth tokens." alt="" coords="5,5,136,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,56,149,83"/>
+<area shape="rect" id="Node000001" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_association_slug_handler.html" title="Simple slug&#45;handler which updates a field of an associated entity." alt="" coords="197,5,357,32"/>
+<area shape="poly" id="edge452_Node000000_Node000001" title=" " alt="" coords="147,49,221,30,222,35,148,54"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_hash_handler.html" title="Gedmo slug handler which simply computes a hash as slug." alt="" coords="228,56,326,83"/>
+<area shape="poly" id="edge453_Node000000_Node000002" title=" " alt="" coords="164,67,228,67,228,72,164,72"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_database_1_1_doctrine_1_1_o_r_m_1_1_listeners_1_1_sluggable_1_1_login_name_slug_handler.html" title="Gedmo slug&#45;handler which converts." alt="" coords="198,107,356,133"/>
+<area shape="poly" id="edge454_Node000000_Node000003" title=" " alt="" coords="148,85,222,103,221,109,147,90"/>
 </map>

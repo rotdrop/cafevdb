@@ -1,12 +1,28 @@
 <map id="explode" name="explode">
-<area shape="rect" id="node1" title="A preg_explode() wrapper with some extra features." alt="" coords="877,200,944,225"/>
-<area shape="rect" id="node2" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a936748b21bb69d2a3f9d51e14ce2cd87" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="308,81,527,136"/>
-<area shape="rect" id="node3" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,54,256,94"/>
-<area shape="rect" id="node5" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a882a0897b82d354409342d1c195c2f4d" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="304,160,531,214"/>
-<area shape="rect" id="node6" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a224e0cc0562d0f2642f19e9f8fb03596" title="Explode a string of the form." alt="" coords="647,125,761,150"/>
-<area shape="rect" id="node7" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a1c7326cf6f827db64c27bbb89f64dd7d" title="Explode a string of the form." alt="" coords="633,174,775,200"/>
-<area shape="rect" id="node8" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ac4930892b628989ea570c18ef64c0b4b" title="The ranking of the mussician&#39;s instruments is implicitly stored in the order of the instrument ids." alt="" coords="579,276,829,330"/>
-<area shape="rect" id="node9" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a67a5fbebd2af7e58f4533e7256e11556" title=" " alt="" coords="611,354,797,380"/>
-<area shape="rect" id="node10" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae7d345a0cb6a0cc4e54913f819db998d" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="620,404,788,429"/>
-<area shape="rect" id="node4" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,124,234,164"/>
+<area shape="rect" id="Node000001" title="A preg_explode() wrapper with some extra features." alt="" coords="875,203,942,230"/>
+<area shape="poly" id="edge6_Node000001_Node000001" title=" " alt="" coords="944,190,932,184,908,182,887,184,875,188,873,194,878,201,874,204,867,194,872,185,886,179,909,176,933,179,946,185"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a936748b21bb69d2a3f9d51e14ce2cd87" title="Before insert&#45;trigger which ideally should insert all data such that nothing remains to be done for p..." alt="" coords="307,79,525,138"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="892,191,866,150,847,132,826,117,790,102,752,92,673,81,596,81,525,88,525,83,595,76,673,76,753,86,792,97,829,113,851,128,870,147,897,188"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_instrumentation_numbers.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="5,52,255,95"/>
+<area shape="poly" id="edge15_Node000001_Node000003" title=" " alt="" coords="897,189,888,162,873,131,852,102,826,80,788,60,748,43,664,21,578,10,491,9,408,15,330,26,204,54,203,49,329,21,407,10,491,4,578,5,665,16,750,38,790,55,829,76,856,99,877,128,892,160,902,187"/>
+<area shape="rect" id="Node000005" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#a882a0897b82d354409342d1c195c2f4d" title="Before update&#45;trigger which ideally should update all data such that nothing remains to do for phpMyE..." alt="" coords="303,162,529,220"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="860,221,732,224,577,219,529,214,530,208,577,214,732,219,860,216"/>
+<area shape="rect" id="Node000006" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a224e0cc0562d0f2642f19e9f8fb03596" title="Explode a string of the form." alt="" coords="646,127,758,154"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="876,196,826,168,792,157,758,150,759,145,794,152,828,163,879,192"/>
+<area shape="rect" id="Node000007" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a1c7326cf6f827db64c27bbb89f64dd7d" title="Explode a string of the form." alt="" coords="632,178,772,204"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="859,213,772,202,773,197,860,208"/>
+<area shape="rect" id="Node000008" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_p_m_e_table_view_base.html#ac4930892b628989ea570c18ef64c0b4b" title="The ranking of the mussician&#39;s instruments is implicitly stored in the order of the instrument ids." alt="" coords="577,279,827,338"/>
+<area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="872,240,828,263,786,281,784,276,826,258,869,235"/>
+<area shape="rect" id="Node000009" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#a67a5fbebd2af7e58f4533e7256e11556" title=" " alt="" coords="609,362,795,388"/>
+<area shape="poly" id="edge14_Node000001_Node000009" title=" " alt="" coords="900,246,874,300,854,328,829,352,797,368,795,363,826,348,850,325,870,298,896,243"/>
+<area shape="rect" id="Node000010" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_common_1_1_util.html#ae7d345a0cb6a0cc4e54913f819db998d" title="Shorten the given string by iteratively reducing the size of its camel&#45;case components until it fits ..." alt="" coords="619,412,786,439"/>
+<area shape="poly" id="edge16_Node000001_Node000010" title=" " alt="" coords="906,245,898,282,883,324,861,367,829,402,809,415,787,423,785,418,807,410,826,398,856,364,878,322,892,280,901,244"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,96,255,92,255,86,292,91"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_page_renderer_1_1_project_participant_fields.html#ab91557ae1e08e1183c76c9ce39edfe33" title="{Show the underlying template page.This is supposed to echo html code to stdout. This is the default ..." alt="" coords="27,127,233,170"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="292,128,234,137,233,131,291,123"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="287,174,233,166,233,161,287,169"/>
+<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="630,135,524,123,525,118,631,130"/>
+<area shape="poly" id="edge9_Node000006_Node000005" title=" " alt="" coords="631,156,530,174,529,168,630,150"/>
+<area shape="poly" id="edge11_Node000007_Node000002" title=" " alt="" coords="616,178,576,168,498,141,500,136,578,163,617,173"/>
+<area shape="poly" id="edge12_Node000007_Node000005" title=" " alt="" coords="616,194,529,194,529,188,616,188"/>
 </map>

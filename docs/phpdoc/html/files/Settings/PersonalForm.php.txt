@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,8 @@
 
 namespace OCA\CAFEVDB\Settings;
 
-use OCP\App\IAppManager;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\App\IAppManager;
 use OCP\Settings\ISettings;
 use OCP\IInitialStateService;
 
@@ -42,7 +42,7 @@ use OCA\CAFEVDB\Service\OrganizationalRolesService;
 use OCA\CAFEVDB\Service\AssetService;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
-use OCA\Redaxo4Embedded\Service\RPC as WebPagesRPC;
+use OCA\Redaxo\Service\RPC as WebPagesRPC;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
@@ -60,76 +60,23 @@ class PersonalForm
   const TEMPLATE = "settings";
   const DEFAULT_EDITOR = 'tinymce';
 
-  /** @var AssetService */
-  private $assetService;
-
-  /** @var ProjectService */
-  private $projectService;
-
-  /** @var ErrorService */
-  private $errorService;
-
-  /** @var OCA\CAFEVDB\Service\L10N\TranslationService */
-  private $translationService;
-
-  /** @var OCA\DokuWikiEmedded\Service\AuthDokuWiki */
-  private $wikiRPC;
-
-  /** @var OCA\Redaxo4Embedded\Service\RPC */
-  private $webPagesRPC;
-
-  /** @var AddressBookProvider */
-  private $addressBookProvider;
-
-  /** @var UserStorage */
-  private $userStorage;
-
-  /** @var CloudUserConnectorService */
-  private $cloudUserService;
-
-  /** @var IInitialStateService */
-  private $initialStateService;
-
-  /** @var IAppManager */
-  private $appManager;
-
-  /** @var GeoCodingService */
-  private $geoCodingService;
-
-  /** @var OrganizationalRolesService */
-  private $roles;
-
   /** {@inheritdoc} */
   public function __construct(
-    ConfigService $configService,
-    AssetService $assetService,
-    ProjectService $projectService,
-    ErrorService $errorService,
-    TranslationService $translationService,
-    IInitialStateService $initialStateService,
-    IAppManager $appManager,
-    WikiRPC $wikiRPC,
-    WebPagesRPC $webPagesRPC,
-    AddressBookProvider $addressBookProvider,
-    UserStorage $userStorage,
-    CloudUserConnectorService $cloudUserService,
-    GeoCodingService $geoCodingService,
-    OrganizationalRolesService $roles,
+    protected ConfigService $configService,
+    private AssetService $assetService,
+    private ProjectService $projectService,
+    private ErrorService $errorService,
+    private TranslationService $translationService,
+    private IInitialStateService $initialStateService,
+    private IAppManager $appManager,
+    private WikiRPC $wikiRPC,
+    private WebPagesRPC $webPagesRPC,
+    private AddressBookProvider $addressBookProvider,
+    private UserStorage $userStorage,
+    private CloudUserConnectorService $cloudUserService,
+    private GeoCodingService $geoCodingService,
+    private OrganizationalRolesService $roles,
   ) {
-    $this->configService = $configService;
-    $this->assetService = $assetService;
-    $this->projectService = $projectService;
-    $this->errorService = $errorService;
-    $this->translationService = $translationService;
-    $this->initialStateService = $initialStateService;
-    $this->appManager = $appManager;
-    $this->wikiRPC = $wikiRPC;
-    $this->webPagesRPC = $webPagesRPC;
-    $this->addressBookProvider = $addressBookProvider;
-    $this->userStorage = $userStorage;
-    $this->cloudUserService = $cloudUserService;
-    $this->geoCodingService = $geoCodingService;
-    $this->roles = $roles;
     $this->l = $this->l10N();
   }
 
@@ -143,8 +90,7 @@ class PersonalForm
   public function getForm()
   {
     if (!$this->inGroup()) {
-      return new TemplateResponse(
-        $this->appName(),
+      return $this->templateResponse(
         self::ERROR_TEMPLATE,
         [
           'assets' => [
@@ -153,7 +99,8 @@ class PersonalForm
           ],
           'error' => 'notamember',
           'userId' => $this->userId(),
-        ], 'blank');
+        ],
+      );
     }
     try {
       // Initial state injecton for JS
@@ -201,13 +148,14 @@ class PersonalForm
           Constants::CSS => $this->assetService->getCSSAsset(self::TEMPLATE),
         ],
         'appName' => $this->appName(),
+        'appNameTag' => 'app-' . $this->appName,
         'appInfo' => $this->appManager->getAppInfo($this->appName()),
         'userId' => $this->userId(),
         //
         'roles' => $this->roles,
         //
-        'locale' => $this->getLocale(),
         'language' => $this->l->getLanguageCode(),
+        'localeSymbol' => $this->getLocale(), // locale itself should already have been provided by NC core
         'locales' => $this->findAvailableLocales(),
         'languages' => $this->findAvailableLanguages(),
         'localeCountryNames' => $this->localeCountryNames(),
@@ -310,6 +258,7 @@ class PersonalForm
         $templateParameters = array_merge(
           $templateParameters,
           [
+            Admin::ORCHESTRA_USER_GROUP_KEY => $this->getAppValue(ConfigService::USER_GROUP_KEY),
             'streetAddressName01' => $this->getConfigValue('streetAddressName01'),
             'streetAddressName02' => $this->getConfigValue('streetAddressName02'),
             'streetAddressStreet' => $this->getConfigValue('streetAddressStreet'),
@@ -347,7 +296,7 @@ class PersonalForm
             'dbuser' => $this->getConfigValue('dbuser'),
             'dbpassword' => $this->getConfigValue('dbpassword'),
 
-            'shareowner' => $this->getConfigValue('shareowner', ''),
+            ConfigService::SHAREOWNER_KEY => $this->getConfigValue(ConfigService::SHAREOWNER_KEY, ''),
             'concertscalendar' => $this->getConfigValue('concertscalendar', $this->l->t('Concerts')),
             'rehearsalscalendar' => $this->getConfigValue('rehearsalscalendar', $this->l->t('Rehearsals')),
             'othercalendar' => $this->getConfigValue('othercalendar', $this->l->t('Other')),
@@ -371,6 +320,8 @@ class PersonalForm
             ConfigService::FINANCE_FOLDER => $this->getConfigValue(ConfigService::FINANCE_FOLDER, ''),
             ConfigService::TRANSACTIONS_FOLDER => $this->getConfigValue(ConfigService::TRANSACTIONS_FOLDER, ''),
             ConfigService::BALANCES_FOLDER => $this->getConfigValue(ConfigService::BALANCES_FOLDER, ''),
+            ConfigService::TAX_OFFICE_IN_TRAY_FOLDER => $this->getConfigValue(ConfigService::TAX_OFFICE_IN_TRAY_FOLDER, ''),
+            ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE => $this->getConfigValue(ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE, ''),
 
             'translations' => $translations,
 
@@ -482,11 +433,9 @@ class PersonalForm
         }
       }
 
-      return new TemplateResponse(
-        $this->appName(),
+      return $this->templateResponse(
         self::TEMPLATE,
         $templateParameters,
-        'blank',
       );
     } catch (\Exception $e) {
       return $this->errorService->exceptionTemplate($e);

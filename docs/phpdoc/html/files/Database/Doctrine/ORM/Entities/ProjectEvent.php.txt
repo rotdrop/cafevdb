@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Common\Uuid;
  *   }
  * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectEventsRepository")
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\ProjectEventEntityListener"})
  * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class ProjectEvent implements \ArrayAccess
@@ -155,7 +156,8 @@ class ProjectEvent implements \ArrayAccess
    * possibly repeating or we need a list of linked fields in order to record
    * the participation for each event instance.
    *
-   * @ORM\OneToOne(targetEntity="ProjectParticipantField", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="ProjectParticipantField", inversedBy="projectEvent", cascade={"remove"}, orphanRemoval=true)
+   * @Gedmo\SoftDeleteableCascade(undelete=true)
    */
   private $absenceField;
 
@@ -437,5 +439,11 @@ class ProjectEvent implements \ArrayAccess
   public function getAbsenceField():?ProjectParticipantField
   {
     return $this->absenceField;
+  }
+
+  /** {@inheritdoc} */
+  public function __toString():string
+  {
+    return $this->eventUri . ':' . $this->recurrenceId . '@' . $this->calendarUri;
   }
 }

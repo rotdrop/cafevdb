@@ -1,0 +1,9 @@
+<map id="dedicatedBoardMemberParticipant" name="dedicatedBoardMemberParticipant">
+<area shape="rect" id="Node000001" title=" " alt="" coords="149,56,369,83"/>
+<area shape="rect" id="Node000002" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a58259e4c7621772baed4e9883b59cc93" title=" " alt="" coords="6,5,100,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,54,100,33,101,28,188,49"/>
+<area shape="rect" id="Node000003" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#a8ada6036f348dbf48c7910c53a774206" title=" " alt="" coords="5,56,101,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="133,72,101,72,101,67,133,67"/>
+<area shape="rect" id="Node000004" href="$class_o_c_a_1_1_c_a_f_e_v_d_b_1_1_service_1_1_organizational_roles_service.html#acd02402643b391e657040ddf7e1c2613" title=" " alt="" coords="6,107,100,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="188,90,101,111,100,106,186,84"/>
+</map>
