@@ -98,8 +98,7 @@ trait MailingListsTrait
         //   $status = 'unknown';
         // }
         $status = 'unknown';
-        return ($this->templateResponse(
-          $this->appName(),
+        return $this->templateResponse(
           'fragments/mailing-lists/announcements-list-controls', [
             'appName' => $this->appName(),
             'action' => $action,
@@ -108,8 +107,7 @@ trait MailingListsTrait
             'toolTips' => $this->toolTipsService,
             'expertMode' => $this->expertMode ?? false,
           ],
-          'blank',
-        ))->render();
+        )->render();
       },
     ];
 
@@ -168,8 +166,7 @@ trait MailingListsTrait
 
         // add an "action button" for some convenience operations in order to
         // spare the change to the admin page for the list.
-        return ($this->templateResponse(
-          $this->appName(),
+        return $this->templateResponse(
           'fragments/mailing-lists/project-list-controls', [
             'appName' => $this->appName(),
             'displayStatus' => $displayStatus,
@@ -178,8 +175,7 @@ trait MailingListsTrait
             'urlGenerator' => $this->urlGenerator(),
             'toolTips' => $this->toolTipsService,
           ],
-          'blank',
-        ))->render();
+        )->render();
       },
     ];
     return Util::arrayMergeRecursive($fdd, $override ?? []);

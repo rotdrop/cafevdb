@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,9 +52,22 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    *
+   * Project payments are actually also expenses in which case the sign of the
+   * payment is negative. Receptions are positive.
+   *
    * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
    */
   private $amount = '0.00';
+
+  /**
+   * @var bool
+   *
+   * Flags the payment as a donation. The supporting document of the
+   * corresponding receivable will be the corresponding certificate.
+   *
+   * @ORM\Column(type="boolean", nullable=false, options={"default"="0"})
+   */
+  private $isDonation;
 
   /**
    * @var string
@@ -65,6 +78,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var ProjectParticipantFieldDatum
+   *
+   * Each project payment must be backed by a "receivable".
    *
    * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDatum", inversedBy="payments")
    * @ORM\JoinColumns(
@@ -89,6 +104,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var CompositePayment
+   *
+   * Composite payments group several payments together.
    *
    * @ORM\ManyToOne(targetEntity="CompositePayment", inversedBy="projectPayments", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
@@ -125,6 +142,9 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var DatabaseStorageFolder
+   *
+   * Project payments may be supported by documents below the project balance,
+   * or by individual supporting documents which are tied to the receivables.
    *
    * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
@@ -303,6 +323,30 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function getSubject():?string
   {
     return $this->subject;
+  }
+
+  /**
+   * Set isDonation.
+   *
+   * @param bool $isDonation
+   *
+   * @return ProjectPayment
+   */
+  public function setIsDonation(bool $isDonation):ProjectPayment
+  {
+    $this->isDonation = $isDonation;
+
+    return $this;
+  }
+
+  /**
+   * Get isDonation.
+   *
+   * @return bool
+   */
+  public function getIsDonation():?bool
+  {
+    return $this->isDonation;
   }
 
   /**

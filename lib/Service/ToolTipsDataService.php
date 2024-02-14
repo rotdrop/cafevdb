@@ -557,6 +557,12 @@ results may be unexpected.'),
           'deleted' => self::t('End of insurance, either because the musician has with-drawn the element from the instrument insurances or maybe because the instrument got damaged or otherwise lost. In order to "undelete" this item please enable "expert-mode" in the settings-menu in the side-bar, reload the page and just delete the date.'),
         ],
         'project-payments' => [
+          'donation' => self::t('Mark this payment as donation. The (single) supporting document for this
+payment should then be the donation receipt. When checking this option an
+additional control button will appear which generates a prefabricated donation
+receipt. The letter has to be triple checked, signed manully, sent by
+snail-mail to the payee and a digital copy has to be uploaded to the cloud as
+supporting document.'),
           'project-balance' => [
             'default' => self::t('Link this payment and the supporting documents of its receivable to the project balance folder.'),
             'open' => self::t('Open the project balance folder in the files app of the cloud.'),

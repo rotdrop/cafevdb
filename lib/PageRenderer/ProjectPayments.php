@@ -135,6 +135,7 @@ GROUP BY __t1.id',
   GROUP_CONCAT(DISTINCT __t1.id ORDER BY __t1.id) AS id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.amount) ORDER BY __t1.id) AS amount,
   SUM(__t1.amount) AS total_amount,
+  IF(SUM(__t1.is_donation) > 0, 1, 0) AS is_donation,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.subject) ORDER BY __t1.id) AS subject,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.project_id) ORDER BY __t1.id) AS project_id,
   GROUP_CONCAT(DISTINCT CONCAT_WS('".self::JOIN_KEY_SEP."', __t1.id, __t1.field_id) ORDER BY __t1.id) AS field_id,
@@ -153,6 +154,7 @@ SELECT
   __t2.id,
   __t2.amount,
   __t2.amount AS total_amount,
+  __t2.is_donation,
   __t2.subject,
   __t2.project_id,
   __t2.field_id,
@@ -622,6 +624,26 @@ WHERE dsf.id IS NOT NULL',
           'rows' => 4,
           'cols' => 35,
         ],
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'is_donation',
+      [
+        'tab' => [ 'id' => 'booking' ],
+        'name' => $this->l->t('Donation'),
+        'select' => 'O',
+        'css'  => [ 'postfix' => [ 'is-donation', ], ],
+        'sort' => true,
+        'sql|LVDF' => 'COALESCE($join_col_fqn, 0)',
+        'sql|ACP' => 'IF($join_col_fqn = 0, NULL, 1)',
+        'default' => null,
+        'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
+        'values2|LVDF' => [
+          0 => '',
+          1 => '&#10004;',
+        ],
+        'align|LF' => 'center',
+        'tooltip' => $this->toolTipsService['page-renderer:project-payments:donation'],
       ]);
 
     /**
