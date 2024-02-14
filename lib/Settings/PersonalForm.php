@@ -55,6 +55,7 @@ use OCA\CAFEVDB\Constants;
 class PersonalForm
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const ERROR_TEMPLATE = "errorpage";
   const TEMPLATE = "settings";
