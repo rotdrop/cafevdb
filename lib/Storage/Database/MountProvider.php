@@ -169,9 +169,10 @@ class MountProvider implements IMountProvider
 
       $mounts[] = new class(
         $storage,
-        '/' . $userId
-        . '/files'
-        . $this->getBankTransactionsPath(),
+        UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $this->getBankTransactionsPath(), ]
+        ),
         null,
         $loader,
         [
@@ -197,9 +198,10 @@ class MountProvider implements IMountProvider
 
       $mounts[] = new class(
         storage: $storage,
-        mountpoint: '/' . $userId
-        . '/files'
-        . $this->getTaxExemptionNoticesPath(),
+        mountpoint: UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $this->getTaxExemptionNoticesPath(), ],
+        ),
         mountId: null,
         loader: $loader,
         mountProvider: MountProvider::class,
@@ -250,7 +252,13 @@ class MountProvider implements IMountProvider
         $mountPathChain[] = $project->getName();
         $mountPathChain[] = $this->getSupportingDocumentsFolderName();
 
-        $mountPath = '/' . $userId . '/' . 'files' . implode('/', $mountPathChain);
+        $mountPath = UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          array_merge(
+            [ $userId, 'files', ],
+            $mountPathChain,
+          ),
+        );
 
         $mounts[] = new class(
           $storage,
@@ -317,10 +325,10 @@ class MountProvider implements IMountProvider
 
       $mounts[] = new class(
         $storage,
-        '/' . $userId
-        . '/files'
-        . $folder
-        . '/'. $this->getDocumentsFolderName(),
+        UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $folder, $this->getDocumentsFolderName(), ]
+        ),
         null,
         $loader,
         [
