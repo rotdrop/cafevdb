@@ -46,13 +46,24 @@ class ReadMeFactory extends AbstractReadMeFactory
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /**
+   * @var array<string, null|InMemoryFileNode>
+   *
+   * Remember the documents for the current request.
+   */
+  protected array $documentCache = [];
+
+  /**
+   * @param ContainerInterface $appContainer
+   *
+   * @param IL10N $l
+   *
+   * @param AppL10N $appL10n
+   *
    * @param string $appName
    *
    * @param LoggerInterface $logger
    *
    * @param IConfig $cloudConfig
-   *
-   * @param ContainerInterface $appContainer
    *
    * @param ToolTipsService $toolTipsService
    */
@@ -77,18 +88,19 @@ class ReadMeFactory extends AbstractReadMeFactory
    */
   public function generateReadMe(DatabaseStorageFolder|EmptyDirectoryNode $parent, string $dirName):?InMemoryFileNode
   {
-    $storageId = $parent->getStorage()->getStorageId();
-    $content = $this->getDefaultReadMeContents($storageId, $dirName);
-    if (empty($content)) {
-      // no empty files
-      return null;
+    if (!isset($this->documentCache[$dirName])) {
+      $storageId = $parent->getStorage()->getStorageId();
+      $content = $this->getDefaultReadMeContents($storageId, $dirName);
+      if (empty($content)) {
+        $this->documentCache[$dirName] = null;
+      } else {
+        $updated = (new DateTime)->setTimestamp(
+          $this->cloudConfig->getAppValue($this->appName, AppMTimeService::L10N_MTIME_KEY, 1),
+        );
+        $this->documentCache[$dirName] = new InMemoryFileNode($parent, $this->getReadMeFileNames()[0], $content, self::MIME_TYPE, $updated);
+      }
     }
-    $updated = (new DateTime)->setTimestamp(
-      $this->cloudConfig->getAppValue($this->appName, AppMTimeService::L10N_MTIME_KEY, 1),
-    );
-    $node = new InMemoryFileNode($parent, $this->getReadMeFileNames()[0], $content, self::MIME_TYPE, $updated);
-
-    return $node;
+    return $this->documentCache[$dirName];
   }
 
   /**

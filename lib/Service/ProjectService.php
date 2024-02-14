@@ -563,44 +563,46 @@ class ProjectService
   /**
    * Return an array with the project skeleton paths, indexed by folder-type.
    *
-   * @return array
+   * @param null|string $which If non-null return only the requested path
+   * instead of an array of all paths.
+   *
+   * @return null|string|array
    *
    * @see ensureProjectFolders()
    */
-  public function getProjectSkeletonPaths():array
+  public function getProjectSkeletonPaths(?string $which = null):null|string|array
   {
-    if ($this->skeletonPaths !== null) {
-      return $this->skeletonPaths;
-    }
-    $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
-    $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
-    $skeletonPath = implode(Constants::PATH_SEP, [
-      $sharedFolder,
-      $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER),
-      $projectsFolder,
-      $this->appL10n()->t(ConfigService::PROJECT_SKELETON_FOLDER),
-    ]);
-    $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
-    $postersFolder = $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
-    $downloadsFolder = $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
-    $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
+    if ($this->skeletonPaths === null) {
+      $sharedFolder   = $this->getConfigValue(ConfigService::SHARED_FOLDER);
+      $projectsFolder = $this->getConfigValue(ConfigService::PROJECTS_FOLDER);
+      $skeletonPath = implode(Constants::PATH_SEP, [
+        $sharedFolder,
+        $this->getConfigValue(ConfigService::DOCUMENT_TEMPLATES_FOLDER),
+        $projectsFolder,
+        $this->appL10n()->t(ConfigService::PROJECT_SKELETON_FOLDER),
+      ]);
+      $participantsFolder = $this->getConfigValue(ConfigService::PROJECT_PARTICIPANTS_FOLDER);
+      $postersFolder = $this->getConfigValue(ConfigService::PROJECT_POSTERS_FOLDER);
+      $downloadsFolder = $this->getConfigValue(ConfigService::PROJECT_PUBLIC_DOWNLOADS_FOLDER);
+      $balancesFolder  = $this->getConfigValue(ConfigService::BALANCES_FOLDER);
 
-    $managementSkeleton = $skeletonPath . Constants::PATH_SEP . $this->appL10n()->t(ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER);
-    $balanceSkeleton = $skeletonPath . Constants::PATH_SEP . $balancesFolder;
+      $managementSkeleton = $skeletonPath . Constants::PATH_SEP . $this->appL10n()->t(ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER);
+      $balanceSkeleton = $skeletonPath . Constants::PATH_SEP . $balancesFolder;
 
-    $this->skeletonPaths = [
-      self::FOLDER_TYPE_BALANCE => $balanceSkeleton,
-      self::FOLDER_TYPE_PROJECT => $managementSkeleton,
-      self::FOLDER_TYPE_PARTICIPANTS => $managementSkeleton . Constants::PATH_SEP . $participantsFolder,
-      self::FOLDER_TYPE_POSTERS => $managementSkeleton . Constants::PATH_SEP . $postersFolder,
-      self::FOLDER_TYPE_DOWNLOADS => $managementSkeleton . Constants::PATH_SEP . $downloadsFolder,
-    ];
-    $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS_TEMPLATE] =
-      $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS]
+      $this->skeletonPaths = [
+        self::FOLDER_TYPE_BALANCE => $balanceSkeleton,
+        self::FOLDER_TYPE_PROJECT => $managementSkeleton,
+        self::FOLDER_TYPE_PARTICIPANTS => $managementSkeleton . Constants::PATH_SEP . $participantsFolder,
+        self::FOLDER_TYPE_POSTERS => $managementSkeleton . Constants::PATH_SEP . $postersFolder,
+        self::FOLDER_TYPE_DOWNLOADS => $managementSkeleton . Constants::PATH_SEP . $downloadsFolder,
+      ];
+      $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS_TEMPLATE] =
+        $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS]
       . Constants::PATH_SEP
-      . $this->appL10n()->t(ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER);
+        . $this->appL10n()->t(ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER);
+    }
 
-    return $this->skeletonPaths;
+    return $which ? $this->skeletonPaths[$which] ?? null : $this->skeletonPaths;
   }
 
   /**
@@ -641,7 +643,10 @@ class ProjectService
 
     $skeletonPaths = $this->getProjectSkeletonPaths();
     // TRANSLATORS: this is a placeholder for the login id. It must in particular remain all lowercase.
-    $skeletonExclude = '/' . preg_quote($this->appL10n()->t(ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER), '/') . '/';
+    $skeletonExclude = [
+      self::FOLDER_TYPE_PROJECT => '/' . preg_quote($this->appL10n()->t(ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER), '/') . '/',
+      self::FOLDER_TYPE_BALANCE => '/' . preg_quote($this->getSupportingDocumentsFolderName()) . '/',
+    ];
 
     $pathPrefix = $this->getProjectPathPrefix($project);
 
@@ -691,7 +696,7 @@ class ProjectService
               || $key == self::FOLDER_TYPE_PROJECT
               || $key == self::FOLDER_TYPE_BALANCE) {
             $skeletonPath = $skeletonPaths[$key];
-            $this->userStorage->copyTree($skeletonPath, $destinationPath, $skeletonExclude);
+            $this->userStorage->copyTree($skeletonPath, $destinationPath, $skeletonExclude[$key] ?? null);
           }
         }
         $returnPaths[$key] = $destinationPath;
@@ -1010,7 +1015,8 @@ class ProjectService
       $this->userStorage->ensureFolder($participantFolder);
       $this->getProjectSkeletonPaths();
       $participantSkeleton = $this->skeletonPaths[self::FOLDER_TYPE_PARTICIPANTS_TEMPLATE];
-      $this->userStorage->copyTree($participantSkeleton, $participantFolder);
+      $exclude = '/' . preg_quote($this->getDocumentsFolderName()) . '/';
+      $this->userStorage->copyTree($participantSkeleton, $participantFolder, $exclude);
     }
     return $participantFolder;
   }
@@ -1071,7 +1077,7 @@ class ProjectService
   }
 
   /**
-   * Generatet the full path to the parent folder of the files attached to the
+   * Generate the full path to the parent folder of the files attached to the
    * given field data (if there are any)
    *
    * @param Entities\ProjectParticipantField $field
