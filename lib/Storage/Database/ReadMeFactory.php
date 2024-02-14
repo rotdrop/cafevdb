@@ -26,35 +26,24 @@ namespace OCA\CAFEVDB\Storage\Database;
 
 use DateTime;
 
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
+use OCP\IL10N;
 
-use OCA\Text\Service\WorkspaceService;
-
+use OCA\CAFEVDB\AppInfo\AppL10N;
 use OCA\CAFEVDB\Constants;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DatabaseStorageFolder;
 use OCA\CAFEVDB\Service\AppMTimeService;
-use OCA\CAFEVDB\Storage\StorageUtil;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**
  * Generate in-memory README nodes.
  */
-class ReadMeFactory
+class ReadMeFactory extends AbstractReadMeFactory
 {
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
-
-  public const MIME_TYPE = 'text/plain'; // markdown';
-
-  /**
-   * @var array
-   *
-   * A cache for possible names of the Readme.md. The first element is the
-   * preferred localized name.
-   */
-  protected ?array $readMeFileNames = null;
 
   /**
    * @param string $appName
@@ -63,17 +52,20 @@ class ReadMeFactory
    *
    * @param IConfig $cloudConfig
    *
-   * @param IAppContainer $appContainer
+   * @param ContainerInterface $appContainer
    *
    * @param ToolTipsService $toolTipsService
    */
   public function __construct(
+    ContainerInterface $appContainer,
+    IL10N $l,
+    AppL10N $appL10n,
     protected string $appName,
     protected LoggerInterface $logger,
     protected IConfig $cloudConfig,
-    protected IAppContainer $appContainer,
     protected ToolTipsService $toolTipsService,
   ) {
+    parent::__construct($appContainer, $l, $appL10n);
   }
 
   /**
@@ -137,52 +129,5 @@ class ReadMeFactory
     $contents = str_replace(ToolTipsService::PARAGRAPH, '', $contents);
 
     return $contents;
-  }
-
-  /**
-   * Possibly populate and return the array of possible "readMe"
-   * variations. We try to recurse to the "text" app and come up with suitable
-   * fallback if that fails.
-   *
-   * @return array<int, string>
-   */
-  public function getReadMeFileNames():array
-  {
-    if ($this->readMeFileNames === null) {
-      try {
-        /** @var WorkspaceService $workspaceService */
-        $workspaceService = $this->appContainer->get(WorkspaceService::class);
-        $this->readMeFileNames = $workspaceService->getSupportedFilenames();
-      } catch (Throwable $t) {
-        $this->readMeFileNames = array_map(
-          fn($value) => $value . '.md', [
-            $this->l->t('Readme'),
-            $this->appL10n()->t('Readme'),
-            'Readme.md',
-            'README.md',
-            'readme.md'
-          ]);
-      }
-    }
-    return $this->readMeFileNames;
-  }
-
-    /**
-   * Check whether the given file is a ReadMe.md file.
-   *
-   * @param string $path
-   *
-   * @return bool
-   */
-  public function isReadMe(string $path):bool
-  {
-    $readMeFileNames = $this->getReadMeFileNames();
-    $path = basename(StorageUtil::uploadBasename($path));
-    foreach ($readMeFileNames as $readMeName) {
-      if ($path == $readMeName) {
-        return true;
-      }
-    }
-    return false;
   }
 }

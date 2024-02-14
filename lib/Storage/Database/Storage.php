@@ -84,7 +84,7 @@ class Storage extends AbstractStorage
   protected $rootFolder = null;
 
   /** @var ReadMeFactory */
-  protected ReadMeFactory $readMeFactory;
+  protected ?ReadMeFactory $readMeFactory;
 
   /** {@inheritdoc} */
   public function __construct($params)
@@ -93,8 +93,7 @@ class Storage extends AbstractStorage
 
     $this->configService = $params['configService'];
     $this->l = $this->l10n();
-    $this->entityManager = $this->di(EntityManager::class);
-    $this->readMeFactory = $this->di(ReadMeFactory::class);
+    $this->entityManager = $this->appContainer()->get(EntityManager::class);
 
     if (!$this->entityManager->connected()) {
       throw new Exception('not connected');
@@ -169,7 +168,7 @@ class Storage extends AbstractStorage
       $this->files[$dirName] = [ '.' => $rootFolder ];
       if (empty($folderDirEntry)) {
         $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
-        $readMeNode = $this->readMeFactory->generateReadMe($rootFolder, $dirName);
+        $readMeNode = $this->getReadMeFactory()->generateReadMe($rootFolder, $dirName);
         if ($readMeNode !== null) {
           $this->files[$dirName][$readMeNode->getName()] = $readMeNode;
         }
@@ -215,11 +214,11 @@ class Storage extends AbstractStorage
       } else {
         /** @var Entities\DatabaseStorageFile $dirEntry */
         $this->files[$dirName][$baseName] = $dirEntry;
-        $hasReadme = $hasReadme || $this->readMeFactory->isReadMe($baseName);
+        $hasReadme = $hasReadme || $this->getReadMeFactory()->isReadMe($baseName);
       }
     }
     if (!$hasReadme) {
-      $readMeNode = $this->readMeFactory->generateReadMe($folderDirEntry, $dirName);
+      $readMeNode = $this->getReadMeFactory()->generateReadMe($folderDirEntry, $dirName);
       if ($readMeNode !== null) {
         $this->files[$dirName][$readMeNode->getName()] = $readMeNode;
       }
@@ -228,6 +227,17 @@ class Storage extends AbstractStorage
     $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
 
     return $this->files[$dirName];
+  }
+
+  /**
+   * Extension point for sub-classes in order to provide their own ReadMe
+   * factory.
+   *
+   * @return ReadMeFactoryInterface
+   */
+  protected function getReadMeFactory():ReadMeFactoryInterface
+  {
+    return $this->readMeFactory ?? ($this->readMeFactory = $this->appContainer()->get(ReadMeFactory::class));
   }
 
   /**
@@ -688,7 +698,7 @@ class Storage extends AbstractStorage
           if (!$this->touch($path)) {
             return false;
           }
-          $tmpFile = $this->di(ITempManager::class)->getTemporaryFile();
+          $tmpFile = $this->appContainer()->get(ITempManager::class)->getTemporaryFile();
         }
         $source = fopen($tmpFile, $mode);
 
@@ -742,7 +752,7 @@ class Storage extends AbstractStorage
       /** @var Entities\DatabaseStorageFile $file */
       $file->getFileData()->setData($fileData);
       /** @var IMimeTypeDetector $mimeTypeDetector */
-      $mimeTypeDetector = $this->di(IMimeTypeDetector::class);
+      $mimeTypeDetector = $this->appContainer()->get(IMimeTypeDetector::class);
       $file->setMimeType($mimeTypeDetector->detectString($fileData));
       $file->setSize(strlen($fileData));
 
