@@ -56,7 +56,7 @@ use OCA\CAFEVDB\Common\Functions;
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
 {
-  use OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\MusicianAvatarTrait;
