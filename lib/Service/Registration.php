@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ use OCP\IConfig;
 use OCP\L10N\IFactory as IL10NFactory;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\AppInfo\AppL10N;
 use OCA\CAFEVDB\Service\EncryptionService;
 use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 
@@ -122,19 +123,7 @@ class Registration
     });
     $context->registerServiceAlias(lcfirst(self::APP_LANGUAGE), ucfirst(self::APP_LANGUAGE));
 
-    $context->registerService(self::APP_L10N, function(ContainerInterface $container) {
-      $appName = $container->get('AppName');
-      $appLocale = $container->get(self::APP_LOCALE);
-      $appLanguage = locale_get_primary_language($appLocale);
-      // The following is a hack because get() below does not underst .UTF-8 etc
-      $appLocale = $appLanguage . '_' . locale_get_region($appLocale);
-
-      /** @var IL10NFactory $l10NFactory */
-      $l10NFactory = $container->get(IL10NFactory::class);
-      $appL10n = $l10NFactory->get($appName, $appLanguage, $appLocale);
-
-      return $appL10n;
-    });
+    $context->registerServiceAlias(self::APP_L10N, AppL10N::class);
     $context->registerServiceAlias(lcfirst(self::APP_L10N), ucfirst(self::APP_L10N));
   }
 }
