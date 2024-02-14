@@ -260,6 +260,8 @@ class PersonalSettingsController extends Controller
    * @SubAdminRequired
    *
    * @bug This function is too big.
+   *
+   * @SuppressWarnings(PHPMD.UndefinedVariable)
    */
   public function setApp(string $parameter, mixed $value):Http\Response
   {
@@ -1765,6 +1767,7 @@ class PersonalSettingsController extends Controller
         return $this->setSimpleConfigValue($parameter, $value);
 
       case (in_array($parameter, ConfigService::MAILING_LIST_REST_CONFIG) ? $parameter : null):
+        /** @var string $mailingListRestUrl */
         foreach (ConfigService::MAILING_LIST_REST_CONFIG as $listConfig) {
           ${$listConfig} = $this->getConfigValue($listConfig);
         }
@@ -1904,23 +1907,6 @@ class PersonalSettingsController extends Controller
       case 'passwordgenerate':
       case 'generatepassword':
         return self::valueResponse($this->generateRandomBytes(32));
-      case 'test'.str_replace('test', '', $parameter):
-        $testKeys = [
-          'cspfailurereporting' => $this->urlGenerator()->linkToRouteAbsolute($this->appName().'.csp_violation.post', ['operation' => 'report']),
-          'clouddev' => null,
-          'sourcedocs' => null,
-          'sourcecode' => null,
-          'phpmyadmincloud' => null,
-          'phpmyadmin' => null,
-        ];
-        $key = substr($parameter, 4);
-        if (array_search($key, array_keys($testKeys)) === false) {
-          return self::grumble($this->l->t('Unknown link target %s', [ $parameter ]));
-        }
-        return self::valueResponse([
-          'link' => $this->getConfigValue($key, $testKeys[$key]),
-          'target' => $key.':'.$this->appName,
-        ]);
       case 'documenttemplatesfolder':
         $sharedFolder = $this->getConfigValue('sharedfolder');
         if (empty($sharedFolder)) {

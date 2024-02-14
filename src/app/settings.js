@@ -1509,20 +1509,16 @@ const afterLoad = function(container) {
     const devLinkTests = $('input.devlinktest');
 
     simpleSetValueHandler($('input.devlink'), 'blur', msg, {
-      setup() { devLinkTests.prop('disabled', true); },
-      cleanup() { devLinkTests.prop('disabled', false); },
-    });
-
-    devLinkTests.on('click', function(event) {
-      const target = $(this).attr('name');
-      $.post(
-        getUrl(target))
-        .fail(function(xhr, status, errorThrown) {
-          msg.html(Ajax.failMessage(xhr, status, errorThrown)).show();
-        })
-        .done(function(data) {
-          window.open(data.value.link, data.value.target);
-        });
+      setup() {
+        devLinkTests.prop('disabled', true);
+      },
+      success($self, data, value, msgElement) {
+        const $testLink = $self.parent().find('a.devlinktest');
+        $testLink.attr('href', value);
+      },
+      cleanup() {
+        devLinkTests.prop('disabled', false);
+      },
     });
   }
 
