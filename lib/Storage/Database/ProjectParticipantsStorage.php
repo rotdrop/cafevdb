@@ -137,7 +137,10 @@ class ProjectParticipantsStorage extends Storage
     $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     $result = implode(
       self::PATH_SEPARATOR, [
-        $this->project->getName(), 'participants', $this->participant->getMusician()->getUserIdSlug(),
+        'project',
+        'participant',
+        $this->project->getName(),
+        $this->participant->getMusician()->getUserIdSlug(),
       ])
       . self::PATH_SEPARATOR;
     $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
