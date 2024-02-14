@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2020, 2021, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2020, 2021, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,95 +28,60 @@ $linkToolTip = function(string $tag, ?string $value) use ($toolTips) {
   return empty($value) ? $toolTips[$tag] : $value;
 };
 
+$linkTargets = [
+  'phpmyadmin' => [
+    'name' => $appName . '@phpMyAdmin',
+    'placeholder' => $appName . '@phpMyAdmin',
+    'label' => $l->t('Link to the database %s', $appName . '@phpMyAdmin'),
+  ],
+  'phpmyadmincloud' => [
+    'name' => 'Cloud@phpMyAdmin',
+    'placeholder' => 'Cloud@phpMyAdmin',
+    'label' => $l->t('Link to the database %s', 'Cloud@phpMyAdmin'),
+  ],
+  'sourcecode' => [
+    'label' => $l->t('Link to the source-code'),
+  ],
+  'sourcedocs' => [
+    'label' => $l->t('Link to the source-code documentation'),
+  ],
+  'clouddev' => [
+    'label' => $l->t('Link to cloud Developer Information'),
+  ],
+  'cspfailurereporting' => [
+    'label' => $l->t('Link for uploading CSP failure information'),
+  ],
+];
+
 ?>
 <div id="tabs-<?php echo $tabNr; ?>" class="personalblock admin devel">
   <form id="develsettings">
     <fieldset id="devlinks"><legend><?php echo $l->t('Links');?></legend>
-      <input type="button"
-             class="devlinktest"
-             id="testphpmyadmin"
-             name="testphpmyadmin"
-             value="<?php echo $l->t('Test Link'); ?>"
-             title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text"
-             class="devlink"
-             id="phpmyadmin"
-             name="phpmyadmin"
-             placeholder="<?php echo $appName.'@phpmyadmin'; ?>"
-             value="<?php echo $phpmyadmin; ?>"
-             title="<?php p($linkToolTip('phpmyadmin-link', $phpmyadmin)); ?>" />
-      <label for="phpmyadmin"><?php echo $l->t('Link to %s', 'phpMyAdmin'); ?></label>
-      <br/>
-      <input type="button"
-             class="devlinktest"
-             id="testphpmyadmincloud"
-             name="testphpmyadmincloud"
-             value="<?php echo $l->t('Test Link'); ?>"
-             title="<?php echo $toolTips['test-linktarget']; ?>" />
-      <input type="text" class="devlink"
-             id="phpmyadmincloud"
-             name="phpmyadmincloud"
-             placeholder="Owncloud@phpMyAdmin"
-             value="<?php echo $phpmyadmincloud; ?>"
-             title="<?php p($linkToolTip('phpmyadmincloud-link', $phpmyadmincloud)); ?>" />
-      <label for="phpmyadmincloud"><?php echo $l->t('Link to Cloud@%s', array('phpMyAdmin')); ?></label>
-      <br/>
-      <input type="button"
-             class="devlinktest"
-             id="testsourcecode"
-             name="testsourcecode"
-             value="<?php echo $l->t('Test Link'); ?>"
-             title="<?php echo $toolTips['test-linktarget']; ?>" />
-      <input type="text" class="devlink"
-             id="sourcecode"
-             name="sourcecode"
-             placeholder="<?php echo $l->t('Link to the source-code'); ?>"
-             value="<?php echo $sourcecode; ?>"
-             title="<?php p($linkToolTip('sourcecode-link', $sourcecode)); ?>" />
-      <label for="phpmyadmin"><?php echo $l->t('Link to the source-code'); ?></label>
-      <br/>
-      <input type="button"
-             class="devlinktest"
-             id="testsourcedocs"
-             name="testsourcedocs"
-             value="<?php echo $l->t('Test Link'); ?>"
-             title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text"
-             class="devlink"
-             id="sourcedocs"
-             name="sourcedocs"
-             placeholder="<?php echo $l->t('Link to the source-code documentation'); ?>"
-             value="<?php echo $sourcedocs; ?>"
-             title="<?php p($linkToolTip('sourcedocs-link', $sourcedocs)); ?>"/>
-      <label for="phpmyadmin"><?php echo $l->t('Link to the source-code documentation'); ?></label>
-      <br/>
-      <input type="button"
-             class="devlinktest"
-             id="testclouddev"
-             name="testclouddev"
-             value="<?php echo $l->t('Test Link'); ?>"
-             title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text" class="devlink"
-             id="clouddev"
-             name="clouddev"
-             placeholder="<?php echo $l->t('Link to cloud Developer Information'); ?>"
-             value="<?php echo $clouddev; ?>"
-             title="<?php p($linkToolTip('clouddev-link', $clouddev)); ?>"/>
-      <label for="phpmyadmin"><?php echo $l->t('Ambient cloud provider developer documentation'); ?></label>
-      <br/>
-      <input type="button"
-             class="devlinktest"
-             id="testcspfailurereporting"
-             name="testcspfailurereporting"
-             value="<?php echo $l->t('Test Link'); ?>"
-             title="<?php echo $toolTips['test-linktarget']; ?>"  />
-      <input type="text" class="devlink"
-             id="cspfailurereporting"
-             name="cspfailurereporting"
-             placeholder="<?php echo $l->t('Link for uploading CSP failure information'); ?>"
-             value="<?php echo $cspfailurereporting; ?>"
-             title="<?php p($linkToolTip('cspfailure-link', $cspfailurereporting)); ?>"/>
-      <label for="phpmyadmin"><?php echo $l->t('CSP-failure upload link'); ?></label>
+      <?php
+      foreach ($linkTargets as $target => $data) {
+        $label = $data['label'] ?? $l->t('Link to "%s"', $data['name']);
+        $placeholder = $data['placeholder'] ?? $label;
+        $targetValue = $_[$target];
+      ?>
+      <div class="devlinkgroup">
+        <a href="<?php p($targetValue) ?>"
+           target="<?php p($appName . ':' . $target); ?>"
+           class="button devlinktest"
+           id="test<?php p($target); ?>"
+           title="<?php echo $toolTips['test-linktarget']; ?>"
+        >
+          <?php echo $l->t('Test Link'); ?>
+        </a>
+        <input type="text"
+               class="devlink"
+               id="<?php p($target); ?>"
+               name="<?php p($target); ?>"
+               placeholder="<?php p($placeholder); ?>"
+               value="<?php p($targetValue); ?>"
+               title="<?php p($linkToolTip($target . '-link', $targetValue)); ?>" />
+        <label for="<?php p($target); ?>"><?php p($label); ?></label>
+      </div>
+      <?php } ?>
     </fieldset>
     <span class="statusmessage" id="msg"></span>
   </form>
