@@ -84,7 +84,7 @@ class Storage extends AbstractStorage
   protected $rootFolder = null;
 
   /** @var ReadMeFactory */
-  protected ?ReadMeFactory $readMeFactory;
+  protected ?ReadMeFactory $readMeFactory = null;
 
   /** {@inheritdoc} */
   public function __construct($params)

@@ -121,6 +121,18 @@ class ProjectParticipantsStorage extends Storage
     return parent::findFiles($dirName, rootIsMandatory: false);
   }
 
+  /** {@inheritdoc} */
+  protected function getReadMeFactory():ReadMeFactoryInterface
+  {
+    if ($this->readMeFactory === null) {
+      $this->readMeFactory = clone $this->appContainer()->get(SkeletonReadMeFactory::class);
+      $skeletonPath = $this->projectService->getProjectSkeletonPaths(ProjectService::FOLDER_TYPE_PARTICIPANTS_TEMPLATE);
+      $skeletonPath .= self::PATH_SEPARATOR . $this->getDocumentsFolderName();
+      $this->readMeFactory->setSkeletonPath($skeletonPath);
+    }
+
+    return $this->readMeFactory;
+  }
 
   /**
    * {@inheritdoc}

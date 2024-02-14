@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Constants;
 class ProjectBalanceSupportingDocumentsStorage extends Storage
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use DatabaseStorageNodeNameTrait;
 
   /** @var ProjectService */
   private $projectService;
@@ -85,6 +86,19 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       }
       $filterState && $this->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
     });
+  }
+
+  /** {@inheritdoc} */
+  protected function getReadMeFactory():ReadMeFactoryInterface
+  {
+    if ($this->readMeFactory === null) {
+      $this->readMeFactory = clone $this->appContainer()->get(SkeletonReadMeFactory::class);
+      $skeletonPath = $this->projectService->getProjectSkeletonPaths(ProjectService::FOLDER_TYPE_BALANCE);
+      $skeletonPath .= self::PATH_SEPARATOR . $this->getSupportingDocumentsFolderName();
+      $this->readMeFactory->setSkeletonPath($skeletonPath);
+    }
+
+    return $this->readMeFactory;
   }
 
   /**
