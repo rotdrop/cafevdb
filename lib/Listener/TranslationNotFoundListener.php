@@ -80,7 +80,7 @@ class TranslationNotFoundListener implements IEventListener
       // just ignore
     }
     if (($debugMode & ConfigService::DEBUG_L10N) == 0) {
-      $this->logDebug('Debugging L10N is not enabled, bailing out');
+      // $this->logDebug('Debugging L10N is not enabled, bailing out');
       return;
     }
     $phrase = $event->getPhrase();
