@@ -29,6 +29,7 @@ use DateTimeImmutable;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice as Entity;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
+use OCA\CAFEVDB\Database\EntityManager as DecoratedEntityManager;
 
 /** Database repository for CompositePayments entities. */
 class TaxExemptionNoticesRepository extends EntityRepository
@@ -57,11 +58,11 @@ class TaxExemptionNoticesRepository extends EntityRepository
     if ($dateOfUsage === null) {
       $dateOfUsage = new DateTimeImmutable;
     }
-    $qb = $this->getQueryBuilder(self::ALIAS);
+    $qb = $this->createQueryBuilder(self::ALIAS);
 
     $qb->select(self::ALIAS)
       ->where($qb->expr()->eq(self::ALIAS . '.taxType', ':taxType'))
-      ->andWhere($qb->expr()->le(self::ALIAS . '.dateIssued', ':dateOfUsage'))
+      ->andWhere($qb->expr()->lte(self::ALIAS . '.dateIssued', ':dateOfUsage'))
       ->andWhere(
         $qb->expr()->orX(
           $qb->expr()->isNull(self::ALIAS . '.deleted'),
@@ -69,7 +70,7 @@ class TaxExemptionNoticesRepository extends EntityRepository
         )
       )
       ->orderBy(self::ALIAS . '.assessmentPeriodEnd', 'DESC')
-      ->addOrderBy(self::ALIAS . 'assessmentPeriodStart', 'DESC')
+      ->addOrderBy(self::ALIAS . '.assessmentPeriodStart', 'DESC')
       ->setParameter('taxType', $taxType)
       ->setParameter('dateOfUsage', $dateOfUsage)
       ;
