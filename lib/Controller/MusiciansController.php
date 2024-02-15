@@ -174,12 +174,15 @@ class MusiciansController extends Controller
         }
       }
 
+      // Attention: userIdSlug can only be compared against ASCII, so a
+      // transliteration is necessary here.
+
       $criteria = [
         '(|surName' => $pattern,
         'firstName' => $pattern,
         'displayName' => $pattern,
         'nickName' => $pattern,
-        'userIdSlug' => $pattern,
+        'userIdSlug' => $this->transliterate($pattern),
         ')' => true,
       ];
     }
