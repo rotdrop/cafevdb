@@ -174,7 +174,7 @@ class EncryptionService
    */
   public function bind(string $userId, string $password):void
   {
-    $this->logDebug('BINDING TO ' . $userId . ' PW LEN ' . strlen($password));
+    // $this->logDebug('BINDING TO ' . $userId . ' PW LEN ' . strlen($password));
     $this->userId = $userId;
     $this->userPassword = $password;
     $this->initUserKeyPair();
