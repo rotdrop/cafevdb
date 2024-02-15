@@ -138,7 +138,9 @@ class ReadMeFactory extends AbstractReadMeFactory
     $tooltipsKey = $this->getReadMeTooltipsKey($storageId, $dirName);
     $contents = $this->toolTipsService->fetch($tooltipsKey, escape: false);
 
-    $contents = str_replace(ToolTipsService::PARAGRAPH, '', $contents);
+    if ($contents !== null) {
+      $contents = str_replace(ToolTipsService::PARAGRAPH, '', $contents);
+    }
 
     return $contents;
   }
