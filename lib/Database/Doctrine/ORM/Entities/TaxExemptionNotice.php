@@ -323,13 +323,13 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   }
 
   /**
-   * @param bool $membershipFeesAreDonations
+   * @param null|bool $membershipFeesAreDonations
    *
    * @return TaxExemptionNotice
    */
-  public function setMembershipFeesAreDonations(bool $membershipFeesAreDonations):TaxExemptionNotice
+  public function setMembershipFeesAreDonations(?bool $membershipFeesAreDonations):TaxExemptionNotice
   {
-    $this->membershipFeesAreDonations = $membershipFeesAreDonations;
+    $this->membershipFeesAreDonations = (bool)$membershipFeesAreDonations;
 
     return $this;
   }
