@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -353,7 +353,16 @@ class FinanceService
     if ($formFile->getMimeType() != 'application/pdf') {
       /** @var OpenDocumentFiller $odf */
       $odf = $this->di(OpenDocumentFiller::class);
-      list($fileData,) = $odf->ffill($formFile, [], [ 'sender' => 'org.treasurer' ], true);
+      list($fileData,) = $odf->ffill(
+        templateFile: $formFile,
+        templateData: [],
+        blocks: [
+          'sender' => 'org.treasurer',
+          // fill also some financial tax exemption notice abbreviations ...
+          'corporateIncomeTaxExemption' => 'org.taxAuthorities.exemptionNotices.corporateIncomeTax',
+        ],
+        asPdf: true,
+      );
     } else {
       $fileData = $formFile->getContent();
     }

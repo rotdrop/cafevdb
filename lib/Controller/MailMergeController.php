@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -220,11 +220,19 @@ class MailMergeController extends Controller
 
       $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys));
 
+      // fill also some financial tax exemption notice abbreviations ...
+      $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
+
       if ($noRecipients) {
         switch ($operation) {
           case self::OPERATION_CLOUD:
           case self::OPERATION_DOWNLOAD:
-            list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $templateData, $blocks, asPdf: self::AS_PDF);
+            list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill(
+              templateFileName: $fileName,
+              templateData: $templateData,
+              blocks: $blocks,
+              asPdf: self::AS_PDF,
+            );
             $filledFile = pathinfo($filledFileName);
             $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . $filledFile['extension'];
             if ($operation == self::OPERATION_DOWNLOAD) {
@@ -300,7 +308,12 @@ class MailMergeController extends Controller
           switch ($operation) {
             case self::OPERATION_CLOUD:
             case self::OPERATION_DOWNLOAD:
-              list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill($fileName, $recipientTemplateData, $blocks, asPdf: self::AS_PDF);
+              list($fileData, $mimeType, $filledFileName) = $this->documentFiller->fill(
+                templateFileName: $fileName,
+                templateData: $recipientTemplateData,
+                blocks: $blocks,
+                asPdf: self::AS_PDF,
+              );
               break;
             case self::OPERATION_DATASET:
               $fillData = $this->documentFiller->fillData($recipientTemplateData);

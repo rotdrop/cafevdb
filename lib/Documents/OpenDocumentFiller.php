@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Documents;
 
 use RuntimeException;
 use DateTimeImmutable;
+use DateTimeInterface;
 
 use clsTinyButStrong as OpenDocumentFillerBackend;
 use Symfony\Component\Process\Process;
@@ -33,6 +34,12 @@ use Symfony\Component\Process\ExecutableFinder;
 
 use OCP\IL10N;
 use OCP\Files\File;
+
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType as TaxType;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\ImagesService;
@@ -43,19 +50,8 @@ use OCA\CAFEVDB\Exceptions;
 /** Autofill for Libre-/Openoffice documents. */
 class OpenDocumentFiller
 {
+  use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
-
-  /** @var OpenDocumentFillerBackend */
-  private $backend;
-
-  /** @var UserStorage */
-  private $userStorage;
-
-  /** @var TemplateService */
-  private $templateService;
-
-  /** @var AnyToPdf */
-  private $anyToPdf;
 
   /**
    * @var array
@@ -67,16 +63,14 @@ class OpenDocumentFiller
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
-    UserStorage $userStorage,
-    TemplateService $templateService,
-    OpenDocumentFillerBackend $backend,
-    AnyToPdf $anyToPdf,
+    EntityManager $entityManager,
+    private UserStorage $userStorage,
+    private TemplateService $templateService,
+    private OpenDocumentFillerBackend $backend,
+    private AnyToPdf $anyToPdf,
   ) {
     $this->configService = $configService;
-    $this->userStorage = $userStorage;
-    $this->templateService = $templateService;
-    $this->backend = $backend;
-    $this->anyToPdf = $anyToPdf;
+    $this->entityManager = $entityManager;
     $this->di(\clsOpenTBS::class);
     ob_start();
     $this->backend->NoErr = true;
@@ -185,9 +179,10 @@ class OpenDocumentFiller
     // convert everything to a time-stamp and add the timezone-offset
     // to get correct dates and times.
     array_walk_recursive($this->backend->VarRef, function(&$value, $key) {
-      if ($value instanceof \DateTimeInterface) {
+      if ($value instanceof DateTimeInterface) {
         $stamp = $value->getTimestamp();
         $stamp += $value->getOffset();
+        $this->logInfo('REPLACE DATE BY TIMESTAMP ' . $key . ': ' . print_r($value, true) . ' -> ' . $stamp);
         $value = $stamp;
       }
     });
@@ -379,6 +374,27 @@ class OpenDocumentFiller
 
     // creditor identifier
     $substitutions['org']['CI'] = $this->getConfigValue('bankAccountCreditorIdentifier')??$this->l->t('unknown');
+
+    // tax exemption notices
+
+    $substitutions['org']['tax-authorities'] = [
+      'exemption-notices' => [],
+    ];
+
+    /** @var Repositories\TaxExemptionNoticesRepository $repository */
+    $repository = $this->getDatabaseRepository(Entities\TaxExemptionNotice::class);
+    foreach (TaxType::values() as $taxType) {
+      $notice = $repository->getLatestValid($taxType);
+      if ($notice === null) {
+        continue;
+      }
+      $noticeData = $notice->toArray();
+      if ($notice->getWrittenNotice()) {
+        $noticeData['writtenNotice'] = $notice->getWrittenNotice()->getData(Entities\FileData::DATA_FORMAT_URI);
+      }
+      $taxType = Util::dashesToCamelCase($taxType, dashes: ' -_');
+      $substitutions['org']['taxAuthorities']['exemptionNotices'][(string)$taxType] = $noticeData;
+    }
 
     return $substitutions;
   }
