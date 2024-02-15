@@ -343,7 +343,16 @@ class FinanceService
     if ($formFile->getMimeType() != 'application/pdf') {
       /** @var OpenDocumentFiller $odf */
       $odf = $this->di(OpenDocumentFiller::class);
-      list($fileData,) = $odf->ffill($formFile, [], [ 'sender' => 'org.treasurer' ], true);
+      list($fileData,) = $odf->ffill(
+        templateFile: $formFile,
+        templateData: [],
+        blocks: [
+          'sender' => 'org.treasurer',
+          // fill also some financial tax exemption notice abbreviations ...
+          'corporateIncomeTaxExemption' => 'org.taxAuthorities.exemptionNotices.corporateIncomeTax',
+        ],
+        asPdf: true,
+      );
     } else {
       $fileData = $formFile->getContent();
     }
