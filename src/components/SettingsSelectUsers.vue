@@ -128,12 +128,6 @@ export default {
     usersArray() {
       return Object.values(this.users)
     },
-    userIds() {
-      return this.inputValObjects.map((element) => element.id)
-    },
-    empty() {
-      return !this.inputValObjects || (Array.isArray(this.inputValObjects) && this.inputValObjects.length === 0)
-    },
   },
   watch: {
     async value(newValue) {
@@ -164,19 +158,26 @@ export default {
     getUserObject(userId) {
       return this.getUser(userId) || { id: userId, displayname: userId }
     },
+    /**
+     * Take the current value, fetch the users and again return the
+     * same value (array of uids) in most cases. The idea is to fetch
+     * the meta-info for each selected user in order to have a nice
+     * display in the UI, including meta-info.
+     */
     async getValueObjects() {
       const validValues = this.value.filter((userId) => userId !== '' && typeof userId !== 'undefined')
       const result = []
       for (const userId of validValues) {
-        result.push(await await this.getUserObject(userId))
+        result.push(await this.getUserObject(userId))
       }
-      return result
+      return result.map((user) => user.id)
     },
     getUser(userId) {
       return this.store.getUser(userId, this.errorHandler)
     },
     findUsers(query) {
-      return this.store.findUsers(query, this.errorHandler)
+      const result = this.store.findUsers(query, this.errorHandler)
+      return result
     },
     errorHandler(error) {
       this.$emit('error', error)
