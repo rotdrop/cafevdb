@@ -651,9 +651,8 @@ WHERE dsf.id IS NOT NULL',
         'select' => 'O',
         'css'  => [ 'postfix' => [ 'is-donation', ], ],
         'sort' => true,
-        'sql|LVDF' => 'COALESCE($join_col_fqn, 0)',
-        'sql|ACP' => 'IF($join_col_fqn = 0, NULL, 1)',
-        'default' => null,
+        'sql' => 'COALESCE($join_col_fqn, 0)',
+        'default' => 0,
         'values2|CAP' => [ 1 => '' ], // empty label for simple checkbox
         'values2|LVDF' => [
           0 => '',
@@ -1271,8 +1270,6 @@ WHERE dsf.id IS NOT NULL',
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($musicianReceivableFilter) {
 
-        // $this->logInfo('RECORD ID ' . print_r($pme->rec, true) . ' op ' . $op);
-
         $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
         $rowTag = $row['qf'.$rowTagIndex];
 
@@ -1507,6 +1504,9 @@ WHERE dsf.id IS NOT NULL',
       return true;
     }
 
+    $oldValues['is_donation'] = $oldValues['is_donation'] ?? 0;
+    $newValues['is_donation'] = $newValues['is_donation'] ?? 0;
+
     $compositeKey = $newValues[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')]??null;
     $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
     $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
@@ -1659,6 +1659,8 @@ WHERE dsf.id IS NOT NULL',
   public function beforeInsertSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
   {
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
+
+    $newValues['is_donation'] = $newValues['is_donation'] ?? 0;
 
     $paymentIdKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id');
     $rowTagKey = $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag');
