@@ -410,9 +410,9 @@ class phpMyEdit
 	/*
 	 * Handle multi-column record keys
 	 */
-	private function key_record_where()
+	private function key_record_where_parts(bool $groupByWhere = true)
 	{
-		if (!empty($this->groupby_rec) && $this->checkOperationOption($this->groupby_where)) {
+		if ($groupByWhere && !empty($this->groupby_rec) && $this->checkOperationOption($this->groupby_where)) {
 			$keyRecord = $this->groupby_rec;
 		} else {
 			$keyRecord = $this->rec;
@@ -432,7 +432,12 @@ class phpMyEdit
 			}
 			$wparts[] = $comp;
 		}
-		return '('.implode(' AND ', $wparts).')';
+		return $wparts;
+	}
+
+	private function key_record_where()
+	{
+		return '('.implode(' AND ', $this->key_record_where_parts(groupByWhere: false)).')';
 	}
 
 	private function key_record_query_data($key_rec, $sysName = 'rec')
@@ -1600,6 +1605,30 @@ class phpMyEdit
 	{
 		$main_table	 = $this->sd.self::MAIN_ALIAS.$this->ed;
 		$join_clause = $this->sd.$this->tb.$this->ed." AS $main_table";
+		$groupByWhereConditions = [];
+		if (!empty($this->groupby_rec) && $this->checkOperationOption($this->groupby_where)) {
+			$groupByWhere = $this->key_record_where_parts();
+			$baseConditions = [];
+			$joinConditions = [];
+			foreach ($groupByWhere as $condition) {
+				if (str_contains($condition, self::MAIN_ALIAS)) {
+					$baseConditions[] = $condition;
+					continue;
+				}
+				$matches = null;
+				if (preg_match('/' . self::JOIN_ALIAS . '([0-9]+)/', $condition, $matches)) {
+					if (empty($joinConditions[$matches[1]])) {
+						$joinConditions[$matches[1]] = [ $condition ];
+					} else {
+						$joinConditions[$matches[1]][] = $condition;
+					}
+				}
+			}
+			foreach ($joinConditions as $k => $condition) {
+				$groupByWhereConditions[$k] = '(' . implode(' AND ', array_merge($baseConditions, $condition)) . ')';
+			}
+		}
+		$groupByWhere = null;
 		for ($k = 0, $numfds = sizeof($this->fds); $k < $numfds; $k++) {
 			$main_column = $this->fds[$k];
 			if (empty($this->fdd[$main_column][self::FDD_VALUES])) {
@@ -1653,6 +1682,9 @@ class phpMyEdit
 				$join_clause .= !empty($join)
 					? $this->substituteVars($join, $ar)
 					: "$join_table.$join_column = $main_table.".$this->sd.$main_column.$this->ed;
+				if (!empty($groupByWhereConditions[$k])) {
+					$join_clause .= ' AND ' . $groupByWhereConditions[$k];
+				}
 				$join_clause .= ')';
 			}
 		}
