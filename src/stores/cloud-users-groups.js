@@ -24,6 +24,9 @@
 import { defineStore } from 'pinia';
 import axios from '@nextcloud/axios';
 import { generateOcsUrl } from '@nextcloud/router';
+import { confirmPassword } from '@nextcloud/password-confirmation';
+import { set as vueSet /* , del as vueDelete */ } from 'vue';
+// import '@nextcloud/password-confirmation/style.css' // Required for dialog styles
 
 const storeId = 'cloud-user-groups';
 
@@ -74,6 +77,27 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         await (this.loadingPromise = this.findGroups(gid, errorHandler));
       }
       return this.groups[gid];
+    },
+    async createGroup(gid, displayName, errorHandler) {
+      const group = await this.getGroup(gid);
+      if (group) {
+        return group;
+      }
+      try {
+        await (this.loadingPromise = axios.post(generateOcsUrl('cloud/groups', 2), { groupid: gid, displayname: displayName }));
+        return this.getGroup(gid);
+      } catch (error) {
+        if (error?.response?.data?.ocs?.meta?.statuscode === 403) {
+          try {
+            await confirmPassword();
+          } catch (error) {
+            this.handleError(error, errorHandler);
+            return;
+          }
+          return this.createGroup(gid, displayName, errorHandler);
+        }
+        this.handleError(error, errorHandler);
+      }
     },
     async getGroupUsers(gid, errorHandler) {
 
@@ -143,7 +167,7 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
         const limit = 10;
         let count = 0;
         let offset = 0;
-        while (count < 10) {
+        while (count < limit) {
           const response = await (this.loadingPromise = axios.get(generateOcsUrl(`cloud/groups/details?search=${query}&limit=${limit}&offset=${offset}`, 2 /* API version */)));
 
           for (const group of response.data.ocs.data.groups) {
@@ -157,7 +181,8 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
             if (!oldGroup) {
               group.getUsers = (errorHandler) => this.getGroupUsers(group.id, errorHandler);
               group.getUsersDetails = (errorHandler) => this.getGroupUsersDetails(group.id, errorHandler);
-              this.groups[gid] = group;
+              // this.groups[gid] = group;
+              vueSet(this.groups, gid, group);
             } else if (JSON.stringify(this.groups[gid]) !== JSON.stringify(group)) {
               // replace in order to keep the references from groups to user-details
               for (const [key, value] of Object.entries(group)) {
@@ -194,7 +219,8 @@ export const useCloudUsersGroupsStore = defineStore(storeId, {
             ++count;
             const oldUser = this.users[uid];
             if (!oldUser) {
-              this.users[uid] = user;
+              vueSet(this.users, uid, user);
+              // this.users[uid] = user;
             } else if (JSON.stringify(oldUser) !== JSON.stringify(user)) {
               // replace in order to keep the references from groups to user-details
               for (const [key, value] of Object.entries(user)) {
