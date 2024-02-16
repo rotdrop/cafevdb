@@ -182,6 +182,12 @@ class OpenDocumentFiller
         $stamp += $value->getOffset();
         $this->logInfo('REPLACE DATE BY TIMESTAMP ' . $key . ': ' . print_r($value, true) . ' -> ' . $stamp);
         $value = $stamp;
+      } elseif ($value === true) {
+        $value = 1;
+      } elseif ($value === false) {
+        $value = 0;
+      } elseif ($value === null) {
+        $value = '';
       }
     });
 
