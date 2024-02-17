@@ -28,14 +28,11 @@ import Vue from 'vue';
 import AdminSettings from './components/AdminSettings.vue';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
-import AsyncComputed from 'vue-async-computed';
 
 Vue.directive('tooltip', Tooltip);
 
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
-
-Vue.use(AsyncComputed);
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js');

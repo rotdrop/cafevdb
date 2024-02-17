@@ -71,6 +71,7 @@
                              :loading="loading.settings"
                              :disabled="loading.general || groupAdminsDisabled"
                              :required="true"
+                             @input="info(...arguments)"
                              @update="saveSetting('orchestraUserGroupAdmins', ...arguments)"
                              @error="showErrorToast"
         />
@@ -99,8 +100,10 @@
               <CheckboxBlankCircle v-else :size="16" fill-color="green" />
             </template>
             <template #actions>
-              <NcActionButton>
-                Button one
+              <NcActionButton :disabled="group.status !== 'inaccessible' || group.backends.length > 0"
+                              @click="createGroup(group.id)"
+              >
+                Create Group
               </NcActionButton>
               <NcActionButton>
                 Button two
@@ -392,6 +395,7 @@ export default {
         tooltips: true,
         fonts: true,
         settings: true,
+        groups: true,
       },
       settings: {
         userAndGroupBackend: '',
@@ -402,6 +406,7 @@ export default {
         defaultOfficeFont: '',
       },
       settingsBackup: {},
+      orchestraGroups: {},
       config: initialState,
       hints: {
         'settings:admin:cloud-user-backend-conf': '',
@@ -434,31 +439,6 @@ export default {
         },
       },
     }
-  },
-  asyncComputed: {
-    async orchestraGroups() {
-      if (!this.orchestraUserGroup || this.orchestraUserGroup === '') {
-        return []
-      }
-      const gids = Object.values(this.config.authorizationGroupSuffixes).map((suffix) => this.orchestraUserGroup + suffix).sort()
-      const groups = {}
-      for (const id of gids) {
-        const group = await this.getGroup(id) || {}
-        if (group.id) {
-          group.l10nStatus = t(appName, group.status = 'accessible')
-          if (!group.users) {
-            await group.getUsers(this.errorHandler)
-          }
-        } else {
-          group.id =
-            group.displayname = id
-          group.l10nStatus = t(appName, group.status = 'inaccessible')
-          group.users = []
-        }
-        groups[id] = group
-      }
-      return groups
-    },
   },
   computed: {
     humanOfficeFontsFolder() {
@@ -504,7 +484,11 @@ export default {
       return this.access.action.failure
     },
     isLoading() {
-      return this.loading.general || this.loading.tooltips || this.loading.recryption || this.loading.fonts
+      return this.loading.general
+        || this.loading.tooltips
+        || this.loading.recryption
+        || this.loading.fonts
+        || this.loading.groups
     },
     savedDefaultOfficeFont() {
       const result = this.config.officeFonts?.[this.settingsBackup.defaultOfficeFont]
@@ -535,6 +519,7 @@ export default {
       this.loading.recryption = true
       this.loading.fonts = true
       this.loading.settings = true
+      this.loading.groups = true
       this.loadTooltips()
       if (this.config.isSubAdmin) {
         // fetch recryption requests
@@ -545,10 +530,37 @@ export default {
 
       await this.getSettingsData()
 
+      this.loadOrchestraGroups()
+
       this.defaultOfficeFont = this.config.officeFonts[this.settings.defaultOfficeFont]
       await vueNextTick()
       this.loading.fonts = false
       this.loading.general = false
+    },
+    async loadOrchestraGroups() {
+      if (!this.orchestraUserGroup || this.orchestraUserGroup === '') {
+        return []
+      }
+      this.loading.groups = true
+      const gids = Object.values(this.config.authorizationGroupSuffixes).map((suffix) => this.orchestraUserGroup + suffix).sort()
+      for (const id of gids) {
+        const group = await this.getGroup(id) || {}
+        if (group.id) {
+          group.l10nStatus = t(appName, group.status = 'accessible')
+          if (!group.users) {
+            await group.getUsers(this.errorHandler)
+          }
+        } else {
+          group.id =
+            group.displayname = id
+          group.l10nStatus = t(appName, group.status = 'inaccessible')
+          group.users = []
+          group.backends = []
+          console.info('GROUP INACCESSIBLE', group)
+        }
+        vueSet(this.orchestraGroups, id, group)
+      }
+      this.loading.groups = false
     },
     async loadTooltips() {
       this.loading.tooltips = true
@@ -646,6 +658,8 @@ export default {
       try {
         if (value === undefined) {
           value = this.settings[settingsKey]
+        } else {
+          this.info('VALUE vs VMODEL', value, this.settings[settingsKey])
         }
         const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/{settingsKey}', { settingsKey }), { value })
         const responseData = response.data
@@ -990,8 +1004,22 @@ export default {
         }
       }
     },
-    getGroup(groupId) {
-      return this.store.getGroup(groupId, this.errorHandler)
+    async getGroup(gid) {
+      const result = await this.store.getGroup(gid, this.errorHandler)
+
+      return result
+    },
+    async createGroup(gid) {
+      const result = await this.store.createGroup(gid, gid, this.errorHandler)
+
+      if (result && this.orchestraGroups[gid]) {
+        if (!result.users) {
+          await result.getUsers(this.errorHandler)
+        }
+        vueSet(this.orchestraGroups, gid, result)
+      }
+
+      return result
     },
     errorHandler(error) {
       this.$emit('error', error)
