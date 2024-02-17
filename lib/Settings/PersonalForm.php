@@ -321,8 +321,6 @@ class PersonalForm
             ConfigService::FINANCE_FOLDER => $this->getConfigValue(ConfigService::FINANCE_FOLDER, ''),
             ConfigService::TRANSACTIONS_FOLDER => $this->getConfigValue(ConfigService::TRANSACTIONS_FOLDER, ''),
             ConfigService::BALANCES_FOLDER => $this->getConfigValue(ConfigService::BALANCES_FOLDER, ''),
-            ConfigService::TAX_OFFICE_IN_TRAY_FOLDER => $this->getConfigValue(ConfigService::TAX_OFFICE_IN_TRAY_FOLDER, ''),
-            ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE => $this->getConfigValue(ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE, ''),
 
             'translations' => $translations,
 
