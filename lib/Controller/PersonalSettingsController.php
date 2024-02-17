@@ -1330,28 +1330,6 @@ class PersonalSettingsController extends Controller
               'Failure checking folder "%s", caught an exception "%s".',
               [ $prefixFolder . $real, $e->getMessage() ]));
         }
-      case ConfigService::TAX_OFFICE_IN_TRAY_FOLDER:
-        return $this->setSimpleConfigValue($parameter, $value);
-      case ConfigService::TAX_EXEMPTION_NOTICE_TEMPLATE:
-        $real = trim($value);
-        $translatedFromYear = $this->l->t('FROM_YEAR');
-        $translatedToYear = $this->l->t('TO_YEAR');
-        $found = 0;
-        foreach (['from', 'to'] as $limit) {
-          foreach ([${$limit . 'Year'}, ${'translated' . ucfirst($limit) . 'Year'}] as $required) {
-            $required = '{' . $required . '}';
-            if (strpos($real, $required) !== false) {
-              ++$found;
-              break;
-            }
-          }
-        }
-        if ($found !== 2) {
-          return self::grumble($this->l->t('The tax-excemption-notice template must contain both, the from-year as well as the to-year placeholders ("{%1$s}", "{%2$s}").', [
-            $translatedFromYear, $translatedToYear,
-          ]));
-        }
-        return $this->setSimpleConfigValue($parameter, $value);
       case 'concertscalendar':
       case 'rehearsalscalendar':
       case 'othercalendar':

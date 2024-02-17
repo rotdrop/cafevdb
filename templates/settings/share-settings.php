@@ -345,34 +345,6 @@ $off = $_['shareowner'] == '' ? 'disabled' : $alloff;
         </label>
         <input name="balancesfolder-check" id="balancesfolder-check" type="button" value="<?php echo $l->t('Check');?>" />
       </fieldset>
-      <fieldset id="tax-excemption-notices"
-                class="needs-sharedfolder needs-financefolder"
-                <?php echo !empty($_['projectsfolder']) && !empty($_['financefolder']) ? $off : 'disabled'; ?>
-      >
-        <span><b>.../</b></span><span class="sharedfolder"><?php echo $_['sharedfolder']; ?></span>
-        <span><b>/</b></span><span class="financefolder"><?php echo $_['financefolder'];?></span>
-        <span><b>/</b></span><span class="taxofficefolder"><?php echo $l->t('tax-office'); ?></span>
-        <span><b>/</b></span><span class="yearplaceholder"><?php echo $l->t('YEAR'); ?></span>
-        <span><b>/</b></span>
-        <input type="text"
-               id="taxOfficeInTrayFolder"
-               name="taxOfficeInTrayFolder"
-               placeholder="<?php echo $l->t('in-tray'); ?>"
-               value="<?php echo $_['taxOfficeInTrayFolder']; ?>"
-               title="<?php echo $toolTips['taxOfficeInTrayFolder']; ?>"
-        />
-        <input type="hidden" id="taxOfficeInTrayFolder-saved" name="taxOfficeInTrayFolder-saved" value="<?php echo $_['taxOfficeInTrayFolder']; ?>" />
-        <input type="hidden" id="taxOfficeInTrayFolder-force"  name="taxOfficeInTrayFolder-force" value="1" />
-        <input type="hidden" id="taxOfficeInTrayFolder-check"  name="taxOfficeInTrayFolder-check" value="0" />
-        <span><b>/</b></span>
-        <input type="text"
-               id="taxExcemptionNoticeTemplate"
-               name="taxExcemptionNoticeTemplate"
-               placeholder="<?php echo $l->t('tax-excemption-notice-{FROM_YEAR}-{TO_YEAR}'); ?>"
-               value="<?php echo $_['taxExcemptionNoticeTemplate']; ?>"
-               title="<?php echo $toolTips['taxExcemptionNoticeTemplate']; ?>"
-        />
-      </fieldset>
     </form>
     <!-- Cloud-User Connector -->
     <h4><?php p($l->t('Members as Cloud-Users')); ?></h4>
