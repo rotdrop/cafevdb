@@ -32,6 +32,9 @@ $nav = '';
 $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-participants', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);
+$nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $projectName, $projectId);
 $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('all');
 
