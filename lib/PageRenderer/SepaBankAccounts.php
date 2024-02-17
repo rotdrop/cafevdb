@@ -282,7 +282,7 @@ class SepaBankAccounts extends PMETableViewBase
     if ($projectMode) {
       $opts['options'] .= 'M';
 
-      // controls display an location of edit/misc buttons
+      // controls display of an location of edit/misc buttons
       $opts['navigation'] = self::PME_NAVIGATION_MULTI;
       $opts['misc']['css']['major'] = 'misc';
       $opts['misc']['css']['minor'] = 'debit-note tooltip-right';
