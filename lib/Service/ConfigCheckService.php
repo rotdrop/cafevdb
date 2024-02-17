@@ -747,7 +747,7 @@ class ConfigCheckService
     }
     if (!$this->getConfigValue(ConfigService::SHAREOWNER_FOLDER_SERVICE_KEY, true)) {
       // migration has been performed, so do nothing else
-      return result;
+      return $result;
     }
 
     if ($sharedFolder == '') {
