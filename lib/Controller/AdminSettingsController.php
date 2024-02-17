@@ -238,7 +238,7 @@ class AdminSettingsController extends Controller
               $success[] = $this->l->t('Added "%1$s" as sub-admin of "%2$s".', [ $userId, $userGroup->getGID(), ]);
             } catch (Throwable $t) {
               $this->logException($t);
-              $failure[] = $this->t->t('Failed to add "%1$s" as sub-admin to "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
+              $failure[] = $this->l->t('Failed to add "%1$s" as sub-admin to "%2$s": %3$s', [ $userId, $userGroup->getGID(), $t->getMessage(), ]);
             }
           }
           foreach ($excess as $userId) {
