@@ -141,8 +141,9 @@ class ProjectService
       $this->logError('SERVER ' . print_r($request->server, true));
       if ($request->method == 'POST') {
         $this->logError('POST ' . print_r($request->post, true));
+      } else {
+        $this->logError('GET ' . print_r($request->get, true));
       }
-      $this->logError('get ' . print_r($request->get, true));
       $this->repository = null;
       $this->logException($t);
     }
