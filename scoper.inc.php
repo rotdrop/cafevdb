@@ -36,7 +36,7 @@ return [
       //     $content
       //   );
       // }
-      if (strpos($filePath, 'doctrine/orm/lib/Doctrine/ORM') !== false) {
+      if (strpos($filePath, 'doctrine/orm/src') !== false) {
         return preg_replace(
           "%(constant|defined)\\('Doctrine\\\\%",
           "\$1('" . $prefix . "\\Doctrine\\",
@@ -47,7 +47,7 @@ return [
     },
     // /** @var array<\Doctrine\ORM\Mapping\JoinColumn> */
     function(string $filePath, string $prefix, string $content): string {
-      if (strpos($filePath, 'doctrine/orm/lib/Doctrine/ORM') !== false) {
+      if (strpos($filePath, 'doctrine/orm/src') !== false) {
         return preg_replace(
           '%(?<!' . preg_quote($prefix) . ')\\\\Doctrine\\\\%',
           $prefix . '\\Doctrine\\',

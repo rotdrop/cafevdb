@@ -24,7 +24,8 @@
     "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
     "ramsey/uuid-doctrine": "^1.6",
-    "ramsey/uuid": "^4"
+    "ramsey/uuid": "^4",
+    "doctrine/annotations": "*"
   },
   "repositories": [
     {
