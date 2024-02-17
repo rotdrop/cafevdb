@@ -143,7 +143,7 @@ class Project implements \ArrayAccess
   private $participantFieldsData;
 
   /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project", index_by="musician_id")
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project", indexBy="musician_id")
    */
   private $participants;
 
