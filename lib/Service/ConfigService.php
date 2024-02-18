@@ -161,51 +161,93 @@ class ConfigService
   const DOCUMENT_TYPE_TEMPLATE = 'template';
 
   const DOCUMENT_TEMPLATE_LOGO = 'logo';
+  const DOCUMENT_TEMPLATE_LOGO_NAME = 'orchestra logo';
   const DOCUMENT_TEMPLATE_SEAL = 'seal';
+  const DOCUMENT_TEMPLATE_SEAL_NAME = 'orchestra seal';
+  const DOCUMENT_TEMPLATE_STANDARD_LETTER = 'standardLetter';
+  const DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME = 'standard letter';
   const DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD = 'instrumentInsuranceRecord';
+  const DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME = 'instrument insurance record template';
   const DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE = 'projectDebitNoteMandateForm';
+  const DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME = 'project debit-note mandate';
   const DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE = 'generalDebitNoteMandateForm';
+  const DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME = 'general debit-note mandate';
   const DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE = 'memberDataUpdateForm';
+  const DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME = 'member data update';
+  const DOCUMENT_TEMPLATE_INVOICE = 'invoice';
+  const DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
+  const DOCUMENT_TEMPLATE_STANDARD_RECEIPT = 'standardReceipt';
+  const DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME = 'standard receipt';
+  const DOCUMENT_TEMPLATE_DONATION_RECEIPT = 'donationReceipt';
+  const DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME = 'donation receipt';
 
   /** @var Dedicated document-templates used in various places. */
   const DOCUMENT_TEMPLATES = [
     self::DOCUMENT_TEMPLATE_LOGO => [
-      'name' => 'orchestra logo',
+      'name' => self::DOCUMENT_TEMPLATE_LOGO_NAME,
       'type' => self::DOCUMENT_TYPE_CONSTANT,
       'folder' => null,
-      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_SEAL => [
-      'name' => 'orchestra seal',
+      'name' => self::DOCUMENT_TEMPLATE_SEAL_NAME,
       'type' => self::DOCUMENT_TYPE_CONSTANT,
       'folder' => null,
-      'blank' => true,
+    ],
+    self::DOCUMENT_TEMPLATE_STANDARD_LETTER => [
+      'name' => self::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME,
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => null,
     ],
     self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE => [
-      'name' => 'project debit-note mandate',
+      'name' => self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE => [
-      'name' => 'general debit-note mandate',
+      'name' => self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE => [
-      'name' => 'member data update',
+      'name' => self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
-      'blank' => true,
+    ],
+    self::DOCUMENT_TEMPLATE_INVOICE => [
+      'name' => self::DOCUMENT_TEMPLATE_INVOICE_NAME,
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
+    ],
+    self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT => [
+      'name' => self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME,
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
+    ],
+    self::DOCUMENT_TEMPLATE_DONATION_RECEIPT => [
+      'name' => self::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME,
+      'type' => self::DOCUMENT_TYPE_TEMPLATE,
+      'folder' => self::FINANCE_FOLDER,
     ],
     self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD => [
-      'name' => 'instrument insurance record template',
+      'name' => self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
-      'blank' => false,
     ],
   ];
+  /** @return void */
+  protected static function documentsTemplatesTranslationHack():void
+  {
+    self::t(self::DOCUMENT_TEMPLATE_LOGO_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_SEAL_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_INVOICE_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME);
+    self::t(self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME);
+  }
 
   /**
    * @var string

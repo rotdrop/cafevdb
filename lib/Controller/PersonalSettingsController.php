@@ -58,6 +58,7 @@ use OCA\CAFEVDB\Service\FuzzyInputService;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\BankAccountValidator;
+use OCA\CAFEVDB\Common\NumberFormatter;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\AddressBook\AddressBookProvider;
@@ -74,6 +75,7 @@ use OCA\RoundCube\Service\Config as RoundCubeConfig;
 class PersonalSettingsController extends Controller
 {
   use \OCA\CAFEVDB\Traits\ConfigTrait;
+  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   public const EMAIL_PROTO = [ 'smtp', 'imap' ];
@@ -1957,6 +1959,7 @@ class PersonalSettingsController extends Controller
 
         return $response;
       case 'auto-fill-test':
+      case 'auto-fill-test-data':
         $templateName = $this->parameterService->getParam('documentTemplate');
         if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
             || ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
@@ -1964,89 +1967,115 @@ class PersonalSettingsController extends Controller
         }
         $format = $this->parameterService->getParam('format');
 
-        switch ($templateName) {
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
-            /** @var InstrumentationService $instrumentationService */
-            $instrumentationService = $this->di(InstrumentationService::class);
-            $musician = $instrumentationService->getDummyMusician();
+        /** @var InstrumentationService $instrumentationService */
+        $instrumentationService = $this->di(InstrumentationService::class);
+        $dummyRecipient = $instrumentationService->getDummyMusician();
 
+        /** @var OpenDocumentFiller $documentFiller */
+        $documentFiller = $this->di(OpenDocumentFiller::class);
+
+        /** @var \OCA\CAFEVDB\Common\NumberFormatter $numberFormatter */
+        $numberFormatter = new NumberFormatter($this->appLocale());
+
+        $templateData = null;
+        $blocks = [
+          'sender' => 'org.treasurer',
+        ];
+
+        switch ($templateName) {
+          case ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER:
+            $templateData = [
+              'project' => $this->flattenProject(
+                $this->projectService->findById(
+                  $this->getClubMembersProjectId()
+                )
+              ),
+              'recipient' => $this->flattenMusician($dummyRecipient),
+            ];
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_INVOICE:
+            $amount = 13.57;
+            $gracePeriodDays = 14;
+            DateInterval::setLocale($this->getLanguage($this->appLocale()));
+            $gracePeriodText = (string)DateInterval::days($gracePeriodDays);
+            $templateData = [
+              'project' => $this->flattenProject(
+                $this->projectService->findById(
+                  $this->getClubMembersProjectId()
+                )
+              ),
+              'recipient' => $this->flattenMusician($dummyRecipient),
+              'invoice' => [
+                'amount' => $amount,
+                'gracePeriodDays' => $gracePeriodDays,
+                'l10n' => [
+                  'locale' => $this->appLocale(),
+                  'amount' => $numberFormatter->formatCurrency($amount),
+                  'amountText' => $numberFormatter->currencyToWords($amount),
+                  'gracePeriod' => $gracePeriodText,
+                ],
+              ],
+            ];
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-                $musician->getSepaBankAccounts()->first(),
+                $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getExecutiveBoardProjectId(),
                 formName: $templateName
               );
             } else {
-              /** @var OpenDocumentFiller $documentFiller */
-              $documentFiller = $this->di(OpenDocumentFiller::class);
-              $templateFileName = $this->getDocumentTemplatesPath($templateName);
-              if (empty($templateFileName)) {
-                return self::grumble(
-                  $this->l->t(
-                    'There is no template file for template "%s"', $templateName));
-              }
-              list($fileData, $mimeType, $fileName) = $documentFiller->fill(
-                $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
-              );
+              $templateData = [];
             }
-
             break;
           case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
-            /** @var InstrumentationService $instrumentationService */
-            $instrumentationService = $this->di(InstrumentationService::class);
-            $musician = $instrumentationService->getDummyMusician();
-
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-                $musician->getSepaBankAccounts()->first(),
+                $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getClubMembersProjectId(),
-                formName: $templateName
+                formName: $templateName,
               );
             } else {
-              /** @var OpenDocumentFiller $documentFiller */
-              $documentFiller = $this->di(OpenDocumentFiller::class);
-              $templateFileName = $this->getDocumentTemplatesPath($templateName);
-              if (empty($templateFileName)) {
-                return self::grumble(
-                  $this->l->t(
-                    'There is no template file for template "%s"', $templateName));
-              }
-              list($fileData, $mimeType, $fileName) = $documentFiller->fill(
-                $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
-              );
+              $templateData = [];
             }
             break;
           case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
-            /** @var InstrumentationService $instrumentationService */
-            $instrumentationService = $this->di(InstrumentationService::class);
-            $musician = $instrumentationService->getDummyMusician();
-
             if ($format == 'pdf') {
               list($fileData, $mimeType, $fileName) = $this->financeService->preFilledDebitMandateForm(
-                $musician->getSepaBankAccounts()->first(),
+                $dummyRecipient->getSepaBankAccounts()->first(),
                 $this->getClubMembersProjectId(),
                 formName: $templateName
               );
             } else {
-              /** @var OpenDocumentFiller $documentFiller */
-              $documentFiller = $this->di(OpenDocumentFiller::class);
-              $templateFileName = $this->getDocumentTemplatesPath($templateName);
-              if (empty($templateFileName)) {
-                return self::grumble(
-                  $this->l->t(
-                    'There is no template file for template "%s"', $templateName));
-              }
-              list($fileData, $mimeType, $fileName) = $documentFiller->fill(
-                $templateFileName, [], [ 'sender' => 'org.treasurer' ], false
-              );
+              $templateData = [];
             }
             break;
           case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
             /** @var InstrumentInsuranceService $insuranceService */
             $insuranceService = $this->di(InstrumentInsuranceService::class);
-            $musician = $insuranceService->getDummyMusician();
-            $insuranceOverview = $insuranceService->musicianOverview($musician);
+            $dummyRecipient = $insuranceService->getDummyMusician();
+            $insuranceOverview = $insuranceService->musicianOverview($dummyRecipient);
 
+            // Prepare the data doing some translations first
+            foreach ($insuranceOverview['musicians'] as &$insurance) {
+              foreach ($insurance['items'] as &$item) {
+                $item['scope'] = $this->l->t($item['scope']);
+              }
+            }
+
+            $templateData = [
+              'instins' => $insuranceOverview,
+            ];
+            $blocks['recipient'] = 'instins.billTo';
+            break;
+          default:
+            return self::grumble(
+              $this->l->t(
+                'Auto-fill test for template "%s: not yet implemented, sorry.', $templateName));
+        }
+
+        if ($parameter == 'auto-fill-test') {
+          if ($templateData !== null) {
             /** @var OpenDocumentFiller $documentFiller */
             $documentFiller = $this->di(OpenDocumentFiller::class);
             $templateFileName = $this->getDocumentTemplatesPath($templateName);
@@ -2057,76 +2086,39 @@ class PersonalSettingsController extends Controller
             }
 
             list($fileData, $mimeType, $fileName) = $documentFiller->fill(
-              $templateFileName,
-              $insuranceOverview,
-              [
-                'sender' => 'org.treasurer',
-                'recipient' => 'billToParty',
-              ], $format == 'pdf'
+              templateFileName: $templateFileName,
+              templateData: $templateData,
+              blocks: $blocks,
+              asPdf: $format == str_contains($format, 'pdf'),
             );
+          }
 
-            break;
+          $pathInfo = pathinfo($fileName);
+          $fileName = implode('-', [
+            $this->timeStamp(),
+            $pathInfo['filename'],
+            'auto-fill-test',
+          ]) . '.' . $pathInfo['extension'];
 
-          default:
-            return self::grumble(
-              $this->l->t(
-                'Auto-fill test for template "%s: not yet implemented, sorry.', $templateName));
+          return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
+        } else {
+          /** @var OpenDocumentFiller $documentFiller */
+          $documentFiller = $this->di(OpenDocumentFiller::class);
+          $fillData = $documentFiller->fillData($templateData);
+
+          $fillData['__blocks__'] = $blocks;
+
+          $fileData = json_encode($fillData);
+          $fileName = implode('-', [
+            $this->timeStamp(),
+            $templateName,
+            'auto-fill-test-data'
+          ])
+            . '.' . 'json';
+          $mimeType = 'application/json';
+
+          return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
         }
-
-        $pathInfo = pathinfo($fileName);
-        $fileName = implode('-', [
-          $this->timeStamp(),
-          $pathInfo['filename'],
-          'auto-fill-test',
-        ]) . '.' . $pathInfo['extension'];
-
-        return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
-      case 'auto-fill-test-data':
-        $templateName = $this->parameterService->getParam('documentTemplate');
-        if (empty(ConfigService::DOCUMENT_TEMPLATES[$templateName])
-            ||ConfigService::DOCUMENT_TEMPLATES[$templateName]['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
-          return self::grumble($this->l->t('Unknown auto-fill template: "%s".', $templateName));
-        }
-
-        switch ($templateName) {
-          // /** @var InstrumentationService $instrumentationService */
-          // $instrumentationService = $this->di(InstrumentationService::class);
-          // $musician = $instrumentationService->getDummyMusician();
-          case ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE:
-          case ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE:
-          case ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE:
-            /** @var InstrumentInsuranceService $insuranceService */
-            /** @var OpenDocumentFiller $documentFiller */
-            $documentFiller = $this->di(OpenDocumentFiller::class);
-            $fillData = $documentFiller->fillData([]);
-            break;
-          case ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD:
-            /** @var InstrumentInsuranceService $insuranceService */
-            $insuranceService = $this->di(InstrumentInsuranceService::class);
-            $musician = $insuranceService->getDummyMusician();
-            $insuranceOverview = $insuranceService->musicianOverview($musician);
-
-            /** @var OpenDocumentFiller $documentFiller */
-            $documentFiller = $this->di(OpenDocumentFiller::class);
-
-            $fillData = $documentFiller->fillData($insuranceOverview);
-            break;
-          default:
-            return self::grumble(
-              $this->l->t(
-                'Download of auto-fill test-data for template "%s" is not yet implemented, sorry.', $templateName));
-        }
-
-        $fileData = json_encode($fillData);
-        $fileName = implode('-', [
-          $this->timeStamp(),
-          $templateName,
-          'auto-fill-test-data'
-        ])
-          . '.' . 'json';
-        $mimeType = 'application/json';
-
-        return $this->dataDownloadResponse($fileData, $fileName, $mimeType);
       default:
         break;
     }
