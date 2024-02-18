@@ -539,10 +539,13 @@ class ContactsService
         'VERSION' => $version,
         'PRODID' => $prodid,
         'UID' => $uuid,
-        'FN' => $musician['firstName'].' '.$musician['surName'],
+        'FN' => $musician->getPublicName(firstNameFirst: true),
         'N' => [ $musician['surName'], $musician['firstName'] ],
         'CATEGORIES' => $categories,
       ]);
+    if ($musician->getNickName()) {
+      $vcard->add('NICKNAME', $musician->getNickName());
+    }
     if ($musician['language']) {
       $vcard->add('LANG', $musician['language']);
     }
