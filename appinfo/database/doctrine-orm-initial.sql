@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS `CompositePayments` (
   `balance_documents_folder_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_65D9920C2423759C` (`supporting_document_id`),
+  UNIQUE KEY `UNIQ_65D9920CA808B60B` (`notification_message_id`),
   KEY `IDX_65D9920CD5560045` (`sepa_transaction_id`),
   KEY `IDX_65D9920C9523AA8A2301E184` (`musician_id`,`bank_account_sequence`),
   KEY `IDX_65D9920C9523AA8A544C02F9` (`musician_id`,`debit_mandate_sequence`),
