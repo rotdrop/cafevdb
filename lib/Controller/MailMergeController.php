@@ -188,8 +188,7 @@ class MailMergeController extends Controller
       }
     }
 
-    $senderInitials = array_reduce(preg_split('/[-_.\s]/', $sender->getPublicName(firstNameFirst: true), -1, PREG_SPLIT_NO_EMPTY), fn($initials, $item) => $initials . $item[0]);
-
+    $senderInitials = $sender->getInitials();
     $timeStamp = $this->formatTimeStamp();
     $mailMergeCount = 0;
     $recipientSlug = '';
