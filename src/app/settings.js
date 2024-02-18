@@ -1193,6 +1193,17 @@ const afterLoad = function(container) {
       $fieldset.find('input').prop('disabled', true);
     }
 
+    /**
+     * @param {string} file TBD.
+     *
+     * @param {jQuery} $container TBD.
+     *
+     * @param {jQuery} $trigger TBD.
+     *
+     * @todo This is the only place which actually uses upload/move,
+     * it should be replace by the things the other parts of the code
+     * use.
+     */
     const moveIntoPlace = function(file, $container, $trigger) {
       const subFolderId = $container.data('documentTemplateSubFolder') || '';
       const destinationPath =
@@ -1203,7 +1214,7 @@ const afterLoad = function(container) {
 
       $.post(
         generateUrl('upload/move'), {
-          stashedFile: file.name,
+          stashedFile: file.tmp_name,
           destinationPath,
           originalFileName: file.original_name,
           uploadMode: 'copy',
