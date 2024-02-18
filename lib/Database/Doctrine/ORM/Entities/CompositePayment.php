@@ -44,8 +44,12 @@ use OCA\CAFEVDB\Common\Util;
  * parts are ProjectPayment entities. Composite-payments may contain payments
  * for different projects.
  *
- * @ORM\Table(name="CompositePayments")
- *    uniqueConstraints={@ORM\UniqueConstraint(columns={"notification_message_id"})}
+ * @ORM\Table(
+ *    name="CompositePayments",
+ *    uniqueConstraints={
+ *      @ORM\UniqueConstraint(columns={"notification_message_id"})
+ *    }
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository")
  *
  * @ORM\HasLifecycleCallbacks
