@@ -38,6 +38,8 @@ use OCA\CAFEVDB\Crypto\CloudSymmetricCryptor;
 class Registration
 {
   const MANAGEMENT_GROUP_ID = 'ManagementGroupId';
+  const LOCALE = 'Locale';
+  const LANGUAGE = 'Language';
   const USER_LOCALE = 'UserLocale';
   const USER_LANGUAGE = 'UserLanguage';
   const USER_L10N = 'UserL10N';
@@ -65,16 +67,16 @@ class Registration
       return $container->get(EncryptionService::class)->getAppAsymmetricCryptor();
     });
 
-    $context->registerService(ucfirst(self::MANAGEMENT_GROUP_ID), function(ContainerInterface $container) {
+    $context->registerService(self::MANAGEMENT_GROUP_ID, function(ContainerInterface $container) {
       return $container->get(IConfig::class)->getAppValue(
         $container->get('AppName'),
         ConfigService::USER_GROUP_KEY,
         null
       );
     });
-    $context->registerServiceAlias(lcfirst(self::MANAGEMENT_GROUP_ID), ucfirst(self::MANAGEMENT_GROUP_ID));
+    $context->registerServiceAlias(lcfirst(self::MANAGEMENT_GROUP_ID), self::MANAGEMENT_GROUP_ID);
 
-    $context->registerService(ucfirst(self::USER_LOCALE), function(ContainerInterface $container) {
+    $context->registerService(self::USER_LOCALE, function(ContainerInterface $container) {
       $appName = $container->get('AppName');
       /** @var IL10NFactory $l10NFactory */
       $l10NFactory = $container->get(IL10NFactory::class);
@@ -93,20 +95,24 @@ class Registration
       }
       return $locale;
     });
-    $context->registerServiceAlias(lcfirst(self::USER_LOCALE), ucfirst(self::USER_LOCALE));
+    $context->registerServiceAlias(lcfirst(self::USER_LOCALE), self::USER_LOCALE);
+    $context->registerServiceAlias(self::LOCALE, self::USER_LOCALE);
+    $context->registerServiceAlias(lcfirst(self::LOCALE), self::USER_LOCALE);
 
-    $context->registerService(ucfirst(self::USER_LANGUAGE), function(ContainerInterface $container) {
+    $context->registerService(self::USER_LANGUAGE, function(ContainerInterface $container) {
       $locale = $container->get(self::USER_LOCALE);
       return locale_get_primary_language($locale);
     });
-    $context->registerServiceAlias(lcfirst(self::USER_LANGUAGE), ucfirst(self::USER_LANGUAGE));
+    $context->registerServiceAlias(lcfirst(self::USER_LANGUAGE), self::USER_LANGUAGE);
+    $context->registerServiceAlias(self::LANGUAGE, self::USER_LANGUAGE);
+    $context->registerServiceAlias(lcfirst(self::LANGUAGE), self::USER_LANGUAGE);
 
-    $context->registerService(ucfirst(self::USER_L10N), function(ContainerInterface $container) {
+    $context->registerService(self::USER_L10N, function(ContainerInterface $container) {
       return $container->get(IL10N::class);
     });
-    $context->registerServiceAlias(lcfirst(self::USER_L10N), ucfirst(self::USER_L10N));
+    $context->registerServiceAlias(lcfirst(self::USER_L10N), self::USER_L10N);
 
-    $context->registerService(ucfirst(self::APP_LOCALE), function(ContainerInterface $container) {
+    $context->registerService(self::APP_LOCALE, function(ContainerInterface $container) {
       /** @var EncryptionService $encryptionService */
       $encryptionService = $container->get(EncryptionService::class);
       $appLocale = $encryptionService->getConfigValue('orchestraLocale', $container->get(self::USER_LOCALE));
@@ -115,15 +121,15 @@ class Registration
       }
       return $appLocale;
     });
-    $context->registerServiceAlias(lcfirst(self::APP_LOCALE), ucfirst(self::APP_LOCALE));
+    $context->registerServiceAlias(lcfirst(self::APP_LOCALE), self::APP_LOCALE);
 
     $context->registerService(ucfirst(self::APP_LANGUAGE), function(ContainerInterface $container) {
       $locale = $container->get(self::APP_LOCALE);
       return locale_get_primary_language($locale);
     });
-    $context->registerServiceAlias(lcfirst(self::APP_LANGUAGE), ucfirst(self::APP_LANGUAGE));
+    $context->registerServiceAlias(lcfirst(self::APP_LANGUAGE), self::APP_LANGUAGE);
 
     $context->registerServiceAlias(self::APP_L10N, AppL10N::class);
-    $context->registerServiceAlias(lcfirst(self::APP_L10N), ucfirst(self::APP_L10N));
+    $context->registerServiceAlias(lcfirst(self::APP_L10N), self::APP_L10N);
   }
 }
