@@ -155,7 +155,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
    *
    * @param int $id
    *
-   * @return Instrument
+   * @return TaxExemptionNotice
    */
   public function setId(int $id):TaxExemptionNotice
   {
@@ -343,7 +343,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   }
 
   /**
-   * @param null|DatabaseStorageFile
+   * @param null|DatabaseStorageFile $writtenNotice
    *
    * @return TaxExemptionNotice
    */

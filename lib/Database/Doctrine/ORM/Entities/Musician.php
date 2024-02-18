@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -287,6 +287,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * @ORM\Column(type="boolean", nullable=true, options={"default"=1})
    */
   private $cloudAccountDisabled;
+
+  /**
+   * @var LegalPerson
+   *
+   * @ORM\OneToOne(targetEntity="LegalPerson", mappedBy="musician", cascade={"remove"}, orphanRemoval=true)
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="legal_person_id",referencedColumnName="id", nullable=true),
+   * )
+   */
+  private $legalPerson;
 
   /**
    * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", cascade={"remove"}, orphanRemoval=true)
@@ -1334,6 +1344,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
       return $this->surName;
     }
     return $this->surName . ', ' . $firstName;
+  }
+
+  /**
+   * Compose initials from the public display name.
+   *
+   * @return string
+   */
+  public function getInitials():string
+  {
+    return array_reduce(preg_split('/[-_.\s]/', $this->getPublicName(firstNameFirst: true), -1, PREG_SPLIT_NO_EMPTY), fn($initials, $item) => $initials . $item[0]);
   }
 
   /**

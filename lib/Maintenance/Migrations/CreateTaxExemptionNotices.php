@@ -54,7 +54,7 @@ class CreateTaxExemptionNotices extends AbstractMigration
  UNIQUE INDEX UNIQ_6417EA3905158D116BA0728A3C1F02B (tax_type, assessment_period_start, assessment_period_end),
  PRIMARY KEY(id)
 )",
-      "ALTER TABLE TaxExemptionNotices ADD CONSTRAINT FK_6417EA3735D82D9 FOREIGN KEY (written_notice_id) REFERENCES DatabaseStorageDirEntries (id)",
+      "ALTER TABLE TaxExemptionNotices ADD CONSTRAINT FK_6417EA3735D82D9 FOREIGN KEY IF NOT EXISTS (written_notice_id) REFERENCES DatabaseStorageDirEntries (id)",
     ],
   ];
 
