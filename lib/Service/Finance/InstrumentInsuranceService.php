@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -573,7 +573,7 @@ class InstrumentInsuranceService
         $this->l->t('There is no document template for the insurance overview letter. Please upload one in the application\'s orchestra settings, sub-section "Document Templates".'));
     }
 
-    // Prepare the date doing some translations first
+    // Prepare the data doing some translations first
     foreach ($overview['musicians'] as &$insurance) {
       foreach ($insurance['items'] as &$item) {
         $item['scope'] = $this->l->t($item['scope']);
