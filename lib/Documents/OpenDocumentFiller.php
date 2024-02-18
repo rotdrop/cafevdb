@@ -383,7 +383,7 @@ class OpenDocumentFiller
 
     // tax exemption notices
 
-    $substitutions['org']['tax-authorities'] = [
+    $substitutions['org']['taxAuthorities'] = [
       'exemption-notices' => [],
     ];
 
