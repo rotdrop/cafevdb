@@ -7,11 +7,14 @@ use Isolated\Symfony\Component\Finder\Finder;
 return [
 
   'prefix' => 'OCA\\CAFEVDB\\Wrapped',
-  // 'exclude-namespaces' => [
-  //   'OC',
-  //   'OCA',
-  //   'OCP',
-  // ],
+  'exclude-classes' => [
+    'OC',
+  ],
+  'exclude-namespaces' => [
+    // 'OC',
+    //'OCA',
+    //'OCP',
+  ],
   // By default when running php-scoper add-prefix, it will prefix all relevant code found in the current working
   // directory. You can however define which files should be scoped by defining a collection of Finders in the
   // following configuration key.
@@ -25,100 +28,63 @@ return [
       ->in('vendor-wrapped'),
   ],
   'patchers' => [
-    function(string $filePath, string $prefix, string $content): string {
-      //
-      // PHP-Parser patch conditions for file targets
-      //
-      // if ($filePath === '/path/to/offending/file') {
-      //   return preg_replace(
-      //     "%\$class = 'Humbug\\\\Format\\\\Type\\\\' . \$type;%",
-      //     '$class = \'' . $prefix . '\\\\Humbug\\\\Format\\\\Type\\\\\' . $type;',
-      //     $content
-      //   );
-      // }
-      if (strpos($filePath, 'doctrine/orm/src') !== false) {
-        return preg_replace(
-          "%(constant|defined)\\('Doctrine\\\\%",
-          "\$1('" . $prefix . "\\Doctrine\\",
-          $content
-        );
-      }
-      return $content;
-    },
     // /** @var array<\Doctrine\ORM\Mapping\JoinColumn> */
     function(string $filePath, string $prefix, string $content): string {
-      if (strpos($filePath, 'doctrine/orm/src') !== false) {
-        return preg_replace(
-          '%(?<!' . preg_quote($prefix) . ')\\\\Doctrine\\\\%',
-          $prefix . '\\Doctrine\\',
-          $content
+      if (str_contains($filePath, 'doctrine/orm/src')) {
+        $twoSlashPrefix = preg_quote(str_replace('\\', '\\\\', $prefix));
+        $content = preg_replace(
+          '%(?<!' . $twoSlashPrefix . '\\\\\\\\)(Doctrine\\\\\\\\)%',
+          $twoSlashPrefix . '\\\\\\\\$1',
+          $content,
         );
-      }
-      return $content;
-    },
-    // Query/Lexer.php: $name = 'Doctrine\\ORM\\Query\\Lexer::T_' . strtoupper($value);
-    function(string $filePath, string $prefix, string $content): string {
-      if (strpos($filePath, 'Doctrine/ORM/Query/Lexer.php') !== false) {
-        return preg_replace(
-          '%\\$name = \'Doctrine\\\\\\\\ORM%',
-          '$name = \'' . $prefix . '\\\\\\Doctrine\\\\\\ORM',
-          $content
+        $oneSlashPrefix = preg_quote($prefix);
+        $content = preg_replace(
+          '%(?<!' . $oneSlashPrefix . '\\\\)(Doctrine\\\\)([^\\\\])%',
+          $oneSlashPrefix . '\\\\$1$2',
+          $content,
         );
       }
       return $content;
     },
     // Gedmo behaviours
     function(string $filePath, string $prefix, string $content): string {
-      if (strpos($filePath, 'gedmo/doctrine-extensions/src/Mapping/MappedEventSubscriber.php') !== false) {
-        return preg_replace(
-          "%'Gedmo\\\\%",
-          "'" . $prefix . "\\\\Gedmo\\\\",
-          $content
-        );
-      }
-      return $content;
-    },
-    // Gedmo behaviours again
-    function(string $filePath, string $prefix, string $content): string {
-      if (strpos($filePath, 'gedmo/doctrine-extensions/src/DoctrineExtensions.php') !== false) {
-        return preg_replace(
-          "%'Gedmo'%",
-          "'" . $prefix . "\\\\Gedmo'",
-          $content
-        );
-      }
-      return $content;
-    },
-    // and Gedmo behaviours again
-    function(string $filePath, string $prefix, string $content): string {
-      if (strpos($filePath, 'gedmo/doctrine-extensions/src') !== false) {
-        return preg_replace(
-          '%repositoryClass="Gedmo%',
-          'repositoryClass="' . $prefix . '\\Gedmo',
-          $content
-        );
+      if (str_contains($filePath, 'gedmo/doctrine-extensions/src')) {
+        $search = [
+          'repositoryClass="Gedmo\\',
+          '* @see \\Gedmo',
+          '* Gedmo\\',
+          ' \\Gedmo\\',
+          'throw new \\Gedmo\\',
+          '`Gedmo\\',
+          '`Doctrine\\',
+        ];
+        $replace = [
+          'repositoryClass="Gedmo\\' . $prefix . '\\',
+          '* @see \\' . $prefix . '\\Gedmo',
+          '* ' . $prefix . '\\Gedmo\\',
+          ' \\' . $prefix. '\\Gedmo\\',
+          'throw new \\' . $prefix . '\\Gedmo\\',
+          '`' . $prefix . '\\Gedmo\\',
+          '`' . $prefix . '\\Doctrine\\',
+        ];
+        if (str_contains($filePath, 'gedmo/doctrine-extensions/src/DoctrineExtensions.php')) {
+          $search[] = '$driverChain->addDriver($driver, \'Gedmo\')';
+          $replace[] = '$driverChain->addDriver($driver, \''. $prefix . '\\Gedmo\')';
+        }
+        if (str_contains($filePath, 'gedmo/doctrine-extensions/src/Mapping/MappedEventSubscriber.php')) {
+          $search[] = '$adapterClass = \'Gedmo';
+          $replace[] = '$adapterClass = \'' .  $prefix . '\\Gedmo';
+        }
+        $content = str_replace($search, $replace, $content);
       }
       return $content;
     },
     // Remove scoper namespace prefix from Symfony polyfills namespace
-    function(string $filePath, string $prefix, string $contents): string {
+    function(string $filePath, string $prefix, string $content): string {
       if (!preg_match('{vendor-wrapped/symfony/polyfill[^/]*/bootstrap.php}i', $filePath)) {
-        return $contents;
+        return $content;
       }
-
-      return preg_replace('/namespace .+;/', '', $contents);
-    },
-    // work around broken Scoper
-    function (string $filePath, string $prefix, string $contents): string {
-      return preg_replace(
-        '%[?]\S+\\\\self%',
-        '?self',
-        $contents
-      );
-    },
-    // white-listing \OC or OC does not work ????x
-    function (string $filePath, string $prefix, string $contents): string {
-      return str_replace($prefix . '\\OC', 'OC', $contents);
+      return preg_replace('/namespace .+;/', '', $content);
     },
   ],
 ];
