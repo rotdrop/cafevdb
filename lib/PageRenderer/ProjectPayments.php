@@ -1406,6 +1406,9 @@ WHERE dsf.id IS NOT NULL',
     $opts['display']['custom_navigation'] = function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme):string {
       $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
       $rowTag = $row['qf'.$rowTagIndex];
+      if (!$this->isCompositeRowTag($rowTag)) {
+        return '';
+      }
       return $this->actionMenu($rec['id'], $rowTag);
     };
 

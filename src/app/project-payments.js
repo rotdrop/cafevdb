@@ -114,6 +114,8 @@ const actionMenu = function(containerSel) {
     console.info('UNINPLEMENTED ACTION CALLBACK', $(this));
     return false;
   });
+  const $form = $container.find(pmeFormSelector);
+  const listMode = $form.is('.' + pmeToken('list'));
 
   $container
     .off('pme:contextmenu', 'tr.' + pmeToken('row'))
@@ -128,8 +130,7 @@ const actionMenu = function(containerSel) {
       }
 
       const $row = $(this);
-      const $form = $row.closest(pmeFormSelector);
-      const $actionMenuContainer = $form.is('.' + pmeToken('list')) ? $row : $row.closest(pmeFormSelector);
+      const $actionMenuContainer = listMode ? $row.closest('tbody').find('.composite-payment.first') : $form;
       const $actionMenu = $actionMenuContainer.find('.menu-actions.dropdown-container').first();
 
       if ($actionMenu.length === 0) {
