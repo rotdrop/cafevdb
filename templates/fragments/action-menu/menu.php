@@ -26,30 +26,26 @@
  * @param array $cssClasses
  * @param array $menuData
  * @param string $toolTipPrefix
- * @param Closure $itemGenerator
+ * @param Closure $menuItemTemplate
+ * @param string $direction 'left' or 'right'
+ * @param string $dropDirection 'up' or 'down'
  */
 
 $cssClasses = array_merge($cssClasses ?? [], ['actions', 'menu-actions']);
 $toolTipPrefix = $toolTipPrefix ?? 'action-menu';
-$itemGenerator = $itemGenerator ?? function() use ($l) {
-  return '
-  <li class="dummy-item" data-operation="none">
-    <a href="#">' . $l->t('Dummy Menu Item') . '</a>
-  </a>
-  </li>';
-};
-
+$menuItemTemplate = $menuItemTemplate ?? 'fragments/action-menu/dummy-item';
 ?>
-
 <span class="<?php p(implode(' ', $cssClasses)); ?> dropdown-container dropdown-no-hover tooltip-right"
-      data-menu-data='<?php echo json_encode($menuData ?? []); ?>'
+      <?php foreach ($menuData as $key => $value) { ?>
+      data-<?php p($key); ?>="<?php p($value); ?>"
+      <?php } ?>
 >
   <button class="menu-title action-menu-toggle tooltip-auto"
-          title="<?php echo $toolTips[$toolTipPrefix . ':actions']; ?>"
+          title="<?php echo $toolTips[$toolTipPrefix]; ?>"
   >...</button>
   <nav class="dropdown-content dropdown-align-<?php p($direction); ?> dropdown-drop<?php p($dropDirection); ?>">
     <ul>
-      <?php echo $itemGenerator(); ?>
+      <?php echo $this->inc($menuItemTemplate, []); ?>
     </ul>
   </nav>
 </span>
