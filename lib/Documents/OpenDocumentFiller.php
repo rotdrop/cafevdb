@@ -384,7 +384,7 @@ class OpenDocumentFiller
     // tax exemption notices
 
     $substitutions['org']['taxAuthorities'] = [
-      'exemption-notices' => [],
+      'exemptionNotices' => [],
     ];
 
     /** @var Repositories\TaxExemptionNoticesRepository $repository */
