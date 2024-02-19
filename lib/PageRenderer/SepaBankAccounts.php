@@ -191,10 +191,10 @@ class SepaBankAccounts extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    private ProjectParticipantFieldsService $participantFieldsService,
+    protected ProjectParticipantFieldsService $participantFieldsService,
     private FinanceService $financeService,
-    private ProjectService $projectService,
-    private UserStorage $userStorage,
+    protected ProjectService $projectService,
+    protected UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
     $this->initCrypto();

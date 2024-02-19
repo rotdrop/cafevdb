@@ -33,7 +33,7 @@ use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 trait QueryFieldTrait
 {
   /** @var PHPMyEdit */
-  protected $pme;
+  protected PHPMyEdit $pme;
 
   /**
    * @param string $column

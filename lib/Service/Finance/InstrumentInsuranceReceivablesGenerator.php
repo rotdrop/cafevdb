@@ -63,7 +63,7 @@ class InstrumentInsuranceReceivablesGenerator extends AbstractReceivablesGenerat
   public function __construct(
     protected ConfigService $configService,
     private InstrumentInsuranceService $insuranceService,
-    private ToolTipsService $toolTipsService,
+    protected ToolTipsService $toolTipsService,
     private StorageFactory $storageFactory,
     EntityManager $entityManager,
     ProgressStatusService $progressStatusService,

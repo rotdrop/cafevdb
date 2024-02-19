@@ -54,6 +54,7 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 /** Table generator for Instruments table. */
 class ProjectPayments extends PMETableViewBase
 {
+  use FieldTraits\QueryFieldTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
   use FieldTraits\CryptoTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
@@ -281,10 +282,10 @@ WHERE dsf.id IS NOT NULL',
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    private ProjectService $projectService,
-    private ProjectParticipantFieldsService $participantFieldsService,
+    protected ProjectService $projectService,
+    protected ProjectParticipantFieldsService $participantFieldsService,
     private FinanceService $financeService,
-    private UserStorage $userStorage,
+    protected UserStorage $userStorage,
     private DatabaseStorageUtil $databaseStorageUtil,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);

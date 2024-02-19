@@ -40,7 +40,7 @@ trait MusicianFromRowTrait
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
   /** @var PHPMyEdit */
-  protected $pme;
+  protected PHPMyEdit $pme;
 
   /**
    * Fill an instance of Entities\Musician with the data from a legacy
@@ -57,9 +57,9 @@ trait MusicianFromRowTrait
    *
    * @bug This should be moved to a trait for reuse only in classes needing it.
    */
-  protected function musicianFromRow(array $row, ?PHPMyEdit $pme)
+  protected function musicianFromRow(array $row, ?PHPMyEdit $pme = null)
   {
-    $pme = $pme?:$this->pme;
+    $pme = $pme ?? $this->pme;
     $joinTable = !empty($pme->fdn[PMETableViewBase::joinTableMasterFieldName(PMETableViewBase::MUSICIANS_TABLE)]);
     $data = [];
     foreach ($pme->fds as $idx => $label) {

@@ -108,8 +108,8 @@ class InstrumentInsurances extends PMETableViewBase
     PageNavigation $pageNavigation,
     ToolTipsService $toolTipsService,
     private InstrumentInsuranceService $insuranceService,
-    private ProjectService $projectService,
-    private UserStorage $userStorage,
+    protected ProjectService $projectService,
+    protected UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 

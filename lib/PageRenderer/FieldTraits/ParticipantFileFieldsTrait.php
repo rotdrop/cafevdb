@@ -56,7 +56,7 @@ trait ParticipantFileFieldsTrait
   protected ProjectParticipantFieldsService $participantFieldsService;
 
   /** @var UserStorage */
-  protected ?UserStorage $userStorage;
+  protected UserStorage $userStorage;
 
   /** @var ToolTipsService */
   protected ToolTipsService $toolTipsService;

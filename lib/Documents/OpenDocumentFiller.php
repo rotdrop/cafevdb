@@ -63,7 +63,7 @@ class OpenDocumentFiller
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ConfigService $configService,
-    private EntityManager $entityManager,
+    protected EntityManager $entityManager,
     private UserStorage $userStorage,
     private TemplateService $templateService,
     private OpenDocumentFillerBackend $backend,

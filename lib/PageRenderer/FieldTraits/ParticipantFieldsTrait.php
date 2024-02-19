@@ -65,7 +65,7 @@ trait ParticipantFieldsTrait
   use MusicianFromRowTrait;
 
   /** @var UserStorage */
-  protected ?UserStorage $userStorage = null;
+  protected UserStorage $userStorage;
 
   /** @var ProjectParticipantFieldsService */
   protected ProjectParticipantFieldsService $participantFieldsService;
@@ -83,7 +83,7 @@ trait ParticipantFieldsTrait
   protected $expertMode;
 
   /** @var PHPMyEdit */
-  protected $pme;
+  protected PHPMyEdit $pme;
 
   /**
    * @var array

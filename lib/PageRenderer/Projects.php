@@ -111,12 +111,12 @@ class Projects extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    private ProjectService $projectService,
+    protected ProjectService $projectService,
     private EventsService $eventsService,
     private ImagesService $imagesService,
     private MailingListsService $listsService,
     private OrganizationalRolesService $orgaRolesService,
-    private UserStorage $userStorage,
+    protected UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 

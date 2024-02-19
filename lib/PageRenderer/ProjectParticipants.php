@@ -204,9 +204,9 @@ class ProjectParticipants extends PMETableViewBase
     private PhoneNumberService $phoneNumberService,
     private FinanceService $financeService,
     private InstrumentInsuranceService $insuranceService,
-    private ProjectParticipantFieldsService $participantFieldsService,
-    private ProjectService $projectService,
-    private UserStorage $userStorage,
+    protected ProjectParticipantFieldsService $participantFieldsService,
+    protected ProjectService $projectService,
+    protected UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 

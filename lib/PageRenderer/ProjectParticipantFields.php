@@ -153,7 +153,7 @@ class ProjectParticipantFields extends PMETableViewBase
     PageNavigation $pageNavigation,
     private InstrumentationService $instrumentationService,
     private FuzzyInputService $fuzzyInput,
-    private ProjectParticipantFieldsService $participantFieldsService,
+    protected ProjectParticipantFieldsService $participantFieldsService,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
   }
