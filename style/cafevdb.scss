@@ -602,7 +602,7 @@ body.#{$appName}-modalizer {
     opacity:0.3;
   }
 
-  &.tooltips-enabled .dropdown-content li a img.tooltips-acheckmark {
+  &.tooltips-enabled .dropdown-content li a img.tooltips-checkmark {
     opacity:1;
   }
 
@@ -639,6 +639,12 @@ body.#{$appName}-modalizer {
         }
       }
       li, li.menu-item {
+        &.disabled {
+          &, * {
+            pointer-events: none;
+          }
+          opacity:50%;
+        }
         &:not([data-operation="none"]) {
           a, label {
             width:100%;

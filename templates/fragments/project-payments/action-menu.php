@@ -22,13 +22,20 @@
  * License alogng with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace OCA\CAFEVDB;
+
+use OCA\CAFEVDB\Common\NumberFormatter;
+
+$numberFormatter = new NumberFormatter($appLocale);
+$l10nAmount = $numberFormatter->formatCurrency($amount);
+
 $routes = [
   'donation-receipt' => '#',
   'standard-receipt' => '#',
 ];
 
 echo $this->inc('fragments/action-menu/menu', [
-  'contextMenuTitle' => $compositePaymentId . ' - ' . $debitorName . ' (' . $debitorId . ')',
+  'contextMenuTitle' => $compositePaymentId . ' - ' . $debitorName . ' - ' . $l10nAmount,
   'menuItemTemplate' => 'fragments/project-payments/action-items',
   'routes' => $routes,
   'menuData' => [
