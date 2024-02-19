@@ -1348,11 +1348,11 @@ WHERE dsf.id IS NOT NULL',
             switch ($fieldName) {
               case 'date_of_receipt':
                 $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
-                continue;
+                continue 2;
               case 'balance_documents_folder_id':
               case $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'):
               case $this->joinTableFieldName(self::DATABASE_STORAGE_DIR_ENTRIES_TABLE, 'id'):
-                continue;
+                continue 2;
             }
             // $this->logInfo('NAME: ' . $fieldName . ' => ' . $fieldIndex);
             $pme->fdd[$fieldIndex]['input'] .= 'R';
@@ -1433,8 +1433,6 @@ WHERE dsf.id IS NOT NULL',
     string $direction = 'left',
     string $dropDirection = 'down',
   ):string {
-    $this->logInfo('MUSICIAN ' . $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')] . ' ' . $row[$this->joinQueryIndexField(self::MUSICIANS_TABLE, 'id')]);
-
     $templateParameters = [
       'appName' => $this->appName(),
       'cssClasses' => ['project-payment-actions'],
@@ -1443,7 +1441,11 @@ WHERE dsf.id IS NOT NULL',
       'expertMode' => $this->expertMode,
       'direction' => $direction,
       'dropDirection' => $dropDirection,
-      'id' => $id,
+      'compositePaymentId' => $id,
+      'debitorName' => $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')],
+      'debitorId' => $row[$this->joinQueryIndexField(self::MUSICIANS_TABLE, 'id')],
+      'isDonation' => $row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'is_donation')],
+      'amount' => $row[$this->queryField('amount')],
     ];
     return $this->templateResponse(
       'fragments/project-payments/action-menu',
