@@ -1464,7 +1464,7 @@ WHERE dsf.id IS NOT NULL',
       'dropDirection' => $dropDirection,
     ];
     return $this->templateResponse(
-      'fragments/action-menu',
+      'fragments/action-menu/menu',
       $templateParameters,
     )->render();
   }
