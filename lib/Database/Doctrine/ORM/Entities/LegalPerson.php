@@ -97,7 +97,7 @@ class LegalPerson implements JsonSerializable, ArrayAccess
    *
    * @ORM\Column(type="uuid_binary", nullable=false)
    */
-  private UuidInterface $contactUuid;
+  private ?UuidInterface $contactUuid;
 
   /**
    * @var Collection
@@ -189,7 +189,7 @@ class LegalPerson implements JsonSerializable, ArrayAccess
    *
    * @return LegalPerson
    */
-  public function setContactUuid(UuidInterface $contactUuid):LegalPerson
+  public function setContactUuid(?UuidInterface $contactUuid):LegalPerson
   {
     if ($contactUuid !== null) {
       $contactUuid = Uuid::asUuid($contactUuid);
