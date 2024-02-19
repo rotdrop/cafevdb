@@ -84,4 +84,4 @@ echo $this->inc('fragments/action-menu/menu', [
   'projectFolders' => $projectService->ensureProjectFolders($projectId, dry: true),
   'wikiPage' => $projectService->projectWikiLink($projectName),
   'wikiTitle' => $l->t('Project Wiki for %s', [ $projectName ]),
-])
+]);

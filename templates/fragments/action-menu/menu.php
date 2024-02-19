@@ -31,6 +31,8 @@
  * @param string $dropDirection 'up' or 'down'
  */
 
+\OC::$server->get(\OCP\ILogger::class)->info('PARAMS ' . print_r(array_keys($_), true));
+
 $cssClasses = array_merge($cssClasses ?? [], ['actions', 'menu-actions']);
 $toolTipPrefix = $toolTipPrefix ?? 'action-menu';
 $menuItemTemplate = $menuItemTemplate ?? 'fragments/action-menu/dummy-item';
@@ -45,7 +47,7 @@ $menuItemTemplate = $menuItemTemplate ?? 'fragments/action-menu/dummy-item';
   >...</button>
   <nav class="dropdown-content dropdown-align-<?php p($direction); ?> dropdown-drop<?php p($dropDirection); ?>">
     <ul>
-      <?php echo $this->inc($menuItemTemplate, []); ?>
+      <?php echo $this->inc($menuItemTemplate, $_); ?>
     </ul>
   </nav>
 </span>
