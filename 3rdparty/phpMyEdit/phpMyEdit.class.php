@@ -82,6 +82,9 @@ class phpMyEdit
 	const SQL_ENCODE = 'TO_BASE64';
 	const SQL_DECODE = 'FROM_BASE64';
 
+	const QUERY_FIELD = 'qf';
+	const QUERY_FIELD_IDX = '_idx';
+
 	const COOKED = 0x00;
 	const OMIT_DESC = 0x01;
 	const OMIT_SQL = 0x02;
@@ -1581,18 +1584,18 @@ class phpMyEdit
 				&& $this->fdd[$k][self::FDD_VALUES]['join'] === false) {
 				$flags = self::OMIT_DESC;
 			}
-			$fieldAlias = 'qf'.$k;
+			$fieldAlias = self::QUERY_FIELD.$k;
 			$fields[] = $this->fqn($k, $flags).' AS '.$this->sd.$fieldAlias.$this->ed;
 			$fieldAliases[] = $fieldAlias;
 			if ($this->col_has_description($k)) {
-				$fieldAlias = 'qf'.$k.'_idx';
+				$fieldAlias = self::QUERY_FIELD.$k.self::QUERY_FIELD_IDX;
 				$fields[] = $this->fqn($k, self::OMIT_DESC).' AS '.$this->sd.$fieldAlias.$this->ed;
 				$fieldAliases[] = $fieldAlias;
 			}
 			if ($this->col_has_datemask($k)) {
 				// Date functions of mysql are a nightmare. Leave the
 				// conversion to PHP further below.
-				$fieldAlias = 'qf'.$k.'_timestamp';
+				$fieldAlias = self::QUERY_FIELD.$k.'_timestamp';
 				$fields[] = $this->fqn($k, $flags).' AS '.$this->sd.$fieldAlias.$this->ed;
 				$fieldAliases[] = $fieldAlias;
 			}
@@ -2067,18 +2070,18 @@ class phpMyEdit
 			return;
 		}
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			$l	  = 'qf'.$k;
+			$l	  = self::QUERY_FIELD.$k;
 			$lc	  = $l.'_comp';
-			$li	  = $l.'_idx';
+			$li	  = $l.self::QUERY_FIELD_IDX;
 			$m	  = $this->get_sys_cgi_var($l);
 			$mc	  = $this->get_sys_cgi_var($lc);
 			$mi	  = $this->get_sys_cgi_var($li);
 			if (! isset($m) && ! isset($mi)) {
 				// retry with field-name to ease programmatic queries
 				$fd   = $this->fds[$k];
-				$l	  = 'qf'.$fd;
+				$l	  = self::QUERY_FIELD.$fd;
 				$lc	  = $l.'_comp';
-				$li	  = $l.'_idx';
+				$li	  = $l.self::QUERY_FIELD_IDX;
 				$m	  = $this->get_sys_cgi_var($l);
 				$mc	  = $this->get_sys_cgi_var($lc);
 				$mi	  = $this->get_sys_cgi_var($li);
@@ -2796,10 +2799,10 @@ class phpMyEdit
 			$cell_popup = $this->fetchCellPopup($k, $row);
 			$helptip = $this->fieldTooltip($k, true);
 			if (!empty($this->fdd[$k]['encryption'])) {
-				if (!isset($row["qf${k}_encrypted"])) {
-					$row["qf${k}_encrypted"] = $row["qf$k"];
+				if (!isset($row[self::QUERY_FIELD . $k . '_encrypted'])) {
+					$row[self::QUERY_FIELD . $k . '_encrypted'] = $row[self::QUERY_FIELD . $k];
 				}
-				$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf${k}_encrypted"]);
+				$row[self::QUERY_FIELD . $k] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row[self::QUERY_FIELD . $k . '_encrypted']);
 			}
 			if ($this->copy_operation() || $this->change_operation()) {
 				if ($this->hidden($k)) {
@@ -2808,17 +2811,17 @@ class phpMyEdit
 							$css_postfix	= $this->fdd[$k]['css']['postfix'] ?? null;
 							$css_class_name = $this->getCSSclass('input', null, false, $css_postfix);
 							if ($this->col_has_multiple($k)) {
-								$hiddenValues = self::explodeValueArray($row["qf$k"]);
+								$hiddenValues = self::explodeValueArray($row[self::QUERY_FIELD . $k]);
 								$idx = 0;
 								foreach ($hiddenValues as $value) {
 									echo $this->htmlHiddenData($this->fds[$k].'['.($idx++).']', $value, $css_class_name);
 								}
 							} else {
-								echo $this->htmlHiddenData($this->fds[$k], $row["qf$k"], $css_class_name);
+								echo $this->htmlHiddenData($this->fds[$k], $row[self::QUERY_FIELD . $k], $css_class_name);
 							}
 						} else {
 							$operation = $this->change_operation() ? self::OPERATION_CHANGE : self::OPERATION_COPY;
-							echo $this->call_display_closure($k, $row["qf$k"], $operation, $row, $this->rec);
+							echo $this->call_display_closure($k, $row[self::QUERY_FIELD . $k], $operation, $row, $this->rec);
 						}
 					}
 					continue;
@@ -2922,10 +2925,10 @@ class phpMyEdit
 			// ok, this stuff is just left completely to the caller
 			if (!empty($vals)) {
 				if ($this->col_has_multiple($k)) {
-					// actually, it seems that $row['qf'.$k] may already
+					// actually, it seems that $row[self::QUERY_FIELD.$k] may already
 					// contain the correctly imploded data. So better
 					// cross-check before generating nulls.
-					$rowValues = self::explodeValueArray($row["qf$k"]);
+					$rowValues = self::explodeValueArray($row[self::QUERY_FIELD . $k]);
 					if (array_intersect($rowValues, array_keys($vals)) == $rowValues) {
 						$value = array();
 						foreach ($rowValues as $key) {
@@ -2934,26 +2937,26 @@ class phpMyEdit
 						$value = self::implodeValueArray($value, onlyFlat: false);
 					} else if (array_intersect($rowValues, $vals) == $rowValues) {
 						// assume the row already contains the imploded values
-						$value = $row["qf$k"];
+						$value = $row[self::QUERY_FIELD . $k];
 					} else {
 						throw new RuntimeException(
 							'Unexpected multi-value column data: '
-							. $row['qf'.$k]
+							. $row[self::QUERY_FIELD.$k]
 							. ' / ' . print_r($rowValues, true)
 							. ' / ' . print_r($vals, true));
 					}
 				} else {
-					$value = $vals[$row["qf$k"]]??null;
+					$value = $vals[$row[self::QUERY_FIELD . $k]]??null;
 				}
 			} else {
-				$value = $row["qf$k"];
+				$value = $row[self::QUERY_FIELD . $k];
 			}
 			echo $this->call_display_closure($k, $value, $operation, $row, $this->rec);
 		} elseif ($vals !== false && (stristr("MCOD", $select) !== false || $multiValues)) {
 			$multiple = $this->col_has_multiple($k);
 			$readonly = $this->disabledTag($k); // || count($vals) == 0;
 			$mandatory = $this->mandatory($k);
-			$selected = $row["qf$k"] ?? null;
+			$selected = $row[self::QUERY_FIELD . $k] ?? null;
 			if ($selected === null) {
 				$selected = $this->fdd[$k]['default'] ?? null;
 			}
@@ -2999,7 +3002,7 @@ class phpMyEdit
 				$this->cgi['prefix']['data'].$this->fds[$k],
 				$css_class_name,
 				$k,
-				$row["qf$k"],
+				$row[self::QUERY_FIELD . $k],
 				$readonly,
 				$mandatory,
 				$escape,
@@ -3007,7 +3010,7 @@ class phpMyEdit
 				$attributes
 			);
 		} else {
-			$value    = $vals ? $vals[$row["qf$k"]] : $row["qf$k"];
+			$value    = $vals ? $vals[$row[self::QUERY_FIELD . $k]] : $row[self::QUERY_FIELD . $k];
 			$readonly = $this->disabledTag($k);
 			if ($readonly === false && $vals) {
 				// force read-only if single value.
@@ -3086,7 +3089,7 @@ class phpMyEdit
 		}
 		echo ($this->disabled($k) ? ' disabled' : '');
 		echo ' name="',$this->cgi['prefix']['data'].$this->fds[$k],'" value="';
-		echo $this->enc($row["qf$k"]),'"',$len_props,' />',"\n";
+		echo $this->enc($row[self::QUERY_FIELD . $k]),'"',$len_props,' />',"\n";
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
 			$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			if (is_callable($postfix)) {
@@ -3338,7 +3341,7 @@ class phpMyEdit
 	function makeUserTimeString($k, $row)
 	{
 		$value = '';
-		$data = $row["qf$k"."_timestamp"];
+		$data = $row[self::QUERY_FIELD . $k."_timestamp"];
 		switch ($data) {
 		case '':
 		case 0:
@@ -3406,17 +3409,17 @@ class phpMyEdit
 			$escape = false;
 		}
 		if (!empty($this->fdd[$k]['encryption'])) {
-			if (!isset($row["qf${k}_encrypted"])) {
-				$row["qf${k}_encrypted"] = $row["qf$k"];
+			if (!isset($row[self::QUERY_FIELD . $k . '_encrypted'])) {
+				$row[self::QUERY_FIELD . $k . '_encrypted'] = $row[self::QUERY_FIELD . $k];
 			}
-			$row["qf$k"] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row["qf${k}_encrypted"]);
+			$row[self::QUERY_FIELD . $k] = call_user_func($this->fdd[$k]['encryption']['decrypt'], $row[self::QUERY_FIELD . $k . '_encrypted']);
 		}
 		$key_rec = [];
 		foreach ($this->key_num as $key => $key_num) {
 			if ($this->col_has_description($key_num)) {
-				$key_rec[$key] = $row['qf'.$key_num.'_idx'];
+				$key_rec[$key] = $row[self::QUERY_FIELD.$key_num.self::QUERY_FIELD_IDX];
 			} else {
-				$key_rec[$key] = $row['qf'.$key_num];
+				$key_rec[$key] = $row[self::QUERY_FIELD.$key_num];
 			}
 		}
 
@@ -3425,12 +3428,12 @@ class phpMyEdit
 		if ($this->col_has_datemask($k)) {
 			$value = $this->makeUserTimeString($k, $row);
 		} else if (isset($this->fdd[$k][self::FDD_VALUES2])) {
-			if (isset($row['qf'.$k.'_idx'])) {
-				$value = $row['qf'.$k.'_idx'];
+			if (isset($row[self::QUERY_FIELD.$k.self::QUERY_FIELD_IDX])) {
+				$value = $row[self::QUERY_FIELD.$k.self::QUERY_FIELD_IDX];
 			} else if (isset($row["qf{$k}_encrypted"])) {
 				$value = $row["qf{$k}_encrypted"];
 			} else {
-				$value = $row["qf$k"];
+				$value = $row[self::QUERY_FIELD . $k];
 			}
 			if ($this->col_display_multiple($k)) {
 				$value_ar  = self::explodeValueArray($value);
@@ -3454,7 +3457,7 @@ class phpMyEdit
 				}
 			}
 		} else {
-			$value = $this->formatValue($row["qf$k"], $k, $css, $key_rec);
+			$value = $this->formatValue($row[self::QUERY_FIELD . $k], $k, $css, $key_rec);
 		}
 		if (!empty($this->fdd[$k]['strip_tags'])) {
 			$value = strip_tags($value);
@@ -4605,9 +4608,9 @@ class phpMyEdit
 			$css_class_name	  = $this->getCSSclass(self::OPERATION_FILTER, null, null, $css_postfix);
 			$fd				  = $this->fds[$k];
 			$this->field	  = $this->fdd[$fd];
-			$l	= 'qf'.$k;
+			$l	= self::QUERY_FIELD.$k;
 			$lc = $l.'_comp';
-			$li = $l.'_idx';
+			$li = $l.self::QUERY_FIELD_IDX;
 			if ($this->clear_operation()) {
 				$m	= null;
 				$mc = null;
@@ -4620,15 +4623,15 @@ class phpMyEdit
 				if ((empty($m) && $m !== '0' && $m !== 0) && empty($mi)) {
 					// retry with field-name to ease programmatic queries
 					$fd   = $this->fds[$k];
-					$l	  = 'qf'.$fd;
+					$l	  = self::QUERY_FIELD.$fd;
 					$lc	  = $l.'_comp';
-					$li	  = $l.'_idx';
+					$li	  = $l.self::QUERY_FIELD_IDX;
 					$m	  = $this->get_sys_cgi_var($l);
 					$mc	  = $this->get_sys_cgi_var($lc);
 					$mi	  = $this->get_sys_cgi_var($li)?:[];
 				}
 				// reset $l to numeric field id in order to output normalized controls
-				$l = 'qf'.$k;
+				$l = self::QUERY_FIELD.$k;
 			}
 			echo '<td class="',$css_class_name,'">';
 			if ($this->password($k) || !$this->filtered($k)) {
@@ -4667,7 +4670,7 @@ class phpMyEdit
 										   true /* checkbox */);
 				echo '</div><div class="'.$css_class_name.'">';
 				$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-select', null, null);
-				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.'_idx',
+				echo $this->htmlSelect($this->cgi['prefix']['sys'].$l.self::QUERY_FIELD_IDX,
 									   $css_second_class_name . ' ' . $css_class_name,
 									   $vals, $groups, $titles, $data, $selected,
 									   $multiple || true, $readonly, false, $strip_tags, $escape,
@@ -4677,7 +4680,7 @@ class phpMyEdit
 					   $this->fdd[$fd][self::FDD_SELECT] == 'T')) {
 				$len_props = '';
 				$maxlen = !empty($this->fdd[$k]['maxlen']) ? intval($this->fdd[$k]['maxlen']) : 0;
-				//$maxlen > 0 || $maxlen = intval($this->sql_field_len($res, $fields["qf$k"]));
+				//$maxlen > 0 || $maxlen = intval($this->sql_field_len($res, $fields[self::QUERY_FIELD . $k]));
 				$maxlen > 0 || $maxlen = 500;
 				$size = isset($this->fdd[$k]['size']) ? $this->fdd[$k]['size']
 					: ($maxlen < 30 ? min($maxlen, 8) : 12);
@@ -5156,9 +5159,9 @@ class phpMyEdit
 			$key_rec = [];
 			foreach ($this->key_num as $key => $key_num) {
 				if ($this->col_has_description($key_num)) {
-					$key_rec[$key] = $row['qf'.$key_num.'_idx'];
+					$key_rec[$key] = $row[self::QUERY_FIELD.$key_num.self::QUERY_FIELD_IDX];
 				} else {
-					$key_rec[$key] = $row['qf'.$key_num];
+					$key_rec[$key] = $row[self::QUERY_FIELD.$key_num];
 				}
 			}
 			$this->exec_data_triggers(self::SQL_QUERY_SELECT, $row);
@@ -5170,9 +5173,9 @@ class phpMyEdit
 				$groupby_rec = [];
 				foreach ($this->groupby_num as $key => $key_num) {
 					if ($this->col_has_description($key_num)) {
-						$groupby_rec[$key] = $row['qf'.$key_num.'_idx'];
+						$groupby_rec[$key] = $row[self::QUERY_FIELD.$key_num.self::QUERY_FIELD_IDX];
 					} else {
-						$groupby_rec[$key] = $row['qf'.$key_num];
+						$groupby_rec[$key] = $row[self::QUERY_FIELD.$key_num];
 					}
 				}
 				$groupbyRecordData = json_encode($groupby_rec);
@@ -5184,9 +5187,9 @@ class phpMyEdit
 				$mrec_rec = [];
 				foreach ($this->mrec_num as $key => $key_num) {
 					if ($this->col_has_description($key_num)) {
-						$mrec_rec[$key] = $row['qf'.$key_num.'_idx'];
+						$mrec_rec[$key] = $row[self::QUERY_FIELD.$key_num.self::QUERY_FIELD_IDX];
 					} else {
-						$mrec_rec[$key] = $row['qf'.$key_num];
+						$mrec_rec[$key] = $row[self::QUERY_FIELD.$key_num];
 					}
 				}
 				$mrecRecordData = json_encode($mrec_rec);
@@ -5516,15 +5519,15 @@ class phpMyEdit
 		}
 		// Also transport the query options ...
 		for ($k = 0; $k < $this->num_fds; $k++) {
-			foreach (array('','_idx','_comp') as $suf) {
-				$qf = $this->get_sys_cgi_var('qf'.$k.$suf);
+			foreach (array('',self::QUERY_FIELD_IDX,'_comp') as $suf) {
+				$qf = $this->get_sys_cgi_var(self::QUERY_FIELD.$k.$suf);
 				if (isset($qf) && $qf != '') {
 					if (is_array($qf) ) {
 						foreach ($qf as $key => $value) {
-							echo $this->htmlHiddenSys('qf'.$k.$suf.'['.$key.']', $value);
+							echo $this->htmlHiddenSys(self::QUERY_FIELD.$k.$suf.'['.$key.']', $value);
 						}
 					} else {
-						echo $this->htmlHiddenSys('qf'.$k.$suf, $qf);
+						echo $this->htmlHiddenSys(self::QUERY_FIELD.$k.$suf, $qf);
 					}
 				}
 			}

@@ -279,8 +279,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       static $oddCompositePayment = true;
       static $oddBulkTransaction = false;
 
-      $bulkTransactionId = $row['qf'.$pme->fdn['id']];
-      // $compositePaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+      $bulkTransactionId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn['id']];
+      // $compositePaymentId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
 
       $cssClasses = ['bulk-transaction'];
       if ($lastBulkTransactionId != $bulkTransactionId) {
@@ -308,8 +308,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
       // $this->logInfo('DATA TRIGGER '.$op.' '.$step.' '.print_r($row, true));
       static $lastBulkTransactionId = -1;
 
-      $bulkTransactionId = $row['qf'.$pme->fdn['id']];
-      // $compositePaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+      $bulkTransactionId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn['id']];
+      // $compositePaymentId = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
 
       if ($lastBulkTransactionId != $bulkTransactionId) {
         if ($lastBulkTransactionId > 0) {
@@ -552,10 +552,10 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         'php|LF' => [$this, 'bulkTransactionRowOnly'],
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
-            return empty($row['qf' . $k]) ? [] : [ 'readonly' => true ];
+            return empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? [] : [ 'readonly' => true ];
           },
           'postfix' => function($op, $pos, $k, $row, $pme) {
-            $checked = empty($row['qf' . $k]) ? '' : 'checked';
+            $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked';
             return '<input id="pme-submit-date-lock"
   type="checkbox"
   ' . $checked . '
@@ -658,8 +658,8 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
         $post = json_encode([
           'bulkTransactionId' => $recordId['id'],
           'requesttoken' => \OCP\Util::callRegister(),
-          'projectId' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
-          'projectName' => $row['qf'.$pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
+          'projectId' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')].'_idx'],
+          'projectName' => $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableFieldName(self::PROJECTS_TABLE, 'id')]],
         ]);
         $actions = [
           'download' => [
@@ -703,7 +703,7 @@ __EOT__;
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteTrigger' ];
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($submitIdx, $opts) {
-      if ($this->expertMode || empty($row['qf'.$submitIdx])) {
+      if ($this->expertMode || empty($row[PHPMyEdit::QUERY_FIELD . $submitIdx])) {
         $pme->options = $opts['options'];
       } else {
         $pme->options = 'LFV';
@@ -805,7 +805,7 @@ __EOT__;
    */
   private function isBulkTransactionRow(array $row, PHPMyEdit $pme)
   {
-    $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
+    $rowTag = $row[PHPMyEdit::QUERY_FIELD . $pme->fdn[$this->joinTableMasterFieldName(self::COMPOSITE_PAYMENTS_TABLE)]];
     return str_starts_with($rowTag, self::ROW_TAG_PREFIX);
   }
 

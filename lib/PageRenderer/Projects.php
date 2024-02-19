@@ -51,6 +51,7 @@ use OCA\CAFEVDB\Common\Util;
 /**Table generator for Projects table. */
 class Projects extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'projects';
@@ -341,7 +342,7 @@ class Projects extends PMETableViewBase
 
             $html = $this->templateEditButton(
               $pme->rec['id'],
-              $row[$this->queryField('name', $pme->fdd)],
+              $row[$this->queryField('name')],
               'project-instrumentation-numbers'
             );
 
@@ -451,7 +452,7 @@ class Projects extends PMETableViewBase
               $instrumentNames = $this->instruments;
             } else {
               $instrumentsIndex = $k - 1;
-              $instruments = Util::explode(',', $row['qf'.$instrumentsIndex], Util::OMIT_EMPTY_FIELDS|Util::TRIM);
+              $instruments = Util::explode(',', $row[PHPMyEdit::QUERY_FIELD . $instrumentsIndex], Util::OMIT_EMPTY_FIELDS|Util::TRIM);
               $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
             }
 
@@ -579,7 +580,7 @@ class Projects extends PMETableViewBase
         'php|VD' => function($value, $op, $field, $row, $recordId, $pme) {
           $html = $this->templateEditButton(
             $recordId['id'],
-            $row[$this->queryField('name', $pme->fdd)],
+            $row[$this->queryField('name')],
             'project-instrumentation-numbers'
           );
 
@@ -645,14 +646,14 @@ class Projects extends PMETableViewBase
             'options' => 'AVCPD',
             'tooltip' => $this->toolTipsService['page-renderer:projects:registration:deadline'],
             'php|LFVD' => function($value, $op, $k, $row, $recordId, $pme) {
-              $registration_start = $row[$this->queryField('registration_start_date', $pme->fdd)];
-              if (empty($registration_start)) {
+              $registrationStart = $row[$this->queryField('registration_start_date')];
+              if (empty($registrationStart)) {
                 return '';
               }
               $project = $this->project ?? ($recordId['id'] ?? null);
               if (!empty($project)) {
                 $value = $this->projectService->getProjectRegistrationDeadline($project)->getTimestamp();
-                $string = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
+                $string = $pme->makeUserTimeString($k, [ PHPMyEdit::QUERY_FIELD . $k . '_timestamp' => $value ]);
                 return $string;
               }
               return '';
@@ -660,13 +661,13 @@ class Projects extends PMETableViewBase
             'display|ACP' => [
               'attributes' => function($op, $k, $row, $pme) {
                 $project = $this->project ?? ($recordId['id'] ?? null);
-                $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
+                $registrationStart = $row[$this->queryField('registration_start_date')] ?? null;
                 $deadlineString = null;
                 if (!empty($project)) {
                   $value = $this->projectService->getProjectRegistrationDeadline($project);
                   if (!empty($value)) {
                     $value = $value->getTimestamp();
-                    $deadlineString = $pme->makeUserTimeString($k, [ 'qf' . $k . '_timestamp' => $value ]);
+                    $deadlineString = $pme->makeUserTimeString($k, [ PHPMyEdit::QUERY_FIELD . $k . '_timestamp' => $value ]);
                   }
                 }
                 $exampleDate = DateTimeImmutable::createFromFormat('Ymd', '17840401', $this->getDateTimeZone());
@@ -675,7 +676,7 @@ class Projects extends PMETableViewBase
                 $lockedPlaceholder =
                   $op == 'add' || empty($deadlineString) ? $this->l->t('e.g. %s', $exampleDateString) : $deadlineString;
                 $unlockedPlaceholder = $this->l->t('e.g. %s', $deadlineString ?? $exampleDateString);
-                if (empty($row['qf'.$k]) || empty($registrationStart)) {
+                if (empty($row[PHPMyEdit::QUERY_FIELD . $k]) || empty($registrationStart)) {
                   return [
                     'placeholder' => $lockedPlaceholder,
                     'data-unlocked-placeholder' => $unlockedPlaceholder,
@@ -695,9 +696,9 @@ class Projects extends PMETableViewBase
                 }
               },
               'postfix' => function($op, $pos, $k, $row, $pme) {
-                $registrationStart = $row[$this->queryField('registration_start_date', $pme->fdd)] ?? null;
+                $registrationStart = $row[$this->queryField('registration_start_date')] ?? null;
                 $disabled = empty($registrationStart) ? 'disabled' : '';
-                $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+                $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
                 return '<input id="pme-project-registration-deadline"
   type="checkbox"
   ' . $checked . '
@@ -742,10 +743,10 @@ class Projects extends PMETableViewBase
       'display|CV' => [ 'popup' => false ],
       'php|CV' => function($value, $op, $field, $row, $recordId, $pme) {
 
-        $projectType = $row['qf' . $pme->fdn['type']];
+        $projectType = $row[$this->queryField('type')];
 
         $projectId = $recordId['id'];
-        $listAddress = strtolower($row[$this->queryField('name', $pme->fdd)]);
+        $listAddress = strtolower($row[$this->queryField('name')]);
         $listAddress = $listAddress . '@' . $this->getConfigValue('mailingListEmailDomain');
         $l10nStatus = $this->l->t($status = 'unset');
         $configUrl = '';
@@ -883,7 +884,7 @@ class Projects extends PMETableViewBase
 
           $html = $this->templateEditButton(
             $recordId['id'],
-            $row[$this->queryField('name', $pme->fdd)],
+            $row[$this->queryField('name')],
             'project-participant-fields'
           );
 
@@ -978,9 +979,9 @@ class Projects extends PMETableViewBase
       );
 
     $opts['filters'] = [ 'OR' => [], 'AND' => [] ];
-    if (!empty($this->requestParameters[$this->pme->cgiSysName('qf'.$nameIdx.'_idx')])) {
+    if (!empty($this->requestParameters[$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $nameIdx.'_idx')])) {
       // unset the year filter, as it does not make sense
-      unset($this->parameterService[$this->pme->cgiSysName('qf'.$yearIdx)]);
+      unset($this->parameterService[$this->pme->cgiSysName(PHPMyEdit::QUERY_FIELD . $yearIdx)]);
     } else {
       $opts['filters']['OR'][] = [
         'sql' => '$table.type IN ("' . ProjectType::PERMANENT . '","' . ProjectType::TEMPLATE . '")',
@@ -1009,16 +1010,15 @@ class Projects extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] = function($pme, $op, $step, &$row) {
       if ($this->copyOperation()) {
         // tweak the name
-        $nameIndex = $pme->fdn['name'];
-        $row['qf' . $nameIndex] = $this->l->t('Copy of %s', $row['qf' . $nameIndex]);
+        $nameKey = $this->queryField('name');
+        $row[$nameKey] = $this->l->t('Copy of %s', $row[$nameKey]);
       }
       return true;
     };
 
     $opts['display']['custom_navigation'] = function($rec, $groupby_rec, $row, $pme) {
-      $nameIndex = $pme->fdn['name'];
       $projectId = $rec['id'];
-      $projectName = $row['qf' . $nameIndex];
+      $projectName = $row[$this->queryField('name')];
       return $this->projectActionMenu($projectId, $projectName, overview: true, direction: 'left');
     };
 

@@ -44,6 +44,8 @@ use OCA\CAFEVDB\Common\Navigation;
 /** Table generator for Instruments table. */
 class Instruments extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
+
   const TEMPLATE = 'instruments';
   const TABLE = self::INSTRUMENTS_TABLE;
   private const INSTRUMENT_FAMILIES_TABLE = 'InstrumentFamilies';
@@ -327,7 +329,7 @@ GROUP BY $columns[1]",
       'options' => 'LF',
       'sql'     => '$main_table.id',
       'php'   =>  function($value, $op, $field, $row, $recordId, $pme) use ($lang) {
-        $inst = $row[$this->queryField('name', $pme->fdd)];
+        $inst = $row[$this->queryField('name')];
         return '<a '
           .'href="http://'.$lang.'.wikipedia.org/wiki/'.$inst.'" '
           .'target="Wikipedia.'.$lang.'" '
@@ -350,7 +352,7 @@ GROUP BY $columns[1]",
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row) use ($usageIdx, $expertMode) {
-        if (!$expertMode && !empty($row['qf'.$usageIdx])) {
+        if (!$expertMode && !empty($row[PHPMyEdit::QUERY_FIELD . $usageIdx])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;

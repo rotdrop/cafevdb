@@ -47,6 +47,7 @@ use OCA\CAFEVDB\Common\Util;
 /** Render the instrument insurances of the club-members. */
 class InstrumentInsurances extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   const TEMPLATE = 'instrument-insurance';
@@ -274,10 +275,10 @@ class InstrumentInsurances extends PMETableViewBase
         'prefix' => function($op, $pos, $k, $row, $pme) {
           $css = [ 'cell-wrapper' ];
           if ($op != 'add') {
-            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
-            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
-            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
-            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id')];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id')];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id')];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id')];
 
             empty($billToParty) && $billToParty = $instrumentHolder;
             empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
@@ -314,10 +315,10 @@ class InstrumentInsurances extends PMETableViewBase
           $css = [ 'cell-wrapper', 'tooltip-auto' ];
           $title = '';
           if ($op != 'add') {
-            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
-            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
-            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
-            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id')];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id')];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id')];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id')];
 
             empty($billToParty) && $billToParty = $instrumentHolder;
             empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
@@ -357,10 +358,10 @@ class InstrumentInsurances extends PMETableViewBase
           $css = [ 'cell-wrapper', 'tooltip-auto' ];
           $title = '';
           if ($op != 'add') {
-            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id', $pme->fdd)];
-            $billToParty = $row[$this->queryIndexField('bill_to_party_id', $pme->fdd)];
-            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id', $pme->fdd)];
-            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id', $pme->fdd)];
+            $instrumentHolder = $row[$this->queryIndexField('instrument_holder_id')];
+            $billToParty = $row[$this->queryIndexField('bill_to_party_id')];
+            $instrumentOwner = $row[$this->queryIndexField('instrument_owner_id')];
+            $isClubMember = $row[$this->joinQueryField(self::MEMBERSHIP_TABLE, 'project_id')];
 
             empty($billToParty) && $billToParty = $instrumentHolder;
             empty($instrumentOwner) && $instrumentOwner = $instrumentHolder;
@@ -623,7 +624,7 @@ GROUP BY b.short_name',
       'nowrap' => true,
       'sort' => true,
       'php' => function($totalAmount, $action, $k, $row, $recordId, $pme) {
-        $musicianId = $row[$this->queryField('instrument_holder_id', $pme->fdd)];
+        $musicianId = $row[$this->queryField('instrument_holder_id')];
         $annualFee = $this->insuranceService->insuranceFee($musicianId, null);
         $bval = $this->l->t(
           'Total Amount %02.02f &euro;, Annual Fee %02.02f &euro;', [ $totalAmount, $annualFee ]);
@@ -719,7 +720,7 @@ GROUP BY b.short_name',
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
 
-      if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
+      if (!empty($row[$this->queryField('deleted')])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
         $pme->options = str_replace([ 'M', 'D' ], '', $opts['options']);

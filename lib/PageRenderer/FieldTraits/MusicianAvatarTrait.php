@@ -39,6 +39,8 @@ use OCA\CAFEVDB\Common\Util;
  */
 trait MusicianAvatarTrait
 {
+  use QueryFieldTrait;
+
   /** @var ToolTipsService */
   protected ToolTipsService $toolTipsService;
 
@@ -75,7 +77,7 @@ trait MusicianAvatarTrait
         'php' => function($userIdSlug, $action, $k, $row, $recordId, PHPMyEdit $pme) {
           $joinTable = !empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
           $columnName = 'cloud_account_disabled';
-          $column = $joinTable ? $this->joinQueryField(self::MUSICIANS_TABLE, $columnName, $pme->fdd) : $this->queryField($columnName, $pme->fdd);
+          $column = $joinTable ? $this->joinQueryField(self::MUSICIANS_TABLE, $columnName) : $this->queryField($columnName);
           if ($row[$column]) {
             // no need to bother the cloud, the user is not there.
             return '';

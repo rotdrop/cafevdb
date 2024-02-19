@@ -139,7 +139,7 @@ trait MailingListsTrait
       // copy and add are disabled
       'php|CVD' => function($email, $action, $k, $row, $recordId, $pme) {
         $cssClasses = [ 'mailing-list', 'project', 'status' ];
-        $registration = empty($row['qf' . $pme->fdn['registration']])
+        $registration = empty($row[PHPMyEdit::QUERY_FIELD . $pme->fdn['registration']])
           ? 'preliminary' : 'confirmed';
         $cssClasses[] =  'registration-' . $registration;
 

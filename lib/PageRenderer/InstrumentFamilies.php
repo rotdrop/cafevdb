@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,8 @@ use OCA\CAFEVDB\Common\Util;
 /** Table generator for Instruments table. */
 class InstrumentFamilies extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
+
   const TEMPLATE = 'instrument-families';
   const TABLE = 'InstrumentFamilies';
   private const INSTRUMENTS_JOIN_TABLE = 'instrument_instrument_family';
@@ -264,7 +266,7 @@ class InstrumentFamilies extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row) use ($expertMode) {
-        if (!$expertMode && !empty($row[$this->joinQueryField(self::INSTRUMENTS_TABLE, 'id', $pme->fdd)])) {
+        if (!$expertMode && !empty($row[$this->joinQueryField(self::INSTRUMENTS_TABLE, 'id')])) {
           $pme->options = str_replace('D', '', $pme->options);
         }
         return true;

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -320,10 +320,10 @@ trait SepaAccountsTrait
 
             // more efficient would perhaps be JSON
             $sepaIds = Util::explode(',', $value);
-            $accountDeleted = Util::explodeIndexed($row['qf'.($k-1)]);
-            $ibans = Util::explodeIndexed($row['qf'.($k-2)]);
-            $mandateDeleted = Util::explodeIndexed($row['qf'.($k-3)]);
-            $references = Util::explodeIndexed($row['qf'.($k-4)]);
+            $accountDeleted = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD.($k-1)]);
+            $ibans = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD.($k-2)]);
+            $mandateDeleted = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD.($k-3)]);
+            $references = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD.($k-4)]);
 
             $this->logDebug('M DELETED '.print_r($mandateDeleted, true));
             $this->logDebug('A DELETED '.print_r($accountDeleted, true));
