@@ -1421,11 +1421,35 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Get rowAccessToken.
    *
-   * @return MusicianRowAccessToken
+   * @return LegalPerson
    */
-  public function getRowAccessToken():?MusicianRowAccessToken
+  public function getRowAccessToken():?LegalPerson
   {
-    return $this->rowAccessToken;
+    return $this->legalPerson;
+  }
+
+  /**
+   * Set legalPerson.
+   *
+   * @param string|null $legalPerson
+   *
+   * @return Musician
+   */
+  public function setLegalPerson(?LegalPerson $legalPerson):Musician
+  {
+    $this->legalPerson = $legalPerson;
+
+    return $this;
+  }
+
+  /**
+   * Get legalPerson.
+   *
+   * @return MusicianLegalPerson
+   */
+  public function getLegalPerson():?LegalPerson
+  {
+    return $this->legalPerson;
   }
 
   /**
