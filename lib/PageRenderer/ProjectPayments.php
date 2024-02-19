@@ -56,6 +56,7 @@ class ProjectPayments extends PMETableViewBase
 {
   use FieldTraits\ParticipantFileFieldsTrait;
   use FieldTraits\CryptoTrait;
+  use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'project-payments';
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
@@ -429,6 +430,13 @@ WHERE dsf.id IS NOT NULL',
     // A - add,  C - change, P - copy, V - view, D - delete,
     // F - filter, I - initial sort suppressed
     $opts['options'] = 'ACPVDF';
+    $opts['options'] .= 'M';
+
+    // controls display of an location of edit/misc buttons
+    $opts['navigation'] = self::PME_NAVIGATION_NO_MULTI . 'C';
+    // $opts['misc']['css']['major'] = 'misc';
+    // $opts['misc']['css']['minor'] = 'payment tooltip-right';
+    // $opts['labels']['Misc'] = $this->l->t('Receipt');
 
     // Number of lines to display on multiple selection filters
     $opts['multiple'] = '6';
@@ -1292,6 +1300,7 @@ WHERE dsf.id IS NOT NULL',
         $subjectIndex = $pme->fdn['subject'];
         $paymentsSubjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
         $imbalanceIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'imbalance')];
+        $isDonationIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'is_donation')];
         $supportingDocumentIndex = $pme->fdn['supporting_document_id'];
         $compositeBalanceDocumentsFolderIdIndex = $pme->fdn['balance_documents_folder_id'];
 
@@ -1312,6 +1321,7 @@ WHERE dsf.id IS NOT NULL',
           $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
           $pme->fdd[$balanceDocumentsFolderIdIndex]['input'] = 'R';
           $pme->fdd[$compositeBalanceDocumentsFolderIdIndex]['input'] = '';
+          $pme->fdd[$isDonationIndex]['input'] = 'R';
 
           if ($this->copyOperation()) {
             $pme->fdd[$supportingDocumentIndex]['input'] = 'HR';
@@ -1393,8 +1403,28 @@ WHERE dsf.id IS NOT NULL',
       $opts['filters'] = 'FIND_IN_SET('.$this->projectId.', '.$joinTables[self::PROJECT_PAYMENTS_TABLE].'.project_ids)';
     }
 
+    $opts['display']['custom_navigation'] = function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme):string {
+      $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
+      $rowTag = $row['qf'.$rowTagIndex];
+      return $this->actionMenu($rec['id'], $rowTag);
+    };
+
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
 
+    $opts['buttons'] = $this->pageNavigation->prependTableButtons(buttons: []);
+    foreach (['C', 'P', 'D', 'V'] as $operationMode) {
+      foreach (['up' => 'down', 'down' => 'up'] as $position => $direction) {
+        $button = [
+          'code' => function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme) use ($direction):string {
+            $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
+            $rowTag = $row['qf'.$rowTagIndex];
+            return $this->actionMenu($rec['id'], $rowTag, dropDirection: $direction);
+          },
+          'name' => 'actions',
+        ];
+        array_unshift($opts['buttons'][$operationMode][$position], $button);
+      }
+    }
     // $this->logInfo('GROUPS '.Functions\dump($opts['groupby_fields']));
 
     if ($execute) {
@@ -1402,6 +1432,38 @@ WHERE dsf.id IS NOT NULL',
     } else {
       $this->pme->setOptions($opts);
     }
+  }
+
+  /**
+   * @param int $id Composite payment id
+   *
+   * @param string $rowTag
+   *
+   * @param string $direction Menu direction left, right.
+   *
+   * @param string $dropDirection Drop up or down.
+   *
+   * @return string HTML.
+   */
+  protected function actionMenu(
+    int $id,
+    string $rowTag,
+    string $direction = 'left',
+    string $dropDirection = 'down',
+  ):string {
+    $templateParameters = [
+      'appName' => $this->appName(),
+      'cssClasses' => ['project-payment-actions'],
+      'toolTips' => $this->toolTipsService,
+      'financeMode' => $this->financeMode,
+      'expertMode' => $this->expertMode,
+      'direction' => $direction,
+      'dropDirection' => $dropDirection,
+    ];
+    return $this->templateResponse(
+      'fragments/action-menu',
+      $templateParameters,
+    )->render();
   }
 
   /**

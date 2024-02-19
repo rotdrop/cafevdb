@@ -4308,9 +4308,9 @@ class phpMyEdit
 	/*
 	 * Display buttons at top and bottom of page
 	 */
-	function display_record_buttons($position) /* {{{ */
+	function display_record_buttons($position, $row) /* {{{ */
 	{
-		$but_str = $this->display_buttons($position);
+		$but_str = $this->display_buttons($position, $row);
 		if ($but_str === null)
 			return;
 		if ($position == 'down') {
@@ -4333,7 +4333,7 @@ class phpMyEdit
 		}
 	} /* }}} */
 
-	function display_buttons($position) /* {{{ */
+	function display_buttons($position, $row = false) /* {{{ */
 	{
 		$ret = '';
 		$nav_fnc = 'nav_'.$position;
@@ -4356,16 +4356,22 @@ class phpMyEdit
 				   : $this->default_buttons_no_B[$this->page_type]);
 		}
 		foreach ($buttons as $name) {
-			$ret .= $this->display_button($name, $position)."\n";
+			$ret .= $this->display_button($name, $position, $row)."\n";
 		}
 		return $ret;
 	} /* }}} */
 
-	function display_button($name, $position = 'up') /* {{{ */
+	function display_button($name, $position = 'up', $row = false) /* {{{ */
 	{
 		$disabledControls = [];
 		if (is_array($name)) {
-			if (isset($name['code'])) return $name['code'];
+			if (isset($name['code'])) {
+				if (is_callable($name['code'])) {
+					return call_user_func($name['code'], $this->rec ?? [], $this->groupby_rec ?? [], $row, $this);
+				} else {
+					return $name['code'];
+				}
+			}
 			$proto = array('name' => null,
 						   'value' => null,
 						   'css' => null,
@@ -5544,7 +5550,7 @@ class phpMyEdit
 		// echo $this->htmlHiddenSys('translations', $this->translations);
 		echo $this->htmlHiddenSys('fl', $this->fl);
 		echo $this->htmlHiddenSys('op_name', $this->operationName());
-		$this->display_record_buttons('up');
+		$this->display_record_buttons('up', $row);
 		echo '</div>'."\n";
 
 		if ($this->tabs_enabled()) {
@@ -5561,7 +5567,7 @@ class phpMyEdit
 		}
 		echo '</tbody></table>',"\n";
 		echo '<div class="'.$this->getCSSclass('navigation-container', 'down').'">'."\n";
-		$this->display_record_buttons('down');
+		$this->display_record_buttons('down', $row);
 		if ($this->display['time'] && $this->timer != null) {
 			echo '<span class="'.$this->getCSSclass('time').'">'.$this->timer->end().' miliseconds'.'</span>';
 		}
