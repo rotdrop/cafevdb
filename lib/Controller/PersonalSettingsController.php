@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB\Controller;
 
+use DateTimeInterface;
 use Exception;
 use Throwable;
 use Carbon\Carbon as DateTime;
@@ -1967,9 +1968,13 @@ class PersonalSettingsController extends Controller
         }
         $format = $this->parameterService->getParam('format');
 
+        $project = $this->projectService->findById($this->getClubMembersProjectId());
+        $flatProject = $this->flattenProject($project);
+
         /** @var InstrumentationService $instrumentationService */
         $instrumentationService = $this->di(InstrumentationService::class);
-        $dummyRecipient = $instrumentationService->getDummyMusician();
+        $dummyRecipient = $instrumentationService->getDummyMusician(project: $project);
+        $flatRecipient = $this->flattenMusician($dummyRecipient);
 
         /** @var OpenDocumentFiller $documentFiller */
         $documentFiller = $this->di(OpenDocumentFiller::class);
@@ -1982,32 +1987,113 @@ class PersonalSettingsController extends Controller
           'sender' => 'org.treasurer',
         ];
 
+        $makePayment = fn(float $value, string $toolTip) => [
+          'amount' => $value,
+          'isIncome' => (int)($value > 0),
+          'subject' => $this->toolTipsService()['mailmerge:examples:finance:' . $toolTip],
+          'l10n' => [
+            'locale' => $this->appLocale(),
+            'amount' => $numberFormatter->formatCurrency($value),
+            'amountText' => $numberFormatter->currencyToWords($value),
+            'absAmount' => $numberFormatter->formatCurrency(abs($value)),
+            'absAmountText' => $numberFormatter->currencyToWords(abs($value)),
+          ],
+        ];
+        $makeCompositePayment = function(
+          DateTimeInterface $dateOfReceipt,
+          array $payments,
+        ) use (
+          $numberFormatter,
+        ):array {
+          $amount = round(
+            array_reduce($payments, fn(float $carry, array $payment) => $payment['amount'] + $carry, 0.0),
+            2,
+          );
+          return [
+            'dateOfReceipt' => $dateOfReceipt,
+            'amount' => $amount,
+            'l10n' => [
+              'locale' => $this->appLocale(),
+              'amount' => $numberFormatter->formatCurrency($amount),
+              'amountText' => $numberFormatter->currencyToWords($amount),
+              'absAmount' => $numberFormatter->formatCurrency(abs($amount)),
+              'absAmountText' => $numberFormatter->currencyToWords(abs($amount)),
+            ],
+            'payments' => $payments,
+          ];
+        };
+
         switch ($templateName) {
           case ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER:
             $templateData = [
-              'project' => $this->flattenProject(
-                $this->projectService->findById(
-                  $this->getClubMembersProjectId()
-                )
-              ),
-              'recipient' => $this->flattenMusician($dummyRecipient),
+              'project' => $flatProject,
+              'recipient' => $flatRecipient,
             ];
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT:
+            $income = 13.57;
+            $expenses = -13.57;
+            $amount = round($income + $expenses, 2);
+            $dateOfReceipt = (new DateTime('- 17 days'));
+            $templateData = [
+              'recipient' => $flatRecipient,
+              'project' => $flatProject,
+              'donation' => [
+                'amount' => $income,
+                'dateOfReceipt' => $dateOfReceipt,
+                'isWaivingOfReimbursement' => (int)($amount == 0),
+                'l10n' => [
+                  'locale' => $this->appLocale(),
+                  'amount' => $numberFormatter->formatCurrency($income),
+                  'amountText' => $numberFormatter->currencyToWords($income),
+                ],
+              ],
+              'payment' => $makeCompositePayment(
+                $dateOfReceipt, [
+                  $makePayment($expenses, 'donation:expensesSubject'),
+                  $makePayment($income, 'donation:incomeSubject'),
+                ],
+              ),
+            ];
+            $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
+            break;
+          case ConfigService::DOCUMENT_TEMPLATE_STANDARD_RECEIPT:
+            $income = 42.57;
+            $expenses = -12.13;
+            $amount = round($income + $expenses, 2);
+            $dateOfReceipt = (new DateTime('- 17 days'));
+            $templateData = [
+              'recipient' => $flatRecipient,
+              'project' => $flatProject,
+              'payment' => $makeCompositePayment(
+                $dateOfReceipt, [
+                  $makePayment($expenses, 'receipt:expensesSubject'),
+                  $makePayment($income, 'receipt:incomeSubject'),
+                ],
+              ),
+            ];
+            $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
             break;
           case ConfigService::DOCUMENT_TEMPLATE_INVOICE:
             $amount = 13.57;
             $gracePeriodDays = 14;
             DateInterval::setLocale($this->getLanguage($this->appLocale()));
             $gracePeriodText = (string)DateInterval::days($gracePeriodDays);
+            // für das Engagement unseres Orchesters für die Konzerte am
+            // 22.10.2022 (Maria Hilf Kirche Freiburg), 23.10.2022
+            // (Ev. Pfarrkirche Ihringen) und am 29.10.2022 (Grand Kursaal
+            // Besançon)
+            $subject = $this->toolTipsService()['mailmerge:examples:finance:invoice:subject'];
+            $purpose = $this->toolTipsService()['mailmerge:examples:finance:invoice:purpose'];
             $templateData = [
-              'project' => $this->flattenProject(
-                $this->projectService->findById(
-                  $this->getClubMembersProjectId()
-                )
-              ),
-              'recipient' => $this->flattenMusician($dummyRecipient),
+              'project' => $flatProject,
+              'recipient' => $flatRecipient,
               'invoice' => [
                 'amount' => $amount,
                 'gracePeriodDays' => $gracePeriodDays,
+                'number' => $this->financeService->generateInvoiceNumber($dummyRecipient, $project),
+                'purpose' => $purpose,
+                'subject' => $subject,
                 'l10n' => [
                   'locale' => $this->appLocale(),
                   'amount' => $numberFormatter->formatCurrency($amount),
