@@ -24,11 +24,12 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
-use \PHP_IBAN;
-use \RuntimeException;
-use \InvalidArgumentException;
-use \DateTimeImmutable as DateTime;
-use \DateTimeInterface;
+use InvalidArgumentException;
+use RuntimeException;
+
+use PHP_IBAN;
+use DateTimeImmutable as DateTime;
+use DateTimeInterface;
 use Cmixin\BusinessDay;
 use OCA\CAFEVDB\Wrapped\Carbon\Carbon;
 use OCA\CAFEVDB\Wrapped\Carbon\CarbonImmutable;
@@ -39,6 +40,7 @@ use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\BankAccountValidator;
+use OCA\CAFEVDB\Common\NumberFormatter;
 
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EventsService;
@@ -48,14 +50,21 @@ use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Documents\PDFFormFiller;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 
-
 /** Finance and bank related stuff. */
 class FinanceService
 {
+  use \OCA\CAFEVDB\Traits\FlattenEntityTrait;
   use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
   use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
   use \OCA\CAFEVDB\Traits\SloppyTrait;
+
+  /**
+   * @var string
+   *
+   * The character used to glue parts of the invoice id together.
+   */
+  public const INVOICE_ID_GLUE = '-';
 
   const VALARM_FROM_START = EventsService::VALARM_FROM_START;
   const VALARM_FROM_END = EventsService::VALARM_FROM_END;
@@ -272,6 +281,183 @@ class FinanceService
       }
     }
     return $result;
+  }
+
+  /**
+   * Generate a unique invoice number given the originator and the date,
+   * possibly examining already persent invoices in the database.
+   *
+   * @param Entities\Musician $originator The person generating the invoice.
+   *
+   * @param null|int|Entities\Project $project The associated project if applicable.
+   *
+   * @param null|DateTimeImmutable $date The date attachted to the
+   * invoice. The actual date on the invoice may differ, but that does not
+   * hurt.
+   *
+   * @return string The generated invoice number.
+   */
+  public function generateInvoiceNumber(Entities\Musician $originator, null|int|Entities\Project $project, ?DateTimeImmutable $date = null):string
+  {
+    $date = $date ?? (new DateTime);
+    $parts = [
+      $originator->getInitials(),
+      $date->format('Y-m'),
+    ];
+    if ($project !== null) {
+      /** @var Entities\Project $project */
+      $project = $this->ensureProject($project);
+      array_unshift($parts, $project->getName());
+    }
+
+    // Simplest thing would be to just use the number of seconds since the
+    // start of the month ... but it is much cooler to do this in a different
+    // way.
+
+    $idPrefix = implode(self::INVOICE_ID_GLUE, $parts);
+    $invoices = $this->getDatabaseRepository(Entities\Invoice::class)->findLike([ 'id' => $idPrefix . self::INVOICE_ID_GLUE . '%', ]);
+    $sequence = array_reduce(
+      $invoices,
+      fn(int $sequence, Entities\Invoice $invoice) => max($sequence, (int)substr($invoice->getId(), strlen($idPrefix))),
+      initial: 1,
+    );
+
+    return $idPrefix . self::INVOICE_ID_GLUE . $sequence;
+  }
+
+  /**
+   * Generate a receipt for a donation by passing a proper template to the
+   * OpenDocumentFiller.
+   *
+   * @param Entities\CompositePayment $compositePayment
+   *
+   * @param Entities\Musician $originator
+   *
+   * @param bool $asPdf Whether to return a finalized PDF document, defaults to \false.
+   *
+   * @return array [ FILE_DATA, MIME_TYPE, FILE_NAME ] or empty array in case of failure.
+   *
+   * @throws InvalidArgumentException If the payment does not refer to a
+   * donation or other thing are fishy.
+   */
+  public function generateReceiptOfDonation(
+    Entities\CompositePayment $compositePayment,
+    ?Entities\Musician $originator,
+    bool $asPdf = false,
+  ):array {
+    // perform sanity checks
+
+    $formName = ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT;
+    $formFileName = $this->getDocumentTemplatesPath($formName);
+    if (empty($formFileName)) {
+      return  [];
+    }
+
+    $projectPayments = $compositePayment->getProjectPayments();
+
+    $donationPayments = $projectPayments->filter(fn(Entities\ProjectPayment $payment) => $payment->getIsDonation());
+    $nonDonationPayments = $projectPayments->filter(fn(Entities\ProjectPayment $payment) => !$payment->getIsDonation());
+
+    if (count($donationPayments) === 0) {
+      throw new InvalidArgumentException($this->l->t('The composite payment "%s" does not refer to a donation.', $compositePayment));
+    } elseif (count($donationPayments) > 1) {
+      throw new InvalidArgumentException($this->l->t('The composite pamynet "%s" contains more than one donation. This is not yet supported.', $compositePayment));
+    }
+
+    $donationAmount = $donationPayments->reduce(fn(float $accumulator, Entities\ProjectPayment $payment) => $accumulator + $payment->getAmount());
+    $nonDonationAmount = $nonDonationPayments->reduce(fn(float $accumulator, Entities\ProjectPayment $payment) => $accumulator + $payment->getAmount());
+
+    if ($donationAmount <= 0) {
+      throw new InvalidArgumentException(
+        $this->l->t(
+          'The donation in the composite payment "%s" sums up to less or equal zero: %s',
+          [
+            $compositePayment,
+            $this->moneyValue($donationAmount),
+          ],
+        ));
+    }
+    if ($nonDonationAmount > 0) {
+      throw new InvalidArgumentException(
+        $this->l->t(
+          'The non-donation parts of the composite payment "%s" sum up to an income of %s. This is unsupported.',
+          [
+            $compositePayment,
+            $this->moneyValue($nonDonationAmount),
+          ],
+        ));
+    }
+
+    /** @var Entities\ProjectPayment $donationPayment */
+    $donationPayment = $donationPayments->first();
+
+    $locale = $this->appLocale();
+
+    /** @var NumberFormatter $numberFormatter */
+    $numberFormatter = new NumberFormatter($locale);
+
+    // now compose the dataset for the document template engine
+    $templateData = [
+      'recipient' => $this->flattenMusician($donationPayment->getMusician()),
+      'project' => $this->flattenProject($donationPayment->getProject()),
+      'donation' => [
+        'amount' => $donationAmount,
+        'dateOfReceipt' => $compositePayment->getDateOfReceipt(),
+        'isWaivingOfReimbursement' => (int)($donationAmount == $nonDonationAmount),
+        'l10n' => [
+          'locale' => $locale,
+          'amount' => $numberFormatter->formatCurrency($donationAmount),
+          'amountText' => $numberFormatter->currencyToWords($donationAmount),
+          'absAmount' => $numberFormatter->formatCurrency($donationAmount),
+          'absAmountText' => $numberFormatter->currencyToWords($donationAmount),
+        ],
+      ],
+      'payment' => [
+        'amount' => $compositePayment->getAmount(),
+        'dateOfReceipt' => $compositePayment->getDateOfReceipt(),
+        'l10n' => [
+          'locale' => $locale,
+          'amount' => $numberFormatter->formatCurrency($compositePayment->getAmount()),
+          'amountText' => $numberFormatter->currencyToWords($compositePayment->getAmount()),
+          'absAmount' => $numberFormatter->formatCurrency($compositePayment->getAmount()),
+          'absAmountText' => $numberFormatter->currencyToWords($compositePayment->getAmount()),
+        ],
+        'payments' => [],
+      ],
+    ];
+
+    /** @var Entities\ProjectPayment $payment */
+    foreach ($compositePayment->getProjectPayments() as $payment) {
+      $value = $payment->getAmount();
+      $templateData['payment']['payments'][] = [
+        'amount' => $value,
+        'isIncome' => (int)($value > 0),
+        'subject' => $payment->getSubject(),
+        'l10n' => [
+          'locale' => $this->appLocale(),
+          'amount' => $numberFormatter->formatCurrency($value),
+          'amountText' => $numberFormatter->currencyToWords($value),
+          'absAmount' => $numberFormatter->formatCurrency(abs($value)),
+          'absAmountText' => $numberFormatter->currencyToWords(abs($value)),
+        ],
+      ];
+    }
+
+    $blocks = [
+      'corporateIncomeTaxExemption' => 'org.taxAuthorities.exemptionNotices.corporateIncomeTax',
+    ];
+    if ($originator === null) {
+      $blocks['sender'] = 'org.treasurer';
+    }
+
+    /** @var OpenDocumentFiller $odf */
+    $odf = $this->di(OpenDocumentFiller::class);
+    return $odf->fill(
+      $formFileName,
+      $templateData,
+      $blocks,
+      asPdf: $asPdf,
+    );
   }
 
   /**
