@@ -21,20 +21,31 @@
  * You should have received a copy of the GNU Affero General Public
  * License alogng with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-$routes = [
-  'donation-receipt' => '#',
-  'standard-receipt' => '#',
-];
-
-echo $this->inc('fragments/action-menu/menu', [
-  'contextMenuTitle' => $compositePaymentId . ' - ' . $debitorName . ' (' . $debitorId . ')',
-  'menuItemTemplate' => 'fragments/project-payments/action-items',
-  'routes' => $routes,
-  'menuData' => [
-    'composite-payment-id' => $compositePaymentId,
-    'debitor-name' => $debitorName,
-    'debitor-id' => $debitorId,
-    'is-donation' => $isDonation,
-  ],
-]);
+?>
+<li class="context-menu-heading show-if-context-menu"
+    data-operation="none"
+>
+  <a href="#">
+    <span class="context-menu-title"><?php p($contextMenuTitle); ?></span>
+  </a>
+</li>
+<li class="separator show-if-context-menu"><span class="rule"></span></li>
+<?php if ($isDonation) { ?>
+<li class=project-payment-action tooltip-auto"
+    data-operation="donation-receipt"
+    title="<?php echo $toolTips['project-payment-action:donation-receipt']; ?>"
+>
+  <a href="<?php p($routes['donation-receipt']); ?>">
+    <?php p($l->t('Donation Receipt')); ?>
+  </a>
+</li>
+<?php } elseif ($amount >= 0) { ?>
+<li class=project-payment-action tooltip-auto"
+    data-operation="standard-receipt"
+    title="<?php echo $toolTips['project-payment-action:standard-receipt']; ?>"
+>
+  <a href="<?php p($routes['standard-receipt']); ?>">
+    <?php p($l->t('Receipt')); ?>
+  </a>
+</li>
+<?php } ?>

@@ -36,7 +36,7 @@ $toolTipPrefix = $toolTipPrefix ?? 'action-menu';
 $menuItemTemplate = $menuItemTemplate ?? 'fragments/action-menu/dummy-item';
 ?>
 <span class="<?php p(implode(' ', $cssClasses)); ?> dropdown-container dropdown-no-hover tooltip-right"
-      <?php foreach ($menuData as $key => $value) { ?>
+      <?php foreach (($menuData ?? []) as $key => $value) { ?>
       data-<?php p($key); ?>="<?php p($value); ?>"
       <?php } ?>
 >
