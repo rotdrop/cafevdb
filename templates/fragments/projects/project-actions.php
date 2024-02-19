@@ -85,4 +85,3 @@ echo $this->inc('fragments/action-menu/menu', [
   'wikiPage' => $projectService->projectWikiLink($projectName),
   'wikiTitle' => $l->t('Project Wiki for %s', [ $projectName ]),
 ])
-?>
