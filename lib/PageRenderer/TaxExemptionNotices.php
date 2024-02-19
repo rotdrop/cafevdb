@@ -289,9 +289,9 @@ class TaxExemptionNotices extends PMETableViewBase
           return '';
         }
 
-        $taxType = $row['qf' . $pme->fdn['tax_type']];
-        $assessmentPeriodStart = $row['qf' . $pme->fdn['assessment_period_start']];
-        $assessmentPeriodEnd = $row['qf' . $pme->fdn['assessment_period_end']];
+        $taxType = $row[$this->queryField('tax_type')];
+        $assessmentPeriodStart = $row[$this->queryField('assessment_period_start')];
+        $assessmentPeriodEnd = $row[$this->queryField('assessment_period_end')];
         $fileName = $this->getLegacyTaxExemptionNoticeFileName(
           $taxType,
           $assessmentPeriodStart,
@@ -322,9 +322,9 @@ class TaxExemptionNotices extends PMETableViewBase
           return $value;
         }
 
-        $taxType = $row['qf' . $pme->fdn['tax_type']];
-        $assessmentPeriodStart = $row['qf' . $pme->fdn['assessment_period_start']];
-        $assessmentPeriodEnd = $row['qf' . $pme->fdn['assessment_period_end']];
+        $taxType = $row[$this->queryField('tax_type')];
+        $assessmentPeriodStart = $row[$this->queryField('assessment_period_start')];
+        $assessmentPeriodEnd = $row[$this->queryField('assessment_period_end')];
 
         /** @var Entities\DatabaseStorageFile $file */
         $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);

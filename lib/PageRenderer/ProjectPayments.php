@@ -384,8 +384,8 @@ WHERE dsf.id IS NOT NULL',
       static $oddProjectPayment = true;
       static $oddCompositePayment = false;
 
-      $compositePaymentId = $row['qf'.$pme->fdn['id']];
-      // $projectPaymentId = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
+      $compositePaymentId = $row[$this->queryField('id')];
+      // $projectPaymentId = $row[$this->queryField($this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
 
       $cssClasses = ['composite-payment'];
       if ($lastCompositeId != $compositePaymentId) {
@@ -414,7 +414,7 @@ WHERE dsf.id IS NOT NULL',
       // $this->logInfo('DATA TRIGGER '.$op.' '.$step.' '.print_r($row, true));
       static $lastCompositeId = -1;
 
-      $compositePaymentId = $row['qf'.$pme->fdn['id']];
+      $compositePaymentId = $row[$this->queryField('id')];
 
       if ($lastCompositeId != $compositePaymentId) {
         if ($lastCompositeId > 0) {
@@ -755,7 +755,7 @@ WHERE dsf.id IS NOT NULL',
         'values2|CP' => [ -1 => $this->l->t('Add a new Receivable'), ],
         'values2glue' => '<br/>',
         'php|VD' => function($value, $action, $k, $row, $recordId, $pme) {
-          $compositeKeyIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')];
+          $compositeKeyIndex = $this->joinQueryFieldIndex(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key');
           return $this->createSupportingDocumentsDownload($value, $action, $compositeKeyIndex, $row, $recordId, $pme);
         },
       ]);
@@ -866,7 +866,7 @@ WHERE dsf.id IS NOT NULL',
           return '';
         }
 
-        $musicianId = $row['qf'.$pme->fdn['musician_id']];
+        $musicianId = $row[$this->queryField('musician_id')];
         /** @var Entities\Musician $musician */
         $musician = $this->findEntity(Entities\Musician::class, $musicianId);
         $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $musician->getUserIdSlug());
@@ -889,7 +889,7 @@ WHERE dsf.id IS NOT NULL',
       },
       'php|LFVD' => function($value, $action, $k, $row, $recordId, $pme) {
 
-        $musicianId = $row['qf'.$pme->fdn['musician_id']];
+        $musicianId = $row[$this->queryField('musician_id')];
         /** @var Entities\Musician $musician */
         $musician = $this->findEntity(Entities\Musician::class, $musicianId);
 
@@ -967,7 +967,7 @@ WHERE dsf.id IS NOT NULL',
           if (!$this->isCompositeRow($row, $pme)) {
             return null;
           }
-          $value = $row['qf' . ($k + 1)];
+          $value = $row[PHPMyEdit::QUERY_FIELD . ($k + 1)];
           if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
             return null;
           }
@@ -1076,12 +1076,12 @@ WHERE dsf.id IS NOT NULL',
           'prefix' => function($op, $pos, $k, $row, $pme) {
 
             if ($this->isCompositeRow($row, $pme)) {
-              if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($row['qf' . $k . '_idx'])) {
+              if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($row[PHPMyEdit::QUERY_FIELD . $k . '_idx'])) {
                 return null;
               }
               $value = null;
             } else {
-              $value = $row['qf' . ($k + 1)];
+              $value = $row[PHPMyEdit::QUERY_FIELD . ($k + 1)];
               if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
                 return null;
               }
@@ -1146,7 +1146,7 @@ WHERE dsf.id IS NOT NULL',
           'options' => 'LFVD',
           'css'  => [ 'postfix' => [ 'bulk-transaction', ], ],
           'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
-            $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
+            $bulkTransactionId = $row[$this->queryField('sepa_transaction_id')];
             if (!empty($bulkTransactionId)) {
               $value = sprintf('%04d: %s', $bulkTransactionId, $value);
             }
@@ -1253,7 +1253,7 @@ WHERE dsf.id IS NOT NULL',
 
     $readOnlySafeGuard = function(&$pme, $op, $step, &$row) use ($opts) {
 
-      $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
+      $bulkTransactionId = $row[$this->queryField('sepa_transaction_id')];
       if (false && !empty($bulkTransactionId)) {
         $pme->options = 'LVF';
         if ($op !== 'select') {
@@ -1278,10 +1278,9 @@ WHERE dsf.id IS NOT NULL',
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_DATA][] =
       $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($musicianReceivableFilter) {
 
-        $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
-        $rowTag = $row['qf'.$rowTagIndex];
+        $rowTag = $row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
 
-        $balanceDocumentsFolderIdIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id')];
+        $balanceDocumentsFolderIdIndex = $this->joinQueryFieldIndex(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id');
         $pme->fdd[$balanceDocumentsFolderIdIndex]['select'] = $this->isCompositeRowTag($rowTag) ? 'M' : 'D';
 
         if ($this->listOperation()) {
@@ -1289,20 +1288,19 @@ WHERE dsf.id IS NOT NULL',
           return true;
         }
 
-        $receivableKeyKey = $this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key');
-        $receivableKeyIndex = $pme->fdn[$receivableKeyKey];
-        $amountIndex = $pme->fdn['amount'];
+        $receivableKeyIndex = $this->joinQueryFieldIndex(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key');
+        $amountIndex = $this->queryFieldIndex('amount');
 
-        $paymentsAmountIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'amount')];
-        $subjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
-        $musicianIdIndex = $pme->fdn[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
-        $paymentsIdIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'id')];
-        $subjectIndex = $pme->fdn['subject'];
-        $paymentsSubjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
-        $imbalanceIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'imbalance')];
-        $isDonationIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'is_donation')];
-        $supportingDocumentIndex = $pme->fdn['supporting_document_id'];
-        $compositeBalanceDocumentsFolderIdIndex = $pme->fdn['balance_documents_folder_id'];
+        $paymentsAmountIndex = $this->joinQueryFieldIndex(self::PROJECT_PAYMENTS_TABLE, 'amount');
+        $subjectIndex = $this->joinQueryFieldIndex(self::PROJECT_PAYMENTS_TABLE, 'subject');
+        $musicianIdIndex = $this->joinQueryFieldIndex(self::MUSICIANS_TABLE, 'id');
+        $paymentsIdIndex = $this->joinQueryFieldIndex(self::PROJECT_PAYMENTS_TABLE, 'id');
+        $subjectIndex = $this->queryFieldIndex('subject');
+        $paymentsSubjectIndex = $this->joinQueryFieldIndex(self::PROJECT_PAYMENTS_TABLE, 'subject');
+        $imbalanceIndex = $this->joinQueryFieldIndex(self::PROJECT_PAYMENTS_TABLE, 'imbalance');
+        $isDonationIndex = $this->joinQueryFieldIndex(self::PROJECT_PAYMENTS_TABLE, 'is_donation');
+        $supportingDocumentIndex = $this->queryFieldIndex('supporting_document_id');
+        $compositeBalanceDocumentsFolderIdIndex = $this->queryFieldIndex('balance_documents_folder_id');
 
         if ($this->isCompositeRowTag($rowTag)) {
           $this->debug('COMPOSITE ROW');
@@ -1331,11 +1329,11 @@ WHERE dsf.id IS NOT NULL',
 
             // Only copy the first receivable
             foreach ([$receivableKeyIndex, $paymentsIdIndex] as $index) {
-              $rowIndex = 'qf' . $index;
+              $rowIndex = PHPMyEdit::QUERY_FIELD . $index;
               list($row[$rowIndex],) = explode(self::VALUES_SEP, $row[$rowIndex]);
             }
             foreach ([$paymentsAmountIndex, $paymentsSubjectIndex] as $index) {
-              $rowIndex = 'qf' . $index;
+              $rowIndex = PHPMyEdit::QUERY_FIELD . $index;
               $row[$rowIndex] = null;
             }
           }
@@ -1359,19 +1357,18 @@ WHERE dsf.id IS NOT NULL',
         // if this payment originated from a scheduled bulk-transaction, then
         // disallow any changes safe the date_of_receipt and adding/changing
         // supporting documents.
-        $bulkTransactionId = $row['qf'.$pme->fdn['sepa_transaction_id']];
+        $bulkTransactionId = $row[$this->queryField('sepa_transaction_id')];
         if (!empty($bulkTransactionId)) {
           // make all rows read-only with the exception of some
           foreach ($pme->fdn as $fieldName => $fieldIndex) {
-            if ($fieldName == 'date_of_receipt') {
-              $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
-              continue;
-            } elseif ($fieldName == 'balance_documents_folder_id') {
-              continue;
-            } elseif ($fieldName == $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id')) {
-              continue;
-            } elseif ($fieldName == $this->joinTableFieldName(self::DATABASE_STORAGE_DIR_ENTRIES_TABLE, 'id')) {
-              continue;
+            switch ($fieldName) {
+              case 'date_of_receipt':
+                $pme->fdd[$fieldIndex]['input'] = str_replace('M', '', $pme->fdd[$fieldIndex]['input']);
+                continue;
+              case 'balance_documents_folder_id':
+              case $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'balance_documents_folder_id'):
+              case $this->joinTableFieldName(self::DATABASE_STORAGE_DIR_ENTRIES_TABLE, 'id'):
+                continue;
             }
             // $this->logInfo('NAME: ' . $fieldName . ' => ' . $fieldIndex);
             $pme->fdd[$fieldIndex]['input'] .= 'R';
@@ -1385,10 +1382,8 @@ WHERE dsf.id IS NOT NULL',
     // tweak the set of selectable fields.
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_PRE][] = function(&$pme, $op) {
       // $this->logInfo('PRE-TRIGGER OPERATION ' . $op);
-      $subjectIndex = $pme->fdn['subject'];
-      $pme->fdd[$subjectIndex]['input'] = 'HR';
-      // $paymentsSubjectIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'subject')];
-      // $pme->fdd[$paymentsSubjectIndex]['input'] = 'HR';
+      $pme->fdd[$this->queryFieldIndex('subject')]['input'] = 'HR';
+      // $pme->fdd[$this->joinQueryFieldIndex(self::PROJECT_PAYMENTS_TABLE, 'subject')['input'] = 'HR';
       return true;
     };
 
@@ -1404,12 +1399,11 @@ WHERE dsf.id IS NOT NULL',
     }
 
     $opts['display']['custom_navigation'] = function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme):string {
-      $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
-      $rowTag = $row['qf'.$rowTagIndex];
+      $rowTag = $row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
       if (!$this->isCompositeRowTag($rowTag)) {
         return '';
       }
-      return $this->actionMenu($rec['id'], $rowTag);
+      return $this->actionMenu($rec['id'], $row, $pme);
     };
 
     $opts = Util::arrayMergeRecursive($this->pmeOptions, $opts);
@@ -1419,9 +1413,7 @@ WHERE dsf.id IS NOT NULL',
       foreach (['up' => 'down', 'down' => 'up'] as $position => $direction) {
         $button = [
           'code' => function(array $rec, array $groupby_rec, array $row, PHPMyEdit $pme) use ($direction):string {
-            $rowTagIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag')];
-            $rowTag = $row['qf'.$rowTagIndex];
-            return $this->actionMenu($rec['id'], $rowTag, dropDirection: $direction);
+            return $this->actionMenu($rec['id'], $row, $pme, dropDirection: $direction);
           },
           'name' => 'actions',
         ];
@@ -1438,9 +1430,11 @@ WHERE dsf.id IS NOT NULL',
   }
 
   /**
-   * @param int $id Composite payment id
+   * @param int $id Composite payment id.
    *
-   * @param string $rowTag
+   * @param array $row
+   *
+   * @param PHPMyEdit $pme
    *
    * @param string $direction Menu direction left, right.
    *
@@ -1450,10 +1444,13 @@ WHERE dsf.id IS NOT NULL',
    */
   protected function actionMenu(
     int $id,
-    string $rowTag,
+    array $row,
+    PHPMyEdit $pme,
     string $direction = 'left',
     string $dropDirection = 'down',
   ):string {
+    $this->logInfo('MUSICIAN ' . $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')] . ' ' . $row[$this->joinQueryIndexField(self::MUSICIANS_TABLE, 'id')]);
+
     $templateParameters = [
       'appName' => $this->appName(),
       'cssClasses' => ['project-payment-actions'],
@@ -1462,9 +1459,10 @@ WHERE dsf.id IS NOT NULL',
       'expertMode' => $this->expertMode,
       'direction' => $direction,
       'dropDirection' => $dropDirection,
+      'id' => $id,
     ];
     return $this->templateResponse(
-      'fragments/action-menu/menu',
+      'fragments/project-payments/action-menu',
       $templateParameters,
     )->render();
   }
@@ -1907,7 +1905,7 @@ WHERE dsf.id IS NOT NULL',
    */
   private function isCompositeRow(array $row, PHPMyEdit $pme):bool
   {
-    $rowTag = $row['qf'.$pme->fdn[$this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE)]];
+    $rowTag = $row[$this->queryField($this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE))];
     return $this->isCompositeRowTag($rowTag);
   }
 
@@ -1971,14 +1969,14 @@ WHERE dsf.id IS NOT NULL',
     array $recordId,
     PHPMyEdit $pme,
   ):string {
-    $musicianId = $row['qf'.$pme->fdn['musician_id']];
+    $musicianId = $row[$this->queryField('musician_id')];
     if ($this->isCompositeRow($row, $pme)) {
-      $receivables = Util::explode(self::VALUES_SEP, $row['qf'.$k.'_idx']);
+      $receivables = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . $k.'_idx']);
       // $receivables must contain at least one element.
-      $supportingDocument = $row['qf'.$pme->fdn['supporting_document_id']];
+      $supportingDocument = $row[$this->queryField('supporting_document_id')];
       $supportingDocuments = [];
       if (!empty($supportingDocument) || count($receivables) > 1) {
-        $userIdSlug = $row['qf'.$pme->fdn[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'user_id_slug')]];
+        $userIdSlug = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'user_id_slug')];
         if (!empty($supportingDocument)) {
           $supportingDocuments = [ $supportingDocument ];
         }
@@ -2001,8 +1999,8 @@ WHERE dsf.id IS NOT NULL',
           }
           $project = $project??$fieldDatum->getProject();
         }
-        // $dateOfReceipt = $row['qf'.$pme->fdn['date_of_receipt']];
-        // $subject = Util::dashesToCamelCase($row['qf'.$pme->fdn['subject']], capitalizeFirstCharacter: true, dashes: ' _-');
+        // $dateOfReceipt = $row[$this->queryField('date_of_receipt')];
+        // $subject = Util::dashesToCamelCase($row[$this->queryField('subject')], capitalizeFirstCharacter: true, dashes: ' _-');
 
         $fileName = $this->getLegacyPaymentRecordFileName($recordId['id'], $userIdSlug);
 
@@ -2028,7 +2026,7 @@ WHERE dsf.id IS NOT NULL',
     }
 
     // fall-through, single or no supporting document
-    $receivable = $row['qf'.$k.'_idx'];
+    $receivable = $row[PHPMyEdit::QUERY_FIELD . $k.'_idx'];
     list($projectId, $fieldId, $optionKey) = explode(self::COMP_KEY_SEP, $receivable, 3);
 
     /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */

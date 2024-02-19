@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,7 @@ use OCA\CAFEVDB\Service\ToolTipsService;
  */
 trait ParticipantTotalFeesTrait
 {
+  use QueryFieldTrait;
   use ParticipantFieldsCgiNameTrait;
   use SubstituteSQLFragmentTrait;
 
@@ -108,9 +109,8 @@ trait ParticipantTotalFeesTrait
               if (!isset($pme->fdn[$label])) {
                 throw new Exception($this->l->t('Data for monetary field "%s" not found', $label));
               }
-              $rowIndex = $pme->fdn[$label];
-              $qf = 'qf'.$rowIndex;
-              $qfIdx = $qf.'_idx';
+              $qf = $this->queryField($label);
+              $qfIdx = $this->queryIndexField($label);
               if (isset($row[$qfIdx])) {
                 $fieldValue = $row[$qfIdx];
               } else {

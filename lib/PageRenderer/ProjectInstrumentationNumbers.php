@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022 Claus-Justus Heine
+ * @copyright 2011-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -433,14 +433,11 @@ class ProjectInstrumentationNumbers extends PMETableViewBase
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
     // $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
-    //   $voiceIndex = $pme->fdn['voice'];
-    //   $instrumentIndex = $pme->fdn['instrument_id'];
-    //   $registeredIndex = $pme->fdn[$this->joinTableFieldName(self::PROJECT_INSTRUMENTS_TABLE, 'musician_id')];
-    //   if ($row['qf' . $voiceIndex] == 0 || !empty($row['qf' . $registeredIndex])) {
+    //   if ($row[$this->queryField('voice')] == 0 || !empty($row[$this->joinQueryField(self::PROJECT_INSTRUMENTS_TABLE, 'musician_id')])) {
     //     // disallow changes to instrument and voice as the integrity
     //     // constraints would not allow changing these anyway.
-    //     $pme->fdd[$instrumentIndex]['input'] .= 'R';
-    //     $pme->fdd[$voiceIndex]['input'] .= 'R';
+    //     $pme->fdd[$this->queryFieldIndex('instrument_id')]['input'] .= 'R';
+    //     $pme->fdd[$this->queryFieldIndex('voice')]['input'] .= 'R';
     //   }
 
     //   return true;

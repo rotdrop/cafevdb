@@ -49,6 +49,7 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
@@ -783,7 +784,7 @@ class SepaBankAccounts extends PMETableViewBase
 
     ///////////////////////////////////////////////////////////////////////////
 
-    list($sequenceIndex,) = $this->makeJoinTableField(
+    $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'sequence',
       [
         'tab'    => [ 'id' => 'mandate' ],
@@ -794,7 +795,7 @@ class SepaBankAccounts extends PMETableViewBase
         'maxlen' => 3,
         'sort'   => true,
         'php|ACP' => function($value, $op, $k, $row, $recordId, $pme) {
-          $mandateReference = $row['qf'.($k+1)] ?? null;
+          $mandateReference = $row[PHPMyEdit::QUERY_FIELD . ($k+1)] ?? null;
           if (empty($mandateReference)) {
             return $this->l->t('generated on save');
           }
@@ -807,7 +808,7 @@ class SepaBankAccounts extends PMETableViewBase
         },
       ]);
 
-    list($referenceIndex,) = $this->makeJoinTableField(
+    $this->makeJoinTableField(
       $opts['fdd'], self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference',
       [
         'tab'    => [ 'id' => 'mandate' ],
@@ -818,7 +819,7 @@ class SepaBankAccounts extends PMETableViewBase
         'maxlen' => 35,
         'sort'   => true,
         'php|LFDV' => function($value, $op, $k, $row, $recordId, $pme) {
-          $writtenMandateId = $row['qf'.($k + 5)];
+          $writtenMandateId = $row[PHPMyEdit::QUERY_FIELD . ($k + 5)];
           if (empty($writtenMandateId)) {
             return $value;
           }
@@ -922,16 +923,13 @@ class SepaBankAccounts extends PMETableViewBase
           $row,
           $recordId,
           $pme,
-        ) use (
-          $referenceIndex,
-          $sequenceIndex,
         ) {
-          $mandateReference = $row['qf' . $referenceIndex] ?? null;
+          $mandateReference = $row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference')] ?? null;
           if (empty($mandateReference)) {
             return $this->l->t('please upload written mandate after saving');
           }
           $musician = $this->findEntity(Entities\Musician::class, $recordId['musician_id']);
-          $projectId = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'id', $pme->fdd)];
+          $projectId = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'id')];
           $project = $this->findEntity(Entities\Project::class, $projectId);
 
           return '<div class="file-upload-wrapper">
@@ -939,7 +937,7 @@ class SepaBankAccounts extends PMETableViewBase
             . $this->dbFileUploadRowHtml(
               $writtenMandateId,
               fieldId: $recordId['musician_id'],
-              optionKey: $row['qf' . $sequenceIndex],
+              optionKey: $row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence')],
               subDir: $this->getDebitMandatesFolderName(),
               fileBase: $this->getLegacyDebitMandateFileName($mandateReference),
               overrideFileName: true,
@@ -1027,7 +1025,7 @@ class SepaBankAccounts extends PMETableViewBase
       function(&$pme, $op, $step, &$row) use ($projectIndex, $mandateDateIndex, $mandateRecurringIndex, $mandateDeletedIndex) {
         switch ($op) {
           case PHPMyEdit::SQL_QUERY_UPDATE:
-            if (empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence', $pme->fdd)])) {
+            if (empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'sequence')])) {
               // enable input for unset debit mandate
               $pme->fdd[$projectIndex]['input'] = '';
               $pme->fdd[$mandateDateIndex]['input'] = 'R';
@@ -1041,8 +1039,8 @@ class SepaBankAccounts extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
 
-      if (!empty($row[$this->queryField('deleted', $pme->fdd)])
-          || !empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'deleted', $pme->fdd)])) {
+      if (!empty($row[$this->queryField('deleted')])
+          || !empty($row[$this->joinQueryField(self::SEPA_DEBIT_MANDATES_TABLE, 'deleted')])) {
         // disable the "misc" checkboxes essentially disabling the possibility
         // to draw debit-mandates from deleted/revoked bank accounts and debit
         // mandates. There is also a corresponding check in the backend which

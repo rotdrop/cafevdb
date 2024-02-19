@@ -55,6 +55,7 @@ use OCA\CAFEVDB\Constants;
 /**Table generator for Instruments table. */
 class ProjectParticipantFields extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
@@ -414,13 +415,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'valueData' => array_map('json_encode', $this->participantFieldsService->multiplicityTypeMask()),
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
-          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          $usage = $row[$this->queryField('usage')];
           return [
             'data-field-usage' => $usage,
           ];
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
-          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          $usage = $row[$this->queryField('usage')];
           return '<input id="pme-field-multiplicity-lock"
 ' . ($usage > 0 ? 'checked' : '') . '
        type="checkbox"
@@ -450,13 +451,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
-          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          $usage = $row[$this->queryField('usage')];
           return [
             'data-field-usage' => $usage,
           ];
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
-          $usage = $row[$this->queryField('usage', $pme->fdd)];
+          $usage = $row[$this->queryField('usage')];
           return '<input id="pme-field-data-type-lock"
 ' . ($usage > 0 ? 'checked' : '') . '
        type="checkbox"
@@ -586,8 +587,8 @@ class ProjectParticipantFields extends PMETableViewBase
         'join' => [ 'reference' => $joinTables[self::OPTIONS_TABLE] ],
       ],
       'php' => function($dataOptions, $op, $field, $row, $recordId, $pme) {
-        $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
-        $dataType = $row['qf'.$pme->fdn['data_type']]??null;
+        $multiplicity = $row[$this->queryField('multiplicity')]??null;
+        $dataType = $row[$this->queryField('data_type')]??null;
         return $this->showDataOptions($dataOptions, $op, $recordId['id']??null, $multiplicity, $dataType);
       },
     ];
@@ -608,9 +609,9 @@ class ProjectParticipantFields extends PMETableViewBase
         'sql' => '$main_table.id',
         'php' => function($dummy, $op, $field, $row, $recordId, $pme) use ($multiplicityVariant) {
           // allowed values from virtual JSON aggregator field
-          $dataOptions = $row['qf'.$pme->fdn['data_options']]??[];
-          $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
-          $dataType = $row['qf'.$pme->fdn['data_type']]??null;
+          $dataOptions = $row[$this->queryField('data_options')]??[];
+          $multiplicity = $row[$this->queryField('multiplicity')]??null;
+          $dataType = $row[$this->queryField('data_type')]??null;
           return $this->showAllowedSingleValue($dataOptions, $op, $pme->fdd[$field]['tooltip'], $multiplicity, $dataType, $multiplicityVariant);
         },
         'input' => 'SR',
@@ -636,9 +637,9 @@ class ProjectParticipantFields extends PMETableViewBase
         'sql' => '$main_table.id',
         'php' => function($dummy, $op, $pmeField, $row, $recordId, $pme) use ($multiplicityVariant) {
           // allowed values from virtual JSON aggregator field
-          $dataOptions = $row['qf'.$pme->fdn['data_options']]??[];
-          $multiplicity = $row['qf'.$pme->fdn['multiplicity']]??null;
-          $dataType = $row['qf'.$pme->fdn['data_type']]??null;
+          $dataOptions = $row[$this->queryField('data_options')]??[];
+          $multiplicity = $row[$this->queryField('multiplicity')]??null;
+          $dataType = $row[$this->queryField('data_type')]??null;
           list($entry,) = $this->getAllowedSingleValue($dataOptions, $multiplicity, $dataType);
           $key = $entry['key'];
           $name  = $this->pme->cgiDataName('data_options_' . $multiplicityVariant);
@@ -732,11 +733,11 @@ __EOT__;
       'sql' => 'BIN2UUID($main_table.default_value)',
       'default' => false,
       'php|LFDV' => function($value, $op, $field, $row, $recordId, $pme) {
-        $multiplicity = $row[$this->queryField('multiplicity', $pme->fdd)];
-        $dataType = $row[$this->queryField('data_type', $pme->fdd)];
+        $multiplicity = $row[$this->queryField('multiplicity')];
+        $dataType = $row[$this->queryField('data_type')];
         if (!empty($value)) {
           // fetch the value from the data-options data
-          $allowed = $row[$this->queryField('data_options', $pme->fdd)];
+          $allowed = $row[$this->queryField('data_options')];
           $allowed = $this->participantFieldsService->explodeDataOptions($allowed);
           $defaultRow = $this->participantFieldsService->findDataOption($value, $allowed);
           if (!empty($defaultRow['data'])) {
@@ -1003,9 +1004,9 @@ __EOT__;
         $km = $pme->fdn['multiplicity'];
         $kd = $pme->fdn['data_type'];
         $kddd = $pme->fdn['deposit_due_date'];
-        $multiplicity = $row['qf'.$km];
-        $dataType = $row['qf'.$kd];
-        $depositDueDate = $row['qf'.$kddd];
+        $multiplicity = $row[PHPMyEdit::QUERY_FIELD . $km];
+        $dataType = $row[PHPMyEdit::QUERY_FIELD . $kd];
+        $depositDueDate = $row[PHPMyEdit::QUERY_FIELD . $kddd];
         $pme->fdd[$km]['css']['postfix'][] = 'multiplicity-'.$multiplicity;
         $pme->fdd[$km]['css']['postfix'][] = 'data-type-'.$dataType;
         if (!empty($depositDueDate)) {
@@ -1015,8 +1016,10 @@ __EOT__;
         }
         switch ($dataType) {
           case DataType::RECEIVABLES:
+            // fall-through
           case DataType::LIABILITIES:
             $selectValue = 'N';
+            break;
           default:
             $selectValue = 'T';
             break;
@@ -1035,8 +1038,8 @@ __EOT__;
 
     $opts[PHPMyEdit::OPT_TRIGGERS]['*'][PHPMyEdit::TRIGGER_DATA][] =
       function(&$pme, $op, $step, &$row) {
-        $dataType = $row[$this->queryField('data_type', $pme->fdd)]??null;
-        if (empty($row[$this->queryField('tab', $pme->fdd)])) {
+        $dataType = $row[$this->queryField('data_type')] ?? null;
+        if (empty($row[$this->queryField('tab')])) {
           $tab = null;
           switch ($dataType) {
             case DataType::RECEIVABLES:
@@ -1052,8 +1055,8 @@ __EOT__;
               $tab = 'project';
               break;
           }
-          $row[$this->queryField('tab', $pme->fdd)] = $tab;
-          $row[$this->queryIndexField('tab', $pme->fdd)] = $tab;
+          $row[$this->queryField('tab')] = $tab;
+          $row[$this->queryIndexField('tab')] = $tab;
         }
         return true;
       };
@@ -1447,7 +1450,6 @@ __EOT__;
    *
    * @param mixed $value One row of the form as returned from
    * \OCA\CAFEVDB\Service\ProjectParticipantFieldsService::explodeDataOptions().
-   *
    *
    * @param int $index A unique row number.
    *

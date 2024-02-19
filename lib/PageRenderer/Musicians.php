@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,6 +52,8 @@ use OCA\CAFEVDB\Common\Uuid;
 /**Table generator for Musicians table. */
 class Musicians extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\MusicianFromRowTrait;
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\MailingListsTrait;
@@ -478,10 +480,10 @@ make sure that the musicians are also automatically added to the
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
           $nickNamePlaceholder = $this->l->t('e.g. Cathy');
-          $firstName = $row['qf'.($k-1)] ?? '';
+          $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-1)] ?? '';
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
           $unlockedPlaceholder = $nickNamePlaceholder;
-          if (empty($row['qf'.$k])) {
+          if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
             return [
               'placeholder' => $lockedPlaceholder,
               'readonly' => true,
@@ -496,7 +498,7 @@ make sure that the musicians are also automatically added to the
           }
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
-          $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+          $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
           return '<input id="pme-musician-nickname"
   '.$checked.'
   type="checkbox"
@@ -531,12 +533,12 @@ make sure that the musicians are also automatically added to the
         'attributes' => function($op, $k, $row, $pme) {
           // $this->logInfo('OP '.$op);
           $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
-          $surName = $row['qf'.($k-3)] ?? '';
-          $firstName = $row['qf'.($k-2)] ?? '';
-          $nickName = $row['qf'.($k-1)] ?? '';
+          $surName = $row[PHPMyEdit::QUERY_FIELD . ($k-3)] ?? '';
+          $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-2)] ?? '';
+          $nickName = $row[PHPMyEdit::QUERY_FIELD . ($k-1)] ?? '';
           $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
           $unlockedPlaceholder = $displayNamePlaceholder;
-          if (empty($row['qf'.$k])) {
+          if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
             return [
               'placeholder' => $lockedPlaceholder,
               'readonly' => true,
@@ -553,7 +555,7 @@ make sure that the musicians are also automatically added to the
           }
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
-          $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+          $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
           return '<input id="pme-musician-displayname"
   type="checkbox"
   '.$checked.'
@@ -587,9 +589,9 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
-          $surName = $row['qf'.($k-4)] ?? '';
-          $firstName = $row['qf'.($k-3)] ?? '';
-          $nickName = $row['qf'.($k-2)] ?? '';
+          $surName = $row[PHPMyEdit::QUERY_FIELD . ($k-4)] ?? '';
+          $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-3)] ?? '';
+          $nickName = $row[PHPMyEdit::QUERY_FIELD . ($k-2)] ?? '';
           $placeHolder = $this->defaultUserIdSlug($surName, $firstName, $nickName);
           return [
             'placeholder' => $op == 'add' ? '' : $placeHolder,
@@ -1021,7 +1023,7 @@ make sure that the musicians are also automatically added to the
       );
 
     if ($this->projectMode) {
-      //$key = 'qf'.$projectsIdx;
+      //$key = PHPMyEdit::QUERY_FIELD . $projectsIdx;
       $projectsJoin = $joinTables[self::PROJECT_PARTICIPANTS_TABLE];
       $projectIds = "GROUP_CONCAT(DISTINCT {$projectsJoin}.project_id)";
       $opts[PHPMyEdit::OPT_HAVING]['AND'] = "($projectIds IS NULL OR NOT FIND_IN_SET('$projectId', $projectIds))";
@@ -1079,7 +1081,7 @@ make sure that the musicians are also automatically added to the
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeDeleteTrigger' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
-      if (!empty($row[$this->queryField('deleted', $pme->fdd)])) {
+      if (!empty($row[$this->queryField('deleted')])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
         $pme->options = str_replace('M', '', $opts['options']);
@@ -1093,8 +1095,8 @@ make sure that the musicians are also automatically added to the
         $this->logInfo('ROW ' . print_r($row, true));
       }
 
-      unset($row['qf' . $pme->fdn['uuid']]);
-      unset($row['qf' . $pme->fdn['user_id_slug']]);
+      unset($row[$this->queryField('uuid')]);
+      unset($row[$this->queryField('user_id_slug')]);
 
       return true;
     };

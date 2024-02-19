@@ -56,6 +56,8 @@ use OCA\CAFEVDB\Common\Functions;
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
 {
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\MusicianFromRowTrait;
+  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
   use FieldTraits\SepaAccountsTrait;
   use FieldTraits\ParticipantFieldsTrait;
@@ -478,10 +480,10 @@ class ProjectParticipants extends PMETableViewBase
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
             $nickNamePlaceholder = $this->l->t('e.g. Cathy');
-            $firstName = $row['qf'.($k-1)];
+            $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-1)];
             $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
             $unlockedPlaceholder = $this->l->t('e.g. Cathy');
-            if (empty($row['qf'.$k])) {
+            if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
               return [
                 'placeholder' => $lockedPlaceholder,
                 'readonly' => true,
@@ -496,7 +498,7 @@ class ProjectParticipants extends PMETableViewBase
             }
           },
           'postfix' => function($op, $pos, $k, $row, $pme) {
-            $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+            $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
             return '<input id="pme-musician-nickname"
   '.$checked.'
   type="checkbox"
@@ -518,12 +520,12 @@ class ProjectParticipants extends PMETableViewBase
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
             $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
-            $surName = $row['qf'.($k-3)];
-            $firstName = $row['qf'.($k-2)];
-            $nickName = $row['qf'.($k-1)];
+            $surName = $row[PHPMyEdit::QUERY_FIELD . ($k-3)];
+            $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-2)];
+            $nickName = $row[PHPMyEdit::QUERY_FIELD . ($k-1)];
             $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
             $unlockedPlaceholder = $this->l->t('e.g. Doe, Cathy');
-            if (empty($row['qf'.$k])) {
+            if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
               return [
                 'placeholder' => $lockedPlaceholder,
                 'readonly' => true,
@@ -540,7 +542,7 @@ class ProjectParticipants extends PMETableViewBase
             }
           },
           'postfix' => function($op, $pos, $k, $row, $pme) {
-            $checked = empty($row['qf'.$k]) ? '' : 'checked="checked" ';
+            $checked = empty($row[PHPMyEdit::QUERY_FIELD . $k]) ? '' : 'checked="checked" ';
             return '<input id="pme-musician-displayname"
   type="checkbox"
   '.$checked.'
@@ -589,9 +591,9 @@ class ProjectParticipants extends PMETableViewBase
         'sort'     => true,
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
-            $surName = $row['qf'.($k-4)];
-            $firstName = $row['qf'.($k-3)];
-            $nickName = $row['qf'.($k-2)];
+            $surName = $row[PHPMyEdit::QUERY_FIELD . ($k-4)];
+            $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-3)];
+            $nickName = $row[PHPMyEdit::QUERY_FIELD . ($k-2)];
             $placeHolder = $this->projectService->defaultUserIdSlug($surName, $firstName, $nickName);
             return [
               'placeholder' => $placeHolder,
@@ -693,7 +695,7 @@ class ProjectParticipants extends PMETableViewBase
 '; // close dropdown-menu
 
             $instrumentsIndex = $k - 2;
-            $instruments = Util::explode(',', $row['qf'.$instrumentsIndex]);
+            $instruments = Util::explode(',', $row[PHPMyEdit::QUERY_FIELD . $instrumentsIndex]);
             $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
 
             $templateParameters = [
@@ -1326,8 +1328,8 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_SELECT][PHPMyEdit::TRIGGER_DATA][] = function(&$pme, $op, $step, &$row) use ($opts) {
 
-      if (!empty($row[$this->queryField('deleted', $pme->fdd)])
-          || !empty($row[$this->joinQueryField(self::MUSICIANS_TABLE, 'deleted', $pme->fdd)])) {
+      if (!empty($row[$this->queryField('deleted')])
+          || !empty($row[$this->joinQueryField(self::MUSICIANS_TABLE, 'deleted')])) {
         // disable misc-checkboxes for soft-deleted musicians in order to
         // avoid sending them bulk-email.
         $pme->options = str_replace('M', '', $opts['options']);

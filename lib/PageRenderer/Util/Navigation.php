@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\PageRenderer\Util;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Database\Legacy\PME\IOptions as PMEOptions;
 use OCA\CAFEVDB\Common\Util;
@@ -572,8 +573,8 @@ class Navigation
         $post = [
           'projects' => $value,
           'template' => 'projects',
-          $sysPfx.'qf'.$field.'_comp' => '>=',
-          $sysPfx.'qf'.$field => $year
+          $sysPfx.PHPMyEdit::QUERY_FIELD.$field.'_comp' => '>=',
+          $sysPfx.PHPMyEdit::QUERY_FIELD.$field => $year
         ];
         break;
 

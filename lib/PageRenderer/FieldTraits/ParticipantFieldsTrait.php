@@ -62,6 +62,7 @@ trait ParticipantFieldsTrait
   use ParticipantFileFieldsTrait;
   use ParticipantFieldsCgiNameTrait;
   use SubstituteSQLFragmentTrait;
+  use MusicianFromRowTrait;
 
   /** @var UserStorage */
   protected $userStorage = null;
@@ -426,8 +427,8 @@ trait ParticipantFieldsTrait
                   $keyFddIndex = $k - $valueFddOffset;
                   $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
 
-                  $optionKey = $row['qf' . $keyFddIndex];
-                  $invoice = $row['qf' . $invoiceFddIndex];
+                  $optionKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
+                  $invoice = $row[PHPMyEdit::QUERY_FIELD . $invoiceFddIndex];
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
                   if (empty($optionKey)) {
@@ -507,9 +508,9 @@ trait ParticipantFieldsTrait
                   $valueFddIndex = $k;
                   $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
 
-                  $optionValue = $row['qf' . $valueFddIndex];
-                  $optionKey = $row['qf' . $keyFddIndex];
-                  $invoice = $row['qf' . $invoiceFddIndex];
+                  $optionValue = $row[PHPMyEdit::QUERY_FIELD . $valueFddIndex];
+                  $optionKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
+                  $invoice = $row[PHPMyEdit::QUERY_FIELD . $invoiceFddIndex];
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
                   if (empty($optionKey)) {
@@ -998,8 +999,8 @@ trait ParticipantFieldsTrait
                       $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
                     }
                   } else {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                   }
 
@@ -1042,8 +1043,8 @@ trait ParticipantFieldsTrait
                       $values[(string)$fieldDatum->getOptionKey()] = $fieldDatum->getOptionValue();
                     }
                   } elseif (!empty($value)) {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                   }
 
@@ -1098,8 +1099,8 @@ trait ParticipantFieldsTrait
               case FieldType::DB_FILE:
                 $this->joinStructure[$tableName]['flags'] |= self::JOIN_READONLY;
                 $keyFdd['php|ACP'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
-                  $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-                  $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                  $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                  $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                   $values = array_combine($optionKeys, $optionValues);
                   $fieldId = $field->getId();
                   $subDir = $field->getName();
@@ -1120,8 +1121,8 @@ trait ParticipantFieldsTrait
                 };
                 $keyFdd['php|LFVD'] = function($value, $op, $k, $row, $recordId, $pme) use ($field) {
                   if (!empty($value)) {
-                    $optionKeys = Util::explode(self::VALUES_SEP, $row['qf'.($k+0)], Util::TRIM);
-                    $optionValues = Util::explode(self::VALUES_SEP, $row['qf'.($k+1)], Util::TRIM);
+                    $optionKeys = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+0)], Util::TRIM);
+                    $optionValues = Util::explode(self::VALUES_SEP, $row[PHPMyEdit::QUERY_FIELD . ($k+1)], Util::TRIM);
                     $values = array_combine($optionKeys, $optionValues);
                     if (!empty($values)) {
                       list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
@@ -1438,11 +1439,11 @@ trait ParticipantFieldsTrait
               // LF are actually both the same. $value will always just
               // come from the filter's $value2 array. The actual values
               // we need are in the description fields which are passed
-              // through the 'qf'.$k field in $row.
-              $values = array_filter(Util::explodeIndexed($row['qf' . $k]));
+              // through the PHPMyEdit::QUERY_FIELD . $k field in $row.
+              $values = array_filter(Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD . $k]));
               $options = self::fetchValueOptions($field, $values);
 
-              $invoices = Util::explodeIndexed($row['qf' . $invoiceFddIndex]);
+              $invoices = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD . $invoiceFddIndex]);
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
               switch ($dataType) {
@@ -1533,19 +1534,19 @@ trait ParticipantFieldsTrait
               $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
 
               // $this->logInfo('VALUE '.$k.': '.$value);
-              // $this->logInfo('ROW '.$k.': '.$row['qf'.$k]);
-              // $this->logInfo('ROW IDX '.$k.': '.$row['qf'.$k.'_idx']);
+              // $this->logInfo('ROW '.$k.': '.$row[PHPMyEdit::QUERY_FIELD . $k]);
+              // $this->logInfo('ROW IDX '.$k.': '.$row[PHPMyEdit::QUERY_FIELD . $k . PHPMyEdit::QUERY_FIELD_IDX]);
 
               $fieldId = $field->getId();
               $multiplicity = FieldMultiplicity::RECURRING;
 
-              $value = $row['qf'.$k];
+              $value = $row[PHPMyEdit::QUERY_FIELD . $k];
               $values = Util::explodeIndexed($value);
 
               $options = [];
               $labelled = false;
               $options = self::fetchValueOptions($field, $values, $labelled);
-              $invoices = Util::explodeIndexed($row['qf' . $invoiceFddIndex]);
+              $invoices = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD . $invoiceFddIndex]);
 
               $generatorOption = $field->getManagementOption();
               $generatorClass = $generatorOption->getData();
@@ -1786,7 +1787,7 @@ WHERE pp.project_id = $this->projectId",
                   'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
                   'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $groupMemberFddOffset) {
                     $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row['qf'.$keyFddIndex];
+                    $selectedKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
                     $active = empty($selectedKey) ? '' : ' selected';
                     return '</span><span class="allowed-option-separator money">&nbsp;</span>'
                       .'<span class="allowed-option-value money">'.$money.'</span></span>';
@@ -1798,7 +1799,7 @@ WHERE pp.project_id = $this->projectId",
                   'prefix' => '<label class="'.implode(' ', $css).'">',
                   'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $groupMemberFddOffset) {
                     $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row['qf'.$keyFddIndex];
+                    $selectedKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
                     $active = ($op == 'display' && empty($selectedKey)) ? '' : 'selected';
                     return $this->allowedOptionLabel('', $fieldData, $dataType, $active)
                       .'</label>';
@@ -1993,7 +1994,7 @@ WHERE pp.project_id = $this->projectId",
                   },
                   'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $groupMemberFddOffset) {
                     $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row['qf'.$keyFddIndex];
+                    $selectedKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
                     $html = '';
                     foreach ($dataOptions as $dataOption) {
                       $key = $dataOption['key'];

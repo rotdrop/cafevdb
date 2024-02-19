@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2023 Claus-Justus Heine
+ * @copyright 2011-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,8 @@ use OCA\CAFEVDB\Common\Util;
  */
 trait MusicianAvatarTrait
 {
+  use QueryFieldTrait;
+
   /** @var ToolTipsService */
   protected $toolTipsService;
 
@@ -75,7 +77,7 @@ trait MusicianAvatarTrait
         'php' => function($userIdSlug, $action, $k, $row, $recordId, PHPMyEdit $pme) {
           $joinTable = !empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)]);
           $columnName = 'cloud_account_disabled';
-          $column = $joinTable ? $this->joinQueryField(self::MUSICIANS_TABLE, $columnName, $pme->fdd) : $this->queryField($columnName, $pme->fdd);
+          $column = $joinTable ? $this->joinQueryField(self::MUSICIANS_TABLE, $columnName) : $this->queryField($columnName);
           if ($row[$column]) {
             // no need to bother the cloud, the user is not there.
             return '';
