@@ -89,6 +89,24 @@ class ToolTipsDataService
   private static function generate():array
   {
     return [
+      'mailmerge' => [
+        'examples' => [
+          'finance' => [
+            'invoice' => [
+              'subject' => self::t('engagement "c-moll-mess"'),
+              'purpose' => self::t('for hiring our orchestra for the concerts on 2022-10-22 (church of our lady)'),
+            ],
+            'donation' => [
+              'expensesSubject' => self::t('example expenses'),
+              'incomeSubject' => self::t('example income'),
+            ],
+            'receipt' => [
+              'expensesSubject' => self::t('example expenses'),
+              'incomeSubject' => self::t('example income'),
+            ],
+          ],
+        ],
+      ],
       'autocomplete' => [
         'default' => self::t('Type some text to get autocomplete suggestions.'),
         'require-three' => self::t('Type at least three characters to get autocomplete suggestions.'),
