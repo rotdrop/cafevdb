@@ -50,12 +50,13 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
 
+use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Service\ProjectService;
 use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\CAFEVDB\Exceptions;
@@ -96,6 +97,9 @@ class MailMergeController extends Controller
   /** @var InstrumentInsuranceService */
   private $insuranceService;
 
+  /** @var FinanceService */
+  private $financeService;
+
   /** @var IContactsManager */
   private $contactsManager;
 
@@ -110,6 +114,7 @@ class MailMergeController extends Controller
     ConfigService $configService,
     OrganizationalRolesService $rolesService,
     InstrumentInsuranceService $insuranceService,
+    FinanceService $financeService,
     OpenDocumentFiller $documentFiller,
     UserStorage $storage,
     IContactsManager $contactsManager,
@@ -121,6 +126,7 @@ class MailMergeController extends Controller
     $this->configService = $configService;
     $this->rolesService = $rolesService;
     $this->insuranceService = $insuranceService;
+    $this->financeService = $financeService;
     $this->documentFiller = $documentFiller;
     $this->userStorage = $storage;
     $this->contactsManager = $contactsManager;
@@ -131,11 +137,11 @@ class MailMergeController extends Controller
    * Try to perform a mail-merge of a document which is assumed to need
    * somehow a sender/recipient context (i.e. a letter).
    *
-   * @param int $fileId
-   *
-   * @param string $fileName
-   *
    * @param int $senderId
+   *
+   * @param null|string $fileName
+   *
+   * @param null|string $templateName
    *
    * @param array $recipientIds
    *
@@ -144,6 +150,8 @@ class MailMergeController extends Controller
    * @param array $contactKeys
    *
    * @param array $addressBookUris
+   *
+   * @param array $compositePaymentIds
    *
    * @param string $operation
    *
@@ -156,13 +164,14 @@ class MailMergeController extends Controller
    * @NoAdminRequired
    */
   public function merge(
-    int $fileId,
-    string $fileName,
     int $senderId,
+    ?string $fileName = null,
+    ?string $templateName = null,
     array $recipientIds = [],
     int $projectId = 0,
     array $contactKeys = [],
     array $addressBookUris = [],
+    array $compositePaymentIds = [],
     string $operation = self::OPERATION_DOWNLOAD,
     ?int $limit = null,
     ?int $offset = null,
@@ -193,6 +202,27 @@ class MailMergeController extends Controller
     $mailMergeCount = 0;
     $recipientSlug = '';
 
+    // determine if we have a special template
+    if ($fileName !== null) {
+      foreach (ConfigService::DOCUMENT_TEMPLATES as $templateName => $templateMeta) {
+        if ($templateMeta['type'] != ConfigService::DOCUMENT_TYPE_TEMPLATE) {
+          continue;
+        }
+        $templateFileName = $this->getDocumentTemplatesPath($templateName);
+        if ($templateFileName == $fileName) {
+          break;
+        }
+        $templateName = null;
+      }
+    } elseif ($templateName !== null) {
+      $fileName = $this->getDocumentTemplatesPath($templateName);
+      if (empty($fileName)) {
+        return self::grumble($this->l->t('Unable to map the given template name "%s" to an existing template file.', $templateName));
+      }
+    } else {
+      return self::grumble($this->l->t('Either a file-name or the name of a dedicated template have to be spicified.'));
+    }
+
     try {
 
       if ($operation == self::OPERATION_CLOUD) {
@@ -217,7 +247,7 @@ class MailMergeController extends Controller
         $templateData['project'] = $this->flattenProject($project);
       }
 
-      $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys));
+      $noRecipients = $limit === 0 || (empty($recipientIds) && empty($contactKeys) && empty($compositePaymentIds));
 
       // fill also some financial tax exemption notice abbreviations ...
       $blocks['corporateIncomeTaxExemption'] = 'org.taxAuthorities.exemptionNotices.corporateIncomeTax';
@@ -247,8 +277,7 @@ class MailMergeController extends Controller
             }
           case self::OPERATION_DATASET:
             $fillData = $this->documentFiller->fillData($templateData);
-            $filledFileName = $fileName;
-            $filledFile = pathinfo($filledFileName);
+            $filledFile = pathinfo($fileName);
             $filledFileName = implode('-', [ $timeStamp, $senderInitials, $filledFile['filename'], ]) . '.' . 'json';
             if (!empty($blocks)) {
               $fillData['__blocks__'] = $blocks;
@@ -258,19 +287,29 @@ class MailMergeController extends Controller
         }
       } else {
 
-        if (count($recipientIds) == 1 && reset($recipientIds) == 0) {
-          $criteria = [];
-          if (!empty($project)) {
-            $criteria[] = [ 'projectParticipation.project' => $project ];
-          }
-          $recipients = $musiciansRepository->findBy($criteria, limit: $limit, offset: $offset);
+        if (!empty($compositePaymentIds)) {
+          $recipients = $this
+            ->getDatabaseRepository(Entities\CompositePayment::class)
+            ->findBy(
+              [ 'id' => $compositePaymentIds, ],
+              limit: $limit,
+              offset: $offset,
+            );
         } else {
-          $recipients = $musiciansRepository->findBy([ 'id' => $recipientIds ], limit: $limit, offset: $offset);
+          if (count($recipientIds) == 1 && reset($recipientIds) == 0) {
+            $criteria = [];
+            if (!empty($project)) {
+              $criteria[] = [ 'projectParticipation.project' => $project ];
+            }
+            $recipients = $musiciansRepository->findBy($criteria, limit: $limit, offset: $offset);
+          } else {
+            $recipients = $musiciansRepository->findBy([ 'id' => $recipientIds ], limit: $limit, offset: $offset);
+          }
+
+          $addressBookRecipients = $this->contactsToEntities($contactKeys, $addressBookUris);
+
+          $recipients = array_merge($recipients, $addressBookRecipients);
         }
-
-        $addressBookRecipients = $this->contactsToEntities($contactKeys, $addressBookUris);
-
-        $recipients = array_merge($recipients, $addressBookRecipients);
 
         if (count($recipients) > 1) {
           $rootDirectory = implode('-', [
@@ -290,9 +329,15 @@ class MailMergeController extends Controller
           }
         }
 
-        /** @var Entities\Musician $recipient */
         foreach ($recipients as $recipient) {
 
+          if ($recipient instanceof Entities\CompositePayment) {
+            /** @var Entities\CompositePayment $recipient */
+            $recipientData = $this->flattenMusician($recient->getMusician());
+            if ($recipient->getIsDonation()) {
+            } else {
+            }
+          }
           $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
           $recipientTemplateData = array_merge(
             $templateData, [

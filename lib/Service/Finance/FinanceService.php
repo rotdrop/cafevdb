@@ -326,32 +326,76 @@ class FinanceService
   }
 
   /**
-   * Generate a receipt for a donation by passing a proper template to the
-   * OpenDocumentFiller.
+   * Generate mail-merge data for stanard receipts. The actual merging has
+   * then to be performed by the MailMergeController.
    *
    * @param Entities\CompositePayment $compositePayment
    *
-   * @param Entities\Musician $originator
+   * @return array
+   */
+  public function generatePaymentData(
+    Entities\CompositePayment $compositePayment,
+  ):array {
+    $projectPayments = $compositePayment->getProjectPayments();
+
+    $locale = $this->appLocale();
+
+    /** @var NumberFormatter $numberFormatter */
+    $numberFormatter = new NumberFormatter($locale);
+
+    // now compose the dataset for the document template engine
+    $templateData = [
+      'recipient' => $this->flattenMusician($compositePayment->getMusician()),
+      'payment' => [
+        // amount need not be the donation amount
+        'amount' => $compositePayment->getAmount(),
+        'dateOfReceipt' => $compositePayment->getDateOfReceipt(),
+        'l10n' => [
+          'locale' => $locale,
+          'amount' => $numberFormatter->formatCurrency($compositePayment->getAmount()),
+          'amountText' => $numberFormatter->currencyToWords($compositePayment->getAmount()),
+          'absAmount' => $numberFormatter->formatCurrency($compositePayment->getAmount()),
+          'absAmountText' => $numberFormatter->currencyToWords($compositePayment->getAmount()),
+        ],
+        'payments' => [],
+      ],
+    ];
+
+    /** @var Entities\ProjectPayment $payment */
+    foreach ($projectPayments as $payment) {
+      $value = $payment->getAmount();
+      $templateData['payment']['payments'][] = [
+        'amount' => $value,
+        'isIncome' => (int)($value > 0),
+        'subject' => $payment->getSubject(),
+        'l10n' => [
+          'locale' => $this->appLocale(),
+          'amount' => $numberFormatter->formatCurrency($value),
+          'amountText' => $numberFormatter->currencyToWords($value),
+          'absAmount' => $numberFormatter->formatCurrency(abs($value)),
+          'absAmountText' => $numberFormatter->currencyToWords(abs($value)),
+        ],
+      ];
+    }
+
+    return $templateData;
+  }
+
+  /**
+   * Generate mail-merge data for donation receipts. The actual merging has
+   * then to be performed by the MailMergeController.
    *
-   * @param bool $asPdf Whether to return a finalized PDF document, defaults to \false.
+   * @param Entities\CompositePayment $compositePayment
    *
-   * @return array [ FILE_DATA, MIME_TYPE, FILE_NAME ] or empty array in case of failure.
+   * @return array
    *
    * @throws InvalidArgumentException If the payment does not refer to a
    * donation or other thing are fishy.
    */
-  public function generateReceiptOfDonation(
+  public function generateReceiptOfDonationData(
     Entities\CompositePayment $compositePayment,
-    ?Entities\Musician $originator,
-    bool $asPdf = false,
   ):array {
     // perform sanity checks
-
-    $formName = ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT;
-    $formFileName = $this->getDocumentTemplatesPath($formName);
-    if (empty($formFileName)) {
-      return  [];
-    }
 
     $projectPayments = $compositePayment->getProjectPayments();
 
@@ -399,7 +443,6 @@ class FinanceService
     // now compose the dataset for the document template engine
     $templateData = [
       'recipient' => $this->flattenMusician($donationPayment->getMusician()),
-      'project' => $this->flattenProject($donationPayment->getProject()),
       'donation' => [
         'amount' => $donationAmount,
         'dateOfReceipt' => $compositePayment->getDateOfReceipt(),
@@ -412,52 +455,13 @@ class FinanceService
           'absAmountText' => $numberFormatter->currencyToWords($donationAmount),
         ],
       ],
-      'payment' => [
-        'amount' => $compositePayment->getAmount(),
-        'dateOfReceipt' => $compositePayment->getDateOfReceipt(),
-        'l10n' => [
-          'locale' => $locale,
-          'amount' => $numberFormatter->formatCurrency($compositePayment->getAmount()),
-          'amountText' => $numberFormatter->currencyToWords($compositePayment->getAmount()),
-          'absAmount' => $numberFormatter->formatCurrency($compositePayment->getAmount()),
-          'absAmountText' => $numberFormatter->currencyToWords($compositePayment->getAmount()),
-        ],
-        'payments' => [],
-      ],
     ];
 
-    /** @var Entities\ProjectPayment $payment */
-    foreach ($compositePayment->getProjectPayments() as $payment) {
-      $value = $payment->getAmount();
-      $templateData['payment']['payments'][] = [
-        'amount' => $value,
-        'isIncome' => (int)($value > 0),
-        'subject' => $payment->getSubject(),
-        'l10n' => [
-          'locale' => $this->appLocale(),
-          'amount' => $numberFormatter->formatCurrency($value),
-          'amountText' => $numberFormatter->currencyToWords($value),
-          'absAmount' => $numberFormatter->formatCurrency(abs($value)),
-          'absAmountText' => $numberFormatter->currencyToWords(abs($value)),
-        ],
-      ];
-    }
+    $paymentData = $this->generatePaymentData($compositePayment);
 
-    $blocks = [
-      'corporateIncomeTaxExemption' => 'org.taxAuthorities.exemptionNotices.corporateIncomeTax',
-    ];
-    if ($originator === null) {
-      $blocks['sender'] = 'org.treasurer';
-    }
+    $templateData = array_merge($paymentData, $templateData);
 
-    /** @var OpenDocumentFiller $odf */
-    $odf = $this->di(OpenDocumentFiller::class);
-    return $odf->fill(
-      $formFileName,
-      $templateData,
-      $blocks,
-      asPdf: $asPdf,
-    );
+    return $templateData;
   }
 
   /**

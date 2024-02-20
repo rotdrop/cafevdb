@@ -639,9 +639,10 @@ body.#{$appName}-modalizer {
         }
       }
       li, li.menu-item {
-        &.disabled {
+        &.disabled, &[data-operation="none"] {
           &, * {
-            pointer-events: none;
+            // pointer-events: none;
+            cursor:default;
           }
           opacity:50%;
         }
@@ -661,11 +662,14 @@ body.#{$appName}-modalizer {
         margin:0!important;
         padding:0!important;
         float:none!important;
-        &.separator .rule {
-          border-bottom:1px solid black;
-          opacity:0.5;
-          margin:0 0.5ex;
-          display:block;
+        &.separator {
+          cursor:default;
+          .rule {
+            border-bottom:1px solid black;
+            opacity:0.5;
+            margin:0 0.5ex;
+            display:block;
+          }
         }
         label, label.menu-item,
         a, a.menu-item,
