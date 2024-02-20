@@ -37,6 +37,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event;
 
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
@@ -105,6 +106,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * @ORM\Column(type="string", length=256, nullable=true)
    */
   private $displayName;
+
+  /**
+   * @var Types\EnumGender|null
+   *
+   * @ORM\Column(type="EnumGender", nullable=true)
+   */
+  private $gender;
 
   /**
    * This should look like a suitable user id, e.g.
@@ -242,10 +250,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * @ORM\Column(
    *   type="EnumMemberStatus",
    *   nullable=false,
-   *   options={
-   *     "default"="regular",
-   *     "comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."
-   *   }
+   *   options={"default"="regular"}
    * )
    */
   private $memberStatus;
@@ -880,6 +885,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getMemberStatus():Types\EnumMemberStatus
   {
     return $this->memberStatus;
+  }
+
+  /**
+   * Set gender.
+   *
+   * @param string|EnumGender $gender
+   *
+   * @return Musician
+   */
+  public function setGender($gender):Musician
+  {
+    $this->gender = new Types\EnumGender($gender);
+
+    return $this;
+  }
+
+  /**
+   * Get gender.
+   *
+   * @return EnumGender
+   */
+  public function getGender():Types\EnumGender
+  {
+    return $this->gender;
   }
 
   /**
