@@ -79,6 +79,9 @@
       li[data-operation="standard-receipt:email"] .menu-icon {
         background-image: url('@mdi/svg/svg/receipt-send-outline.svg');
       }
+      li[data-operation="payment:download-data"] .menu-icon {
+        background-image: url('@mdi/svg/svg/code-json.svg');
+      }
     }
     td.pme- {
       &cell, &value {
