@@ -574,6 +574,10 @@ body.#{$appName}-modalizer {
   box-shadow:2px 2px 2px #080808 inset; /*, 1px 1px 1px #cfc inset;*/
 }
 
+span.dropdown-container {
+  display:inline-block;
+}
+
 .dropdown-container {
   position: relative;
 
