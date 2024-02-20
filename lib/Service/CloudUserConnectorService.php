@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -525,7 +525,7 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
       // $this->cloudConfig->setAppValue(self::CLOUD_USER_BACKEND, $cloudUserBackendKey, $cloudUserBackendValue);
       $cloudUserBackendParams[str_replace('.', '-', $cloudUserBackendKey)] = $cloudUserBackendValue;
     }
-    $this->logInfo('USER SQL POST PARAMS ' . print_r($cloudUserBackendParams, true));
+    // $this->logInfo('USER SQL POST PARAMS ' . print_r($cloudUserBackendParams, true));
 
     // try also to clear the cache after and before changing the configuration
     $this->clearUserBackendCache();
