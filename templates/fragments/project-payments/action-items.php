@@ -21,9 +21,6 @@
  * You should have received a copy of the GNU Affero General Public
  * License alogng with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-\OC::$server->get(\OCP\ILogger::class)->info('PARAMS ' . print_r(array_keys($_), true));
-
 ?>
 <li class="context-menu-heading context-menu dropdown-item dropdown-no-close"
     data-operation="none"
@@ -67,5 +64,14 @@
   <a href="<?php p($routes['standard-receipt:email']); ?>">
     <span class="menu-icon"></span>
     <?php p($l->t('Email Standard Receipt')); ?>
+  </a>
+</li>
+<li class="project-payment-action dropdown-item tooltip-auto"
+    data-operation="payment:download-data"
+    title="<?php echo $toolTips['project-payment-action:payment:download-data']; ?>"
+>
+  <a href="<?php p($routes['payment:download-data'] ?? '#'); ?>">
+    <span class="menu-icon"></span>
+    <?php p($l->t('Download Substitution Data')); ?>
   </a>
 </li>
