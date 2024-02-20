@@ -333,7 +333,7 @@ class FinanceService
    *
    * @return array
    */
-  public function generatePaymentData(
+  public function generatePaymentMailMergeData(
     Entities\CompositePayment $compositePayment,
   ):array {
     $projectPayments = $compositePayment->getProjectPayments();
@@ -392,24 +392,20 @@ class FinanceService
    * @throws InvalidArgumentException If the payment does not refer to a
    * donation or other thing are fishy.
    */
-  public function generateReceiptOfDonationData(
+  public function generateReceiptOfDonationMailMergeData(
     Entities\CompositePayment $compositePayment,
   ):array {
     // perform sanity checks
 
-    $projectPayments = $compositePayment->getProjectPayments();
-
-    $donationPayments = $projectPayments->filter(fn(Entities\ProjectPayment $payment) => $payment->getIsDonation());
-    $nonDonationPayments = $projectPayments->filter(fn(Entities\ProjectPayment $payment) => !$payment->getIsDonation());
-
-    if (count($donationPayments) === 0) {
+    $numberOfDonations = $compositePayment->countDonations();
+    if ($numberOfDonations == 0) {
       throw new InvalidArgumentException($this->l->t('The composite payment "%s" does not refer to a donation.', $compositePayment));
-    } elseif (count($donationPayments) > 1) {
+    } elseif ($numberOfDonations > 1) {
       throw new InvalidArgumentException($this->l->t('The composite pamynet "%s" contains more than one donation. This is not yet supported.', $compositePayment));
     }
 
-    $donationAmount = $donationPayments->reduce(fn(float $accumulator, Entities\ProjectPayment $payment) => $accumulator + $payment->getAmount());
-    $nonDonationAmount = $nonDonationPayments->reduce(fn(float $accumulator, Entities\ProjectPayment $payment) => $accumulator + $payment->getAmount());
+    $donationAmount = $compositePayment->getDonationAmount();
+    $nonDonationAmount = $compositePayment->getNonDonationAmount();
 
     if ($donationAmount <= 0) {
       throw new InvalidArgumentException(
@@ -433,7 +429,7 @@ class FinanceService
     }
 
     /** @var Entities\ProjectPayment $donationPayment */
-    $donationPayment = $donationPayments->first();
+    $donationPayment = $compositePayment->getDonations()->first();
 
     $locale = $this->appLocale();
 
@@ -446,7 +442,7 @@ class FinanceService
       'donation' => [
         'amount' => $donationAmount,
         'dateOfReceipt' => $compositePayment->getDateOfReceipt(),
-        'isWaivingOfReimbursement' => (int)($donationAmount == $nonDonationAmount),
+        'isWaivingOfReimbursement' => !($donationAmount + $nonDonationAmount),
         'l10n' => [
           'locale' => $locale,
           'amount' => $numberFormatter->formatCurrency($donationAmount),
@@ -457,7 +453,7 @@ class FinanceService
       ],
     ];
 
-    $paymentData = $this->generatePaymentData($compositePayment);
+    $paymentData = $this->generatePaymentMailMergeData($compositePayment);
 
     $templateData = array_merge($paymentData, $templateData);
 

@@ -614,6 +614,55 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * @return Count the number of donations contained in this composite.
+   */
+  public function countDonations():int
+  {
+    return $this->projectPayments->reduce(
+      fn(bool $accumulator, ProjectPayment $payment) => $accumulator + (int)$payment->getIsDonation(),
+      0,
+    );
+  }
+
+  /**
+   * @return float The sum of all contained donation parts.
+   */
+  public function getDonationAmount():float
+  {
+    return $this->projectPayments->reduce(
+      fn(float $accumulator, ProjectPayment $payment) => $accumulator + (int)$payment->getIsDonation() * $payment->getAmount(),
+      0.0,
+    );
+  }
+
+  /**
+   * @return float The sum of all contained non-donation parts.
+   */
+  public function getNonDonationAmount():float
+  {
+    return $this->projectPayments->reduce(
+      fn(float $accumulator, ProjectPayment $payment) => $accumulator + (int)(!$payment->getIsDonation()) * $payment->getAmount(),
+      0.0,
+    );
+  }
+
+  /**
+   * @return Collection The ProjectPayment entities which are donations.
+   */
+  public function getDonations():Collection
+  {
+    return $this->projectPayments->filter(fn(ProjectPayment $payment) => $payment->getIsDonation());
+  }
+
+  /**
+   * @return Collection The ProjectPayment entities which aren't donations.
+   */
+  public function getNonDonations():Collection
+  {
+    return $this->projectPayments->filter(fn(ProjectPayment $payment) => !$payment->getIsDonation());
+  }
+
+  /**
    * Automatic subject generation from receivables and linked
    * DatabaseStorageFolder's. The routine applies the supplied
    * transliteration routine such that the result only contains valid
