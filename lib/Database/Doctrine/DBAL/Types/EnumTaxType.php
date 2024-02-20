@@ -30,8 +30,8 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * Tax types.
  *
  * @method static EnumTaxType CORPORATE_INCOME()
- * @method static EnumVCalendarType SALES()
- * @method static EnumVCalendarType VAT()
+ * @method static EnumTaxType SALES()
+ * @method static EnumTaxType VAT()
  */
 class EnumTaxType extends EnumType
 {
