@@ -30,9 +30,10 @@ import * as SelectUtils from './select-utils.js';
 import * as Page from './page.js';
 import * as Dialogs from './dialogs.js';
 import initFileUploadRow from './pme-file-upload-row.js';
-import fileDownload from './file-download.js';
+import ajaxDownload from './file-download.js';
 import { pageRenderer } from './pme-state.js';
 import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
+import setBusyIndicators from './busy-indicators.js';
 import {
   valueSelector as pmeValueSelector,
   sys as pmeSys,
@@ -108,12 +109,26 @@ const backgroundDecryption = function(container) {
   lazyDecrypt($container);
 };
 
+const fileDownload = (url, post, $menu) => {
+  const $pmeContainer = $menu.closest(pmeFormSelector);
+  ajaxDownload(url, post, {
+    always() {
+      setBusyIndicators(false, $pmeContainer, false);
+      $menu.removeClass('loading');
+      $menu.find('button').prop('disabled', false);
+    },
+    setup() {
+      $menu.find('button').prop('disabled', true);
+      $menu.addClass('loading');
+      setBusyIndicators(true, $pmeContainer, false);
+    },
+  });
+};
+
 const actionMenu = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
-  const $menu = $container.find('.menu-actions.dropdown-container');
   const itemSelector = '.menu-actions.dropdown-container .dropdown-item';
-  const menuData = $menu.data();
 
   $container.on('click', itemSelector + '.disabled', function(event) {
     event.preventDefault();
@@ -122,39 +137,52 @@ const actionMenu = function(containerSel) {
   });
   $container.on('click', itemSelector, function(event) {
     const $this = $(this);
+    const $menu = $this.closest('.menu-actions.dropdown-container');
+    const menuData = $menu.data();
+
+    const postData = {
+      senderId: cloudUser.uid,
+      operation: 'download',
+      compositePaymentIds: [menuData.compositePaymentId],
+      projectId: menuData.projectId,
+    };
 
     const operation = $this.data('operation');
 
-    console.info('OPERATION', operation);
-
     switch (operation) {
     case 'donation-receipt:download':
-      console.info('DOWNLOAD DONATION RECEIPT');
       fileDownload(
         generateUrl('documents/mail-merge'), {
-          senderId: cloudUser,
           templateName: 'donationReceipt',
-          operation: 'download',
-          compositePaymentId: menuData.compositePaymentId,
-          projectId: menuData.projectId,
-        });
+          ...postData,
+        },
+        $menu,
+      );
       break;
     case 'donation-receipt:email':
       showError(t(appName, 'Unimplemented operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
       break;
     case 'standard-receipt:download':
-      console.info('USER', cloudUser);
       fileDownload(
         generateUrl('documents/mail-merge'), {
-          senderId: cloudUser.uid,
           templateName: 'standardReceipt',
-          projectId: $this.data('projectId'),
-          compositePaymentId: $this.data('compositePaymentId'),
-          operation: 'download',
-        });
+          ...postData,
+        },
+        $menu,
+      );
       break;
     case 'standard-receipt:email':
       showError(t(appName, 'Unimplemented operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
+      break;
+    case 'payment:download-data':
+      fileDownload(
+        generateUrl('documents/mail-merge'), {
+          templateName: 'standardReceipt',
+          ...postData,
+          operation: 'dataset',
+        },
+        $menu,
+      );
       break;
     default:
       showError(t(appName, 'Unknown operation: {operation}', { operation }), { timeout: TOAST_PERMANENT_TIMEOUT });
@@ -169,7 +197,6 @@ const actionMenu = function(containerSel) {
     .off('pme:contextmenu', 'tr.' + pmeToken('row'))
     .on('pme:contextmenu', 'tr.' + pmeToken('row'), function(event, originalEvent, databaseIdentifier) {
       const $contentTarget = $(originalEvent.target).closest('.dropdown-content');
-      console.info('TARGET', $contentTarget);
       if ($contentTarget.length > 0) {
         // use standard context menu inside dropdown
         return;
