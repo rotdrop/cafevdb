@@ -110,7 +110,7 @@ class MailMergeController extends Controller
    * Try to perform a mail-merge of a document which is assumed to need
    * somehow a sender/recipient context (i.e. a letter).
    *
-   * @param int $senderId
+   * @param int|string $senderId
    *
    * @param null|string $fileName
    *
@@ -137,7 +137,7 @@ class MailMergeController extends Controller
    * @NoAdminRequired
    */
   public function merge(
-    int $senderId,
+    int|string $senderId,
     ?string $fileName = null,
     ?string $templateName = null,
     array $recipientIds = [],
@@ -160,7 +160,16 @@ class MailMergeController extends Controller
     $musiciansRepository = $this->getDatabaseRepository(Entities\Musician::class);
 
     /** @var Entities\Musician $sender */
-    $sender = $musiciansRepository->find($senderId);
+    if (filter_var($senderId, FILTER_VALIDATE_INT, ['min_range' => 1]) === false) {
+      $sender = $musiciansRepository->findByUserId($senderId);
+    } else {
+      $sender = $musiciansRepository->find($senderId);
+    }
+    if (empty($sender)) {
+      return self::grumble($this->l->t('Unable to determine the sender given its id "%s"', $senderId));
+    }
+
+    $senderId = $sender->getId();
     $senderUserId = $sender->getUserIdSlug();
 
     foreach (OrganizationalRolesService::BOARD_MEMBERS as $role) {
@@ -305,17 +314,22 @@ class MailMergeController extends Controller
         foreach ($recipients as $recipient) {
 
           if ($recipient instanceof Entities\CompositePayment) {
-            /** @var Entities\CompositePayment $recipient */
-            $recipientData = $this->flattenMusician($recient->getMusician());
-            if ($recipient->getIsDonation()) {
+            /** @var Entities\CompositePayment $compositePayment */
+            $compositePayment = $recipient;
+            $recipient = $compositePayment->getMusician();
+            if ($compositePayment->countDonations() > 0) {
+              $paymentData = $this->financeService->generateReceiptOfDonationMailMergeData($compositePayment);
             } else {
+              $paymentData = $this->financeService->generatePaymentMailMergeData($compositePayment);
             }
           }
           $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
           $recipientTemplateData = array_merge(
-            $templateData, [
+            [
               'recipient' => $this->flattenMusician($recipient),
             ],
+            $paymentData,
+            $templateData,
             [
               'instins' => $this->insuranceService->musicianOverview($recipient),
             ],
