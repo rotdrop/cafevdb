@@ -30,8 +30,10 @@ $numberFormatter = new NumberFormatter($appLocale);
 $l10nAmount = $numberFormatter->formatCurrency($amount);
 
 $routes = [
-  'donation-receipt' => '#',
-  'standard-receipt' => '#',
+  'donation-receipt:download' => '#',
+  'donation-receipt:email' => '#',
+  'standard-receipt:download' => '#',
+  'standard-receipt:email' => '#',
 ];
 
 echo $this->inc('fragments/action-menu/menu', [
@@ -43,5 +45,6 @@ echo $this->inc('fragments/action-menu/menu', [
     'debitor-name' => $debitorName,
     'debitor-id' => $debitorId,
     'is-donation' => $isDonation,
+    'project-id' => $projectId,
   ],
 ]);

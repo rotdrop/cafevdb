@@ -40,6 +40,7 @@ import checkInvalidInputs from './check-invalid-inputs.js';
 import { tweaks as pmeTweaks, unTweak as pmeUnTweak } from './pme-tweaks.js';
 import clear from '../util/clear-object.js';
 import pmeQueryLogMenu from './pme-querylog.js';
+import { close as closeActionMenus } from './action-menu.js';
 import {
   deselectAll as selectDeselectAll,
   widget as selectWidget,
@@ -325,6 +326,7 @@ const pmePost = function(post) {
     console.info('PME is halted, returning never-resolved promise.');
     return $.Deferred().promise();
   }
+  closeActionMenus();
   return $.post(generateUrl('page/pme/load'), post)
     .then(
       function(htmlContent, textStatus, request) {

@@ -484,6 +484,17 @@ WHERE dsf.id IS NOT NULL',
       'sort'     => true,
     ];
 
+    $opts['fdd']['project_id'] = [
+      'name'     => $this->l->t('Project-Id'),
+      'input'    => 'RH',
+      'select'   => 'T',
+      'options'  => 'LACPDV',
+      'maxlen'   => 5,
+      'align'    => 'right',
+      'default'  => null,
+      'sort'     => true,
+    ];
+
     $opts['fdd']['sepa_transaction_id'] = [
       'name'     => $this->l->t('Bulk-Transaction Id'),
       'input'    => 'RH',
@@ -512,6 +523,8 @@ WHERE dsf.id IS NOT NULL',
         'select' => 'D',
         'input' => 'M',
         'input|C' => 'R',
+        'select|C' => 'T',
+        'sql|C' => self::musicianPublicNameSql(),
         'default|C' => $this->musicianId,
         'values' => [
           'description' => [
@@ -1443,9 +1456,11 @@ WHERE dsf.id IS NOT NULL',
       'dropDirection' => $dropDirection,
       'compositePaymentId' => $id,
       'debitorName' => $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')],
-      'debitorId' => $row[$this->joinQueryIndexField(self::MUSICIANS_TABLE, 'id')],
+      'debitorId' => $row[$this->queryField('musician_id')],
       'isDonation' => $row[$this->joinQueryField(self::PROJECT_PAYMENTS_TABLE, 'is_donation')],
       'amount' => $row[$this->queryField('amount')],
+      'appLocale' => $this->appLocale(),
+      'projectId' => $row[$this->queryField('project_id')],
     ];
     return $this->templateResponse(
       'fragments/project-payments/action-menu',
