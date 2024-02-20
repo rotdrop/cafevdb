@@ -500,7 +500,7 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
       // $this->cloudConfig->setAppValue(self::CLOUD_USER_BACKEND, $cloudUserBackendKey, $cloudUserBackendValue);
       $cloudUserBackendParams[str_replace('.', '-', $cloudUserBackendKey)] = $cloudUserBackendValue;
     }
-    $this->logInfo('USER SQL POST PARAMS ' . print_r($cloudUserBackendParams, true));
+    // $this->logInfo('USER SQL POST PARAMS ' . print_r($cloudUserBackendParams, true));
 
     // try also to clear the cache after and before changing the configuration
     $this->clearUserBackendCache();
