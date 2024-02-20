@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,6 @@
 import * as Page from './page.js';
 import { tableDialogLoadIndicator } from './pme.js';
 import modalizer from './modalizer.js';
-import { close as closeActionMenus } from './action-menu.js';
 
 const setBusyIndicators = function(state, $pmeContainer, modal) {
   if (modal === undefined) {
@@ -42,7 +41,6 @@ const setBusyIndicators = function(state, $pmeContainer, modal) {
     if (modal) {
       modalizer(false);
     }
-    closeActionMenus();
   }
 };
 
