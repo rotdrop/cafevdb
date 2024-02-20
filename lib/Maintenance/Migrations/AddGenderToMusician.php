@@ -34,6 +34,7 @@ class AddGenderToMusician extends AbstractMigration
       "ALTER TABLE Musicians ADD COLUMN IF NOT EXISTS
    gender
      enum('male','female','diverse')
+     DEFAULT NULL
      COMMENT 'enum(male,female,diverse)(DC2Type:EnumGender)'",
       "ALTER TABLE Musicians CHANGE member_status
    member_status
