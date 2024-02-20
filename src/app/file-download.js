@@ -28,7 +28,7 @@ import * as Ajax from './ajax.js';
 import * as Notification from './notification.js';
 import * as ncRouter from '@nextcloud/router';
 import { parse as parseContentDisposition } from 'content-disposition';
-import { busyIcon as pageBusyIcon } from './page.js';
+import setBusyIndicators from './busy-indicators.js';
 
 // still needed for jquery
 require('../legacy/nextcloud/jquery/requesttoken.js');
@@ -51,10 +51,10 @@ const download = function(url, post, options) {
     done(url) { console.info('DONE downloading', url); },
     fail(data) {},
     always() {
-      pageBusyIcon(false);
+      setBusyIndicators(true, undefined, false);
     },
     setup() {
-      pageBusyIcon(true);
+      setBusyIndicators(false, undefined, false);
     },
     errorMessage(url, data) {
       let message = data.message || [t(appName, 'unknown error')];
@@ -88,13 +88,13 @@ const download = function(url, post, options) {
 
   const method = post ? 'POST' : 'GET';
   post = post || [];
-  if (!Array.isArray(post) && typeof post === 'object') {
-    const newPost = [];
-    for (const [name, value] of Object.entries(post)) {
-      newPost.push({ name, value });
-    }
-    post = newPost;
-  }
+  // if (false && !Array.isArray(post) && typeof post === 'object') {
+  //   const newPost = [];
+  //   for (const [name, value] of Object.entries(post)) {
+  //     newPost.push({ name, value });
+  //   }
+  //   post = newPost;
+  // }
 
   const downloadUrl = (url.startsWith(ncRouter.generateUrl(''))
                        || url.startsWith(ncRouter.generateRemoteUrl('')))
@@ -167,8 +167,3 @@ const download = function(url, post, options) {
 };
 
 export default download;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
