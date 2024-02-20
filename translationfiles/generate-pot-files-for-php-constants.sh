@@ -15,13 +15,17 @@ function extractConstant()
     php "$EXTRACT_CONSTANTS" "$CLASS" "$CONSTANT"
 }
 
-TRANSLATION_RE='\Wt\(([$][0-9a-zA-Z_]+\s*=\s*)?([0-9a-zA-Z_]+)::([^)]+)\)'
+#TRANSLATION_RE='\Wt\((("((\\"|[^"])*)"|'"'"'([^'"'"']*)'"'"')\s*[.]\s*|([$][0-9a-zA-Z_\\\\]+\s*=\s*))?([0-9a-zA-Z_\\\\]+)::([^)]+)'
+TRANSLATION_RE='\Wt\(([$][0-9a-zA-Z_\\\\]+\s*=\s*)?([0-9a-zA-Z_\\\\]+)::([^)]+)'
 USE_RE='use\s+(\\?([0-9a-zA-Z_]+\\)*([0-9a-zA-Z_]+))(\s+as\s+([0-9a-zA-Z_]+))?';
 
 while read -r MATCH; do
     FILE=$(echo "$MATCH"|cut -d: -f 1)
     SHORT_FILE=${FILE//$APPDIR\//}
+    PREFIX=$(echo "$MATCH"|sed -E 's/^.*'"$TRANSLATION_RE"'.*$/\1/g')
+    [ -n "$PREFIX" ] && PREFIX="$PREFIX . "
     CLASS=$(echo "$MATCH"|sed -E 's/^.*'"$TRANSLATION_RE"'.*$/\2/g')
+    CONSTANT=$(echo "$MATCH"|sed -E 's/^.*'"$TRANSLATION_RE"'.*$/\3/g')
     if [ "$CLASS" = self ]; then
         NAMESPACE='\'$(grep namespace "$FILE"|sed -E 's/^namespace\s+([^;]+);.*$/\1/g')
         CLASS=${NAMESPACE}\\$(basename "$FILE" .php)
@@ -46,11 +50,12 @@ while read -r MATCH; do
             fi
         fi
     fi
-    CONSTANT=$(echo "$MATCH"|sed -E 's/^.*'"$TRANSLATION_RE"'.*$/\3/g')
     LINE=$(echo "$MATCH"|cut -d: -f 2)
     VALUE=$(extractConstant "$CLASS" "$CONSTANT")
     cat <<EOF
 #: $SHORT_FILE:$LINE
+#. TRANSLATORS: The expression in the sourcecode was
+#. TRANSLATORS: $PREFIX$CLASS::$CONSTANT = $VALUE
 #, php-format
 msgid "$VALUE"
 msgstr ""
