@@ -24,11 +24,6 @@
 
 namespace OCA\CAFEVDB\Maintenance\Migrations;
 
-use OCP\ILogger;
-use OCP\IL10N;
-
-use OCA\CAFEVDB\Database\EntityManager;
-
 /**
  * Remember the id of a mailing list.
  */
