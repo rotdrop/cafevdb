@@ -234,6 +234,7 @@ class ConfigService
       'folder' => self::FINANCE_FOLDER,
     ],
   ];
+
   /** @return void */
   protected static function documentsTemplatesTranslationHack():void
   {
