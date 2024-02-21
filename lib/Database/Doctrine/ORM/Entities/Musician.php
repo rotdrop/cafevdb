@@ -908,7 +908,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function getGender():Types\EnumGender
   {
-    return $this->gender;
+    return $this->gender ?? Types\EnumGender::DIVERSE();
   }
 
   /**

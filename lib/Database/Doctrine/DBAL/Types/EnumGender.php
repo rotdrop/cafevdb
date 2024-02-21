@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
-use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
-
 /**
  * Gender for the sake of mail-merge.
  *
@@ -33,10 +31,8 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
  * @method static EnumGender FEMALE()
  * @method static EnumGender DIVERSE()
  */
-class EnumGender extends EnumType
+class EnumGender extends AbstractEnumType
 {
-  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
-
   public const MALE = 'male';
   public const FEMALE = 'female';
   public const DIVERSE = 'diverse';

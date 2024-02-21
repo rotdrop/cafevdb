@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
 class EnumTaxType extends EnumType
 {
   use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
+
   public const CORPORATE_INCOME = 'corporate income tax';
   public const SALES = 'sales tax';
   public const VAT = 'VAT';
