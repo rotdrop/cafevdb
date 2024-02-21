@@ -356,6 +356,7 @@ give you the choice to select any musician as recipient.'),
               'announcements-mailing-list' => self::t('Post to the global announcements mailing list instead of sending to the musicians registered in the data-base. Using the mailing list should be the preferred transport for global @all emails as it has less legal problems concerning the regulations for data privacy. Posting to the list does not make sense if any of the instrument filters is selected or if recipients are explicitly selected.'),
               'database' => self::t('Post to the musicians registered in the database. Unless instrument-filters are active or specific recipients are explicitly selected the global announcement mailing list should be preferred for @all emails.'),
             ],
+
             'member-status' => self::t('Select recipients by member status. Normally, conductors and soloists
 are excluded from receiving mass-email. Please be careful when modifying the default selection!'),
             'apply' => self::t('Apply the currently selected instruments as filter. At your option,
@@ -367,6 +368,7 @@ form. This will <b>REALLY</b> void all your recipient selections and
 reset the form to the initial state. Note, however, that the text of
 your email will be maintained, the reset only applies to the recipient
 list.'),
+
             'instruments' => [
               'filter' => self::t('Restrict the basic set of musicians to the instruments selected
 here. The filter is additive: selecting more than one instruments will
@@ -396,6 +398,12 @@ invited to have a look, but please do not change anything unless you know what y
       ],
 
       'page-renderer' => [
+        'pme' => [
+          'showall' => [
+            'tab' => self::t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
+          ],
+        ],
+
         'attachment' => [
           'default' => self::t('Attach a supporting document.'),
           'delete' => self::t('Delete this file attachment. Undelete may be possible using the files-app of the cloud-software.'),
@@ -410,9 +418,26 @@ invited to have a look, but please do not change anything unless you know what y
         ],
         'miscinfo-tab' => self::t('Further "not so important" data of the participant.'),
         'musicians' => [
+          'tab' => [
+            'orchestra' => self::t('Display name, pre-name, instruments, status, general remarks.'),
+
+            'contact' => self::t('Display name, pre-name, phone number, email, street-address.'),
+
+            'miscinfo' => self::t('Further information like birthday, a photo, date of last change.'),
+
+            'finance' => self::t('Finance related data like project fees, reimbursements etc.'),
+          ],
+
+          'instruments-disabled' => self::t('Instruments which were formerly known to be played by the respective musican but which are disabled for whatever reason. Re-enable by simply adding them again to the list of the musician\'s instruments.'),
+
+          'register' => self::t('Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.'),
+
           'avatar' => self::t('An optional avatar image provided by the person itself. This is part of the public self-expression of the respective user and thus read-only and only provided here for reference. Avatar images are only availabe for persons with an active cloud account.'),
+
           'cloud-account-deactivated' => self::t('Expert-setting. "Deactivating the cloud account" means that this musician will show up in the user list of the cloud but will not be able to log-in.'),
+
           'cloud-account-disabled' => self::t('Expert-setting. "Disabling the cloud account" means that this musician will be hidden from the user-management of the cloud, there will be not corresponding cloud account. Note that marking a musician as deleted will also have the effect to hide the person from the cloud.'),
+
           'mailing-list' => [
             'default' => self::t('Musicians are normally invited to the announcements mailing list when they are registered with the orchestra app. The announcements mailing list is a receive-only list for announcing projects, concerts and other things "to the public". It may also be used to forward announcements of other orchestras or off-topic notices if this seems appropriate in a case-to-case manner.'),
             'actions' => [
@@ -423,6 +448,26 @@ invited to have a look, but please do not change anything unless you know what y
               'reject' => self::t('Cancel a pending subscription or invitation request.'),
             ],
           ],
+
+          'member-status' => self::t('A flag which indicates not so much social or functional status, but
+default behaviour for mass-emails as follows
+<br/>
+<dl>
+<dt>regular</dt>
+<dd>ordinary member, receives mass-emails</dd>
+<dt>passive</dt>
+<dd>passive member, does not receive mass-emails unless participating in a project.</dd>
+<dt>temporary</dt>
+<dd>like passive, but defines another class of musicians during email-address selection</dd>
+<dt>conductor</dt>
+<dd>does not even receive mass-emails when participating in a project</dd>
+<dt>soloist</dt>
+<dd>like conductor, but defines yet another class for email-recipient selection</dd>
+</dl>
+<br/>
+All classes of members can be explicitly added to a specific mass-emails through the controls
+in the email form.'),
+
           'address-supplement' => self::t('Additional required address parts like "c/o X Y" or "Apt. N"'),
           'emails' => [
             'principal' => self::t('The principal email address of the musician.'),
@@ -718,25 +763,6 @@ each individual table view.'),
       'instruments-disabled' => self::t('Instruments which are already used by musicians or
 projects cannot be deleted; instead "deleting" them flags them as "Disabled".'),
 
-      'member-status' => self::t('A flag which indicates not so much social or functional status, but
-default behaviour for mass-emails as follows
-<br/>
-<dl>
-<dt>regular</dt>
-<dd>ordinary member, receives mass-emails</dd>
-<dt>passive</dt>
-<dd>passive member, does not receive mass-emails unless participating in a project.</dd>
-<dt>temporary</dt>
-<dd>like passive, but defines another class of musicians during email-address selection</dd>
-<dt>conductor</dt>
-<dd>does not even receive mass-emails when participating in a project</dd>
-<dt>soloist</dt>
-<dd>like conductor, but defines yet another class for email-recipient selection</dd>
-</dl>
-<br/>
-All classes of members can be explicitly added to a specific mass-emails through the controls
-in the email form.'),
-
       'mailing-list' => [
         'domain' => [
           'default' => self::t('Externally visible domains and configuration web-pages.'),
@@ -762,19 +788,11 @@ In order to configure the mailing-list the REST_API credentials have to be confi
         ],
       ],
 
-      'musican-contact-tab' => self::t('Display name, pre-name, phone number, email, street-address.'),
-
       'musician-disabled' => self::t('Musicians which already paid something for the project cannot be
 deleted in order not to loose track of the payments. Instead, they are
 simply marked as "disabled" and normally are hidden from sight.'),
 
-      'musician-instruments-disabled' => self::t('Instruments which were formerly known to be played by the respective musican but which are disabled for whatever reason. Re-enable by simply adding them again to the list of the musician\'s instruments.'),
-
       'musician-instrument-insurance' => self::t('Opens a new table view with the insured items for the respective musician.'),
-
-      'musician-miscinfo-tab' => self::t('Further information like birthday, a photo, date of last change.'),
-
-      'musician-orchestra-tab' => self::t('Display name, pre-name, instruments, status, general remarks.'),
 
       'nothing' => self::t('nothing'),
 
@@ -1272,8 +1290,6 @@ tablet or desktop computer.'),
 
       'redaxo-trashbin' => self::t('Trashbin pseudo-category, articles deleted from within the
 project-views are moved here.'),
-
-      'register-musician' => self::t('Add the musician to the project. A new form will open were details like the instrument etc. can be adjustetd.'),
 
       'registration-mark' => self::t('This is checked for officially registered musicians, those, who have
 sent us a signed registration form. It is left blannk otherwise.'),
