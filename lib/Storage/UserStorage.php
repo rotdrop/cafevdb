@@ -317,7 +317,7 @@ class UserStorage
    */
   public function copyTree(mixed $src, mixed $dst, ?string $excludeRegexp = null, int $flags = self::KEEP_DEST):?Folder
   {
-    $this->logInfo('SRC // DST ' . $src . ' || ' . $dst);
+    // $this->logInfo('SRC // DST ' . $src . ' || ' . $dst);
 
     /** @var Folder $sourceFolder */
     if (!($src instanceof Folder)) {
@@ -388,7 +388,7 @@ class UserStorage
               $destNode->delete();
               throw new FileNotFoundException($this->l->t("Deleted non-directory %s", [$destPath]));
             }
-            $this->logInfo('TARGET FOLDER ALREADY EXISTS: ' . $destPath);
+            // $this->logInfo('TARGET FOLDER ALREADY EXISTS: ' . $destPath);
           } catch (FileNotFoundException $e) {
             $destNode = $destFolder->newFolder($relativePath);
           }
@@ -399,8 +399,6 @@ class UserStorage
             if ($flags & self::OVWR_DEST) {
               $destNode->delete();
               throw new FileNotFoundException($this->l->t("Overwrite requested, deleted %s", [$destPath]));
-            } else {
-              $this->logInfo('KEEPING EXISTING FILE: ' . $destPath);
             }
           } catch (FileNotFoundException $e) {
             $sourceNode->copy($destPath);
