@@ -323,19 +323,19 @@ make sure that the musicians are also automatically added to the
       'tabs'  => [
         [ 'id' => 'orchestra',
           'default' => true,
-          'tooltip' => $this->toolTipsService['musician-orchestra-tab'],
+          'tooltip' => $this->toolTipsService['page-render:musicians:tab:orchestra'],
           'name' => $this->l->t('Instruments and Status') ],
         [ 'id' => 'contact',
-          'tooltip' => $this->toolTipsService['musican-contact-tab'],
+          'tooltip' => $this->toolTipsService['page-render:musicians:tab:contact'],
           'name' => $this->l->t('Contact Information') ],
         [ 'id' => 'finance',
-          'tooltip' => $this->toolTipsService['musician-finance-tab'],
+          'tooltip' => $this->toolTipsService['page-render:musicians:tab:finance'],
           'name' => $this->l->t('Financial Topics') ],
         [ 'id' => 'miscinfo',
-          'tooltip' => $this->toolTipsService['musician-miscinfo-tab'],
+          'tooltip' => $this->toolTipsService['page-render:musicians:tab:miscinfo'],
           'name' => $this->l->t('Miscellaneous Data') ],
         [ 'id' => 'tab-all',
-          'tooltip' => $this->toolTipsService['pme-showall-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:pme:tab:showall'],
           'name' => $this->l->t('Display all columns')
         ],
       ],
@@ -402,7 +402,7 @@ make sure that the musicians are also automatically added to the
     $joinTables = $this->defineJoinStructure($opts);
 
     $bval = strval($this->l->t('Add to %s', [ $projectName ]));
-    $tip  = strval($this->toolTipsService['register-musician']);
+    $tip  = strval($this->toolTipsService['page-renderer:musicians:register']);
     if ($this->projectMode) {
       $opts['fdd']['add_musicians'] = [
         'tab' => [ 'id' => 'tab-all' ],
@@ -569,7 +569,7 @@ make sure that the musicians are also automatically added to the
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', ], ],
       'options' => 'LFAVCPD',
-      'input|LF'    => $this->pmeBare ? 'R' : 'HR', // handy for export
+      'input|LF' => $this->pmeBare ? 'R' : 'HR', // handy for export
       'values2' => Types\EnumGender::getL10NValues($this->l),
       'tooltip' => $this->toolTipsService['page-renderer:musicians:gender'],
       'display|LF' => [
@@ -704,7 +704,7 @@ make sure that the musicians are also automatically added to the
         'default' => null,
         'select'  => 'M',
         'input'   => 'SR',
-        'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
         'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],
         'filter' => [
@@ -732,7 +732,7 @@ make sure that the musicians are also automatically added to the
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
       'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
-      'tooltip' => $this->toolTipsService['member-status'],
+      'tooltip' => $this->toolTipsService['page-renderer:musicians:member-status'],
     ];
 
     $opts['fdd']['cloud_account_deactivated'] = [

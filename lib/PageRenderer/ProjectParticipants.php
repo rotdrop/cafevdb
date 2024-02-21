@@ -945,7 +945,7 @@ class ProjectParticipants extends PMETableViewBase
         'default' => null,
         'select'  => 'M',
         'input'   => 'SR',
-        'tooltip' => $this->toolTipsService['musician-instruments-disabled'],
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:instruments-disabled'],
         'values2' => $this->instrumentInfo['byId'],
         'valueGroups' => $this->instrumentInfo['idGroups'],
         'filter' => [
@@ -973,7 +973,7 @@ class ProjectParticipants extends PMETableViewBase
         'maxlen'  => 128,
         'css'     => ['postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
         'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
-        'tooltip' => $this->toolTipsService['member-status'],
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:member-status'],
       ]);
 
     // soft-deleted musician kept to keep the instrumentation for the old project
