@@ -47,7 +47,8 @@ use OCA\CAFEVDB\Common\Util;
 /** Render the instrument insurances of the club-members. */
 class InstrumentInsurances extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
+  use FieldTraits\QueryFieldTrait;
+  use FieldTraits\MusicianPublicNameTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
 
   const TEMPLATE = 'instrument-insurance';
@@ -267,9 +268,9 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => self::trivialDescription(self::musicianPublicNameSql()),
+        'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.instrument_holder_id',
-        // 'filters' => parent::musicianInProjectSql($this->projectId),
+        // 'filters' => static::musicianInProjectSql($this->projectId),
       ],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {
@@ -306,9 +307,9 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => self::trivialDescription(self::musicianPublicNameSql()),
+        'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.bill_to_party_id',
-        //'filters' => parent::musicianInProjectSql($this->projectId),
+        //'filters' => static::musicianInProjectSql($this->projectId),
       ],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {
@@ -349,9 +350,9 @@ class InstrumentInsurances extends PMETableViewBase
       'values' => [
         'table' => self::MUSICIANS_TABLE,
         'column' => 'id',
-        'description' => self::trivialDescription(self::musicianPublicNameSql()),
+        'description' => self::trivialDescription(static::musicianPublicNameSql()),
         'join' => ' $join_col_fqn = $main_table.instrument_owner_id',
-        //'filters' => parent::musicianInProjectSql($this->projectId),
+        //'filters' => static::musicianInProjectSql($this->projectId),
       ],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {

@@ -1727,7 +1727,7 @@ trait ParticipantFieldsTrait
                   'table' => "SELECT
    m1.id AS musician_id,
    CONCAT(
-     ".$this->musicianPublicNameSql('m1').",
+     ".static::musicianPublicNameSql('m1').",
      IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
    ) AS name,
    m1.sur_name AS sur_name,
@@ -1944,7 +1944,7 @@ WHERE pp.project_id = $this->projectId",
                   'table' => "SELECT
   m3.id AS musician_id,
   CONCAT(
-    ".$this->musicianPublicNameSql('m3').",
+    ".static::musicianPublicNameSql('m3').",
     IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
   ) AS name,
   m3.sur_name AS sur_name,
@@ -2029,7 +2029,7 @@ WHERE pp.project_id = $this->projectId",
                   'table' => "SELECT
   m2.id AS musician_id,
   CONCAT(
-    ".$this->musicianPublicNameSql('m2').",
+    ".static::musicianPublicNameSql('m2').",
     IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
   ) AS name,
   m2.sur_name AS sur_name,

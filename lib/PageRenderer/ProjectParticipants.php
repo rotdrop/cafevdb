@@ -56,16 +56,17 @@ use OCA\CAFEVDB\Common\Functions;
 /**Table generator for Instruments table. */
 class ProjectParticipants extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\PageRenderer\FieldTraits\MusicianFromRowTrait;
-  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use FieldTraits\SepaAccountsTrait;
-  use FieldTraits\ParticipantFieldsTrait;
-  use FieldTraits\MusicianAvatarTrait;
-  use FieldTraits\ParticipantTotalFeesTrait;
-  use FieldTraits\MailingListsTrait;
-  use FieldTraits\MusicianEmailsTrait;
   use FieldTraits\AllProjectsTrait;
+  use FieldTraits\MailingListsTrait;
+  use FieldTraits\MusicianAvatarTrait;
+  use FieldTraits\MusicianEmailsTrait;
+  use FieldTraits\MusicianFromRowTrait;
+  use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ParticipantFieldsTrait;
+  use FieldTraits\ParticipantTotalFeesTrait;
+  use FieldTraits\QueryFieldTrait;
+  use FieldTraits\SepaAccountsTrait;
 
   const TEMPLATE = 'project-participants';
   const TABLE = self::PROJECT_PARTICIPANTS_TABLE;
@@ -487,7 +488,7 @@ class ProjectParticipants extends PMETableViewBase
         'name'     => $this->l->t('Display-Name'),
         'tab'      => [ 'id' => 'tab-all' ],
         'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-public-name' ], ],
-        'sql|LFVD' => parent::musicianPublicNameSql(),
+        'sql|LFVD' => static::musicianPublicNameSql(),
         'maxlen'   => 384,
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
@@ -547,8 +548,20 @@ class ProjectParticipants extends PMETableViewBase
         'css'      => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-personal-public-name' ], ],
         'options'  => 'LFAVCPD',
         'input' => $this->pmeBare ? 'R' : 'HR', // handy for export
-        'sql' => parent::musicianPublicNameSql(firstNameFirst: true),
+        'sql' => static::musicianPublicNameSql(firstNameFirst: true),
         'maxlen'   => 384,
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::MUSICIANS_TABLE, 'gender', [
+        'name'    => strval($this->l->t('Gender')),
+        'tab'     => [ 'id' => [ 'orchestra, contact' ] ],
+        'select'  => 'D',
+        'maxlen'  => 128,
+        'sort'    => true,
+        'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', ], ],
+        'values2' => Types\EnumGender::getL10NValues($this->l),
+        'tooltip' => $this->toolTipsService['page-renderer:musicians:gender'],
       ]);
 
     $this->makeJoinTableField(
@@ -941,7 +954,7 @@ class ProjectParticipants extends PMETableViewBase
         'select'  => 'D',
         'maxlen'  => 128,
         'css'     => ['postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
-        'values2' => $this->memberStatusNames,
+        'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
         'tooltip' => $this->toolTipsService['member-status'],
       ]);
 
@@ -1313,6 +1326,8 @@ class ProjectParticipants extends PMETableViewBase
 
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::OPERATION_LIST][PHPMyEdit::TRIGGER_PRE][] = [ $this, 'totalFeesPreFilterTrigger' ];
 
+    // The following are in order to aid the email form to extract
+    // pre-selected musiancs from the form-data.
     $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 

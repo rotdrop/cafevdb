@@ -55,8 +55,10 @@ use OCA\CAFEVDB\Controller\DownloadsController;
 class ProjectPayments extends PMETableViewBase
 {
   use FieldTraits\QueryFieldTrait;
-  use FieldTraits\ParticipantFileFieldsTrait;
   use FieldTraits\CryptoTrait;
+  use FieldTraits\MusicianInProjectTrait;
+  use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\ParticipantFileFieldsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
 
   const TEMPLATE = 'project-payments';
@@ -524,11 +526,11 @@ WHERE dsf.id IS NOT NULL',
         'input' => 'M',
         'input|C' => 'R',
         'select|C' => 'T',
-        'sql|C' => self::musicianPublicNameSql(),
+        'sql|C' => static::musicianPublicNameSql(),
         'default|C' => $this->musicianId,
         'values' => [
           'description' => [
-            'columns' => [ self::musicianPublicNameSql() ],
+            'columns' => [ static::musicianPublicNameSql() ],
             'divs' => [],
             'ifnull' => [ false, false ],
             'cast' => [ false ],
@@ -536,7 +538,7 @@ WHERE dsf.id IS NOT NULL',
           'data' => 'receivable_keys',
           'filters' => (!$projectMode
                         ? null
-                        : parent::musicianInProjectSql($this->projectId)),
+                        : static::musicianInProjectSql($this->projectId)),
         ],
       ]);
 

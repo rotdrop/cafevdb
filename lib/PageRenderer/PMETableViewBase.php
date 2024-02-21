@@ -366,21 +366,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->groupedInstruments = $this->instrumentInfo['nameGroups'];
     $this->instrumentFamilies =
       $this->getDatabaseRepository(ORM\Entities\InstrumentFamily::class)->values();
-
-    // @todo think about how to generate translations
-    $this->memberStatus = DBTypes\EnumMemberStatus::toArray();
-    foreach ($this->memberStatus as $key => $tag) {
-      if (!isset($this->memberStatusNames[$tag])) {
-        $this->memberStatusNames[$tag] = $this->l->t('member status '.$tag);
-      }
-    }
-
-    $this->projectType = DBTypes\EnumProjectTemporalType::toArray();
-    foreach ($this->projectType as $key => $tag) {
-      if (!isset($this->projectTypeNames[$tag])) {
-        $this->projectTypeNames[$tag] = $this->l->t($tag);
-      }
-    }
   }
 
   /**
@@ -2658,97 +2643,6 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     } else {
       $this->logDebug($message, $context, $shift);
     }
-  }
-
-  /**
-   * Possibly regenerate the user-id slug.
-   *
-   * @param PHPMyEdit $pme The phpMyEdit instance.
-   *
-   * @param string $op The operation, 'insert', 'update' etc.
-   *
-   * @param string $step 'before' or 'after'.
-   *
-   * @param array $oldValues Self-explanatory.
-   *
-   * @param array $changed Set of changed fields, may be modified by the callback.
-   *
-   * @param null|array $newValues Set of new values, which may also be modified.
-   *
-   * @return bool If returning @c false the operation will be terminated
-   *
-   * @todo This would rather belong to some service class.
-   */
-  public function ensureUserIdSlug(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, ?array &$changed, ?array &$newValues):bool
-  {
-    $tag = 'user_id_slug';
-    if (!empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
-      $tag = $this->joinTableFieldName(self::MUSICIANS_TABLE, $tag);
-    }
-    if (empty($newValues[$tag])) {
-      // force regeneration by setting the slug to a "magic" value.
-      $newValues[$tag] = \Gedmo\Sluggable\SluggableListener::PLACEHOLDER_SLUG;
-      $changed[] = $tag;
-      $changed = array_values(array_unique($changed));
-    }
-
-    return true;
-  }
-
-  /**
-   * Generate an SQL fragment which composes a display name from the
-   * available name-parts sur_name, first_name, nick_name,
-   * display_name.
-   *
-   * @param string $tableAlias Table to refer to, refers to
-   * placeholder '$table'.
-   *
-   * @param bool $firstNameFirst
-   *
-   * @return string SQL fragment.
-   */
-  public static function musicianPublicNameSql(string $tableAlias = '$table', bool $firstNameFirst = false):string
-  {
-    if ($firstNameFirst) {
-      return "CONCAT_WS(
-  ' ',
-  IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
-    $tableAlias.first_name,
-    $tableAlias.nick_name
-  ),
-  $tableAlias.sur_name)";
-    } else {
-      return "IF($tableAlias.display_name IS NULL OR $tableAlias.display_name = '',
-      CONCAT(
-        $tableAlias.sur_name,
-        ', ',
-        IF($tableAlias.nick_name IS NULL OR $tableAlias.nick_name = '',
-          $tableAlias.first_name,
-          $tableAlias.nick_name
-        )
-      ),
-      $tableAlias.display_name
-    )";
-    }
-  }
-
-  /**
-   * Return an SQL filter fragment to ensure that a musician-id is
-   * only in the request project.
-   *
-   * @param string $projectIdSql SQL to get the projects id.
-   *
-   * @param string $musicianId Field holding the musician id.
-   *
-   * @param string $tableAlias Table alias to use.
-   *
-   * @return string SQL fragment.
-   */
-  public static function musicianInProjectSql(string $projectIdSql, string $musicianId = 'id', string $tableAlias = '$table'):string
-  {
-    return "$tableAlias.$musicianId IN (SELECT pp.musician_id
-  FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
-  WHERE pp.project_id = $projectIdSql)";
   }
 
   /**
