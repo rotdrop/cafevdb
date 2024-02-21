@@ -49,11 +49,12 @@ use OCA\CAFEVDB\Exceptions;
 /** TBD. */
 class SepaBankAccounts extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
+  use FieldTraits\CryptoTrait;
+  use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
-  use FieldTraits\CryptoTrait;
+  use FieldTraits\QueryFieldTrait;
 
   const AMOUNT_TAB_ID = 'amount';
 
@@ -560,7 +561,7 @@ class SepaBankAccounts extends PMETableViewBase
         'sort'     => true,
         'values' => [
           'description' => [
-            'columns' => [ self::musicianPublicNameSql() ],
+            'columns' => [ static::musicianPublicNameSql() ],
             'divs' => [],
             'ifnull' => [ false ],
             'cast' => [ false ],

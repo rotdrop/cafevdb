@@ -323,7 +323,7 @@ class Projects extends PMETableViewBase
       'options'  => 'LFAVCPD', // auto increment
       'maxlen'   => 11,
       'css'      => ['postfix' => [ 'tooltip-right', 'selectize', 'no-chosen', 'not-empty' ], ],
-      'values2'  => $this->projectTypeNames,
+      'values2'  => ProjectType::getL10NValues($this->l),
       'default'  => ProjectType::TEMPORARY,
       'sort'     => true,
       'align'    => 'center',

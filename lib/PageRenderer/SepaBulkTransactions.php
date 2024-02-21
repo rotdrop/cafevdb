@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Exceptions;
 class SepaBulkTransactions extends PMETableViewBase
 {
   use FieldTraits\CryptoTrait;
+  use FieldTraits\MusicianPublicNameTrait;
 
   const TEMPLATE = 'sepa-bulk-transactions';
   const TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
@@ -404,14 +405,14 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'column' => 'id',
           'join' => '$join_col_fqn = '.$this->joinTables[self::COMPOSITE_PAYMENTS_TABLE].'.musician_id',
           'description' => [
-            'columns' => [ '$table.id', self::musicianPublicNameSql() ],
+            'columns' => [ '$table.id', static::musicianPublicNameSql() ],
             'divs' => [ ': ' ],
             'ifnull' => [ false, false ],
             'cast' => [ 'CHAR', false ],
           ],
           'filters' => (!$projectMode
                         ? null
-                        : parent::musicianInProjectSql($this->projectId)),
+                        : static::musicianInProjectSql($this->projectId)),
         ],
         'values2glue' => '<br/>',
         'display' => [

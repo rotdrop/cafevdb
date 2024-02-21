@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Controller\ImagesController;
 
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Common\Util;
@@ -52,13 +53,15 @@ use OCA\CAFEVDB\Common\Uuid;
 /**Table generator for Musicians table. */
 class Musicians extends PMETableViewBase
 {
-  use \OCA\CAFEVDB\PageRenderer\FieldTraits\QueryFieldTrait;
-  use \OCA\CAFEVDB\PageRenderer\FieldTraits\MusicianFromRowTrait;
-  use FieldTraits\SepaAccountsTrait;
-  use FieldTraits\MusicianAvatarTrait;
-  use FieldTraits\MailingListsTrait;
-  use FieldTraits\MusicianEmailsTrait;
   use FieldTraits\AllProjectsTrait;
+  use FieldTraits\MailingListsTrait;
+  use FieldTraits\MusicianAvatarTrait;
+  use FieldTraits\MusicianEmailsTrait;
+  use FieldTraits\MusicianFromRowTrait;
+  use FieldTraits\MusicianEnsureUserIdSlugTrait;
+  use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\QueryFieldTrait;
+  use FieldTraits\SepaAccountsTrait;
 
   const ALL_TEMPLATE = 'all-musicians';
   const ADD_TEMPLATE = 'add-musicians';
@@ -525,7 +528,7 @@ make sure that the musicians are also automatically added to the
           $addCSS,
         ],
       ],
-      'sql|LFVD' => parent::musicianPublicNameSql(),
+      'sql|LFVD' => static::musicianPublicNameSql(),
       'maxlen'   => 384,
       'sort'     => true,
       'select'   => 'T',
@@ -574,8 +577,19 @@ make sure that the musicians are also automatically added to the
       'css'     => [ 'postfix' => [ 'default-readonly', 'tab-musician-readwrite', 'tab-all-readwrite', 'musician-personal-public-name' ], ],
       'options' => 'LFAVCPD',
       'input'   => $this->pmeBare ? 'R' : 'HR', // handy for export
-      'sql'     => parent::musicianPublicNameSql(firstNameFirst: true),
+      'sql'     => static::musicianPublicNameSql(firstNameFirst: true),
       'maxlen'  => 384,
+    ];
+
+    $opts['fdd']['gender'] = [
+      'name'    => strval($this->l->t('Gender')),
+      'tab'     => [ 'id' => [ 'orchestra, contact' ] ],
+      'select'  => 'D',
+      'maxlen'  => 128,
+      'sort'    => true,
+      'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', ], ],
+      'values2' => Types\EnumGender::getL10NValues($this->l),
+      'tooltip' => $this->toolTipsService['page-renderer:musicians:gender'],
     ];
 
     $opts['fdd']['user_id_slug'] = [
@@ -720,7 +734,7 @@ make sure that the musicians are also automatically added to the
       'maxlen'  => 128,
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'memberstatus', 'tooltip-wide', ], ],
-      'values2' => $this->memberStatusNames,
+      'values2' => Types\EnumMemberStatus::getL10NValues($this->l),
       'tooltip' => $this->toolTipsService['member-status'],
     ];
 
@@ -1101,6 +1115,8 @@ make sure that the musicians are also automatically added to the
       return true;
     };
 
+    // The following are in order to aid the email form to extract
+    // pre-selected musiancs from the form-data.
     $opts['cgi']['persist']['memberStatusFddIndex'] = $memberStatusFddIndex;
     $opts['cgi']['persist']['instrummentsFddIndex'] = $instrumentsFddIndex;
 
