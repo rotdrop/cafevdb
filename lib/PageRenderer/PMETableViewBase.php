@@ -2271,7 +2271,7 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    * The name of the field-descriptor for a join-table field
    * referencing a master-join-table.
    *
-   * @param string|array $joinInfo Table-description-data
+   * @param null|string|array $joinInfo Table-description-data
    * ```
    * [
    *   'table' => SQL_TABLE_NAME,
@@ -2283,7 +2283,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    *     ...
    *   ]
    * ]
-   * ```.
+   * ```. If empty then assume the master tables, if a non-empty string assume
+   * it is the name of the joined table.
    *
    * @param string $column column to generate a query field for. This
    * is another column different from $joinInfo['column'] in order to
@@ -2293,6 +2294,9 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected static function joinTableFieldName($joinInfo, string $column)
   {
+    if (empty($joinInfo)) {
+      return $column;
+    }
     if (is_array($joinInfo)) {
       if ($joinInfo['flags'] & self::JOIN_MASTER) {
         return $column;

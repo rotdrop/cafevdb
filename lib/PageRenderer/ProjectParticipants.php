@@ -63,6 +63,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\MusicianEmailsTrait;
   use FieldTraits\MusicianEnsureUserIdSlugTrait;
   use FieldTraits\MusicianFromRowTrait;
+  use FieldTraits\MusicianGenderTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
@@ -556,13 +557,30 @@ class ProjectParticipants extends PMETableViewBase
     $this->makeJoinTableField(
       $opts['fdd'], self::MUSICIANS_TABLE, 'gender', [
         'name'    => strval($this->l->t('Gender')),
-        'tab'     => [ 'id' => [ 'orchestra, contact' ] ],
+        'tab'     => [ 'id' => [ 'musician' ], ],
         'select'  => 'D',
         'maxlen'  => 128,
         'sort'    => true,
-        'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', ], ],
+        'options'  => 'LFAVCPD',
+        'input|LF' => $this->pmeBare ? 'R' : 'HR', // handy for export
+        'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', 'allow-empty' ], ],
         'values2' => Types\EnumGender::getL10NValues($this->l),
         'tooltip' => $this->toolTipsService['page-renderer:musicians:gender'],
+        'display|LF' => [
+          'popup' => function($cellData, int $k, array $row, PHPMyEdit $pme) {
+            if (!empty($cellData) || empty($row) || !empty($row[$this->queryField($k)])) {
+              return '';
+            }
+            $genderTypes = $this->guessGender($row);
+            if (!empty($genderTypes)) {
+              return $this->l->t('auto-detected gender: %s', implode(', ', $genderTypes));
+            }
+            return '';
+          }
+        ],
+        'display|CPVD' => [
+          'postfix' => fn(string $op, string $pos, int $k, array $row, PHPMyEdit $pme) => $this->genderDisplayPostfix($k, $row),
+        ],
       ]);
 
     $this->makeJoinTableField(

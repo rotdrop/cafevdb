@@ -48,7 +48,7 @@ trait QueryFieldTrait
   /**
    * @param string|array $tableInfo Table-description-data.
    *
-   * @param string $column
+   * @param null|string|array $column
    *
    * @return null|int the numeric field description index
    */
@@ -84,7 +84,7 @@ trait QueryFieldTrait
   /***
    * Compute the key in to the PME $row array for the given column.
    *
-   * @param string|array $tableInfo Table-description-data.
+   * @param null|string|array $tableInfo Table-description-data.
    *
    * @param string $column
    *
@@ -101,7 +101,7 @@ trait QueryFieldTrait
   /**
    * Compute the key in to the PME $row array for the given column.
    *
-   * @param string|array $tableInfo Table-description-data.
+   * @param null|string|array $tableInfo Table-description-data.
    *
    * @param string $column
    *

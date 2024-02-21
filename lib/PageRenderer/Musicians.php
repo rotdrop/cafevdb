@@ -59,6 +59,7 @@ class Musicians extends PMETableViewBase
   use FieldTraits\MusicianEmailsTrait;
   use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianEnsureUserIdSlugTrait;
+  use FieldTraits\MusicianGenderTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\QueryFieldTrait;
   use FieldTraits\SepaAccountsTrait;
@@ -562,13 +563,30 @@ make sure that the musicians are also automatically added to the
 
     $opts['fdd']['gender'] = [
       'name'    => strval($this->l->t('Gender')),
-      'tab'     => [ 'id' => [ 'orchestra, contact' ] ],
+      'tab'     => [ 'id' => [ 'contact' ] ],
       'select'  => 'D',
       'maxlen'  => 128,
       'sort'    => true,
       'css'     => [ 'postfix' => [ 'gender', 'tooltip-wide', ], ],
+      'options' => 'LFAVCPD',
+      'input|LF'    => $this->pmeBare ? 'R' : 'HR', // handy for export
       'values2' => Types\EnumGender::getL10NValues($this->l),
       'tooltip' => $this->toolTipsService['page-renderer:musicians:gender'],
+      'display|LF' => [
+          'popup' => function($cellData, int $k, array $row, PHPMyEdit $pme) {
+            if (!empty($cellData) || empty($row) || !empty($row[$this->queryField($k)])) {
+              return '';
+            }
+            $genderTypes = $this->guessGender($row);
+            if (!empty($genderTypes)) {
+              return $this->l->t('auto-detected gender: %s', implode(', ', $genderTypes));
+            }
+            return '';
+          }
+      ],
+      'display|CPVD' => [
+        'postfix' => fn(string $op, string $pos, int $k, array $row, PHPMyEdit $pme) => $this->genderDisplayPostfix($k, $row),
+      ],
     ];
 
     $opts['fdd']['user_id_slug'] = [

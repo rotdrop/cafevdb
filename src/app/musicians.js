@@ -32,7 +32,14 @@ import * as ProjectParticipants from './project-participants.js';
 import * as PHPMyEdit from './pme.js';
 import * as Notification from './notification.js';
 import { selected as selectedValues } from './select-utils.js';
-import { token as pmeToken, data as pmeData, sys as pmeSys, classSelectors as pmeClassSelectors } from './pme-selectors.js';
+import {
+  token as pmeToken,
+  data as pmeData,
+  sys as pmeSys,
+  classSelectors as pmeClassSelectors,
+  valueSelector as pmeValueSelector,
+  classSelector as pmeClassSelector,
+} from './pme-selectors.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 import {
   lazyDecrypt,
@@ -874,6 +881,23 @@ const ready = function(container) {
       const href = $(this).attr('href');
       const queryString = href.split('?')[1];
       Page.loadPage(queryString);
+      return false;
+    });
+
+  const acceptGenderClass = 'accept-gender-detection';
+  $form
+    .find('button.' + acceptGenderClass + ', .button.' + acceptGenderClass)
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+      const gender = $this.data('value');
+      const $genderInput = $this.closest(pmeValueSelector).find(pmeClassSelector('', 'input'));
+      console.info('GENDER', gender, $genderInput);
+      if ($genderInput.is('select')) {
+        selectedValues($genderInput, gender);
+      } else {
+        $genderInput.val(gender);
+      }
       return false;
     });
 };
