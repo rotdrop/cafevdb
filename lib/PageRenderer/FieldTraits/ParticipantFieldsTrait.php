@@ -24,12 +24,14 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use Throwable;
 use Exception;
 use RuntimeException;
 
-use \OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
+use OCA\CAFEVDB\Wrapped\Carbon\Carbon as DateTime;
 
 use OCP\Files as CloudFiles;
+use OCP\Files\NotFoundException;
 
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
@@ -241,21 +243,20 @@ trait ParticipantFieldsTrait
           $extraFddBase['input'] = 'VSRH';
         }
 
-        list($fddBaseIndex, $keyFddName) = $this->makeJoinTableField(
+        list(, $keyFddName) = $this->makeJoinTableField(
           $fieldDescData, $tableName, 'option_key',
           Util::arrayMergeRecursive($extraFddBase, [ 'values' => ['encode' => 'BIN2UUID(%s)',], ])
         );
         $keyFdd = &$fieldDescData[$keyFddName];
 
-        list($absValueFddIndex, $valueFddName) = $this->makeJoinTableField(
+        list(, $valueFddName) = $this->makeJoinTableField(
           $fieldDescData, $tableName, 'option_value',
           Util::arrayMergeRecursive($extraFddBase, [ 'input' => 'VSRH', ])
         );
         $valueFdd = &$fieldDescData[$valueFddName];
-        $valueFddOffset = $absValueFddIndex - $fddBaseIndex;
 
         // @todo this would need more care.
-        /* list($deletedFddIndex, $deletedFddName) = */$this->makeJoinTableField(
+        /* list(, $deletedFddName) = */$this->makeJoinTableField(
           $fieldDescData, $tableName, 'deleted',
           Util::arrayMergeRecursive($extraFddBase, [
             'name' => $this->l->t('Deleted'),
@@ -370,7 +371,7 @@ trait ParticipantFieldsTrait
                 unset($valueFdd['mask']);
 
                 // yet another field for the supporting documents
-                list($absInvoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
+                list(, $invoiceFddName) = $this->makeJoinTableField(
                   $fieldDescData, $tableName, 'supporting_document_id', [
                     'input' => 'SRH',
                     'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(DISTINCT
@@ -380,8 +381,6 @@ trait ParticipantFieldsTrait
                       'orderby' => '$table.option_key ASC',
                     ],
                   ]);
-                // $invoiceFdd = &$fieldDescData[$invoiceFddName];
-                $invoiceFddOffset = $absInvoiceFddIndex - $fddBaseIndex;
 
                 // yet another field to support summing up totals
                 list($subTotalsIndex, $subTotalsName) = $this->makeJoinTableField(
@@ -411,24 +410,20 @@ trait ParticipantFieldsTrait
                 );
 
                 $viewCallback = function(
-                  $optionValue,
-                  $op,
-                  $k,
-                  $row,
-                  $recordId,
-                  $pme,
-                  $valueFddOffset,
+                  mixed $optionValue,
+                  string $op,
+                  int $k,
+                  array $row,
+                  array $recordId,
+                  PHPMyEdit $pme,
                 ) use (
                   $field,
-                  $invoiceFddOffset,
+                  $tableName,
                 ) {
                   $html = $this->moneyValue($optionValue);
 
-                  $keyFddIndex = $k - $valueFddOffset;
-                  $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
-
-                  $optionKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
-                  $invoice = $row[PHPMyEdit::QUERY_FIELD . $invoiceFddIndex];
+                  $optionKey = $row[$this->joinQueryField($tableName, 'option_key')];
+                  $invoice = $row[$this->joinQueryField($tableName, 'supporting_document_id')];
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
                   if (empty($optionKey)) {
@@ -466,21 +461,8 @@ trait ParticipantFieldsTrait
                   return $html;
                 };
 
-                $valueFdd['php|VDLF'] = function(
-                  $optionValue,
-                  $op,
-                  $k,
-                  $row,
-                  $recordId,
-                  $pme,
-                ) use (
-                  $field,
-                  $invoiceFddOffset,
-                  $valueFddOffset,
-                  $viewCallback,
-                ) {
-                  return $viewCallback($optionValue, $op, $k, $row, $recordId, $pme, $valueFddOffset);
-                };
+                // $valueFddOffset used here
+                $valueFdd['php|VDLF'] = $viewCallback;
 
                 $valueFdd['display|ACP']['postfix'] = function(
                   $op,
@@ -489,11 +471,10 @@ trait ParticipantFieldsTrait
                   $row,
                   $pme,
                 ) use (
+                  $tableName,
                   $field,
                   $defaultValue,
                   $defaultButton,
-                  $valueFddOffset,
-                  $invoiceFddOffset,
                 ) {
                   $html = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                   if ($defaultValue !== '' && $defaultValue !== null) {
@@ -504,13 +485,9 @@ trait ParticipantFieldsTrait
                     return $html;
                   }
 
-                  $keyFddIndex = $k - $valueFddOffset;
-                  $valueFddIndex = $k;
-                  $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
-
-                  $optionValue = $row[PHPMyEdit::QUERY_FIELD . $valueFddIndex];
-                  $optionKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
-                  $invoice = $row[PHPMyEdit::QUERY_FIELD . $invoiceFddIndex];
+                  $optionValue = $row[PHPMyEdit::QUERY_FIELD . $k];
+                  $optionKey = $row[$this->joinQueryField($tableName, 'option_key')];
+                  $invoice = $row[$this->joinQueryField($tableName, 'supporting_document_id')];
                   list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
                   if (empty($optionKey)) {
@@ -534,7 +511,7 @@ trait ParticipantFieldsTrait
                     try {
                       $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
                       break;
-                    } catch (\OCP\Files\NotFoundException $e) {
+                    } catch (NotFoundException $e) {
                       $this->logDebug('No file found for ' . $filesAppPath);
                       array_pop($pathChain);
                     }
@@ -606,7 +583,6 @@ trait ParticipantFieldsTrait
                   ],
                 ]);
                 $depositFdd = &$fieldDescData[$depositFddName];
-                $depositFddOffset = count($fieldDescData) - $fddBaseIndex;
 
                 $depositFdd['display|ACP']['postfix'] = '<span class="currency-symbol">'.$this->currencySymbol().'</span>';
                 if ($defaultValue !== '' && $defaultValue !== null) {
@@ -614,22 +590,7 @@ trait ParticipantFieldsTrait
                     str_replace([ '[BUTTON_STYLE]', '[FIELD_PROPERTY]' ], [ 'hidden-text', 'defaultDeposit' ], $defaultButton);
                 }
 
-                $depositFdd['php|VDLF'] = function(
-                  $optionValue,
-                  $op,
-                  $k,
-                  $row,
-                  $recordId,
-                  $pme,
-                ) use (
-                  $field,
-                  $invoiceFddOffset,
-                  $depositFddOffset,
-                  $viewCallback,
-                ) {
-                  return $viewCallback($optionValue, $op, $k, $row, $recordId, $pme, $depositFddOffset);
-                };
-
+                $depositFdd['php|VDLF'] = $viewCallback;
                 break;
 
               case FieldType::DB_FILE:
@@ -735,7 +696,7 @@ trait ParticipantFieldsTrait
                       $html = '<a class="download-link ajax-download tooltip-auto"
    title="'.$this->toolTipsService[self::$toolTipsPrefix . ':attachment:download'].'"
    href="'.$downloadLink.'">' . $fileBase . '.' . $extension . '</a>';
-                    } catch (\OCP\Files\NotFoundException $e) {
+                    } catch (NotFoundException $e) {
                       $this->logException($e);
                       $html = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileBase) . '</span>';
                     }
@@ -823,7 +784,7 @@ trait ParticipantFieldsTrait
                              class="download-link tooltip-auto">
   ' . $linkText . '
 </a>';
-                    } catch (\OCP\Files\NotFoundException $e) {
+                    } catch (NotFoundException $e) {
                       $this->logException($e);
                       $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
                     }
@@ -947,7 +908,7 @@ trait ParticipantFieldsTrait
                     $dataValue = ($dataType == FieldType::DATE)
                       ? $this->dateTimeFormatter()->formatDate($date, 'medium')
                       : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-                  } catch (\Throwable $t) {
+                  } catch (Throwable $t) {
                     $this->logException($t);
                     // don't care
                   }
@@ -1072,7 +1033,7 @@ trait ParticipantFieldsTrait
                              class="download-link tooltip-auto">
   ' . $linkText . '
 </a>';
-                    } catch (\OCP\Files\NotFoundException $e) {
+                    } catch (NotFoundException $e) {
                       $this->logException($e);
                       $html = '<span class="error tooltip-auto" title="' . $folderPath . '">' . $this->l->t('The folder "%s" could not be found on the server.', $subDir) . '</span>';
                     }
@@ -1399,7 +1360,7 @@ trait ParticipantFieldsTrait
             // $labelFdd = &$fieldDescData[$labelFddName];
 
             // yet another field for the supporting documents
-            list($absInvoiceFddIndex, $invoiceFddName) = $this->makeJoinTableField(
+            list(, $invoiceFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'supporting_document_id', [
                 'input' => 'SRH',
                 'sql' => 'TRIM(BOTH \',\' FROM GROUP_CONCAT(
@@ -1419,7 +1380,6 @@ trait ParticipantFieldsTrait
                   'orderby' => '$table.created DESC, $table.option_key ASC',
                 ],
               ]);
-            $invoiceFddOffset = $absInvoiceFddIndex - $fddBaseIndex;
 
             $viewClosure = function(
               $value,
@@ -1429,21 +1389,18 @@ trait ParticipantFieldsTrait
               $recordId,
               $pme,
             ) use (
+              $tableName,
               $field,
               $dataType,
-              $invoiceFddOffset,
             ) {
-              $keyFddIndex = $k;
-              $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
-
               // LF are actually both the same. $value will always just
               // come from the filter's $value2 array. The actual values
               // we need are in the description fields which are passed
               // through the PHPMyEdit::QUERY_FIELD . $k field in $row.
-              $values = array_filter(Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD . $k]));
+              $values = array_filter(Util::explodeIndexed($row[$this->queryField($k)]));
               $options = self::fetchValueOptions($field, $values);
 
-              $invoices = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD . $invoiceFddIndex]);
+              $invoices = Util::explodeIndexed($row[$this->joinQueryField($tableName, 'supporting_document_id')]);
               list('musician' => $musician, ) = $this->musicianFromRow($row, $pme);
 
               switch ($dataType) {
@@ -1525,14 +1482,10 @@ trait ParticipantFieldsTrait
               $recordId,
               $pme,
             ) use (
+              $tableName,
               $field,
               $dataType,
-              $valueFddOffset,
-              $invoiceFddOffset,
             ) {
-              $keyFddIndex = $k - $valueFddOffset;
-              $invoiceFddIndex = $keyFddIndex + $invoiceFddOffset;
-
               // $this->logInfo('VALUE '.$k.': '.$value);
               // $this->logInfo('ROW '.$k.': '.$row[PHPMyEdit::QUERY_FIELD . $k]);
               // $this->logInfo('ROW IDX '.$k.': '.$row[PHPMyEdit::QUERY_FIELD . $k . PHPMyEdit::QUERY_FIELD_IDX]);
@@ -1540,13 +1493,13 @@ trait ParticipantFieldsTrait
               $fieldId = $field->getId();
               $multiplicity = FieldMultiplicity::RECURRING;
 
-              $value = $row[PHPMyEdit::QUERY_FIELD . $k];
+              $value = $row[$this->queryField($k)];
               $values = Util::explodeIndexed($value);
 
               $options = [];
               $labelled = false;
               $options = self::fetchValueOptions($field, $values, $labelled);
-              $invoices = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD . $invoiceFddIndex]);
+              $invoices = Util::explodeIndexed($row[$this->joinQueryField($tableName, 'supporting_document_id')]);
 
               $generatorOption = $field->getManagementOption();
               $generatorClass = $generatorOption->getData();
@@ -1670,9 +1623,8 @@ trait ParticipantFieldsTrait
             $keyFdd = array_merge($keyFdd, [ 'mask' => null, ]);
 
             // generate a new group-definition field as yet another column
-            list($groupMemberFddIndex, $groupMemberFddName) = $this->makeJoinTableField(
+            list(, $groupMemberFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'musician_id', $keyFdd);
-            $groupMemberFddOffset = $groupMemberFddIndex - $fddBaseIndex;
 
             // hide value field and tweak for view displays.
             $css[] = FieldMultiplicity::GROUPOFPEOPLE;
@@ -1785,9 +1737,8 @@ WHERE pp.project_id = $this->projectId",
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<span class="allowed-option money group service-fee"><span class="allowed-option-name money clip-long-text group">',
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $groupMemberFddOffset) {
-                    $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($money, $tableName) {
+                    $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $active = empty($selectedKey) ? '' : ' selected';
                     return '</span><span class="allowed-option-separator money">&nbsp;</span>'
                       .'<span class="allowed-option-value money">'.$money.'</span></span>';
@@ -1797,9 +1748,8 @@ WHERE pp.project_id = $this->projectId",
                 $groupMemberFdd['display'],
                 [
                   'prefix' => '<label class="'.implode(' ', $css).'">',
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $groupMemberFddOffset) {
-                    $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($fieldData, $dataType, $tableName) {
+                    $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $active = ($op == 'display' && empty($selectedKey)) ? '' : 'selected';
                     return $this->allowedOptionLabel('', $fieldData, $dataType, $active)
                       .'</label>';
@@ -1918,9 +1868,8 @@ WHERE pp.project_id = $this->projectId",
               ]);
 
             // generate a new group-definition field as yet another column
-            list($groupMemberFddIndex, $groupMemberFddName) = $this->makeJoinTableField(
+            list(, $groupMemberFddName) = $this->makeJoinTableField(
               $fieldDescData, $tableName, 'musician_id', $fddBase);
-            $groupMemberFddOffset = $groupMemberFddIndex - $fddBaseIndex;
 
             // compute group limits per group
             $dataOptionsData = $dataOptions->map(function($value) {
@@ -1992,9 +1941,8 @@ WHERE pp.project_id = $this->projectId",
                   'prefix' => function($op, $pos, $k, $row, $pme) use ($css) {
                     return '<label class="'.implode(' ', $css).'">';
                   },
-                  'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $groupMemberFddOffset) {
-                    $keyFddIndex = $k - $groupMemberFddOffset;
-                    $selectedKey = $row[PHPMyEdit::QUERY_FIELD . $keyFddIndex];
+                  'postfix' => function($op, $pos, $k, $row, $pme) use ($dataOptions, $dataType, $tableName) {
+                    $selectedKey = $row[$this->joinQueryField($tableName, 'option_key')];
                     $html = '';
                     foreach ($dataOptions as $dataOption) {
                       $key = $dataOption['key'];
@@ -2139,7 +2087,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             $value = ($dataType == FieldType::DATE)
               ? $this->dateTimeFormatter()->formatDate($date, 'medium')
               : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             // don't care
           }
         }
@@ -2208,7 +2156,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
             $optionValue = ($dataType == FieldType::DATE)
               ? $this->dateTimeFormatter()->formatDate($date, 'medium')
               : $this->dateTimeFormatter()->formatDateTime($date, 'medium', 'short');
-          } catch (\Throwable $t) {
+          } catch (Throwable $t) {
             // ignore for now
           }
           break;
@@ -2253,7 +2201,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
       try {
         $filesAppLink = $this->userStorage->getFilesAppLink($path, true);
         break;
-      } catch (\OCP\Files\NotFoundException $e) {
+      } catch (NotFoundException $e) {
         $this->logDebug('No file found for ' . $filesAppPath);
         array_pop($pathChain);
       }
@@ -2673,7 +2621,7 @@ WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
     if (!empty($supportingDocument) && !($supportingDocument instanceof Entities\DatabaseStorageFile)) {
       try {
         $supportingDocument = $this->findEntity(Entities\DatabaseStorageFile::class, $supportingDocument);
-      } catch (\Throwable $t) {
+      } catch (Throwable $t) {
         $supportingDocument = null;
       }
     }

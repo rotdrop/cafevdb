@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Exceptions;
 class SepaBulkTransactions extends PMETableViewBase
 {
   use FieldTraits\CryptoTrait;
+  use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
 
   const TEMPLATE = 'sepa-bulk-transactions';
@@ -644,7 +645,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           if ($this->isBulkTransactionRow($row, $pme)) {
             return str_replace(',', '<br/>', Util::htmlEscape($value));
           }
-          $html = $pme->cellDisplay($k - 1, $row);
+          $html = $pme->cellDisplay($this->joinQueryFieldIndex(static::SENT_EMAILS_TABLE, 'message_id'), $row);
           return empty($html) ? Util::htmlEscape($value) : $html;
         },
       ]);

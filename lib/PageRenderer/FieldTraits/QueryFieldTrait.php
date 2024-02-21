@@ -36,13 +36,13 @@ trait QueryFieldTrait
   protected $pme;
 
   /**
-   * @param string $column
+   * @param int|string $column
    *
    * @return null|int the numeric field description index
    */
-  protected function queryFieldIndex(string $column):?int
+  protected function queryFieldIndex(int|string $column):?int
   {
-    return $this->pme->fdn[$column] ?? null;
+    return is_int($column) ? $column : ($this->pme->fdn[$column] ?? null);
   }
 
   /**
@@ -58,12 +58,12 @@ trait QueryFieldTrait
   }
 
   /**
-   * @param string $key
+   * @param int|string $key
    *
    * @return string PHPMyEdit::QUERY_FIELD . N where N is determined by a
    * lookup table of PHPMyEdit.
    */
-  protected function queryField(string $key):string
+  protected function queryField(int|string $key):string
   {
     return PHPMyEdit::QUERY_FIELD . $this->queryFieldIndex($key);
   }
@@ -71,12 +71,12 @@ trait QueryFieldTrait
   /**
    * Compute the key in to the PME $row array for the given column.
    *
-   * @param string $key
+   * @param int|string $key
    *
    * @return string PHPMyEdit::QUERY_FIELD . N . PHPMyEdit::QUERY_FIELD_IDX
    * where N is determined by a lookup table of PHPMyEdit.
    */
-  protected function queryIndexField(string $key)
+  protected function queryIndexField(int|string $key)
   {
     return $this->queryField($key) . PHPMyEdit::QUERY_FIELD_IDX;
   }

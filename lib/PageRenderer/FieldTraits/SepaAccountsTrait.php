@@ -33,6 +33,7 @@ use OCA\CAFEVDB\PageRenderer\PMETableViewBase as ParentClass;
 trait SepaAccountsTrait
 {
   use CryptoTrait;
+  use QueryFieldTrait;
 
   /**
    * Generate join-structure and field-descriptions for the SEPA information.
@@ -313,17 +314,17 @@ trait SepaAccountsTrait
             }
             // $this->logInfo('RECORD ID '.$recordId.' PME REC '.print_r($pme->rec, true));
 
-            //$valInfo = $pme->set_values($k-1);
+            // $valInfo = $pme->set_values($k - 1);
 
-            //$this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
-            //$this->logInfo('VALINFO '.print_r($valInfo, true));
+            // $this->logInfo('VALUE '.$value.' ROW '.print_r($row, true));
+            // $this->logInfo('VALINFO '.print_r($valInfo, true));
 
             // more efficient would perhaps be JSON
             $sepaIds = Util::explode(',', $value);
-            $accountDeleted = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD.($k-1)]);
-            $ibans = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD.($k-2)]);
-            $mandateDeleted = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD.($k-3)]);
-            $references = Util::explodeIndexed($row[PHPMyEdit::QUERY_FIELD.($k-4)]);
+            $accountDeleted = Util::explodeIndexed($row[$this->joinQueryField(ParentClass::SEPA_BANK_ACCOUNTS_TABLE, 'deleted')]);
+            $ibans = Util::explodeIndexed($row[$this->joinQueryField(ParentClass::SEPA_BANK_ACCOUNTS_TABLE, 'iban')]);
+            $mandateDeleted = Util::explodeIndexed($row[$this->joinQueryField(ParentClass::SEPA_DEBIT_MANDATES_TABLE, 'deleted')]);
+            $references = Util::explodeIndexed($row[$this->joinQueryField(ParentCLass::SEPA_DEBIT_MANDATES_TABLE, 'mandate_reference')]);
 
             $this->logDebug('M DELETED '.print_r($mandateDeleted, true));
             $this->logDebug('A DELETED '.print_r($accountDeleted, true));

@@ -24,7 +24,10 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use Throwable;
 use RuntimeException;
+
+use OCP\Files\NotFoundException;
 
 use OCA\CAFEVDB\Service\ToolTipsService;
 use OCA\CAFEVDB\Service\ProjectService;
@@ -109,7 +112,7 @@ trait ParticipantFileFieldsTrait
       $filePath = $participantFolder . $subDirPrefix . UserStorage::PATH_SEP . $fileName;
       try {
         $downloadLink = $this->userStorage->getDownloadLink($filePath);
-      } catch (\OCP\Files\NotFoundException $e) {
+      } catch (NotFoundException $e) {
         $downloadLink = '#';
         $optionValue = '<span class="error tooltip-auto" title="' . $filePath . '">' . $this->l->t('The file "%s" could not be found on the server.', $fileName) . '</span>';
       }
@@ -122,7 +125,7 @@ trait ParticipantFileFieldsTrait
     $filesAppPath = $participantFolder . $subDirPrefix;
     try {
       $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, true);
-    } catch (\OCP\Files\NotFoundException $e) {
+    } catch (NotFoundException $e) {
       $filesAppLink = $filesAppLinkParticipant;
     }
     $optionValueName = $this->pme->cgiDataName(self::participantFieldValueFieldName($fieldId))
@@ -242,11 +245,11 @@ trait ParticipantFileFieldsTrait
         $filesAppPath = $folderPath . $subDirPrefix;
         try {
           $filesAppLink = $this->userStorage->getFilesAppLink($filesAppPath, subDir: true);
-        } catch (\OCP\Files\NotFoundException $e) {
+        } catch (NotFoundException $e) {
           $this->logDebug('No file found for ' . $filesAppPath);
           $filesAppLink = $filesAppLinkFolder;
         }
-      } catch (\OCP\Files\NotFoundException $e) {
+      } catch (NotFoundException $e) {
         $this->logDebug('No folder found for ' . $folderPath);
         $filesAppPath = '';
         $filesAppLink = '';
@@ -345,7 +348,7 @@ trait ParticipantFileFieldsTrait
       try {
         $filesAppLink = $this->userStorage->getFilesAppLink($folderPath, true);
         break;
-      } catch (/*\OCP\Files\NotFoundException*/ \Throwable $e) {
+      } catch (/*NotFoundException*/ Throwable $e) {
         $this->logException($e, level: \OCP\ILogger::DEBUG);
         array_pop($pathChain);
       }

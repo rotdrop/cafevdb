@@ -24,6 +24,9 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
+use Throwable;
+
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
