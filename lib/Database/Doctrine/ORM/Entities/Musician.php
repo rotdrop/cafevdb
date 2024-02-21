@@ -890,13 +890,17 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * Set gender.
    *
-   * @param string|EnumGender $gender
+   * @param null|string|Types\EnumGender $gender
    *
    * @return Musician
    */
-  public function setGender($gender):Musician
+  public function setGender(null|string|Types\EnumGender $gender):Musician
   {
-    $this->gender = new Types\EnumGender($gender);
+    if ($gender === null) {
+      $this->gender = $gender;
+    } else {
+      $this->gender = new Types\EnumGender($gender);
+    }
 
     return $this;
   }
@@ -906,9 +910,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return EnumGender
    */
-  public function getGender():Types\EnumGender
+  public function getGender():?Types\EnumGender
   {
-    return $this->gender ?? Types\EnumGender::DIVERSE();
+    return $this->gender;
   }
 
   /**
