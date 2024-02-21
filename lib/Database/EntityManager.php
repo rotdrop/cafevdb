@@ -811,7 +811,7 @@ class EntityManager extends EntityManagerDecorator
 
       /** @var \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\Column $column */
       foreach ($enumColumns as $column) {
-        $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->getValues()))));
+        $column->setComment(trim(sprintf('%s enum(%s)', $column->getComment(), implode(',', $column->getType()->toArray()))));
       }
     }
   }

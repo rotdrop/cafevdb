@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2022, 2024 Claus-Justus Heine
+ * @copyright 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,36 +24,28 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 
+use OCA\CAFEVDB\Wrapped\MyCLabs\Enum\Enum as EnumType;
+
+use OCP\IL10N;
+
 /**
- * Member status enum for musicians.
- *
- * @method static EnumMemberStatus REGULAR()
- * @method static EnumMemberStatus PASSIVE()
- * @method static EnumMemberStatus SOLOIST()
- * @method static EnumMemberStatus CONDUCTOR()
- * @method static EnumMemberStatus TEMPORARY()
- *
- * @todo This should rather be specified per project.
+ * Abstract base class for providing some common services.
  */
-class EnumMemberStatus extends AbstractEnumType
+abstract class AbstractEnumType extends EnumType
 {
-  public const REGULAR = 'regular';
-  public const PASSIVE = 'passive';
-  public const SOLOIST = 'soloist';
-  public const CONDUCTOR = 'conductor';
-  public const TEMPORARY = 'temporary';
+  use \OCA\CAFEVDB\Toolkit\Traits\FakeTranslationTrait;
 
   /**
-   * Just here in order to inject the enum values into the l10n framework.
+   * @param IL10N $l
    *
-   * @return void
+   * @return array translated value array.
    */
-  protected static function translationHack():void
+  public static function getL10NValues(IL10N $l): array
   {
-    self::t(self::REGULAR);
-    self::t(self::PASSIVE);
-    self::t(self::SOLOIST);
-    self::t(self::CONDUCTOR);
-    self::t(self::TEMPORARY);
+    $values = array_values(static::toArray());
+    return array_combine(
+      $values,
+      array_map(fn(string $value) => $l->t($value), $values),
+    );
   }
 }
