@@ -205,7 +205,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
+   * @ORM\Column(type="string", length=5, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
    */
   private $language;
 
