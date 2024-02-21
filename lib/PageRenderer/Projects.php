@@ -451,9 +451,17 @@ class Projects extends PMETableViewBase
               $instruments = array_keys($this->instruments);
               $instrumentNames = $this->instruments;
             } else {
-              $instrumentsIndex = $k - 1;
-              $instruments = Util::explode(',', $row[PHPMyEdit::QUERY_FIELD . $instrumentsIndex], Util::OMIT_EMPTY_FIELDS|Util::TRIM);
-              $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
+              $instruments = Util::explode(
+                ',',
+                $row[$this->joinQueryField(static::PROJECT_INSTRUMENTATION_NUMBERS_TABLE, 'instrument_id')],
+                Util::OMIT_EMPTY_FIELDS|Util::TRIM,
+              );
+              $instrumentNames = $pme->set_values(
+                $this->joinQueryFieldIndex(
+                  static::PROJECT_INSTRUMENTATION_NUMBERS_TABLE,
+                  'instrument_id',
+                )
+              )['values'];
             }
 
             $templateParameters = [
@@ -944,7 +952,7 @@ class Projects extends PMETableViewBase
       'maxlen'   => 65535,
       'css'      => ['postfix' => [ 'projectposters', ], ],
       'sql'      => '$main_table.id',
-      'php|' . $posterDisplay => function($value, $action, $field, $row, $recordId, $pme) {
+      'php|' . $posterDisplay => function($value, string $action, int $field, array $row, array $recordId, PHPMyEdit $pme) {
         $projectId = $recordId['id'];
         $postersFolder = $this->projectService->ensurePostersFolder($projectId);
         $filesAppLink = empty($postersFolder)
@@ -954,7 +962,7 @@ class Projects extends PMETableViewBase
           'folder' => $postersFolder,
           'filesAppLink' => $filesAppLink,
           'toolTips' => $this->toolTipsService,
-          'operation' => $this->listOperation() ? 'list' : $op,
+          'operation' => $this->listOperation() ? 'list' : $action,
         ];
         $template = $this->templateResponse(
           'fragments/projects/project-posters',

@@ -24,7 +24,7 @@
 
 namespace OCA\CAFEVDB\PageRenderer\FieldTraits;
 
-use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
 
 /**
  * Provide an SQL snippets for use in conditionals in order to determine
@@ -55,7 +55,7 @@ trait MusicianEnsureUserIdSlugTrait
   {
     $tag = 'user_id_slug';
     if (!empty($pme->fdn[self::joinTableMasterFieldName(self::MUSICIANS_TABLE)])) {
-      $tag = $this->joinTableFieldName(self::MUSICIANS_TABLE, $tag);
+      $tag = $this->joinTableFieldName(static::MUSICIANS_TABLE, $tag);
     }
     if (empty($newValues[$tag])) {
       // force regeneration by setting the slug to a "magic" value.

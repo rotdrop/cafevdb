@@ -61,6 +61,7 @@ class ProjectParticipants extends PMETableViewBase
   use FieldTraits\MailingListsTrait;
   use FieldTraits\MusicianAvatarTrait;
   use FieldTraits\MusicianEmailsTrait;
+  use FieldTraits\MusicianEnsureUserIdSlugTrait;
   use FieldTraits\MusicianFromRowTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
@@ -453,7 +454,7 @@ class ProjectParticipants extends PMETableViewBase
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
             $nickNamePlaceholder = $this->l->t('e.g. Cathy');
-            $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-1)];
+            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
             $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
             $unlockedPlaceholder = $this->l->t('e.g. Cathy');
             if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
@@ -493,9 +494,9 @@ class ProjectParticipants extends PMETableViewBase
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
             $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
-            $surName = $row[PHPMyEdit::QUERY_FIELD . ($k-3)];
-            $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-2)];
-            $nickName = $row[PHPMyEdit::QUERY_FIELD . ($k-1)];
+            $surName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'sur_name')];
+            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
+            $nickName = $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'nick_name')];
             $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
             $unlockedPlaceholder = $this->l->t('e.g. Doe, Cathy');
             if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
@@ -576,9 +577,9 @@ class ProjectParticipants extends PMETableViewBase
         'sort'     => true,
         'display|ACP' => [
           'attributes' => function($op, $k, $row, $pme) {
-            $surName = $row[PHPMyEdit::QUERY_FIELD . ($k-4)];
-            $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-3)];
-            $nickName = $row[PHPMyEdit::QUERY_FIELD . ($k-2)];
+            $surName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'sur_name')];
+            $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
+            $nickName = $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'nick_name')];
             $placeHolder = $this->projectService->defaultUserIdSlug($surName, $firstName, $nickName);
             return [
               'placeholder' => $placeHolder,
@@ -679,9 +680,8 @@ class ProjectParticipants extends PMETableViewBase
             $html = '</div>
 '; // close dropdown-menu
 
-            $instrumentsIndex = $k - 2;
-            $instruments = Util::explode(',', $row[PHPMyEdit::QUERY_FIELD . $instrumentsIndex]);
-            $instrumentNames = $pme->set_values($instrumentsIndex)['values'];
+            $instruments = Util::explode(',', $row[$this->joinQueryField(static::PROJECT_INSTRUMENTS_TABLE, 'instrument_id')]);
+            $instrumentNames = $pme->set_values($this->joinQueryFieldIndex(static::PROJECT_INSTRUMENTS_TABLE, 'instrument_id'))['values'];
 
             $templateParameters = [
               'instruments' => $instruments,

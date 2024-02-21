@@ -462,7 +462,7 @@ make sure that the musicians are also automatically added to the
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
           $nickNamePlaceholder = $this->l->t('e.g. Cathy');
-          $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-1)] ?? '';
+          $firstName = $row[$this->queryField('first_name')];
           $lockedPlaceholder = $firstName ?: $nickNamePlaceholder;
           $unlockedPlaceholder = $nickNamePlaceholder;
           if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
@@ -515,9 +515,9 @@ make sure that the musicians are also automatically added to the
         'attributes' => function($op, $k, $row, $pme) {
           // $this->logInfo('OP '.$op);
           $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
-          $surName = $row[PHPMyEdit::QUERY_FIELD . ($k-3)] ?? '';
-          $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-2)] ?? '';
-          $nickName = $row[PHPMyEdit::QUERY_FIELD . ($k-1)] ?? '';
+          $surName = $row[$this->queryField('sur_name')] ?? '';
+          $firstName = $row[$this->queryField('first_name')] ?? '';
+          $nickName = $row[$this->queryField('nick_name')] ?? '';
           $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
           $unlockedPlaceholder = $displayNamePlaceholder;
           if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
@@ -582,9 +582,9 @@ make sure that the musicians are also automatically added to the
       'sort'     => true,
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
-          $surName = $row[PHPMyEdit::QUERY_FIELD . ($k-4)] ?? '';
-          $firstName = $row[PHPMyEdit::QUERY_FIELD . ($k-3)] ?? '';
-          $nickName = $row[PHPMyEdit::QUERY_FIELD . ($k-2)] ?? '';
+          $surName = $row[$this->queryField('sur_name')];
+          $firstName = $row[$this->queryField('first_name')];
+          $nickName = $row[$this->queryField('nick_name')];
           $placeHolder = $this->defaultUserIdSlug($surName, $firstName, $nickName);
           return [
             'placeholder' => $op == 'add' ? '' : $placeHolder,

@@ -51,6 +51,7 @@ class SepaBankAccounts extends PMETableViewBase
 {
   use \OCA\CAFEVDB\Storage\Database\DatabaseStorageNodeNameTrait;
   use FieldTraits\CryptoTrait;
+  use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFieldsTrait;
   use FieldTraits\ParticipantTotalFeesTrait;
