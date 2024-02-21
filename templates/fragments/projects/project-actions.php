@@ -35,6 +35,9 @@
  * @param string $dropDirection 'up' or 'down'
  */
 
+$projectFolders = $projectService->ensureProjectFolders($projectId, dry: true);
+$wikiPage = $projectService->projectWikiLink($projectName);
+
 // provide URLs for all cases where the user may want to open this in another tab or window
 $routes = [
   'project-files' => $urlGenerator->linkToRoute('files.view.index', [
@@ -81,7 +84,7 @@ echo $this->inc('fragments/action-menu/menu', [
   'toolTipPrefix' => 'project-actions',
   'menuItemTemplate' => 'fragments/projects/action-items',
   'routes' => $routes,
-  'projectFolders' => $projectService->ensureProjectFolders($projectId, dry: true),
-  'wikiPage' => $projectService->projectWikiLink($projectName),
+  'projectFolders' => $projectFolders,
+  'wikiPage' => $wikiPage,
   'wikiTitle' => $l->t('Project Wiki for %s', [ $projectName ]),
 ]);
