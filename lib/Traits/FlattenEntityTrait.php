@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022 Claus-Justus Heine
+ * @copyright 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -291,7 +291,13 @@ trait FlattenEntityTrait
       }
     }
 
-    return array_filter($musicianData, fn($value) => !is_object($value));
+    return array_filter(
+      array_map(
+        fn($value) => is_object($value) && method_exists($value, '__toString') ? (string)$value : $value,
+        $musicianData,
+      ),
+      fn($value) => !is_object($value),
+    );
   }
 
   /**
@@ -317,6 +323,13 @@ trait FlattenEntityTrait
     foreach ($skippedProperties as $key) {
       unset($flatProject[$key]);
     }
-    return $flatProject;
+
+    return array_filter(
+      array_map(
+        fn($value) => is_object($value) && method_exists($value, '__toString') ? (string)$value : $value,
+        $flatProject,
+      ),
+      fn($value) => !is_object($value),
+    );
   }
 }
