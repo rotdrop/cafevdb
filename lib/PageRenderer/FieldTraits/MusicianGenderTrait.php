@@ -35,7 +35,7 @@ use OCA\CAFEVDB\PageRenderer\PMETableViewBase;
 trait MusicianGenderTrait
 {
   /** @var PHPMyEdit */
-  protected $pme;
+  protected PHPMyEdit $pme;
 
   /**
    * Return an array of possibilities for the gender of the musician.
