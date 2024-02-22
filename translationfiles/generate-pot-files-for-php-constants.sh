@@ -19,6 +19,8 @@ function extractConstant()
 TRANSLATION_RE='\Wt\(([$][0-9a-zA-Z_\\\\]+\s*=\s*)?([0-9a-zA-Z_\\\\]+)::([^)]+)'
 USE_RE='use\s+(\\?([0-9a-zA-Z_]+\\)*([0-9a-zA-Z_]+))(\s+as\s+([0-9a-zA-Z_]+))?';
 
+declare -A CONSTANTS
+
 while read -r MATCH; do
     FILE=$(echo "$MATCH"|cut -d: -f 1)
     SHORT_FILE=${FILE//$APPDIR\//}
@@ -52,10 +54,16 @@ while read -r MATCH; do
     fi
     LINE=$(echo "$MATCH"|cut -d: -f 2)
     VALUE=$(extractConstant "$CLASS" "$CONSTANT")
+    ARRAY_KEY=$(echo "$CLASS-$CONSTANT"|sed 's/\\/-/g')
+    if [ -z "${CONSTANTS[$ARRAY_KEY]}" ]; then
+        CONSTANTS[$ARRAY_KEY]=1
+        cat <<EOF
+#. TRANSLATORS: The expression in the sourcecode was
+#. TRANSLATORS: $PREFIX$CLASS::$CONSTANT = '$VALUE';
+EOF
+    fi
     cat <<EOF
 #: $SHORT_FILE:$LINE
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: $PREFIX$CLASS::$CONSTANT = $VALUE
 #, php-format
 msgid "$VALUE"
 msgstr ""

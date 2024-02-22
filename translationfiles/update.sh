@@ -27,7 +27,7 @@ done
 
 bash "$APPDIR"/translationfiles/generate-pot-files-for-php-constants.sh >> "${TMPFILE}"
 if msguniq "${TMPFILE}" > /dev/null 2>&1 ; then
-    msguniq -o "${TEMPLATE}" "${TMPFILE}"
+    msguniq "${TMPFILE}"|grep -vF '#-#-#-#-#' > "${TEMPLATE}"
 else
     echo "Broken POT template file" 1>&2
     exit 1
