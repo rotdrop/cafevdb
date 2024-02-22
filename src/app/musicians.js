@@ -162,6 +162,23 @@ const contactValidation = function(container) {
     return;
   }
 
+  const acceptGenderClass = 'accept-gender-detection';
+  $form
+    .find('button.' + acceptGenderClass + ', .button.' + acceptGenderClass)
+    .off('click')
+    .on('click', function(event) {
+      const $this = $(this);
+      const gender = $this.data('value');
+      const $genderInput = $this.closest(pmeValueSelector).find(pmeClassSelector('', 'input'));
+      console.info('GENDER', gender, $genderInput);
+      if ($genderInput.is('select')) {
+        selectedValues($genderInput, gender);
+      } else {
+        $genderInput.val(gender);
+      }
+      return false;
+    });
+
   $form.find('input.phone-number')
     .not('.pme-filter')
     .off('blur')
@@ -881,23 +898,6 @@ const ready = function(container) {
       const href = $(this).attr('href');
       const queryString = href.split('?')[1];
       Page.loadPage(queryString);
-      return false;
-    });
-
-  const acceptGenderClass = 'accept-gender-detection';
-  $form
-    .find('button.' + acceptGenderClass + ', .button.' + acceptGenderClass)
-    .off('click')
-    .on('click', function(event) {
-      const $this = $(this);
-      const gender = $this.data('value');
-      const $genderInput = $this.closest(pmeValueSelector).find(pmeClassSelector('', 'input'));
-      console.info('GENDER', gender, $genderInput);
-      if ($genderInput.is('select')) {
-        selectedValues($genderInput, gender);
-      } else {
-        $genderInput.val(gender);
-      }
       return false;
     });
 };

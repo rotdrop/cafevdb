@@ -70,35 +70,34 @@ trait MusicianGenderTrait
   /**
    * Use as display-postfix for legacy PME.
    *
+   * @param string $op Operation mode of PME.
+   *
    * @param int $k
    *
    * @param array $row
    *
    * @return string HTML fragment to add to the cell.
    */
-  protected function genderDisplayPostfix(int $k, array $row):string
+  protected function genderDisplayPostfix(string $op, int $k, array $row):string
   {
     if (empty($row) || !empty($row[$this->queryField($k)])) {
-      $this->logInfo('NO DATA');
       return '';
     }
     $genderTypes = $this->guessGender($row);
     if (count($genderTypes) == 0) {
-      $this->logInfo('GUESS FAILED');
       return '';
     }
-    $html = '
-<span class="space">&nbsp;</span>';
-    if (count($genderTypes) == 1) {
-      $html .= '
-<span class="gender-detector">' . $this->l->t('click to selected guessed gender:') . '</span>
+    if (count($genderTypes) == 1 && $op == PHPMyEdit::OPERATION_CHANGE) {
+      $html = '
+<span class="space">&nbsp;</span>
+<span class="gender-detector">' . $this->l->t('click to selected the guessed value:') . '</span>
 <span class="space">&nbsp;</span>';
       foreach ($genderTypes as $gender => $l10nGender) {
         $html .= '<a href="#" class="button accept-gender-detection" data-value="' . $gender . '">' . $l10nGender . '</a>';
       }
     } else {
       $html .= '
-<span class="gender-detector">' . $this->l->t('auto-detected: ' . implode(', ', $l10nGender)) . '</span>';
+<span class="gender-detector">' . $this->l->t('guessed: %s', implode(', ', $genderTypes)) . '</span>';
     }
     return $html;
   }
