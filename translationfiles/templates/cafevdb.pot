@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2024-02-21 21:25+0100\n"
+"POT-Creation-Date: 2024-02-22 14:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -599,8 +599,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:336
 #, php-format
 msgid ""
-"Would hard-remove soft-deleted event \"%1$s@%2$s\" from project "
-"\"%3$s\" (dry-run)"
+"Would hard-remove soft-deleted event \"%1$s@%2$s\" from project \"%3$s\" "
+"(dry-run)"
 msgstr ""
 
 #: lib/Command/ProjectEvents.php:363
@@ -663,8 +663,8 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:475
 #, php-format
 msgid ""
-"Would split non-repeating multi-day event \"%1$s@%2$s\" of project "
-"\"%3$s\" (dry-run)."
+"Would split non-repeating multi-day event \"%1$s@%2$s\" of project \"%3$s\" "
+"(dry-run)."
 msgstr ""
 
 #: lib/Command/ProjectEvents.php:482
@@ -708,15 +708,15 @@ msgstr ""
 #: lib/Command/ProjectEvents.php:603
 #, php-format
 msgid ""
-"Would delete unregistered event \"%1$s@%2$s\" with project-category "
-"\"%3$s\" (dry-run)."
+"Would delete unregistered event \"%1$s@%2$s\" with project-category \"%3$s\" "
+"(dry-run)."
 msgstr ""
 
 #: lib/Command/ProjectEvents.php:610
 #, php-format
 msgid ""
-"Will delete unregistered event \"%1$s@%2$s\" with project-category "
-"\"%3$s\" (dry-run)."
+"Will delete unregistered event \"%1$s@%2$s\" with project-category \"%3$s\" "
+"(dry-run)."
 msgstr ""
 
 #: lib/Command/ProjectEvents.php:628
@@ -4989,12 +4989,13 @@ msgstr ""
 msgid "Principal Em@il"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/MusicianGenderTrait.php:94
-msgid "click to selected guessed gender:"
+#: lib/PageRenderer/FieldTraits/MusicianGenderTrait.php:93
+msgid "click to selected the guessed value:"
 msgstr ""
 
-#: lib/PageRenderer/FieldTraits/MusicianGenderTrait.php:101
-msgid "auto-detected: "
+#: lib/PageRenderer/FieldTraits/MusicianGenderTrait.php:100
+#, php-format
+msgid "guessed: %s"
 msgstr ""
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:198
@@ -6911,7 +6912,7 @@ msgstr ""
 msgid "Unapplied migrations: %s."
 msgstr ""
 
-#: lib/Service/ContactsService.php:430
+#: lib/Service/ContactsService.php:431
 msgid "PO Box"
 msgstr ""
 
@@ -12108,33 +12109,33 @@ msgstr ""
 msgid "{command} expects an argument, but none was specified"
 msgstr ""
 
-#: src/app/musicians.js:223
+#: src/app/musicians.js:240
 msgid "Phone Number Validation"
 msgstr ""
 
-#: src/app/musicians.js:286
+#: src/app/musicians.js:303
 msgid "Email Validation"
 msgstr ""
 
-#: src/app/musicians.js:315
+#: src/app/musicians.js:332
 msgid "Email-address is empty, cannot perform mailing list operations."
 msgstr ""
 
-#: src/app/musicians.js:424
+#: src/app/musicians.js:441
 msgid "Suggestions"
 msgstr ""
 
-#: src/app/musicians.js:715
+#: src/app/musicians.js:732
 msgid "I am refusing to add duplicates to the database."
 msgstr ""
 
-#: src/app/musicians.js:718
+#: src/app/musicians.js:735
 msgid "The following musician matches exactly your input:"
 msgid_plural "The following musicians match exactly your input:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/app/musicians.js:721
+#: src/app/musicians.js:738
 msgid ""
 "When you click the 'OK'-button or close this alert-window\n"
 "you will be redirected to the existing musician's data in order to inspect "
@@ -12144,21 +12145,21 @@ msgid ""
 "entry."
 msgstr ""
 
-#: src/app/musicians.js:725
+#: src/app/musicians.js:742
 msgid "Duplicates Detected"
 msgstr ""
 
-#: src/app/musicians.js:752
+#: src/app/musicians.js:769
 msgid "You definitely do not want to add duplicates to the database."
 msgstr ""
 
-#: src/app/musicians.js:756
+#: src/app/musicians.js:773
 msgid "The following musician matches your input:"
 msgid_plural "The following musicians match also your input:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/app/musicians.js:759
+#: src/app/musicians.js:776
 msgid ""
 "Please answer \"YES\" in order not to add a new musician,\n"
 "otherwise answer \"no\" (but please do not do this). If you react in a "
@@ -12167,7 +12168,7 @@ msgid ""
 "the personal data of the respective musician up-to-date."
 msgstr ""
 
-#: src/app/musicians.js:763
+#: src/app/musicians.js:780
 msgid "Avoid Possible Duplicate?"
 msgstr ""
 
@@ -14199,9 +14200,8 @@ msgstr ""
 msgid "once"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::PERMANENT = permanent
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::PERMANENT = 'permanent';
 #: templates/sepa-debit-mandate.php:267
 #: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:48
 #, php-format
@@ -15441,12 +15441,8 @@ msgstr ""
 msgid "sub-page"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPLATE = template
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPLATE = template
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPLATE = 'template';
 #: lib/PageRenderer/PMETableViewBase.php:230
 #: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:49
 #: lib/PageRenderer/Projects.php:1020
@@ -15454,12 +15450,10 @@ msgstr ""
 msgid "template"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::TEMPORARY = temporary
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::TEMPORARY = 'temporary';
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY = temporary
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType::TEMPORARY = 'temporary';
 #: lib/PageRenderer/PMETableViewBase.php:230
 #: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:57
 #: lib/Database/Doctrine/DBAL/Types/EnumProjectTemporalType.php:47
@@ -15507,18 +15501,16 @@ msgstr ""
 msgid "file-attachments"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME = general debit-note mandate
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME = 'general debit-note mandate';
 #: templates/settings/orchestra-settings.php:142
 #: lib/Service/ConfigService.php:242
 #, php-format
 msgid "general debit-note mandate"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME = project debit-note mandate
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME = 'project debit-note mandate';
 #: templates/settings/orchestra-settings.php:142
 #: lib/Service/ConfigService.php:241
 #, php-format
@@ -15530,9 +15522,8 @@ msgstr ""
 msgid "signature"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME = instrument insurance record template
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME = 'instrument insurance record template';
 #: templates/settings/orchestra-settings.php:142
 #: lib/Service/ConfigService.php:247
 #, php-format
@@ -15559,9 +15550,8 @@ msgstr ""
 msgid "blz"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::EUROPE = Europe
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::EUROPE = 'Europe';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
 #: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:60
@@ -15569,9 +15559,8 @@ msgstr ""
 msgid "Europe"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::GERMANY = Germany
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::GERMANY = 'Germany';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
 #: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:59
@@ -15599,9 +15588,8 @@ msgstr ""
 msgid "Select project debit-note mandate"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::WORLD = World
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::WORLD = 'World';
 #: lib/PageRenderer/InstrumentInsurances.php:120
 #: lib/PageRenderer/InsuranceRates.php:67
 #: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:61
@@ -15609,9 +15597,8 @@ msgstr ""
 msgid "World"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_LOGO_NAME = orchestra logo
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_LOGO_NAME = 'orchestra logo';
 #: templates/settings/orchestra-settings.php:156
 #: lib/Service/ConfigService.php:238
 #, php-format
@@ -15624,9 +15611,8 @@ msgstr ""
 msgid "Select orchestra logo"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_SEAL_NAME = orchestra seal
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_SEAL_NAME = 'orchestra seal';
 #: templates/settings/orchestra-settings.php:159
 #: lib/Service/ConfigService.php:239
 #, php-format
@@ -15808,27 +15794,24 @@ msgstr ""
 msgid "tooltips"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::UPDATE_STRATEGY_SKIP = skip
+#. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::UPDATE_STRATEGY_SKIP = 'skip';
 #: lib/PageRenderer/ProjectParticipantFields.php:1387
 #: lib/Service/Finance/AbstractReceivablesGenerator.php:80
 #, php-format
 msgid "skip"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::UPDATE_STRATEGY_REPLACE = replace
+#. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::UPDATE_STRATEGY_REPLACE = 'replace';
 #: lib/PageRenderer/ProjectParticipantFields.php:1387
 #: lib/Service/Finance/AbstractReceivablesGenerator.php:79
 #, php-format
 msgid "replace"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION = exception
+#. TRANSLATORS: \OCA\CAFEVDB\Service\Finance\AbstractReceivablesGenerator::UPDATE_STRATEGY_EXCEPTION = 'exception';
 #: lib/PageRenderer/ProjectParticipantFields.php:1387
 #: lib/Service/Finance/AbstractReceivablesGenerator.php:78
 #, php-format
@@ -15845,9 +15828,8 @@ msgstr ""
 msgid "Select member data update"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME = member data update
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME = 'member data update';
 #: lib/EmailForm/Composer.php:4016
 #: templates/settings/orchestra-settings.php:180
 #: lib/Service/ConfigService.php:243
@@ -15870,9 +15852,8 @@ msgstr ""
 msgid "concerts"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::STATUS_INVITED = invited
+#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::STATUS_INVITED = 'invited';
 #: lib/PageRenderer/Musicians.php:646 lib/Service/MailingListsService.php:1299
 #, php-format
 msgid "invited"
@@ -16028,18 +16009,10 @@ msgstr ""
 msgid "SURCHARGE"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::SORT_ASCENDING = ascending
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
+#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::SORT_ASCENDING = 'ascending';
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::SORT_DEFAULT = ascending
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::SORT_ASCENDING = ascending
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::SORT_DEFAULT = ascending
+#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::SORT_DEFAULT = 'ascending';
 #: lib/Command/Migrations.php:107 lib/Command/Migrations.php:109
 #: lib/Command/Migrations.php:182 lib/Command/Migrations.php:197
 #, php-format
@@ -16047,31 +16020,23 @@ msgid "ascending"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::SORT_DESCENDING = descending
+#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::SORT_DESCENDING = 'descending';
 #: lib/Command/Migrations.php:108 lib/Command/Migrations.php:183
 #, php-format
 msgid "descending"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::APPLY_SINGLE = single
+#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::APPLY_SINGLE = 'single';
 #: lib/Command/Migrations.php:126 lib/Command/Migrations.php:213
 #, php-format
 msgid "single"
 msgstr ""
 
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::APPLY_AUTO = auto
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
+#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::APPLY_AUTO = 'auto';
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::APPLY_DEFAULT = auto
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::APPLY_AUTO = auto
-#. #-#-#-#-#  tmp.P03JmVry7y (Nextcloud 3.14159)  #-#-#-#-#
-#. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::APPLY_DEFAULT = auto
+#. TRANSLATORS: \OCA\CAFEVDB\Command\Migrations::APPLY_DEFAULT = 'auto';
 #: lib/Command/Migrations.php:127 lib/Command/Migrations.php:128
 #: lib/Command/Migrations.php:212 lib/Command/Migrations.php:230
 #, php-format
@@ -16079,182 +16044,182 @@ msgid "auto"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::MALE = male
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::MALE = 'male';
 #: lib/Database/Doctrine/DBAL/Types/EnumGender.php:47
 #, php-format
 msgid "male"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::FEMALE = female
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::FEMALE = 'female';
 #: lib/Database/Doctrine/DBAL/Types/EnumGender.php:48
 #, php-format
 msgid "female"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::DIVERSE = diverse
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender::DIVERSE = 'diverse';
 #: lib/Database/Doctrine/DBAL/Types/EnumGender.php:49
 #, php-format
 msgid "diverse"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::DOMESTIC = Domestic
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::DOMESTIC = 'Domestic';
 #: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:57
 #, php-format
 msgid "Domestic"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::CONTINENT = Continent
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope::CONTINENT = 'Continent';
 #: lib/Database/Doctrine/DBAL/Types/EnumGeographicalScope.php:58
 #, php-format
 msgid "Continent"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::REGULAR = regular
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::REGULAR = 'regular';
 #: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:53
 #, php-format
 msgid "regular"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::PASSIVE = passive
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::PASSIVE = 'passive';
 #: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:54
 #, php-format
 msgid "passive"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::SOLOIST = soloist
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::SOLOIST = 'soloist';
 #: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:55
 #, php-format
 msgid "soloist"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::CONDUCTOR = conductor
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus::CONDUCTOR = 'conductor';
 #: lib/Database/Doctrine/DBAL/Types/EnumMemberStatus.php:56
 #, php-format
 msgid "conductor"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::CORPORATE_INCOME = corporate income tax
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::CORPORATE_INCOME = 'corporate income tax';
 #: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:51
 #, php-format
 msgid "corporate income tax"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::SALES = sales tax
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::SALES = 'sales tax';
 #: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:52
 #, php-format
 msgid "sales tax"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::VAT = VAT
+#. TRANSLATORS: \OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType::VAT = 'VAT';
 #: lib/Database/Doctrine/DBAL/Types/EnumTaxType.php:53
 #, php-format
 msgid "VAT"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME = standard letter
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME = 'standard letter';
 #: lib/Service/ConfigService.php:240
 #, php-format
 msgid "standard letter"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INVOICE_NAME = invoice
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_INVOICE_NAME = 'invoice';
 #: lib/Service/ConfigService.php:244
 #, php-format
 msgid "invoice"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME = standard receipt
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME = 'standard receipt';
 #: lib/Service/ConfigService.php:245
 #, php-format
 msgid "standard receipt"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME = donation receipt
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME = 'donation receipt';
 #: lib/Service/ConfigService.php:246
 #, php-format
 msgid "donation receipt"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::PROJECT_REGISTRATION_CATEGORY = project registration
+#. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::PROJECT_REGISTRATION_CATEGORY = 'project registration';
 #: lib/Service/EventsService.php:1164
 #, php-format
 msgid "project registration"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = record absence
+#. TRANSLATORS: \OCA\CAFEVDB\Service\EventsService::RECORD_ABSENCE_CATEGORY = 'record absence';
 #: lib/Service/EventsService.php:1178
 #, php-format
 msgid "record absence"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::TEMPLATE_DIR_MAILING_LISTS = mailing-lists
+#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::TEMPLATE_DIR_MAILING_LISTS = 'mailing-lists';
 #: lib/Service/MailingListsService.php:1129
 #, php-format
 msgid "mailing-lists"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::TEMPLATE_DIR_AUTO_RESPONSES = auto-responses
+#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::TEMPLATE_DIR_AUTO_RESPONSES = 'auto-responses';
 #: lib/Service/MailingListsService.php:1130
 #, php-format
 msgid "auto-responses"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::STATUS_UNSUBSCRIBED = unsubscribed
+#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::STATUS_UNSUBSCRIBED = 'unsubscribed';
 #: lib/Service/MailingListsService.php:1297
 #, php-format
 msgid "unsubscribed"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::STATUS_SUBSCRIBED = subscribed
+#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::STATUS_SUBSCRIBED = 'subscribed';
 #: lib/Service/MailingListsService.php:1298
 #, php-format
 msgid "subscribed"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::STATUS_WAITING = waiting
+#. TRANSLATORS: \OCA\CAFEVDB\Service\MailingListsService::STATUS_WAITING = 'waiting';
 #: lib/Service/MailingListsService.php:1300
 #, php-format
 msgid "waiting"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_SKELETON_FOLDER = skeleton
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_SKELETON_FOLDER = 'skeleton';
 #: lib/Service/ProjectService.php:591
 #, php-format
 msgid "skeleton"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER = management
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_MANAGEMENT_SKELETON_FOLDER = 'management';
 #: lib/Service/ProjectService.php:598
 #, php-format
 msgid "management"
 msgstr ""
 
 #. TRANSLATORS: The expression in the sourcecode was
-#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER = forename.surname
+#. TRANSLATORS: \OCA\CAFEVDB\Service\ConfigService::PROJECT_PARTICIPANTS_SKELETON_FOLDER = 'forename.surname';
 #: lib/Service/ProjectService.php:611 lib/Service/ProjectService.php:656
 #, php-format
 msgid "forename.surname"
