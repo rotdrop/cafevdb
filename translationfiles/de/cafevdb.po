@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2024-02-22 13:01+0100\n"
-"PO-Revision-Date: 2024-02-09 16:29+0100\n"
+"POT-Creation-Date: 2024-02-22 13:48+0100\n"
+"PO-Revision-Date: 2024-02-22 13:51+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -5607,13 +5607,14 @@ msgstr "z.B. musteradresse@irgendwo.tld"
 msgid "Principal Em@il"
 msgstr "Haupt-Em@il"
 
-#: lib/PageRenderer/FieldTraits/MusicianGenderTrait.php:94
-msgid "click to selected guessed gender:"
-msgstr "anklicken um den mutmaßlichen Genus auszuwählen:"
+#: lib/PageRenderer/FieldTraits/MusicianGenderTrait.php:93
+msgid "click to selected the guessed value:"
+msgstr "anklicken um den mutmaßlichen Wert auszuwählen:"
 
-#: lib/PageRenderer/FieldTraits/MusicianGenderTrait.php:101
-msgid "auto-detected: "
-msgstr "mutmaßlich: "
+#: lib/PageRenderer/FieldTraits/MusicianGenderTrait.php:100
+#, php-format
+msgid "guessed: %s"
+msgstr "mutmaßlich: %s"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:198
 #, php-format
@@ -14228,33 +14229,33 @@ msgstr ""
 msgid "{command} expects an argument, but none was specified"
 msgstr "{command} erwartet genau ein Argument, es wurde aber keines angegeben"
 
-#: src/app/musicians.js:223
+#: src/app/musicians.js:240
 msgid "Phone Number Validation"
 msgstr "Rufnummernvalidierung"
 
-#: src/app/musicians.js:286
+#: src/app/musicians.js:303
 msgid "Email Validation"
 msgstr "Em@il-Validierung"
 
-#: src/app/musicians.js:315
+#: src/app/musicians.js:332
 msgid "Email-address is empty, cannot perform mailing list operations."
 msgstr "die Email-Adresse is leer, kann dehalb nichts machen."
 
-#: src/app/musicians.js:424
+#: src/app/musicians.js:441
 msgid "Suggestions"
 msgstr "Vorschläge"
 
-#: src/app/musicians.js:715
+#: src/app/musicians.js:732
 msgid "I am refusing to add duplicates to the database."
 msgstr "Ich weigere mich, Duplikate zur Datenbank hinzu zu fügen."
 
-#: src/app/musicians.js:718
+#: src/app/musicians.js:735
 msgid "The following musician matches exactly your input:"
 msgid_plural "The following musicians match exactly your input:"
 msgstr[0] "Die folgende Person stimmmt exakt mit Deiner Eingabe überein:"
 msgstr[1] "Die folgenden Personen stimmen exakt mit Deiner Eingab überein:"
 
-#: src/app/musicians.js:721
+#: src/app/musicians.js:738
 msgid ""
 "When you click the 'OK'-button or close this alert-window\n"
 "you will be redirected to the existing musician's data in order to inspect "
@@ -14268,21 +14269,21 @@ msgstr ""
 "Datenbank existierenden Person. Die Daten können dann inspiziert\n"
 "und die Person ggf. zum Projekt hinzugefügt werden."
 
-#: src/app/musicians.js:725
+#: src/app/musicians.js:742
 msgid "Duplicates Detected"
 msgstr "Duplikate entdeckt"
 
-#: src/app/musicians.js:752
+#: src/app/musicians.js:769
 msgid "You definitely do not want to add duplicates to the database."
 msgstr "Du willst keine Duplikate zur Datenbank hinzufügen."
 
-#: src/app/musicians.js:756
+#: src/app/musicians.js:773
 msgid "The following musician matches your input:"
 msgid_plural "The following musicians match also your input:"
 msgstr[0] "Die folgende Person passt auch zu Deinen Eingaben:"
 msgstr[1] "Die folgenden Personen passen auch zu Deinen Eingaben:"
 
-#: src/app/musicians.js:759
+#: src/app/musicians.js:776
 msgid ""
 "Please answer \"YES\" in order not to add a new musician,\n"
 "otherwise answer \"no\" (but please do not do this). If you react in a "
@@ -14295,7 +14296,7 @@ msgstr ""
 "Fall öffnet sich ein neues Fenster mit den Daten der bereits existierenden "
 "Person, mit der Möglichkeit, die Person direkt zum Projekt hinu zu fügen."
 
-#: src/app/musicians.js:763
+#: src/app/musicians.js:780
 msgid "Avoid Possible Duplicate?"
 msgstr "Doppelten Datenbankeintrag lieber vermeiden?"
 
@@ -18645,6 +18646,12 @@ msgstr "Verwaltung"
 #, php-format
 msgid "forename.surname"
 msgstr "vorname.nachname"
+
+#~ msgid "guessed value: "
+#~ msgstr "mutmaßlich: %s"
+
+#~ msgid "auto-detected: "
+#~ msgstr "mutmaßlich: "
 
 #~ msgid "Remove all options."
 #~ msgstr "Alle ausgewählten Optionen entfernen"
