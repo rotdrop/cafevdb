@@ -291,6 +291,13 @@ trait FlattenEntityTrait
       }
     }
 
+    if ($musician->getGender() == null) {
+      $guessedGenders = $musician->guessGender();
+      if (count($guessedGenders) == 1) {
+        $musicianData['guessedGender'] = reset($guessedGenders);
+      }
+    }
+
     return array_filter(
       array_map(
         fn($value) => is_object($value) && method_exists($value, '__toString') ? (string)$value : $value,
