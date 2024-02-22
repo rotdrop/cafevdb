@@ -61,7 +61,7 @@ class PHPMailer extends PHPMailerUpstream
   protected $mimeMessageTotalSize = 0;
   protected $mimeDataSent;
 
-  protected ?Callable $progressCallback = null;
+  protected ?Closure $progressCallback = null;
 
   /**
    * @var array
@@ -128,11 +128,11 @@ class PHPMailer extends PHPMailerUpstream
   }
 
   /**
-   * @param Closure $progressCallback
+   * @param null|Closure $progressCallback
    *
    * @return void
    */
-  public function setProgressCallback(Closure $progressCallback):void
+  public function setProgressCallback(?Closure $progressCallback):void
   {
     $this->progressCallback = $progressCallback;
   }
