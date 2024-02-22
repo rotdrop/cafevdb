@@ -34,6 +34,7 @@ use Symfony\Component\Process\ExecutableFinder;
 
 use OCP\IL10N;
 use OCP\Files\File;
+use OCP\Files\IMimeTypeDetector;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\EntityManager;
@@ -68,6 +69,8 @@ class OpenDocumentFiller
     private TemplateService $templateService,
     private OpenDocumentFillerBackend $backend,
     private AnyToPdf $anyToPdf,
+    private IMimeTypeDetector $mimeTypeDetector,
+    private ExecutableFinder $executableFinder,
   ) {
     $this->configService = $configService;
     $this->entityManager = $entityManager;
@@ -323,9 +326,9 @@ class OpenDocumentFiller
     ];
 
     // Logo
+    /** @var \OCP\Files\File */
     $logo = $this->templateService->getDocumentTemplate(ConfigService::DOCUMENT_TEMPLATE_LOGO);
-
-    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->userStorage->createDataUri($logo);
+    $substitutions['org'][ConfigService::DOCUMENT_TEMPLATE_LOGO] = $this->createDataUri($logo->getContent(), $logo->getMimeType());
 
     // $logoData = $logo->getContent();
     // $logoImage = ImagesService::rasterize($logoData, 1200);
@@ -350,7 +353,7 @@ class OpenDocumentFiller
         // if ($signature->mimeType() != 'image/png') {
         //   $signature = ImagesService::rasterize($signature, 1200, 1200);
         // }
-        $signature = 'data:'.$signature->mimeType().';base64,' . base64_encode($signature->data());
+        $signature = $this->createDataUri($signature->data(), $signature->mimeType());
       }
       $substitutions['org'][$boardMember]['signature'] = $signature;
       $substitutions['org'][$boardMember]['role'] = $this->l->t($boardMember);
@@ -403,5 +406,43 @@ class OpenDocumentFiller
     }
 
     return $substitutions;
+  }
+
+  /**
+   * Create a data-uri from a data string. If $data is svg then first convert
+   * texts to paths as Libreoffice has a bug with font rendering with svg
+   * images.
+   *
+   * @param string $data
+   *
+   * @parma null|string $mimeType
+   *
+   * @return string
+   */
+  protected function createDataUri(string $data, ?string $mimeType = null):string
+  {
+    if ($mimeType === null) {
+      $mimeType = $this->mimeTypeDetector->detectString($data);
+    }
+    if ($mimeType == 'image/svg+xml') {
+      // libreoffice has a bug with SVGs which contain text.
+      $inkscape = $this->executableFinder->find('inkscape');
+      if (!empty($inkscape)) {
+        $process = new Process([
+          $inkscape,
+          '--export-plain-svg',
+          '--export-text-to-path',
+          '-o', '-',
+          '-p',
+        ]);
+        try {
+          $process->setInput($data)->run();
+          $data = $process->getOutput();
+        } catch (Throwable $t) {
+          $this->logException('Calling inkscape as filter failed.', $t);
+        }
+      }
+    }
+    return 'data:' . $mimeType . ';base64,' . base64_encode($data);
   }
 }
