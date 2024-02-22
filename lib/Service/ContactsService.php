@@ -44,6 +44,7 @@ use OCP\IAvatarManager;
 use OCP\IAvatar;
 
 use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGender;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\AddressBook\MusicianCardBackend;
 use OCA\CAFEVDB\Common\Util;
@@ -482,6 +483,24 @@ class ContactsService
       $entity['instruments'] = new ArrayCollection($musicianInstruments);
     }
 
+    $value = $cardData['GENDER'] ?? null;
+    if (!empty($value)) {
+      switch ($value) {
+        case 'M':
+          $entity['gender'] = EnumGender::MALE();
+          break;
+        case 'F':
+          $entity['gender'] = EnumGender::FEMALE();
+          break;
+        case 'O':
+          $entity['gender'] = EnumGender::DIVERSE();
+          break;
+        case 'N':
+        case 'U':
+          break;
+      }
+    }
+
     // [PHOTO] => VALUE=uri:http://localhost/nextcloud-git/remote.php/dav/addressbooks/users/claus/
     //   z-app-generated--cafevdb--cafevdb-musicians/musician-32653235-3461-6335-2d34-3064362d3461.vcf?photo
     $value = $cardData['PHOTO'] ?? null;
@@ -600,6 +619,21 @@ class ContactsService
         $country
       ],
       [ 'TYPE' => 'home' ]);
+
+    $gender = $musician->getGender();
+    switch ((string)$gender) {
+      case EnumGender::MALE:
+        $vcard->add('GENDER', 'M');
+        break;
+      case EnumGender::FEMALE:
+        $vcard->add('GENDER', 'F');
+        break;
+      case EnumGender::DIVERSE:
+        $vcard->add('GENDER', 'O');
+        break;
+      default:
+        break;
+    }
 
     if (!$musician->getCloudAccountDeactivated()) {
       /** @var IAvatar $avatar */

@@ -606,7 +606,7 @@ make sure that the musicians are also automatically added to the
           }
       ],
       'display|CPVD' => [
-        'postfix' => fn(string $op, string $pos, int $k, array $row, PHPMyEdit $pme) => $this->genderDisplayPostfix($k, $row),
+        'postfix' => fn(string $op, string $pos, int $k, array $row, PHPMyEdit $pme) => $this->genderDisplayPostfix($op, $k, $row),
       ],
     ];
 
