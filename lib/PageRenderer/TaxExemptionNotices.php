@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Common\Util;
 /** Table generator TaxExemptionNotice. */
 class TaxExemptionNotices extends PMETableViewBase
 {
+  use FieldTraits\QueryFieldTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
 
   const TEMPLATE = 'tax-exemption-notices';
