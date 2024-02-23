@@ -225,6 +225,9 @@ class MailMergeController extends Controller
       }
     } elseif ($templateName !== null) {
       $fileName = $this->getDocumentTemplatesPath($templateName);
+      if (empty($fileName) && $operation == self::OPERATION_DATASET) {
+        $fileName = $templateName; // ok for testing
+      }
       if (empty($fileName)) {
         return self::grumble($this->l->t('Unable to map the given template name "%s" to an existing template file.', $templateName));
       }
