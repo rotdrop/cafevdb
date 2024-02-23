@@ -497,7 +497,7 @@ class ProjectParticipants extends PMETableViewBase
             $displayNamePlaceholder = $this->l->t('e.g. Doe, Cathy');
             $surName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'sur_name')];
             $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'first_name')];
-            $nickName = $firstName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'nick_name')];
+            $nickName = $row[$this->joinQueryField(static::MUSICIANS_TABLE, 'nick_name')];
             $lockedPlaceholder = $op == 'add' ? $displayNamePlaceholder : $surName.', '.($nickName?:$firstName);
             $unlockedPlaceholder = $this->l->t('e.g. Doe, Cathy');
             if (empty($row[PHPMyEdit::QUERY_FIELD . $k])) {
