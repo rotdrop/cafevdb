@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import generateUrl from './generate-url.js';
 
 require('iframe-resizer');
 
-const iFrameContentScriptData = loadState(appName, 'iFrameContentScript');
+let scriptUrl;
 
 /**
  * Handle iframe resizing based on the size of its contents. The width
@@ -41,7 +41,10 @@ const iFrameContentScriptData = loadState(appName, 'iFrameContentScript');
 const iFrameResize = function($iframe) {
   $iframe = $($iframe);
 
-  const scriptUrl = generateUrl('js/' + iFrameContentScriptData.asset + '.js');
+  if (!scriptUrl) {
+    const iFrameContentScriptData = loadState(appName, 'iFrameContentScript');
+    scriptUrl = generateUrl('js/' + iFrameContentScriptData.asset + '.js');
+  }
 
   $iframe.contents().find('head').prepend(`<script type="text/javascript" defer src="${scriptUrl}"></script>`);
 
