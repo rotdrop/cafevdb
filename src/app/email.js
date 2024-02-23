@@ -21,19 +21,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { globalState, appName, $, appPrefix } from './globals.js';
-import * as CAFEVDB from './cafevdb.js';
-import * as Ajax from './ajax.js';
-import * as Page from './page.js';
+import { appName, $, appPrefix } from './globals.js';
+import { toolTipsInit, globalState } from './cafevdb.js';
+import { handleError as ajaxHandleError, validateResponse as ajaxValidateResponse } from './ajax.js';
+import { busyIcon as pageBusyIcon } from './page.js';
 import * as Dialogs from './dialogs.js';
-import * as ProjectParticipants from './project-participants.js';
-import * as Projects from './projects.js';
+import { personalRecordDialog as participantRecordDialog } from './project-participants.js';
+import { eventsPopup as projectEventsPopup } from './projects.js';
 import * as WysiwygEditor from './wysiwyg-editor.js';
-import * as FileUpload from './file-upload.js';
-import * as Legacy from '../legacy.js';
+import fileUploadInit from './file-upload.js';
+import { Calendar as LegacyCalendar } from '../legacy.js';
 import * as DialogUtils from './dialog-utils.js';
 import * as ProgressStatus from './progress-status.js';
-import * as Notification from './notification.js';
+import { show as notificationShow } from './notification.js';
 import * as SelectUtils from './select-utils.js';
 import { urlDecode } from './url-decode.js';
 import generateAppUrl from './generate-url.js';
@@ -108,7 +108,7 @@ function attachmentFromJSON(response, info) {
 
 const cloudAttachment = function(paths, callback) {
   $.post(generateUrl('attachment/cloud'), { paths })
-    .fail(Ajax.handleError)
+    .fail(ajaxHandleError)
     .done(function(response) {
       for (const attachment of response) {
         attachmentFromJSON(attachment, { origin: 'cloud' });
@@ -153,9 +153,9 @@ function updateComposerElements($emailForm, elements) {
   }
   const url = generateComposerUrl('update', 'element');
   $.post(url, post)
-    .fail(Ajax.handleError)
+    .fail(ajaxHandleError)
     .done(function(data) {
-      if (!Ajax.validateResponse(data, [
+      if (!ajaxValidateResponse(data, [
         'projectId', 'projectName', 'operation', 'requestData',
       ])) {
         return;
@@ -250,7 +250,7 @@ const emailFormRecipientsSelectControls = function(dialogHolder, fieldset) {
     $dualListBoxContainer.find('input, select, button').readonly(true);
   }
 
-  CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformrecipients'));
+  toolTipsInit(dialogHolder.find('div#emailformrecipients'));
 };
 
 /**
@@ -326,7 +326,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
     }
     $.post(generateUrl('recipients-filter'), post)
       .fail(function(xhr, textStatus, errorThrown) {
-        Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+        ajaxHandleError(xhr, textStatus, errorThrown, function(data) {
           parameters.cleanup();
           busyIndicator.hide();
           filterUpdateActive = false;
@@ -343,7 +343,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
             'instrumentsFilter',
             'memberStatusFilter',
           ];
-        if (!Ajax.validateResponse(data, requiredResponse)) {
+        if (!ajaxValidateResponse(data, requiredResponse)) {
           parameters.cleanup();
           busyIndicator.hide();
           filterUpdateActive = false;
@@ -567,7 +567,7 @@ const emailFormRecipientsHandlers = function(fieldset, form, dialogHolder, panel
       const projectId = formData.find('input[name="projectId"]').val();
       const projectName = formData.find('input[name="projectName"]').val();
 
-      ProjectParticipants.personalRecordDialog(
+      participantRecordDialog(
         musicianId, {
           table: isParticipant ? 'ProjectParticipants' : 'Musicians',
           projectId,
@@ -628,7 +628,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       return true;
     });
 
-    CAFEVDB.toolTipsInit(dialogHolder.find('div#emailformcomposer'));
+    toolTipsInit(dialogHolder.find('div#emailformcomposer'));
   }
 
   const formData = form.find('fieldset.form-data');
@@ -690,13 +690,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     }
 
     const validateLock = function() {
-      Page.busyIcon(true);
+      pageBusyIcon(true);
       validateLockCB(true);
     };
 
     const validateUnlock = function() {
       validateLockCB(false);
-      Page.busyIcon(false);
+      pageBusyIcon(false);
     };
 
     // until end of validation
@@ -730,7 +730,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
     }
     $.post(url, post)
       .fail(function(xhr, textStatus, errorThrown) {
-        Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+        ajaxHandleError(xhr, textStatus, errorThrown, function(data) {
           let debugText = '';
           if (data.caption !== undefined) {
             debugText += '<div class="error caption">' + data.caption + '</div>';
@@ -745,7 +745,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       .done(function(data) {
         let postponeEnable = false;
         $.fn.cafevTooltip.remove();
-        if (!Ajax.validateResponse(
+        if (!ajaxValidateResponse(
           data,
           ['projectId', 'projectName', 'operation', 'requestData'], validateUnlock)) {
           return false;
@@ -1030,9 +1030,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
       // submit the progress status id with the send request to the server.
       ProgressStatus.create(0, 0, { proto: 'undefined', active: 0, total: -1 })
-        .fail(Ajax.handleError)
+        .fail(ajaxHandleError)
         .done(function(data) {
-          if (!Ajax.validateResponse(data, ['id'])) {
+          if (!ajaxValidateResponse(data, ['id'])) {
             return;
           }
           const progressToken = data.id;
@@ -1050,7 +1050,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
               progressOpen = true;
               ProgressStatus.poll(progressToken, {
                 update: pollProgress,
-                fail(xhr, status, errorThrown) { Ajax.handleError(xhr, status, errorThrown); },
+                fail(xhr, status, errorThrown) { ajaxHandleError(xhr, status, errorThrown); },
                 interval: 500,
               });
             },
@@ -1102,11 +1102,11 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
       const post = form.serialize();
 
-      Page.busyIcon(true);
+      pageBusyIcon(true);
 
       $.post(generateComposerUrl('preview'), post)
         .fail(function(xhr, textStatus, errorThrown) {
-          Ajax.handleError(xhr, textStatus, errorThrown, function(data) {
+          ajaxHandleError(xhr, textStatus, errorThrown, function(data) {
             let debugText = '';
             if (data.caption !== undefined) {
               debugText += '<div class="error caption">' + data.caption + '</div>';
@@ -1121,7 +1121,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             debugOutput.html(debugText);
             debugOutput.find('.for-dialog').addClass('hidden');
 
-            Page.busyIcon(false);
+            pageBusyIcon(false);
 
             if (hasPreviewMessages) {
               dialogHolder.tabs('option', 'active', 2);
@@ -1131,16 +1131,16 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           });
         })
         .done(function(data) {
-          if (!Ajax.validateResponse(
+          if (!ajaxValidateResponse(
             data, ['contents'], function() {
-              Page.busyIcon(false);
+              pageBusyIcon(false);
             })) {
             return false;
           }
 
           debugOutput.html(data.contents);
 
-          Page.busyIcon(false);
+          pageBusyIcon(false);
 
           dialogHolder.tabs('option', 'active', 2);
 
@@ -1153,7 +1153,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   //   off('click').
   //   on('click', function(event) {
 
-  //   Page.busyIcon(true);
+  //   pageBusyIcon(true);
 
   //   var action = OC.filePath(appName, 'ajax/email', 'exporter.php');
   //   var formPost = form.serialize();
@@ -1168,14 +1168,14 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
   //     cookieValue: post['DownloadCookie'],
   //     cookiePath: oc_webroot,
   //     successCallback: function() {
-  //       Page.busyIcon(false);
+  //       pageBusyIcon(false);
   //     },
   //     failCallback: function(responseHtml, url, error) {
   //       Dialogs.alert(t(appName, 'Unable to export message(s):')+
   //                        ' '+
   //                        responseHtml,
   //                        t(appName, 'Error'),
-  //                        function() { Page.busyIcon(false); },
+  //                        function() { pageBusyIcon(false); },
   //                        true, true);
   //     }
   //   });
@@ -1309,7 +1309,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         value: $this.prop('checked') ? autoSaveSeconds : 0,
       })
         .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, function() {
+          ajaxHandleError(xhr, status, errorThrown, function() {
             $this.prop('checked', !$this.prop('checked'));
           });
         })
@@ -1318,7 +1318,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
             const message = $this.prop('checked')
               ? t(appName, 'Draft-auto-save interval set to {seconds} seconds.', { seconds: autoSaveSeconds })
               : t(appName, 'Draft-auto-save switched off');
-            Notification.show(message, { timeout: 15 });
+            notificationShow(message, { timeout: 15 });
           }
           if (!$this.prop('checked')) {
             confirmAutoSaveDelete(true);
@@ -1609,7 +1609,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         events = [];
       }
       eventAttachmentsRow.addClass('show-selectable');
-      Projects.eventsPopup({
+      projectEventsPopup({
         projectId: projectId(),
         projectName: projectName(),
         eventSelect: events,
@@ -1762,7 +1762,7 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
 
   // Arguably, these should only be active if the
   // composer tab is active. Mmmh.
-  FileUpload.init({
+  fileUploadInit({
     url: generateUrl('attachment/upload'),
     doneCallback(json, index, container) {
       attachmentFromJSON(json, { origin: 'upload', index });
@@ -1791,12 +1791,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       } else {
         const deferred = $.Deferred();
         folderPromise = deferred.promise();
-        deferred.resolve({ folder: CAFEVDB.globalState.sharedFolder });
+        deferred.resolve({ folder: globalState.sharedFolder });
       }
 
       folderPromise
         .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown);
+          ajaxHandleError(xhr, status, errorThrown);
         })
         .done(function(data) {
           Dialogs.filePicker(
@@ -1892,10 +1892,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
       const post = { freeFormRecipients: input.val() };
       $.post(generateUrl('contacts/list'), post)
         .fail(function(xhr, status, errorThrown) {
-          Ajax.handleError(xhr, status, errorThrown, cleanup);
+          ajaxHandleError(xhr, status, errorThrown, cleanup);
         })
         .done(function(data) {
-          if (!Ajax.validateResponse(data, ['contents'])) {
+          if (!ajaxValidateResponse(data, ['contents'])) {
             cleanup();
             return;
           }
@@ -1924,12 +1924,12 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                   });
                   const innerPost = { addressBookCandidates: selectedFreeForm };
                   $.post(generateUrl('contacts/save'), innerPost)
-                    .fail(Ajax.handleError)
+                    .fail(ajaxHandleError)
                     .done(function(data) {
                       $.post(generateUrl('contacts/list'), post)
-                        .fail(Ajax.handleError)
+                        .fail(ajaxHandleError)
                         .done(function(data) {
-                          if (!Ajax.validateResponse(data, ['contents'])) {
+                          if (!ajaxValidateResponse(data, ['contents'])) {
                             return;
                           }
                           const newOptions = $(data.contents).html();
@@ -2037,7 +2037,7 @@ function emailFormPopup(post, modal, single, afterInit) {
   }
   $.post(generateUrl('form'), post)
     .fail(function(xhr, status, errorThrown) {
-      Ajax.handleError(xhr, status, errorThrown, function() {
+      ajaxHandleError(xhr, status, errorThrown, function() {
         Email.active = false;
         afterInit(false);
       });
@@ -2045,7 +2045,7 @@ function emailFormPopup(post, modal, single, afterInit) {
     .done(function(data) {
       const containerId = 'emailformdialog';
 
-      if (!Ajax.validateResponse(
+      if (!ajaxValidateResponse(
         data, ['contents'], function() {
           Email.active = false;
           afterInit(false);
@@ -2244,10 +2244,10 @@ const documentReady = function() {
       function(response, textStatus, xhr) {
         if (textStatus === 'success') {
           $('input[name="delete"]').prop('disabled', true);
-          Legacy.Calendar.UI.startEventDialog();
+          LegacyCalendar.UI.startEventDialog();
           return;
         }
-        Ajax.handleError(xhr, textStatus, xhr.status);
+        ajaxHandleError(xhr, textStatus, xhr.status);
       });
 
     return false;
@@ -2259,8 +2259,3 @@ export {
   documentReady,
   emailFormPopup,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

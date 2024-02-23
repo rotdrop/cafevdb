@@ -21,7 +21,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as Page from './page.js';
+import { busyIcon as pageBusyIcon } from './page.js';
 import { tableDialogLoadIndicator } from './pme.js';
 import modalizer from './modalizer.js';
 
@@ -34,9 +34,9 @@ const setBusyIndicators = function(state, $pmeContainer, modal) {
       modalizer(true);
     }
     $pmeContainer && tableDialogLoadIndicator($pmeContainer, true);
-    Page.busyIcon(true);
+    pageBusyIcon(true);
   } else {
-    Page.busyIcon(false);
+    pageBusyIcon(false);
     $pmeContainer && tableDialogLoadIndicator($pmeContainer, false);
     if (modal) {
       modalizer(false);

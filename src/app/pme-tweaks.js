@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,13 +22,13 @@
  */
 
 import { globalState, $ } from './globals.js';
-import * as Email from './email.js';
+import { emailFormPopup } from './email.js';
 import { busyIcon as pageBusyIcon } from './page.js';
 import { token as pmeToken, sys as PMEsys } from './pme-selectors.js';
 
 // const qs = require('qs');
 // require('qs/lib/index.js');
-import * as qs from 'qs';
+import { parse as qsParse } from 'qs';
 
 require('./jquery-datetimepicker.js');
 
@@ -91,7 +91,7 @@ const pmeTweaks = function(container) {
     .off('click')
     .on('click', function(event) {
       pageBusyIcon(true);
-      Email.emailFormPopup($(this.form).serialize(), true, false, () => pageBusyIcon(false));
+      emailFormPopup($(this.form).serialize(), true, false, () => pageBusyIcon(false));
       return false;
     });
 
@@ -106,7 +106,7 @@ const pmeTweaks = function(container) {
       return false;
     }
     const recordKey = PMEsys('rec');
-    const params = qs.parse(href[1]);
+    const params = qsParse(href[1]);
     if (params[recordKey] === undefined) {
       return false;
     }
@@ -118,7 +118,7 @@ const pmeTweaks = function(container) {
     post += '&emailRecipients[MemberStatusFilter][3]=conductor';
 
     pageBusyIcon(true);
-    Email.emailFormPopup(post, true, true, () => pageBusyIcon(false));
+    emailFormPopup(post, true, true, () => pageBusyIcon(false));
 
     return false;
   });
@@ -132,8 +132,3 @@ export {
   pmeTweaks as tweaks,
   pmeUnTweak as unTweak,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
