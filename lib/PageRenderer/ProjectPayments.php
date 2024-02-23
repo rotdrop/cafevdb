@@ -542,8 +542,8 @@ WHERE dsf.id IS NOT NULL',
         'select' => 'D',
         'input' => 'M',
         'input|C' => 'R',
-        'select|C' => 'T',
-        'sql|C' => static::musicianPublicNameSql(),
+        // 'select|C' => null, // 'T',
+        // 'sql|C' => static::musicianPublicNameSql(),
         'default|C' => $this->musicianId,
         'values' => [
           'description' => [
