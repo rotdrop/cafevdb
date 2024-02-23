@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
+use GenderDetector;
 
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Common\Uuid;
@@ -913,6 +914,31 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getGender():?Types\EnumGender
   {
     return $this->gender;
+  }
+
+  /**
+   * Guess the gender from the name.
+   *
+   * @param null|\OCP\IL10N $l
+   *
+   * @return array An array of guesses.
+   */
+  public function guessGender(?\OCP\IL10N $l = null):array
+  {
+    $detector = new GenderDetector\GenderDetector();
+    $country = $this->country;
+    if (!empty($this->language)) {
+      $country = substr($this->language, 0, 2);
+    }
+    $country = strtoupper($country);
+    $names = array_filter(array_merge(explode(' ', $this->firstName ?? ''), explode(' ', $this->nickName ?? '')));
+    $genderTypes = array_filter(array_map(fn(string $name) => $detector->getGender($name, $country), $names));
+    $genderTypes = array_unique(array_map(fn(GenderDetector\Gender $gender) => str_replace('mostly', '', strtolower($gender->name)), $genderTypes));
+    if ($l !== null) {
+      return array_combine($genderTypes, array_map(fn(string $name) => $this->l->t($name), $genderTypes));
+    } else {
+      return $genderTypes;
+    }
   }
 
   /**
