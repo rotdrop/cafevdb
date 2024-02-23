@@ -88,12 +88,29 @@ class ProjectPayments extends PMETableViewBase
   __t1.*,
   GROUP_CONCAT(
     DISTINCT
-    CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t2.field_id, BIN2UUID(__t2.option_key))
-    ORDER BY __t2.project_id ASC, __t2.field_id ASC
-  ) AS receivable_keys
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)))
+    ORDER BY __t2.project_id ASC, __t4.id ASC
+  ) AS receivable_keys,
+  GROUP_CONCAT(
+    DISTINCT
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::JOIN_KEY_SEP . '", CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)), COALESCE(__t2.option_value, __t3.data, "undefined")))
+    ORDER BY __t2.project_id ASC, __t4.id ASC
+  ) AS receivable_values,
+  GROUP_CONCAT(
+    DISTINCT
+    IF(__t4.id IS NULL, NULL, CONCAT_WS("' . self::JOIN_KEY_SEP . '", CONCAT_WS("' . self::COMP_KEY_SEP . '", __t2.project_id, __t4.id, BIN2UUID(__t3.key)), __t4.data_type))
+    ORDER BY __t2.project_id ASC, __t4.id ASC
+  ) AS receivable_data_types
 FROM ' . self::MUSICIANS_TABLE . ' __t1
 LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . ' __t2
 ON __t2.musician_id = __t1.id
+LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE . ' __t3
+ON __t2.field_id = __t3.field_id AND __t2.option_key = __t3.key
+LEFT JOIN ' . self::PROJECT_PARTICIPANT_FIELDS_TABLE . ' __t4
+ON __t2.field_id = __t4.id AND __t4.data_type  IN ('
+        . "   '" . FieldType::RECEIVABLES . "',"
+        . "   '" . FieldType::LIABILITIES . "'"
+        . ' )
 GROUP BY __t1.id',
       'identifier' => [
         'id' => 'musician_id',
@@ -535,7 +552,11 @@ WHERE dsf.id IS NOT NULL',
             'ifnull' => [ false, false ],
             'cast' => [ false ],
           ],
-          'data' => 'receivable_keys',
+          'data' => [
+            'keys' => 'receivable_keys',
+            'values' => 'receivable_values',
+            'data-types' => 'receivable_data_types',
+          ],
           'filters' => (!$projectMode
                         ? null
                         : static::musicianInProjectSql($this->projectId)),
@@ -560,9 +581,10 @@ WHERE dsf.id IS NOT NULL',
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
-      array_merge(
+      Util::arrayMergeRecursive(
         $this->defaultFDD['money'], [
           'sql|LF' => 'IF($join_table.row_tag LIKE "'.self::ROW_TAG_PREFIX.'%", $main_table.amount, $join_col_fqn)',
+          'css' => [ 'postfix' => [ 'validate-non-zero' ], ],
           'sql' => '$join_col_fqn',
           'name' => $this->l->t('Amount'),
           'input' => 'M',

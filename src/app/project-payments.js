@@ -58,6 +58,9 @@ const findByName = function($container, name) {
   return $($container).find('[name="' + name + '"]').filter('input, select, textarea');
 };
 
+const ppAmountName = pmeData('ProjectPayments:amount');
+const ppSubjectName = pmeData('ProjectPayments:subject');
+
 /**
  * Generate a popup in order to add a new split-transaction, i.e. a
  * ProjectPayment entity which is always subordinate to a
@@ -228,6 +231,46 @@ const actionMenu = function(containerSel) {
     });
 };
 
+const musicianReceivableKeys = ($musicianOption) => {
+  let keys = $musicianOption.data('keys');
+  if (!Array.isArray(keys)) {
+    keys = keys.split(',');
+    $musicianOption.data('keys', keys);
+  }
+  return keys;
+};
+
+const musicianReceivableTypes = ($musicianOption) => {
+  let dataTypes = $musicianOption.data('dataTypes');
+  if (typeof dataTypes === 'string') {
+    const valueObject = {};
+    for (const part of dataTypes.split(',')) {
+      const [key, value] = part.split(':');
+      valueObject[key] = value;
+    }
+    dataTypes = valueObject;
+    $musicianOption.data('dataTypes', dataTypes);
+  }
+  return dataTypes;
+};
+
+const musicianReceivableValues = ($musicianOption) => {
+  let values = $musicianOption.data('values');
+  if (typeof values === 'string') {
+    const dataTypes = musicianReceivableTypes($musicianOption);
+    const valueObject = {};
+    for (const part of values.split(',')) {
+      const [key, value] = part.split(':');
+      if (value !== 'undefined') {
+        valueObject[key] = dataTypes[key] === 'liabilities' ? -value : +value;
+      }
+    }
+    values = valueObject;
+    $musicianOption.data('values', values);
+  }
+  return values;
+};
+
 const ready = function(selector, pmeParameters, resizeCB) {
 
   const $container = $(selector);
@@ -268,13 +311,22 @@ const ready = function(selector, pmeParameters, resizeCB) {
         const $receivableOptions = $receivables.find('option');
         if (musicianId !== '') {
           const $musicianOption = SelectUtils.optionByValue($this, musicianId);
-          const allowedOptionKeys = $musicianOption.data('data').split(',');
+          const allowedOptionKeys = musicianReceivableKeys($musicianOption);
           $receivableOptions.each(function(index) {
             const $option = $(this);
             if ($option.val() !== '') {
               $option.prop('disabled', allowedOptionKeys.indexOf($option.val()) < 0);
             }
           });
+          const receivableKey = $receivables.val();
+          if (receivableKey !== '') {
+            const $amountInput = findByName($container, ppAmountName);
+            if (!(+$amountInput.val()) || $amountInput.hasClass('auto-filled')) {
+              const value = musicianReceivableValues($musicianOption)?.[receivableKey] || '';
+              $amountInput.val(value);
+              $amountInput.addClass('auto-filled');
+            }
+          }
         } else {
           $receivableOptions.prop('disabled', false);
         }
@@ -288,16 +340,47 @@ const ready = function(selector, pmeParameters, resizeCB) {
         const $musicians = $container.find('select.instrumentation-id');
         const $musiciansOptions = $musicians.find('option');
         if (receivableKey !== '') {
+          let $selectedMusician;
           $musiciansOptions.each(function(index) {
             const $option = $(this);
             if ($option.val() !== '') {
-              $option.prop('disabled', $option.data('data').split(',').indexOf(receivableKey) < 0);
+              $option.prop('disabled', musicianReceivableKeys($option).indexOf(receivableKey) < 0);
+            }
+            if ($option.is(':selected') && !$option.prop('disabled')) {
+              $selectedMusician = $option;
             }
           });
+          if ($selectedMusician) {
+            const $amountInput = findByName($container, ppAmountName);
+            if (!(+$amountInput.val()) || $amountInput.hasClass('auto-filled')) {
+              const value = musicianReceivableValues($selectedMusician)?.[receivableKey];
+              if (value) {
+                $amountInput.val(value);
+                $amountInput.addClass('auto-filled');
+              }
+            }
+          }
+          const $subjectInput = findByName($container, ppSubjectName);
+          if ($subjectInput.val() === '' || $subjectInput.hasClass('auto-filled')) {
+            const $receivableOption = SelectUtils.optionByValue($this, receivableKey);
+            const receivableText = $receivableOption.text();
+            $subjectInput.val(receivableText);
+            $subjectInput.addClass('auto-filled');
+          }
         } else {
           $musiciansOptions.prop('disabled', false);
         }
         SelectUtils.refreshWidget($musicians);
+      });
+
+    $container
+      .on('change', '[name="' + ppAmountName + '"]', function(event) {
+        $(this).removeClass('auto-filled');
+      });
+
+    $container
+      .on('change', '[name="' + ppSubjectName + '"]', function(event) {
+        $(this).removeClass('auto-filled');
       });
 
     $container
@@ -417,13 +500,11 @@ const ready = function(selector, pmeParameters, resizeCB) {
       const paymentsIdName = pmeData('ProjectPayments:id[]');
       const $paymentOption = findByName($ambientContainer, paymentsIdName).find('option[value="' + rowTag + '"]');
       if ($paymentOption.length === 0) {
-        const amountName = pmeData('ProjectPayments:amount');
-        const subjectName = pmeData('ProjectPayments:subject');
         $ambientForm.append('<input type="hidden" name="' + paymentsIdName + '" value="' + rowTag + '"/>');
-        const amountInput = findByName($ambientForm, amountName);
-        amountInput.val(amountInput.val() + ',' + rowTag + ':' + findByName($pmeForm, amountName).val());
-        const subjectInput = findByName($ambientForm, subjectName);
-        subjectInput.val(subjectInput.val() + ',' + rowTag + ':' + findByName($pmeForm, subjectName).val());
+        const $amountInput = findByName($ambientForm, ppAmountName);
+        $amountInput.val($amountInput.val() + ',' + rowTag + ':' + findByName($pmeForm, ppAmountName).val());
+        const $subjectInput = findByName($ambientForm, ppSubjectName);
+        $subjectInput.val($subjectInput.val() + ',' + rowTag + ':' + findByName($pmeForm, ppSubjectName).val());
       }
     }
   }
