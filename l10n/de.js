@@ -317,7 +317,7 @@ OC.L10N.register(
     "Successfully updated `%s'." : "`%s' erfolgreich modifiziert.",
     "Successfully deleted `%s'." : "`%s' erfolgreich gelöscht.",
     "Unable to determine the sender given its id \"%s\"" : "Kann den Sender anhand der angegeben Id \"%s\" nicht ermitteln.",
-    "Unable to map the given template name \"%s\" to an existing template file." : "Kann die Angebene Vorlag \"%s\" keiner Datei zurordnen.",
+    "Unable to map the given template name \"%s\" to an existing template file." : "Kann die angebene Vorlage \"%s\" keiner Datei zurordnen.",
     "Either a file-name or the name of a dedicated template have to be spicified." : "Es muss entweder ein Dateiname oder aber einer der vordefinierten Vorlagenarten angegeben werden.",
     "_Mail-merge successful, %n file substituted._::_Mail-merge successful, %n files substituted._" : ["Vorlage erfolgreich ausgefüllt, %n Dokument wurde erstellt.","Vorlage erfolgreich ausgefüllt, %n Dokumente wurden erstellt."],
     "Exception: \"%s\"" : "Ausnahme: \"%s\"",

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2024-02-22 14:10+0100\n"
-"PO-Revision-Date: 2024-02-22 14:17+0100\n"
+"POT-Creation-Date: 2024-02-23 07:34+0100\n"
+"PO-Revision-Date: 2024-02-23 07:30+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1788,12 +1788,12 @@ msgid "Manufacturer field is empty."
 msgstr "Der Hersteller wurde nicht angegeben."
 
 #: lib/Controller/InstrumentInsuranceController.php:291
-#: lib/Database/EntityManager.php:305 lib/Documents/OpenDocumentFiller.php:343
-#: lib/Documents/OpenDocumentFiller.php:361
-#: lib/Documents/OpenDocumentFiller.php:372
-#: lib/Documents/OpenDocumentFiller.php:378
-#: lib/Documents/OpenDocumentFiller.php:379
+#: lib/Database/EntityManager.php:305 lib/Documents/OpenDocumentFiller.php:346
+#: lib/Documents/OpenDocumentFiller.php:364
+#: lib/Documents/OpenDocumentFiller.php:375
+#: lib/Documents/OpenDocumentFiller.php:381
 #: lib/Documents/OpenDocumentFiller.php:382
+#: lib/Documents/OpenDocumentFiller.php:385
 #: lib/PageRenderer/FieldTraits/MailingListsTrait.php:146
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:2430
 #: lib/PageRenderer/Instruments.php:386 lib/PageRenderer/Projects.php:800
@@ -1901,41 +1901,41 @@ msgstr "`%s' erfolgreich gelöscht."
 msgid "Unable to determine the sender given its id \"%s\""
 msgstr "Kann den Sender anhand der angegeben Id \"%s\" nicht ermitteln."
 
-#: lib/Controller/MailMergeController.php:229
+#: lib/Controller/MailMergeController.php:232
 #, php-format
 msgid ""
 "Unable to map the given template name \"%s\" to an existing template file."
-msgstr "Kann die Angebene Vorlag \"%s\" keiner Datei zurordnen."
+msgstr "Kann die angebene Vorlage \"%s\" keiner Datei zurordnen."
 
-#: lib/Controller/MailMergeController.php:232
+#: lib/Controller/MailMergeController.php:235
 msgid ""
 "Either a file-name or the name of a dedicated template have to be spicified."
 msgstr ""
 "Es muss entweder ein Dateiname oder aber einer der vordefinierten "
 "Vorlagenarten angegeben werden."
 
-#: lib/Controller/MailMergeController.php:282
-#: lib/Controller/MailMergeController.php:397
-#: lib/Controller/MailMergeController.php:422
+#: lib/Controller/MailMergeController.php:285
+#: lib/Controller/MailMergeController.php:400
+#: lib/Controller/MailMergeController.php:425
 msgid "Mail-merge successful, %n file substituted."
 msgid_plural "Mail-merge successful, %n files substituted."
 msgstr[0] "Vorlage erfolgreich ausgefüllt, %n Dokument wurde erstellt."
 msgstr[1] "Vorlage erfolgreich ausgefüllt, %n Dokumente wurden erstellt."
 
-#: lib/Controller/MailMergeController.php:439
+#: lib/Controller/MailMergeController.php:442
 #, php-format
 msgid "Exception: \"%s\""
 msgstr "Ausnahme: \"%s\""
 
 #. TRANSLATORS: folder-name
-#: lib/Controller/MailMergeController.php:461
+#: lib/Controller/MailMergeController.php:464
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1533
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:65
 msgid "Documents"
 msgstr "Dokumente"
 
-#: lib/Controller/MailMergeController.php:462
-#: lib/Controller/MailMergeController.php:470 src/files-hooks.js:155
+#: lib/Controller/MailMergeController.php:465
+#: lib/Controller/MailMergeController.php:473 src/files-hooks.js:155
 #: src/files-hooks.js:211
 msgid "MailMerge"
 msgstr "Serienbrief"
@@ -4579,12 +4579,12 @@ msgstr ""
 msgid "Please install the \"%s\" program on the server."
 msgstr "Bitte das \"%s\" Programm auf dem Server installieren."
 
-#: lib/Documents/OpenDocumentFiller.php:138
+#: lib/Documents/OpenDocumentFiller.php:141
 #, php-format
 msgid "Unable to obtain file-handle for path \"%s\""
 msgstr "Kann keine Datei-Deskriptor für \"%s\" erhalten."
 
-#: lib/Documents/OpenDocumentFiller.php:227
+#: lib/Documents/OpenDocumentFiller.php:230
 #, php-format
 msgid ""
 "Data for block \"%s\" using the path \"%s\" could not be found in the "
@@ -4611,7 +4611,7 @@ msgstr "Option"
 
 #: lib/EmailForm/Composer.php:1016 lib/EmailForm/Composer.php:1038
 #: lib/EmailForm/Composer.php:1435 lib/EmailForm/Composer.php:1487
-#: lib/PageRenderer/ProjectPayments.php:570
+#: lib/PageRenderer/ProjectPayments.php:591
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
 
@@ -5334,7 +5334,7 @@ msgstr "Instrumentenversicherungen"
 
 #: lib/PageRenderer/Export/InsuranceSpreadsheetExporter.php:189
 #: lib/PageRenderer/InstrumentInsurances.php:275
-#: lib/PageRenderer/ProjectPayments.php:540
+#: lib/PageRenderer/ProjectPayments.php:557
 #: lib/PageRenderer/SepaBankAccounts.php:556
 #: lib/PageRenderer/SepaBulkTransactions.php:399
 msgid "Musician"
@@ -5625,8 +5625,8 @@ msgid "Actions"
 msgstr "Aktionen"
 
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1571
-#: lib/PageRenderer/ProjectPayments.php:631
-#: lib/PageRenderer/ProjectPayments.php:652
+#: lib/PageRenderer/ProjectPayments.php:653
+#: lib/PageRenderer/ProjectPayments.php:674
 #: lib/PageRenderer/SepaBulkTransactions.php:517
 #: lib/PageRenderer/SepaBulkTransactions.php:612
 #: templates/emailform/part.emailform.composer.php:196
@@ -5721,7 +5721,7 @@ msgid "SEPA Bank Accounts"
 msgstr "SEPA Bankverbindungen"
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:185
-#: lib/PageRenderer/ProjectPayments.php:1208
+#: lib/PageRenderer/ProjectPayments.php:1230
 #: lib/PageRenderer/SepaBankAccounts.php:632
 #: lib/PageRenderer/SepaBankAccounts.php:710
 #: lib/PageRenderer/SepaBulkTransactions.php:451
@@ -5730,7 +5730,7 @@ msgid "Fetching decrypted values in the background."
 msgstr "Entschlüssele Werte im Hintergrund."
 
 #: lib/PageRenderer/FieldTraits/SepaAccountsTrait.php:187
-#: lib/PageRenderer/ProjectPayments.php:1210
+#: lib/PageRenderer/ProjectPayments.php:1232
 #: lib/PageRenderer/SepaBankAccounts.php:634
 #: lib/PageRenderer/SepaBankAccounts.php:712
 #: lib/PageRenderer/SepaBulkTransactions.php:453
@@ -5820,7 +5820,7 @@ msgstr "Verschiedenes"
 #: lib/PageRenderer/Musicians.php:360
 #: lib/PageRenderer/ProjectParticipantFields.php:275
 #: lib/PageRenderer/ProjectParticipants.php:1607
-#: lib/PageRenderer/ProjectPayments.php:465
+#: lib/PageRenderer/ProjectPayments.php:482
 #: lib/PageRenderer/SepaBankAccounts.php:1138
 #: lib/PageRenderer/SepaBulkTransactions.php:277
 #: lib/Service/InstrumentationService.php:206
@@ -6087,7 +6087,7 @@ msgstr "mutmaßlicher Genus: %s"
 
 #: lib/PageRenderer/Musicians.php:615
 #: lib/PageRenderer/ProjectParticipants.php:617
-#: lib/PageRenderer/ProjectPayments.php:564
+#: lib/PageRenderer/ProjectPayments.php:585
 msgid "User Id"
 msgstr "Benutzerkennung"
 
@@ -6584,7 +6584,7 @@ msgid "Limit"
 msgstr "Obergrenze"
 
 #: lib/PageRenderer/ProjectParticipantFields.php:2007
-#: lib/PageRenderer/ProjectPayments.php:584
+#: lib/PageRenderer/ProjectPayments.php:606
 #: lib/PageRenderer/SepaBankAccounts.php:1092
 #: lib/PageRenderer/SepaBulkTransactions.php:391
 msgid "Amount"
@@ -6618,12 +6618,12 @@ msgid "Project-id and/or -name must be given (%1$s / %2$s)"
 msgstr "Projekt-Id und/oder -Name müssen angegeben werden (%1$s / %2$s)"
 
 #: lib/PageRenderer/ProjectParticipants.php:416
-#: lib/PageRenderer/ProjectPayments.php:507
+#: lib/PageRenderer/ProjectPayments.php:524
 msgid "Project-Id"
 msgstr "Projekt-Id"
 
 #: lib/PageRenderer/ProjectParticipants.php:428
-#: lib/PageRenderer/ProjectPayments.php:496
+#: lib/PageRenderer/ProjectPayments.php:513
 #: lib/PageRenderer/SepaBankAccounts.php:477
 msgid "Musician-Id"
 msgstr "Musizierenden-Id"
@@ -6695,105 +6695,105 @@ msgstr "Persönliche Daten"
 msgid "Miscinfo"
 msgstr "Verschiedenes"
 
-#: lib/PageRenderer/ProjectPayments.php:322
+#: lib/PageRenderer/ProjectPayments.php:339
 #, php-format
 msgid "Payments for project \"%s\""
 msgstr "Zahlungen für das Projekt \"%s\""
 
-#: lib/PageRenderer/ProjectPayments.php:456
+#: lib/PageRenderer/ProjectPayments.php:473
 msgid "General accounting data"
 msgstr "Allgemeine Buchungsdaten"
 
-#: lib/PageRenderer/ProjectPayments.php:457
+#: lib/PageRenderer/ProjectPayments.php:474
 msgid "Booking Entry"
 msgstr "Buchungsdaten"
 
-#: lib/PageRenderer/ProjectPayments.php:460
+#: lib/PageRenderer/ProjectPayments.php:477
 msgid "Bulk-transaction data"
 msgstr "Sammelauftragsddaten"
 
-#: lib/PageRenderer/ProjectPayments.php:461
+#: lib/PageRenderer/ProjectPayments.php:478
 msgid "Bank Transaction"
 msgstr "Bankauftrag"
 
-#: lib/PageRenderer/ProjectPayments.php:518
+#: lib/PageRenderer/ProjectPayments.php:535
 msgid "Bulk-Transaction Id"
 msgstr "Sammelauftrags-Id"
 
-#: lib/PageRenderer/ProjectPayments.php:597
+#: lib/PageRenderer/ProjectPayments.php:619
 msgid "Imbalance"
 msgstr "Fehlbetrag"
 
-#: lib/PageRenderer/ProjectPayments.php:626
+#: lib/PageRenderer/ProjectPayments.php:648
 msgid "Date of Receipt"
 msgstr "Eingangsdatum"
 
-#: lib/PageRenderer/ProjectPayments.php:674
+#: lib/PageRenderer/ProjectPayments.php:696
 msgid "Donation"
 msgstr "Spende"
 
 #. TRANSLATORS: folder-name
-#: lib/PageRenderer/ProjectPayments.php:697
-#: lib/PageRenderer/ProjectPayments.php:783
+#: lib/PageRenderer/ProjectPayments.php:719
+#: lib/PageRenderer/ProjectPayments.php:805
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:99
 msgid "Receivables"
 msgstr "Forderungen"
 
-#: lib/PageRenderer/ProjectPayments.php:767
-#: lib/PageRenderer/ProjectPayments.php:831
+#: lib/PageRenderer/ProjectPayments.php:789
+#: lib/PageRenderer/ProjectPayments.php:853
 msgid "Single Options"
 msgstr "Einfachauswahl"
 
-#: lib/PageRenderer/ProjectPayments.php:770
+#: lib/PageRenderer/ProjectPayments.php:792
 msgid "Operations"
 msgstr "Operationen"
 
-#: lib/PageRenderer/ProjectPayments.php:771
+#: lib/PageRenderer/ProjectPayments.php:793
 msgid "Add a new Receivable"
 msgstr "Eine neue Forderung hinzufügen"
 
-#: lib/PageRenderer/ProjectPayments.php:876
+#: lib/PageRenderer/ProjectPayments.php:898
 msgid "Supporting Document"
 msgstr "Beleg"
 
-#: lib/PageRenderer/ProjectPayments.php:951
+#: lib/PageRenderer/ProjectPayments.php:973
 msgid "Composite Project Balance"
 msgstr "Projekt-Bilanz Gesamt"
 
-#: lib/PageRenderer/ProjectPayments.php:1038
+#: lib/PageRenderer/ProjectPayments.php:1060
 msgid "Parts Project Balances"
 msgstr "Projekt-Bilanz Teilzahlungen"
 
-#: lib/PageRenderer/ProjectPayments.php:1160
+#: lib/PageRenderer/ProjectPayments.php:1182
 #: lib/PageRenderer/SepaBulkTransactions.php:268
 msgid "Bulk Transaction"
 msgstr "Sammelauftrag"
 
-#: lib/PageRenderer/ProjectPayments.php:1178
+#: lib/PageRenderer/ProjectPayments.php:1200
 msgid "Filing Date"
 msgstr "Einreichungsdatum"
 
-#: lib/PageRenderer/ProjectPayments.php:1189
+#: lib/PageRenderer/ProjectPayments.php:1211
 #: lib/PageRenderer/SepaBulkTransactions.php:429
 msgid "IBAN"
 msgstr "IBAN"
 
-#: lib/PageRenderer/ProjectPayments.php:1251
+#: lib/PageRenderer/ProjectPayments.php:1273
 #: lib/PageRenderer/SepaBankAccounts.php:817
 #: lib/PageRenderer/SepaBulkTransactions.php:491
 msgid "Mandate Reference"
 msgstr "Mandatsreferenz"
 
-#: lib/PageRenderer/ProjectPayments.php:1259
+#: lib/PageRenderer/ProjectPayments.php:1281
 msgid "Message-ID"
 msgstr "Message-ID"
 
-#: lib/PageRenderer/ProjectPayments.php:1277
+#: lib/PageRenderer/ProjectPayments.php:1299
 msgid "Payments resulting from direct debit transfers cannot be changed."
 msgstr ""
 "Zahlung, die von Lastschriften herrühren, können nicht geändert werden."
 
-#: lib/PageRenderer/ProjectPayments.php:1370
+#: lib/PageRenderer/ProjectPayments.php:1392
 msgid "Project Balance"
 msgstr "Projekt-Bilanz"
 
@@ -13617,30 +13617,30 @@ msgstr ""
 msgid "Really delete the entry?"
 msgstr "Den Beitrag wirklich löschen?"
 
-#: src/app/check-invalid-inputs.js:160
+#: src/app/check-invalid-inputs.js:164
 msgid "Unknown input element"
 msgstr "Unbekanntes Eingabefeld"
 
-#: src/app/check-invalid-inputs.js:167
+#: src/app/check-invalid-inputs.js:171
 msgid "invalid data \"{value}\""
 msgstr "ungültige Eingabedaten: \"{value}\""
 
-#: src/app/check-invalid-inputs.js:168
+#: src/app/check-invalid-inputs.js:172
 msgid "no or invalid data"
 msgstr "Keine oder ungültige Daten"
 
-#: src/app/check-invalid-inputs.js:174
+#: src/app/check-invalid-inputs.js:178
 msgid ""
 "The following required fields are empty or contain otherwise invalid data:"
 msgstr ""
 "Die folgenden erforderlichen Eingabefelder sind leer oder enthalten "
 "ungültige Eingabedaten:"
 
-#: src/app/check-invalid-inputs.js:178
+#: src/app/check-invalid-inputs.js:182
 msgid "Please add the missing data!"
 msgstr "Bitte die fehlenden Daten ergänzen!"
 
-#: src/app/check-invalid-inputs.js:180
+#: src/app/check-invalid-inputs.js:184
 msgid "Missing Input Data"
 msgstr "Fehlende Eingabedaten"
 
@@ -14290,19 +14290,19 @@ msgstr ""
 msgid "Unconfirmed, doing nothing."
 msgstr "Bestätigung nicht erfolgt, mache nichts."
 
-#: src/app/project-payments.js:163 src/app/project-payments.js:175
+#: src/app/project-payments.js:166 src/app/project-payments.js:178
 msgid "Unimplemented operation: {operation}"
 msgstr "Nicht-implementierte Operation: {operation}"
 
-#: src/app/project-payments.js:188 src/app/projects.js:285
+#: src/app/project-payments.js:191 src/app/projects.js:285
 msgid "Unknown operation: {operation}"
 msgstr "Unbekannte Operation: {operation}"
 
-#: src/app/project-payments.js:329
+#: src/app/project-payments.js:412
 msgid "Too many Projects"
 msgstr "Zu viele Projekte"
 
-#: src/app/project-payments.js:330
+#: src/app/project-payments.js:413
 msgid ""
 "Currently merging composite-payments for different projects ({projects}) is "
 "not supported, sorry."
@@ -14310,11 +14310,11 @@ msgstr ""
 "Zur Zeit können Sammelbuchungen nicht mehrere Projekte ({projects}) "
 "zusammenfassen, tut uns leid."
 
-#: src/app/project-payments.js:336
+#: src/app/project-payments.js:419
 msgid "Too many Musicians"
 msgstr "Zu viele Personen"
 
-#: src/app/project-payments.js:337
+#: src/app/project-payments.js:420
 msgid ""
 "Internal error: splits of composite-payments cannot belong to different "
 "musicians ({musicians})."
