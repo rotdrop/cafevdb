@@ -294,8 +294,11 @@ trait FlattenEntityTrait
     if ($musician->getGender() == null) {
       $guessedGenders = $musician->guessGender();
       if (count($guessedGenders) == 1) {
-        $musicianData['guessedGender'] = reset($guessedGenders);
+        $musicianData['gender'] = reset($guessedGenders);
+        $musicianData['genderAssumed'] = true;
       }
+    } else {
+      $musicianData['genderAssumed'] = false;
     }
 
     return array_filter(
