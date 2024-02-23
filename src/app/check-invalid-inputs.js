@@ -4,7 +4,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine
- * @copyright 2011-2016, 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2016, 2020, 2021, 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -85,7 +85,7 @@ function checkInvalidInputs(container, options, labelCallback, afterDialog) {
   const searchBase = containedForms.length === 0 ? container : containedForms;
 
   // exclude fieldsets, as the contained items are also included.
-  const invalidInputs = searchBase.find(':invalid').filter(function() {
+  const invalidInputs = searchBase.find(':invalid, input.validate-non-zero').filter(function() {
     const $this = $(this);
     if ($this.is('fieldset')) {
       return false;
@@ -93,10 +93,14 @@ function checkInvalidInputs(container, options, labelCallback, afterDialog) {
     if ($this.hasClass('emulated-placeholder') && !$this.hasClass('value-required')) {
       return false;
     }
+    if (!$this.is(':invalid') && $this.hasClass('validate-non-zero') && +$this.val() !== 0 && $this.val() !== '') {
+      return false;
+    }
     return true;
   });
 
   if (invalidInputs.length !== 0) {
+    $.fn.cafevTooltip.remove();
     const highlightInvalid = function(afterDialog) {
       for (const input of invalidInputs) {
         const $input = $(input);
