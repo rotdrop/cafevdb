@@ -287,11 +287,11 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     $this->defaultFDD = $this->createDefaultFDD();
 
     $cgiDefault = [
-      'template' => 'blog',
-      'musicianId' => null,
-      'projectId' => null,
-      'projectName' => '',
-      'recordsPerPage' => $this->getUserValue('pagerows', 20),
+      'template' => fn($value):string => (string)($value ?? 'blog'),
+      'musicianId' => fn($value):?int => $value === null ? null : (int)$value,
+      'projectId' => fn($value):?int => $value === null ? null : (int)$value,
+      'projectName' => fn($value):string => (string)($value ?? ''),
+      'recordsPerPage' => fn($value):int => (int)($value ?? $this->getUserValue('pagerows', 20)),
     ];
 
     $this->pmeOptions = [
@@ -300,13 +300,13 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       'css' => [ 'postfix' => [], ],
       'navigation' => self::PME_NAVIGATION_NO_MULTI,
     ];
-    $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
     foreach ($cgiDefault as $key => $default) {
       $this->pmeOptions['cgi']['persist'][$key] =
-        $this->{lcFirst($key)} =
-          $this->requestParameters->getParam($key, $default);
+        $this->{lcFirst($key)} = $default($this->requestParameters->getParam($key, null));
     }
+
+    $this->pmeOptions['css']['postfix'][] = $this->showDisabled ? 'show-disabled' : 'hide-disabled';
 
     $this->pmeOptions['cgi']['append'][$this->pme->cgiSysName('fl')] = $this->filterVisibility;
 
