@@ -28,6 +28,8 @@ use DateTimeInterface;
 use JsonSerializable;
 use ArrayAccess;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -144,10 +146,20 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
    */
   private $writtenNotice;
 
+  /**
+   * @var Collection
+   *
+   * The collection of donation receipts assiated to this notice of tax exemption.
+   *
+   * @ORM\OneToMany(targetEntity="DonationReceipt", mappedBy="taxExemptionNotice")
+   */
+  private $donationReceipts;
+
   /** {@inheritdoc} */
   public function __construct()
   {
     $this->__wakeup();
+    $this->donationReceipts = new ArrayCollection;
   }
 
   /**
@@ -335,7 +347,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   }
 
   /**
-   * @return null|DateTimeInterface
+   * @return null|DatabaseStorageFile
    */
   public function getWrittenNotice():?DatabaseStorageFile
   {
@@ -350,6 +362,26 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   public function setWrittenNotice(?DatabaseStorageFile $writtenNotice):TaxExemptionNotice
   {
     $this->writtenNotice = $writtenNotice;
+
+    return $this;
+  }
+
+  /**
+   * @return Collection
+   */
+  public function getDonationReceipts():Colletion
+  {
+    return $this->donationReceipts;
+  }
+
+  /**
+   * @param Collection $donationReceipts
+   *
+   * @return TaxExemptionNotice
+   */
+  public function setDonationReceipts(Collection $donationReceipts):TaxExemptionNotice
+  {
+    $this->donationReceipts = $donationReceipts;
 
     return $this;
   }
