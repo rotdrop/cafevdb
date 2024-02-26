@@ -158,6 +158,8 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * This is the unique message id from the email sent to the payees.
    *
    * @ORM\Column(type="string", length=512, nullable=true)
+   *
+   * @todo Check why this is not a relation to the SentEmail entity.
    */
   private $notificationMessageId;
 
@@ -204,6 +206,13 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", fetch="EXTRA_LAZY")
    */
   private $balanceDocumentsFolder;
+
+  /**
+   * @var DonationReceipt
+   *
+   * @ORM\OneToOne(targetEntity="DonationReceipt", mappedBy="donation")
+   */
+  private $donationReceipt;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -525,6 +534,30 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   public function getNotificationMessageId():?string
   {
     return $this->notificationMessageId;
+  }
+
+  /**
+   * Set donationReceipt.
+   *
+   * @param null|string $donationReceipt
+   *
+   * @return CompositePayment
+   */
+  public function setDonationReceipt(?string $donationReceipt):CompositePayment
+  {
+    $this->donationReceipt = $donationReceipt;
+
+    return $this;
+  }
+
+  /**
+   * Get donationReceipt.
+   *
+   * @return null|string
+   */
+  public function getDonationReceipt()
+  {
+    return $this->donationReceipt;
   }
 
   /**
