@@ -332,9 +332,7 @@ class TaxExemptionNotices extends PMETableViewBase
 
         $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
 
-        $dir = $this->getFinanceFolderPath()
-          . UserStorage::PATH_SEP . $this->getTaxAuthoritiesFolderName()
-          . UserStorage::PATH_SEP . $this->getTaxExemptionNoticesFolderName();
+        $dir = $this->getTaxExemptionNoticesPath();
 
         try {
           $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);
