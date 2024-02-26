@@ -60,6 +60,7 @@ class ProjectPayments extends PMETableViewBase
   use FieldTraits\MusicianPublicNameTrait;
   use FieldTraits\ParticipantFileFieldsTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFEVDB\Traits\EnsureEntityTrait;
 
   const TEMPLATE = 'project-payments';
   const TABLE = self::COMPOSITE_PAYMENTS_TABLE;
@@ -311,7 +312,6 @@ WHERE dsf.id IS NOT NULL',
     $this->compositePaymentExpanded = $this->requestParameters['compositePaymentExpanded'];
     if ($this->projectId > 0) {
       $this->project = $this->getDatabaseRepository(Entities\Project::class)->find($this->projectId);
-      $this->projectName = $this->project->getName();
     }
     $this->initCrypto();
   }
@@ -319,7 +319,9 @@ WHERE dsf.id IS NOT NULL',
   /** {@inheritdoc} */
   public function shortTitle()
   {
-    return $this->l->t('Payments for project "%s"', [ $this->projectName ]);
+    return !empty($this->project)
+      ? $this->l->t('Payments for project "%s"', $this->project->getName())
+      : $this->l->t('Payments for all projects');
   }
 
   /**
@@ -332,9 +334,6 @@ WHERE dsf.id IS NOT NULL',
     $template        = $this->template;
 
     $projectMode = $this->projectId > 0;
-    if (!$projectMode) {
-      throw new InvalidArgumentException('Project-id and/or -name must be given.');
-    }
 
     $opts            = [];
 
@@ -362,13 +361,15 @@ WHERE dsf.id IS NOT NULL',
     // Sorting field(s). 'id' and self::PROJECT_PAYMENTS_TABLE.id must
     // be there in order to group the fields correctly, as we "blow"
     // up the table by joining self::PROJECT_PAYMENTS_TABLE.
-    $opts['sort_field'] = [
-      '-date_of_receipt',
-      'project_id',
-      'musician_id',
-      'id',
-      $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag'),
-    ];
+    if ($projectMode) {
+      $opts['sort_field'] = [
+        '-date_of_receipt',
+        'project_id',
+        'musician_id',
+        'id',
+        $this->joinTableFieldName(self::PROJECT_PAYMENTS_TABLE, 'row_tag'),
+      ];
+    }
 
     $opts['groupby_fields'] = [ 'id' ];
     $opts['groupby_where'] = true;
@@ -514,13 +515,13 @@ WHERE dsf.id IS NOT NULL',
       'sort'     => true,
     ];
 
+    $joinTables = $this->defineJoinStructure($opts);
+
     $opts['fdd']['sepa_transaction_id'] = [
       'name'     => $this->l->t('Bulk-Transaction Id'),
       'input'    => 'RH',
       'options'  => 'LFAVCPD',
     ];
-
-    $joinTables = $this->defineJoinStructure($opts);
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'row_tag', [
@@ -532,6 +533,50 @@ WHERE dsf.id IS NOT NULL',
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'composite_payment_id', [
         'name' => 'composite_payment_id',
         'input' => 'RH',
+      ]);
+
+    list(, $projectIdKey) = $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'id',
+      [
+        'name' => $this->l->t('Project'),
+        'css' => [ 'postfix' => [ 'project-id', ], ],
+        'select|CDV' => 'T',
+        'select|AFLP' => 'D',
+        'maxlen' => 20,
+        'size' => 16,
+        'input' => 'M',
+        'input|C' => 'R',
+        'default' => ($projectMode ? $this->projectId : null),
+        'values' => [
+          'description' => [
+            'columns' => [ '$table.name' ],
+            'cast' => [ false ],
+            'ifnull' => [ false ],
+          ],
+          'groups'      => 'year',
+          'orderby'     => '$table.year DESC, $table.name ASC',
+          'filters' => (!$projectMode
+                        ? null
+                        : '$table.id = ' . $this->projectId),
+        ],
+      ]);
+    if (!$projectMode) {
+      $opts['fdd'][$projectIdKey]['values|DVFL'] = $opts['fdd'][$projectIdKey]['values'];
+      $opts['fdd'][$projectIdKey]['values|DVFL']['filters'] = '$table.id IN (SELECT project_id FROM $main_table)';
+    }
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'name',
+      [
+        'name'  => $this->l->t('Project Name'),
+        'input' => 'VHR',
+      ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::PROJECTS_TABLE, 'year',
+      [
+        'name'  => $this->l->t('Project Year'),
+        'input' => 'VHR',
       ]);
 
     $this->makeJoinTableField(
@@ -930,7 +975,9 @@ WHERE dsf.id IS NOT NULL',
             UserStorage::PATH_SEP . $this->getDocumentsFolderName()
             . UserStorage::PATH_SEP . $this->getSupportingDocumentsFolderName()
             . UserStorage::PATH_SEP . $this->getBankTransactionsFolderName();
-          $participantFolder = $this->projectService->ensureParticipantFolder($this->project, $musician, dry: true);
+
+          $project = $this->project ?? $this->ensureProject($row[$this->queryField('project_id')]);
+          $participantFolder = $this->projectService->ensureParticipantFolder($project, $musician, dry: true);
           try {
             $filesAppTarget = md5($this->userStorage->getFilesAppLink($participantFolder));
             $filesAppLink = $this->userStorage->getFilesAppLink($participantFolder . $subDirPrefix, true);
@@ -980,31 +1027,40 @@ WHERE dsf.id IS NOT NULL',
         'groups' => 'CONCAT($table.parent_name, "/")',
         'orderby' => '$table.parent_name ASC, $table.name ASC',
         'data' => 'CONCAT($table.name, "/")',
-        'filters' => '$table.project_id = ' . $this->projectId,
+        'filters' => (!$projectMode
+                      ? null
+                      : '$table.project_id = ' . $this->projectId),
       ],
       'tooltip' => $this->toolTipsService['page-renderer:project-payments:project-balance'],
       'display' => [
         'prefix' => function($op, $pos, $k, $row, $pme) {
-          if (!$this->isCompositeRow($row, $pme)) {
+
+          if ($op === PHPMyEdit::OPERATION_ADD && empty($this->project)) {
             return null;
           }
-          $value = $row[PHPMyEdit::QUERY_FIELD . ($k + 1)];
+
+          if ($op != PHPMyEdit::OPERATION_ADD && !$this->isCompositeRow($row, $pme)) {
+            return null;
+          }
+
+          $value = $row[$this->joinQueryField(self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE, 'name')];
           if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
             return null;
           }
 
+          $project = $this->project ?? $this->ensureProject($row[$this->queryField('project_id')]);
           $documentPathChain = [ $this->getProjectBalancesPath() ];
-          if ($this->project->getType() == ProjectType::TEMPORARY) {
-            $documentPathChain[] = $this->project->getYear();
+          if ($project->getType() == ProjectType::TEMPORARY) {
+            $documentPathChain[] = $project->getYear();
           };
-          $documentPathChain[] = $this->project->getName();
+          $documentPathChain[] = $project->getName();
           $documentPathChain[] = $this->getSupportingDocumentsFolderName();
 
           $documentParentPath = implode('/', $documentPathChain);
           $filesAppTarget = md5($documentParentPath);
           if (!empty($value)) {
             if (is_numeric($value)) {
-              $value = sprintf('%s-%03d', $this->projectName, $value);
+              $value = sprintf('%s-%03d', $project->getName(), $value);
             }
           }
 
@@ -1030,6 +1086,20 @@ WHERE dsf.id IS NOT NULL',
             . '<div class="pme-cell-wrapper"><div class="pme-cell-squeezer">';
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
+
+          if ($op === PHPMyEdit::OPERATION_ADD && empty($this->project)) {
+            return null;
+          }
+
+          if ($op != PHPMyEdit::OPERATION_ADD && !$this->isCompositeRow($row, $pme)) {
+            return null;
+          }
+
+          $value = $row[$this->joinQueryField(self::COMPOSITE_DATABASE_STORAGE_ENTRIES_TABLE, 'name')];
+          if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
+            return null;
+          }
+
           return '</div></div></span></div>';
         },
       ],
@@ -1077,7 +1147,9 @@ WHERE dsf.id IS NOT NULL',
           'groups' => 'CONCAT($table.parent_name, "/")',
           'orderby' => '$table.parent_name ASC, $table.name ASC',
           'data' => 'CONCAT($table.name, "/")',
-          'filters' => '$table.project_id = ' . $this->projectId,
+          'filters' => (!$projectMode
+                        ? null
+                        : '$table.project_id = ' . $this->projectId),
         ],
         'php|LF' => function($value, $action, $k, $row, $recordId, $pme) {
           if ($this->isCompositeRow($row, $pme)) {
@@ -1096,23 +1168,28 @@ WHERE dsf.id IS NOT NULL',
           },
           'prefix' => function($op, $pos, $k, $row, $pme) {
 
+            if ($op === PHPMyEdit::OPERATION_ADD && empty($this->project)) {
+              return null;
+            }
+
             if ($this->isCompositeRow($row, $pme)) {
               if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($row[PHPMyEdit::QUERY_FIELD . $k . '_idx'])) {
                 return null;
               }
               $value = null;
             } else {
-              $value = $row[PHPMyEdit::QUERY_FIELD . ($k + 1)];
+              $value = $row[$this->joinQueryField(self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE, 'name')];
               if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
                 return null;
               }
             }
 
+            $project = $this->project ?? $this->ensureProject($row[$this->queryField('project_id')]);
             $documentPathChain = [ $this->getProjectBalancesPath() ];
-            if ($this->project->getType() == ProjectType::TEMPORARY) {
-              $documentPathChain[] = $this->project->getYear();
+            if ($project->getType() == ProjectType::TEMPORARY) {
+              $documentPathChain[] = $project->getYear();
             };
-            $documentPathChain[] = $this->project->getName();
+            $documentPathChain[] = $project->getName();
             $documentPathChain[] = $this->getSupportingDocumentsFolderName();
 
             $documentParentPath = implode('/', $documentPathChain);
@@ -1144,6 +1221,23 @@ WHERE dsf.id IS NOT NULL',
             }
           },
           'postfix' => function($op, $pos, $k, $row, $pme) {
+
+            if ($op === PHPMyEdit::OPERATION_ADD && empty($this->project)) {
+              return null;
+            }
+
+            if ($this->isCompositeRow($row, $pme)) {
+              if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($row[PHPMyEdit::QUERY_FIELD . $k . '_idx'])) {
+                return null;
+              }
+              $value = null;
+            } else {
+              $value = $row[$this->joinQueryField(self::SPLIT_DATABASE_STORAGE_ENTRIES_TABLE, 'name')];
+              if ($op === PHPMyEdit::OPERATION_DISPLAY && empty($value)) {
+                return null;
+              }
+            }
+
             if ($this->isCompositeRow($row, $pme)) {
               return '</div></div></span></div>';
             } else {
@@ -1798,9 +1892,10 @@ WHERE dsf.id IS NOT NULL',
       $newValues[$this->joinTableFieldName(self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE, 'composite_key')],
       3
     );
-    $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
 
+    $musicianId = $newValues[$this->joinTableFieldName(self::MUSICIANS_TABLE, 'id')];
     $newValues['musician_id'] = $musicianId;
+
     if (($newValues[$amountKey]??null) === null) {
       $newValues[$amountKey] = $newValues['amount'];
     } else {
@@ -1931,6 +2026,9 @@ WHERE dsf.id IS NOT NULL',
   private function isCompositeRow(array $row, PHPMyEdit $pme):bool
   {
     $rowTag = $row[$this->queryField($this->joinTableMasterFieldName(self::PROJECT_PAYMENTS_TABLE))];
+    if (empty($rowTag)) {
+      $this->logException(new \Exception('blah'));
+    }
     return $this->isCompositeRowTag($rowTag);
   }
 
