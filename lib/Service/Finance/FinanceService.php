@@ -454,6 +454,11 @@ class FinanceService
     ];
 
     $paymentData = $this->generatePaymentMailMergeData($compositePayment);
+    foreach ($paymentData['payment']['payments'] as $paymentData) {
+      if ($paymentData['amount'] < 0) {
+        $templateData['donation']['waivedPayment'] = $paymentData;
+      }
+    }
 
     $templateData = array_merge($paymentData, $templateData);
 
