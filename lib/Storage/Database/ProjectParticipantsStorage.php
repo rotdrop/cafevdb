@@ -30,24 +30,15 @@ use DateTimeInterface;
 
 use OCP\EventDispatcher\IEventDispatcher;
 
-// F I X M E: those are not public, but ...
-use OC\Files\Storage\Common as AbstractStorage;
-use OC\Files\Storage\PolyFill\CopyDirectory;
-
-use Icewind\Streams\CallbackWrapper;
-use Icewind\Streams\CountWrapper;
-use Icewind\Streams\IteratorDirectory;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Service\ProjectService;
 
 /**
  * Storage implementation for data-base storage, including access to

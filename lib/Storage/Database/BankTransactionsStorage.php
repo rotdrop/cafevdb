@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine  <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2020, 2021, 2022, Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2011-2014, 2016, 2020-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,22 +24,12 @@
 
 namespace OCA\CAFEVDB\Storage\Database;
 
-use \DateTimeImmutable;
+use DateTimeImmutable;
 
-// F I X M E: those are not public, but ...
-use OC\Files\Storage\Common as AbstractStorage;
-use OC\Files\Storage\PolyFill\CopyDirectory;
 use OCP\EventDispatcher\IEventDispatcher;
 
-use Icewind\Streams\CallbackWrapper;
-use Icewind\Streams\CountWrapper;
-use Icewind\Streams\IteratorDirectory;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Exceptions;
 
 /**
