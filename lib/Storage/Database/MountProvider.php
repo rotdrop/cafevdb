@@ -157,8 +157,8 @@ class MountProvider implements IMountProvider
     $mounts = [];
     $bulkLoadStorageIds = [];
 
+    // allow only treasurers or similar folk
     if ($this->authorizationService->authorized($userId, AuthorizationService::PERMISSION_FINANCE)) {
-      // allow only treasurers or similar folk
 
       $storage = $this->storageFactory->getBankTransactionsStorage();
       $bulkLoadStorageIds[] = $storage->getId();
@@ -187,8 +187,6 @@ class MountProvider implements IMountProvider
         }
       };
 
-      // allow only treasurers or similar folk
-
       $storage = $this->storageFactory->getTaxExemptionNoticesStorage();
       $bulkLoadStorageIds[] = $storage->getId();
 
@@ -197,6 +195,34 @@ class MountProvider implements IMountProvider
         mountpoint: UserStorage::PATH_SEP . implode(
           UserStorage::PATH_SEP,
           [ $userId, 'files', $this->getTaxExemptionNoticesPath(), ],
+        ),
+        mountId: null,
+        loader: $loader,
+        mountProvider: MountProvider::class,
+        mountOptions: [
+          'filesystem_check_changes' => 1,
+          'readonly' => false,
+          'previews' => true,
+          'enable_sharing' => false, // cannot work, mount needs DB access
+          'authenticated' => true,
+        ]
+      ) extends MountPoint
+      {
+        /** {@inheritdoc} */
+        public function getMountType()
+        {
+          return MountProvider::MOUNT_TYPE;
+        }
+      };
+
+      $storage = $this->storageFactory->getDonationReceiptsStorage();
+      $bulkLoadStorageIds[] = $storage->getId();
+
+      $mounts[] = new class(
+        storage: $storage,
+        mountpoint: UserStorage::PATH_SEP . implode(
+          UserStorage::PATH_SEP,
+          [ $userId, 'files', $this->getDonationReceiptsPath(), ],
         ),
         mountId: null,
         loader: $loader,
