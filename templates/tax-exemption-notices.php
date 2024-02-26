@@ -24,9 +24,16 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\Service\ConfigService;
+
 $css_pfx = $renderer->cssPrefix();
 $projectName = $renderer->getProjectName();
 $projectId = $renderer->getProjectId();
+
+if (empty($projectId)) {
+  $projectId = (int)$appConfig->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, 0);
+  $projectName = $appConfig->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
+}
 
 $nav = '';
 $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
