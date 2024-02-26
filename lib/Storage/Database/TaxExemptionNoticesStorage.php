@@ -27,24 +27,15 @@ namespace OCA\CAFEVDB\Storage\Database;
 use DateTimeImmutable;
 use UnexpectedValueException;
 
-// F I X M E: those are not public, but ...
-use OC\Files\Storage\Common as AbstractStorage;
-use OC\Files\Storage\PolyFill\CopyDirectory;
 use OCP\EventDispatcher\IEventDispatcher;
-
-use Icewind\Streams\CallbackWrapper;
-use Icewind\Streams\CountWrapper;
-use Icewind\Streams\IteratorDirectory;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Constants;
-use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumTaxType;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\TaxExemptionNotice as Entity;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Storage\StorageUtil;
 
 /**
