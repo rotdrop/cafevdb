@@ -51,5 +51,8 @@ class Registration
     $context->registerService(TaxExemptionNoticesStorage::class, function(ContainerInterface $container) {
       return new TaxExemptionNoticesStorage([ 'configService' => $container->get(ConfigService::class), ]);
     });
+    $context->registerService(DonationReceiptsStorage::class, function(ContainerInterface $container) {
+      return new DonationReceiptsStorage([ 'configService' => $container->get(ConfigService::class), ]);
+    });
   }
 }

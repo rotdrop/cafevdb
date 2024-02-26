@@ -756,6 +756,19 @@ trait ConfigTrait
   }
 
   /**
+   * @return null|string Return the full path to the financial balances folder
+   */
+  protected function getDonationReceiptsPath():?string
+  {
+    $taxAuthoritiesFolder = $this->getTaxAuthoritiesPath();
+    if (empty($taxAuthoritiesFolder)) {
+      return null;
+    }
+    $donationReceiptsFolder = $this->appL10n()->t('donation-receipts');
+    return $taxAuthoritiesFolder . Constants::PATH_SEP . $donationReceiptsFolder;
+  }
+
+  /**
    * @return null|string Return the full path to incoming post-box folder.
    */
   protected function getPostBoxFolderPath():?string

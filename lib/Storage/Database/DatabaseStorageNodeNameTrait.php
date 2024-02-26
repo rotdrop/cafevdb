@@ -120,6 +120,16 @@ trait DatabaseStorageNodeNameTrait
   }
 
   /**
+   * Get the name of the folder containing tax exemption notices.
+   *
+   * @return string
+   */
+  protected function getDonationReceiptsFolderName():string
+  {
+    return $this->getAppL10n()->t('DonationReceipts');
+  }
+
+  /**
    * PME-legacy.
    *
    * @param int $compositePaymentId
@@ -253,6 +263,58 @@ trait DatabaseStorageNodeNameTrait
       $taxExemptionNotice->getTaxType(),
       $taxExemptionNotice->getAssessmentPeriodStart(),
       $taxExemptionNotice->getAssessmentPeriodEnd(),
+      $extension,
+    );
+  }
+
+  /**
+   * PME-legacy.
+   *
+   * @param int $paymentId
+   *
+   * @param string $projectName
+   *
+   * @param string $musicianName
+   *
+   * @param null|string $extension
+   *
+   * @return string
+   */
+  protected function getLegacyDonationReceiptFileName(
+    int $paymentId,
+    string $musicianName,
+    string $projectName,
+    ?string $extension = null,
+  ):string {
+    // TRANSLATORS: file-name
+    $fileName =  $this->getAppL10n()->t('DonationReceipt-%1$d-%2$s-%3$s', [
+      $paymentId,
+      Util::dashesToCamelCase($musicianName, true, '_-. '),
+      $projectName,
+    ]);
+    if (!empty($extension)) {
+      $fileName .= '.' . $extension;
+    }
+    return $fileName;
+  }
+
+  /**
+   * Generate a file-name for the given donation.
+   *
+   * @param Entities\CompositePayment $doonation
+   *
+   * @param null|string $extension
+   *
+   * @return string
+   */
+  protected function getDonationReceiptFileName(
+    Entities\CompositePayment $donation,
+    ?string $extension = null,
+  ):string {
+    return $this->getLegacyTaxExemptionNoticeFileName(
+      $donation->getId(),
+      $donation->getMusician()->getPublicName(firstNameFirst: true),
+      $donation->getProject()->getName(),
       $extension,
     );
   }
