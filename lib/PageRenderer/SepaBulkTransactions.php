@@ -265,7 +265,7 @@ FROM ".self::COMPOSITE_PAYMENTS_TABLE." __t2",
           'name' => $this->l->t('Bookings'),
         ], [
           'id' => 'tab-all',
-          'tooltip' => $this->toolTipsService['pme-showall-tab'],
+          'tooltip' => $this->toolTipsService['page-renderer:tab:showall'],
           'name' => $this->l->t('Display all columns'),
         ],
       ],

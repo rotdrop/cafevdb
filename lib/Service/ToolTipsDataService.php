@@ -35,6 +35,8 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
  */
 class ToolTipsDataService
 {
+  public const PME_SHOW_ALL_TEXT = 'Simply blends in all the columns of the table as if all the tabs would be activated at the same time.';
+
   /**
    * Just a shim which injects the content of the data-array into the
    * to-be-translated strings. The actual translation will happen in the using
@@ -434,10 +436,9 @@ invited to have a look, but please do not change anything unless you know what y
       ],
 
       'page-renderer' => [
-        'pme' => [
-          'showall' => [
-            'tab' => self::t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
-          ],
+        'tab' => [
+          'showall' => self::t(self::PME_SHOW_ALL_TEXT),
+          'miscinfo' => self::t('Further "not so important" data.'),
         ],
 
         'attachment' => [
@@ -452,7 +453,6 @@ invited to have a look, but please do not change anything unless you know what y
           'download' => self::t('Click to download this file.'),
           'open-parent' => self::t('Open the containing folder using the files-app of the cloud.'),
         ],
-        'miscinfo-tab' => self::t('Further "not so important" data of the participant.'),
         'musicians' => [
           'tab' => [
             'orchestra' => self::t('Display name, pre-name, instruments, status, general remarks.'),
@@ -1094,7 +1094,7 @@ Suchkriterien anzuzeigen.'),
         ],
 
         'showall' => [
-          'tab' => self::t('Simply blends in all the columns of the table as if all the tabs would be activated at the same time.'),
+          'tab' => self::t(self::PME_SHOW_ALL_TEXT),
         ],
 
         'sort' => [
