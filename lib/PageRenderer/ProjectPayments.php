@@ -479,7 +479,7 @@ WHERE dsf.id IS NOT NULL',
             'name' => $this->l->t('Bank Transaction'),
           ], [
             'id' => 'tab-all',
-            'tooltip' => $this->toolTipsService['pme-showall-tab'],
+            'tooltip' => $this->toolTipsService['page-renderer:tab:showall'],
             'name' => $this->l->t('Display all columns'),
           ],
         ],

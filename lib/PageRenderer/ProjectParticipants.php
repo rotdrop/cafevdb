@@ -1598,12 +1598,12 @@ class ProjectParticipants extends PMETableViewBase
     $post = [
       [
         'id' => 'miscinfo',
-        'tooltip' => $this->toolTipsService['page-renderer:miscinfo-tab'],
+        'tooltip' => $this->toolTipsService['page-renderer:tab:miscinfo'],
         'name' => $this->l->t('Miscinfo'),
       ],
       [
         'id' => 'tab-all',
-        'tooltip' => $this->toolTipsService['pme-showall-tab'],
+        'tooltip' => $this->toolTipsService['page-renderer:tab:showall'],
         'name' => $this->l->t('Display all columns'),
       ],
     ];
