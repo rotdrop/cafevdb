@@ -96,14 +96,6 @@ class TaxExemptionNotices extends PMETableViewBase
   }
 
   /** {@inheritdoc} */
-  public function headerText()
-  {
-    $header = $this->shortTitle();
-
-    return '<div class="' . $this->cssPrefix() . '-header-text">' . $header . '</div>';
-  }
-
-  /** {@inheritdoc} */
   public function render(bool $execute = true):void
   {
     $template        = $this->template;
