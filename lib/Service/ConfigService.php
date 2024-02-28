@@ -184,51 +184,61 @@ class ConfigService
       'name' => self::DOCUMENT_TEMPLATE_LOGO_NAME,
       'type' => self::DOCUMENT_TYPE_CONSTANT,
       'folder' => null,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_SEAL => [
       'name' => self::DOCUMENT_TEMPLATE_SEAL_NAME,
       'type' => self::DOCUMENT_TYPE_CONSTANT,
       'folder' => null,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_STANDARD_LETTER => [
       'name' => self::DOCUMENT_TEMPLATE_STANDARD_LETTER_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => null,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE => [
       'name' => self::DOCUMENT_TEMPLATE_PROJECT_DEBIT_NOTE_MANDATE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE => [
       'name' => self::DOCUMENT_TEMPLATE_GENERAL_DEBIT_NOTE_MANDATE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE => [
       'name' => self::DOCUMENT_TEMPLATE_MEMBER_DATA_UPDATE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_INVOICE => [
       'name' => self::DOCUMENT_TEMPLATE_INVOICE_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT => [
       'name' => self::DOCUMENT_TEMPLATE_STANDARD_RECEIPT_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_DONATION_RECEIPT => [
       'name' => self::DOCUMENT_TEMPLATE_DONATION_RECEIPT_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => true,
     ],
     self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD => [
       'name' => self::DOCUMENT_TEMPLATE_INSTRUMENT_INSURANCE_RECORD_NAME,
       'type' => self::DOCUMENT_TYPE_TEMPLATE,
       'folder' => self::FINANCE_FOLDER,
+      'blank' => false,
     ],
   ];
 
