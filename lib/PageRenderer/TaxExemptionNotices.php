@@ -315,10 +315,6 @@ class TaxExemptionNotices extends PMETableViewBase
           return $value;
         }
 
-        $taxType = $row[$this->queryField('tax_type')];
-        $assessmentPeriodStart = $row[$this->queryField('assessment_period_start')];
-        $assessmentPeriodEnd = $row[$this->queryField('assessment_period_end')];
-
         /** @var Entities\DatabaseStorageFile $file */
         $file = $this->getDatabaseRepository(Entities\DatabaseStorageFile::class)->find($value);
 
@@ -329,9 +325,9 @@ class TaxExemptionNotices extends PMETableViewBase
         try {
           $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);
           $filesAppTarget = md5($filesAppLink);
-          $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget.'"
+          $filesAppLink = '<a href="' . $filesAppLink . '" target="'.$filesAppTarget . '"
        title="'.$this->toolTipsService['page-renderer:upload:open-parent'].'"
-       class="button operation open-parent tooltip-auto'.(empty($filesAppLink) ? ' disabled' : '').'"
+       class="button operation open-parent tooltip-auto' . (empty($filesAppLink) ? ' disabled' : '') . '"
        ></a>';
         } catch (\OCP\Files\NotFoundException $e) {
           $this->logInfo('No file found for ' . $dir);
@@ -341,8 +337,8 @@ class TaxExemptionNotices extends PMETableViewBase
 '
           . $filesAppLink
           . '<a class="download-link ajax-download tooltip-auto inline-block clip-long-text"
-   title="'.$this->toolTipsService['tax-exemption-notices:written-notice'].'"
-   href="'.$downloadLink.'">' . $file->getName() . '</a>
+   title="' . $this->toolTipsService['page-renderer:tax-exemption-notices:written-notice'] . '"
+   href="' . $downloadLink . '">' . $file->getName() . '</a>
 </div>';
       },
     ];
