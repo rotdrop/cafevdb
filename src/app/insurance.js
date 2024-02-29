@@ -32,6 +32,12 @@ import * as SelectUtils from './select-utils.js';
 import generateUrl from './generate-url.js';
 import fileDownload from './file-download.js';
 import pmeExportMenu from './pme-export.js';
+import {
+  formSelector as pmeFormSelector,
+  inputClassSelector as pmeInputClassSelector,
+  classSelectors as pmeClassSelectors,
+  valueSelector as pmeValueSelector,
+} from './pme-selectors.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -106,7 +112,7 @@ const updateInsuranceFee = function(elements) {
   }
   const rate = rateMeta.rate;
 
-  $insuranceRate.find('.pme-input').val(rate);
+  $insuranceRate.find(pmeInputClassSelector()).val(rate);
   const $rateDisplay = $insuranceRate.find('.insurance-rate-display');
   $rateDisplay.data('value', rate);
   $rateDisplay.html((rate * 100.0).toLocaleString(lang) + ' %');
@@ -143,8 +149,9 @@ const enableScopeOptions = function($scopeSelect, $broker) {
 const pmeFormInit = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
   const container = PHPMyEdit.container(containerSel);
-  const form = container.find('form[class^="pme-form"]');
-  const submitSel = 'input.pme-save,input.pme-apply,input.pme-more';
+  const form = container.find(pmeFormSelector);
+
+  const submitSel = pmeClassSelectors('input', ['save', 'apply', 'more']);
   const submits = form.find(submitSel);
 
   if (submits.length > 0) {
@@ -284,9 +291,9 @@ const pmeFormInit = function(containerSel) {
 
     const $scopeSelect = form.find('select.scope-select');
     const $brokerSelect = form.find('select.broker-select');
-    const $insuranceRate = form.find('td.pme-value.insurance-rate');
-    const $insuranceFee = form.find('td.pme-value.insurance-fee .insurance-fee-display');
-    const $insuranceAmount = form.find('td.pme-value.insurance-amount input');
+    const $insuranceRate = form.find(pmeValueSelector + '.insurance-rate');
+    const $insuranceFee = form.find(pmeValueSelector + '.insurance-fee .insurance-fee-display');
+    const $insuranceAmount = form.find(pmeValueSelector + '.insurance-amount input');
 
     form.find('input.insurance-amount')
       .on('change', function(event) {
@@ -390,7 +397,7 @@ const documentReady = function() {
   });
 
   CAFEVDB.addReadyCallback(function() {
-    const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
+    const renderer = $(PHPMyEdit.defaultSelector).find(pmeFormSelector + ' input[name="templateRenderer"]').val();
     if (renderer === Page.templateRenderer('instrument-insurance')
         || renderer === Page.templateRenderer('insurance-rates')) {
       pmeFormInit(PHPMyEdit.defaultSelector);

@@ -48,22 +48,24 @@ import {
 } from './select-utils.js';
 import * as qs from 'qs';
 import {
-  sys as pmeSys,
-  data as pmeData,
-  token as pmeToken,
-  idSelector as pmeIdSelector,
-  inputSelector as pmeInputSelector,
-  valueSelector as pmeValueSelector,
   classSelector as pmeClassSelector,
   classSelectors as pmeClassSelectors,
+  container as pmeContainer,
+  data as pmeData,
+  formEditSuffixes as pmeFormEditSuffixes,
+  formSelector as pmeFormSelector,
+  idSelector as pmeIdSelector,
+  inputSelector as pmeInputSelector,
+  navigationSelector as pmeNavigationSelector,
+  selectInputSelector as pmeSelectInputSelector,
+  selector as pmeSelector,
+  sys as pmeSys,
   sysNameSelector as pmeSysNameSelector,
   sysNameSelectors as pmeSysNameSelectors,
-  navigationSelector as pmeNavigationSelector,
-  formSelector as pmeFormSelector,
   tableSelector as pmeTableSelector,
-  selector as pmeSelector,
-  container as pmeContainer,
-  formEditSuffixes as pmeFormEditSuffixes,
+  textareaInputSelector as pmeTextareaInputSelector,
+  token as pmeToken,
+  valueSelector as pmeValueSelector,
 } from './pme-selectors.js';
 import 'jquery-ui/ui/effects/effect-highlight.js';
 import 'jquery-ui/ui/widgets/sortable.js';
@@ -1414,14 +1416,12 @@ const clearButtonPlugin = {
  * @param {boolean} onlyClass TBD.
  */
 function installInputSelectize(containerSel, onlyClass) {
-  const pmeInput = pmeToken('input');
-
   const container = pmeContainer(containerSel);
   if (onlyClass === undefined) {
     onlyClass = 'selectize';
   }
 
-  container.find('select.' + pmeInput + '.' + onlyClass).each(function(index) {
+  container.find(pmeSelectInputSelector + '.' + onlyClass).each(function(index) {
     const $self = $(this);
     const plugins = $self.hasClass('not-empty')
       ? []
@@ -1436,7 +1436,7 @@ function installInputSelectize(containerSel, onlyClass) {
         items: $self.data('initialValues'),
         // closeAfterSelect: true,
         create: false,
-        inputClass: 'pme-selectize-input',
+        inputClass: pmeToken('selectize-input'),
       },
       $self.data('selectizeOptions') || {}
     );
@@ -1503,18 +1503,18 @@ const installInputChosen = function(containerSel, onlyClass) {
 
   // Provide a data-placeholder and also remove the match-all
   // filter, which is not needed when using chosen.
-  container.find('select.' + pmeInput).each(function() {
+  container.find(pmeSelectInputSelector).each(function() {
     const $select = $(this);
     if (!$select.attr('data-placeholder')) {
       $select.attr('data-placeholder', PHPMyEdit.inputSelectPlaceholder);
     }
   });
 
-  container.off('change', 'select.' + pmeInput);
+  container.off('change', pmeSelectInputSelector);
   //    container.find('select.' + pmeInput + ' option[value="*"]').remove();
 
   // Then the general stuff
-  container.find('select.' + pmeInput).each(function(index) {
+  container.find(pmeSelectInputSelector).each(function(index) {
     const self = $(this);
     if (self.hasClass('no-chosen') || (onlyClass !== undefined && !self.hasClass(onlyClass))) {
       return;
@@ -2102,31 +2102,30 @@ const documentReady = function() {
 
 export {
   documentReady,
+  lockTableDialog as tableDialogLock,
   pmeAddTableLoadCallback as addTableLoadCallback,
-  pmeSelector as selector,
+  pmeClassSelector as classSelector,
+  pmeClassSelectors as classSelectors,
   pmeContainer as container,
+  pmeData as data,
   pmeDefaultSelector as defaultSelector,
   pmeDeferReload as deferReload,
   pmeFormSelector as formSelector,
-  pmeClassSelector as classSelector,
-  pmeSys as sys,
-  pmeData as data,
-  pmeIdSelector as idSelector,
-  pmeTriggerSubmit as triggerSubmit,
-  pmeTableDialogOpen as tableDialogOpen,
-  lockTableDialog as tableDialogLock,
-  tableDialogLoadIndicator,
-  pmeSysNameSelector as sysNameSelector,
-  pmeSubmitOuterForm as submitOuterForm,
-  pmeClassSelectors as classSelectors,
-  pmeOpenRowDialog as openRowDialog,
-  pmePushCancellable as pushCancellable,
   pmeHalt as halt,
-  pmeIsHalted as halted,
-  pmePageRenderer as pageRenderer,
   pmeHasEditableData as hasEditableData,
+  pmeIdSelector as idSelector,
+  pmeInputSelector as inputSelector,
+  pmeIsHalted as halted,
+  pmeOpenRowDialog as openRowDialog,
+  pmePageRenderer as pageRenderer,
+  pmePushCancellable as pushCancellable,
+  pmeSelectInputSelector as selectInputSelector,
+  pmeSelector as selector,
+  pmeSubmitOuterForm as submitOuterForm,
+  pmeSys as sys,
+  pmeSysNameSelector as sysNameSelector,
+  pmeTableDialogOpen as tableDialogOpen,
+  pmeTextareaInputSelector as textareaInputSelector,
+  pmeTriggerSubmit as triggerSubmit,
+  tableDialogLoadIndicator,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// End: ***

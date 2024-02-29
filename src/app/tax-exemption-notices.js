@@ -27,6 +27,7 @@ import * as Page from './page.js';
 import * as PHPMyEdit from './pme.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import fileDownload from './file-download.js';
+import { formSelector as pmeFormSelector } from './pme-selectors.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
@@ -80,7 +81,7 @@ const pmeAutocomplete = function($input) {
 const pmeFormInit = function(containerSel, parameters, resizeCB) {
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
-  const $form = $container.find('form[class^="pme-form"]');
+  const $form = $container.find(pmeFormSelector);
 
   if (!PHPMyEdit.hasEditableData($form)) {
     // no need to do further work
