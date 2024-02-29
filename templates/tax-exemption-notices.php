@@ -24,6 +24,7 @@
 
 namespace OCA\CAFEVDB;
 
+use OCA\CAFEVDB\PageRenderer;
 use OCA\CAFEVDB\Service\ConfigService;
 
 $css_pfx = $renderer->cssPrefix();
@@ -35,11 +36,20 @@ if (empty($projectId)) {
   $projectName = $appConfig->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_KEY, '');
 }
 
-$nav = '';
-$nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('project-participants', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
-$nav .= $pageNavigation->pageControlElement('projects');
+$projectNavs = [
+  PageRenderer\ProjectParticipants::TEMPLATE,
+  PageRenderer\ProjectParticipantFields::TEMPLATE,
+  PageRenderer\SepaBankAccounts::TEMPLATE,
+  PageRenderer\ProjectPayments::TEMPLATE,
+  PageRenderer\SepaBulkTransactions::TEMPLATE,
+  PageRenderer\DonationReceipts::TEMPLATE,
+];
+
+$nav = $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
+foreach ($projectNavs as $template) {
+  $nav .= $pageNavigation->pageControlElement($template, $projectName, $projectId);
+}
+$nav .= $pageNavigation->pageControlElement(PageRenderer\Projects::TEMPLATE);
 $nav .= $pageNavigation->pageControlElement('all');
 
 echo $this->inc('part.common.header', [

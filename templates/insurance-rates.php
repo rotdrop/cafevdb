@@ -29,7 +29,7 @@ $css_pfx = $renderer->cssPrefix();
 $nav = '';
 $nav .= $pageNavigation->pageControlElement('projects');
 $nav .= $pageNavigation->pageControlElement('all');
-$nav .= $pageNavigation->pageControlElement('insurances');
+$nav .= $pageNavigation->pageControlElement('instrument-insurance');
 $nav .= $pageNavigation->pageControlElement('insurance-brokers');
 $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts');
 

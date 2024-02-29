@@ -31,10 +31,10 @@ $css_class = $renderer->cssClass();
 $nav = '';
 $nav .= $pageNavigation->pageControlElement('projectlabel', $renderer->getProjectName(), $renderer->getProjectId());
 $nav .= $pageNavigation->pageControlElement('projects');
-$nav .= $pageNavigation->pageControlElement('detailed', $renderer->getProjectName(), $renderer->getProjectId());
+$nav .= $pageNavigation->pageControlElement('project-participants', $renderer->getProjectName(), $renderer->getProjectId());
 $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $renderer->getProjectName(), $renderer->getProjectId());
 $nav .= $pageNavigation->pageControlElement('instruments', $renderer->getProjectName(), $renderer->getProjectId());
-//$nav .= $pageNavigation->pageControlElement('detailed', $renderer->getProjectName(), $renderer->getProjectId());
+//$nav .= $pageNavigation->pageControlElement('project-participants', $renderer->getProjectName(), $renderer->getProjectId());
 
 echo $this->inc(
   'part.common.header',

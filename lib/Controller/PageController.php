@@ -50,7 +50,8 @@ use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\MigrationsService;
 use OCA\CAFEVDB\Service\AssetService;
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+use OCA\CAFEVDB\PageRenderer\Registration as RendererRegistration;
+use OCA\CAFEVDB\PageRenderer\Blog as BlogRenderer;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
 use OCA\CAFEVDB\PageRenderer\IPageRenderer;
 
@@ -330,8 +331,8 @@ class PageController extends Controller
     $template = $this->getTemplate($template, $renderAs);
     $this->logDebug("Try load template ".$template);
     try {
-      /** @var IPageRenderer $renderer */
-      $renderer = $this->appContainer->query('template:'.$template);
+      /** @var IRenderer $renderer */
+      $renderer = $this->appContainer->get(RendererRegistration::TEMPLATE_PREFIX . $template);
       if (empty($renderer)) {
         return self::response(
           $this->l->t("Template-renderer for template `%s' is empty.", [$template]),
@@ -431,9 +432,10 @@ class PageController extends Controller
       $template = self::DEFAULT_TEMPLATE;
     }
     if ($renderAs === self::RENDER_AS_USER) {
-      $blogMapper = \OC::$server->query(BlogMapper::class);
-      if ($blogMapper->notificationPending($this->userId())) {
-        $template = 'blog/blog';
+      /** @var BlogRenderer $blogRenderer */
+      $blogRenderer = $this->appContainer->get(BlogRenderer::class);
+      if ($blogRenderer->notificationsPending()) {
+        $template = BlogRenderer::TEMPLATE;
       }
     }
     return $template;
