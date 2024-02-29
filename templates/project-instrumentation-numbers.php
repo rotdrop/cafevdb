@@ -31,7 +31,7 @@ $projectId = $renderer->getProjectId();
 $nav = '';
 if (!empty($projectId)) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-participants', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
   if ($roles->inTreasurerGroup()) {
     $nav .= $pageNavigation->pageControlElement('project-payments', $projectName, $projectId);

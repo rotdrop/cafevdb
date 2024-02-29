@@ -31,7 +31,7 @@ $projectId = $renderer->getProjectId();
 $nav = '';
 if (!empty($projectId)) {
   $nav .= $pageNavigation->pageControlElement('projectlabel', $projectName, $projectId);
-  $nav .= $pageNavigation->pageControlElement('detailed', $projectName, $projectId);
+  $nav .= $pageNavigation->pageControlElement('project-participants', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-participant-fields', $projectName, $projectId);
   $nav .= $pageNavigation->pageControlElement('project-instrumentation-numbers', $projectName, $projectId);
   if ($roles->inTreasurerGroup()) {
@@ -39,7 +39,7 @@ if (!empty($projectId)) {
     $nav .= $pageNavigation->pageControlElement('sepa-bank-accounts', $projectName, $projectId);
     $nav .= $pageNavigation->pageControlElement('sepa-bulk-transactions', $projectName, $projectId);
     if ($projectId === $appConfig->getConfigValue('memberProjectid', false)) {
-      $nav .= $pageNavigation->pageControlElement('insurances');
+      $nav .= $pageNavigation->pageControlElement('instrument-insurance');
     }
   }
   $nav .= $pageNavigation->pageControlElement('projects');

@@ -27,10 +27,11 @@ namespace OCA\CAFEVDB\PageRenderer\Util;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\Service\ToolTipsService;
-use OCA\CAFEVDB\Database\Legacy\PME\IOptions as PMEOptions;
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Legacy\PME\IOptions as PMEOptions;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\PageRenderer;
+use OCA\CAFEVDB\Service\ToolTipsService;
 
 /**Support class to generate navigation buttons and the like.
  */
@@ -527,7 +528,7 @@ class Navigation
   /**
    * Generate a couple of standard buttons, identified by Ids.
    *
-   * @param string $id One of
+   * @param string $template The page template to refer to.
    *   - projects Project Overview.
    *   - all Overview of all musicians.
    *   - email Mass-email dialog (obsolete).
@@ -552,19 +553,19 @@ class Navigation
    * @return string The HTML form control requested.
    */
   public function pageControlElement(
-    string $id = 'projects',
+    string $template = PageRenderer\Projects::TEMPLATE,
     string $projectName = '',
     int $projectId = 0,
   ):string {
-    $controlid = $id.'-control';
+    $controlid = $template . '-control';
     $controlclass = '';
     $value = '';
     $title = '';
     $post = null;
     $json = null;
 
-    switch ($id) {
-      case 'projects':
+    switch ($template) {
+      case PageRenderer\Projects::TEMPLATE:
         $value = $this->l->t("View all Projects");
         $title = $this->l->t("Overview over all known projects (start-page).");
         $year = date("Y") - 1;
@@ -572,40 +573,46 @@ class Navigation
         $field = 'year';
         $post = [
           'projects' => $value,
-          'template' => 'projects',
+          'template' => $template,
           $sysPfx.PHPMyEdit::QUERY_FIELD.$field.'_comp' => '>=',
           $sysPfx.PHPMyEdit::QUERY_FIELD.$field => $year
         ];
         break;
 
-      case 'project-participant-fields':
+      case PageRenderer\ProjectParticipantFields::TEMPLATE:
         $value = $this->l->t("Project Participant-Fields");
         $title = $this->l->t("Add additional data-fields to the instrumenation table for the project.");
-        $post = ['projectParticipantFields' => $value,
-                 'template' => 'project-participant-fields',
-                 'showDisabledFields' => false,
-                 'projectName' => $projectName,
-                 'projectId' => $projectId];
+        $post = [
+          'projectParticipantFields' => $value,
+          'template' => $template,
+          'showDisabledFields' => false,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
-      case 'project-payments':
+      case PageRenderer\ProjectPayments::TEMPLATE:
         $value = $this->l->t("Received Payments");
         $title = $this->l->t("A table holding the various payments of participants.");
         $controlclass = 'finance';
-        $post = ['projectPayments' => $value,
-                 'template' => 'project-payments',
-                 'projectName' => $projectName,
-                 'projectId' => $projectId];
+        $post = [
+          'projectPayments' => $value,
+          'template' => $template,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
-      case 'sepa-bulk-transactions':
+      case PageRenderer\SepaBulkTransactions::TEMPLATE:
         $value = $this->l->t("Issued Bulk Transactions");
         $title = $this->l->t("A table holding all bulk bank-transactions issued from the orchestra-software.");
         $controlclass = 'finance';
-        $post = ['debitNotes' => $value,
-                 'template' => 'sepa-bulk-transactions',
-                 'projectName' => $projectName,
-                 'projectId' => $projectId];
+        $post = [
+          'debitNotes' => $value,
+          'template' => $template,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
       case 'all':
@@ -615,29 +622,36 @@ class Navigation
                  'template' => 'all-musicians'];
         break;
 
+      case PageRenderer\Blog::TEMPLATE:
       case 'blog':
         $value = $this->l->t("Frontpage Blog");
         $title = $this->l->t("Simplistic blog page with follow apps, used primarily to display hints
 if something has changed in the orchestra app.");
-        $post = ['blog' => $value,
-                 'template' => 'blog/blog'];
+        $post = [
+          'blog' => $value,
+          'template' => PageRenderer\Blog::TEMPLATE,
+        ];
         break;
 
       case 'email':
         $title = $this->l->t(
           "Mass-email form, use with care. Mass-emails will be logged. Recipients will be specified by the Bcc: field in the header, so the recipients are undisclosed to each other."
         );
-        $post = ['template' => 'email',
-                 'projectName' => $projectName,
-                 'projectId' => $projectId];
+        $post = [
+          'template' => $template,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
       case 'emailhistory':
         $value = $this->l->t("Email History");
         $title = $this->l->t("Display all emails sent by our mass-email form.");
-        $post = ['template' => 'email-history',
-                 'projectName' => $projectName,
-                 'projectId' > $projectId];
+        $post = [
+          'template' => 'email-history',
+          'projectName' => $projectName,
+          'projectId' > $projectId,
+        ];
         break;
 
       case 'projectlabel':
@@ -645,33 +659,40 @@ if something has changed in the orchestra app.");
 The overview-page gives the possibility to add events, change the instrumentation
 and even edit the public web-pages for the project and other things.");
         $value = $this->l->t('Overview %s', $projectName);
-        $json = ['projectName' => $projectName,
-                 'projectId' => $projectId];
+        $json = [
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
-      case 'project-participants':
-      case 'detailed':
+      case PageRenderer\ProjectParticipants::TEMPLATE:
         $value = $this->l->t("Participants");
         $title = $this->l->t("Detailed display of all registered musicians for the selected project. The table will allow for modification of personal data like email, phone, address etc.");
-        $post = ['template' => 'project-participants',
-                 'projectName' => $projectName,
-                 'projectId' => $projectId];
+        $post = [
+          'template' => $template,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
-      case 'instruments':
+      case PageRenderer\Instruments::TEMPLATE:
         $value = $this->l->t("Musical Instruments");
         $title = $this->l->t("Display the list of instruments known by the data-base, possibly add new ones as needed.");
-        $post = ['template' => 'instruments',
-                 'projectName' => $projectName,
-                 'projectId' => $projectId];
+        $post = [
+          'template' => $template,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
-      case 'instrument-families':
+      case PageRenderer\InstrumentFamilies::TEMPLATE:
         $value = $this->l->t("Instrument Families");
         $title = $this->l->t("Display the list of instrument families and add or change them as needed.");
-        $post = ['template' => 'instrument-families',
-                 'projectName' => $projectName,
-                 'projectId' => $projectId];
+        $post = [
+          'template' => $template,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
       case 'config-check':
@@ -680,16 +701,17 @@ and even edit the public web-pages for the project and other things.");
         $post = [ 'template' => 'maintenance/configcheck' ];
         break;
 
-      case 'project-instrumentation-numbers':
+      case PageRenderer\ProjectInstrumentationNumbers::TEMPLATE:
         $value = $this->l->t('Instrumentation Numbers');
         $title = $this->l->t('Display the desired instrumentaion numbers, i.e. how many musicians are already registered for each instrument group and how many are finally needed.');
-        $json = ['template' => 'project-instrumentation-numbers',
-                 'projectName' => $projectName,
-                 'projectId' => $projectId];
-
+        $json = [
+          'template' => $template,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
         break;
 
-      case 'sepa-bank-accounts':
+      case PageRenderer\SepaBankAccounts::TEMPLATE:
         if (!empty($projectId)) {
           $value = $this->l->t('Create Bulk Transactions');
           $title = $this->l->t('Display a table with the bank accounts of the project participants,
@@ -701,39 +723,56 @@ to and from the registered bank accounts.');
         }
         $controlclass = 'finance';
         $post = [
-          'template' => 'sepa-bank-accounts',
+          'template' => $template,
           'projectName' => $projectName,
           'projectId' => $projectId,
         ];
         break;
 
-      case 'insurances':
+      case PageRenderer\InstrumentInsurances::TEMPLATE:
         $value = $this->l->t("Insurances");
         $title = $this->l->t("Display a table with an overview about the current state of the member's instrument insurances.");
         $controlclass = 'finance';
-        $post = ['template' => 'instrument-insurance'];
+        $post = [
+          'template' => $template,
+        ];
         break;
 
-      case 'insurance-rates':
+      case PageRenderer\InsuranceRates::TEMPLATE:
         $value = $this->l->t("Insurance Rates");
         $title = $this->l->t("Display a table with the insurance rates for the individual instrument insurances.");
         $controlclass = 'finance';
-        $post = ['template' => 'insurance-rates'];
+        $post = [
+          'template' => $template,
+        ];
         break;
 
-      case 'insurance-brokers':
+      case PageRenderer\InsuranceBrokers::TEMPLATE:
         $value = $this->l->t("Insurance Brokers");
         $title = $this->l->t("Display a table with the insurance brokers.");
         $controlclass = 'finance';
-        $post = ['template' => 'insurance-brokers'];
+        $post = [
+          'template' => $template,
+        ];
         break;
 
-      case 'tax-exemption-notices':
+      case PageRenderer\TaxExemptionNotices::TEMPLATE:
         $value = $this->l->t("Notices of Exemption");
         $title = $this->l->t("Display a table an overview table with exemption notices received by tax offices.");
         $controlclass = 'finance';
         $post = [
-          'template' => 'tax-exemption-notices',
+          'template' => $template,
+          'projectName' => $projectName,
+          'projectId' => $projectId,
+        ];
+        break;
+
+      case PageRenderer\DonationReceipts::TEMPLATE:
+        $value = $this->l->t("Donation Receipts");
+        $title = $this->l->t("Display a table an overview table with donation receipts send out to donators.");
+        $controlclass = 'finance';
+        $post = [
+          'template' => $template,
           'projectName' => $projectName,
           'projectId' => $projectId,
         ];
