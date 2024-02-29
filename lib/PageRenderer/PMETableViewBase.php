@@ -132,6 +132,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
   const PROJECT_INSTRUMENTATION_NUMBERS_TABLE = 'ProjectInstrumentationNumbers';
   const MUSICIAN_INSTRUMENTS_TABLE = 'MusicianInstruments';
   const MUSICIAN_PHOTO_JOIN_TABLE = 'MusicianPhoto';
+  const TAX_EXEMPTION_NOTICES_TABLE = 'TaxExemptionNotices';
+  const DONATION_RECEIPTS_TABLE = 'DonationReceipts';
   const FILES_TABLE = 'Files';
   const SENT_EMAILS_TABLE = 'SentEmails';
 
@@ -2393,46 +2395,47 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
    */
   protected function makeJoinTableField(array &$fieldDescriptionData, $tableInfo, string $column, array $fdd = [])
   {
-    if (is_string($tableInfo) && isset($fdd['values']['join'])) {
-      $defaultFDD = [
-        'name' => $column,
-        'select' => 'T',
-        'maxlen' => 128,
-        'sort' => true,
-        'input' => 'S',
-        'values' => [
-          'table' => $tableInfo,
-          'column' => $column,
-        ],
-      ];
-    } else {
-      $masterFieldName = self::joinTableMasterFieldName($tableInfo);
-      $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
-      if ($joinIndex === false) {
-        $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
-        throw new Exception($this->l->t("Master join-table field for %s not found.", $table));
-      }
-      if (isset($fieldDescriptionData[$masterFieldName]['values']['join']['reference'])) {
-        $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
-      }
-      $defaultFDD = [
-        'name' => $column,
-        'select' => 'T',
-        'maxlen' => 128,
-        'sort' => true,
-        'input' => 'S',
-        'values' => [
-          'column' => $column,
-          'join' => [ 'reference' => $joinIndex, ],
-        ],
-      ];
-      if (empty($fdd)) {
-        $defaultFDD['input'] = 'HRS';
-      }
-    }
+    $defaultFDD = [
+      'name' => $column,
+      'select' => 'T',
+      'maxlen' => 128,
+      'sort' => true,
+      'input' => 'S',
+      'values' => [],
+    ];
     $fieldName = $this->joinTableFieldName($tableInfo, $column);
     $index = count($fieldDescriptionData);
-    $fieldDescriptionData[$fieldName] = Util::arrayMergeRecursive($defaultFDD, $fdd);
+    $fdd = Util::arrayMergeRecursive($defaultFDD, $fdd);
+    $joinInfo = null;
+    $keys = array_keys($fdd);
+    foreach ($keys as $key) {
+      if ($fdd[$key] === null || ($key != 'values' && !str_starts_with($key, 'values|'))) {
+        continue;
+      }
+      $values = [
+        'column' => $column,
+      ];
+      if (is_string($tableInfo) && isset($fdd[$key]['join'])) {
+        $values['table'] = $tableInfo;
+      } else {
+        if ($joinInfo === null) {
+          $masterFieldName = self::joinTableMasterFieldName($tableInfo);
+          $joinIndex = array_search($masterFieldName, array_keys($fieldDescriptionData));
+          if ($joinIndex === false) {
+            $table = is_array($tableInfo) ? $tableInfo['table'] : $tableInfo;
+            throw new Exception($this->l->t("Master join-table field for %s not found.", $table));
+          }
+          if (isset($fieldDescriptionData[$masterFieldName]['values']['join']['reference'])) {
+            $joinIndex = $fieldDescriptionData[$masterFieldName]['values']['join']['reference'];
+          }
+          $joinInfo = [ 'reference' => $joinIndex, ];
+        }
+        $values['join'] = $joinInfo;
+      }
+      $fdd[$key] = Util::arrayMergeRecursive($values, $fdd[$key]);
+    }
+    $fieldDescriptionData[$fieldName] = $fdd;
+
     if (isset($fdd['decoration'])) {
       if (!empty($fdd['decoration']['slug'])) {
         $this->addSlug($fdd['decoration']['slug'], $fieldDescriptionData[$fieldName]);
