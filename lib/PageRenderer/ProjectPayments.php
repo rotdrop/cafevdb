@@ -399,7 +399,7 @@ WHERE dsf.id IS NOT NULL',
     ];
 
     // in order to be able to collapse payment details:
-    $opts['css']['row'] = function($name, $position, $divider, $row, $pme) {
+    $opts['css']['row'] = function(string $name, null $position, string $divider, array $row, PHPMyEdit $pme):array {
       static $evenOdd = [ 'even', 'odd' ];
       static $lastCompositeId = -1;
       static $oddProjectPayment = true;
@@ -490,9 +490,10 @@ WHERE dsf.id IS NOT NULL',
 
     $opts['fdd']['id'] = [
       'tab' => [ 'id' => 'tab-all', ],
-      'name'     => 'id',
+      'name'     => $this->l->t('Payment Id'),
       'select'   => 'T',
-      'input'    => ($this->expertMode ? 'R' : 'RH'),
+      'align'    => 'right',
+      'input'    => 'R',
       'input|A' => 'RH',
       'options'  => 'LFAVCPD',
       'maxlen'   => 11,
