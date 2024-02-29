@@ -44,6 +44,7 @@ import queryData from './query-data.js';
 import modalizer from './modalizer.js';
 import { handleMenu as handleUserManualMenu } from './user-manual.js';
 import fileDownload from './file-download.js';
+import { token as pmeToken } from './pme-selectors.js';
 
 import 'selectize';
 import 'selectize/dist/css/selectize.bootstrap4.css';
@@ -1077,13 +1078,13 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
                 $(window).on('beforeunload', function(event) {
                   return t(appName, 'Email sending is in progress. Leaving the page now will cancel the email submission.');
                 });
-                dialogWidget.addClass('pme-table-dialog-blocked');
+                dialogWidget.addClass(pmeToken('table-dialog-blocked'));
               } else {
                 $(window).off('beforeunload');
                 if (progressOpen) {
                   progressWrapper.dialog('close');
                 }
-                dialogWidget.removeClass('pme-table-dialog-blocked');
+                dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
               }
             });
         });
@@ -1458,9 +1459,9 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
           },
           function(lock) {
             if (lock) {
-              dialogWidget.addClass('pme-table-dialog-blocked');
+              dialogWidget.addClass(pmeToken('table-dialog-blocked'));
             } else {
-              dialogWidget.removeClass('pme-table-dialog-blocked');
+              dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
               dialogHolder.tabs('option', 'disabled', []);
             }
           });
@@ -1495,10 +1496,10 @@ const emailFormCompositionHandlers = function(fieldset, form, dialogHolder, pane
         },
         function(lock) {
           if (lock) {
-            dialogWidget.addClass('pme-table-dialog-blocked');
+            dialogWidget.addClass(pmeToken('table-dialog-blocked'));
           } else {
             SelectUtils.deselectAll(sentEmailsSelector);
-            dialogWidget.removeClass('pme-table-dialog-blocked');
+            dialogWidget.removeClass(pmeToken('table-dialog-blocked'));
             dialogHolder.tabs('option', 'disabled', []);
           }
         },

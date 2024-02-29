@@ -23,7 +23,12 @@
 
 import { globalState, appName, appNameTag, $, jQuery } from './globals.js';
 import { urlDecode } from './url-decode.js';
-import { token as pmeToken } from './pme-selectors.js';
+import {
+  token as pmeToken,
+  textareaInputSelector as pmeTextareaInputSelector,
+  inputSelector as pmeInputSelector,
+  tableSelector as pmeTableSelector,
+} from './pme-selectors.js';
 import {
   backGroundPromise as toolTipsBackgroundPromise,
   rejectBackgroundPromise as rejectToolTipsBackgroundPromise,
@@ -300,9 +305,9 @@ const toolTipSelectors = [
   // top wide
   {
     selector: [
-      'textarea.' + pmeToken('input'),
-      'input.' + pmeToken('input'),
-      'table.' + pmeToken('main') + ' td',
+      pmeTextareaInputSelector,
+      pmeInputSelector,
+      pmeTableSelector + ' td',
     ].join(','),
     options: {
       placement: 'top',

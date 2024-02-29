@@ -340,7 +340,7 @@ const actionMenu = function(containerSel) {
 const pmeFormInit = function(containerSel) {
   containerSel = PHPMyEdit.selector(containerSel);
   const $container = PHPMyEdit.container(containerSel);
-  const $form = $container.find('form[class^="pme-form"]');
+  const $form = $container.find(pmeFormSelector);
   const submitSel = PHPMyEdit.classSelectors(
     'input',
     ['save', 'apply', 'more']);

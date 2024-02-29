@@ -883,7 +883,7 @@ const ready = function(container) {
 
   $form
     .find(['input', 'bulkcommit', pmeToken('misc'), pmeToken('commit')].join('.'))
-    .addClass('pme-custom')
+    .addClass(pmeToken('custom'))
     .prop('disabled', false)
     .off('click')
     .on('click', debounce(function(event) {

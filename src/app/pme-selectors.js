@@ -107,6 +107,15 @@ const pmeClassSelector = function(element, token) {
 };
 
 /**
+ * Generate a class selector with pme-.... prefix.
+ *
+ * @param {string} element TBD.
+ *
+ * @returns {string}
+ */
+const pmeInputClassSelector = (element) => pmeClassSelector(element || '', 'input');
+
+/**
  * Generate a compound class selector with pme-.... prefix.
  *
  * @param {string} element TBD.
@@ -180,7 +189,17 @@ const pmeTableSelector = 'table.' + pmeToken('main');
 /**
  * Selector for input.
  */
-const pmeInputSelector = 'input.' + pmeToken('input');
+const pmeInputSelector = pmeInputClassSelector('input');
+
+/**
+ * Selector for select input.
+ */
+const pmeSelectInputSelector = pmeInputClassSelector('select');
+
+/**
+ * Selector for textarea input.
+ */
+const pmeTextareaInputSelector = pmeInputClassSelector('textarea');
 
 /**
  * Selector for key.
@@ -275,31 +294,29 @@ const pmeContainer = function(selector) {
 
 export {
   PHPMyEdit,
-  pmeContainer as container,
-  pmeSys as sys,
-  pmeData as data,
-  pmeToken as token,
-  pmeDefaultSelector as defaultSelector,
-  pmeSelector as selector,
-  pmeFormSelector as formSelector,
-  pmeInputSelector as inputSelector,
-  pmeIdSelector as idSelector,
-  pmeSysNameSelector as sysNameSelector,
-  pmeSysNameSelectors as sysNameSelectors,
+  pmeCellSelector as cellSelector,
   pmeClassSelector as classSelector,
   pmeClassSelectors as classSelectors,
-  pmeNavigationSelector as navigationSelector,
-  pmeTableSelector as tableSelector,
-  pmeKeySelector as keySelector,
-  pmeValueSelector as valueSelector,
-  pmeCellSelector as cellSelector,
+  pmeContainer as container,
+  pmeData as data,
+  pmeDefaultSelector as defaultSelector,
   pmeFilterSelector as filterSelector,
-  pmeQueryInfoSelector as queryInfoSelector,
-  pmeFormViewSuffixes as formViewSuffixes,
   pmeFormEditSuffixes as formEditSuffixes,
+  pmeFormSelector as formSelector,
+  pmeFormViewSuffixes as formViewSuffixes,
+  pmeIdSelector as idSelector,
+  pmeInputClassSelector as inputClassSelector,
+  pmeInputSelector as inputSelector,
+  pmeKeySelector as keySelector,
+  pmeNavigationSelector as navigationSelector,
+  pmeQueryInfoSelector as queryInfoSelector,
+  pmeSelectInputSelector as selectInputSelector,
+  pmeSelector as selector,
+  pmeSys as sys,
+  pmeSysNameSelector as sysNameSelector,
+  pmeSysNameSelectors as sysNameSelectors,
+  pmeTableSelector as tableSelector,
+  pmeTextareaInputSelector as textareaInputSelector,
+  pmeToken as token,
+  pmeValueSelector as valueSelector,
 };
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
