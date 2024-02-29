@@ -1,0 +1,113 @@
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine
+ * @copyright 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use 'sass:color';
+
+.pme-form.donation-receipts {
+
+  &:not(.pme-list) {
+    &.amount-check-failure {
+      // background-color: color.change(#ffa500, $alpha: 0.4);
+      // table, thead, tbody, tr, td, span.query-log {
+      //   mix-blend-mode: multiply;
+      // }
+      tr.pme-row.project-payment.status {
+        background-color:red;
+        td.pme-key {
+          padding-left: 30px;
+          background-color: red;
+          background-image: url('@mdi/svg/svg/alert-circle-outline.svg');
+          background-position: 3px;
+          background-size: 24px;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+  }
+
+  &.pme- {
+    &list {
+      tr.pme-row {
+        &.cafevdb-page-amount-check-failure {
+          background-color: color.change(#ffa500, $alpha: 0.4);
+          > td {
+            mix-blend-mode: multiply;
+          }
+          td.pme-cell.project-payment.status {
+            background-color: red;
+            background-image: url('@mdi/svg/svg/alert-circle-outline.svg');
+            background-position: center;
+            background-size: 24px;
+            background-repeat: no-repeat;
+          }
+        }
+      }
+    }
+    &list, &view, &copy, &add, &copyadd, &change, &delete {
+
+      td.pme- {
+        &cell, &value {
+          .operation {
+            display:inline-block;
+            background-repeat:no-repeat;
+            background-size: 20px 20px;
+            background-position: center;
+            width:24px;
+            height:24px;
+            min-height:unset;
+            margin:0;
+            vertical-align:middle;
+            padding:4px;
+            margin-right:0.5em;
+            &.open-parent {
+              background-image:url('../../../core/img/filetypes/folder-external.svg');
+            }
+          }
+          .flex-container {
+          }
+          input[type="checkbox"].pme-input.project-payment.status:disabled + span.pme-label {
+            opacity: 0.75;
+          }
+        }
+      }
+    }
+    &list, &view, &delete {
+      td.pme- {
+        &cell, &value {
+          .flex-container {
+            > .pme-cell-content {
+              overflow: hidden;
+            }
+            .pme-cell-squeezer {
+              text-overflow: ellipsis;
+              overflow: hidden;
+            }
+          }
+        }
+      }
+    }
+    &copy, &add, &copyadd, &change {
+
+    }
+  }
+}

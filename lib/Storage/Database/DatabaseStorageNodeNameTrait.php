@@ -289,7 +289,7 @@ trait DatabaseStorageNodeNameTrait
     // TRANSLATORS: file-name
     $fileName =  $this->getAppL10n()->t('DonationReceipt-%1$d-%2$s-%3$s', [
       $paymentId,
-      Util::dashesToCamelCase($musicianName, true, '_-. '),
+      Util::dashesToCamelCase($musicianName, true, '_-. ,'),
       $projectName,
     ]);
     if (!empty($extension)) {

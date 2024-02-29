@@ -44,7 +44,13 @@ use OCA\CAFEVDB\Common\Uuid;
  * Although a donation in principle is just a payment there is some meta-data
  * to take care of. This is maintained here.
  *
- * @ORM\Table(name="DonationReceipts")
+ * @ORM\Table(
+ *   name="DonationReceipts",
+ *   uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="donation_receipt_unique", columns={
+ *       "donation_id", "deleted",
+ *   })}
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
@@ -133,7 +139,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   private SentEmail $notificationMessage;
 
   /** {@inheritdoc} */
-  public function __construct(?Musician $musician = null, ?UuidInterface $uuid = null)
+  public function __construct()
   {
     $this->__wakeup();
   }
@@ -143,9 +149,9 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * @param int $id
    *
-   * @return LegalPerson
+   * @return DonationReceipt
    */
-  public function setId(int $id):LegalPerson
+  public function setId(int $id):DonationReceipt
   {
     $this->id = $id;
 
@@ -193,7 +199,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    *
    * @return LegalPerson
    */
-  public function setTaxExemptionNotice(TaxExemptionNotice $taxExemptionNotice):TaxExemptionNoticeReceipt
+  public function setTaxExemptionNotice(TaxExemptionNotice $taxExemptionNotice):DonationReceipt
   {
     $this->taxExemptionNotice = $taxExemptionNotice;
 
