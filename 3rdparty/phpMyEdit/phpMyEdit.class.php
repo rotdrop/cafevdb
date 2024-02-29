@@ -72,6 +72,7 @@ class phpMyEdit_timer /* {{{ */
 /**
  * @SuppressWarnings(PHPMD.ErrorControlOperator)
  * @SuppressWarnings(PHPMD.Superglobals)
+ * @SuppressWarnings(PHPMD.DevelopmentCodeFragment)
  */
 class phpMyEdit
 {
@@ -125,6 +126,7 @@ class phpMyEdit
 	const TRIGGER_CANCEL = 'cancel';
 
 	const OPT_HAVING = 'having';
+	const OPT_FILTERS = 'filters';
 
 	const OPERATION_FILTER = 'filter';
 	const OPERATION_LIST = 'list';
@@ -134,6 +136,7 @@ class phpMyEdit
 	const OPERATION_VIEW = 'view';
 	const OPERATION_ADD = 'add';
 	const OPERATION_DELETE = 'delete';
+	const OPERATION_COPY_ADD = 'copyadd';
 
 	const TRIVIAL_ENCODE = '%s';
 	const TRIVIAL_DESCRIPION = '$table.$column';
@@ -307,6 +310,11 @@ class phpMyEdit
 		);
 
 	// }}}
+
+	function quote(string $item):string
+	{
+		return $this->sd . $item . $this->ed;
+	}
 
 	/*
 	 * column specific functions
@@ -1001,7 +1009,8 @@ class phpMyEdit
 
 		$column   = $valuesDef['column'];
 		$desc     = $valuesDef['description'];
-		$filters  = $valuesDef['filters'] ?? null;
+		$filters  = $valuesDef[self::OPT_FILTERS];
+		$having  = $valuesDef[self::OPT_HAVING];
 		$orderby  = $valuesDef['orderby'] ?? null;
 		$groups   = $valuesDef['groups'] ?? null;
 		$data     = $valuesDef['data'] ?? [];
@@ -1010,7 +1019,7 @@ class phpMyEdit
 		$dbp      = !empty($db) ? $this->sd.$db.$this->ed.'.' : $this->dbp;
 
 		if ($encode == self::TRIVIAL_ENCODE) {
-			unset($encode);
+			$encode = '';
 		}
 		if ($desc == self::TRIVIAL_DESCRIPION) {
 			unset($desc);
@@ -1019,22 +1028,64 @@ class phpMyEdit
 		$qparts = [];
 		$qparts[self::QPARTS_TYPE] = self::QPARTS_SELECT;
 
-		$table_name = self::TABLE_ALIAS.$field_num;
+		$table_name = self::TABLE_ALIAS . $field_num;
 
-		if (!empty($desc)) {
+		// See if we need to do a real join query
+		$joinTableIndex = $this->join_table_index($field_num);
+		$joinTablesIndices = [];
+		foreach ([$filters, $having] as $restriction) {
+			foreach (['OR', 'AND'] as $junctor) {
+				$matches = null;
+				if (preg_match_all('/' . self::JOIN_ALIAS . '([0-9]+)/', $restriction[$junctor]['sql'] ?? '', $matches)) {
+					$joinTablesIndices = array_merge($joinTablesIndices, $matches[1]);
+					$joinTablesIndices[] = $joinTableIndex;
+				}
+			}
+			if (!empty($data)) {
+				if (!is_array($data)) {
+					$data = [ 'data' => $data ];
+				}
+				foreach ($data as $dataValue) {
+					if (preg_match_all('/' . self::JOIN_ALIAS . '([0-9]+)/', $dataValue ?? '', $matches)) {
+						$joinTablesIndices = array_merge($joinTablesIndices, $matches[1]);
+						$joinTablesIndices[] = $joinTableIndex;
+					}
+				}
+			}
+		}
+		if (!empty($desc ?? null)) {
+			$desc = $this->normalize_field_description($desc);
+			$descColumns = implode('', $desc['columns']);
+			$matches = null;
+			if (preg_match_all('/' . self::JOIN_ALIAS . '([0-9]+)/', $descColumns, $matches)) {
+				$joinTablesIndices = array_merge($joinTablesIndices, $matches[1]);
+				$joinTablesIndices[] = $joinTableIndex;
+			}
+			if (str_contains($descColumns, '$main_table') || str_contains($descColumns, self::MAIN_ALIAS)) {
+				$joinTablesIndices[] = $joinTableIndex;
+			}
+			$table_name = empty($joinTablesIndices) ? $table_name : self::JOIN_ALIAS . $joinTableIndex;
 			$descSubs = [
+				'main_table'  => $this->tb,
 				'table' => $table_name,
 				'column' => $column,
+				'join_col_fqn' => $table_name . '.' . $column,
+				'join_col_enc' => sprintf($encode, $table_name . '.' . $column),
 			];
 			$descSql = $this->field_description_sql($desc, $descSubs);
 		}
+		sort($joinTablesIndices);
+		$joinTablesIndices = array_values(array_unique($joinTablesIndices));
 
 		$subs = array(
 			'main_table'  => $this->tb,
 			'record_id'   => implode(',', $this->rec), // may be useful for change op.
 			'table'		  => $table_name,
 			'column'	  => $column,
-			'description' => $descSql ?? null);
+			'description' => $descSql ?? null,
+			'join_col_fqn' => $table_name . '.' . $column,
+			'join_col_enc' => sprintf($encode, $table_name . '.' . $column),
+		);
 		if (!empty($this->rec)) {
 			foreach ($this->rec as $recKey => $recValue) {
 				$subs['record_id['.$recKey.']'] = $recValue;
@@ -1061,7 +1112,7 @@ class phpMyEdit
 			}
 		}
 
-		$queryField = $table_name.'.'.$this->sd.$column.$this->ed;
+		$queryField = $table_name . '.' . $this->quote($column);
 		$qparts[self::QPARTS_GROUPBY] = $queryField;
 		if (!empty($encode)) {
 			$queryField = sprintf($encode, $queryField);
@@ -1079,16 +1130,45 @@ class phpMyEdit
 		$table = $this->substituteVars($table, $subs);
 		$subquery = stripos($table, self::SQL_SELECT) !== false;
 		if ($subquery) {
-			$from_table = '('.$table.') '.$table_name;
+			$table = '('.$table.')';
 		} else {
-			$table      = $this->sd.$table.$this->ed;
-			$from_table = $dbp.$table.' '.$table_name;
+			$table = $dbp . $this->sd.$table.$this->ed;
+		}
+
+		if (!empty($joinTablesIndices)) {
+			// perform a convenience join in order to automatically
+			// access values from other join tables or the main table
+			$from_table = $this->get_SQL_join_clause($joinTablesIndices, $joinTableIndex);
+		} else {
+			$from_table = $table . ' ' . $table_name;
 		}
 
 		$qparts[self::QPARTS_FROM] = $from_table;
-		if (!empty($filters)) {
-			$qparts[self::QPARTS_WHERE] = $this->substituteVars($filters, $subs);
+
+		// generate where clause from given filters
+		$orFilter = $this->substituteVars($filters['OR']['sql'] ?? '' , $subs);
+		$andFilter = $this->substituteVars($filters['AND']['sql'] ?? '' , $subs);
+		$where = [];
+		if (!empty($orFilter)) {
+			$where[] = '(' . $orFilter . ')';
 		}
+		if (!empty($andFilter)) {
+			$where[] = $andFilter;
+		}
+		$qparts[self::QPARTS_WHERE] = implode(' AND ', $where);
+
+		// generate having clause from given filters
+		$orFilter = $this->substituteVars($having['OR']['sql'] ?? '' , $subs);
+		$andFilter = $this->substituteVars($having['AND']['sql'] ?? '' , $subs);
+		$having = [];
+		if (!empty($orFilter)) {
+			$having[] = '(' . $orFilter . ')';
+		}
+		if (!empty($andFilter)) {
+			$having[] = $andFilter;
+		}
+		$qparts[self::QPARTS_HAVING] = implode(' AND ', $having);
+
 		!empty($groups) && $groups = $this->substituteVars($groups, $subs);
 		if (!empty($orderby)) {
 			$qparts[self::QPARTS_ORDERBY] = $this->substituteVars($orderby, $subs);
@@ -1102,7 +1182,7 @@ class phpMyEdit
 			if (!is_array($data)) {
 				$data = [ 'data' => $data ];
 			}
-			foreach ($data as &$dataValue) {
+			foreach ($data as $dataValue) {
 				$dataValue = $this->substituteVars($dataValue, $subs);
 				$qparts[self::QPARTS_SELECT] .= ', '.$dataValue;
 			}
@@ -1205,35 +1285,21 @@ class phpMyEdit
 		$encode = $values['encode']??self::TRIVIAL_ENCODE;
 
 		$join_table = $this->join_table_alias($field);
-		if (!isset($values['column'])) {
-			$join_column = $this->fds[$field];
-		} else {
-			$join_column = $values['column'];
-		}
 
-		if (!isset($values['description'])) {
-			$join_desc = sprintf($encode, self::TRIVIAL_DESCRIPION);
-		} else {
-			$join_desc = $values['description'];
-		}
-
-		if (!isset($values['orderby'])) {
-			$orderBy = sprintf($encode.' ASC', self::TRIVIAL_DESCRIPION);
-		} else {
-			$orderBy = $values['orderby'];
-		}
-
-		return array_merge(
+		$values = array_merge(
 			[
 				'join_table' => $join_table,
-				'column' => $join_column,
-				'description' => $join_desc,
-				'orderby' => $orderBy,
+				'column' => $this->fds[$field],
+				'description' => sprintf($encode, self::TRIVIAL_DESCRIPION),
+				'orderby' => sprintf($encode.' ASC', self::TRIVIAL_DESCRIPION),
 				'encode' => $encode,
 				'grouped' => false,
 			],
 			array_filter($values, function ($value) { return $value !== null; })
 		);
+		$values[self::OPT_FILTERS] = $this->normalizeFilters($values[self::OPT_FILTERS] ?? null);
+		$values[self::OPT_HAVING] = $this->normalizeFilters($values[self::OPT_HAVING] ?? null);
+		return $values;
 	}
 
 	/**
@@ -1318,8 +1384,10 @@ class phpMyEdit
 			if (!empty($desc['columns']) && !is_array($desc['columns'])) {
 				$desc['columns'] = [ $desc['columns'], ];
 			}
-			if (!empty($desc['divs']) && !is_array($desc['divs'])) {
-				$desc['divs'] = array_fill(0, max(0, count($desc['columns']) - 1), $desc['divs']);
+			foreach (['divs', 'cast', 'ifnull'] as $fillItem) {
+				if (isset($desc[$fillItem]) && !is_array($desc[$fillItem])) {
+					$desc[$fillItem] = array_fill(0, max(0, count($desc['columns']) - 1), $desc[$fillItem]);
+				}
 			}
 		}
 		return $desc;
@@ -1604,10 +1672,8 @@ class phpMyEdit
 		return implode(',', $fields);
 	} /* }}} */
 
-	function get_SQL_join_clause() /* {{{ */
+	function get_SQL_join_clause(?array $fields = null, ?int $mainTableIndex = null) /* {{{ */
 	{
-		$main_table	 = $this->sd.self::MAIN_ALIAS.$this->ed;
-		$join_clause = $this->sd.$this->tb.$this->ed." AS $main_table";
 		$groupByWhereConditions = [];
 		if (!empty($this->groupby_rec) && $this->checkOperationOption($this->groupby_where)) {
 			$groupByWhere = $this->key_record_where_parts();
@@ -1632,20 +1698,101 @@ class phpMyEdit
 			}
 		}
 		$groupByWhere = null;
-		for ($k = 0, $numfds = sizeof($this->fds); $k < $numfds; $k++) {
+		if ($mainTableIndex !== null && !in_array($mainTableIndex, $fields)) {
+			$fields = array_values(array_unique(array_merge($fields ?? [], [ $mainTableIndex ])));
+		}
+		$dependencyChain = [];
+		if ($fields !== null) {
+			// $this->logInfo('ORIGINAL FIELDS ' . print_r($fields, true));
+			// for incomplete joins we first have to pull in dependencies
+			// as needed, i.e. previous join tables mentioned in the join
+			// condition.
+			$dependencies = [];
+			$numFds = count($fields);
+			do {
+				$oldNumFds = $numFds;
+				foreach ($fields as $k) {
+					$main_column = $this->fds[$k];
+					if (empty($this->fdd[$main_column][self::FDD_VALUES])) {
+						continue;
+					}
+					$join = $this->fdd[$main_column][self::FDD_VALUES]['join'] ?? null;
+					if (!is_array($join)) {
+						$join = [ 'condition' => $join ];
+					}
+					$join_condition = $join['condition'] ?? false;
+					if ($join_condition === false) {
+						// use this just for values definitions
+						continue;
+					}
+					$matches = null;
+					if (preg_match_all('/' . self::JOIN_ALIAS . '([0-9]+)|(' . self::MAIN_ALIAS . '|\\$main_table)/', $join_condition, $matches)) {
+						// $this->logInfo('MATCHES ' . $k . ' ' .  $join_condition . ' ' .  print_r($matches, true));
+						if (!empty($matches[1])) {
+							$dependencies[$k] = array_filter(array_merge($dependencies[$k] ?? [], $matches[1]));
+							$fields = array_merge($fields, $matches[1]);
+						}
+						if (!empty(array_filter($matches[2]))) {
+							$dependencies[$k][] = 0;
+						}
+					}
+				}
+				foreach ($dependencies as &$dependency) {
+					sort($dependency);
+					$dependency = array_values(array_unique($dependency));
+				}
+				unset($dependency); // safe guard
+				sort($fields);
+				$fields = array_values(array_filter(array_unique($fields)));
+				$numFds = count($fields);
+				// $this->logInfo('FIELDS / DEPS ' . $mainTableIndex . ' -> ' . print_r($fields, true) . ' ' . print_r($dependencies, true));
+			} while ($oldNumFds < $numFds);
+			if ($mainTableIndex !== null) {
+				// the most general case is not supported, we only
+				// support rotations of the join net if there is a
+				// direct simple path down from the new pivot table to
+				// the old pivot table, i.e. join conditions must only
+				// refer to a single other table, but multiple columns are
+				// legal. Here we build the chain leading from the new
+				// pivot down to the root table.
+				$index = $mainTableIndex;
+				do {
+					$dependency = $dependencies[$index];
+					if (count($dependency) > 1) {
+						throw new \UnexpectedValueException('Sorry, but only simple join-chains are supported in this code-path.');
+					}
+					$oldIndex = $index;
+					$index = reset($dependency);
+					$dependencyChain[$oldIndex] = $index;
+				} while ($index != 0);
+				// $this->logInfo('JOIN DEPENDENCY CHAIN IS OK ' . print_r($dependencyChain, true));
+				$reordedFields = array_keys($dependencyChain);
+				$tail = array_diff($fields, $reordedFields);
+				$fields = array_merge($reordedFields, $tail);
+				$tableMapping = $dependencyChain;
+				$tableMapping = $tableMapping + array_combine($tail, $tail);
+				// $this->logInfo('REMAPPED ' . print_r($fields, true) . ' ' . print_r($tableMapping, true));
+			}
+		} else {
+			$fields = array_keys($this->fds);
+			$tableMapping = array_combine($fields, $fields);
+		}
+
+		$joinClauses = [];
+		$main_table	 = self::MAIN_ALIAS;
+		$mainTableSql = null;
+		$columnReplacements = [];
+		foreach ($fields as $k) {
 			$main_column = $this->fds[$k];
 			if (empty($this->fdd[$main_column][self::FDD_VALUES])) {
 				continue;
 			}
-			$join = $this->fdd[$main_column][self::FDD_VALUES]['join']??null;
-			if (is_array($join)) {
-				if (isset($join['condition'])) {
-					$join = $join['condition'];
-				} else {
-					$join = false;
-				}
+			$join = $this->fdd[$main_column][self::FDD_VALUES]['join'] ?? null;
+			if (!is_array($join)) {
+				$join = [ 'condition' => $join ];
 			}
-			if ($join === false) {
+			$join_condition = $join['condition'] ?? false;
+			if ($join_condition === false) {
 				// use this just for values definitions
 				continue;
 			}
@@ -1655,41 +1802,110 @@ class phpMyEdit
 				$dbp = null; // $this->dbp; not needed
 			}
 
-			$join_column = $this->sd.$this->fdd[$main_column][self::FDD_VALUES]['column'].$this->ed;
-			// $join_desc	 = $this->sd.($this->fdd[$main_column][self::FDD_VALUES]['description']??'').$this->ed;
-			// if ($join_desc == $this->sd.$this->ed) {
-			// 	$join_desc = $join_column;
-			// }
-			if ($join_column != $this->sd.$this->ed) {
+			$join_column = $this->fdd[$main_column][self::FDD_VALUES]['column'];
+			if (!empty($join_column)) {
+				$join_column = $this->quote($join_column);
 
-				$table = trim($this->fdd[$main_column][self::FDD_VALUES]['table']);
-				$subquery = stripos($table, self::SQL_SELECT) !== false;
-				if ($subquery) {
-					$table = '('.$table.')';
-				} else {
-					$table = $dbp.$this->sd.$table.$this->ed;
-				}
-				$join_table = $this->sd.self::JOIN_ALIAS.$k.$this->ed;
+				$join_table = self::JOIN_ALIAS . $k;
 				$ar = array(
 					'data_base'        => $dbp,
 					'main_table'	   => $main_table,
-					'main_column'	   => $this->sd.$main_column.$this->ed,
-					'main_col_fqn'     => $main_table.'.'.$this->sd.$main_column.$this->ed,
+					'main_column'	   => $this->quote($main_column),
+					'main_col_fqn'     => $main_table . '.' . $this->quote($main_column),
 					'join_table'	   => $join_table,
 					'join_column'	   => $join_column,
-					'join_col_fqn'     => $join_table.'.'.$join_column,
-					// 'join_description' => $join_desc,
-					// 'join_desc_fqn'    => $join_table.'.'.$join_desc,
+					'join_col_fqn'     => $join_table . '.' . $join_column,
 				);
-				$join_clause .= " LEFT JOIN ".$table." AS $join_table ON (";
-				$join_clause .= !empty($join)
-					? $this->substituteVars($join, $ar)
-					: "$join_table.$join_column = $main_table.".$this->sd.$main_column.$this->ed;
-				if (!empty($groupByWhereConditions[$k])) {
-					$join_clause .= ' AND ' . $groupByWhereConditions[$k];
+
+				$l = $tableMapping[$k];
+				if ($l === 0) {
+					$table = $this->quote($this->tb);
+					$join_table = self::MAIN_ALIAS;
+				} else {
+					$table_column = $this->fds[$l];
+
+					// $this->logInfo('MAIN ' . $k . ' -> ' . $main_column . ' TABLE ' . $l . ' -> ' . $table_column);
+
+					if (empty($this->fdd[$table_column][self::FDD_VALUES]['table'])) {
+						throw new \UnexpectedValueException('Column "' . $table_column . '" has no associated join table.');
+					}
+
+					$table = trim($this->fdd[$table_column][self::FDD_VALUES]['table']);
+					$subquery = stripos($table, self::SQL_SELECT) !== false;
+					if ($subquery) {
+						$table = '(' . $table . ')';
+					} else {
+						$table = $dbp . $this->quote($table);
+					}
+					$join_table = self::JOIN_ALIAS . $l;
 				}
-				$join_clause .= ')';
+
+				if ($k == $mainTableIndex) {
+					$mainTableSql = trim($this->fdd[$main_column][self::FDD_VALUES]['table']);
+					$subquery = stripos($mainTableSql, self::SQL_SELECT) !== false;
+					if ($subquery) {
+						$mainTableSql = '(' . $mainTableSql . ')';
+					} else {
+							$mainTableSql = $dbp . $this->quote($mainTableSql);
+					}
+				}
+
+				$finalJoinCondition = !empty($join_condition)
+					? $this->substituteVars($join_condition, $ar)
+					: "$join_table.$join_column = $main_table." . $this->quote($main_column);
+				if (!empty($groupByWhereConditions[$k])) {
+					$finalJoinCondition .= ' AND ' . $groupByWhereConditions[$k];
+				}
+				$joinClause = 'LEFT JOIN ' . $table . ' AS ' . $join_table . ' ON (
+  ' . $finalJoinCondition . '
+)';
+				$joinClauses[$k] = $joinClause;
+				if ($l !== $k) {
+					$table1 = $l === 0 ? self::MAIN_ALIAS : self::JOIN_ALIAS . $l;
+					$table2 = self::JOIN_ALIAS . $k;
+					// we need to tweak later joins and also exchange the join columns
+					$sd = $this->sd;
+					$ed = $this->ed;
+					$regexp = '/'
+						. $table1 . '\\.(' . $sd . '[^' . $ed . ']+' . $ed . '|' . '[^\\s=)]+)'
+						. '\s*=\s*'
+						. $table2 . '\\.(' . $sd . '[^' . $ed . ']+' . $ed . '|' . '[^\\s=)]+)'
+						. '|'
+						. $table2 . '\\.(' . $sd . '[^' . $ed . ']+' . $ed . '|' . '[^\\s=)]+)'
+						. '\s*=\s*'
+						. $table1 . '\\.(' . $sd . '[^' . $ed . ']+' . $ed . '|' . '[^\\s=)]+)'
+						. '/';
+					// $this->logInfo('REGEXP ' . $regexp . ' ' . $finalJoinCondition);
+					if (preg_match_all($regexp, $finalJoinCondition, $matches, PREG_SET_ORDER)) {
+						foreach ($matches as $match) {
+							$match = array_map(fn($value) => trim($value, $sd . $ed), $match);
+							$newTableColumn = $match[1] . $match[4];
+							$oldTableColumn = $match[2] . $match[3];
+							$quotedNewTableColumn = $table1 . '.' . $this->quote($newTableColumn);
+							$quotedOldTableColumn = $table2 . '.' . $this->quote($oldTableColumn);
+							$newTableColumn = $table1 . '.' . $newTableColumn;
+							$oldTableColumn = $table2 . '.' . $oldTableColumn;
+							$columnReplacements[$quotedNewTableColumn] = $quotedOldTableColumn;
+							$columnReplacements[$quotedOldTableColumn] = $quotedNewTableColumn;
+							$columnReplacements[$newTableColumn] = $quotedOldTableColumn;
+							$columnReplacements[$oldTableColumn] = $quotedNewTableColumn;
+						}
+					}
+				}
 			}
+		}
+		if ($mainTableIndex !== null && $mainTableSql !== null) {
+			$join_clause = implode(' ', $joinClauses);
+			// request to exchange main table by given join table for
+			// the sake of definining display values.
+			if (!empty($columnReplacements)) {
+				$join_clause = strtr($join_clause, $columnReplacements);
+			}
+			$join_clause = $mainTableSql . ' AS ' . self::JOIN_ALIAS . $mainTableIndex . ' ' . $join_clause;
+			// $this->logInfo('JOIN CLAUSE ' . $join_clause);
+		} else {
+			// normal join
+			$join_clause = $this->quote($this->tb) . ' AS ' . self::MAIN_ALIAS . ' ' . implode(' ', $joinClauses);
 		}
 		return $join_clause;
 	} /* }}} */
@@ -3130,19 +3346,16 @@ class phpMyEdit
 	/**
 	 * Returns CSS class name
 	 */
-	function getCSSclass($name, $position  = null, $divider = null, $postfix = null, $postfix_data = null) /* {{{ */
+	function getCSSclass(string $name, $position  = null, $divider = null, $postfix = null, $postfix_data = null) /* {{{ */
 	{
 		static $div_idx = -1;
-		if (!is_array($name)) {
-			$name = [ $name ];
-		}
 		$pfx = '';
 		if ($this->css['separator'] === ' ') {
 			$pfx = $this->css['prefix'].'-';
-			$elements = $name;
+			$elements = [ $name, ];
 		} else {
 			// ????
-			$elements = array_merge([ $this->css['prefix'] ], $name);
+			$elements = array_merge([ $this->css['prefix'] ], [ $name ]);
 		}
 		if ($this->page_type && $this->css['page_type']) {
 			if ($this->page_type != 'L' && $this->page_type != 'F') {
@@ -3215,11 +3428,11 @@ class phpMyEdit
 	} /* }}} */
 
 	/*
-	 * Check whether $str contains substitutions.
+	 * Check whether $str contains substitutions or references to global aliases.
 	 */
 	function hasSubstitutions($str)
 	{
-		return strpos($str, '$') !== false;
+		return str_contains($str, '$') || str_contains($str, self::MAIN_ALIAS) || str_contains($str, self::JOIN_ALIAS);
 	}
 
 	/**
@@ -3833,6 +4046,7 @@ class phpMyEdit
 							$help = null,
 							$attributes = null)
 	{
+		$this->logInfo('KV AR ' . print_r($kv_array, true));
 		$ret = '';
 		if ($multiple) {
 			if (! is_array($selected) && $selected !== null) {
@@ -3869,15 +4083,18 @@ class phpMyEdit
 			}
 			unset($dataValue);
 		}
-
-		if (count($kv_array) == 1 || $multiple) {
+		$kv_keys = array_filter(array_keys($kv_array));
+		if (count($kv_keys) == 1 || count($kv_array) == 1 || $multiple) {
 			$type = 'checkbox';
+			krsort($kv_array);
+			$this->logInfo('KV AR ' . print_r($kv_array, true) . ' ' . print_r($kv_keys, true));
 		} else {
 			$type = 'radio';
 		}
 		$br = count($kv_array) == 1 ? '' : '<br>';
 		$found = false;
-		foreach ($kv_array as $key => $value) {
+		foreach ($kv_keys as $key) {
+			$value = $kv_array[$key];
 			$tip = empty($kt_array[$key]) ? $help : $kt_array[$key];
 			$labelhelp = !empty($tip)
 				? ' title="'.$this->enc($tip).'" '
@@ -3925,7 +4142,8 @@ class phpMyEdit
 			}
 			$strip_tags && $value = strip_tags($value);
 			$escape		&& $value = $this->enc($value);
-			$ret .= '><span class="pme-label">'.$value.'</span></label>'.$br."\n";
+			$ret .= '>';
+			$ret .= '<span class="pme-label">' . $value . '</span></label>'.$br."\n";
 		}
 		return $ret;
 	} /* }}} */
@@ -4942,7 +5160,7 @@ class phpMyEdit
 		/*
 		 * Display the SQL table in an HTML table
 		 */
-		$formCssClass = $this->getCSSclass(self::OPERATION_LIST, null, null, $this->css['postfix']);
+		$formCssClass = $this->getCSSclass(self::OPERATION_LIST, null, null, $this->css['postfix'], null);
 		$this->form_begin($formCssClass);
 		echo '<div class="'.$this->getCSSclass('navigation-container', 'up').'">'."\n";
 		if ($this->display['form']) {
@@ -5451,14 +5669,10 @@ class phpMyEdit
 
 	function display_record() /* {{{ */
 	{
-		$postfix = $this->css['postfix'];
-		$formCssClass = $this->getCSSclass(self::OPERATION_LIST, null, null, $postfix);
-
 		// PRE Triggers
 		$trigger = '';
 		if ($this->change_operation()) {
 			$trigger = self::SQL_QUERY_UPDATE;
-			$formCssClass = $this->getCSSclass(self::OPERATION_CHANGE, null, null, $postfix);
 			if (!$this->exec_triggers_simple($trigger, self::TRIGGER_PRE)) {
 				// if PRE update fails, then back to view operation
 				// @TODO: why? Just emit an error?
@@ -5467,18 +5681,21 @@ class phpMyEdit
 				// recurse in order to restart the logic.
 				return $this->display_record();
 			}
+			$formCssSelector = self::OPERATION_CHANGE;
 		} else {
 			if ($this->add_operation() || $this->copy_operation()) {
-				$formCssClass = $this->getCSSclass('copyadd', null, null, $postfix);
+				$formCssSelector = self::OPERATION_COPY_ADD;
 				$trigger = self::SQL_QUERY_INSERT;
 			}
 			if ($this->view_operation()) {
-				$formCssClass = $this->getCSSclass(self::OPERATION_VIEW, null, null, $postfix);
+				$formCssSelector = self::OPERATION_VIEW;
 				$trigger = self::SQL_QUERY_SELECT;
 			}
 			if ($this->delete_operation()) {
-				$formCssClass = $this->getCSSclass(self::OPERATION_DELETE, null, null, $postfix);
+				$formCssSelector = self::OPERATION_DELETE;
 				$trigger = self::SQL_QUERY_DELETE;
+			} else {
+				$formCssSelector = self::OPERATION_LIST;
 			}
 			$ret = $this->exec_triggers_simple($trigger, self::TRIGGER_PRE);
 			// if PRE insert/view/delete fail, then back to the list
@@ -5507,6 +5724,9 @@ class phpMyEdit
 			}
 			$this->exec_data_triggers($trigger, $row);
 		}
+
+		$postfix = $this->css['postfix'];
+		$formCssClass = $this->getCSSclass($formCssSelector, null, null, $postfix, $row);
 
 		$this->form_begin($formCssClass);
 		echo '<div class="'.$this->getCSSclass('navigation-container', 'up').'">'."\n";
@@ -6818,6 +7038,47 @@ class phpMyEdit
 		return compact('operation', 'rec', 'groupby_rec');
 	}
 
+	protected function normalizeFilters(null|string|array $filters):array
+	{
+		$filtersArray = [
+			'AND' => false,
+			'OR' => false,
+		];
+		if (!empty($filters)) {
+			if (!is_array($filters)) {
+				$filters = [ 'AND' => array($filters), 'OR' => false, ];
+			}
+			if (!isset($filters['AND']) && !isset($filters['OR'])) {
+				$filters = [ 'AND' => $filters, 'OR' => false, ];
+			}
+			if (!isset($filters['AND'])) {
+				$filters['AND'] = false;
+			}
+			if (!isset($filters['OR'])) {
+				$filters['OR'] = false;
+			}
+			foreach ($filters as $junctor => $filter) {
+				if (empty($filter)) {
+					continue;
+				}
+				if (is_array($filter)) {
+					$filtersArray[$junctor]['sql'] = implode(
+						' ' . $junctor . ' ',
+						array_map(fn($value) => $value['sql'] ?? $value, $filter)
+					);
+					$filtersArray[$junctor]['text'] = implode(
+						' ' . $junctor . ' ',
+						array_filter(array_map(fn($value) => $value['text'] ?? null,  $filter))
+					);
+				} else {
+					$filtersArray[$junctor]['sql'] = $filter;
+					$filtersArray[$junctor]['text'] = null;
+				}
+			}
+		}
+		return $filtersArray;
+	}
+
 	/*
 	 * Class constructor
 	 */
@@ -6867,77 +7128,11 @@ class phpMyEdit
 		$this->multiple <= 0 && $this->multiple = 2;
 
 		// WHERE filters
-		$this->filters   = array('AND' => false, 'OR' => false);
-		if (!empty($opts['filters'])) {
-			$filters = $opts['filters'];
-			if (!is_array($filters)) {
-				$filters = array('AND' => array($filters), 'OR' => false);
-			}
-			if (!isset($filters['AND']) && !isset($filters['OR'])) {
-				$filters = array('AND' => $filters, 'OR' => false);
-			}
-			if (!isset($filters['AND'])) {
-				$filters['AND'] = false;
-			}
-			if (!isset($filters['OR'])) {
-				$filters['OR'] = false;
-			}
-			foreach ($filters as $junctor => $filter) {
-				if (empty($filter)) {
-					continue;
-				}
-				if (is_array($filter)) {
-					$this->filters[$junctor]['sql'] = implode(
-						' ' . $junctor . ' ',
-						array_map(fn($value) => $value['sql'] ?? $value, $filter)
-					);
-					$this->filters[$junctor]['text'] = implode(
-						' ' . $junctor . ' ',
-						array_filter(array_map(fn($value) => $value['text'] ?? null,  $filter))
-					);
-				} else {
-					$this->filters[$junctor]['sql'] = $filter;
-					$this->filters[$junctor]['text'] = null;
-				}
-			}
-		}
+		$this->filters = $this->normalizeFilters($opts[self::OPT_FILTERS] ?? null);
 		// at this point $this->filters is a normalized array
 
 		// HAVING filters
-		$this->having = array('AND' => false, 'OR' => false);
-		if (isset($opts[self::OPT_HAVING])) {
-			$filters = $opts[self::OPT_HAVING];
-			if (!is_array($filters)) {
-				$filters = array('AND' => array($filters), 'OR' => false);
-			}
-			if (!isset($filters['AND']) && !isset($filters['OR'])) {
-				$filters = array('AND' => $filters, 'OR' => false);
-			}
-			if (!isset($filters['AND'])) {
-				$filters['AND'] = false;
-			}
-			if (!isset($filters['OR'])) {
-				$filters['OR'] = false;
-			}
-			foreach ($filters as $junctor => $filter) {
-				if (empty($filter)) {
-					continue;
-				}
-				if (is_array($filter)) {
-					$this->having[$junctor]['sql'] = implode(
-						' ' . $junctor . ' ',
-						array_map(fn($value) => $value['sql'] ?? $value, $filter)
-					);
-					$this->having[$junctor]['text'] = implode(
-						' ' . $junctor . ' ',
-						array_filter(array_map(fn($value) => $value['text'] ?? null,  $filter))
-					);
-				} else {
-					$this->having[$junctor]['sql'] = $filter;
-					$this->having[$junctor]['text'] = null;
-				}
-			}
-		}
+		$this->having = $this->normalizeFilters($opts[self::OPT_HAVING] ?? null);
 		// at this point $this->having is a normalized array
 
 		$this->triggers	 = $opts[self::OPT_TRIGGERS] ?? null;
