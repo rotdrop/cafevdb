@@ -58,20 +58,21 @@ class Registration
       $musicians->enableProjectMode();
       return $musicians;
     });
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'projects', Projects::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'project-participants', ProjectParticipants::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'project-instrumentation-numbers', ProjectInstrumentationNumbers::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'project-payments', ProjectPayments::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'sepa-bank-accounts', SepaBankAccounts::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'sepa-bulk-transactions', SepaBulkTransactions::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'instrument-insurance', InstrumentInsurances::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'project-participant-fields', ProjectParticipantFields::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'instruments', Instruments::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'instrument-families', InstrumentFamilies::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'insurance-brokers', InsuranceBrokers::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'insurance-rates', InsuranceRates::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'tax-exemption-notices', TaxExemptionNotices::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX.'blog/blog', BlogMapper::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Projects::TEMPLATE, Projects::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectParticipants::TEMPLATE, ProjectParticipants::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectInstrumentationNumbers::TEMPLATE, ProjectInstrumentationNumbers::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectPayments::TEMPLATE, ProjectPayments::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . SepaBankAccounts::TEMPLATE, SepaBankAccounts::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . SepaBulkTransactions::TEMPLATE, SepaBulkTransactions::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . InstrumentInsurances::TEMPLATE, InstrumentInsurances::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . ProjectParticipantFields::TEMPLATE, ProjectParticipantFields::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Instruments::TEMPLATE, Instruments::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . InstrumentFamilies::TEMPLATE, InstrumentFamilies::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . InsuranceBrokers::TEMPLATE, InsuranceBrokers::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . InsuranceRates::TEMPLATE, InsuranceRates::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . TaxExemptionNotices::TEMPLATE, TaxExemptionNotices::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . DonationReceipts::TEMPLATE, DonationReceipts::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Blog::TEMPLATE, BlogMapper::class);
 
     // @todo find a cleaner way for the following
 

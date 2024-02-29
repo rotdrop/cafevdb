@@ -42,6 +42,7 @@ import { documentReady as phpMyEditDocumentReady } from './app/pme.js';
 import { documentReady as configCheckDocumentReady } from './app/configcheck.js';
 import { documentReady as projectPaymentsReady } from './app/project-payments.js';
 import { documentReady as taxExemptionNoticesReady } from './app/tax-exemption-notices.js';
+import { documentReady as donationReceiptsReady } from './app/donation-receipts.js';
 import beforeReady from './app/before-ready.js';
 import './app/jquery-extensions.js';
 
@@ -69,6 +70,7 @@ $(function() {
   insurancesDocumentReady();
   projectPaymentsReady();
   taxExemptionNoticesReady();
+  donationReceiptsReady();
   phpMyEditDocumentReady();
   // backgroundJobs();
   settings();
@@ -77,8 +79,3 @@ $(function() {
   beforeReady();
   runReadyCallbacks();
 });
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

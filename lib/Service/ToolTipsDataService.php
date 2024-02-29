@@ -453,6 +453,16 @@ invited to have a look, but please do not change anything unless you know what y
           'download' => self::t('Click to download this file.'),
           'open-parent' => self::t('Open the containing folder using the files-app of the cloud.'),
         ],
+
+        'donation-receipts' => [
+          'amount-check' => self::t('If not checked or empty then there are serious problems with this donation receipt.
+ The associated payment is either not marked as donation in the payments table, or the amount is negative (and thus not
+ an income and hence not a donation), or it is a split booking with negative and positive sub-amounts which should sum up
+to zero (but don\'t) in order to have a donation which is a waiving of reimbursement.'),
+          'amount-waived' => self::t('If non-zero then this amount must be negativ and sum up to zero with the proper donation
+amount. In this case this donation is a waiving of reimbursement'),
+        ],
+
         'musicians' => [
           'tab' => [
             'orchestra' => self::t('Display name, pre-name, instruments, status, general remarks.'),

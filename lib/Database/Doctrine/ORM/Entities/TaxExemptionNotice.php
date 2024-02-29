@@ -369,7 +369,7 @@ class TaxExemptionNotice implements JsonSerializable, ArrayAccess
   /**
    * @return Collection
    */
-  public function getDonationReceipts():Colletion
+  public function getDonationReceipts():Collection
   {
     return $this->donationReceipts;
   }
