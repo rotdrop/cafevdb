@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,6 +40,7 @@ use Psr\Log\LoggerInterface as ILogger;
  *
  * @ORM\Table(name="Translations")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TranslationsRepository")
+ * @ORM\HasLifecycleCallbacks
  * @Gedmo\Loggable(enabled=false)
  */
 class Translation implements \ArrayAccess

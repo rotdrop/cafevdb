@@ -48,6 +48,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ * @ORM\HasLifecycleCallbacks
  */
 class Invoice implements JsonSerializable, ArrayAccess
 {

@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
  *   }
  * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStoragesRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class DatabaseStorage implements \ArrayAccess
 {
