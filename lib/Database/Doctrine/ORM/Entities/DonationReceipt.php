@@ -56,6 +56,7 @@ use OCA\CAFEVDB\Common\Uuid;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ * @ORM\HasLifecycleCallbacks
  */
 class DonationReceipt implements JsonSerializable, ArrayAccess
 {
@@ -131,7 +132,7 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
    * not there may be an additional email to the donator notifying him or her
    * about the sending out of the donation receipt.
    *
-   * @ORM\OneToOne(targetEntity="SentEmail")
+   * @ORM\OneToOne(targetEntity="SentEmail", inversedBy="donationReceipt")
    * @ORM\JoinColumns(
    *   @ORM\JoinColumn(name="notification_message_id", referencedColumnName="message_id", nullable=true),
    * )
@@ -267,12 +268,15 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   /**
    * Set notificationMessage.
    *
-   * @param SentEmail $notificationMessage
+   * @param null|SentEmail $notificationMessage
    *
    * @return LegalPerson
    */
-  public function setNotificationMessage(SentEmail $notificationMessage):DonationReceipt
+  public function setNotificationMessage(?SentEmail $notificationMessage):DonationReceipt
   {
+    if ($notificationMessage !== null) {
+      $notificationMessage->setDonationReceipt($this);
+    }
     $this->notificationMessage = $notificationMessage;
 
     return $this;
@@ -281,9 +285,9 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   /**
    * Get notificationMessage.
    *
-   * @return SentEmail
+   * @return null|SentEmail
    */
-  public function getNotificationMessage():SentEmail
+  public function getNotificationMessage():?SentEmail
   {
     return $this->taxExemptionNotice;
   }

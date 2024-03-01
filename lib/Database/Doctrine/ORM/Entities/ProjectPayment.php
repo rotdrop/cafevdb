@@ -34,6 +34,7 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="ProjectPayments")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\ProjectPaymentsRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class ProjectPayment implements \ArrayAccess, \JsonSerializable
 {

@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022, 2023 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -143,6 +143,12 @@ class RecipientsFilter
   /** @var int */
   private $bulkTransactionId;
 
+  /** @var Entities\DonationReceipt */
+  private $donationReceipt;
+
+  /**@var int */
+  private $donationReceiptId;
+
   private $instruments; // List of instruments for filtering
   private $instrumentGroups; // mapping of instruments to groups.
 
@@ -236,6 +242,12 @@ class RecipientsFilter
     if ($this->bulkTransactionId > 0) {
       $this->bulkTransaction = $this->getDatabaseRepository(Entities\SepaBulkTransaction::class)
                                     ->find($this->bulkTransactionId);
+    }
+
+    $this->donationReceiptId = $this->parameterService->getParam('donationReceiptId', 0);
+    if ($this->donationReceiptId > 0) {
+      $this->donationReceipt = $this->getDatabaseRepository(Entities\DonationReceipt::class)
+                                    ->find($this->donationReceiptId);
     }
 
     // See wether we were passed specific variables ...
@@ -575,6 +587,20 @@ class RecipientsFilter
       foreach ($payments as $payment) {
         $this->emailRecs[] = $payment->getMusician()->getId();
       }
+
+      $this->frozen = true; // restrict to initial set of recipients
+
+      return;
+    } elseif (!empty($this->donationReceipt)) {
+
+      $payment = $this->donationReceipt->getDonation();
+      if (empty($payment)) {
+        throw new RuntimeException(
+          $this->l->t('No payment attached to the donation receipt with id %d.', [ $this->donationReceiptId ])
+        );
+      }
+      $this->emailRecs = [];
+      $this->emailRecs[] = $payment->getMusician()->getId(); // only a single recipient
 
       $this->frozen = true; // restrict to initial set of recipients
 
