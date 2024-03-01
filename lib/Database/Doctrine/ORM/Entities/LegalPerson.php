@@ -60,6 +60,7 @@ use OCA\CAFEVDB\Common\Uuid;
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\HardDeleteExpiredUnused"
  * )
+ * @ORM\HasLifecycleCallbacks
  *
  * @todo Eventually there should be convenience functions which expose name
  * and address for the purpose of performing mail-merge operations.

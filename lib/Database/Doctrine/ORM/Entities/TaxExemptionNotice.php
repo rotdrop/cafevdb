@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
  *   }
  * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\TaxExemptionNoticesRepository")
+ * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(
  *   fieldName="deleted",
  *   hardDelete="OCA\CAFEVDB\Database\Doctrine\ORM\Listeners\SoftDeleteable\NeverHardDelete"

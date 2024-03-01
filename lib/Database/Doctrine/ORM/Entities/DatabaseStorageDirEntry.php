@@ -46,6 +46,7 @@ use OCA\CAFEVDB\Constants;
  * @ORM\DiscriminatorColumn(name="type", type="EnumDirEntryType")
  * @ORM\DiscriminatorMap({"generic"="DatabaseStorageDirEntry", "file"="DatabaseStorageFile", "folder"="DatabaseStorageFolder"})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\DatabaseStorageDirEntriesRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class DatabaseStorageDirEntry implements \ArrayAccess
 {
