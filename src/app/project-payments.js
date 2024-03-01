@@ -34,6 +34,7 @@ import ajaxDownload from './file-download.js';
 import { pageRenderer } from './pme-state.js';
 import { showError, /* showSuccess, showInfo, TOAST_DEFAULT_TIMEOUT, */ TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
 import setBusyIndicators from './busy-indicators.js';
+import { filename } from './path.js';
 import {
   valueSelector as pmeValueSelector,
   sys as pmeSys,
@@ -61,6 +62,8 @@ const findByName = function($container, name) {
 const ppAmountName = pmeData('ProjectPayments:amount');
 const ppSubjectName = pmeData('ProjectPayments:subject');
 
+const templateName = filename(__filename);
+
 /**
  * Generate a popup in order to add a new split-transaction, i.e. a
  * ProjectPayment entity which is always subordinate to a
@@ -78,7 +81,7 @@ const projectPaymentPopup = function(containerSel, post) {
   // instrumentation numbers are somewhat nasty and require too
   // many options.
 
-  const template = 'project-payments';
+  const template = templateName;
   const tableOptions = {
     ambientContainerSelector: containerSel,
     dialogHolderCSSId: template + '-dialog',
@@ -451,8 +454,8 @@ const ready = function(selector, pmeParameters, resizeCB) {
           -1, // projectId
           musicianId,
           resizeCB, {
-            upload: 'finance/payments/documents/upload',
-            delete: 'finance/payments/documents/delete',
+            upload: 'documents/finance/' + templateName + '/upload',
+            delete: 'documents/finance/' + templateName + '/delete',
           });
         const ambientContainerSelector = pmeParameters?.tableOptions?.ambientContainerSelector;
         if (ambientContainerSelector) {
@@ -518,7 +521,7 @@ const documentReady = function() {
 
     const container = PHPMyEdit.container();
 
-    if (!container.hasClass('project-payments')) {
+    if (!container.hasClass(templateName)) {
       return;
     }
 

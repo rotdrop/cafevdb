@@ -28,12 +28,15 @@ import * as PHPMyEdit from './pme.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import fileDownload from './file-download.js';
 import { formSelector as pmeFormSelector } from './pme-selectors.js';
+import { filename } from './path.js';
 
 require('jquery-ui/ui/widgets/autocomplete');
 require('jquery-ui/themes/base/autocomplete.css');
 
 require('tax-exemption-notices.scss');
 require('project-participant-fields-display.scss');
+
+const templateName = filename(__filename);
 
 const pmeAutocomplete = function($input) {
   const autocompleteData = $input.data('autocomplete');
@@ -108,8 +111,8 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
         -1, // projectId
         -1, // musicianId,
         resizeCB, {
-          upload: 'finance/exemption-notices/documents/upload',
-          delete: 'finance/exemption-notices/documents/delete',
+          upload: 'documents/finance/' + templateName + '/upload',
+          delete: 'documents/finance/' + templateName + '/delete',
         });
       const ambientContainerSelector = parameters?.tableOptions?.ambientContainerSelector;
       if (ambientContainerSelector) {
@@ -125,7 +128,7 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
 const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback(
-    'tax-exemption-notices', {
+    templateName, {
       callback(selector, parameters, resizeCB) {
         if (parameters.reason === 'dialogOpen') {
           pmeFormInit(selector, parameters, resizeCB);
@@ -140,12 +143,12 @@ const documentReady = function() {
 
     const container = PHPMyEdit.container();
 
-    if (!container.hasClass('tax-exemption-notices')) {
+    if (!container.hasClass(templateName)) {
       return;
     }
 
     const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
-    if (renderer === Page.templateRenderer('tax-exemption-notices')) {
+    if (renderer === Page.templateRenderer(templateName)) {
       pmeFormInit(PHPMyEdit.defaultSelector, undefined, () => null);
     }
   });
