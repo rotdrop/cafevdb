@@ -45,6 +45,7 @@ import {
   deselectAll as selectDeselectAll,
   widget as selectWidget,
   getControlObject as getSelectConstrolObject,
+  refreshWidget as refreshSelectWidget,
 } from './select-utils.js';
 import * as qs from 'qs';
 import {
@@ -55,6 +56,7 @@ import {
   formEditSuffixes as pmeFormEditSuffixes,
   formSelector as pmeFormSelector,
   idSelector as pmeIdSelector,
+  inputClassSelector as pmeInputClassSelector,
   inputSelector as pmeInputSelector,
   navigationSelector as pmeNavigationSelector,
   selectInputSelector as pmeSelectInputSelector,
@@ -2047,7 +2049,8 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     function(event) {
       const $this = $(this);
       const locked = !$this.prop('checked');
-      const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
+      const $input = $this.closest(pmeValueSelector).find(pmeInputClassSelector()).not($this);
+      // const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
       $input.prop('readonly', locked);
       if ($this.hasClass('locked-disabled') || $input.hasClass('locked-disabled')) {
         $input.prop('disabled', locked);
@@ -2059,6 +2062,9 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
         $input.attr('placeholder', $input.data('unlockedPlaceholder'));
       }
       $input.toggleClass('readonly', locked);
+      if ($input.is('select')) {
+        refreshSelectWidget($input);
+      }
       return false;
     });
 
@@ -2067,12 +2073,16 @@ const pmeInit = function(containerSel, noSubmitHandlers) {
     function(event) {
       const $this = $(this);
       const locked = $this.prop('checked');
-      const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
+      const $input = $this.closest(pmeValueSelector).find(pmeInputClassSelector()).not($this);
+      // const $input = $this.hasClass('left-of-input') ? $this.next().next() : $this.prev();
       $input.prop('readonly', locked);
       if ($this.hasClass('locked-disabled') || $input.hasClass('locked-disabled')) {
         $input.prop('disabled', locked);
       }
       $input.toggleClass('readonly', locked);
+      if ($input.is('select')) {
+        refreshSelectWidget($input);
+      }
       return false;
     });
 
@@ -2114,6 +2124,7 @@ export {
   pmeHalt as halt,
   pmeHasEditableData as hasEditableData,
   pmeIdSelector as idSelector,
+  pmeInputClassSelector as inputClassSelector,
   pmeInputSelector as inputSelector,
   pmeIsHalted as halted,
   pmeOpenRowDialog as openRowDialog,
