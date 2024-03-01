@@ -60,6 +60,7 @@
     <command>OCA\CAFEVDB\Command\ProjectFolders</command>
     <command>OCA\CAFEVDB\Command\ParticipantFolders</command>
     <command>OCA\CAFEVDB\Command\RecurringReceivables</command>
+    <command>OCA\CAFEVDB\Command\SentNotifications</command>
     <command>OCA\CAFEVDB\Command\TooltipsFind</command>
     <command>OCA\CAFEVDB\Command\TooltipsList</command>
     <command>OCA\CAFEVDB\Command\UpdateGeoCodingCache</command>
