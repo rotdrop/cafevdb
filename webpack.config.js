@@ -49,6 +49,10 @@ module.exports = {
     clean: false,
     compareBeforeEmit: true, // true would break the Makefile
   },
+  node: {
+    __dirname: true,
+    __filename: true,
+  },
   devtool: 'source-map',
   optimization: {
     minimize: productionMode,
