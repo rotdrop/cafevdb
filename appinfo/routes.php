@@ -532,14 +532,12 @@ $routes = [
       'verb' => 'POST',
     ],
     [
-      'name' => 'payments#documents',
-      'url' => '/finance/payments/documents/{operation}',
+      'name' => 'document_storage_upload#documents',
+      'url' => '/documents/{section}/{topic}/{operation}',
       'verb' => 'POST',
-    ],
-    [
-      'name' => 'tax_exemption_notices#documents',
-      'url' => '/finance/exemption-notices/documents/{operation}',
-      'verb' => 'POST',
+      'requirements' => [
+        'section' => '^(?!mailmerge).*$',
+      ],
     ],
     /**
      * Insurances
