@@ -308,10 +308,10 @@ trait DatabaseStorageNodeNameTrait
    * @return string
    */
   protected function getDonationReceiptFileName(
-    Entities\CompositePayment $donation,
+    Entities\DonationReceipt $donation,
     ?string $extension = null,
   ):string {
-    return $this->getLegacyTaxExemptionNoticeFileName(
+    return $this->getLegacyDonationReceiptFileName(
       $donation->getId(),
       $donation->getMusician()->getPublicName(firstNameFirst: true),
       $donation->getProject()->getName(),

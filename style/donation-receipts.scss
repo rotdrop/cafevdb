@@ -64,7 +64,6 @@
       }
     }
     &list, &view, &copy, &add, &copyadd, &change, &delete {
-
       td.pme- {
         &cell, &value {
           .operation {
@@ -85,8 +84,14 @@
           }
           .flex-container {
           }
-          input[type="checkbox"].pme-input.project-payment.status:disabled + span.pme-label {
-            opacity: 0.75;
+          input.pme-input.project-payment.status {
+            &:disabled + .pme-label {
+              opacity: 0.75;
+            }
+            &:checked + .pme-label {
+              font-weight: bold;
+              font-style: italic;
+            }
           }
         }
       }
@@ -107,7 +112,9 @@
       }
     }
     &copy, &add, &copyadd, &change {
-
+      td.composite-payment-id .chosen-container {
+        max-width: 40em;
+      }
     }
   }
 }

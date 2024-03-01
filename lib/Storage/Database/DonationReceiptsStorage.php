@@ -31,7 +31,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\CompositePayment as Entity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\DonationReceipt as Entity;
 use OCA\CAFEVDB\Events;
 use OCA\CAFEVDB\Exceptions;
 
@@ -42,6 +42,7 @@ use OCA\CAFEVDB\Exceptions;
 class DonationReceiptsStorage extends Storage
 {
   use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+  use DatabaseStorageNodeNameTrait;
 
   /** @var \OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository */
   private $entityRepository;
@@ -129,7 +130,7 @@ class DonationReceiptsStorage extends Storage
     if (empty($extension) && !empty($file['name'])) {
       $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     }
-    $fileName = $this->getTaxExemptionNoticeFileName($entity, $extension);
+    $fileName = $this->getDonationReceiptFileName($entity, $extension);
 
     if ($flush) {
       $this->entityManager->beginTransaction();

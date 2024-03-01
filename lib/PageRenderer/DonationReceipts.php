@@ -54,6 +54,12 @@ class DonationReceipts extends PMETableViewBase
   public const TABLE = 'DonationReceipts';
   public const AMOUNT_CHECK_FAILURE = 'amount-check-failure';
 
+  public const FORM_DATA = [
+    'template' => self::TEMPLATE,
+    'table' => self::TABLE,
+    'self-test-failure' => self::AMOUNT_CHECK_FAILURE,
+  ];
+
   protected $joinStructure = [
     self::TABLE => [
       'flags' => self::JOIN_MASTER,
@@ -295,6 +301,9 @@ class DonationReceipts extends PMETableViewBase
       $opts['display']['tabs'] = false;
     }
 
+    // global data to be attached to the form
+    $opts['data']['form'] = self::FORM_DATA;
+
     $opts['fdd']['id'] = [
       'name'     => 'id',
       'select'   => 'T',
@@ -319,7 +328,6 @@ class DonationReceipts extends PMETableViewBase
         'select|AFL' => 'D',
         'select|CVD' => 'T',
         'input' => 'R',
-        'select|A' => 'D',
         'input|A' => 'M',
         'values' => [
           'description' => [
@@ -353,6 +361,30 @@ class DonationReceipts extends PMETableViewBase
         'input' => 'RH',
       ]);
 
+    $displayControls = fn(string $id) => [
+      'attributes' => function($op, $k, $row, $pme) use ($id) {
+        $mailingDate = $row[$this->queryField('mailing_date')];
+        if (empty($mailingDate)) {
+          return [];
+        }
+        return [ 'readonly' => true, 'disabled' => true ];
+      },
+      'postfix' => function($op, $pos, $k, $row, $pme) use ($id) {
+        $mailingDate = $row[$this->queryField('mailing_date')];
+        if (empty($mailingDate)) {
+          return '';
+        }
+        return '<input id="' . $id . '"
+  type="checkbox"
+  checked
+  class="pme-input pme-input-lock lock-unlock locked-disabled"
+/><label
+    class="pme-input pme-input-lock lock-unlock"
+    title="' . $this->toolTipsService['pme:input:lock:unlock'] . '"
+    for="' . $id . '"></label>';
+      },
+    ];
+
     $this->makeJoinTableField(
       $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'id',
       [
@@ -360,14 +392,14 @@ class DonationReceipts extends PMETableViewBase
         'name|ACFLP'   => $this->l->t('Payment'),
         'tab'          => [ 'id' => 'payment', ],
         'css'          => [ 'postfix' => [ 'composite-payment-id', 'allow-empty', ], ],
-        'select'       => 'T',
-        'select|ACFLP' => 'D',
+        'select|FL'       => 'T',
+        'select|ACP' => 'D',
         'align'        => 'right',
         'input'        => 'M',
         'maxlen'       => 11,
         'default'      => null,
         'sort'         => true,
-        'values|ACFLP' => [
+        'values|ACP' => [
           'description' => [
             'columns' => ($projectMode
                           ? [ static::musicianPublicNameSql($joinTables[self::MUSICIANS_TABLE]),
@@ -397,6 +429,7 @@ class DonationReceipts extends PMETableViewBase
           // ],
           'data' => [
             'payment-id' => '$table.id',
+            'subject' => '$table.subject',
             'project-id' => $joinTables[self::PROJECTS_TABLE] . '.id',
             'musician-id' => $joinTables[self::MUSICIANS_TABLE] . '.id',
             'amount' => $this->paymentAmountSql($joinTables[self::PROJECT_PAYMENTS_TABLE]),
@@ -404,6 +437,7 @@ class DonationReceipts extends PMETableViewBase
             'status' => $this->paymentStatusSql($joinTables[self::PROJECT_PAYMENTS_TABLE]),
           ],
         ],
+        'display|ACP' => $displayControls('lock-unlock-composite-payment-id'),
       ]);
 
     $this->makeJoinTableField(
@@ -411,16 +445,34 @@ class DonationReceipts extends PMETableViewBase
       [
         'tab' => [ 'id' => 'payment', ],
         'name' => $this->l->t('Subject'),
-        'css'  => [ 'postfix' => [ 'commposite-payment-subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
+        'css'  => [ 'postfix' => [ 'composite-payment-subject', 'squeeze-subsequent-lines', 'clip-long-text', ], ],
         'sql|LFVD' => 'REPLACE($join_col_fqn, \'; \', \'<br/>\')',
         'select' => 'T',
         'input' => 'R',
-        'input|A' => 'RH',
-        'display|LF' => [ 'popup' => 'data' ],
+        'display' => [ 'popup' => 'data' ],
         'escape' => true,
         'sort' => true,
         'maxlen' => FinanceService::SEPA_PURPOSE_LENGTH,
+        'size' => FinanceService::SEPA_PURPOSE_LENGTH,
+        'textarea|ACP' => [
+          'css' => 'constrained',
+          'rows' => 4,
+          'cols' => 35,
+        ],
       ]);
+
+    $this->makeJoinTableField(
+      $opts['fdd'], self::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt',
+      Util::arrayMergeRecursive(
+        $this->defaultFDD['date'],
+        [
+          'tab' => [ 'id' => 'payment' ],
+          'name' => $this->l->t('Date of Receipt'),
+          'input' => 'R',
+          'align' => 'center',
+        ]
+      ),
+    );
 
     $this->makeJoinTableField(
       $opts['fdd'], self::PROJECT_PAYMENTS_TABLE, 'amount',
@@ -478,7 +530,7 @@ class DonationReceipts extends PMETableViewBase
             'description' => PHPMyEdit::TRIVIAL_DESCRIPION,
           ],
           'values2|CAP' => [
-            0 => '',
+            0 => $this->l->t('inconsistent donation'),
             1 => $this->l->t('consistency checks passed'),
           ], // empty label for simple checkbox
           'values2|LVDF' => [
@@ -496,11 +548,14 @@ class DonationReceipts extends PMETableViewBase
         'name' => $this->l->t('Project'),
         'tab'  => [ 'id' => 'payment' ],
         'css' => [ 'postfix' => [ 'project-id', 'allow-empty', ], ],
+        'sql' => '$join_table.name',
+        'select|AFL' => 'D',
+        'select|CVD' => 'T',
+        'input|A' => 'M',
         'select' => 'D',
         'maxlen' => 20,
         'size' => 16,
         'input' => $projectMode ? 'HR' : 'R',
-        'input|A' => 'M',
         'default' => ($projectMode ? $this->projectId : null),
         'values' => [
           'description' => [
@@ -543,9 +598,8 @@ class DonationReceipts extends PMETableViewBase
           return '';
         }
 
-        $this->logInfo('ROW ' . print_r($row, true));
-
         $donationId = $row[$this->joinQueryField(self::COMPOSITE_PAYMENTS_TABLE, 'id')];
+        $dateOfReceipt = $row[$this->joinQueryField(self::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt')];
         $musicianName = $row[$this->joinQueryField(self::MUSICIANS_TABLE, 'id')];
         $projectName = $row[$this->joinQueryField(self::PROJECTS_TABLE, 'name')];
 
@@ -556,6 +610,8 @@ class DonationReceipts extends PMETableViewBase
         );
 
         $dir = $this->getDonationReceiptsPath();
+        $year = substr($dateOfReceipt, 0, 4);
+        $dir .= UserStorage::PATH_SEP . $year;
 
         return '<div class="file-upload-wrapper">
   <table class="file-upload">'
@@ -584,7 +640,10 @@ class DonationReceipts extends PMETableViewBase
 
         $downloadLink = $this->di(DatabaseStorageUtil::class)->getDownloadLink($file);
 
-        $dir = $this->getTaxExemptionNoticesPath();
+        $dateOfReceipt = $row[$this->joinQueryField(self::COMPOSITE_PAYMENTS_TABLE, 'date_of_receipt')];
+        $year = substr($dateOfReceipt, 0, 4);
+        $dir = $this->getTaxExemptionNoticesPath()
+          . UserStorage::PATH_SEP . $year;
 
         try {
           $filesAppLink = $this->userStorage->getFilesAppLink($dir, true);
@@ -632,13 +691,17 @@ class DonationReceipts extends PMETableViewBase
             'cast' => false,
           ],
         ],
+        'display|ACP' => $displayControls('lock-unlock-tax-exemption-notice'),
       ]);
 
-    $opts['fdd']['mailing_date'] = array_merge(
-      $this->defaultFDD['date'], [
+    $opts['fdd']['mailing_date'] = Util::arrayMergeRecursive(
+      $this->defaultFDD['date'],
+      [
         'tab' => [ 'id' => 'document' ],
         'name' => $this->l->t('Mailing Date'),
-      ]);
+        'display|ACP' => $displayControls('lock-unlock-mailing-date'),
+      ],
+    );
 
     if ($this->showDisabled) {
       $opts['fdd']['deleted'] = array_merge(
@@ -683,6 +746,7 @@ class DonationReceipts extends PMETableViewBase
     // redirect all updates through Doctrine\ORM.
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_INSERT][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeInsertDoInsertAll' ];
+    $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateSanitizeFields' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_UPDATE][PHPMyEdit::TRIGGER_BEFORE][]  = [ $this, 'beforeUpdateDoUpdateAll' ];
     $opts[PHPMyEdit::OPT_TRIGGERS][PHPMyEdit::SQL_QUERY_DELETE][PHPMyEdit::TRIGGER_BEFORE][] = [ $this, 'beforeDeleteSimplyDoDelete' ];
 
@@ -729,6 +793,56 @@ class DonationReceipts extends PMETableViewBase
     foreach ($remapFields as $source => $target) {
       $newValues[$target] = $newValues[$source];
       $changed[] = $target;
+    }
+
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');
+
+    return true;
+  }
+
+  /**
+   * Remap some input values.
+   *
+   * @param PHPMyEdit $pme The phpMyEdit instance.
+   *
+   * @param string $op The operation, 'insert', 'update' etc.
+   *
+   * @param string $step 'before' or 'after'.
+   *
+   * @param array $oldValues Self-explanatory.
+   *
+   * @param array $changed Set of changed fields, may be modified by the callback.
+   *
+   * @param null|array $newValues Set of new values, which may also be modified.
+   *
+   * @return bool If returning @c false the operation will be terminated
+   */
+  public function beforeUpdateSanitizeFields(PHPMyEdit &$pme, string $op, string $step, array &$oldValues, array &$changed, array &$newValues):bool
+  {
+    $this->debugPrintValues($oldValues, $changed, $newValues, null, 'before');
+
+    if (empty($changed)) {
+      // don't start manipulations if nothing has changed.
+      return true;
+    }
+
+    $remapFields = [
+      $this->joinTableFieldName(self::COMPOSITE_PAYMENTS_TABLE, 'id') => 'donation_id',
+      $this->joinTableFieldName(self::TAX_EXEMPTION_NOTICES_TABLE, 'id') => 'tax_exemption_notice_id',
+    ];
+
+    foreach ($remapFields as $source => $target) {
+      $newValues[$target] = $newValues[$source];
+      $changed[] = $target;
+    }
+
+    $unsetTags = [
+      'supporting_document_id',
+    ];
+    foreach ($unsetTags as $tag) {
+      unset($newValues[$tag]);
+      unset($oldValues[$tag]);
+      Util::unsetValue($changed, $tag);
     }
 
     $this->debugPrintValues($oldValues, $changed, $newValues, null, 'after');

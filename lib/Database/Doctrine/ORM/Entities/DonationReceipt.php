@@ -289,6 +289,46 @@ class DonationReceipt implements JsonSerializable, ArrayAccess
   }
 
   /**
+   * Get musician.
+   *
+   * @return Musician
+   */
+  public function getMusician():Musician
+  {
+    return $this->donation->getMusician();
+  }
+
+  /**
+   * Get project.
+   *
+   * @return Project
+   */
+  public function getProject():Project
+  {
+    return $this->donation->getProject();
+  }
+
+  /**
+   * Get projectParticipant.
+   *
+   * @return ProjectParticipant
+   */
+  public function getProjectParticipant():?ProjectParticipant
+  {
+    return $this->donation->getProjectParticipant();
+  }
+
+  /**
+   * Get dateOfReceipt.
+   *
+   * @return null|DateTimeInterface
+   */
+  public function getDateOfReceipt():?DateTimeInterface
+  {
+    return $this->donation->getDateOfReceipt();
+  }
+
+  /**
    * Flag this entity as in use and thus undeleteable returning a positive
    * value.
    *

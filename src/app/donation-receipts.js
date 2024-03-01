@@ -27,11 +27,13 @@ import * as Page from './page.js';
 import * as PHPMyEdit from './pme.js';
 import initFileUploadRow from './pme-file-upload-row.js';
 import fileDownload from './file-download.js';
+import { filename } from './path.js';
 import {
   inputSelector as pmeInputSelector,
   formSelector as pmeFormSelector,
   valueSelector as pmeValueSelector,
   selectInputSelector as pmeSelectInputSelector,
+  inputClassSelector as pmeInputClassSelector,
 } from './pme-selectors.js';
 import {
   refreshWidget as refreshSelectWidget,
@@ -39,8 +41,11 @@ import {
   optionByValue as getSelectOptionByValue,
 } from './select-utils.js';
 
+require('./jquery-readonly.js');
 require('project-participant-fields-display.scss');
 require('donation-receipts.scss');
+
+const templateName = filename(__filename);
 
 const pmeFormInit = function(containerSel, parameters, resizeCB) {
   containerSel = PHPMyEdit.selector(containerSel);
@@ -70,8 +75,8 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
         -1, // projectId
         -1, // musicianId,
         resizeCB, {
-          upload: 'finance/exemption-notices/documents/upload',
-          delete: 'finance/exemption-notices/documents/delete',
+          upload: 'documents/finance/' + templateName + '/upload',
+          delete: 'documents/finance/' + templateName + '/delete',
         });
       const ambientContainerSelector = parameters?.tableOptions?.ambientContainerSelector;
       if (ambientContainerSelector) {
@@ -132,6 +137,10 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
     if (selectablePayments.length === 1) {
       $paymentOptions.each(function() { $(this).prop('disabled', false); });
       selectablePayments[0].prop('selected', true);
+      $container.find(pmeInputClassSelector() + '.composite-payment-subject').val(
+        selectablePayments[0].data('subject')
+      );
+      $form.toggleClass($form.data('selfTestFailure'), !selectablePayments[0].data('status'));
     }
     refreshSelectWidget($paymentsSelect);
 
@@ -150,24 +159,26 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
     const $this = $(this);
     const projectId = +$this.val() || 0;
 
-    const $musiciansSelect = $container.find(pmeSelectInputSelector + '.musician-id');
-    const $musicianOptions = getSelectOptions($musiciansSelect);
-    const selectableMusicians = [];
-    $musicianOptions.each(function() {
-      const $musicianOption = $(this);
-      const projects = $musicianOption.data('projects') || [];
-      if (projectId > 0 && projects.find((id) => id === projectId) === undefined) {
-        $musicianOption.prop('selected', false).prop('disabled', true);
-      } else {
-        $musicianOption.prop('disabled', false);
-        selectableMusicians.push($musicianOption);
+    const $musicianInput = $container.find(pmeInputClassSelector() + '.musician-id');
+    if ($musicianInput.is('select')) {
+      const $musicianOptions = getSelectOptions($musicianInput);
+      const selectableMusicians = [];
+      $musicianOptions.each(function() {
+        const $musicianOption = $(this);
+        const projects = $musicianOption.data('projects') || [];
+        if (projectId > 0 && projects.find((id) => id === projectId) === undefined) {
+          $musicianOption.prop('selected', false).prop('disabled', true);
+        } else {
+          $musicianOption.prop('disabled', false);
+          selectableMusicians.push($musicianOption);
+        }
+      });
+      if (selectableMusicians.length === 1) {
+        $musicianOptions.each(function() { $(this).prop('disabled', false); });
+        selectableMusicians[0].prop('selected', true);
       }
-    });
-    if (selectableMusicians.length === 1) {
-      $musicianOptions.each(function() { $(this).prop('disabled', false); });
-      selectableMusicians[0].prop('selected', true);
+      refreshSelectWidget($musicianInput);
     }
-    refreshSelectWidget($musiciansSelect);
 
     const $paymentsSelect = $container.find(pmeSelectInputSelector + '.composite-payment-id');
     const $paymentOptions = getSelectOptions($paymentsSelect);
@@ -185,6 +196,10 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
     if (selectablePayments.length === 1) {
       $paymentOptions.each(function() { $(this).prop('disabled', false); });
       selectablePayments[0].prop('selected', true);
+      $container.find(pmeInputClassSelector() + '.composite-payment-subject').val(
+        selectablePayments[0].data('subject')
+      );
+      $form.toggleClass($form.data('selfTestFailure'), !selectablePayments[0].data('status'));
     }
     refreshSelectWidget($paymentsSelect);
 
@@ -208,31 +223,46 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
     const amount = $paymentOption.data('amount');
     const amountWaived = $paymentOption.data('amountWaived');
     const status = $paymentOption.data('status');
+    const subject = $paymentOption.data('subject');
 
     $container.find(pmeInputSelector + '.project-payment.amount').val(amount);
     $container.find(pmeInputSelector + '.project-payment.amount-waived').val(amountWaived);
-    $container.find(pmeInputSelector + '.project-payment.status').prop('checked', status);
+    $container.find(pmeInputSelector + '.project-payment.status').val([status]);
+
+    $form.toggleClass($form.data('selfTestFailure'), !status);
 
     // we re-enable all options but select the respective project and
     // person
 
-    const $musiciansSelect = $container.find(pmeSelectInputSelector + '.musician-id');
-    const $musicianOptions = getSelectOptions($musiciansSelect);
-    $musicianOptions.each(function() {
-      const $musicianOption = $(this);
-      const thisMusicianId = +$musicianOption.val();
-      $musicianOption.prop('disabled', false).prop('selected', thisMusicianId === musicianId);
-    });
-    refreshSelectWidget($musiciansSelect);
+    const $musicianInput = $container.find(pmeInputClassSelector() + '.musician-id');
+    if ($musicianInput.is('select')) {
+      const $musicianOptions = getSelectOptions($musicianInput);
+      $musicianOptions.each(function() {
+        const $musicianOption = $(this);
+        const thisMusicianId = +$musicianOption.val();
+        $musicianOption.prop('disabled', false).prop('selected', thisMusicianId === musicianId);
+      });
+      refreshSelectWidget($musicianInput);
+    } else if ($musicianInput.is('input')) {
+      $musicianInput.val($musicianInput.data('pmeValues').values[musicianId]);
+    }
 
-    const $projectSelect = $container.find(pmeSelectInputSelector + '.project-id');
-    const $projectOptions = getSelectOptions($projectSelect);
-    $projectOptions.each(function() {
-      const $projectOption = $(this);
-      const thisProjectId = +$projectOption.val();
-      $projectOption.prop('disabled', false).prop('selected', thisProjectId === projectId);
-    });
-    refreshSelectWidget($projectSelect);
+    const $projectInput = $container.find(pmeInputClassSelector() + '.project-id');
+    if ($projectInput.is('select')) {
+      const $projectOptions = getSelectOptions($projectInput);
+      $projectOptions.each(function() {
+        const $projectOption = $(this);
+        const thisProjectId = +$projectOption.val();
+        $projectOption.prop('disabled', false).prop('selected', thisProjectId === projectId);
+      });
+      refreshSelectWidget($projectInput);
+    } else if ($projectInput.is('input')) {
+      $projectInput.val($projectInput.data('pmeValues').values[projectId]);
+    }
+
+    const $subjectInput = $container.find(pmeInputClassSelector() + '.composite-payment-subject');
+    console.info('SUBJECT INPUT', pmeInputClassSelector() + '.composite-payment-subject', $subjectInput);
+    $subjectInput.val(subject);
 
     const $options = getSelectOptions($this);
     $options.each(function() { $(this).prop('disabled', false); });
@@ -246,11 +276,12 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
 const documentReady = function() {
 
   PHPMyEdit.addTableLoadCallback(
-    'donation-receipts', {
+    templateName, {
       callback(selector, parameters, resizeCB) {
         if (parameters.reason === 'dialogOpen') {
           pmeFormInit(selector, parameters, resizeCB);
         }
+        console.info('RESIZE DB');
         resizeCB();
       },
       context: globalState,
@@ -261,12 +292,12 @@ const documentReady = function() {
 
     const container = PHPMyEdit.container();
 
-    if (!container.hasClass('donation-receipts')) {
+    if (!container.hasClass(templateName)) {
       return;
     }
 
     const renderer = $(PHPMyEdit.defaultSelector).find('form.pme-form input[name="templateRenderer"]').val();
-    if (renderer === Page.templateRenderer('donation-receipts')) {
+    if (renderer === Page.templateRenderer(templateName)) {
       pmeFormInit(PHPMyEdit.defaultSelector, undefined, () => null);
     }
   });
