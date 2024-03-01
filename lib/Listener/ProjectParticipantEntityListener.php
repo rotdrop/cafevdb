@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Listener;
 
-use Throwable;
-
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Event as ORMEvent;
 
 use OCP\IL10N;
@@ -73,6 +71,13 @@ class ProjectParticipantEntityListener
   /** @var IUserManager */
   protected IUserManager $userManager;
 
+  /**
+   * @var array
+   * Array of the pre-update values, indexed by musician id. Currently only
+   * needed for the principal email address.
+   */
+  private array $preUpdateValues = [];
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ILogger $logger,
@@ -91,6 +96,14 @@ class ProjectParticipantEntityListener
     if ($event->hasChangedField($field)) {
       $oldValue = $event->getOldValue($field);
       $this->entityManager->dispatchEvent(new Events\PreChangeRegistrationConfirmation($this, !empty($oldValue), !empty($event->getNewValue($field))));
+      $this->entityManager->dispatchEvent(
+        new Events\PreChangeRegistrationConfirmation(
+          $entity,
+          !empty($oldValue),
+          !empty($event->getNewValue($field)),
+        )
+      );
+
       $key = self::entityId($entity, $field);
       $this->preUpdateValues[$key] = $oldValue;
     }
@@ -111,7 +124,13 @@ class ProjectParticipantEntityListener
     $entityId = self::entityId($entity);
     $key = self::entityId($entityId, $field);
     if (array_key_exists($key, $this->preUpdateValues)) {
-      $this->entityManager->dispatchEvent(new Events\PostChangeRegistrationConfirmation($this, !empty($this->preUpdateValue[$field])));
+      $this->entityManager->dispatchEvent(
+        new Events\PostChangeRegistrationConfirmation(
+          $entity,
+          !empty($this->preUpdateValue[$field],
+          )
+        )
+      );
       unset($this->preUpdateValues[$key]);
     }
     $field = 'deleted';
