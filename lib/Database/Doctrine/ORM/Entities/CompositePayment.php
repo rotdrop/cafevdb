@@ -24,7 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use \Closure;
+use Closure;
+use DateTimeInterface;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
@@ -387,7 +388,7 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
    *
    * @return \DateTime|null
    */
-  public function getDateOfReceipt()
+  public function getDateOfReceipt():?DateTimeInterface
   {
     return $this->dateOfReceipt;
   }
