@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020-2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,9 +50,8 @@ use OCA\CAFEVDB\Database\EntityManager;
  * @ORM\DiscriminatorColumn(name="sepa_transaction", type="EnumSepaTransaction")
  * @ORM\DiscriminatorMap({null="SepaBulkTransaction","debit_note"="SepaDebitNote", "bank_transfer"="SepaBankTransfer"})
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SepaBulkTransactionsRepository")
- * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener"})
- *
  * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\SepaBulkTransactionEntityListener"})
  */
 class SepaBulkTransaction implements \ArrayAccess
 {
@@ -163,12 +162,20 @@ class SepaBulkTransaction implements \ArrayAccess
    */
   private $payments;
 
+  /**
+   * @var SentEamil
+   *
+   * @ORM\OneToMany(targetEntity="SentEmail", indexBy="messageId", mappedBy="sepaBulkTransaction")
+   */
+  private $preNotificationEmails;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
     $this->sepaTransactionData = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->preNotificationEmails = new ArrayCollection();
   }
   // phpcs:enable
 
@@ -494,6 +501,66 @@ class SepaBulkTransaction implements \ArrayAccess
   }
 
   /**
+   * Set preNotificationEmails.
+   *
+   * @param Collection $preNotificationEmails
+   *
+   * @return SepaBulkTransaction
+   */
+  public function setPreNotificationEmails(Collection $preNotificationEmails):SepaBulkTransaction
+  {
+    $this->preNotificationEmails = $preNotificationEmails;
+
+    return $this;
+  }
+
+  /**
+   * Get preNotificationEmails.
+   *
+   * @return Collection
+   */
+  public function getPreNotificationEmails():Collection
+  {
+    return $this->preNotificationEmails;
+  }
+
+  /**
+   * Add a new email to the list of pre-notificiations
+   *
+   * @param SentEmail $sentEmail
+   *
+   * @return SepaBulkTransaction
+   */
+  public function addPreNotificationEmail(SentEmail $sentEmail):SepaBulkTransaction
+  {
+    $messageId = $sentEmail->getMessageId();
+    if ($this->getPreNotificationEmail($messageId) === null) {
+      $this->preNotificationEmails->set($messageId, $sentEmail);
+    }
+    return $this;
+  }
+
+  /**
+   * Get the preNotificationEmail for the specified musician
+   *
+   * @param string $messageId
+   *
+   * @return null|SentEmail
+   */
+  public function getPreNotificationEmail(string $messageId):?SentEmail
+  {
+    if ($this->preNotificationEmails->containsKey($messageId)) {
+      return $this->preNotificationEmails->get($messageId);
+    }
+    // need to search ...
+    $preNotificationEmails = $this->preNotificationEmails->filter(fn(SentEmail $sentEmail) => $sentEmail->getMessageId() == $messageId);
+    if ($preNotificationEmails->count() === 1) {
+      return $preNotificationEmails->first();
+    }
+    return null;
+  }
+
+  /**
    * @return The sum of all contained split transactions.
    */
   public function totals():float
@@ -514,44 +581,5 @@ class SepaBulkTransaction implements \ArrayAccess
   public function usage():int
   {
     return $this->payments->count();
-  }
-
-  /**
-   * @var null|array
-   *
-   * The array of changed field values.
-   */
-  private $preUpdateValue = [];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PreUpdate
-   */
-  public function preUpdate(Event\PreUpdateEventArgs $event)
-  {
-    $field = 'submitDate';
-    if ($event->hasChangedField($field)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $oldValue = $event->getOldValue($field);
-      $this->preUpdateValue[$field] = $oldValue;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PostUpdate
-   */
-  public function postUpdate(Event\LifecycleEventArgs $event)
-  {
-    $field = 'submitDate';
-    if (array_key_exists($field, $this->preUpdateValue)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostChangeSepaBulkTransactionSubmitDate(
-        $entityManager, $this, $this->preUpdateValue[$field]));
-      unset($this->preUpdateValue[$field]);
-    }
   }
 }

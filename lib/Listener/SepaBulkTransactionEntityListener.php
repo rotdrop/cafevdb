@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\SepaBulkTransaction as Entity;
 use OCA\CAFEVDB\Storage\Database\BankTransactionsStorage;
 use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 
@@ -56,6 +57,13 @@ class SepaBulkTransactionEntityListener
   /** @var array */
   protected $lock = [];
 
+  /**
+   * @var array
+   * Array of the pre-update values, indexed by musician id. Currently only
+   * needed for the principal email address.
+   */
+  private array $preUpdateValues = [];
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ILogger $logger,
@@ -76,52 +84,81 @@ class SepaBulkTransactionEntityListener
   /**
    * Protect against re-entrance when the preRemove() handler causes changes to the entity.
    *
-   * @param Entities\SepaBulkTransaction $transaction
+   * @param Entity $entity
    *
    * @return bool
    */
-  private function lockEntity(Entities\SepaBulkTransaction $transaction):bool
+  private function lockEntity(Entity $entity):bool
   {
-    $transactionId = $transaction->getId();
-    if (!empty($this->lock[$transactionId])) {
+    $entityId = $entity->getId();
+    if (!empty($this->lock[$entityId])) {
       return false;
     }
-    $this->lock[$transactionId] = true;
+    $this->lock[$entityId] = true;
     return true;
   }
 
   /**
    * Protect against re-entrance when the preRemove() handler causes changes to the entity.
    *
-   * @param Entities\SepaBulkTransaction $transaction
+   * @param Entity $entity
    *
    * @return void
    */
-  private function unlockEntity(Entities\SepaBulkTransaction $transaction):void
+  private function unlockEntity(Entity $entity):void
   {
-    unset($this->lock[$transaction->getId()]);
+    unset($this->lock[$entity->getId()]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preUpdate(Entities\SepaBulkTransaction $transaction, ORMEvent\PreUpdateEventArgs $eventArgs)
+  public function preUpdate(Entity $entity, ORMEvent\PreUpdateEventArgs $eventArgs)
   {
-    if (!$this->lockEntity($transaction)) {
+    $field = 'submitDate';
+    if ($eventArgs->hasChangedField($field)) {
+      $oldValue = $eventArgs->getOldValue($field);
+      $entityId = $entity->getId();
+      $this->preUpdateValues[$entityId] = array_merge(
+        $this->preUpdateValues[$entityId] ?? [],
+        [ $field => $oldValue, ],
+      );
+    }
+
+    if (!$this->lockEntity($entity)) {
       return;
     }
-    $this->prePersist($transaction, $eventArgs);
-    $this->unlockEntity($transaction);
+    $this->prePersist($entity, $eventArgs);
+    $this->unlockEntity($entity);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function prePersist(Entities\SepaBulkTransaction $transaction, ORMEvent\LifecycleEventArgs $eventArgs)
+  public function postUpdate(Entity $entity, ORMEvent\PostUpdateEventArgs $eventArgs)
   {
-    $this->entityManager->registerPreCommitAction(function() use ($transaction) {
+    $entityId = $entity->getId();
+    $field = 'submitDate';
+    if (array_key_exists($field, $this->preUpdateValues[$entityId] ?? [])) {
+      $this->entityManager->dispatchEvent(
+        new Events\PostChangeSepaBulkTransactionSubmitDate(
+          $this->entityManager,
+          $entity,
+          $this->preUpdateValues[$entityId][$field],
+        )
+      );
+      unset($this->preUpdateValues[$entityId][$field]);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prePersist(Entity $entity, ORMEvent\LifecycleEventArgs $eventArgs)
+  {
+    $this->entityManager->registerPreCommitAction(function() use ($entity) {
       foreach (SepaBulkTransactionService::EXPORTERS as $format) {
-        $this->service->generateTransactionData($transaction, format: $format);
+        $this->service->generateTransactionData($entity, format: $format);
       }
     });
   }
@@ -129,18 +166,18 @@ class SepaBulkTransactionEntityListener
   /**
    * {@inheritdoc}
    */
-  public function preRemove(Entities\SepaBulkTransaction $transaction, ORMEvent\LifecycleEventArgs $eventArgs)
+  public function preRemove(Entity $entity, ORMEvent\LifecycleEventArgs $eventArgs)
   {
-    if (!$this->lockEntity($transaction)) {
+    if (!$this->lockEntity($entity)) {
       return;
     }
     /** @var Entities\DatabaseStorageFile $dirEntry */
-    foreach ($transaction->getSepaTransactionData() as $dirEntry) {
-      $transaction->removeTransactionData($dirEntry);
+    foreach ($entity->getSepaTransactionData() as $dirEntry) {
+      $entity->removeTransactionData($dirEntry);
       $this->remove($dirEntry);
-      // $this->storage->removeDocument($transaction, $file, flush: false);
+      // $this->storage->removeDocument($entity, $file, flush: false);
     }
     $this->flush();
-    $this->unlockEntity($transaction);
+    $this->unlockEntity($entity);
   }
 }
