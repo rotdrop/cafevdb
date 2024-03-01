@@ -29,7 +29,7 @@ while read -r MATCH; do
     CLASS=$(echo "$MATCH"|sed -E 's/^.*'"$TRANSLATION_RE"'.*$/\2/g')
     CONSTANT=$(echo "$MATCH"|sed -E 's/^.*'"$TRANSLATION_RE"'.*$/\3/g')
     if [ "$CLASS" = self ]; then
-        NAMESPACE='\'$(grep namespace "$FILE"|sed -E 's/^namespace\s+([^;]+);.*$/\1/g')
+        NAMESPACE='\'$(grep -E '^namespace.*;$' "$FILE"|sed -E 's/^namespace\s+([^;]+);.*$/\1/g')
         CLASS=${NAMESPACE}\\$(basename "$FILE" .php)
     else
         DIR=$(dirname "$FILE")
