@@ -138,7 +138,7 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
       $paymentOptions.each(function() { $(this).prop('disabled', false); });
       selectablePayments[0].prop('selected', true);
       $container.find(pmeInputClassSelector() + '.composite-payment-subject').val(
-        selectablePayments[0].data('subject')
+        selectablePayments[0].data('subject'),
       );
       $form.toggleClass($form.data('selfTestFailure'), !selectablePayments[0].data('status'));
     }
@@ -197,7 +197,7 @@ const pmeFormInit = function(containerSel, parameters, resizeCB) {
       $paymentOptions.each(function() { $(this).prop('disabled', false); });
       selectablePayments[0].prop('selected', true);
       $container.find(pmeInputClassSelector() + '.composite-payment-subject').val(
-        selectablePayments[0].data('subject')
+        selectablePayments[0].data('subject'),
       );
       $form.toggleClass($form.data('selfTestFailure'), !selectablePayments[0].data('status'));
     }
