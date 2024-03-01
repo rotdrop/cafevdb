@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use Closure;
 use DateTimeInterface;
+use UnexpectedValueException;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 
@@ -563,10 +564,16 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   public function setPreNotificationEmail(?SentEmail $preNotificationEmail):CompositePayment
   {
     if ($preNotificationEmail !== null) {
-      $this->notificationMessageId = $preNotificationEmail->getMessageId();
-      $preNotificationEmail->setCompositePayment($this); // but we are the owner ...
-    } else {
-      $this->notificationMessageId = null;
+      if (empty($this->notificationMessageId)) {
+        $this->notificationMessageId = $preNotificationEmail->getMessageId();
+      } elseif ($this->notificationMessageId != $preNotificationEmail->getMessageId()) {
+        throw new UnexpectedValueException(
+          'Legacy notification message id "' . $this->notificationMessageId . '" '
+          . 'differs from pre-notification email "' . $preNotificationEmail->getSubject() . '" '
+          . 'with message-id "' . $preNotificationEmail->getMessageId() . '".'
+        );
+      }
+      $preNotificationEmail->setCompositePayment($this); // we are the owner ...
     }
     $this->preNotificationEmail = $preNotificationEmail;
 
