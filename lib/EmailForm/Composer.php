@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2011-2014, 2016, 2021, 2022, 2023, 2024 Claus-Justus Heine
+ * @copyright 2011-2014, 2016, 202-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ use \Mail_RFC822;
 use \PHP_IBAN;
 use \DOMDocument;
 use Throwable;
+use UnexpectedValueException;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 
@@ -397,6 +398,12 @@ Störung.';
   /** @var int */
   private $bulkTransactionId;
 
+  /** @var Entities\DonationReceipt */
+  private $donationReceipt;
+
+  /**@var int */
+  private $donationReceiptId;
+
   /** @var float */
   private $paymentSign = 1.0;
 
@@ -541,6 +548,19 @@ Störung.';
       }
     }
 
+    $this->donationReceiptId =  $this->cgiValue(
+      'donationReceiptId', $this->parameterService->getParam('donationReceiptId', 0));
+    if ($this->donationReceiptId > 0) {
+      $this->donationReceipt = $this
+        ->getDatabaseRepository(Entities\DonationReceipt::class)
+        ->find($this->donationReceiptId);
+      if (empty($template)) {
+        $template = Entities\DonationReceipt::NOTIFICATION_EMAIL_TEMPLATE;
+        list($template,) = $this->normalizeTemplateName($template);
+      }
+      $this->paymentSign = 1.0;
+    }
+
     if (!empty($template)) {
       $this->cgiData['storedMessagesSelector'] = $template;
     }
@@ -610,7 +630,7 @@ Störung.';
           $template = $this->fetchTemplate($this->l->t('ExampleFormletter'), exact: false);
         }
         $loadedTag = $template->getTag();
-        if (empty($this->bulkTransaction) || str_ends_with($loadedTag, $initialTemplate)) {
+        if ((empty($this->bulkTransaction) && empty($this->donationReceipt)) || str_ends_with($loadedTag, $initialTemplate)) {
           $initialTemplate = $template->getTag();
           $this->cgiData['storedMessagesSelector'] = $initialTemplate;
           $this->templateName = $initialTemplate;
@@ -661,6 +681,40 @@ Störung.';
     } else {
       return $default;
     }
+  }
+
+  /**
+   * @param null|Entities\Musician
+   *
+   * @return null|Entities\CompositePayment
+   */
+  private function getCompositePayment(?Entities\Musician $musician):?Entities\CompositePayment
+  {
+    if (empty($musician)) {
+      return null;
+    }
+
+    /** @var Entities\CompositePayment $compositePayment */
+    $compositePayment = !empty($this->bulkTransaction)
+      ? $this->bulkTransaction->getPayments()->get($musician->getId())
+      : $this->donationReceipt->getDonation();
+
+    if ($compositePayment->getMusician()->getId() != $musician->getId()) {
+      // throw new Exceptions\SubstitutionException(
+      //   $this->l->t(
+      //     'Inconsistency: given musician "%1$s" is not the payee "%2$s" of the given payment %3$d "%4$s".',
+      //     [
+      //       $musician->getPublicName(),
+      //       $compositePayment->getMusician()->getPublicName(),
+      //       $compositePayment->getId(),
+      //       $compositePayment->getSubject(),
+      //     ],
+      //   )
+      // );
+      return null;
+    }
+
+    return $compositePayment;
   }
 
   /**
@@ -1221,18 +1275,58 @@ Störung.';
 
     }
 
-    if (!empty($this->bulkTransaction)) {
+    if (!empty($this->bulkTransaction) || !empty($this->donationReceipt)) {
+
+      if (!empty($this->donationReceipt)) {
+        $this->substitutions[self::MEMBER_NAMESPACE]['DONATION_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+          if (empty($musician)) {
+            return $keyArg[0];
+          }
+
+          $compositePayment = $this->getCompositePayment($musician);
+          if (!empty($compositePayment)) {
+            $amount = $this->paymentSign * $compositePayment->getDonationAmount();
+            return $this->moneyValue($amount);
+          }
+          return $keyArg[0];
+        };
+
+        $this->substitutions[self::MEMBER_NAMESPACE]['WAIVED_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
+          if (empty($musician)) {
+            return $keyArg[0];
+          }
+
+          $compositePayment = $this->getCompositePayment($musician);
+          if (!empty($compositePayment)) {
+            $amount = $this->paymentSign * $compositePayment->getNonDonationAmount();
+            return $this->moneyValue($amount);
+          }
+          return $keyArg[0];
+        };
+
+        $this->substitutions[self::MEMBER_NAMESPACE]['WAIVING_OF_REIMBURSEMENT'] = function(array $keyArg, ?Entities\Musician $musician) {
+          if (empty($musician)) {
+            return $keyArg[0];
+          }
+
+          $compositePayment = $this->getCompositePayment($musician);
+          if (!empty($compositePayment)) {
+            return $compositePayment->getDonationAmount() == $compositePayment->getNonDonationAmount()
+              ? $this->l->t('yes')
+              : $this->l->t('no');
+          }
+          return $keyArg[0];
+        };
+
+        // maybe add more, however, the proper receipt will be send out as attachjment.
+      }
 
       $this->substitutions[self::MEMBER_NAMESPACE]['BANK_TRANSACTION_AMOUNT'] = function(array $keyArg, ?Entities\Musician $musician) {
         if (empty($musician)) {
           return $keyArg[0];
         }
-        if (empty($this->bulkTransaction)) {
-          return $keyArg[0];
-        }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
           $amount = $this->paymentSign * $compositePayment->getAmount();
           return $this->moneyValue($amount);
@@ -1245,8 +1339,7 @@ Störung.';
           return $keyArg[0];
         }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
           return $compositePayment->getSubject();
         }
@@ -1259,8 +1352,7 @@ Störung.';
           return $keyArg[0];
         }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
           /** @var Entities\SepaDebitMandate $debitMandate */
           $debitMandate = $compositePayment->getSepaDebitMandate();
@@ -1277,8 +1369,7 @@ Störung.';
           return $keyArg[0];
         }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
           /** @var Entities\SepaDebitMandate $debitMandate */
           $debitMandate = $compositePayment->getSepaDebitMandate();
@@ -1295,8 +1386,7 @@ Störung.';
           return $keyArg[0];
         }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
           /** @var Entities\SepaBankAccount $bankAccount */
           $bankAccount = $compositePayment->getSepaBankAccount();
@@ -1313,8 +1403,7 @@ Störung.';
           return $keyArg[0];
         }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
           /** @var Entities\SepaBankAccount $bankAccount */
           $bankAccount = $compositePayment->getSepaBankAccount();
@@ -1331,8 +1420,7 @@ Störung.';
           return $keyArg[0];
         }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
           /** @var Entities\SepaBankAccount $bankAccount */
           $bankAccount = $compositePayment->getSepaBankAccount();
@@ -1360,8 +1448,7 @@ Störung.';
           return $keyArg[0];
         }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
           /** @var Entities\SepaBankAccount $bankAccount */
           $bankAccount = $compositePayment->getSepaBankAccount();
@@ -1377,12 +1464,8 @@ Störung.';
         if (empty($musician)) {
           return $keyArg[0];
         }
-        if (empty($this->bulkTransaction)) {
-          return $keyArg[0];
-        }
 
-        /** @var Entities\CompositePayment $compositePayment */
-        $compositePayment = $this->bulkTransaction->getPayments()->get($musician->getId());
+        $compositePayment = $this->getCompositePayment($musician);
         if (!empty($compositePayment)) {
 
           $keyArg = array_map(
@@ -1756,6 +1839,8 @@ Störung.';
           $messageId =  $msg['messageId'];
           $references[] = $messageId;
 
+          $sentEmailEntity = $msg['logMessage'];
+
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
           if (!empty($this->bulkTransaction)) {
@@ -1768,8 +1853,10 @@ Störung.';
                 ])
               );
             }
-            $payment->setNotificationMessageId($messageId);
+            $payment->setPreNotificationEmail($sentEmailEntity);
             // $this->flush();
+          } elseif (!empty($this->donationReceipt)) {
+            $this->donationReceipt->setNotificationMessage($sentEmailEntity);
           }
         } else {
           ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
@@ -1908,6 +1995,31 @@ Störung.';
             };
           }
         }
+      }
+    }
+
+    if (!empty($this->donationReceipt)) {
+      $supportingDocument = $this->donationReceipt->getSupportingDocument();
+      if (!empty($supportingDocument)) {
+        $personalAttachments[] = function() use ($supportingDocument) {
+          return [
+            'data' => $supportingDocument->getFileData()->getData(),
+            'fileName' => $supportingDocument->getFileName(),
+            'encoding' => 'base64',
+            'mimeType' => $supportingDocument->getMimeType(),
+          ];
+        };
+      }
+      $taxExemptionNotice = $this->donationReceipt->getTaxExemptionNotice()->writtenNotice();
+      if (!empty($taxExemptionNotice)) {
+        $personalAttachments[] = function() use ($taxExemptionNotice) {
+          return [
+            'data' => $taxExemptionNotice->getFileData()->getData(),
+            'fileName' => $taxExemptionNotice->getFileName(),
+            'encoding' => 'base64',
+            'mimeType' => $taxExemptionNotice->getMimeType(),
+          ];
+        };
       }
     }
 
@@ -2820,7 +2932,8 @@ Störung.';
 
     return [
       'messageId' => $phpMailer->getLastMessageID(),
-      'message' => $phpMailer->GetSentMIMEMessage(),
+      'message' => $phpMailer->getSentMIMEMessage(),
+      'logMessage' => $sentEmail,
     ];
   }
 
@@ -2981,15 +3094,16 @@ Störung.';
     }, $logMessage->recipients);
 
     $sentEmail->setProject($this->project)
-              ->setBulkRecipients(implode(';', $bulkRecipients))
-              ->setCc($logMessage->CC)
-              ->setBcc($logMessage->BCC)
-              ->setSubject($logMessage->subject)
-              ->setHtmlBody($logMessage->message)
+      ->setBulkRecipients(implode(';', $bulkRecipients))
+      ->setCc($logMessage->CC)
+      ->setBcc($logMessage->BCC)
+      ->setSubject($logMessage->subject)
+      ->setHtmlBody($logMessage->message)
       // cannot wait for the slug-handler here
-              ->setBulkRecipientsHash(hash('md5', $sentEmail->getBulkRecipients()))
-              ->setSubjectHash(hash('md5', $sentEmail->getSubject()))
-              ->setHtmlBodyHash(hash('md5', $sentEmail->getHtmlBody()));
+      ->setBulkRecipientsHash(hash('md5', $sentEmail->getBulkRecipients()))
+      ->setSubjectHash(hash('md5', $sentEmail->getSubject()))
+      ->setHtmlBodyHash(hash('md5', $sentEmail->getHtmlBody()))
+      ;
 
     // Now logging is ready to execute. But first check for
     // duplicate sending attempts. This takes only the recipients,
@@ -3024,6 +3138,11 @@ Störung.';
         ];
         return false;
       }
+    }
+
+    if (!empty($this->bulkTransaction)) {
+      $sentEmail->setSepaBulkTransaction($this->sepaBulkTransaction);
+      $this->sepaBulkTransaction->addPreNotificationEmail($sentEmail);
     }
 
     return $sentEmail;

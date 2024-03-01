@@ -52,7 +52,7 @@ use OCA\CAFEVDB\Common\Util;
  *    }
  * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\CompositePaymentsRepository")
- *
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\CompositePaymentEntityListener"})
  * @ORM\HasLifecycleCallbacks
  */
 class CompositePayment implements \ArrayAccess, \JsonSerializable
@@ -156,13 +156,29 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    *
-   * This is the unique message id from the email sent to the payees.
+   * This is the unique message id from the email sent to the payees. However,
+   * the connectivity between the sent-emails table and the CompositePayments
+   * table unfortunately is as of yet broken, so we keep stray notification
+   * message ids as is and add a new association which is filled with the
+   * existing entities in a migration step.
    *
    * @ORM\Column(type="string", length=512, nullable=true)
    *
    * @todo Check why this is not a relation to the SentEmail entity.
    */
   private $notificationMessageId;
+
+  /**
+   * @var SentEmail
+   *
+   * Pre notification email sent out to the recipients.
+   *
+   * @ORM\OneToOne(targetEntity="SentEmail", inversedBy="compositePayment")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="pre_notification_message_id", referencedColumnName="message_id", nullable=true),
+   * )
+   */
+  private $preNotificationEmail;
 
   /**
    * @var Project
@@ -538,6 +554,36 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set preNotificationEmail.
+   *
+   * @param null|SentEmail $preNotificationEmail
+   *
+   * @return CompositePayment
+   */
+  public function setPreNotificationEmail(?SentEmail $preNotificationEmail):CompositePayment
+  {
+    if ($preNotificationEmail !== null) {
+      $this->notificationMessageId = $preNotificationEmail->getMessageId();
+      $preNotificationEmail->setCompositePayment($this); // but we are the owner ...
+    } else {
+      $this->notificationMessageId = null;
+    }
+    $this->preNotificationEmail = $preNotificationEmail;
+
+    return $this;
+  }
+
+  /**
+   * Get preNotificationEmail.
+   *
+   * @return null|SentEmail
+   */
+  public function getPreNotificationEmail():?SentEmail
+  {
+    return $this->preNotificationEmail;
+  }
+
+  /**
    * Set donationReceipt.
    *
    * @param null|string $donationReceipt
@@ -850,46 +896,6 @@ class CompositePayment implements \ArrayAccess, \JsonSerializable
   {
     $this->subject = $this->generateSubject($transliterate);
     return $this;
-  }
-
-  /**
-   * @var null|array
-   *
-   * The array of changed field values.
-   */
-  private $preUpdateValue = [];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PreUpdate
-   */
-  public function preUpdate(Event\PreUpdateEventArgs $event)
-  {
-    $field = 'notificationMessageId';
-    if ($event->hasChangedField($field)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      // $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $oldValue = $event->getOldValue($field);
-      // $entityManager->dispatchEvent(new Events\PreChangeUserIdSlug($entityManager, $this, $oldValue, $event->getNewValue($field)));
-      $this->preUpdateValue[$field] = $oldValue;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PostUpdate
-   */
-  public function postUpdate(Event\LifecycleEventArgs $event)
-  {
-    $field = 'notificationMessageId';
-    if (array_key_exists($field, $this->preUpdateValue)) {
-      /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PostChangeCompositePaymentNotificationMessageId($entityManager, $this, $this->preUpdateValue[$field]));
-      unset($this->preUpdateValue[$field]);
-    }
   }
 
   /** {@inheritdoc} */

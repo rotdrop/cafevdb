@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,6 +37,8 @@ use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="SentEmails")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\SentEmailsRepository")
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\SentEmailEntityListener"})
  */
 class SentEmail
 {
@@ -170,6 +172,27 @@ class SentEmail
    * @ORM\OrderBy({"bulkRecipients" = "ASC"})
    */
   private $referencedBy;
+
+  /**
+   * @var SepaBulkTransaction
+   *
+   * @ORM\ManyToOne(targetEntity="SepaBulkTransaction", inversedBy="preNotificationEmails")
+   */
+  private $sepaBulkTransaction;
+
+  /**
+   * @var ProjectPayment
+   *
+   * @ORM\OneToOne(targetEntity="CompositePayment", mappedBy="preNotificationEmail")
+   */
+  private $compositePayment;
+
+  /**
+   * @var DonationReceipt
+   *
+   * @ORM\OneToOne(targetEntity="DonationReceipt", mappedBy="notificationMessage")
+   */
+  private $donationReceipt;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -489,5 +512,77 @@ class SentEmail
   public function getProject():?Project
   {
     return $this->project;
+  }
+
+  /**
+   * Sets sepaBulkTransaction.
+   *
+   * @param SepaBulkTransaction $sepaBulkTransaction
+   *
+   * @return SentEmail $this
+   */
+  public function setSepaBulkTransaction(SepaBulkTransaction $sepaBulkTransaction):SentEmail
+  {
+    $this->sepaBulkTransaction = $sepaBulkTransaction;
+
+    return $this;
+  }
+
+  /**
+   * Returns sepaBulkTransactions.
+   *
+   * @return SepaBulkTransaction
+   */
+  public function getSepaBulkTransaction():SepaBulkTransaction
+  {
+    return $this->sepaBulkTransaction;
+  }
+
+  /**
+   * Sets $compositePayment
+   *
+   * @param CompositePayment $compositePayment
+   *
+   * @return SentEmail $this
+   */
+  public function setCompositePayment(CompositePayment $compositePayment):SentEmail
+  {
+    $this->compositePayment = $compositePayment;
+
+    return $this;
+  }
+
+  /**
+   * Returns compositePayments.
+   *
+   * @return CompositePayment
+   */
+  public function getCompositePayment():CompositePayment
+  {
+    return $this->compositePayment;
+  }
+
+  /**
+   * Sets $donationReceipt
+   *
+   * @param DonationReceipt $donationReceipt
+   *
+   * @return SentEmail $this
+   */
+  public function setDonationReceipt(DonationReceipt $donationReceipt):SentEmail
+  {
+    $this->donationReceipt = $donationReceipt;
+
+    return $this;
+  }
+
+  /**
+   * Returns donationReceipts.
+   *
+   * @return DonationReceipt
+   */
+  public function getDonationReceipt():DonationReceipt
+  {
+    return $this->donationReceipt;
   }
 }
