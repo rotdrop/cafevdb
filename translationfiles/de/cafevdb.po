@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cafevdb\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2024-03-01 14:28+0100\n"
-"PO-Revision-Date: 2024-02-22 13:51+0100\n"
+"POT-Creation-Date: 2024-03-01 16:16+0100\n"
+"PO-Revision-Date: 2024-03-01 16:14+0100\n"
 "Last-Translator: Claus-Justus Heine <himself@claus-justus-heine.de>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -1496,12 +1496,13 @@ msgid "Required information \"%s\" not provided."
 msgstr "Die Information \"%s\" wird benötigt, fehlt aber."
 
 #: lib/Controller/DocumentStorageUploadController.php:160
-#, fuzzy, php-format
-#| msgid "Unable to find the option with id \"%1$s\" for field \"%2$s\"."
+#, php-format
 msgid ""
 "Unable to find the database entity with id \"%1$d\" in section \"%2$s\" for "
 "topic \"%3$s\"."
-msgstr "Kann die Option mit Id \"%1$s\" für das Feld \"%2$s\" nicht finden."
+msgstr ""
+"Kann den Datenbankeintrag zur Id \"%1$s\" im Abschnitt \"%2$s\", Stichpunkt "
+"\"%3$s\" nicht finden."
 
 #: lib/Controller/DocumentStorageUploadController.php:176
 #: lib/Controller/SepaDebitMandatesController.php:1217
@@ -1611,6 +1612,8 @@ msgid ""
 "Support for file upload in section \"%2$s\" for the topic \"%3$s\" is "
 "unimplemented."
 msgstr ""
+"Datei-Upload in Abschnitt \"%2$s\", Stichpunkt \"%3$s\" ist nicht "
+"implementiert."
 
 #: lib/Controller/DocumentStorageUploadController.php:428
 #: lib/Controller/DocumentStorageUploadController.php:459
@@ -1619,6 +1622,7 @@ msgstr ""
 #, php-format
 msgid "Support for file upload for entities of type \"%1$s\" is unimplemented."
 msgstr ""
+"Datei-Upload für Datenbankeinträge des Type \"%1$s\" ist nicht implementiert."
 
 #: lib/Controller/DownloadsController.php:114
 #, php-format
@@ -2044,7 +2048,7 @@ msgstr "Kann den Sender anhand der angegeben Id \"%s\" nicht ermitteln."
 #, php-format
 msgid ""
 "Unable to map the given template name \"%s\" to an existing template file."
-msgstr "Kann die Angebene Vorlag \"%s\" keiner Datei zurordnen."
+msgstr "Kann die angebene Vorlage \"%s\" keiner Datei zurordnen."
 
 #: lib/Controller/MailMergeController.php:208
 msgid ""
@@ -4888,7 +4892,7 @@ msgstr "Umsätze zum Sammelauftrag mit der Id %d liegen nicht vor."
 #: lib/EmailForm/RecipientsFilter.php:588
 #, php-format
 msgid "No payment attached to the donation receipt with id %d."
-msgstr ""
+msgstr "Der Zuwendungsbestätigung mit Id %d ist keine Zahlung zugeordnet."
 
 #: lib/EmailForm/RecipientsFilter.php:836
 msgid "member status "
@@ -5217,10 +5221,9 @@ msgstr ""
 "k"
 
 #: lib/Maintenance/Migrations/CreateTableDonationReceipts.php:72
-#, fuzzy
-#| msgid "Provide a table for recording issued invoices."
 msgid "Provide a table for recording sent out donation receipts."
-msgstr "Eine Tabelle für gestellte Rechnungen zur Verfügung stellen."
+msgstr ""
+"Eine Tabelle für versendete Spendenbescheinigungen zur Verfügung stellen."
 
 #: lib/Maintenance/Migrations/CreateTableInvoices.php:60
 msgid "Provide a table for recording issued invoices."
@@ -5338,7 +5341,7 @@ msgstr "Einige Dateispeicher ids aufräumen."
 
 #: lib/Maintenance/Migrations/SanitizeSentEmailAssociations.php:66
 msgid "Sanitize the sent-email connectivity."
-msgstr ""
+msgstr "Die Verweise auf versendete Emails aufräumen."
 
 #: lib/Maintenance/Sanitizers/AbstractSanitizer.php:142
 #: lib/Maintenance/Sanitizers/AbstractSanitizer.php:151
@@ -5409,17 +5412,13 @@ msgstr "Protestieren"
 
 #: lib/PageRenderer/DonationReceipts.php:154
 #: lib/PageRenderer/Util/Navigation.php:757
-#, fuzzy
-#| msgid "donation receipt"
 msgid "Donation Receipts"
-msgstr "Zuwendungsbestätigung"
+msgstr "Zuwendungsbestätigungen"
 
 #: lib/PageRenderer/DonationReceipts.php:281
 #: lib/PageRenderer/DonationReceipts.php:389
-#, fuzzy
-#| msgid "Payments"
 msgid "Payment"
-msgstr "Zahlungen"
+msgstr "Zahlung"
 
 #: lib/PageRenderer/DonationReceipts.php:285
 #: lib/PageRenderer/ProjectPayments.php:927
@@ -5463,10 +5462,8 @@ msgstr "Benutzerkennung"
 
 #: lib/PageRenderer/DonationReceipts.php:388
 #: lib/PageRenderer/ProjectPayments.php:476
-#, fuzzy
-#| msgid "Payments"
 msgid "Payment Id"
-msgstr "Zahlungen"
+msgstr "Zahlungs-Id"
 
 #: lib/PageRenderer/DonationReceipts.php:444
 #: lib/PageRenderer/FieldTraits/ParticipantFieldsTrait.php:1571
@@ -5492,20 +5489,16 @@ msgid "Amount"
 msgstr "Betrag"
 
 #: lib/PageRenderer/DonationReceipts.php:494
-#, fuzzy
-#| msgid "Amount Paid"
 msgid "Amount Waived"
-msgstr "Bezahlt"
+msgstr "Verzichtsbetrag"
 
 #: lib/PageRenderer/DonationReceipts.php:530
-#, fuzzy
-#| msgid "Instrumentation"
 msgid "inconsistent donation"
-msgstr "Besetzung"
+msgstr "inkonsistente Spendenbeträge"
 
 #: lib/PageRenderer/DonationReceipts.php:531
 msgid "consistency checks passed"
-msgstr ""
+msgstr "Konsistenztests waren erfolgreich"
 
 #. TRANSLATORS src/views/FilesTab.vue:141
 #: lib/PageRenderer/DonationReceipts.php:545
@@ -5531,25 +5524,19 @@ msgstr "Projekt-Jahr"
 
 #: lib/PageRenderer/DonationReceipts.php:587
 msgid "Local Copy"
-msgstr ""
+msgstr "Lokale Kopie"
 
 #: lib/PageRenderer/DonationReceipts.php:670
-#, fuzzy
-#| msgid "Tax Exemption Notices"
 msgid "Tax Exemption Notice"
-msgstr "Freistellungsbescheide"
+msgstr "Freistellungsbescheid"
 
 #: lib/PageRenderer/DonationReceipts.php:698
-#, fuzzy
-#| msgid "Filing Date"
 msgid "Mailing Date"
-msgstr "Einreichungsdatum"
+msgstr "Versanddatum"
 
 #: lib/PageRenderer/DonationReceipts.php:707
-#, fuzzy
-#| msgid "Invalid Since"
 msgid "Invalidated"
-msgstr "Ablaufdatum"
+msgstr "Löschdatum"
 
 #: lib/PageRenderer/DonationReceipts.php:722
 #: lib/PageRenderer/Musicians.php:1015
@@ -6857,10 +6844,8 @@ msgid "Payments for project \"%s\""
 msgstr "Zahlungen für das Projekt \"%s\""
 
 #: lib/PageRenderer/ProjectPayments.php:324
-#, fuzzy
-#| msgid "Payments for project \"%s\""
 msgid "Payments for all projects"
-msgstr "Zahlungen für das Projekt \"%s\""
+msgstr "Zahlungen für alle Projekte"
 
 #: lib/PageRenderer/ProjectPayments.php:457
 msgid "General accounting data"
@@ -7613,16 +7598,10 @@ msgstr ""
 "anzeigen."
 
 #: lib/PageRenderer/Util/Navigation.php:758
-#, fuzzy
-#| msgid ""
-#| "Display a table an overview table with exemption notices received by tax "
-#| "offices."
 msgid ""
 "Display a table an overview table with donation receipts send out to "
 "donators."
-msgstr ""
-"Eine Übersicht über die ausgestellen Freistellungsbescheide der Finanzämter "
-"anzeigen."
+msgstr "Eine Übersicht über die versendeten Zuwendungsbestätigungen anzeigen."
 
 #: lib/Service/AppMTimeService.php:93
 #, php-format
@@ -8968,36 +8947,24 @@ msgid ""
 "is the display name of the donator in camel-case, PROJECT is the name of the "
 "associated project and the file extension EXT should be `pdf`."
 msgstr ""
+"# Zuwendungsbestätigungen\n"
+"\n"
+"## Was ist das hier?\n"
+"\n"
+"Das ist ein \"virtueller\" Ordner, der alle erzeugten "
+"Zuwendungsbestätigungen anzeigt, gruppiert nach dem Jahr der Spende. Die "
+"Zuwendungsbestätigungen können auch in der Datenbank mittels der [%2$s App]"
+"(%3$s) angeschaut werden, mit zusätzlichen Informationen dort.\n"
+"\n"
+"## Schema der Dateinamen\n"
+"ZuwendungsBestätigung-ZAHLUNGS_ID-PERSON-PROJEKT.EXT\\n\"\n"
+"\n"
+"wobei ZAHLUNGS_ID die numerische Id der zugeordneten Zahlung ist, PERSON der "
+"Anzeigenahme des Spenders und PROJEKT das zugeordnete Projekt. EXT sollte "
+"eigentlich immer \"pdf\" sein."
 
 #: lib/Service/ToolTipsDataService.php:223
-#, fuzzy, php-format
-#| msgid ""
-#| "# Notices of Tax Exemption\n"
-#| "## What's This?\n"
-#| "\n"
-#| "This is a virtual folder giving direct access to stored copies -- "
-#| "probably scans of the real documents -- of notices of exemption from "
-#| "various tax-types, as issued on request by the respective tax "
-#| "authorities. The main overview table with additional information is "
-#| "accessible through the [%2$s table](%3$s).\n"
-#| "\n"
-#| "## Naming Scheme\n"
-#| "```\n"
-#| "TaxExemptionNotice-TAX_TYPE-YYYY-YYYY\n"
-#| "```\n"
-#| "\n"
-#| "where `TAX_TYPE` is one of \"%1$s\".\n"
-#| "\n"
-#| "- it is to some extend possible to rename the entries and push back the "
-#| "changes to the overview table of existing notices of exemption\n"
-#| "\n"
-#| "- in order to do so the naming scheme must be strictly respected (no "
-#| "spaces, do not change hyphens to underscores, do not change the casing "
-#| "etc.).\n"
-#| "\n"
-#| "- so if you are well-behaved and polite, then changing the years and the "
-#| "tax-types is allowed *and* those changes will be written back to the "
-#| "[overview table in the database](%2$s).\n"
+#, php-format
 msgid ""
 "# Notices of Tax Exemption\n"
 "## What's This?\n"
@@ -9631,10 +9598,8 @@ msgstr ""
 "wie \"unbekannt\", \"Ende des 19ten Jahrhunderts\", \"um 1900\" usw."
 
 #: lib/Service/ToolTipsDataService.php:441
-#, fuzzy
-#| msgid "Further \"not so important\" data of the participant."
 msgid "Further \"not so important\" data."
-msgstr "Weitere \"nicht so wichtige\" Daten über die Person."
+msgstr "Weitere \"nicht so wichtige\" Daten."
 
 #: lib/Service/ToolTipsDataService.php:445
 msgid "Attach a supporting document."
@@ -9692,6 +9657,13 @@ msgid ""
 "to zero (but don't) in order to have a donation which is a waiving of "
 "reimbursement."
 msgstr ""
+"Falls das Kästchen nicht angekreuzt ist, gibt es ernsthafte\n"
+"Konsistenzprobleme mit der Spende. Entweder ist die Zahlung nicht als\n"
+"Spende markiert, oder der Betrag ist negativ (also eine Ausgabe, keine\n"
+"Einnahme), oder die Zahlung besteht aus mehreren Teilen mit negativen\n"
+"und positiven Beträgen und sollte also eine Verzicht auf Aufwendungen\n"
+"sein. In dem Fall müssen sich aber alle Zahlungen zu 0 summieren, was\n"
+"möglicherweise aber nicht der Fall ist."
 
 #: lib/Service/ToolTipsDataService.php:462
 msgid ""
@@ -9699,6 +9671,9 @@ msgid ""
 "proper donation\n"
 "amount. In this case this donation is a waiving of reimbursement"
 msgstr ""
+"Falls nicht 0, dann muss dieser Betrag negativ sein und zusammen mit\n"
+"dem Spendenbetrag 0 ergeben. In dem Fall handelt es sich um einen\n"
+"Verzicht auf Aufwandsentschädigung."
 
 #: lib/Service/ToolTipsDataService.php:468
 msgid "Display name, pre-name, instruments, status, general remarks."
@@ -12700,10 +12675,8 @@ msgid "TaxExemptionNotices"
 msgstr "FreistellungsBescheide"
 
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:129
-#, fuzzy
-#| msgid "donation receipt"
 msgid "DonationReceipts"
-msgstr "Zuwendungsbestätigung"
+msgstr "Zuwendungsbestätigungen"
 
 #. TRANSLATORS: file-name
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:149
@@ -12726,7 +12699,7 @@ msgstr "FreistellungsBescheid-%1$s-%2$04d-%3$04d"
 #: lib/Storage/Database/DatabaseStorageNodeNameTrait.php:290
 #, php-format
 msgid "DonationReceipt-%1$d-%2$s-%3$s"
-msgstr ""
+msgstr "ZuwendungsBestätigung-%1$d-%2$s-%3$s"
 
 #: lib/Storage/Database/DonationReceiptsStorage.php:142
 #: lib/Storage/Database/ProjectParticipantsStorage.php:275
@@ -12938,10 +12911,8 @@ msgid "exemption-notices"
 msgstr "FreistellungsBescheide"
 
 #: lib/Traits/ConfigTrait.php:767
-#, fuzzy
-#| msgid "donation receipt"
 msgid "donation-receipts"
-msgstr "Zuwendungsbestätigung"
+msgstr "Zuwendungsbestätigungen"
 
 #: lib/Traits/InitialStateTrait.php:113
 msgid "Select a filter option."
@@ -18837,40 +18808,6 @@ msgid ""
 "activated at the same time."
 msgstr "Zeigt einfach alle Spalten an."
 
-#, php-format
-#~ msgid ""
-#~ "Unable to find composite-payment for musician id \"%1$d\" with payment id "
-#~ "\"%2$d\"."
-#~ msgstr ""
-#~ "Kann die Buchung für die Person \"%1$d\" mit Zahlungs-Id \"%2$d\" nicht "
-#~ "finden."
-
-#, php-format
-#~ msgid ""
-#~ "We have no supporting document for the payment \"%1$s\", so we cannot "
-#~ "delete it."
-#~ msgstr ""
-#~ "Es ist kein Zahlungsbeleg zu Buchung \"%1$s\" gespeichert, kann also auch "
-#~ "nicht gelöscht werden."
-
-#, php-format
-#~ msgid ""
-#~ "Successfully deleted the supporting document for the payment \"%1$s\", "
-#~ "please upload a new one!"
-#~ msgstr ""
-#~ "Zahlungsbeleg zur Buchnung \"%1$s\" gelöscht, bitte den korrekten Beleg "
-#~ "hochladen!"
-
-#, php-format
-#~ msgid "Unable to find the tax exemption notice with id \"%1$d\"."
-#~ msgstr "Konnte den Freistellungsbescheid mit der Id \"%1$d\" nicht finden."
-
-#~ msgid "guessed value: "
-#~ msgstr "mutmaßlich: %s"
-
-#~ msgid "auto-detected: "
-#~ msgstr "mutmaßlich: "
-
 #~ msgid "Remove all options."
 #~ msgstr "Alle ausgewählten Optionen entfernen"
 
@@ -18918,6 +18855,40 @@ msgstr "Zeigt einfach alle Spalten an."
 #~ msgstr ""
 #~ "Es gibt bereits ein Verzeichnis oder eine Datei mit dem Namen "
 #~ "\"{dirName}\"."
+
+#, php-format
+#~ msgid ""
+#~ "Unable to find composite-payment for musician id \"%1$d\" with payment id "
+#~ "\"%2$d\"."
+#~ msgstr ""
+#~ "Kann die Buchung für die Person \"%1$d\" mit Zahlungs-Id \"%2$d\" nicht "
+#~ "finden."
+
+#, php-format
+#~ msgid ""
+#~ "We have no supporting document for the payment \"%1$s\", so we cannot "
+#~ "delete it."
+#~ msgstr ""
+#~ "Es ist kein Zahlungsbeleg zu Buchung \"%1$s\" gespeichert, kann also auch "
+#~ "nicht gelöscht werden."
+
+#, php-format
+#~ msgid ""
+#~ "Successfully deleted the supporting document for the payment \"%1$s\", "
+#~ "please upload a new one!"
+#~ msgstr ""
+#~ "Zahlungsbeleg zur Buchnung \"%1$s\" gelöscht, bitte den korrekten Beleg "
+#~ "hochladen!"
+
+#, php-format
+#~ msgid "Unable to find the tax exemption notice with id \"%1$d\"."
+#~ msgstr "Konnte den Freistellungsbescheid mit der Id \"%1$d\" nicht finden."
+
+#~ msgid "guessed value: "
+#~ msgstr "mutmaßlich: %s"
+
+#~ msgid "auto-detected: "
+#~ msgstr "mutmaßlich: "
 
 #~ msgid "Receipt"
 #~ msgstr "Quittung"
