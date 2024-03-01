@@ -129,9 +129,6 @@ class DonationReceipts extends PMETableViewBase
     ],
   ];
 
-  /** @var UserStorage */
-  protected $userStorage;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
@@ -140,7 +137,7 @@ class DonationReceipts extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    UserStorage $userStorage,
+    protected UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 

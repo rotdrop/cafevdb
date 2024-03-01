@@ -63,9 +63,6 @@ class TaxExemptionNotices extends PMETableViewBase
    */
   private array $taxTypeNames;
 
-  /** @var UserStorage */
-  protected $userStorage;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ConfigService $configService,
@@ -74,7 +71,7 @@ class TaxExemptionNotices extends PMETableViewBase
     PHPMyEdit $phpMyEdit,
     ToolTipsService $toolTipsService,
     PageNavigation $pageNavigation,
-    UserStorage $userStorage,
+    protected UserStorage $userStorage,
   ) {
     parent::__construct(self::TEMPLATE, $configService, $requestParameters, $entityManager, $phpMyEdit, $toolTipsService, $pageNavigation);
 
