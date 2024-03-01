@@ -117,6 +117,7 @@ class phpMyEdit
 	const FDD_VALUES2 = 'values2';
 
 	const OPT_DISPLAY = 'display';
+	const OPT_DATA = 'data';
 
 	const OPT_TRIGGERS = 'triggers';
 	const TRIGGER_DATA = 'data';
@@ -191,6 +192,8 @@ class phpMyEdit
 	public $dfltsfn;	// default sort field number
 	public $cur_tab;	// current selected tab
 	public $page_type;	// current page type
+	public $css;        // various options for css classes
+	public $data;       // data attributes to be attached to elements.
 
 	// Operation
 	public $navop;		// navigation buttons/operations
@@ -2741,9 +2744,21 @@ class phpMyEdit
 		}
 
 		if ($this->display['form']) {
-			echo '<form class="'.$this->getCSSclass('form').' '.$css_class.'" method="post"';
-			echo ' action="',$page_name,'" name="'.$this->cgi['prefix']['sys'].'form">',"\n";
-			echo '  <input type="hidden" autofocus="autofocus" />'; // jquery hack.
+			$css_class = $this->getCSSclass('form') . ' ' . $css_class;
+			$form = <<<EOT
+<form class="{$css_class}"
+      method="post"
+      action="{$page_name}"
+      name="{$this->cgi['prefix']['sys']}form"
+EOT;
+			foreach (($this->data['form'] ?? []) as $key => $value) {
+				$form .= '
+      data-' . $key . '="' . $this->enc($value) . '"';
+			}
+			$form .= '
+      >
+         <input type="hidden" autofocus="autofocus" />';
+			echo $form;
 		}
 		return true;
 	} /* }}} */
@@ -3326,7 +3341,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
 			$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 			if (is_callable($prefix)) {
-				echo call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
+				echo call_user_func($prefix, self::OPERATION_DISPLAY, 'prefix', $k, $row, $this);
 			} else {
 				echo $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 			}
@@ -3335,7 +3350,7 @@ class phpMyEdit
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
 			$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			if (is_callable($postfix)) {
-				echo call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
+				echo call_user_func($postfix, self::OPERATION_DISPLAY, 'postfix', $k, $row, $this);
 			} else {
 				echo $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 			}
@@ -3346,16 +3361,16 @@ class phpMyEdit
 	/**
 	 * Returns CSS class name
 	 */
-	function getCSSclass(string $name, $position  = null, $divider = null, $postfix = null, $postfix_data = null) /* {{{ */
+	function getCSSclass(array|string $name, $position  = null, $divider = null, $postfix = null, $postfix_data = null) /* {{{ */
 	{
 		static $div_idx = -1;
 		$pfx = '';
 		if ($this->css['separator'] === ' ') {
 			$pfx = $this->css['prefix'].'-';
-			$elements = [ $name, ];
+			$elements = is_array($name) ? $name : [ $name, ];
 		} else {
 			// ????
-			$elements = array_merge([ $this->css['prefix'] ], [ $name ]);
+			$elements = array_merge([ $this->css['prefix'] ], is_array($name) ? $name : [ $name, ]);
 		}
 		if ($this->page_type && $this->css['page_type']) {
 			if ($this->page_type != 'L' && $this->page_type != 'F') {
@@ -4046,7 +4061,6 @@ class phpMyEdit
 							$help = null,
 							$attributes = null)
 	{
-		$this->logInfo('KV AR ' . print_r($kv_array, true));
 		$ret = '';
 		if ($multiple) {
 			if (! is_array($selected) && $selected !== null) {
@@ -4083,18 +4097,14 @@ class phpMyEdit
 			}
 			unset($dataValue);
 		}
-		$kv_keys = array_filter(array_keys($kv_array));
-		if (count($kv_keys) == 1 || count($kv_array) == 1 || $multiple) {
+		if (count($kv_array) == 1 || $multiple) {
 			$type = 'checkbox';
-			krsort($kv_array);
-			$this->logInfo('KV AR ' . print_r($kv_array, true) . ' ' . print_r($kv_keys, true));
 		} else {
 			$type = 'radio';
 		}
 		$br = count($kv_array) == 1 ? '' : '<br>';
 		$found = false;
-		foreach ($kv_keys as $key) {
-			$value = $kv_array[$key];
+		foreach ($kv_array as $key => $value) {
 			$tip = empty($kt_array[$key]) ? $help : $kt_array[$key];
 			$labelhelp = !empty($tip)
 				? ' title="'.$this->enc($tip).'" '
@@ -5063,7 +5073,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
 					$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 					if (is_callable($prefix)) {
-						$cell .= call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
+						$cell .= call_user_func($prefix, self::OPERATION_DISPLAY, 'prefix', $k, $row, $this);
 					} else {
 						$cell .= $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 					}
@@ -5072,7 +5082,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
 					$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 					if (is_callable($postfix)) {
-						$cell .= call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
+						$cell .= call_user_func($postfix, self::OPERATION_DISPLAY, 'postfix', $k, $row, $this);
 					} else {
 						$cell .= $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 					}
@@ -5619,7 +5629,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k][self::FDD_DISPLAY]['prefix'])) {
 					$prefix = $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 					if (is_callable($prefix)) {
-						echo call_user_func($prefix, 'display', 'prefix', $k, $row, $this);
+						echo call_user_func($prefix, self::OPERATION_DISPLAY, 'prefix', $k, $row, $this);
 					} else {
 						echo $this->fdd[$k][self::FDD_DISPLAY]['prefix'];
 					}
@@ -5628,7 +5638,7 @@ class phpMyEdit
 				if (isset($this->fdd[$k][self::FDD_DISPLAY]['postfix'])) {
 					$postfix = $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 					if (is_callable($postfix)) {
-						echo call_user_func($postfix, 'display', 'postfix', $k, $row, $this);
+						echo call_user_func($postfix, self::OPERATION_DISPLAY, 'postfix', $k, $row, $this);
 					} else {
 						echo $this->fdd[$k][self::FDD_DISPLAY]['postfix'];
 					}
@@ -5683,19 +5693,22 @@ class phpMyEdit
 			}
 			$formCssSelector = self::OPERATION_CHANGE;
 		} else {
-			if ($this->add_operation() || $this->copy_operation()) {
-				$formCssSelector = self::OPERATION_COPY_ADD;
-				$trigger = self::SQL_QUERY_INSERT;
-			}
-			if ($this->view_operation()) {
-				$formCssSelector = self::OPERATION_VIEW;
-				$trigger = self::SQL_QUERY_SELECT;
-			}
-			if ($this->delete_operation()) {
+			switch (true) {
+			case $this->delete_operation():
 				$formCssSelector = self::OPERATION_DELETE;
 				$trigger = self::SQL_QUERY_DELETE;
-			} else {
+				break;
+			case $this->view_operation():
+				$formCssSelector = self::OPERATION_VIEW;
+				$trigger = self::SQL_QUERY_SELECT;
+				break;
+			case ($this->add_operation() || $this->copy_operation()):
+				$formCssSelector = self::OPERATION_COPY_ADD;
+				$trigger = self::SQL_QUERY_INSERT;
+				break;
+			default:
 				$formCssSelector = self::OPERATION_LIST;
+				break;
 			}
 			$ret = $this->exec_triggers_simple($trigger, self::TRIGGER_PRE);
 			// if PRE insert/view/delete fail, then back to the list
@@ -5727,6 +5740,8 @@ class phpMyEdit
 
 		$postfix = $this->css['postfix'];
 		$formCssClass = $this->getCSSclass($formCssSelector, null, null, $postfix, $row);
+
+		$this->logInfo('FORM SELECTOR ' . $formCssClass . ' ' . $formCssSelector);
 
 		$this->form_begin($formCssClass);
 		echo '<div class="'.$this->getCSSclass('navigation-container', 'up').'">'."\n";
@@ -7194,7 +7209,7 @@ class phpMyEdit
 		$this->url['images'] = 'images/alt/';
 		isset($opts['url']['images']) && $this->url['images'] = $opts['url']['images'];
 		// CSS classes policy
-		$this->css = @$opts['css'];
+		$this->css = $opts['css'] ?? null;
 		!isset($this->css['textarea'])  && $this->css['textarea']  = '';
 		!isset($this->css['separator']) && $this->css['separator'] = '-';
 		!isset($this->css['prefix'])	&& $this->css['prefix']	   = 'pme';
@@ -7204,6 +7219,9 @@ class phpMyEdit
 		!isset($this->css['divider'])	&& $this->css['divider']   = 2;
 		!isset($this->css['row'])   	&& $this->css['row']       = '';
 		$this->css['divider'] = intval(@$this->css['divider']);
+
+		$this->data = $opts['data'] ?? null;
+
 		// JS overall configuration
 		$this->js = @$opts['js'];
 		!isset($this->js['prefix']) && $this->js['prefix'] = 'PME_js_';
@@ -7232,6 +7250,8 @@ class phpMyEdit
 				$this->labels['Sort Field'] = $opts['labels']['Sort Field'];;
 			}
 		}
+
+
 		$this->tooltips = array();
 		if (isset($opts['tooltips']) && (is_array($opts['tooltips']) || ($opts['tooltips'] instanceof \ArrayAccess))) {
 			$this->tooltips = $opts['tooltips'];
