@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Command;
 
+use Throwable;
+
 use OCP\IL10N;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IUserSession;
@@ -64,11 +66,19 @@ class SentNotifications extends Command
    */
   private array $imapMessages = [];
 
-  /** @var array<sting, Entities\SentEmail>
+  /**
+   * @var array<sting, Entities\SentEmail>
    *
    * The SentEmail entities retrieved so far.
    */
   private array $sentEmails = [];
+
+  /**
+   * @var array<string, Entities\CompositePayment
+   *
+   * Payments with broken SentEmail links.
+   */
+  private array $payments = [];
 
   /**
    * @var bool
@@ -161,22 +171,6 @@ class SentNotifications extends Command
       return $result;
     }
 
-    if (!empty($imapOptions)) {
-      if (isset($imapOptions['user']) && !isset($imapOptions['pass'])) {
-        $helper = $this->getHelper('question');
-        $question = (new Question($this->l->t('IMAP Password') . ': ', ''))->setHidden(true);
-        $imapOptions['pass'] = $helper->ask($input, $output, $question);
-      }
-    }
-
-    $this->imapService->setAccount(
-      host: $imapOptions['host'] ?? null,
-      port: $imapOptions['port'] ?? null,
-      security: $imapOptions['scheme'] ?? null,
-      user: $imapOptions['user'] ?? null,
-      password: $imapOptions['pass'] ?? null,
-    );
-
     if ($input->getOption(self::ACTION_LIST_MISSING) || $input->getOption(self::ACTION_ADD_MISSING)) {
       $sentEmailsRepository = $this->getDatabaseRepository(Entities\SentEmail::class);
       $payments = $this->getDatabaseRepository(Entities\CompositePayment::class)->findBy(
@@ -198,6 +192,7 @@ class SentNotifications extends Command
           $this->sentEmails[$notificationMessageId] = $sentEmail; // remember for later
           continue;
         }
+        $this->payments[$notificationMessageId] = $payment; // remember in order to reconstruct the SentEmail link.
         $rows[$notificationMessageId] = [
           $notificationMessageId,
           $payment->getDateOfReceipt()->format('Y-m-d'),
@@ -208,6 +203,27 @@ class SentNotifications extends Command
       if (!empty($messageIdOptions)) {
         $rows = array_filter($rows, fn(array $row) => in_array($row[0], $messageIdOptions));
       }
+
+      if (count($rows) == 0) {
+        $output->writeln('<info>' . $this->l->t('All email notifications seem to be recorded in the database.') . '</info>');
+        return 0;
+      }
+
+      if (!empty($imapOptions)) {
+        if (isset($imapOptions['user']) && !isset($imapOptions['pass'])) {
+          $helper = $this->getHelper('question');
+          $question = (new Question($this->l->t('IMAP Password') . ': ', ''))->setHidden(true);
+          $imapOptions['pass'] = $helper->ask($input, $output, $question);
+        }
+      }
+
+      $this->imapService->setAccount(
+        host: $imapOptions['host'] ?? null,
+        port: $imapOptions['port'] ?? null,
+        security: $imapOptions['scheme'] ?? null,
+        user: $imapOptions['user'] ?? null,
+        password: $imapOptions['pass'] ?? null,
+      );
 
       $messageIds = array_map(fn(array $row) => $row[0], $rows);
       $imapMessages = $this->imapService->searchMessageId($messageIds);
@@ -255,7 +271,37 @@ class SentNotifications extends Command
 
     if ($input->getOption(self::ACTION_ADD_MISSING)) {
       foreach ($imapMessages as $messageId => $imapMessage) {
-        $this->reconstructSentEmailEntity($imapMessage);
+        $sentEmail = $this->reconstructSentEmailEntity($imapMessage);
+        $this->entityManager->beginTransaction();
+        try {
+          /** @var Entities\CompositePayment $payment */
+          $payment = $this->payments[$messageId];
+          $payment->setPreNotificationEmail($sentEmail);
+          $sentEmail->setCompositePayment($payment);
+
+          $sepaTransaction  = $payment->getSepaTransaction();
+          if (!empty($sepaTransaction)) {
+            $sentEmail->setSepaBulkTransaction($sepaTransaction);
+          }
+
+          $this->persist($sentEmail);
+          $this->flush();
+
+          $this->entityManager->commit();
+        } catch (Throwable $t) {
+          $this->entityManager->rollback();
+          $output->writeln(
+            '<error>'
+            . $this->l->t(
+              'Reconstruction of "%1$s" failed: %2$s.',
+              [
+                $messageId,
+                $t->getMessage(),
+              ],
+            )
+            . '</error>');
+          throw $t;
+        }
       }
     }
 
@@ -298,8 +344,7 @@ class SentNotifications extends Command
       ->setSubjectHash(hash('md5', $sentEmail->getSubject()))
       ->setHtmlBodyHash(hash('md5', $sentEmail->getHtmlBody()))
       ;
-    $references = $imapMessage->getRawReferences();
-    $this->logInfo('RAW REFERENCES ' . print_r($references, true));
+    // $references = $imapMessage->getRawReferences();
 
     return $sentEmail;
   }
