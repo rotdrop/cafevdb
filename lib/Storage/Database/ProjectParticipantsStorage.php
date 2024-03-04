@@ -81,7 +81,6 @@ class ProjectParticipantsStorage extends Storage
       try {
         $projectId = $this->participant->getProject()->getId();
         $musicianId = $this->participant->getMusician()->getId();
-        $this->clearDatabaseRepository();
 
         $this->getRootFolder(create: false);
 

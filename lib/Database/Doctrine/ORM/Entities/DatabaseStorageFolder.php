@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
+use InvalidArgumentException;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
 use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
@@ -63,6 +65,21 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
     $this->directoryEntries = new ArrayCollection;
   }
   // phpcs:enable
+
+  /**
+   * @param DatabaseStorage $storage
+   *
+   * @return DatabaseStorageFolder
+   */
+  public function setStorage(DatabaseStorage $storage):DatabaseStorageFolder
+  {
+    if (!$this->isRootFolder()) {
+      throw new InvalidArgumentException('The storage may only be set on the root entity.');
+    }
+    $this->storage = $storage;
+
+    return $this;
+  }
 
   /**
    * @param DatabaseStorageDirEntry $dirEntry

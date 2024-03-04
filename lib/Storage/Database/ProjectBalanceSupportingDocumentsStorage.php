@@ -70,7 +70,6 @@ class ProjectBalanceSupportingDocumentsStorage extends Storage
       $filterState = $this->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
       try {
         $projectId = $this->project->getId();
-        $this->clearDatabaseRepository();
 
         $this->getRootFolder(create: false);
 

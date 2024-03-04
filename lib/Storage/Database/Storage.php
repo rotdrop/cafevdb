@@ -28,6 +28,7 @@ use \DateTimeInterface;
 use \DateTimeImmutable;
 
 use OCP\Files\IMimeTypeDetector;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\ITempManager;
 
 // F I X M E: those are not public, but ...
@@ -100,6 +101,15 @@ class Storage extends AbstractStorage
     }
 
     $this->filesRepository = $this->getDatabaseRepository(Entities\EncryptedFile::class);
+
+    /** @var IEventDispatcher $eventDispatcher */
+    $eventDispatcher = $this->di(IEventDispatcher::class);
+    $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
+      $this->clearDatabaseRepository();
+      $this->rootFolder = null;
+      $this->storageEntity = null;
+      $this->filesRepository = $this->getDatabaseRepository(Entities\EncryptedFile::class);
+    });
   }
 
   /**
@@ -131,6 +141,7 @@ class Storage extends AbstractStorage
     $rootStorage = (new Entities\DatabaseStorage)
       ->setRoot($rootFolder)
       ->setStorageId($shortId);
+    $rootFolder->setStorage($rootStorage);
     $this->persist($rootFolder);
     $this->persist($rootStorage);
 
