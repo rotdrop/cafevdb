@@ -156,6 +156,11 @@ class SepaBulkTransactionEntityListener
    */
   public function prePersist(Entity $entity, ORMEvent\LifecycleEventArgs $eventArgs)
   {
+    if ($entity->getSubmitDate() != null) {
+      // we should not change transactions which already have been submitted
+      // to the bank.
+      return;
+    }
     $this->entityManager->registerPreCommitAction(function() use ($entity) {
       foreach (SepaBulkTransactionService::EXPORTERS as $format) {
         $this->service->generateTransactionData($entity, format: $format);
