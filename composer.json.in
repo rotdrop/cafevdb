@@ -20,6 +20,7 @@
     "giggsey/libphonenumber-for-php": "^8.12",
     "globalcitizen/php-iban": "^4.0",
     "guzzlehttp/guzzle": "^7.0",
+    "bytestream/horde-imap-client": "*",
     "html2text/html2text": "^4.3",
     "jpgraph/jpgraph": "*",
     "kwn/number-to-words": "^2.8",
