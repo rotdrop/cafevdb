@@ -40,7 +40,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Question\Question;
 
-use OCA\Mail\Model\IMAPMessage;
+use OCA\CAFEVDB\Service\IMAP\IMAPMessage;
+use OCA\Mail\Address;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Service\IMAPService;
@@ -55,6 +56,19 @@ class SentNotifications extends Command
   private const OPTION_DRY_RUN = 'dry';
   private const OPTION_IMAP_URI = 'imap-uri';
   private const OPTION_MESSAGE_ID = 'message-id';
+
+  /**
+   * @var array<string, IMAPMessage>
+   *
+   * A cache of the IMAP-messages retrieved in this run.
+   */
+  private array $imapMessages = [];
+
+  /** @var array<sting, Entities\SentEmail>
+   *
+   * The SentEmail entities retrieved so far.
+   */
+  private array $sentEmails = [];
 
   /**
    * @var bool
@@ -163,7 +177,7 @@ class SentNotifications extends Command
       password: $imapOptions['pass'] ?? null,
     );
 
-    if ($input->getOption(self::ACTION_LIST_MISSING)) {
+    if ($input->getOption(self::ACTION_LIST_MISSING) || $input->getOption(self::ACTION_ADD_MISSING)) {
       $sentEmailsRepository = $this->getDatabaseRepository(Entities\SentEmail::class);
       $payments = $this->getDatabaseRepository(Entities\CompositePayment::class)->findBy(
         [
@@ -181,6 +195,7 @@ class SentNotifications extends Command
         /** @var Entities\SentEmail $sentEmail */
         $sentEmail = $sentEmailsRepository->find([ 'messageId' => $notificationMessageId, ]);
         if (!empty($sentEmail)) {
+          $this->sentEmails[$notificationMessageId] = $sentEmail; // remember for later
           continue;
         }
         $rows[$notificationMessageId] = [
@@ -196,6 +211,13 @@ class SentNotifications extends Command
 
       $messageIds = array_map(fn(array $row) => $row[0], $rows);
       $imapMessages = $this->imapService->searchMessageId($messageIds);
+      /** @var IMAPMessage $imapMessage */
+      foreach ($imapMessages as $key => $imapMessage) {
+        unset($imapMessages[$key]);
+        $imapMessages[$imapMessage->getMessageId()] = $imapMessage;
+      }
+      array_merge($this->imapMessages, $imapMessages);
+
       $output->writeln(
         '<info>'
           . $this->l->t(
@@ -206,10 +228,11 @@ class SentNotifications extends Command
             ]
           )
           . '</info>');
+    }
 
+    if ($input->getOption(self::ACTION_LIST_MISSING)) {
       /** @var IMAPMessage $imapMessage */
-      foreach ($imapMessages as $imapMessage) {
-        $messageId = $imapMessage->getMessageId();
+      foreach ($imapMessages as $messageId => $imapMessage) {
         $subject = $imapMessage->getSubject();
         if (mb_strlen($subject) > 20) {
           $subject = mb_substr($subject, 0, 8) . '...' . mb_substr($subject, -9);
@@ -230,6 +253,54 @@ class SentNotifications extends Command
         ->render();
     }
 
+    if ($input->getOption(self::ACTION_ADD_MISSING)) {
+      foreach ($imapMessages as $messageId => $imapMessage) {
+        $this->reconstructSentEmailEntity($imapMessage);
+      }
+    }
+
     return 0;
+  }
+
+  /**
+   * Try to reconstruct a missing SentEmail entity from the given
+   * IMAP-message. Note that this may involve fetching further data-base
+   * and/or IMAP messages in order to get the references right.
+   *
+   * @param IMAPMessage $imapMessage
+   *
+   * @return Entities\SentEmail
+   */
+  protected function reconstructSentEmailEntity(IMAPMessage $imapMessage):Entities\SentEmail
+  {
+    $bulkRecipients = [];
+    /** @var Address $address */
+    foreach ($imapMessage->getTo() as $address) {
+      $bulkRecipients[] = $address->getLabel() . '<' . $address->getEmail() . '>';
+    }
+    foreach ($imapMessage->getBCC() as $address) {
+      $bulkRecipients[] = $address->getLabel() . '<' . $address->getEmail() . '>';
+    }
+    $carbonCopy = [];
+    foreach ($imapMessage->getCC() as $address) {
+      $carbonCopy[] = $address->getLabel() . '<' . $address->getEmail() . '>';
+    }
+
+    /** @var Entities\SentEmail $sentEmail */
+    $sentEmail = (new Entities\SentEmail);
+    $sentEmail
+      ->setSubject($imapMessage->getSubject())
+      ->setBulkRecipients(implode(';', $bulkRecipients))
+      ->setCc(implode(';', $carbonCopy))
+      ->setMessageId($imapMessage->getMessageId())
+      ->setHtmlBody($imapMessage->htmlMessage)
+      ->setBulkRecipientsHash(hash('md5', $sentEmail->getBulkRecipients()))
+      ->setSubjectHash(hash('md5', $sentEmail->getSubject()))
+      ->setHtmlBodyHash(hash('md5', $sentEmail->getHtmlBody()))
+      ;
+    $references = $imapMessage->getRawReferences();
+    $this->logInfo('RAW REFERENCES ' . print_r($references, true));
+
+    return $sentEmail;
   }
 }
