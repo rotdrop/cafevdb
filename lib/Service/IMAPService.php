@@ -29,6 +29,7 @@ use Throwable;
 
 use Psr\Log\LoggerInterface as ILogger;
 
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Socket;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
@@ -40,9 +41,8 @@ use Horde_Mime_Headers;
 use Horde_Mime_Part;
 
 /** Maybe clone the stuff, but for now we just (ab-)use it */
-use OCA\Mail\IMAP\ImapMessageFetcher;
-use OCA\Mail\IMAP\ImapMessageFetcherFactory;
-use OCA\Mail\Model\IMAPMessage;
+use OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher;
+use OCA\CAFEVDB\Service\IMAP\IMAPMessage;
 
 /**
  * A wrapper around a given IMAP library in order to hide which one actually
@@ -112,12 +112,10 @@ class IMAPService
    *
    * @param ConfigService $configService
    *
-   * @param ImapMessageFetcherFactory $imapMessageFactory
    */
   public function __construct(
     ILogger $logger,
     ConfigService $configService,
-    protected ImapMessageFetcherFactory $imapMessageFactory,
   ) {
     $this->logger = $logger;
     $this->configService = $configService;
@@ -211,7 +209,12 @@ class IMAPService
       ],
     ];
     $this->client = new Horde_Imap_Client_Socket($params);
-    $this->client->login();
+    try {
+      $this->client->login();
+    } catch (Horde_Imap_Client_Exception $e) {
+      $this->logError('LOGIN FAILED ' . $imapSecurity . '://' . urlencode($this->imapUser) . ':' . $this->imapPassword[0] . 'XXX' . ':' . $this->imapHost);
+      throw $e;
+    }
   }
 
   /**
@@ -441,10 +444,13 @@ class IMAPService
         $results,
         array_map(
           fn(Horde_Imap_Client_Data_Fetch $fetchResult)
-          => $this->imapMessageFactory
-                   ->build($fetchResult->getUid(), $folderName, $this->client, 'donotcare')
-                   ->withBody(true)
-                   ->fetchMessage($fetchResult),
+            => (new ImapMessageFetcher(
+              $fetchResult->getUid(),
+              $folderName,
+              $this->client,
+            ))
+            ->withBody(true)
+            ->fetchMessage($fetchResult),
           iterator_to_array($fetchResults),
         ),
       );
