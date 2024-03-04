@@ -1789,6 +1789,20 @@ Störung.';
     $references = [];
     $templateMessageId = $this->getOutboundService()->generateMessageId();
 
+    $customHeaders = [
+      'SENDER-CLOUD-USER' => $this->encrypt($this->userId()),
+    ];
+    if ($this->projectid > 0) {
+      $customHeaders['PROJECT-ID'] = $this->projectId;
+      $customHeaders['PROJECT-NAME'] = $this->projectName;
+    }
+    if ($this->bulkTransactionId > 0) {
+      $customHeaders['BULK-TRANSACTION-ID'] = $this->bulkTransactionId;
+    }
+    if ($this->donationReceiptId > 0) {
+      $customHeaders['DONATION-RECEIPT-ID'] = $this->donationReceiptId;
+    }
+
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
       $this->logInfo(
@@ -1828,11 +1842,24 @@ Störung.';
           continue;
         }
 
+        if (!empty($this->bulkTransaction)) {
+          $payment = $this->bulkTransaction->getPayment($musician);
+          if (empty($payment)) {
+            // this must not happen
+            throw new Exceptions\DatabaseEntityNotFoundException(
+              $this->l->t('Unable to find a payment for the musician "%s" (transaction %d)', [
+                $musician->getPublicName(), $this->bulkTransactionId
+              ])
+            );
+          }
+          $customHeaders['PAYMENT-ID'] = $payment->getId();
+        }
+
         $msg = $this->composeAndSend(
           $strMessage, [ $recipient ], $personalAttachments,
           addCC: false,
           references: $templateMessageId,
-          customHeaders: self::HEADER_MARKER_RECIPIENT,
+          customHeaders: array_merge($customHeaders, self::HEADER_MARKER_RECIPIENT),
         );
         if (!empty($msg['message'])) {
           $this->copyToSentFolder($msg['message']);
@@ -1844,15 +1871,6 @@ Störung.';
           // Don't remember the individual emails, but for
           // debit-mandates record the message id, ignore errors.
           if (!empty($this->bulkTransaction)) {
-            $payment = $this->bulkTransaction->getPayment($musician);
-            if (empty($payment)) {
-              // this must not happen
-              throw new Exceptions\DatabaseEntityNotFoundException(
-                $this->l->t('Unable to find a payment for the musician "%s" (transaction %d)', [
-                  $musician->getPublicName(), $this->bulkTransactionId
-                ])
-              );
-            }
             $payment->setPreNotificationEmail($sentEmailEntity);
             // $this->flush();
           } elseif (!empty($this->donationReceipt)) {
@@ -1875,7 +1893,7 @@ Störung.';
         addCC: true,
         messageId: $templateMessageId,
         references: $references,
-        customHeaders: self::HEADER_MARKER_SENT,
+        customHeaders: array_merge($customHeaders, self::HEADER_MARKER_SENT),
         doNotReply: true,
         allowDuplicates: true,
       );
@@ -2675,7 +2693,13 @@ Störung.';
     $logMessage = new SentEmailDTO;
     $logMessage->recipients = $eMails;
 
-    $customHeaders[] = self::HEADER_MARKER;
+    $customHeaders = array_merge($customHeaders, self::HEADER_MARKER);
+    foreach ($customHeaders as $key => &$value) {
+      if (!str_starts_with($value, self::HEADER_TAG)) {
+        $value = self::HEADER_TAG . '-' . $value;
+      }
+    }
+    unset($value);
 
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -3199,7 +3223,13 @@ Störung.';
     $logMessage = new stdClass;
     $logMessage->recipients = $eMails;
 
-    $customHeaders[] = self::HEADER_MARKER;
+    $customHeaders = array_merge($customHeaders, self::HEADER_MARKER);
+    foreach ($customHeaders as $key => &$value) {
+      if (!str_starts_with($value, self::HEADER_TAG)) {
+        $value = self::HEADER_TAG . '-' . $value;
+      }
+    }
+    unset($value);
 
     // If we are sending to a single address (i.e. if $strMessage has
     // been constructed with per-member variable substitution), then
@@ -3507,6 +3537,20 @@ Störung.';
     $references = [];
     $templateMessageId = $this->getOutboundService()->generateMessageId();
 
+    $customHeaders = [
+      'SENDER-CLOUD-USER' => $this->encrypt($this->userId()),
+    ];
+    if ($this->projectid > 0) {
+      $customHeaders['PROJECT-ID'] = $this->projectId;
+      $customHeaders['PROJECT-NAME'] = $this->projectName;
+    }
+    if ($this->bulkTransactionId > 0) {
+      $customHeaders['BULK-TRANSACTION-ID'] = $this->bulkTransactionId;
+    }
+    if ($this->donationReceiptId > 0) {
+      $customHeaders['DONATION-RECEIPT-ID'] = $this->donationReceiptId;
+    }
+
     if ($hasPersonalSubstitutions || $hasPersonalAttachments) {
 
       if ($this->recipientsFilter->announcementsMailingList()) {
@@ -3532,6 +3576,8 @@ Störung.';
       $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD] = count($recipients)+1;
 
       foreach ($recipients as $recipient) {
+        ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
+
         /** @var Entities\Musician $musician */
         $musician = $recipient['dbdata'];
 
@@ -3552,14 +3598,26 @@ Störung.';
 
         $personalAttachments = $this->composePersonalAttachments($musician);
 
-        ++$this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT];
+        if (!empty($this->bulkTransaction)) {
+          $payment = $this->bulkTransaction->getPayment($musician);
+          if (empty($payment)) {
+            // this must not happen
+            throw new Exceptions\DatabaseEntityNotFoundException(
+              $this->l->t('Unable to find a payment for the musician "%s" (transaction %d)', [
+                $musician->getPublicName(), $this->bulkTransactionId
+              ])
+            );
+          }
+          $customHeaders['PAYMENT-ID'] = $payment->getId();
+        }
+
         $message = $this->composeAndExport(
           $strMessage,
           [ $recipient ],
           $personalAttachments,
           addCC: false,
           references: $templateMessageId,
-          customHeaders: self::HEADER_MARKER_RECIPIENT,
+          customHeaders: array_merge($customHeaders, self::HEADER_MARKER_RECIPIENT),
         );
         if (empty($message) || !empty($this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION])) {
           ++$this->diagnostics[self::DIAGNOSTICS_FAILED_COUNT];
@@ -3582,7 +3640,7 @@ Störung.';
         addCC: true,
         messageId: $templateMessageId,
         references: $references,
-        customHeaders: self::HEADER_MARKER_SENT,
+        customHeaders: array_merge($customHeaders, self::HEADER_MARKER_SENT),
         doNotReply: true,
       );
       if (empty($message) || !empty($this->diagnostics[self::DIAGNOSTICS_ATTACHMENT_VALIDATION])) {
