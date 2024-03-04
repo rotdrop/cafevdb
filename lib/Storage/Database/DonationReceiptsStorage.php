@@ -58,9 +58,6 @@ class DonationReceiptsStorage extends Storage
     /** @var IEventDispatcher $eventDispatcher */
     $eventDispatcher = $this->di(IEventDispatcher::class);
     $eventDispatcher->addListener(Events\EntityManagerBoundEvent::class, function(Events\EntityManagerBoundEvent $event) {
-      $this->logDebug('Entity-manager shoot down, re-fetching cached entities.');
-      $this->clearDatabaseRepository();
-
       $this->getRootFolder(create: false);
       $this->entityRepository = $this->getDatabaseRepository(Entity::class);
     });
