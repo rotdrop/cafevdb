@@ -81,7 +81,7 @@ class IMAPService
     self::SPECIAL_USE_TRASH,
   ];
 
-  private Horde_Imap_Client_Socket $client;
+  private null|Horde_Imap_Client_Socket $client = null;
 
   /**
    * @var null|array
