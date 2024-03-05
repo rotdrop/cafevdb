@@ -71,13 +71,6 @@ class ProjectParticipantEntityListener
   /** @var IUserManager */
   protected IUserManager $userManager;
 
-  /**
-   * @var array
-   * Array of the pre-update values, indexed by musician id. Currently only
-   * needed for the principal email address.
-   */
-  private array $preUpdateValues = [];
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     protected ILogger $logger,
@@ -127,8 +120,7 @@ class ProjectParticipantEntityListener
       $this->entityManager->dispatchEvent(
         new Events\PostChangeRegistrationConfirmation(
           $entity,
-          !empty($this->preUpdateValue[$field],
-          )
+          !empty($this->preUpdateValue[$field]),
         )
       );
       unset($this->preUpdateValues[$key]);

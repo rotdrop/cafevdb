@@ -41,9 +41,6 @@ class CompositePaymentEntityListener
   use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFEVDB\Traits\EntityManagerTrait;
 
-  /** @var EntityManager */
-  protected $entityManager;
-
   /**
    * @var array
    * Array of the pre-update values, indexed by musician id. Currently only
@@ -53,11 +50,9 @@ class CompositePaymentEntityListener
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ILogger $logger,
-    EntityManager $entityManager,
+    protected ILogger $logger,
+    protected EntityManager $entityManager,
   ) {
-    $this->logger = $logger;
-    $this->entityManager = $entityManager;
   }
   // phpcs:enable
 
