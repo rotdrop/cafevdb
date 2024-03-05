@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\Service;
 use Throwable;
 use Exception;
 use RuntimeException;
-use Net_IMAP;
 
 use OCP\IUserManager;
 use OCP\IGroupManager;
@@ -253,11 +252,19 @@ class ConfigCheckService
     string $user,
     string $password,
   ):bool {
-    $imap = new Net_IMAP($host, $port, $secure == 'starttls' ? true : false, 'UTF-8');
-    $result = $imap->login($user, $password) === true;
-    $imap->disconnect();
+    /** @var IMAPService $imapService */
+    $imapService = $this->di(IMAPService::class);
 
-    return $result;
+    $imapService->setAccount($host, $port, $secure, $user, $password);
+    try {
+      $imapService->connect();
+      $imapService->disconnet();
+      return true;
+    } catch (Throwable $t) {
+      $this->logException($t, 'Unable to connect to ' . $secure . '://' . urlencode($user) . ':' . 'XXXX@' . $host . ':' . $port);
+    }
+
+    return false;
   }
 
   /**
