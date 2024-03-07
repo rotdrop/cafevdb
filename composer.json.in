@@ -10,7 +10,6 @@
   ],
   "require": {
     "behat/transliterator": "^1.3.0",
-    "bytestream/horde-imap-client": "*",
     "chillerlan/php-qrcode": "^4.2",
     "cmixin/business-day": "^1.12",
     "components/jquery": "^2.2.0",

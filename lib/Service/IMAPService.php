@@ -29,16 +29,16 @@ use Throwable;
 
 use Psr\Log\LoggerInterface as ILogger;
 
-use Horde_Imap_Client_Exception;
-use Horde_Imap_Client_Socket;
-use Horde_Imap_Client;
-use Horde_Imap_Client_Data_Fetch;
-use Horde_Imap_Client_Data_Envelope;
-use Horde_Imap_Client_Fetch_Query;
-use Horde_Imap_Client_Ids;
-use Horde_Imap_Client_Search_Query;
-use Horde_Mime_Headers;
-use Horde_Mime_Part;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Exception;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Socket;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Fetch;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Data_Envelope;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Fetch_Query;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Ids;
+use OCA\CAFEVDB\Wrapped\Horde_Imap_Client_Search_Query;
+use OCA\CAFEVDB\Wrapped\Horde_Mime_Headers;
+use OCA\CAFEVDB\Wrapped\Horde_Mime_Part;
 
 /** Maybe clone the stuff, but for now we just (ab-)use it */
 use OCA\CAFEVDB\Service\IMAP\ImapMessageFetcher;
@@ -130,15 +130,15 @@ class IMAPService
    * to switch to another email server than configured in the user
    * preferences.
    *
-   * @param null|string $imapHost
+   * @param null|string $host
    *
-   * @param null|string $imapPort
+   * @param null|string $port
    *
-   * @param null|string $imapSecurity
+   * @param null|string $security
    *
-   * @param null|string $imapUser
+   * @param null|string $user
    *
-   * @param null|string $imapPassword
+   * @param null|string $password
    *
    * @return IMAPService
    */
