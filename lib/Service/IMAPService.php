@@ -171,10 +171,17 @@ class IMAPService
   }
 
   /**
+   * @param null|Closure $progressCallback
+   *
+   * @param null|int $chunkSize Call $progressCallback erliest after
+   * transferring this many bytes.
+   *
    * @return void
    */
-  public function connect():void
-  {
+  public function connect(
+    ?Closure $progressCallback,
+    ?int $chunkSize,
+  ):void {
     if (!empty($this->client)) {
       return;
     }
@@ -194,6 +201,19 @@ class IMAPService
 
     // $this->logInfo('IMAP ACCOUNT ' . $imapSecurity . '://' . urlencode($this->imapUser) . ':' . $this->imapPassword[0] . 'XXX' . ':' . $this->imapHost);
 
+    $context = [
+      'ssl' => [
+        'verify_peer' => true,
+        'verify_peer_name' => true,
+      ],
+    ];
+    if ($chunkSize !== null) {
+      $context['chunkSize'] = $chunkSize;
+    }
+    if ($progressCallback !== null) {
+      $context['progressCallback'] = $progressCallback;
+    }
+
     $params = [
       'username' => $this->imapUser,
       'password' => $this->imapPassword,
@@ -201,12 +221,7 @@ class IMAPService
       'port' => $this->imapPort,
       'secure' => $imapSecurity,
       'timeout' => 20,
-      'context' => [
-        'ssl' => [
-          'verify_peer' => true,
-          'verify_peer_name' => true,
-        ],
-      ],
+      'context' => $context,
     ];
     $this->client = new Horde_Imap_Client_Socket($params);
     try {
@@ -223,7 +238,11 @@ class IMAPService
   public function disconnet():void
   {
     if (!empty($this->client)) {
-      $this->client->logout();
+      try {
+        $this->client->logout();
+      } catch (Throwable $t) {
+        $this->logException($t);
+      }
       $this->client = null;
     }
   }
