@@ -27,7 +27,6 @@ namespace OCA\CAFEVDB\EmailForm;
 use \DateTimeImmutable;
 use \DateTimeInterface;
 use \stdClass;
-use \Net_IMAP;
 use \Mail_RFC822;
 use \PHP_IBAN;
 use \DOMDocument;
@@ -67,6 +66,7 @@ use OCA\CAFEVDB\Service\Finance\FinanceService;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
 use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
+use OCA\CAFEVDB\Service\IMAPService;
 use OCA\CAFEVDB\Storage\AppStorage;
 use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
@@ -480,6 +480,7 @@ Störung.';
     private OrganizationalRolesService $organizationRolesService,
     private AppStorage $appStorage,
     private UserStorage $userStorage,
+    private IMAPService $imapService,
   ) {
     $this->l = $this->l10N();
 
@@ -3014,61 +3015,37 @@ Störung.';
    */
   private function copyToSentFolder(string $mimeMessage):bool
   {
-    // PEAR IMAP works without the c-client library
-    ini_set('error_reporting', ini_get('error_reporting') & ~E_STRICT);
-
-    $imapHost   = $this->getConfigValue('imapserver');
-    $imapPort   = $this->getConfigValue('imapport');
-    $imapSecurity = $this->getConfigValue('imapsecurity');
-
-    $progressStatus = $this->progressStatusService->get($this->progressToken);
-    $progressStatus->update(0, null, [
-      'proto' => 'imap',
-      'total' =>  $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD],
-      'active' => $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT],
-    ]);
-    $imap = new Net_IMAP(
-      $imapHost,
-      $imapPort,
-      $imapSecurity == 'starttls' ? true : false, 'UTF-8',
-      function($current, $total) use ($progressStatus) {
-        if ($total < 128) {
-          return; // ignore non-data transfers
-        }
-        $progressStatus->update($current, $total);
-      },
-      self::PROGRESS_CHUNK_SIZE); // 4 kb chunk-size
-
-    $user = $this->getConfigValue('emailuser');
-    $pass = $this->getConfigValue('emailpassword');
-    $ret = $imap->login($user, $pass);
-    if ($ret !== true) {
+    try {
+      $progressStatus = $this->progressStatusService->get($this->progressToken);
+      $progressStatus->update(0, null, [
+        'proto' => 'imap',
+        'total' =>  $this->diagnostics[self::DIAGNOSTICS_TOTAL_PAYLOAD],
+        'active' => $this->diagnostics[self::DIAGNOSTICS_TOTAL_COUNT],
+      ]);
+      $this->imapService->connect(
+        function($current, $total) use ($progressStatus) {
+          $progressStatus->update($current, $total);
+        },
+        self::PROGRESS_CHUNK_SIZE,
+      );
+    } catch (Throwable $t) {
       $this->executionStatus = false;
-      $this->diagnostics[self::DIAGNOSTICS_COPY_TO_SENT]['login'] = $ret->toString();
-      $imap->disconnect();
+      $this->diagnostics[self::DIAGNOSTICS_COPY_TO_SENT]['login'] = $t->getMessage();
+      $this->imapService->disconnect();
       return false;
     }
 
-    $ret1 = $imap->selectMailbox('Sent');
-    if ($ret1 === true) {
-      $ret1 = $imap->appendMessage($mimeMessage, 'Sent');
-    } else {
-      $ret2 = $imap->selectMailbox('INBOX.Sent');
-      if ($ret === true) {
-        $ret2 = $imap->appendMessage($mimeMessage, 'INBOX.Sent');
-      }
-    }
-    if ($ret1 !== true && $ret2 !== true) {
+    try {
+      $this->imapService->append($mimeMessage, IMAPService::SPECIAL_USE_SENT);
+      $this->imapService->disconnect();
+    } catch (Throwable $t) {
       $this->executionStatus = false;
       $this->diagnostics[self::DIAGNOSTICS_COPY_TO_SENT]['copy'] = [
-        'Sent' => $ret1->toString(),
-        'INBOX.Sent' => $ret2->toString(),
+        'Sent' => $t->getMessage(),
       ];
-      $imap->disconnect();
+      $this->imapService->disconnect();
       return false;
     }
-    $imap->disconnect();
-
     return true;
   }
 
