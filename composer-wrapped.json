@@ -70,6 +70,9 @@
     "patches": {
       "bytestream/horde-socket-client": {
         "Add an optional progress callback to the Horde Socket Client": "../composer-patches/bytestream/horde-socket-client/progress-callback.patch"
+      },
+      "bytestream/horde-imap-client": {
+        "Add an optional progress callback to the Horde IMAP Client": "../composer-patches/bytestream/horde-imap-client/write-progress-callback.patch"
       }
     }
   }
