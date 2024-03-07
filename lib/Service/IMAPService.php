@@ -179,8 +179,8 @@ class IMAPService
    * @return void
    */
   public function connect(
-    ?Closure $progressCallback,
-    ?int $chunkSize,
+    ?Closure $progressCallback = null,
+    ?int $chunkSize = null,
   ):void {
     if (!empty($this->client)) {
       return;
