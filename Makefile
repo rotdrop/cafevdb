@@ -28,8 +28,7 @@ APPSTORE_PACKAGE_NAME = $(APPSTORE_BUILD_DIR)/$(APP_NAME)
 BASH=$(shell which bash 2> /dev/null)
 SHELL := $(BASH)
 PHP = $(shell which php 2> /dev/null) # allow override
-PHP_SCOPER_VERSION = 0.18.2
-PHP_SCOPER = $(BUILD_TOOLS_DIR)/php-scoper.phar
+PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
 COMPOSER_TOOL = $(PHP) $(BUILD_TOOLS_DIR)/composer.phar
@@ -130,7 +129,7 @@ composer.lock: composer.json composer.json.in
  $(COMPOSER_TOOL) install $(COMPOSER_OPTIONS);\
 }
 
-pre-build: php-scoper-download app-toolkit
+pre-build: php-scoper-install app-toolkit
 #	git submodule update --init
 	$(OCC) maintenance:mode --on
 .PHONY: pre-build
@@ -162,12 +161,10 @@ composer-download:
 	curl -sS https://getcomposer.org/installer | $(PHP)
 	mv composer.phar $(BUILD_TOOLS_DIR)
 
-.PHONY: php-scoper-download
-php-scoper-download:
-	mkdir -p $(BUILD_TOOLS_DIR)
-	if ! [ -x $(PHP_SCOPER) ] || ! $(PHP_SCOPER) --version|grep -qsF $(PHP_SCOPER_VERSION); then\
-  curl -L -o $(PHP_SCOPER) -sS https://github.com/humbug/php-scoper/releases/download/$(PHP_SCOPER_VERSION)/php-scoper.phar;\
-  chmod +x $(PHP_SCOPER);\
+.PHONY: php-scoper-install
+php-scoper-install: composer
+	if ! [ -x $(PHP_SCOPER) ]; then\
+  $(COMPOSER_TOOL) bin php-scoper install;\
 fi
 
 # Installs and updates the composer dependencies. If composer is not installed
@@ -196,8 +193,12 @@ $(BUILDDIR)/vendor-wrapped: composer-wrapped.lock wrapper-build-hash
 	ln -fs ../3rdparty $(BUILDDIR)
 	ln -fs ../vendor $(BUILDDIR)
 	rm -rf $(BUILDDIR)/vendor-wrapped
+	ln -sf ../composer-patches $(BUILDDIR)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+
+$(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json Makefile
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER_TOOL) -d$(BUILDDIR) dump-autoload
 
 .PHONY: composer-wrapped-suggest
 composer-wrapped-suggest:
@@ -209,7 +210,7 @@ composer-suggest: composer-wrapped-suggest
 	@echo -e "\n*** Regular Composer Suggestions ***\n"
 	$(COMPOSER_TOOL) suggest --all
 
-$(PHP_SCOPER): php-scoper-download
+$(PHP_SCOPER): php-scoper-install
 
 vendor-wrapped: Makefile $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
 	$(PHP_SCOPER) add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force

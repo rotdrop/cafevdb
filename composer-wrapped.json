@@ -9,23 +9,27 @@
     }
   ],
   "config": {
-    "vendor-dir": "vendor-wrapped"
+    "vendor-dir": "vendor-wrapped",
+    "allow-plugins": {
+      "cweagans/composer-patches": true
+    }
   },
   "require": {
     "acelaya/doctrine-enum-type": "^2.5",
-    "myclabs/php-enum": "^1.8",
     "beberlei/doctrineextensions": "^1.2.0",
+    "bytestream/horde-imap-client": "*",
     "cjh/doctrine-on-update-extension": "dev-master",
+    "doctrine/annotations": "*",
     "doctrine/dbal": "^2.13.0",
     "doctrine/orm": "dev-production/2.19.x/cafevdb",
-    "symfony/cache": "^6",
     "gedmo/doctrine-extensions": "3.15.x-dev",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
+    "myclabs/php-enum": "^1.8",
     "nesbot/carbon": "^2.46",
     "oro/doctrine-extensions": "dev-master",
-    "ramsey/uuid-doctrine": "^1.6",
     "ramsey/uuid": "^4",
-    "doctrine/annotations": "*"
+    "ramsey/uuid-doctrine": "^1.6",
+    "symfony/cache": "^6"
   },
   "repositories": [
     {
@@ -58,5 +62,15 @@
     }
   ],
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "require-dev": {
+    "cweagans/composer-patches": "^1.7"
+  },
+  "extra": {
+    "patches": {
+      "bytestream/horde-socket-client": {
+        "Add an optional progress callback to the Horde Socket Client": "../composer-patches/bytestream/horde-socket-client/progress-callback.patch"
+      }
+    }
+  }
 }

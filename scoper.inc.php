@@ -79,6 +79,20 @@ return [
       }
       return $content;
     },
+    // Horde
+    function(string $filePath, string $prefix, string $content): string {
+      if (str_contains($filePath, 'bytestream/horde')) {
+        $lines = explode("\n", $content);
+        foreach ($lines as &$line) {
+          if (str_contains($line, 'class_alias')) {
+            continue;
+          }
+          $line = str_replace('\'Horde_', '\'' . $prefix . '\\Horde_', $line);
+        }
+        return implode("\n", $lines);
+      }
+      return $content;
+    },
     // Remove scoper namespace prefix from Symfony polyfills namespace
     function(string $filePath, string $prefix, string $content): string {
       if (!preg_match('{vendor-wrapped/symfony/polyfill[^/]*/bootstrap.php}i', $filePath)) {

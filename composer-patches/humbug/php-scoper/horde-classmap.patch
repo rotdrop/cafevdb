@@ -1,0 +1,11 @@
+--- humbug/php-scoper/src/Scoper/Composer/AutoloadPrefixer.php.orig	2024-03-07 19:21:47.510301325 +0100
++++ humbug/php-scoper/src/Scoper/Composer/AutoloadPrefixer.php	2024-03-07 19:23:02.729722302 +0100
+@@ -143,7 +143,7 @@
+                 $namespace .= '\\';
+             }
+ 
+-            if (str_contains($namespace, '_')) {
++            if (str_contains($namespace, '_') || str_starts_with($namespace, 'Horde')) {
+                 $classMap[] = $path;
+ 
+                 continue;

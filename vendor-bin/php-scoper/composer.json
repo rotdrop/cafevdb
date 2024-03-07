@@ -1,0 +1,18 @@
+{
+  "require-dev": {
+    "humbug/php-scoper": "^0.18.11",
+    "cweagans/composer-patches": "^1.7"
+  },
+  "config": {
+    "allow-plugins": {
+      "cweagans/composer-patches": true
+    }
+  },
+  "extra": {
+    "patches": {
+      "humbug/php-scoper": {
+        "Use classmap autoloading for ALL Horde packages": "../../composer-patches/humbug/php-scoper/horde-classmap.patch"
+      }
+    }
+  }
+}

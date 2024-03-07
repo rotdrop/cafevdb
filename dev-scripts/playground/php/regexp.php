@@ -23,4 +23,9 @@ $result = preg_replace_callback(
 
 echo $result.PHP_EOL;
 
-echo preg_replace('/\\\\(.)/u', '$1', $result).PHP_EOL;
+$string = '\'Horde_
+\\class_alias(\'OCA\\\\CAFEVDB\\\\Wrapped\\\\Horde_Imap_Client_Socket\', \'Horde_Imap_Client_Socket\')';
+
+echo $string . PHP_EOL . PHP_EOL;
+
+echo preg_replace('/(?<!class_alias[^,]+,\*=)\'Horde_/', '\'\\OCA\\CAFEVDB\\Wrapped\\Horde_', $string) . PHP_EOL;

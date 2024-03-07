@@ -1,0 +1,107 @@
+--- bytestream/horde-socket-client/lib/Horde/Socket/Client.php.orig	2021-12-21 20:22:30.000000000 +0100
++++ bytestream/horde-socket-client/lib/Horde/Socket/Client.php	2024-03-06 16:24:23.842928915 +0100
+@@ -58,6 +58,27 @@
+     protected $_stream;
+ 
+     /**
++     * Write in chunks of this many bytes. Use in conjunction with the progress-callback.
++     *
++     * @var int
++     */
++    protected $_chunkSize = null;
++
++    /**
++     * A user supplied progress callback, called like
++     *
++     * $this->_progressCallback($mode, $bytesTransferred, $bytesToTransfer)
++     *
++     * If _chunkSize is 0 or smaller than the total transfer size the progress
++     * callback will only be called at the end of the transfer. The callback
++     * is also always executed at the start of the transfer with size 0. $mode
++     * is either 'read' or 'write'.
++     *
++     * @var Closure
++     */
++    protected $_progressCallback = null;
++
++    /**
+      * Constructor.
+      *
+      * @param string $host      Hostname of remote server (can contain
+@@ -101,6 +122,16 @@
+             $context
+         );
+ 
++        if (isset($context['chunkSize'])) {
++            $this->_chunkSize = $context['chunkSize'];
++            unset($context['chunkSize']);
++        }
++
++        if (isset($context['progressCallback'])) {
++            $this->_progressCallback = $context['progressCallback'];
++            unset($context['progressCallback']);
++        }
++
+         $this->_params = $params;
+ 
+         $this->_connect($host, $port, $timeout, $secure, $context);
+@@ -220,9 +251,24 @@
+     public function read($size)
+     {
+         $this->_checkStream();
+-        $data = @fread($this->_stream, $size);
+-        if ($data === false) {
+-            throw new Client\Exception('Error reading data from socket');
++        $pos = 0;
++        $mode = 'read';
++        if (is_callable($this->_progressCallback)) {
++            $this->_progressCallback($mode, $pos, $size);
++        }
++        $chunkSize = $this->_chunkSize ?? $size;
++        $data = '';
++        while ($pos < $size) {
++            $chunkSize = min($chunkSize, $size - $pos);
++            $chunkData = @fread($this->_stream, $chunkSize);
++            if ($chunkData === false) {
++                throw new Client\Exception('Error reading data from socket');
++            }
++            $data .= $chunkData;
++            $pos += $chunkSize;
++            if (is_callable($this->_progressCallback)) {
++                $this->_progressCallback($mode, $pos, $size);
++            }
+         }
+         return $data;
+     }
+@@ -237,12 +283,26 @@
+     public function write($data)
+     {
+         $this->_checkStream();
+-        if (!@fwrite($this->_stream, $data)) {
+-            $meta_data = $this->getStatus();
+-            if (!empty($meta_data['timed_out'])) {
+-                throw new Client\Exception('Timed out writing data to socket');
++        $size = strlen($data);
++        $pos = 0;
++        $mode = 'write';
++        if (is_callable($this->_progressCallback)) {
++            $this->_progressCallback($mode, $pos, $size);
++        }
++        $chunkSize = $this->_chunkSize ?? $size;
++        while ($pos < $size) {
++            $chunkSize = min($chunkSize, $size - $pos);
++            if (!@fwrite($this->_stream, substr($data, $pos, $chunkSize), $chunkSize)) {
++                $meta_data = $this->getStatus();
++                if (!empty($meta_data['timed_out'])) {
++                        throw new Client\Exception('Timed out writing data to socket');
++                }
++                throw new Client\Exception('Error writing data to socket');
++            }
++            $pos += $chunkSize;
++            if (is_callable($this->_progressCallback)) {
++                $this->_progressCallback($mode, $pos, $size);
+             }
+-            throw new Client\Exception('Error writing data to socket');
+         }
+     }
+ 
