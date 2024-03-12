@@ -108,17 +108,11 @@ class IMAPService
   private string $imapPassword;
 
   /**
-   * @param ILogger $logger
-   *
    * @param ConfigService $configService
-   *
    */
   public function __construct(
-    ILogger $logger,
-    ConfigService $configService,
+    protected ConfigService $configService,
   ) {
-    $this->logger = $logger;
-    $this->configService = $configService;
     $this->l = $this->l10n();
 
     $this->setAccount();
