@@ -44,7 +44,7 @@
     "@nextcloud/moment": "~1.2.2",
     "@nextcloud/password-confirmation": "*",
     "@nextcloud/router": "^2.2.1",
-    "@nextcloud/vue": "^8.4.0",
+    "@nextcloud/vue": "^8.8.1",
     "@rotdrop/nextcloud-app-dokuwiki": "github:rotdrop/nextcloud-app-dokuwiki",
     "@vue/tsconfig": "^0.4.0",
     "babel-jest": "^29.6.4",
