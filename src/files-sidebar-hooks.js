@@ -25,8 +25,8 @@ import Vue from 'vue';
 import { appName } from './app/app-info.js';
 import { getInitialState } from './services/initial-state-service.js';
 import { generateFilePath } from '@nextcloud/router';
+import { getRequestToken } from '@nextcloud/auth';
 import { translate as t, translatePlural as n } from '@nextcloud/l10n';
-import FilesTab from './views/FilesTab.vue';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { Tooltip } from '@nextcloud/vue';
 // eslint-disable-next-line
@@ -37,11 +37,13 @@ Vue.directive('tooltip', Tooltip);
 Vue.use(PiniaVuePlugin);
 const pinia = createPinia();
 
+// eslint-disable-next-line camelcase
+__webpack_nonce__ = btoa(getRequestToken());
+
 // eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js');
+__webpack_public_path__ = generateFilePath(appName, '', '');
 Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
 
-const View = Vue.extend(FilesTab);
 let TabInstance = null;
 
 if (!window.OCA.CAFEVDB) {
@@ -95,6 +97,8 @@ window.addEventListener('DOMContentLoaded', () => {
       enabled: enableTemplateActions,
 
       async mount(el, fileInfo, context) {
+        const FilesTab = (await import('./views/FilesTab.vue')).default;
+        const View = Vue.extend(FilesTab);
 
         if (TabInstance) {
           TabInstance.$destroy();
@@ -106,16 +110,17 @@ window.addEventListener('DOMContentLoaded', () => {
           pinia,
         });
 
-        // Only mount after we hahve all theh info we need
+        // Only mount after we hahve all the info we need
         await TabInstance.update(fileInfo);
-
         TabInstance.$mount(el);
       },
       update(fileInfo) {
         TabInstance.update(fileInfo);
       },
       destroy() {
-        TabInstance.$destroy();
+        if (TabInstance !== null) {
+          TabInstance.$destroy();
+        }
         TabInstance = null;
       },
     }));

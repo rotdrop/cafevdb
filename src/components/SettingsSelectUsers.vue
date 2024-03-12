@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
+import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import { NcListItemIcon } from '@nextcloud/vue'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.js'
 import { mapWritableState } from 'pinia'

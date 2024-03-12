@@ -119,21 +119,14 @@
         {{ t(appName, 'Wiki Name-Space') }}
       </label>
       <!-- Note: v-model does not work here -->
-      <NcTextField v-if="config.isSubAdmin || config.isAdmin"
-                   id="wiki-name-space"
-                   :value.sync="settings.wikiNameSpace"
-                   type="text"
-                   :label="t(appName, 'Wiki Name-Space')"
-                   :show-trailing-button="true"
-                   trailing-button-icon="arrowRight"
-                   @trailing-button-click="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
-                   @update="info(settings.wikiNameSpace, ...arguments)"
-                   @update:value="info(settings.wikiNameSpace, ...arguments)"
+      <TextField v-if="config.isSubAdmin || config.isAdmin"
+                 id="wiki-name-space"
+                 :value.sync="settings.wikiNameSpace"
+                 type="text"
+                 :label="t(appName, 'Wiki Name-Space')"
+                 :hint="hints['settings:admin:wiki-name-space']"
+                 @submit="saveSetting('wikiNameSpace', settings.wikiNameSpace)"
       />
-      <!-- @trailing-button-click="saveSetting('wikiNameSpace', ...arguments)" -->
-      <p class="hint">
-        {{ hints['settings:admin:wiki-name-space'] }}
-      </p>
     </NcSettingsSection>
     <NcSettingsSection v-if="config.isSubAdmin"
                        :name="t(appName, 'Configure User Backend')"
@@ -331,9 +324,10 @@ import {
   NcActionButton,
   NcProgressBar,
   NcSettingsSection,
-  NcTextField,
   NcListItem,
 } from '@nextcloud/vue'
+import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
+import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 
 import CheckboxBlankCircle from 'vue-material-design-icons/CheckboxBlankCircle.vue'
 import GroupIcon from 'vue-material-design-icons/AccountGroup.vue'
@@ -352,7 +346,6 @@ import SelectProjects from './SelectProjects.vue'
 
 import SettingsSelectGroup from './SettingsSelectGroup.vue'
 import SettingsSelectUsers from './SettingsSelectUsers.vue'
-import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
 import tooltip from '../mixins/tooltips.js'
 import formatDate from '../mixins/formatDate.js'
 
@@ -372,7 +365,7 @@ export default {
     NcSettingsSection,
     SettingsSelectGroup,
     SettingsSelectUsers,
-    NcTextField,
+    TextField,
     NcListItem,
     CheckboxBlankCircle,
     GroupIcon,
@@ -1145,25 +1138,6 @@ export default {
       }
       label.default-font {
         padding-right: 0.5em;
-      }
-    }
-  }
-  // Tweak the submit button of the NcTextField
-  .input-field::v-deep  .input-field__trailing-button.button-vue--vue-tertiary-no-background {
-    max-height: var(--default-clickable-area);
-    max-width: var(--default-clickable-area);
-    // FIXME: instead we probably should switch to material design icons for everything else ...
-    background-image: var(--icon-confirm-dark);
-    background-position: center;
-    background-repeat: no-repeat;
-    .button-vue__icon {
-      opacity: 0;
-    }
-    &:hover, &:focus {
-      &:not(:disabled) {
-        border: 2px solid var(--color-primary-element);
-        border-radius: var(--border-radius-large);
-        outline: 2px solid var(--color-main-background);
       }
     }
   }

@@ -45,7 +45,7 @@ import { appName } from '../app/app-info.js'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { getInitialState } from '../services/initial-state-service.js'
-import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
+import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 
 export default {
   name: 'SelectAddressBooks',

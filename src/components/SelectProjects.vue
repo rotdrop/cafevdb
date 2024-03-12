@@ -46,7 +46,7 @@ import { appName } from '../app/app-info.js'
 import { set as vueSet } from 'vue'
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
+import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 
 /**
  * Select multiple or a single project. The provided value is always an array of project ids.

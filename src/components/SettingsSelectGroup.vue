@@ -57,7 +57,7 @@
   </SelectWithSubmitButton>
 </template>
 <script>
-import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
+import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 import groupInfoPopup from '../mixins/user-info-popup.js'
 import { useCloudUsersGroupsStore } from '../stores/cloud-users-groups.js'

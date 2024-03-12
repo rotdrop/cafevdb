@@ -40,7 +40,7 @@
                         :title="t(appName, 'Download Merged Document')"
                         @click="handleMailMergeRequest('download', ...arguments)"
           >
-            <!-- {{ hints['templates:cloud:integration:download'] }} -->
+            {{ t(appName, 'download locally') }}
           </ActionButton>
           <ActionButton v-tooltip="hints['templates:cloud:integration:cloudstore']"
                         :close-after-click="true"
@@ -49,9 +49,9 @@
                         @click="handleMailMergeRequest('cloud', ...arguments)"
           >
             <template #icon>
-              <CloudIcon />
+              <CloudUploadIcon />
             </template>
-            <!-- {{ hints['templates:cloud:integration:cloudstore'] }} -->
+            {{ t(appName, 'save to cloud') }}
           </ActionButton>
           <ActionButton v-tooltip="hints['templates:cloud:integration:dataset']"
                         :close-after-click="true"
@@ -62,6 +62,7 @@
             <template #icon>
               <CodeJsonIcon />
             </template>
+            {{ t(appName, 'download data') }}
           </ActionButton>
         </Actions>
       </li>
@@ -184,7 +185,7 @@ import {
   // NcAppSidebarTab as AppSidebarTab,
 } from '@nextcloud/vue'
 // import ActionRadio from '../components/action-radio/NcActionRadio'
-import CloudIcon from 'vue-material-design-icons/Cloud.vue'
+import CloudUploadIcon from 'vue-material-design-icons/CloudUpload.vue'
 import CodeJsonIcon from 'vue-material-design-icons/CodeJson.vue'
 // import DatabaseIcon from 'vue-material-design-icons/Database.vue'
 // import ContactsIcon from 'vue-material-design-icons/Contacts.vue'
@@ -212,7 +213,7 @@ export default {
     Actions,
     ActionButton,
     ActionRadio,
-    CloudIcon,
+    CloudUploadIcon,
     CodeJsonIcon,
     // DatabaseIcon,
     // ContactsIcon,

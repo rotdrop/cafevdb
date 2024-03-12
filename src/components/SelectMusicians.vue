@@ -62,7 +62,7 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import musicianAddressPopup from '../mixins/address-popup.js'
 import { usePersistentDataStore } from '../stores/persistentData.js'
-import SelectWithSubmitButton from './SelectWithSubmitButton.vue'
+import SelectWithSubmitButton from '@rotdrop/nextcloud-vue-components/lib/components/SelectWithSubmitButton.vue'
 import NcEllipsisedOption from '@nextcloud/vue/dist/Components/NcEllipsisedOption.js'
 
 export default {
@@ -214,15 +214,15 @@ export default {
       this.resetMusicians()
       if (!this.searchable) {
         try {
-          // console.info('PERSISTENT DATA', this.persistentData)
-          this.musicians = this.persistentData.selectMusicians[this.searchScope][this.projectId]
-          this.inputValObjects = this.getValueObject()
+          this.musicians = this.persistentData.selectMusicians[this.searchScope][this.projectId] || {}
+          this.inputValObjects = this.getValueObjects()
           if (this.resetButton) {
             this.initialValObjects = this.inputValObjects
           }
           this.ajaxLoading = false
           return
-        } catch (ignoreMe) {}
+        } catch (ignoreMe) {
+        }
       }
       await this.findMusicians('', this.getValueIds())
       this.inputValObjects = this.getValueObjects(true)
