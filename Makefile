@@ -337,7 +337,9 @@ clean: ## Tidy up local environment
 
 #@@ Same as clean but also removes dependencies installed by composer, bower and npm
 distclean: clean ## Clean even more, calls clean
-	rm -rf vendor*
+	rm -rf vendor
+	rm -rf vendor-wrapped
+	rm -rf vendor-bin/*/vendor
 	rm -rf node_modules
 	rm -rf lib/Toolkit/*
 .PHONY: distclean
@@ -345,6 +347,7 @@ distclean: clean ## Clean even more, calls clean
 #@@ Really delete everything but the bare source files
 realclean: distclean
 	rm -f composer*.lock
+	rm -f vendor-bin/*/composer.lock
 	rm -f composer.json
 	rm -f stamp.composer-core-versions
 	rm -f package-lock.json
