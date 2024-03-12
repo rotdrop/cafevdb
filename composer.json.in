@@ -67,14 +67,6 @@
     {
       "type": "path",
       "url": "3rdparty/pear/mail"
-    },
-    {
-      "type": "path",
-      "url": "3rdparty/pear/Net_IMAP"
-    },
-    {
-      "type": "path",
-      "url": "3rdparty/pear/Net_Socket"
     }
   ],
   "minimum-stability": "dev",
