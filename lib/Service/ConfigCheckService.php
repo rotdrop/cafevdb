@@ -248,7 +248,7 @@ class ConfigCheckService
   ):bool {
     $result = true;
 
-    $mail = new PHPMailer(true);
+    $mail = new PHPMailer;
     $mail->CharSet = 'utf-8';
     $mail->SingleTo = false;
     $mail->IsSMTP();

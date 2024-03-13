@@ -24,54 +24,53 @@
 
 namespace OCA\CAFEVDB\EmailForm;
 
-use \DateTimeImmutable;
-use \DateTimeInterface;
-use \stdClass;
-use \Mail_RFC822;
-use \PHP_IBAN;
-use \DOMDocument;
+use DOMDocument;
+use DateTimeImmutable;
+use DateTimeInterface;
+use PHP_IBAN;
 use Throwable;
 use UnexpectedValueException;
-
-use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use stdClass;
 
 use OCP\IDateTimeFormatter;
 
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+
+use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
+use OCA\CAFEVDB\Common\PHPMailer;
 use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Common\Uuid;
-use OCA\CAFEVDB\Common\PHPMailer;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Controller\ProjectEventsController;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumMemberStatus as MemberStatus;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\Doctrine\Util as DBUtil;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
 use OCA\CAFEVDB\Exceptions;
 use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\InstrumentationService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\EventsService;
-use OCA\CAFEVDB\Controller\ProjectEventsController;
-use OCA\CAFEVDB\Service\ProgressStatusService;
 use OCA\CAFEVDB\Service\ConfigCheckService;
-use OCA\CAFEVDB\Service\SimpleSharingService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\EventsService;
 use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
 use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
 use OCA\CAFEVDB\Service\Finance\ReceivablesGeneratorFactory;
-use OCA\CAFEVDB\Service\Finance\IRecurringReceivablesGenerator;
+use OCA\CAFEVDB\Service\Finance\SepaBulkTransactionService;
 use OCA\CAFEVDB\Service\IMAPService;
+use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ProgressStatusService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\SimpleSharingService;
 use OCA\CAFEVDB\Storage\AppStorage;
-use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Storage\DatabaseStorageUtil;
-
-use OCA\CAFEVDB\BackgroundJob\CleanupExpiredDownloads;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /**
  * This is the mass-email composer class. We try to be somewhat
@@ -481,6 +480,7 @@ Störung.';
     private AppStorage $appStorage,
     private UserStorage $userStorage,
     private IMAPService $imapService,
+    private EmailAddressService $emailAddressService,
   ) {
     $this->l = $this->l10N();
 
@@ -2389,7 +2389,7 @@ Störung.';
    */
   private function getOutboundService(bool $authenticate = false):PHPMailer
   {
-    $phpMailer = new PHPMailer(exceptions: true);
+    $phpMailer = new PHPMailer;
     $phpMailer->setLanguage($this->getLanguage());
     $phpMailer->CharSet = 'utf-8';
     $phpMailer->SingleTo = false;
@@ -3857,48 +3857,26 @@ Störung.';
       return [];
     }
 
-    $phpMailer = new PHPMailer(exceptions: true);
-    $parser = new Mail_RFC822(null, null, null, false);
-
     $brokenRecipients = [];
-    $parsedRecipients = $parser->parseAddressList($freeForm);
-    $parseError = $parser->parseError();
-    if ($parseError !== false) {
-      $this->logDebug("Parse-error on email address list: ".
-                      vsprintf($parseError['message'], $parseError['data']));
-      // We report the entire string.
-      $brokenRecipients[] = $this->l->t($parseError['message'], $parseError['data']);
-    } else {
-      $this->logDebug("Parsed address list: ". print_r($parsedRecipients, true));
-      $recipients = [];
-      foreach ($parsedRecipients as $emailRecord) {
-        $email = $emailRecord->mailbox.'@'.$emailRecord->host;
-        $name  = $emailRecord->personal;
-        if ($name === '') {
-          $recipient = $email;
-        } else {
-          $recipient = $name.' <'.$email.'>';
-        }
-        if ($emailRecord->host === 'localhost') {
-          $brokenRecipients[] = htmlspecialchars($recipient);
-        } elseif (!$phpMailer->validateAddress($email)) {
-          $brokenRecipients[] = htmlspecialchars($recipient);
-        } else {
-          $recipients[] = [
-            'email' => $email,
-            'name' => $name,
-          ];
-        }
-      }
-    }
-    if (!empty($brokenRecipients)) {
-      $this->diagnostics[self::DIAGNOSTICS_ADDRESS_VALIDATION][$header] = $brokenRecipients;
+    try {
+      $parsedRecipients = $this->emailAddressService->parseAddressString($freeForm);
+    } catch (Exceptions\EnduserNotificationException $e) {
+      $this->logDebug("Parse-error on email address list: " . $e->getMessage());
+      $this->diagnostics[self::DIAGNOSTICS_ADDRESS_VALIDATION][$header] = [ $e->getMessage() ];
       $this->executionStatus = false;
       return false;
-    } else {
-      $this->logDebug("Returned address list: ".print_r($recipients, true));
-      return $recipients;
     }
+
+    $recipients = [];
+    foreach ($parsedRecipients as $email => $displayName) {
+      $recipients[] = [
+        'email' => $email,
+        'name' => $name,
+      ];
+    }
+
+    $this->logDebug("Returned address list: ".print_r($recipients, true));
+    return $recipients;
   }
 
   /**
@@ -4331,16 +4309,18 @@ Störung.';
 
     $this->draftId = 0; // avoid accidental overwriting
 
-    $parser = new Mail_RFC822(null, null, null, false);
     $recipients = [];
     foreach (explode(';', $sentEmail->getBulkRecipients()) as $recipient) {
-      $emailRecord = $parser->parseAddressList($recipient);
-      $parseError = $parser->parseError();
-      if ($parseError !== false || count($emailRecord) != 1) {
+      try {
+        $emailRecord = $this->emailAddressService->parseAddressString($recipient);
+      } catch (Exceptions\EnduserNotificationException $e) {
+        $this->logDebug("Parse-error on email address list: " . $e->getMessage());
         continue;
       }
-      $emailRecord = reset($emailRecord);
-      $recipients[] = $emailRecord->mailbox . '@' . $emailRecord->host;
+      if (count($emailRecord) != 1) {
+        continue;
+      }
+      $recipients[] = array_key_first($emailRecord);
     }
     $musicianIds = $this->getDatabaseRepository(Entities\Musician::class)->fetchIds([ 'email' => $recipients ]);
 

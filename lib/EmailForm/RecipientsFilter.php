@@ -642,7 +642,7 @@ class RecipientsFilter
     // use the mailer-class we are using later anyway in order to
     // validate email addresses syntactically now. Add broken
     // addresses to the "brokenEMails" list.
-    $mailer = new PHPMailer(true);
+    $mailer = new PHPMailer;
 
     /** @var Entities\Musician $musician */
     foreach ($musicians as $rec => $musician) {

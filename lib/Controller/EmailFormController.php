@@ -24,31 +24,30 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use \Mail_RFC822;
-
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\IAppContainer;
-use OCP\IRequest;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IURLGenerator;
+use OCP\AppFramework\Http\Response;
+use OCP\AppFramework\IAppContainer;
 use OCP\Files\FileInfo;
 use OCP\IDateTimeFormatter;
-
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\ContactsService;
-use OCA\CAFEVDB\Service\OrganizationalRolesService;
-use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
-use OCA\CAFEVDB\Storage\UserStorage;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\EmailForm\RecipientsFilter;
-use OCA\CAFEVDB\EmailForm\Composer;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCP\IRequest;
+use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumAttachmentOrigin as AttachmentOrigin;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\EmailForm\Composer;
+use OCA\CAFEVDB\EmailForm\RecipientsFilter;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Util\Navigation as PageNavigation;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\ContactsService;
+use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\OrganizationalRolesService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 /** Controller class for the mass-email form */
 class EmailFormController extends Controller
@@ -70,6 +69,8 @@ class EmailFormController extends Controller
     private PageNavigation $pageNavigation,
     protected ConfigService $configService,
     private ProjectService $projectService,
+    private ContactsService $contactsService,
+    private EmailAddressService $emailAddressService,
     private PHPMyEdit $pme
   ) {
     parent::__construct($appName, $request);
@@ -880,33 +881,22 @@ class EmailFormController extends Controller
    */
   public function contacts(string $operation):Response
   {
-    /** @var ContactsService */
-    $contactsService = $this->appContainer->query(ContactsService::class);
     switch ($operation) {
       case 'list':
         // Free-form recipients from Cc: or Bcc:
         $freeForm  = $this->parameterService->getParam('freeFormRecipients', '');
 
-        // Convert the free-form input to an array (possibly)
-        $parser = new Mail_RFC822(null, null, null, false);
-        $recipients = $parser->parseAddressList($freeForm);
-        $parseError = $parser->parseError();
-        if ($parseError !== false) {
-          return self::grumble(
-            $this->l->t(
-              'Unable to parse email-recipients "%s".',
-              vsprintf($parseError['message'], $parseError['data'])
-            ));
+        try {
+          $freeForm = $this->emailAddressService->parseAddressString($freeForm);
         }
-        $freeForm = [];
-        foreach ($recipients as $emailRecord) {
-          $email = $emailRecord->mailbox.'@'.$emailRecord->host;
-          $name  = $emailRecord->personal;
-          $freeForm[$email] = $name;
+        catch (Exceptions\EnduserNotificationException $e) {
+          return self::grumble(
+            $this->l->t('Unable to parse email-recipients "%s".', $e->getMessage())
+          );
         }
 
         // Fetch all known address-book contacts with email
-        $bookContacts = $contactsService->emailContacts();
+        $bookContacts = $this->contactsService->emailContacts();
 
         $addressBookEmails = [];
         foreach ($bookContacts as $entry) {
@@ -991,7 +981,7 @@ class EmailFormController extends Controller
         }
         $failedContacts = [];
         foreach ($formContacts as $contact) {
-          if ($contactsService->addEmailContact($contact) === false) {
+          if ($this->contactsService->addEmailContact($contact) === false) {
             $failedContacts[] = $contact['display'];
           }
         }

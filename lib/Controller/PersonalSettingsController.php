@@ -24,49 +24,49 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use DateTimeInterface;
-use Exception;
-use Throwable;
 use Carbon\Carbon as DateTime;
 use Carbon\CarbonInterval as DateInterval;
 use DateTimeImmutable;
+use DateTimeInterface;
+use Exception;
 use PHP_IBAN;
-use Mail_RFC822;
+use Throwable;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\IAppContainer;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
-use OCP\IRequest;
 use OCP\IL10N;
+use OCP\IRequest;
 
-use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\ConfigCheckService;
-use OCA\CAFEVDB\Service\RequestParameterService;
-use OCA\CAFEVDB\Settings\Personal;
-use OCA\CAFEVDB\Service\CalDavService;
-use OCA\CAFEVDB\Service\L10N\TranslationService;
-use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Service\Finance\FinanceService;
-use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
-use OCA\CAFEVDB\Service\ProjectService;
-use OCA\CAFEVDB\Service\InstrumentationService;
-use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
-use OCA\CAFEVDB\Service\MailingListsService;
-use OCA\CAFEVDB\Service\FuzzyInputService;
-use OCA\CAFEVDB\Service\CloudUserConnectorService;
-use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\AddressBook\AddressBookProvider;
 use OCA\CAFEVDB\Common\BankAccountValidator;
 use OCA\CAFEVDB\Common\NumberFormatter;
+use OCA\CAFEVDB\Common\Util;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\AddressBook\AddressBookProvider;
-use OCA\CAFEVDB\Exceptions;
-use OCA\CAFEVDB\Storage\UserStorage;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Documents\OpenDocumentFiller;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\Service\CalDavService;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Service\ConfigCheckService;
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Service\EmailAddressService;
+use OCA\CAFEVDB\Service\EncryptionService;
+use OCA\CAFEVDB\Service\Finance\FinanceService;
+use OCA\CAFEVDB\Service\Finance\InstrumentInsuranceService;
+use OCA\CAFEVDB\Service\FuzzyInputService;
+use OCA\CAFEVDB\Service\InstrumentationService;
+use OCA\CAFEVDB\Service\L10N\TranslationService;
+use OCA\CAFEVDB\Service\MailingListsService;
+use OCA\CAFEVDB\Service\PhoneNumberService;
+use OCA\CAFEVDB\Service\ProjectParticipantFieldsService;
+use OCA\CAFEVDB\Service\ProjectService;
+use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Settings\Personal;
+use OCA\CAFEVDB\Storage\UserStorage;
 
 use OCA\DokuWiki\Service\AuthDokuWiki as WikiRPC;
 use OCA\Redaxo\Service\RPC as WebPagesRPC;
@@ -112,6 +112,7 @@ class PersonalSettingsController extends Controller
     private UserStorage $userStorage,
     private WikiRPC $wikiRPC,
     private WebPagesRPC $webPagesRPC,
+    private EmailAddressService $emailAddressService,
   ) {
     parent::__construct($appName, $request);
 
@@ -1644,28 +1645,16 @@ class PersonalSettingsController extends Controller
       case ConfigService::EMAIL_TEST_ADDRESS_KEY:
       case ConfigService::EMAIL_FORM_ADDRESS_KEY:
         $realValue = Util::normalizeSpaces($value);
-        $parser = new Mail_RFC822(null, null, null, false);
-        $parsedEmail = $parser->parseAddressList($realValue);
-        $parseError = $parser->parseError();
-        if ($parseError !== false) {
-          return self::grumble($this->l->t('Unable to parse email address "%1$s": %2$s', [ $value, $parseError['message'] ]));
+        try {
+          $parsedEmail = $this->emailAddressService->parseAddressString($realValue);
+        } catch (Exceptions\EnduserNotificationException $e) {
+          return self::grumble($this->l->t('Unable to parse email address "%1$s": %2$s', [ $value, $e->getMessage() ]));
         }
         if (count($parsedEmail) !== 1) {
           return self::grumble($this->l->t('"%s" seems to contain multiple email address, only a single address is allowed here.', $value));
         }
-        $parsedEmail = $parsedEmail[0];
-        if (empty($parsedEmail->host)) {
-          return self::grumble($this->l->t('"%s" does not contain the host-part of the email-address, local addresses are not allowed here.', $value));
-        }
-        $realValue = $parsedEmail->mailbox . '@' . $parsedEmail->host;
-        if (!empty($realValue) && filter_var($realValue, FILTER_VALIDATE_EMAIL) === false) {
-          return self::grumble($this->l->t('"%s" does not seem to be a valid email address', $value));
-        }
-        if (!empty($parsedEmail->personal)) {
-          $displayName = $parsedEmail->personal;
-        } elseif (!empty($parsedEmail->comment)) {
-          $displayName = implode(', ', $parsedEmail->comment);
-        }
+        $realValue = array_key_first($parsedEmail);
+        $displayName = reset($parsedEmail);
         $furtherData = [];
         if (!empty($displayName)) {
           switch ($parameter) {

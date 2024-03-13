@@ -24,10 +24,6 @@
 
 namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
-use \Mail_RFC822;
-use OCA\CAFEVDB\Common\PHPMailer;
-use InvalidArgumentException;
-
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
@@ -42,6 +38,7 @@ use OCA\CAFEVDB\Database\EntityManager;
  *
  * @ORM\Table(name="MusicianEmailAddresses")
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * @ORM\EntityListeners({"\OCA\CAFEVDB\Listener\MusicianEmailAddressEntityListener"})
  * @ORM\HasLifecycleCallbacks
  */
 class MusicianEmailAddress implements \ArrayAccess
@@ -74,7 +71,7 @@ class MusicianEmailAddress implements \ArrayAccess
   public function __construct(?string $address = null, Musician $musician = null)
   {
     $this->arrayCTOR();
-    $this->musician = $musician;
+    $this->setMusician($musician);
     $this->setAddress($address);
   }
 
@@ -93,19 +90,17 @@ class MusicianEmailAddress implements \ArrayAccess
   }
 
   /**
+   * Set the email address. Address validation is done in a pre-persist
+   * listener. Pre-update is not needed as the address is the key and hence
+   * cannot be updated ;).
+   *
    * @param null|string $address
    *
    * @return MusicianEmailAddress
    */
   public function setAddress(?string $address):MusicianEmailAddress
   {
-    if (!empty($address)) {
-      $address = strtolower($address);
-      if (!self::validateAddress($address)) {
-        throw new InvalidArgumentException('Email-address "' . $address . '" fails validation.');
-      }
-      $this->address = $address;
-    }
+    $this->address = $address;
     return $this;
   }
 
@@ -136,108 +131,5 @@ class MusicianEmailAddress implements \ArrayAccess
   public function isPrimaryAddress():bool
   {
     return $this->musician->getEmail() == $this->address;
-  }
-
-  /**
-   * Validate the given email address.
-   *
-   * @param string $address
-   *
-   * @return bool
-   */
-  public static function validateAddress(string $address):bool
-  {
-    $phpMailer = new PHPMailer(exceptions: true);
-    $parser = new Mail_RFC822(null, null, null, false);
-    $parsedAddresses = $parser->parseAddressList($address);
-    $parseError = $parser->parseError();
-    if ($parseError !== false) {
-      return false;
-    }
-    if (count($parsedAddresses) !== 1) {
-      return false;
-    }
-    $emailRecord = reset($parsedAddresses);
-    $email = $emailRecord->mailbox.'@'.$emailRecord->host;
-    if ($emailRecord->host == 'localhost') {
-      return false;
-    } elseif (!$phpMailer->validateAddress($email)) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * @var bool
-   *
-   * Neither pre- nor post-remove events can cancel a remove, so we need to
-   * listen on pre-flush.
-   */
-  private $doTriggerPreFlushRemoveEvent = false;
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PreRemove
-   */
-  public function preRemove(Event\LifecycleEventArgs $event)
-  {
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $this->musician->getEmailAddresses()->remove($this->address);
-    // $entityManager = EntityManager::getDecorator($event->getEntityManager());
-    // $entityManager->dispatchEvent(new Events\PreRemoveMusicianEmail($this));
-    $this->doTriggerPreFlushRemoveEvent = true;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PreFlush
-   */
-  public function preFlush(Event\PreFlushEventArgs $event)
-  {
-    if ($this->doTriggerPreFlushRemoveEvent) {
-      $entityManager = EntityManager::getDecorator($event->getEntityManager());
-      $entityManager->dispatchEvent(new Events\PreRemoveMusicianEmail($this));
-      $this->doTriggerPreFlushRemoveEvent = false;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PrePersist
-   */
-  public function prePersist(Event\LifecycleEventArgs $event)
-  {
-    $this->address = strtolower($this->address);
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $this->musician->getEmailAddresses()->set($this->address, $this);
-    $entityManager = EntityManager::getDecorator($event->getEntityManager());
-    $entityManager->dispatchEvent(new Events\PrePersistMusicianEmail($this));
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PostRemove
-   */
-  public function postRemove(Event\LifecycleEventArgs $event)
-  {
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = EntityManager::getDecorator($event->getEntityManager());
-    $entityManager->dispatchEvent(new Events\PostRemoveMusicianEmail($this));
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @ORM\PostPersist
-   */
-  public function postPersist(Event\LifecycleEventArgs $event)
-  {
-    /** @var OCA\CAFEVDB\Database\EntityManager $entityManager */
-    $entityManager = EntityManager::getDecorator($event->getEntityManager());
-    $entityManager->dispatchEvent(new Events\PostPersistMusicianEmail($this));
   }
 }

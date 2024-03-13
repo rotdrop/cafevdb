@@ -87,8 +87,12 @@ class PHPMailer extends PHPMailerUpstream
     return static::stripTrailingWSP($headers);
   }
 
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(?bool $exceptions = null)
+  /**
+   * @param bool $exceptions Enable or disable throwing of exceptions. The
+   * core PHPMailer has this disabled by default while throughout this app we
+   * have it allways enabled.
+   */
+  public function __construct(bool $exceptions = true)
   {
     parent::__construct($exceptions);
     $this->Debugoutput = function($str, $lvl) {
@@ -111,7 +115,26 @@ class PHPMailer extends PHPMailerUpstream
     };
     $this->SMTPDebug = 1;
   }
-  // phpcs:enable
+
+  /**
+   * Enable throwing exceptions.
+   *
+   * @return void
+   */
+  public function enableExceptions():void
+  {
+    $this->exceptions = true;
+  }
+
+  /**
+   * Disable throwing exceptions.
+   *
+   * @return void
+   */
+  public function disableExceptions():void
+  {
+    $this->exceptions = false;
+  }
 
   /**
    * {@inheritdoc}

@@ -24,8 +24,6 @@
 
 namespace OCA\CAFEVDB\Controller;
 
-use \Mail_RFC822;
-
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -33,16 +31,17 @@ use OCP\IRequest;
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Common\Util;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+use OCA\CAFEVDB\Database\EntityManager;
+use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
+use OCA\CAFEVDB\Exceptions;
+use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
 use OCA\CAFEVDB\Service\ConfigService;
-use OCA\CAFEVDB\Service\RequestParameterService;
+use OCA\CAFEVDB\Service\EmailAddressService;
 use OCA\CAFEVDB\Service\GeoCodingService;
 use OCA\CAFEVDB\Service\PhoneNumberService;
-use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
-use OCA\CAFEVDB\Database\Legacy\PME\PHPMyEdit;
-use OCA\CAFEVDB\PageRenderer\Projects as Renderer;
-use OCA\CAFEVDB\Common\Util;
-use OCA\CAFEVDB\Common\PHPMailer;
+use OCA\CAFEVDB\Service\RequestParameterService;
 
 /** Validation controller for some personal input fields. */
 class MusicianValidationController extends Controller
@@ -68,6 +67,7 @@ class MusicianValidationController extends Controller
     private PhoneNumberService $phoneNumberService,
     protected EntityManager $entityManager,
     protected PHPMyEdit $pme,
+    private EmailAddressService $emailAddressService,
   ) {
     parent::__construct($appName, $request);
 
@@ -199,46 +199,22 @@ class MusicianValidationController extends Controller
           $returnFailures([ 'message' => $this->t->t('Submitted email is empty'), 'email' => '' ]);
         }
 
-        $phpMailer = new PHPMailer(true);
-        $parser = new Mail_RFC822(null, null, null, false);
-
-        $parsedEmail = $parser->parseAddressList($email);
-        $parseError = $parser->parseError();
-
-        if ($parseError !== false) {
-          $message[] = htmlspecialchars($this->l->t($parseError['message'], $parseError['data']));
-        } else {
-          $emailArray = [];
-          foreach ($parsedEmail as $emailRecord) {
-            if ($emailRecord->host === 'localhost') {
-              $message[] = $this->l->t(
-                'Missing host for email-address: %s. ',
-                [ htmlspecialchars($emailRecord->mailbox) ]
-              );
-              continue;
-            }
-            $recipient = strtolower($emailRecord->mailbox.'@'.$emailRecord->host);
-            if (!$phpMailer->validateAddress($recipient)) {
-              $message[] = $this->l->t(
-                'Validation failed for: %s. ',
-                [ htmlspecialchars($recipient) ]
-              );
-              continue;
-            }
-            $emailArray[] = $recipient;
-          }
+        try {
+          $emailArray = $this->emailAddressService->parseAddressString($email);
+        } catch (Exceptions\EndUserNotificationException $e) {
+          $messages = $e->getMessage();
         }
 
-        if (empty($message)) {
-          $email = implode(', ', $emailArray);
+        if (empty($messages)) {
+          $email = implode(', ', array_keys($emailArray));
         }
 
         $result = [
-          'message' => $message,
+          'message' => $messages,
           'email' => $email,
         ];
 
-        if (empty($message)) {
+        if (empty($messages)) {
           return self::dataResponse($result);
         } else {
           return $returnFailures($result);
