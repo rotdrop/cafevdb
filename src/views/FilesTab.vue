@@ -177,12 +177,14 @@
 <script>
 import { appName } from '../app/app-info.js'
 import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
+import Vue from 'vue'
 import {
   NcActions as Actions,
   NcActionButton as ActionButton,
   NcActionRadio as ActionRadio,
   // NcAppSidebar as AppSidebar,
   // NcAppSidebarTab as AppSidebarTab,
+  Tooltip,
 } from '@nextcloud/vue'
 // import ActionRadio from '../components/action-radio/NcActionRadio'
 import CloudUploadIcon from 'vue-material-design-icons/CloudUpload.vue'
@@ -191,6 +193,7 @@ import CodeJsonIcon from 'vue-material-design-icons/CodeJson.vue'
 // import ContactsIcon from 'vue-material-design-icons/Contacts.vue'
 import axios from '@nextcloud/axios'
 import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 import { generateUrl } from '@nextcloud/router'
 import { getInitialState } from '../services/initial-state-service.js'
 import SelectContacts from '../components/SelectContacts.vue'
@@ -200,6 +203,16 @@ import SelectProjects from '../components/SelectProjects.vue'
 import fileDownload from '../services/axios-file-download.js'
 import tooltip from '../mixins/tooltips.js'
 import md5 from 'blueimp-md5'
+
+Vue.mixin({ data() { return { appName } }, methods: { t, n } })
+Vue.directive('tooltip', Tooltip)
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
+
+export {
+  Vue,
+  pinia,
+}
 
 export default {
   name: 'FilesTab',

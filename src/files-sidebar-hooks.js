@@ -21,28 +21,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
 import { appName } from './app/app-info.js';
 import { getInitialState } from './services/initial-state-service.js';
 import { generateFilePath } from '@nextcloud/router';
 import { getRequestToken } from '@nextcloud/auth';
-import { translate as t, translatePlural as n } from '@nextcloud/l10n';
-import { createPinia, PiniaVuePlugin } from 'pinia';
-import { Tooltip } from '@nextcloud/vue';
+import { translate as t } from '@nextcloud/l10n';
 // eslint-disable-next-line
 import logoSvg from '../img/cafevdb.svg?raw';
-
-Vue.directive('tooltip', Tooltip);
-
-Vue.use(PiniaVuePlugin);
-const pinia = createPinia();
 
 // eslint-disable-next-line camelcase
 __webpack_nonce__ = btoa(getRequestToken());
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', '');
-Vue.mixin({ data() { return { appName }; }, methods: { t, n } });
 
 let TabInstance = null;
 
@@ -97,6 +88,9 @@ window.addEventListener('DOMContentLoaded', () => {
       enabled: enableTemplateActions,
 
       async mount(el, fileInfo, context) {
+        const FilesTabAsset = (await import('./views/FilesTab.vue'));
+        const Vue = FilesTabAsset.Vue;
+        const pinia = FilesTabAsset.pinia;
         const FilesTab = (await import('./views/FilesTab.vue')).default;
         const View = Vue.extend(FilesTab);
 
