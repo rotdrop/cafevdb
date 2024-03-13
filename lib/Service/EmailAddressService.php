@@ -24,11 +24,11 @@
 
 namespace OCA\CAFEVDB\Service;
 
-use Mail_RFC822;
-
 use Psr\Log\LoggerInterface as ILogger;
 use OCP\IL10N;
 
+use OCA\CAFEVDB\Wrapped\Horde_Mail_Exception;
+use OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822;
 use OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_List;
 use OCA\CAFEVDB\Wrapped\Horde_Mail_Rfc822_Address;
 
@@ -72,16 +72,20 @@ class EmailAddressService
    */
   public function parseAddressString(string $addressString):array
   {
-    $parser = new Mail_RFC822(null, null, null, false);
-
-    $parsedEmail = $parser->parseAddressList($addressString);
-    $parseError = $parser->parseError();
-
-    if ($parseError !== false) {
-      throw new Exceptions\EnduserNotificationException($this->l->t($parseError['message'], $parseError['data']));
+    $parser = new Horde_Mail_Rfc822;
+    try {
+      $parsedEmail = $parser->parseAddressList($addressString);
+    } catch (Horde_Mail_Exception $e) {
+      throw new Exceptions\EnduserNotificationException($this->l->t('Horde failed to parse address "%s".', $addressString), 0, $e);
     }
+
     $emailArray = [];
+    /** @var Horde_Mail_Rfc822_Address $emailRecord */
     foreach ($parsedEmail as $emailRecord) {
+      if (!($emailRecord instanceof Horde_Mail_Rfc822_Address)) {
+        // don't care about group stuff
+        continue;
+      }
       if ($emailRecord->host === 'localhost') {
         throw new Exceptions\EnduserNotificationException(
           $this->l->t('Missing host for email-address: %s. ', $emailRecord->mailbox)
