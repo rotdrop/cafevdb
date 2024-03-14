@@ -99,6 +99,7 @@ class Admin implements IDelegatedSettings
     $this->appManager = $appManager;
     $this->cloudUserConnector = $cloudUserConnector;
     $this->fontService = $fontService;
+    $this->l = $this->l10n(); // ResponseTrait
   }
   // phpcs:enable
 
