@@ -1203,7 +1203,7 @@ class ProjectParticipants extends PMETableViewBase
       $opts['fdd'], self::MUSICIANS_TABLE, 'remarks',
       [
         'tab'      => ['id' => 'musician'],
-        'name'     => $this->l->t('Remarks'),
+        'name'     => $this->l->t('General Remarks'),
         'maxlen'   => 65535,
         'css'      => ['postfix' => [ 'remarks', 'tooltip-top', 'squeeze-subsequent-lines', ], ],
         'textarea' => [
@@ -1217,6 +1217,11 @@ class ProjectParticipants extends PMETableViewBase
           'postfix' => '</div></div>',
         ],
         'escape' => false,
+        'display' => [
+          'attributes' => [ 'readonly' => true, 'disabled' => true, ],
+          'popup' => 'data',
+        ],
+        'tooltip' => $this->l->t('General, not project-specific remarks. The field cannot be changed from here.'),
       ]);
 
     $this->makeJoinTableField(
