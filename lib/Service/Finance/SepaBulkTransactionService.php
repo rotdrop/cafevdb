@@ -142,7 +142,7 @@ class SepaBulkTransactionService
     protected EntityManager $entityManager,
     private FinanceService $financeService,
     private EventsService $eventsService,
-    private IAppContainer $appContainer,
+    protected IAppContainer $appContainer,
     protected ILogger $logger,
     protected IL10N $l,
   ) {
