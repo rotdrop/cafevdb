@@ -50,10 +50,10 @@ class ProgressStatusController extends Controller
   private $userId;
 
   /** @var IL10N */
-  private $l;
+  protected IL10N $l;
 
   /** @var ILogger */
-  private $logger;
+  protected $logger;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
