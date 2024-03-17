@@ -139,7 +139,6 @@ module.exports = {
         'style/**/*.scss',
       ],
       exclude: [
-        'src/components/SettingsInputText.vue',
         'src/toolkit/mixins/settings-sync.js',
         'src/toolkit/services/InitialStateService.js',
         'src/toolkit/util/ajax.js',
