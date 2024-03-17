@@ -302,6 +302,7 @@ trait ParticipantFieldsTrait
                 'cols' => 50,
               ];
               $fdd['css']['postfix'][] = 'hide-subsequent-lines';
+              $fdd['css']['postfix'][] = 'clip-long-text';
               $fdd['display|LF'] = [ 'popup' => 'data' ];
               $fdd['escape'] = false;
               break;
@@ -1179,8 +1180,15 @@ trait ParticipantFieldsTrait
                 $keyFdd['valueTitles'] = $valueTitles;
                 $keyFdd['valueData'] = $valueData;
                 $keyFdd['values2glue'] = '</span><br/><span>';
-                $keyFdd['display|LF'] = [
-                  'popup' => 'data',
+                $keyFdd['display|VDLF'] = [
+                  'popup' => function($data, $k, $row, $pme) use ($valueTitles, $valueData) {
+                    // $data is the field-id
+                    $optionKey = $row[$this->queryField($k)] ?? null;
+                    $tip = $valueTitles[$optionKey] ?? '';
+                    $data = $valueData[$optionKey] ?? '';
+                    $this->logInfo('TIPDATA ' . $tip . ' ' . $data);
+                    return $tip;
+                  },
                   'prefix' => '<div class="allowed-option-wrapper"><span>',
                   'postfix' => '</spans></div>',
                 ];
