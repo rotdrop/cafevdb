@@ -62,6 +62,9 @@ class LegacyEventsController extends Controller
   const SUBTOPIC_DELETE = 'delete';
   const SUBTOPIC_EXPORT = 'export';
 
+  /** @var OC_Calendar_Object */
+  private $ocCalendarObject;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
@@ -78,6 +81,7 @@ class LegacyEventsController extends Controller
     parent::__construct($appName, $request);
 
     $this->l = $this->l10N();
+    $this->ocCalendarObject = $vCalendarService->legacyEventObject();
   }
   // phpcs:enable
 
