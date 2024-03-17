@@ -109,6 +109,9 @@ const addEditor = function(selector, initCallback) {
               if (!$editorElement.is('textarea')) {
                 elementConfig.inline = true;
               }
+              if ($editorElement.prop('disabled') || $editorElement.prop('readonly')) {
+                elementConfig.readonly = 1;
+              }
               $editorElement.tinymce({ ...mceConfig, ...elementConfig });
               const mceDeferredTimer = setTimeout(function() { mceDeferred.reject('timeout'); }, mceDeferredTimeout);
               $editorElement.data('mceDeferredTimer', mceDeferredTimer);
