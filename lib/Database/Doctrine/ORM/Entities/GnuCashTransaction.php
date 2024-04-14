@@ -1,0 +1,53 @@
+<?php
+/**
+ * Orchestra member, musicion and project management application.
+ *
+ * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Link to the Gnucash accounts table.
+ *
+ * _AT_ORM\Table(name="GnuCashTransactions")
+ * _AT_ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * _AT_ORM\HasLifecycleCallbacks
+ */
+class GnuCashTransaction implements \ArrayAccess
+{
+  use CAFEVDB\Traits\ArrayTrait;
+  use CAFEVDB\Traits\TimestampableEntity;
+
+// CREATE TABLE `transactions` (
+//   `guid` varchar(32) NOT NULL,
+//   `currency_guid` varchar(32) NOT NULL,
+//   `num` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+//   `post_date` datetime DEFAULT '1970-01-01 00:00:00',
+//   `enter_date` datetime DEFAULT '1970-01-01 00:00:00',
+//   `description` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+}
