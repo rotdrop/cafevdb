@@ -50,4 +50,46 @@ class GnuCashTransaction implements \ArrayAccess
 //   `enter_date` datetime DEFAULT '1970-01-01 00:00:00',
 //   `description` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @ORM\Id
+   */
+  private string $guid;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   */
+  private string $currencyGuid;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2028, nullable=false)
+   * @ORM\Id
+   */
+  private string $num;
+
+  /**
+   * @var \DateTimeImmutable
+   * @ORM\Column(type="datetime_immutable", options={"default": "1970-01-01 00:00:00"})
+   */
+  protected $postDate;
+
+  /**
+   * @var \DateTimeImmutable
+   * @ORM\Column(type="datetime_immutable", options={"default": "1970-01-01 00:00:00"})
+   */
+  protected $enterDate;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2028, nullable=true)
+   * @ORM\Id
+   */
+  private string $description;
 }
