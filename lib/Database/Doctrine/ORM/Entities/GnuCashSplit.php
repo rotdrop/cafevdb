@@ -33,14 +33,13 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * Link to the Gnucash accounts table.
  *
- * _AT_ORM\Table(name="GnuCashSplits")
- * _AT_ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * _AT_ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="GnuCashSplits")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class GnuCashSplit implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
 
 // CREATE TABLE `splits` (
 //   `guid` varchar(32) NOT NULL,
@@ -56,6 +55,33 @@ class GnuCashSplit implements \ArrayAccess
 //   `quantity_denom` bigint(20) NOT NULL,
 //   `lot_guid` varchar(32) DEFAULT NULL
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->__wakeup();
+  }
+
+  /**
+   * @return string GUID (id).
+   */
+  public function getGuid():string
+  {
+    return $this->guid;
+  }
+
+  /**
+   * @param string $guid
+   *
+   * @return GnuCashSplit $this
+   */
+  public function setGuid(string $guid):GnuCashSplit
+  {
+    $this->guid = $guid;
+
+    return $this;
+  }
+
   /**
    * @var string
    *
@@ -97,7 +123,7 @@ class GnuCashSplit implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @ORM\Column(type="string", length=1, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
    */
   private string $reconcileState;
 

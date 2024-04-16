@@ -33,14 +33,14 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * Link to the Gnucash accounts table.
  *
- * _AT_ORM\Table(name="GnuCashTransactions")
- * _AT_ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * _AT_ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="GnuCashTransactions")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class GnuCashTransaction implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
 
 // CREATE TABLE `transactions` (
 //   `guid` varchar(32) NOT NULL,
@@ -50,6 +50,147 @@ class GnuCashTransaction implements \ArrayAccess
 //   `enter_date` datetime DEFAULT '1970-01-01 00:00:00',
 //   `description` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->__wakeup();
+  }
+
+  /**
+   * @return string GUID (id).
+   */
+  public function getGuid():string
+  {
+    return $this->guid;
+  }
+
+  /**
+   * @param string $guid
+   *
+   * @return GnuCashTransaction $this
+   */
+  public function setGuid(string $guid):GnuCashTransaction
+  {
+    $this->guid = $guid;
+
+    return $this;
+  }
+
+  /**
+   * For the purpose of this application the "currency" is just the currency.
+   *
+   * @return GnuCashCommodity Currency.
+   */
+  public function getCurrency():GnuCashCommodity
+  {
+    return $this->currency;
+  }
+
+  /**
+   * @param GnuCashCommodity $currency
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setCurrency(GnuCashCommodity $currency):GnuCashAccount
+  {
+    $this->currency = $currency;
+
+    return $this;
+  }
+
+  /**
+   * @return string Num.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getNum():string
+  {
+    return $this->num;
+  }
+
+  /**
+   * @param string $num
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setNum(string $num):GnuCashAccount
+  {
+    $this->num = $num;
+
+    return $this;
+  }
+
+  /**
+   * Get postDate.
+   *
+   * @return \DateTime|null
+   */
+  public function getPostDate():?DateTimeInterface
+  {
+    return $this->postDate;
+  }
+
+  /**
+   * Set postDate.
+   *
+   * @param \DateTime|null $postDate
+   *
+   * @return CompositePayment
+   */
+  public function setPostDate($postDate = null):CompositePayment
+  {
+    $this->postDate = self::convertToDateTime($postDate);
+
+    return $this;
+  }
+
+  /**
+   * Get enterDate.
+   *
+   * @return \DateTime|null
+   */
+  public function getEnterDate():?DateTimeInterface
+  {
+    return $this->enterDate;
+  }
+
+  /**
+   * Set enterDate.
+   *
+   * @param \DateTime|null $enterDate
+   *
+   * @return CompositePayment
+   */
+  public function setEnterDate($enterDate = null):CompositePayment
+  {
+    $this->enterDate = self::convertToDateTime($enterDate);
+
+    return $this;
+  }
+
+  /**
+   * @return string Description.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getDescription():string
+  {
+    return $this->description;
+  }
+
+  /**
+   * @param string $description
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setDescription(string $description):GnuCashAccount
+  {
+    $this->description = $description;
+
+    return $this;
+  }
+
   /**
    * @var string
    *
@@ -59,17 +200,21 @@ class GnuCashTransaction implements \ArrayAccess
   private string $guid;
 
   /**
-   * @var string
+   * @var GnuCashCommodity
    *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @ORM\ManyToOne(targetEntity="GnuCashCommodity", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="currency_guid", referencedColumnName="guid", nullable=false)
+   * )
    */
-  private string $currencyGuid;
+  private GnuCashCommodity $currency;
 
   /**
    * @var string
    *
    * @ORM\Column(type="string", length=2028, nullable=false)
-   * @ORM\Id
+   *
+   * @todo What is this?
    */
   private string $num;
 
@@ -77,13 +222,13 @@ class GnuCashTransaction implements \ArrayAccess
    * @var \DateTimeImmutable
    * @ORM\Column(type="datetime_immutable", options={"default": "1970-01-01 00:00:00"})
    */
-  protected $postDate;
+  private $postDate;
 
   /**
    * @var \DateTimeImmutable
    * @ORM\Column(type="datetime_immutable", options={"default": "1970-01-01 00:00:00"})
    */
-  protected $enterDate;
+  private $enterDate;
 
   /**
    * @var string

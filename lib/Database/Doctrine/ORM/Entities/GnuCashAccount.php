@@ -26,16 +26,17 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Link to the Gnucash accounts table.
  *
- * _AT_ORM\Table(name="GnuCashAccounts")
- * _AT_ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * _AT_ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="GnuCashAccounts")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class GnuCashAccount implements \ArrayAccess
 {
@@ -68,7 +69,6 @@ class GnuCashAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2028, nullable=false)
-   * @ORM\Id
    */
   private string $name;
 
@@ -80,11 +80,14 @@ class GnuCashAccount implements \ArrayAccess
   private string $accountType;
 
   /**
-   * @var string
+   * @var GnuCashCommodity
    *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @ORM\ManyToOne(targetEntity="GnuCashCommodity", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="commodity_guid", referencedColumnName="guid", nullable=false)
+   * )
    */
-  private string $commodityGuid;
+  private GnuCashCommodity $commodity;
 
   /**
    * @var int
@@ -101,17 +104,26 @@ class GnuCashAccount implements \ArrayAccess
   private int $nonStdScu;
 
   /**
-   * @var string
+   * @var GnuCashAccount
    *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @ORM\ManyToOne(targetEntity="GnuCashAccount", inversedBy="children", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="parent_guid", referencedColumnName="guid", nullable=true)
+   * )
    */
-  private string $parentGuid;
+  private ?GnuCashAccount $parent;
+
+  /**
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="GnuCashAccount", mappedBy="parent", fetch="EXTRA_LAZY")
+   */
+  private string $children;
 
   /**
    * @var string
    *
    * @ORM\Column(type="string", length=2028, nullable=false, options={"collation"="ascii_general_ci"})
-   * @ORM\Id
    */
   private string $code;
 
@@ -119,7 +131,6 @@ class GnuCashAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2028, nullable=false)
-   * @ORM\Id
    */
   private string $description;
 
@@ -136,4 +147,269 @@ class GnuCashAccount implements \ArrayAccess
    * @ORM\Column(type="boolean", nullable=false)
    */
   private bool $placeholder;
+
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->__wakeup();
+    $this->children = new ArrayCollection;
+  }
+
+  /**
+   * @return string GUID (id).
+   */
+  public function getGuid():string
+  {
+    return $this->guid;
+  }
+
+  /**
+   * @param string $guid
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setGuid(string $guid):GnuCashAccount
+  {
+    $this->guid = $guid;
+
+    return $this;
+  }
+
+  /**
+   * @return string Name.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getName():string
+  {
+    return $this->name;
+  }
+
+  /**
+   * @param string $name
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setName(string $name):GnuCashAccount
+  {
+    $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * @return string AccountType.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getAccountType():string
+  {
+    return $this->accountType;
+  }
+
+  /**
+   * @param string $accountType
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setAccountType(string $accountType):GnuCashAccount
+  {
+    $this->accountType = $accountType;
+
+    return $this;
+  }
+
+  /**
+   * For the purpose of this application the "commodity" is just the currency.
+   *
+   * @return GnuCashCommodity Commodity.
+   */
+  public function getCommodity():GnuCashCommodity
+  {
+    return $this->commodity;
+  }
+
+  /**
+   * @param GnuCashCommodity $commodity
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setCommodity(GnuCashCommodity $commodity):GnuCashAccount
+  {
+    $this->commodity = $commodity;
+
+    return $this;
+  }
+
+  /**
+   * @return int CommodityScu.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getCommodityScu():int
+  {
+    return $this->commodityScu;
+  }
+
+  /**
+   * @param int $commodityScu
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setCommodityScu(int $commodityScu):GnuCashAccount
+  {
+    $this->commodityScu = $commodityScu;
+
+    return $this;
+  }
+
+  /**
+   * @return int NonStdScu.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getNonStdScu():int
+  {
+    return $this->nonStdScu;
+  }
+
+  /**
+   * @param int $nonStdScu
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setNonStdScu(int $nonStdScu):GnuCashAccount
+  {
+    $this->nonStdScu = $nonStdScu;
+
+    return $this;
+  }
+
+  /**
+   * @return GnuCashAccount Parent.
+   */
+  public function getParent():GnuCashAccount
+  {
+    return $this->parent;
+  }
+
+  /**
+   * @param GnuCashAccount $parent
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setParent(GnuCashAccount $parent):GnuCashAccount
+  {
+    $this->parent = $parent;
+
+    return $this;
+  }
+
+  /**
+   * @return GnuCashAccount Children.
+   */
+  public function getChildren():Collection
+  {
+    return $this->children;
+  }
+
+  /**
+   * @param GnuCashAccount $children
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setChildren(Collection $children):GnuCashAccount
+  {
+    $this->children = $children;
+
+    return $this;
+  }
+
+  /**
+   * @return string Code.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getCode():string
+  {
+    return $this->code;
+  }
+
+  /**
+   * @param string $code
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setCode(string $code):GnuCashAccount
+  {
+    $this->code = $code;
+
+    return $this;
+  }
+
+  /**
+   * @return string Description.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getDescription():string
+  {
+    return $this->description;
+  }
+
+  /**
+   * @param string $description
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setDescription(string $description):GnuCashAccount
+  {
+    $this->description = $description;
+
+    return $this;
+  }
+
+  /**
+   * @return bool Hidden.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getHidden():bool
+  {
+    return $this->hidden;
+  }
+
+  /**
+   * @param bool $hidden
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setHidden(bool $hidden):GnuCashAccount
+  {
+    $this->hidden = $hidden;
+
+    return $this;
+  }
+
+  /**
+   * @return bool Placeholder.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getPlaceholder():bool
+  {
+    return $this->placeholder;
+  }
+
+  /**
+   * @param bool $placeholder
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setPlaceholder(bool $placeholder):GnuCashAccount
+  {
+    $this->placeholder = $placeholder;
+
+    return $this;
+  }
 }

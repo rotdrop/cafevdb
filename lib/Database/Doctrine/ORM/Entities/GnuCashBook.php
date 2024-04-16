@@ -33,9 +33,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * Link to the Gnucash accounts table.
  *
- * _AT_ORM\Table(name="GnuCashBooks")
- * _AT_ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * _AT_ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="GnuCashBooks")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class GnuCashBook implements \ArrayAccess
 {
@@ -48,25 +48,97 @@ class GnuCashBook implements \ArrayAccess
   //   `root_template_guid` varchar(32) NOT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->__wakeup();
+  }
+
+  /**
+   * @return string GUID (id).
+   */
+  public function getGuid():string
+  {
+    return $this->guid;
+  }
+
+  /**
+   * @param string $guid
+   *
+   * @return GnuCashBook $this
+   */
+  public function setGuid(string $guid):GnuCashBook
+  {
+    $this->guid = $guid;
+
+    return $this;
+  }
+
+  /**
+   * @return GnuCashAccount RootAccount.
+   */
+  public function getRootAccount():GnuCashAccount
+  {
+    return $this->rootAccount;
+  }
+
+  /**
+   * @param GnuCashAccount $rootAccount
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setRootAccount(GnuCashAccount $rootAccount):GnuCashAccount
+  {
+    $this->rootAccount = $rootAccount;
+
+    return $this;
+  }
+
+  /**
+   * @return GnuCashAccount RootTemplate.
+   */
+  public function getRootTemplate():GnuCashAccount
+  {
+    return $this->rootTemplate;
+  }
+
+  /**
+   * @param GnuCashAccount $rootTemplate
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setRootTemplate(GnuCashAccount $rootTemplate):GnuCashAccount
+  {
+    $this->rootTemplate = $rootTemplate;
+
+    return $this;
+  }
+
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci")
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
    * @ORM\Id
    */
   private string $guid;
 
   /**
-   * @var string
+   * @var GnuCashAccount
    *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci")
+   * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="root_account_guid", referencedColumnName="guid", nullable=false)
+   * )
    */
-  private string $rootAccountGuid;
+  private string $rootAccount;
 
   /**
-   * @var string
+   * @var GnuCashAccount
    *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci")
+   * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="root_template_guid", referencedColumnName="guid", nullable=false)
+   * )
    */
-  private string $rootTemplateGuid;
+  private string $rootTemplate;
 }

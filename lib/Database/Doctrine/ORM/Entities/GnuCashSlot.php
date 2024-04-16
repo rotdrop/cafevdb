@@ -33,9 +33,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * Link to the Gnucash accounts table.
  *
- * _AT_ORM\Table(name="GnuCashSlots")
- * _AT_ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * _AT_ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="GnuCashSlots")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class GnuCashSlot implements \ArrayAccess
 {
@@ -56,6 +56,97 @@ class GnuCashSlot implements \ArrayAccess
 //   `numeric_val_denom` bigint(20) DEFAULT NULL,
 //   `gdate_val` date DEFAULT NULL
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->__wakeup();
+  }
+
+  /**
+   * Get id.
+   *
+   * @return int
+   */
+  public function getId():int
+  {
+    return $this->id;
+  }
+
+  /**
+   * Set id.
+   *
+   * @param int $id
+   *
+   * @return Musician
+   */
+  public function setId(int $id):GnuCashSlot
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
+  /**
+   * @return string OBJGUID.
+   */
+  public function getObjGuid():string
+  {
+    return $this->objGuid;
+  }
+
+  /**
+   * @param string $objGuid
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setObjGuid(string $objGuid):GnuCashAccount
+  {
+    $this->objGuid = $objGuid;
+
+    return $this;
+  }
+
+  /**
+   * @return string NAME.
+   */
+  public function getName():string
+  {
+    return $this->name;
+  }
+
+  /**
+   * @param string $name
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setName(string $name):GnuCashAccount
+  {
+    $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * @return string SLOTTYPE.
+   */
+  public function getSlotType():GnuCashSlotType
+  {
+    return GnuCashSlottype($this->slotType);
+  }
+
+  /**
+   * @param int|GnuCashSlotType $slotType
+   *
+   * @return GnuCashAccount $this
+   */
+  public function setSlotType(int|GnuCashSlotType $slotType):GnuCashAccount
+  {
+    $this->slotType = (int)$slotType;
+
+    return $this;
+  }
+
   /**
    * @var int
    *

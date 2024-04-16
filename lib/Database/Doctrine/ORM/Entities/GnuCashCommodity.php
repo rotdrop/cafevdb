@@ -31,16 +31,15 @@ use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
- * Link to the Gnucash accounts table.
+ * Link to the GnuCash commodities table.
  *
- * _AT_ORM\Table(name="GnuCashCommodities")
- * _AT_ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
- * _AT_ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="GnuCashCommodities")
+ * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class GnuCashCommodity implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
 
 // CREATE TABLE `commodities` (
 //   `guid` varchar(32) NOT NULL,
@@ -52,12 +51,12 @@ class GnuCashCommodity implements \ArrayAccess
 //   `quote_flag` int(11) NOT NULL,
 //   `quote_source` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
 //   `quote_tz` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
-// ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci")
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
    * @ORM\Id
    */
   private string $guid;
@@ -65,7 +64,7 @@ class GnuCashCommodity implements \ArrayAccess
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2024, nullable=false, options={"collation"="ascii_general_ci")
+   * @ORM\Column(type="string", length=2024, nullable=false, options={"collation"="ascii_general_ci"})
    */
   private string $namespace;
 
@@ -73,7 +72,6 @@ class GnuCashCommodity implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2028, nullable=false)
-   * @ORM\Id
    */
   private string $mnemonic;
 
@@ -81,7 +79,6 @@ class GnuCashCommodity implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2028)
-   * @ORM\Id
    */
   private string $fullname;
 
@@ -89,7 +86,6 @@ class GnuCashCommodity implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2028)
-   * @ORM\Id
    */
   private string $cusip;
 
@@ -120,4 +116,206 @@ class GnuCashCommodity implements \ArrayAccess
    * @ORM\Column(type="string", length=2028, nullable=false, options={"collation"="ascii_general_ci"})
    */
   private string $quoteTz;
+
+  /** {@inheritdoc} */
+  public function __construct()
+  {
+    $this->__wakeup();
+  }
+
+  /**
+   * @return string GUID (id).
+   */
+  public function getGuid():string
+  {
+    return $this->guid;
+  }
+
+  /**
+   * @param string $guid
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setGuid(string $guid):GnuCashCommodity
+  {
+    $this->guid = $guid;
+
+    return $this;
+  }
+
+  /**
+   * @return string Namespace.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getNamespace():string
+  {
+    return $this->namespace;
+  }
+
+  /**
+   * @param string $namespace
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setNamespace(string $namespace):GnuCashCommodity
+  {
+    $this->namespace = $namespace;
+
+    return $this;
+  }
+
+  /**
+   * @return string Mnemonic.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getMnemonic():string
+  {
+    return $this->mnemonic;
+  }
+
+  /**
+   * @param string $mnemonic
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setMnemonic(string $mnemonic):GnuCashCommodity
+  {
+    $this->mnemonic = $mnemonic;
+
+    return $this;
+  }
+
+  /**
+   * @return string Fullname.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getFullname():string
+  {
+    return $this->fullname;
+  }
+
+  /**
+   * @param string $fullname
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setFullname(string $fullname):GnuCashCommodity
+  {
+    $this->fullname = $fullname;
+
+    return $this;
+  }
+
+  /**
+   * @return string Cusip.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getCusip():string
+  {
+    return $this->cusip;
+  }
+
+  /**
+   * @param string $cusip
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setCusip(string $cusip):GnuCashCommodity
+  {
+    $this->cusip = $cusip;
+
+    return $this;
+  }
+
+  /**
+   * @return int Fraction.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getFraction():int
+  {
+    return $this->fraction;
+  }
+
+  /**
+   * @param int $fraction
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setFraction(int $fraction):GnuCashCommodity
+  {
+    $this->fraction = $fraction;
+
+    return $this;
+  }
+
+  /**
+   * @return bool QuoteFlag.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getQuoteFlag():bool
+  {
+    return $this->quoteFlag;
+  }
+
+  /**
+   * @param bool $quoteFlag
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setQuoteFlag(bool $quoteFlag):GnuCashCommodity
+  {
+    $this->quoteFlag = $quoteFlag;
+
+    return $this;
+  }
+
+  /**
+   * @return string QuoteSource.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getQuoteSource():string
+  {
+    return $this->quoteSource;
+  }
+
+  /**
+   * @param string $quoteSource
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setQuoteSource(string $quoteSource):GnuCashCommodity
+  {
+    $this->quoteSource = $quoteSource;
+
+    return $this;
+  }
+
+  /**
+   * @return string QuoteTz.
+   *
+   * @todo Clarify the meaning.
+   */
+  public function getQuoteTz():string
+  {
+    return $this->quoteTz;
+  }
+
+  /**
+   * @param string $quoteTz
+   *
+   * @return GnuCashCommodity $this
+   */
+  public function setQuoteTz(string $quoteTz):GnuCashCommodity
+  {
+    $this->quoteTz = $quoteTz;
+
+    return $this;
+  }
 }
