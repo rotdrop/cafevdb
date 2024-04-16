@@ -413,14 +413,14 @@ class EntityManager extends EntityManagerDecorator
       return false;
     }
     try {
-      if (!$connection->ping()) {
+      if (!$connection->isConnected()) {
         if (!$connection->connect()) {
           $this->logError('db cannot connect');
           return false;
         }
       }
     } catch (\Throwable $t) {
-      $this->logException($t, 'Caught execption trying to ping database server ' . $params['user'] . '@' . $params['host'] . ':' . $params['dbname']);
+      $this->logException($t, 'Caught execption checking connection to database server ' . $params['user'] . '@' . $params['host'] . ':' . $params['dbname']);
       return false;
     }
     return true;
@@ -450,6 +450,7 @@ class EntityManager extends EntityManagerDecorator
       Types\EnumSepaTransaction::class => 'enum',
       Types\EnumTaxType::class => 'enum',
       Types\EnumVCalendarType::class => 'enum',
+      Types\EnumGnuCashSlotType::class => 'enum',
       // Ramsey\UuidType::class => null,
       // Ramsey\UuidBinaryType::class => 'binary',
       // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
@@ -535,7 +536,7 @@ class EntityManager extends EntityManagerDecorator
     $this->annotationReader = $annotationReader;
 
     // mysql set names UTF-8 if required
-    $eventManager->addEventSubscriber(new DBALEventListeners\MysqlSessionInit($conParams['charset'], $conParams['collate']));
+    // $eventManager->addEventSubscriber(new DBALEventListeners\MysqlSessionInit($conParams['charset'], $conParams['collate']));
 
     $eventManager->addEventListener([
       ORM\Tools\ToolEvents::postGenerateSchema,
