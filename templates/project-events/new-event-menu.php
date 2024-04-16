@@ -53,3 +53,4 @@ $calendarUris = array_column(ConfigService::CALENDARS, 'uri');
     </ul>
   </nav>
 </span>
+<div id="vue-test-menu"></div>
