@@ -1,0 +1,11 @@
+--- doctrine/dbal/src/Schema/MySQLSchemaManager.php.orig	2024-03-03 16:55:06.000000000 +0100
++++ doctrine/dbal/src/Schema/MySQLSchemaManager.php	2024-04-17 21:05:20.579378218 +0200
+@@ -568,6 +568,8 @@
+       FROM information_schema.TABLES t
+         INNER JOIN information_schema.COLLATION_CHARACTER_SET_APPLICABILITY ccsa
+             ON ccsa.COLLATION_NAME = t.TABLE_COLLATION
++               OR
++               CONCAT_WS('_', ccsa.CHARACTER_SET_NAME, ccsa.COLLATION_NAME) = t.TABLE_COLLATION
+ SQL;
+ 
+         $conditions = ['t.TABLE_SCHEMA = ?'];

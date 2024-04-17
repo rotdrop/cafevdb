@@ -73,6 +73,9 @@
       },
       "bytestream/horde-imap-client": {
         "Add an optional progress callback to the Horde IMAP Client": "../composer-patches/bytestream/horde-imap-client/write-progress-callback.patch"
+      },
+      "doctrine/dbal": {
+        "Handle collation changes in recent MariaDB versions": "../composer-patches/doctrine/dbal/mariadb-short-collation-names.patch"
       }
     }
   }
