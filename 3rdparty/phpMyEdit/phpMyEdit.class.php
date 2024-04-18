@@ -3724,6 +3724,7 @@ EOT;
 
 	function fetchCellPopup($k, $row, $cell_data = null)
 	{
+		$k = (int)$k;
 		$cell_popup = null;
 		if (isset($this->fdd[$k][self::FDD_DISPLAY]['popup'])) {
 			$popup = $this->fdd[$k][self::FDD_DISPLAY]['popup'];
