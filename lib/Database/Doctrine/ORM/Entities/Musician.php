@@ -1482,9 +1482,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return LegalPerson
    */
-  public function getRowAccessToken():?LegalPerson
+  public function getRowAccessToken():?MusicianRowAccessToken
   {
-    return $this->legalPerson;
+    return $this->rowAccessToken;
   }
 
   /**
