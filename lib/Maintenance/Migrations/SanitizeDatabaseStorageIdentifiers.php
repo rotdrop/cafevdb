@@ -41,7 +41,7 @@ class SanitizeDatabaseStorageIdentifiers extends AbstractMigration
     WHERE EXPLODE('/', jds.storage_id, 2) = 'participants'
   ) exp
   ON ds.id = exp.id
-  SET ds.storage_id = CONCAT_WS('/', 'project', 'participant', exp.project_name, exp.participant)
+  SET ds.storage_id = CONCAT(CONCAT_WS('/', 'project', 'participant', exp.project_name, exp.participant), '/')
 ;",
     ],
   ];
