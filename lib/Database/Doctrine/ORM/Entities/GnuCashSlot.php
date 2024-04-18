@@ -33,14 +33,103 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 /**
  * Link to the Gnucash accounts table.
  *
- * @ORM\Table(name="GnuCashSlots")
+ * @ORM\Table(
+ *   name="GnuCashSlots",
+ *   indexes={
+ *     @ORM\Index(name="slots_guid_index", columns={"obj_guid"})
+ *   }
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class GnuCashSlot implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
+  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   * @ORM\Id
+   * @ORM\GeneratedValue(strategy="IDENTITY")
+   */
+  private int $id;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   */
+  private string $objGuid;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=4096, nullable=false)
+   */
+  private string $name;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", nullable=false)
+   */
+  private int $slotType;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", length=20, nullable=true, name="int64_val")
+   */
+  private int $int64Val;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=4096, nullable=true)
+   */
+  private string $stringVal;
+
+  /**
+   * @var double
+   *
+   * @ORM\Column(type="float", nullable=true)
+   */
+  private $doubleVal;
+
+  /**
+   * @var \DateTimeImmutable
+   * @ORM\Column(type="datetime_immutable", nullable=true)
+   */
+  private $timespecVal;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed": true, "collation"="ascii_general_ci"})
+   */
+  private string $guidVal;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", length=20, nullable=true)
+   */
+  private int $numericValNum;
+
+  /**
+   * @var int
+   *
+   * @ORM\Column(type="integer", length=20, nullable=true)
+   */
+  private int $numericValDenom;
+
+  /**
+   * @var \DateTimeImmutable
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $gdateVal;
 
 // CREATE TABLE `slots` (
 //   `id` int(11) NOT NULL,
@@ -98,9 +187,9 @@ class GnuCashSlot implements \ArrayAccess
   /**
    * @param string $objGuid
    *
-   * @return GnuCashAccount $this
+   * @return GnuCashSlot $this
    */
-  public function setObjGuid(string $objGuid):GnuCashAccount
+  public function setObjGuid(string $objGuid):GnuCashSlot
   {
     $this->objGuid = $objGuid;
 
@@ -118,9 +207,9 @@ class GnuCashSlot implements \ArrayAccess
   /**
    * @param string $name
    *
-   * @return GnuCashAccount $this
+   * @return GnuCashSlot $this
    */
-  public function setName(string $name):GnuCashAccount
+  public function setName(string $name):GnuCashSlot
   {
     $this->name = $name;
 
@@ -138,9 +227,9 @@ class GnuCashSlot implements \ArrayAccess
   /**
    * @param int|GnuCashSlotType $slotType
    *
-   * @return GnuCashAccount $this
+   * @return GnuCashSlot $this
    */
-  public function setSlotType(int|GnuCashSlotType $slotType):GnuCashAccount
+  public function setSlotType(int|GnuCashSlotType $slotType):GnuCashSlot
   {
     $this->slotType = (int)$slotType;
 
@@ -148,87 +237,170 @@ class GnuCashSlot implements \ArrayAccess
   }
 
   /**
-   * @var int
+   * @return string GUIDVAL.
+   */
+  public function getGuidVal():string
+  {
+    return $this->guidVal;
+  }
+
+  /**
+   * @param string $guidVal
    *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
+   * @return GnuCashSlot $this
    */
-  private int $id;
+  public function setGuidVal(string $guidVal):GnuCashSlot
+  {
+    $this->guidVal = $guidVal;
+
+    return $this;
+  }
 
   /**
-   * @var string
+   * Get gdateVal.
    *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @return \DateTime|null
    */
-  private string $objGuid;
+  public function getGdateVal():?DateTimeInterface
+  {
+    return $this->gdateVal;
+  }
 
   /**
-   * @var string
+   * Set gdateVal.
    *
-   * @ORM\Column(type="string", length=4096, nullable=false)
-   * @ORM\Id
-   */
-  private string $name;
-
-  /**
-   * @var int
+   * @param \DateTime|null $gdateVal
    *
-   * @ORM\Column(type="integer", nullable=false)
+   * @return CompositePayment
    */
-  private int $slotType;
+  public function setGdateVal($gdateVal = null):CompositePayment
+  {
+    $this->gdateVal = self::convertToDateTime($gdateVal);
+
+    return $this;
+  }
 
   /**
-   * @var int
+   * @return int INT64VAL.
+   */
+  public function getInt64Val():int
+  {
+    return $this->int64Val;
+  }
+
+  /**
+   * @param int $int64Val
    *
-   * @ORM\Column(type="integer", length=20, nullable=true)
+   * @return GnuCashSlot $this
    */
-  private int $int64Val;
+  public function setInt64Val(int $int64Val):GnuCashSlot
+  {
+    $this->int64Val = $int64Val;
+
+    return $this;
+  }
 
   /**
-   * @var string
+   * @return string STRINGVAL.
+   */
+  public function getStringVal():string
+  {
+    return $this->stringVal;
+  }
+
+  /**
+   * @param string $stringVal
    *
-   * @ORM\Column(type="string", length=4096, nullable=true)
-   * @ORM\Id
+   * @return GnuCashSlot $this
    */
-  private string $stringVal;
+  public function setStringVal(string $stringVal):GnuCashSlot
+  {
+    $this->stringVal = $stringVal;
+
+    return $this;
+  }
 
   /**
-   * @var double
+   * @return float
+   */
+  public function getDoubleVal():float
+  {
+    return $this->doubleVal;
+  }
+
+  /**
+   * @param float $doubleVal
    *
-   * @ORM\Column(type="float", nullable=true)
+   * @return GnuCashSlot $this
    */
-  private $doubleVal;
+  public function setDoubleVal(float $doubleVal):GnuCashSlot
+  {
+    $this->doubleVal = $doubleVal;
+
+    return $this;
+  }
 
   /**
-   * @var \DateTimeImmutable
-   * @ORM\Column(type="datetime_immutable", nullable=true)
+   * @return int NUMERICVALNUM.
    */
-  private $timespecVal;
+  public function getNumericValNum():int
+  {
+    return $this->numericValNum;
+  }
 
   /**
-   * @var string
+   * @param int $numericValNum
    *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @return GnuCashSlot $this
    */
-  private string $guidVal;
+  public function setNumericValNum(int $numericValNum):GnuCashSlot
+  {
+    $this->numericValNum = $numericValNum;
+
+    return $this;
+  }
 
   /**
-   * @var int
+   * @return int NUMERICVALDENOM.
+   */
+  public function getNumericValDenom():int
+  {
+    return $this->numericValDenom;
+  }
+
+  /**
+   * @param int $numericValDenom
    *
-   * @ORM\Column(type="integer", length=20, nullable=true)
+   * @return GnuCashSlot $this
    */
-  private int $numericValNum;
+  public function setNumericValDenom(int $numericValDenom):GnuCashSlot
+  {
+    $this->numericValDenom = $numericValDenom;
+
+    return $this;
+  }
 
   /**
-   * @var int
+   * Get timespecVal.
    *
-   * @ORM\Column(type="integer", length=20, nullable=true)
+   * @return \DateTime|null
    */
-  private int $numericValDenom;
+  public function getTimespecVal():?DateTimeInterface
+  {
+    return $this->timespecVal;
+  }
 
   /**
-   * @var \DateTimeImmutable
-   * @ORM\Column(type="date_immutable", nullable=true)
+   * Set timespecVal.
+   *
+   * @param \DateTime|null $timespecVal
+   *
+   * @return CompositePayment
    */
-  private $gdateVal;
+  public function setTimespecVal($timespecVal = null):CompositePayment
+  {
+    $this->timespecVal = self::convertToDateTime($timespecVal);
+
+    return $this;
+  }
 }

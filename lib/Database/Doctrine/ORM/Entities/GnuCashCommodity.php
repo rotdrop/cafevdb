@@ -41,16 +41,16 @@ class GnuCashCommodity implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
-// CREATE TABLE `commodities` (
-//   `guid` varchar(32) NOT NULL,
-//   `namespace` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-//   `mnemonic` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-//   `fullname` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-//   `cusip` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-//   `fraction` int(11) NOT NULL,
-//   `quote_flag` int(11) NOT NULL,
-//   `quote_source` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-//   `quote_tz` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
+  // CREATE TABLE `commodities` (
+  //   `guid` varchar(32) NOT NULL,
+  //   `namespace` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  //   `mnemonic` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  //   `fullname` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  //   `cusip` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  //   `fraction` int(11) NOT NULL,
+  //   `quote_flag` int(11) NOT NULL,
+  //   `quote_source` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  //   `quote_tz` varchar(2048) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
   /**

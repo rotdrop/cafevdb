@@ -40,13 +40,40 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class GnuCashBook implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
 
   //   CREATE TABLE `books` (
   //   `guid` varchar(32) NOT NULL,
   //   `root_account_guid` varchar(32) NOT NULL,
   //   `root_template_guid` varchar(32) NOT NULL
   // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @ORM\Id
+   */
+  private string $guid;
+
+  /**
+   * @var GnuCashAccount
+   *
+   * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="root_account_guid", referencedColumnName="guid", nullable=false)
+   * )
+   */
+  private string $rootAccount;
+
+  /**
+   * @var GnuCashAccount
+   *
+   * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="root_template_guid", referencedColumnName="guid", nullable=false)
+   * )
+   */
+  private string $rootTemplate;
 
   /** {@inheritdoc} */
   public function __construct()
@@ -113,32 +140,4 @@ class GnuCashBook implements \ArrayAccess
 
     return $this;
   }
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
-   * @ORM\Id
-   */
-  private string $guid;
-
-  /**
-   * @var GnuCashAccount
-   *
-   * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="root_account_guid", referencedColumnName="guid", nullable=false)
-   * )
-   */
-  private string $rootAccount;
-
-  /**
-   * @var GnuCashAccount
-   *
-   * @ORM\OneToOne(targetEntity="GnuCashAccount", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="root_template_guid", referencedColumnName="guid", nullable=false)
-   * )
-   */
-  private string $rootTemplate;
 }

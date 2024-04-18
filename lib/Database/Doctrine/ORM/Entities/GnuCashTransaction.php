@@ -27,20 +27,81 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM as CAFEVDB;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFEVDB\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFEVDB\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Link to the Gnucash accounts table.
  *
- * @ORM\Table(name="GnuCashTransactions")
+ * @ORM\Table(
+ *   name="GnuCashTransactions",
+ *   indexes={
+ *     @ORM\Index(name="tx_post_date_index", columns={"post_date"})
+ *   }
+ * )
  * @ORM\Entity(repositoryClass="\OCA\CAFEVDB\Database\Doctrine\ORM\Repositories\EntityRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class GnuCashTransaction implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\DateTimeTrait;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
+   * @ORM\Id
+   */
+  private string $guid;
+
+  /**
+   * @var GnuCashCommodity
+   *
+   * @ORM\ManyToOne(targetEntity="GnuCashCommodity", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="currency_guid", referencedColumnName="guid", nullable=false)
+   * )
+   */
+  private GnuCashCommodity $currency;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2028, nullable=false)
+   *
+   * @todo What is this?
+   */
+  private string $num;
+
+  /**
+   * @var \DateTimeImmutable
+   * @ORM\Column(type="datetime_immutable", options={"default": "1970-01-01 00:00:00.000000"})
+   */
+  private $postDate;
+
+  /**
+   * @var \DateTimeImmutable
+   * @ORM\Column(type="datetime_immutable", options={"default": "1970-01-01 00:00:00.000000"})
+   */
+  private $enterDate;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(type="string", length=2028, nullable=true)
+   */
+  private string $description;
+
+  /**
+   * @var Collection
+   *
+   * Link back to the splits belonging to this transaction.
+   *
+   * @ORM\OneToMany(targetEntity="GnuCashSplit", mappedBy="transaction", fetch="EXTRA_LAZY")
+   */
+  private Collection $splits;
 
 // CREATE TABLE `transactions` (
 //   `guid` varchar(32) NOT NULL,
@@ -55,6 +116,7 @@ class GnuCashTransaction implements \ArrayAccess
   public function __construct()
   {
     $this->__wakeup();
+    $this->splits = new ArrayCollection;
   }
 
   /**
@@ -192,49 +254,22 @@ class GnuCashTransaction implements \ArrayAccess
   }
 
   /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed": true, "collation"="ascii_general_ci"})
-   * @ORM\Id
+   * @return GnuCashAccount Splits.
    */
-  private string $guid;
+  public function getSplits():Collection
+  {
+    return $this->splits;
+  }
 
   /**
-   * @var GnuCashCommodity
+   * @param Collection $splits
    *
-   * @ORM\ManyToOne(targetEntity="GnuCashCommodity", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="currency_guid", referencedColumnName="guid", nullable=false)
-   * )
+   * @return GnuCashAccount $this
    */
-  private GnuCashCommodity $currency;
+  public function setSplits(Collection $splits):GnuCashTransaction
+  {
+    $this->splits = $splits;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=false)
-   *
-   * @todo What is this?
-   */
-  private string $num;
-
-  /**
-   * @var \DateTimeImmutable
-   * @ORM\Column(type="datetime_immutable", options={"default": "1970-01-01 00:00:00"})
-   */
-  private $postDate;
-
-  /**
-   * @var \DateTimeImmutable
-   * @ORM\Column(type="datetime_immutable", options={"default": "1970-01-01 00:00:00"})
-   */
-  private $enterDate;
-
-  /**
-   * @var string
-   *
-   * @ORM\Column(type="string", length=2028, nullable=true)
-   * @ORM\Id
-   */
-  private string $description;
+    return $this;
+  }
 }

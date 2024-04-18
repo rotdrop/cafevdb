@@ -41,7 +41,6 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 class GnuCashAccount implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
 
 //   CREATE TABLE `accounts` (
 //   `guid` varchar(32) NOT NULL,
@@ -80,14 +79,14 @@ class GnuCashAccount implements \ArrayAccess
   private string $accountType;
 
   /**
-   * @var GnuCashCommodity
+   * @var null|GnuCashCommodity
    *
    * @ORM\ManyToOne(targetEntity="GnuCashCommodity", fetch="EXTRA_LAZY")
    * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="commodity_guid", referencedColumnName="guid", nullable=false)
+   *   @ORM\JoinColumn(name="commodity_guid", referencedColumnName="guid", nullable=true)
    * )
    */
-  private GnuCashCommodity $commodity;
+  private ?GnuCashCommodity $commodity;
 
   /**
    * @var int
@@ -314,7 +313,7 @@ class GnuCashAccount implements \ArrayAccess
   }
 
   /**
-   * @param GnuCashAccount $children
+   * @param Collection $children
    *
    * @return GnuCashAccount $this
    */
