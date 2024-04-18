@@ -512,7 +512,7 @@ class EntityManager extends EntityManagerDecorator
       'wrapperClass' => Connection::class,
     ];
     $charSetParams = [
-      'collate' => 'utf8mb4_bin',
+      'collate' => 'utf8mb4_uca1400_ai_ci', // 'utf8mb4_bin',
       'charset' => 'utf8mb4',
       'row_format' => 'compressed',
     ];
