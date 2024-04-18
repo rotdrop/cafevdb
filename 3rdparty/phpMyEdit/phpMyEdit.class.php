@@ -1821,7 +1821,7 @@ class phpMyEdit
 				);
 
 				$l = $tableMapping[$k];
-				if ($l === 0) {
+				if ($mainTableIndex !== null && $l == 0) {
 					$table = $this->quote($this->tb);
 					$join_table = self::MAIN_ALIAS;
 				} else {
@@ -1843,13 +1843,13 @@ class phpMyEdit
 					$join_table = self::JOIN_ALIAS . $l;
 				}
 
-				if ($k == $mainTableIndex) {
+				if ($k === $mainTableIndex) {
 					$mainTableSql = trim($this->fdd[$main_column][self::FDD_VALUES]['table']);
 					$subquery = stripos($mainTableSql, self::SQL_SELECT) !== false;
 					if ($subquery) {
 						$mainTableSql = '(' . $mainTableSql . ')';
 					} else {
-							$mainTableSql = $dbp . $this->quote($mainTableSql);
+						$mainTableSql = $dbp . $this->quote($mainTableSql);
 					}
 				}
 
