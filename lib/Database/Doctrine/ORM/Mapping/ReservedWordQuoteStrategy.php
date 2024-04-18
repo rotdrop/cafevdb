@@ -22,6 +22,7 @@ namespace OCA\CAFEVDB\Database\Doctrine\ORM\Mapping;
 
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping\QuoteStrategy;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Internal\SQLResultCasing as SQLResultCasingTrait;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
@@ -32,7 +33,9 @@ use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
  */
 class ReservedWordQuoteStrategy implements QuoteStrategy
 {
-   /**
+    use SQLResultCasingTrait;
+
+    /**
      * @param AbstractPlatform $platform
      * @param string $name
      * @param bool $force
@@ -197,6 +200,6 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
         $columnName = preg_replace('/[^A-Za-z0-9_]/', '', $columnName);
         $columnName = is_numeric($columnName) ? '_' . $columnName : $columnName;
 
-        return $platform->getSQLResultCasing($columnName);
+        return $this->getSQLResultCasing($platform, $columnName);
     }
 }
