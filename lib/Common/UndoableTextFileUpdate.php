@@ -26,6 +26,7 @@ namespace OCA\CAFEVDB\Common;
 
 use DateTime;
 use Exception;
+use Closure;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\Files\Node as FileSystemNode;

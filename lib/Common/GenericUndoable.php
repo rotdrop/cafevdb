@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use Closure;
+
 /**
  * Simplistic do-undo interface in order to be stacked into a
  * do-undo-list.

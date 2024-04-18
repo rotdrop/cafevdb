@@ -25,6 +25,7 @@
 namespace OCA\CAFEVDB\Common;
 
 use Exception;
+use Closure;
 
 use OCP\Files\Folder as CloudFolder;
 use OCP\Files\NotFoundException as FileNotFoundException;

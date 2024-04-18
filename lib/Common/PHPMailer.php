@@ -24,6 +24,8 @@
 
 namespace OCA\CAFEVDB\Common;
 
+use Closure;
+
 use \PHPMailer\PHPMailer\PHPMailer as PHPMailerUpstream;
 
 /**
