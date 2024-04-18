@@ -68,11 +68,11 @@ class FilesHooksListener implements IEventListener
   const ASSET_BASENAME = [
     LoadAdditionalScriptsEvent::class => [
       Constants::JS => 'files-hooks',
-      Constants::CSS => null,
+      Constants::CSS => 'files-hooks',
     ],
     LoadSidebar::class => [
       Constants::JS => 'files-sidebar-hooks',
-      Constants::CSS => 'files-sidebar-hooks',
+      Constants::CSS => null,
     ],
   ];
 
