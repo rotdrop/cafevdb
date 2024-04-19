@@ -795,7 +795,7 @@ class ProjectParticipantsController extends Controller
                   // also place the tooltip as README.md
                   $this->entityManager->registerPreCommitAction(
                     new Common\UndoableTextFileUpdate(
-                      basename($filePath) . Constants::PATH_SEP . Constants::README_NAME,
+                      dirname($filePath) . Constants::PATH_SEP . Constants::README_NAME,
                       content: $readMe,
                       gracefully: true,
                     )
