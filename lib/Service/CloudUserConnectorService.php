@@ -134,7 +134,6 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
     // 'ProjectParticipantFieldsData' => 'musician_id', needs extra access controls
     'ProjectPayments' => 'musician_id',
     'CompositePayments' => 'musician_id',
-    'MusicianPhoto' => 'owner_id',
     'EncryptedFileOwners' => 'musician_id',
     'MusicianEmailAddresses' => 'musician_id',
   ];
@@ -749,10 +748,7 @@ VIEW " . $viewName . "
 AS
 SELECT t.*
   FROM " . $table . " t
-  WHERE t.id IN (
-    SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
-      UNION
-    SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
+  WHERE t.id IN (SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov)";
 
     $table = 'FileData';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -775,8 +771,7 @@ SELECT t.*
   FROM " . $table . " t
   WHERE t.file_id IS NULL OR t.file_id IN (
     SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
-      UNION
-    SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
+)";
 
     foreach (self::UNRESTRICTED_TABLES as $table) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);
