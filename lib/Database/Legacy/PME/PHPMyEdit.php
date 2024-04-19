@@ -435,7 +435,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
     if (!$this->resultValid($stmt)) {
       return false;
     }
-    return $stmt->closeCursor();
+    return $stmt->free();
   }
 
   /** {@inheritdoc} */
