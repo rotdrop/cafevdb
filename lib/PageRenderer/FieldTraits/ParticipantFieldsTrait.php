@@ -302,6 +302,7 @@ trait ParticipantFieldsTrait
                 'cols' => 50,
               ];
               $fdd['css']['postfix'][] = 'hide-subsequent-lines';
+              $fdd['css']['postfix'][] = 'clip-long-text';
               $fdd['display|LF'] = [ 'popup' => 'data' ];
               $fdd['escape'] = false;
               break;
@@ -1179,8 +1180,15 @@ trait ParticipantFieldsTrait
                 $keyFdd['valueTitles'] = $valueTitles;
                 $keyFdd['valueData'] = $valueData;
                 $keyFdd['values2glue'] = '</span><br/><span>';
-                $keyFdd['display|LF'] = [
-                  'popup' => 'data',
+                $keyFdd['display|VDLF'] = [
+                  'popup' => function($data, $k, $row, $pme) use ($valueTitles, $valueData) {
+                    // $data is the field-id
+                    $optionKey = $row[$this->queryField($k)] ?? null;
+                    $tip = $valueTitles[$optionKey] ?? '';
+                    $data = $valueData[$optionKey] ?? '';
+                    $this->logInfo('TIPDATA ' . $tip . ' ' . $data);
+                    return $tip;
+                  },
                   'prefix' => '<div class="allowed-option-wrapper"><span>',
                   'postfix' => '</spans></div>',
                 ];
@@ -1666,6 +1674,10 @@ trait ParticipantFieldsTrait
 
             // new field, member selection
             $groupMemberFdd = &$fieldDescData[$groupMemberFddName];
+            $fieldId = $field->getId();
+            $fdAlias = 'fd_' . $fieldId;
+            $fd2Alias = 'fd2_' . $fieldId;
+            $fdgAlias = 'fdg_' . $fieldId;
             $groupMemberFdd = array_merge(
               $groupMemberFdd, [
                 'select' => 'M',
@@ -1680,30 +1692,30 @@ trait ParticipantFieldsTrait
    m1.id AS musician_id,
    CONCAT(
      ".static::musicianPublicNameSql('m1').",
-     IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+     IF(" . $fdAlias . ".deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
    ) AS name,
    m1.sur_name AS sur_name,
    m1.first_name AS first_name,
    m1.nick_name AS nick_name,
    m1.display_name AS display_name,
-   fd.option_key AS group_id,
-   fdg.group_number AS group_number
+   " . $fdAlias . ".option_key AS group_id,
+   " . $fdgAlias . ".group_number AS group_number
 FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m1
   ON m1.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id
-     AND fd.project_id = $this->projectId
-     AND fd.field_id = $fieldId
-     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
+LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+  ON " . $fdAlias . ".musician_id = pp.musician_id
+     AND " . $fdAlias . ".project_id = $this->projectId
+     AND " . $fdAlias . ".field_id = $fieldId
+     ".($this->showDisabled ? '' : ' AND " . $fdAlias . ".deleted IS NULL')."
 LEFT JOIN (SELECT
-    fd2.option_key AS group_id,
-    ROW_NUMBER() OVER (ORDER BY fd2.field_id) AS group_number
-    FROM ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd2
-    WHERE fd2.project_id = $this->projectId AND fd2.field_id = $fieldId
-    GROUP BY fd2.option_key
-  ) fdg
-  ON fdg.group_id = fd.option_key
+    " . $fd2Alias . ".option_key AS group_id,
+    ROW_NUMBER() OVER (ORDER BY " . $fd2Alias . ".field_id) AS group_number
+    FROM " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fd2Alias . "
+    WHERE " . $fd2Alias . ".project_id = $this->projectId AND " . $fd2Alias . ".field_id = $fieldId
+    GROUP BY " . $fd2Alias . ".option_key
+  ) " . $fdgAlias . "
+  ON " . $fdgAlias . ".group_id = " . $fdAlias . ".option_key
 WHERE pp.project_id = $this->projectId",
                   'column' => 'musician_id',
                   'description' => [
@@ -1882,6 +1894,12 @@ WHERE pp.project_id = $this->projectId",
 
             // new field, member selection
             $groupMemberFdd = &$fieldDescData[$groupMemberFddName];
+
+            $fieldId = $field->getId();
+            $fdAlias = 'fd_' . $fieldId;
+            $fd2Alias = 'fd2_' . $fieldId;
+            $fdgAlias = 'fdg_' . $fieldId;
+
             $groupMemberFdd = Util::arrayMergeRecursive(
               $groupMemberFdd, [
                 'select' => 'M',
@@ -1894,26 +1912,26 @@ WHERE pp.project_id = $this->projectId",
   m3.id AS musician_id,
   CONCAT(
     ".static::musicianPublicNameSql('m3').",
-    IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+    IF(" . $fdAlias . ".deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
   ) AS name,
   m3.sur_name AS sur_name,
   m3.first_name AS first_name,
   m3.nick_name AS nick_name,
   m3.display_name AS display_name,
-  fd.option_key AS group_id,
+  " . $fdAlias . ".option_key AS group_id,
   do.label AS group_label,
   do.data AS group_data,
   do.limit AS group_limit
 FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
 LEFT JOIN ".self::MUSICIANS_TABLE." m3
   ON m3.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id
-     AND fd.project_id = $this->projectId
-     AND fd.field_id = $fieldId
-     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
+LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+  ON " . $fdAlias . ".musician_id = pp.musician_id
+     AND " . $fdAlias . ".project_id = $this->projectId
+     AND " . $fdAlias . ".field_id = $fieldId
+     ".($this->showDisabled ? '' : ' AND " . $fdAlias . ".deleted IS NULL')."
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
-  ON do.field_id = fd.field_id AND do.key = fd.option_key
+  ON do.field_id = " . $fdAlias . ".field_id AND do.key = " . $fdAlias . ".option_key
 WHERE pp.project_id = $this->projectId",
                   'column' => 'musician_id',
                   'description' => [
@@ -1934,7 +1952,7 @@ WHERE pp.project_id = $this->projectId",
                 'valueData|ACP' => $valueData,
                 'values2|ACP' => $values2,
                 'mask' => null,
-                'display|LDV' => [
+                'display|FLDV' => [
                   'popup' => 'data:next',
                 ],
                 'display|ACP' => [
@@ -1967,36 +1985,40 @@ WHERE pp.project_id = $this->projectId",
             // new field, data-popup
             $popupFdd = &$fieldDescData[$fddMemberNameName];
 
+            $fieldId = $field->getId();
+            $fdAlias = 'fd_pop_' . $fieldId;
+            $fd2Alias = 'fd2_pop_' . $fieldId;
+            $fdgAlias = 'fdg_pop_' . $fieldId;
+
             // data-popup field, this can be virtual as it is only used for displaying data
             $popupFdd = Util::arrayMergeRecursive(
               $popupFdd, [
                 'input' => 'VSRH',
                 'css'   => [ 'postfix' => array_merge($css, [ 'groupofpeople-popup', ]), ],
-                'sql|LVFD' => "GROUP_CONCAT(DISTINCT \$join_col_fqn ORDER BY \$order_by SEPARATOR ', ')",
+                'sql|LVFD' => '$join_col_fqn',
                 'values|LFDV' => [
                   'table' => "SELECT
-  m2.id AS musician_id,
-  CONCAT(
-    ".static::musicianPublicNameSql('m2').",
-    IF(fd.deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
-  ) AS name,
-  m2.sur_name AS sur_name,
-  m2.first_name AS first_name,
-  m2.nick_name AS nick_name,
-  m2.display_name AS display_name,
-  fd.option_key AS group_id
-FROM ".self::PROJECT_PARTICIPANTS_TABLE." pp
-LEFT JOIN ".self::MUSICIANS_TABLE." m2
-  ON m2.id = pp.musician_id
-LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE." fd
-  ON fd.musician_id = pp.musician_id
-     AND fd.project_id = pp.project_id
-     AND fd.field_id = $fieldId
-     ".($this->showDisabled ? '' : ' AND fd.deleted IS NULL')."
-WHERE pp.project_id = $this->projectId AND fd.field_id = $fieldId",
-                  'column' => 'name',
-                  'orderby' => '$table.group_id ASC, $table.display_name ASC, $table.sur_name ASC, $table.nick_name ASC, $table.first_name ASC',
-                  'join' => '$join_table.group_id = '.$this->joinTables[$tableName].'.option_key',
+  GROUP_CONCAT(DISTINCT
+    CONCAT(
+      " . static::musicianPublicNameSql('m2_pop', firstNameFirst: true) . ",
+      IF(" . $fdAlias . ".deleted IS NOT NULL, ' (".$this->l->t('deleted').")', '')
+    )
+    ORDER BY m2_pop.display_name ASC, m2_pop.sur_name ASC, m2_pop.nick_name ASC, m2_pop.first_name ASC SEPARATOR  ', '
+  ) AS group_members,
+  GROUP_CONCAT(DISTINCT m2_pop.id) AS group_member_ids,
+  " . $fdAlias . ".option_key AS group_id
+FROM " . self::MUSICIANS_TABLE . " m2_pop
+INNER JOIN " . self::PROJECT_PARTICIPANTS_TABLE . " pp_pop
+  ON pp_pop.project_id = " . $this->projectId . " AND m2_pop.id = pp_pop.musician_id
+INNER JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
+  ON " . $fdAlias . ".field_id = " . $fieldId . "
+  AND " . $fdAlias . ".project_id = pp_pop.project_id
+  AND " . $fdAlias . ".musician_id = m2_pop.id
+  " . ($this->showDisabled ? '' : ' AND " . $fdAlias . ".deleted IS NULL')."
+WHERE pp_pop.project_id = $this->projectId AND " . $fdAlias . ".field_id = $fieldId
+GROUP BY " . $fdAlias . ".option_key",
+                  'column' => 'group_members',
+                  'join' => 'FIND_IN_SET($main_table.musician_id, $join_table.group_member_ids)',
                 ],
               ]);
 

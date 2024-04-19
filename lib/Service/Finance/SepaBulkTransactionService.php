@@ -543,7 +543,9 @@ class SepaBulkTransactionService
                  ->setReceivableOption($receivableOption)
                  ->setAmount($debitAmount)
                  ->setCompositePayment($compositePayment)
-                 ->setSubject($receivable->paymentReference());
+                 ->setSubject($receivable->paymentReference())
+                 ->setIsDonation(false)
+          ;
 
         $payments->add($payment);
         $totalAmount += $debitAmount;
