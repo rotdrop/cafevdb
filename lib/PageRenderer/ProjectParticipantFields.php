@@ -403,13 +403,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'valueData' => array_map('json_encode', $this->participantFieldsService->multiplicityTypeMask()),
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
-          $usage = $row[$this->queryField('usage')];
+          $usage = $op == 'add' ? -1 : $row[$this->queryField('usage')];
           return [
             'data-field-usage' => $usage,
           ];
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
-          $usage = $row[$this->queryField('usage')];
+          $usage = $op == 'add' ? -1 : $row[$this->queryField('usage')];
           return '<input id="pme-field-multiplicity-lock"
 ' . ($usage > 0 ? 'checked' : '') . '
        type="checkbox"
@@ -439,13 +439,13 @@ class ProjectParticipantFields extends PMETableViewBase
       'tooltip' => $this->toolTipsService['participant-field-data-type'],
       'display|ACP' => [
         'attributes' => function($op, $k, $row, $pme) {
-          $usage = $row[$this->queryField('usage')];
+          $usage = $op == 'add' ? -1 : $row[$this->queryField('usage')];
           return [
             'data-field-usage' => $usage,
           ];
         },
         'postfix' => function($op, $pos, $k, $row, $pme) {
-          $usage = $row[$this->queryField('usage')];
+          $usage = $op == 'add' ? -1 : $row[$this->queryField('usage')];
           return '<input id="pme-field-data-type-lock"
 ' . ($usage > 0 ? 'checked' : '') . '
        type="checkbox"
