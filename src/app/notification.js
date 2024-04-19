@@ -40,6 +40,7 @@ const toasts = globalState.Notification.toasts;
 
 const hide = function(callback) {
   for (const toast of toasts) {
+    console.info('TOAST', toast);
     toast.hideToast();
   }
   toasts.length = 0;
@@ -86,7 +87,7 @@ const showTemporary = function(text, options) {
   console.info(text);
   tweakTimeout(options);
   options.timeout = options.timeout || TOAST_DEFAULT_TIMEOUT;
-  const toast = OC.Notification.showTemporary(text, options);
+  const toast = showMessage(text, options);
   toasts.push(toast);
   return toast;
 };
