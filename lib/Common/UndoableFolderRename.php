@@ -88,11 +88,11 @@ class UndoableFolderRename extends AbstractFileSystemUndoable
   {
     $startTime = $this->timeFactory->getTime();
     if ($this->oldName instanceof Closure) {
-      $this->oldName = $this->oldName();
+      $this->oldName = ($this->oldName)();
     }
     $this->oldName = self::normalizePath($this->oldName);
     if ($this->newName instanceof Closure) {
-      $this->newName = $this->newName();
+      $this->newName = ($this->newName)();
     }
     $this->newName = self::normalizePath($this->newName);
 

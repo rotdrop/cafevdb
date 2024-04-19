@@ -84,7 +84,7 @@ class UndoableFolderCreate extends AbstractFileSystemUndoable
   public function do():void
   {
     if ($this->name instanceof Closure) {
-      $this->name = $this->name();
+      $this->name = ($this->name)();
     }
     $this->name = self::normalizePath($this->name);
 

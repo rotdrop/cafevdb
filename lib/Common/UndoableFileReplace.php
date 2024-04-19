@@ -79,12 +79,12 @@ class UndoableFileReplace extends AbstractFileSystemUndoable
   {
     $startTime = $this->timeFactory->getTime();
     if ($this->name instanceof Closure) {
-      $this->name = call_user_func($this->name);
+      $this->name = ($this->name)();
     }
     $this->name = self::normalizePath($this->name);
     if ($this->oldName) {
       if ($this->oldName instanceof Closure) {
-        $this->oldName = call_user_func($this->oldName);
+        $this->oldName = ($this->oldName)();
       }
       $this->oldName = self::normalizePath($this->oldName);
     }

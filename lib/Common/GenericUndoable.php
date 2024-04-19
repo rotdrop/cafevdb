@@ -56,14 +56,14 @@ class GenericUndoable extends AbstractUndoable
   /** {@inheritdoc} */
   public function do():void
   {
-    $this->doResult = $this->doCallback();
+    $this->doResult = ($this->doCallback)();
   }
 
   /** {@inheritdoc} */
   public function undo():void
   {
     if (!empty($this->undoCallback)) {
-      $this->undoCallback($this->doResult);
+      ($this->undoCallback)($this->doResult);
     }
     $this->reset();
   }

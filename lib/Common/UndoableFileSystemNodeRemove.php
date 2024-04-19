@@ -84,7 +84,7 @@ class UndoableFileSystemNodeRemove extends AbstractFileSystemUndoable
   {
     $startTime = $this->timeFactory->getTime();
     if ($this->name instanceof Closure) {
-      $this->name = $this->name();
+      $this->name = ($this->name)();
     }
     $this->name = self::normalizePath($this->name);
     try {
