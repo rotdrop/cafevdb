@@ -513,8 +513,8 @@ class EntityManager extends EntityManagerDecorator
       'wrapperClass' => Connection::class,
     ];
     $charSetParams = [
-      'collate' => 'utf8mb4_uca1400_ai_ci', // 'utf8mb4_bin',
-      'charset' => 'utf8mb4',
+      'collate' => Constants::FULL_COLLATION,
+      'charset' => Constants::CHARACTER_SET,
       'row_format' => 'compressed',
     ];
     !is_array($params) && ($params = []);
@@ -771,7 +771,7 @@ class EntityManager extends EntityManagerDecorator
   public function postConnect(ConnectionEventArgs $args)
   {
     // not yet
-    // $args->getConnection()->executeStatement("SET @@character_set_collations = 'utf8mb4=uca1400_ai_ci'");
+    // $args->getConnection()->executeStatement("SET @@character_set_collations = '" . Constants::CHARACTER_SET . "=" . Constants::SHORT_COLLATION . "'");
   }
 
   /**

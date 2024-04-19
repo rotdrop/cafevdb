@@ -36,6 +36,7 @@ use OCA\CAFEVDB\Service\ContactsService;
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Repositories;
+use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Common\Uuid;
 
 /** Generate VCards from the musicians database. */
@@ -112,7 +113,7 @@ class MusicianCardBackend implements ICardBackend
       }
       if (array_search('EMAIL', $properties) !== false) {
         $empty = false;
-        $criteria[] = [ 'email#CONVERT(%s USING utf8mb4)' => $likePattern ];
+        $criteria[] = [ 'email#CONVERT(%s USING ' . DBConstants::CHARACTER_SET . ')' => $likePattern ];
       }
       if (array_search('UID', $properties) !== false) {
         $empty = false;
