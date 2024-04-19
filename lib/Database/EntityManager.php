@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
@@ -547,6 +548,7 @@ class EntityManager extends EntityManagerDecorator
       // ORM\Events::postPersist,
       // ORM\Events::preRemove,
       // ORM\Events::postRemove,
+      \Doctrine\DBAL\Events::postConnect,
       ORM\Events::postLoad, // still needed for __wakeup()
     ], $this);
 
@@ -763,6 +765,13 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($foreignKeyListener);
 
     return [ $config, $evm, $annotationReader ];
+  }
+
+  /** {@inheritdoc} */
+  public function postConnect(ConnectionEventArgs $args)
+  {
+    // not yet
+    // $args->getConnection()->executeStatement("SET @@character_set_collations = 'utf8mb4=uca1400_ai_ci'");
   }
 
   /**
