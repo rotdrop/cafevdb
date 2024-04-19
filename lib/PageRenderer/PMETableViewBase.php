@@ -43,6 +43,7 @@ use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Doctrine\ORM;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities;
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types as DBTypes;
+use OCA\CAFEVDB\Database\Constants as DBConstants;
 
 use OCA\CAFEVDB\Exceptions;
 
@@ -2546,6 +2547,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
     AND $joinTable.foreign_key = ";
       if (count($joinInfo['identifier']) > 1) {
         $l10nJoin .= " CONCAT_WS(' ', ";
+      } else {
+        $l10nJoin .= " CAST(";
       }
       $l10nJoin .= implode(' ,', array_map(function($id) use ($joinInfo) {
         $column = 't.' . $id;
@@ -2556,6 +2559,8 @@ abstract class PMETableViewBase extends Renderer implements IPageRenderer
       }, array_keys($joinInfo['identifier'])));
       if (count($joinInfo['identifier']) > 1) {
         $l10nJoin .= ')';
+      } else {
+        $l10nJoin .= ' AS CHAR CHARACTER SET ' . DBConstants::CHARACTER_SET . ') COLLATE ' . DBConstants::FULL_COLLATION;
       }
       $l10nJoins[] = $l10nJoin;
     }
