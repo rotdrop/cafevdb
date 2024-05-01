@@ -358,7 +358,7 @@ class MailMergeController extends Controller
             [
               'recipient' => $this->flattenMusician($recipient),
             ],
-            $paymentData,
+            $paymentData ?? [],
             $templateData,
             [
               'instins' => $this->insuranceService->musicianOverview($recipient),
