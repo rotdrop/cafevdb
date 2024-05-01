@@ -389,7 +389,7 @@ class ContactsService
     // [ADR] => Array ( [0] => Array ( [type] => home [value] => ;;Seestraße 70;Leonberg;;71229;Germany ) )
     $typed = false;
     foreach (($cardData['ADR'] ?? []) as $addr) {
-      $type = strtolower($email['type']);
+      $type = strtolower($addr['type']);
       $address = $addr['value'];
       $work = strpos($type, 'work') !== false;
 
@@ -404,7 +404,7 @@ class ContactsService
         $address = explode(';', $address);
 
         $poBox = $address[0]; // or so it seems ...
-        // $this->logInfo('POBOX ' . $poBox);
+        $this->logInfo('POBOX ' . $poBox);
         $entity['addressSupplement'] = $address[1];
         $street = Util::normalizeSpaces($address[2]);
         // if the first word or the last word of the street start with a
@@ -504,7 +504,7 @@ class ContactsService
     // [PHOTO] => VALUE=uri:http://localhost/nextcloud-git/remote.php/dav/addressbooks/users/claus/
     //   z-app-generated--cafevdb--cafevdb-musicians/musician-32653235-3461-6335-2d34-3064362d3461.vcf?photo
     $value = $cardData['PHOTO'] ?? null;
-    if (!empty($value)) {
+    if (false && !empty($value)) {
       // complicated:
       //
       // - extract the image datas or URI
