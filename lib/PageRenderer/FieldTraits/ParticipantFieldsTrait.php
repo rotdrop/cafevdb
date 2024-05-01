@@ -1707,7 +1707,7 @@ LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
   ON " . $fdAlias . ".musician_id = pp.musician_id
      AND " . $fdAlias . ".project_id = $this->projectId
      AND " . $fdAlias . ".field_id = $fieldId
-     ".($this->showDisabled ? '' : ' AND " . $fdAlias . ".deleted IS NULL')."
+     ".($this->showDisabled ? '' : ' AND ' . $fdAlias . '.deleted IS NULL')."
 LEFT JOIN (SELECT
     " . $fd2Alias . ".option_key AS group_id,
     ROW_NUMBER() OVER (ORDER BY " . $fd2Alias . ".field_id) AS group_number
@@ -1929,7 +1929,7 @@ LEFT JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
   ON " . $fdAlias . ".musician_id = pp.musician_id
      AND " . $fdAlias . ".project_id = $this->projectId
      AND " . $fdAlias . ".field_id = $fieldId
-     ".($this->showDisabled ? '' : ' AND " . $fdAlias . ".deleted IS NULL')."
+     ".($this->showDisabled ? '' : ' AND ' . $fdAlias . '.deleted IS NULL')."
 LEFT JOIN ".self::PROJECT_PARTICIPANT_FIELDS_OPTIONS_TABLE." do
   ON do.field_id = " . $fdAlias . ".field_id AND do.key = " . $fdAlias . ".option_key
 WHERE pp.project_id = $this->projectId",
@@ -2014,7 +2014,7 @@ INNER JOIN " . self::PROJECT_PARTICIPANT_FIELDS_DATA_TABLE . " " . $fdAlias . "
   ON " . $fdAlias . ".field_id = " . $fieldId . "
   AND " . $fdAlias . ".project_id = pp_pop.project_id
   AND " . $fdAlias . ".musician_id = m2_pop.id
-  " . ($this->showDisabled ? '' : ' AND " . $fdAlias . ".deleted IS NULL')."
+  " . ($this->showDisabled ? '' : ' AND ' . $fdAlias . '.deleted IS NULL')."
 WHERE pp_pop.project_id = $this->projectId AND " . $fdAlias . ".field_id = $fieldId
 GROUP BY " . $fdAlias . ".option_key",
                   'column' => 'group_members',
