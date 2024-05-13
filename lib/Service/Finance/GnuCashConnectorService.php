@@ -89,8 +89,23 @@ FROM %2$s';
 
   /**
    * Copy the data out of the given GnuCash data-base.
+   *
+   * @param string $gnuCashDatabase
+   *
+   * @param null|string $user
+   *
+   * @param null|string $password
+   *
+   * @param null|string $host
+   *
+   * @return void
    */
-  public function copyGnuCashTables(string $gnuCashDatabase)
+  public function copyGnuCashTables(
+    string $gnuCashDatabase,
+    ?string $user = null,
+    ?string $password = null,
+    ?string $host = null,
+  ):void
   {
     // // $em is your Doctrine\ORM\EntityManager instance
     // $schemaManager = $em->getConnection()->getSchemaManager();
@@ -106,7 +121,12 @@ FROM %2$s';
     /** @var SchemaManager $schemaManager */
     $schemaManager = $this->connection->getSchemaManager();
 
-    $gncConnection = $this->connection->bind($gnuCashDatabase);
+    $gncConnection = $this->connection->bind(
+      $gnuCashDatabase,
+      $user,
+      $password,
+      $host,
+    );
     /** @var SchemaManager $gncSchemaManager */
     $gncSchemaManager = $gncConnection->getSchemaManager();
 

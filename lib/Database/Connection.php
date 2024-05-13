@@ -53,12 +53,31 @@ class Connection extends DBALConnection
    *
    * @param string $database
    *
+   * @param null|string $user
+   *
+   * @param null|string $password
+   *
+   * @param null|string $host
+   *
    * @return Connection
    */
-  public function bind(string $database):Connection
-  {
+  public function bind(
+    string $database,
+    ?string $user = null,
+    ?string $password = null,
+    ?string $host = null,
+  ):Connection {
     $params = $this->getParams();
     $params['dbname'] = $database;
+    if ($user !== null) {
+      $params['user'] = $user;
+    }
+    if ($password !== null) {
+      $params['password'] = $password;
+    }
+    if ($host !== null) {
+      $params['host'] = $host;
+    }
 
     $connection = new Connection(
       $params,
