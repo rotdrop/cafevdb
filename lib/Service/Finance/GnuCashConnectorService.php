@@ -24,7 +24,11 @@
 
 namespace OCA\CAFEVDB\Service\Finance;
 
+use UnexpectedValueException;
+use Throwable;
+
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Schema\View;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IL10N;
@@ -52,7 +56,7 @@ class GnuCashConnectorService
     'splits',
     'transactions',
   ];
-  private const INSERT_STMT = 'INSERT INTO %1$s (%3$s) SELECT %3$s FROM %2$s';
+  private const INSERT_STMT = 'INSERT INTO %1$s (%3$s) SELECT %3$s FROM %2$s ON DUPLICATE KEY UPDATE %1$s.guid = %2$s.guid';
   private const CREATE_VIEW_STMT = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
@@ -130,7 +134,13 @@ FROM %2$s';
     /** @var SchemaManager $gncSchemaManager */
     $gncSchemaManager = $gncConnection->getSchemaManager();
 
+    $gncViews = array_keys($gncSchemaManager->listViews());
+
     foreach (self::GNU_CASH_TABLES as $gncTable) {
+      if (in_array($gncTable, $gncViews)) {
+        // test is not perfect, but just let's skip it if it is a view already.
+        continue;
+      }
       $gncColumns = array_map(
         fn($column) => $column->getName(),
         $gncSchemaManager->listTableColumns($gncTable),
@@ -145,31 +155,39 @@ FROM %2$s';
       sort($ormColumns);
 
       if ($gncColumns != $ormColumns) {
+        print_r($ormColumns);
+        print_r($gncColumns);
         throw new UnexpectedValueException(
           $this->l->t('%1$s column names differ from expected column-names.', 'GnuCash'),
         );
       }
 
       $sql = vsprintf(
-        self::INSERT_STMT, [
+        'SET FOREIGN_KEY_CHECKS=0;'
+        . self::INSERT_STMT, [
           $this->appDbName . '.' . $ormTable,
           $gnuCashDatabase . '.' . $gncTable,
           implode(',', $gncColumns),
         ],
       );
-      $this->logDebug('SQL ' . $sql);
+      $this->logInfo('SQL ' . $sql);
       $this->connection->prepare($sql)->execute();
 
       $gncSchemaManager->renameTable($gncTable, $gncTable . '_old');
 
-      $sql = vsprintf(
-        self::CREATE_VIEW_STMT, [
-          $gnuCashDatabase . '.' . $gncTable,
-          $this->appDbName . '.' . $ormTable,
-        ],
-      );
-      $this->logDebug('SQL ' . $sql);
-      $this->connection->prepare($sql)->execute();
+      try {
+        $sql = vsprintf(
+          self::CREATE_VIEW_STMT, [
+            $gnuCashDatabase . '.' . $gncTable,
+            $this->appDbName . '.' . $ormTable,
+          ],
+        );
+        $this->logInfo('SQL ' . $sql);
+        $gncConnection->prepare($sql)->execute();
+      } catch (Throwable $t) {
+        $this->logException($t);
+        $gncSchemaManager->renameTable($gncTable . '_old', $gncTable);
+      }
     }
   }
 }

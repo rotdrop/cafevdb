@@ -43,6 +43,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Question\Question;
 
 use OCA\CAFEVDB\Service\Finance\GnuCashConnectorService;
+use OCA\CAFEVDB\Constants;
 
 /** GnuCash connectivity. */
 class GnuCashSetup extends Command
@@ -67,7 +68,6 @@ class GnuCashSetup extends Command
     protected IUserManager $userManager,
     protected IUserSession $userSession,
     protected IAppContainer $appContainer,
-    protected GnuCashConnectorService $gncService,
   ) {
     parent::__construct();
   }
@@ -119,6 +119,8 @@ class GnuCashSetup extends Command
       );
       return 1;
     }
+    list(,$path,) = explode(Constants::PATH_SEP, $gncOptions['path']);
+    $gncOptions['path'] = $path;
 
     print_r($gncOptions);
 
@@ -135,7 +137,10 @@ class GnuCashSetup extends Command
       }
     }
 
-    $this->gncService->copyGnuCashTables(
+    /** @var GnuCashConnectorService $gncService */
+    $gncService = $this->appContainer->get(GnuCashConnectorService::class);
+
+    $gncService->copyGnuCashTables(
       gnuCashDatabase: $gncOptions['path'],
       host: $gncOptions['host'] ?? null,
       user: $gncOptions['user'] ?? null,
