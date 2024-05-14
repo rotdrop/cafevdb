@@ -100,7 +100,7 @@ class Invoice implements JsonSerializable, ArrayAccess
    *
    * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false)
    */
-  private float  $amount;
+  private string $amount;
 
   /**
    * @var string

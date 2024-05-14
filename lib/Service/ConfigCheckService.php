@@ -1228,7 +1228,7 @@ class ConfigCheckService
     }
 
     $selfOpened = false;
-    if (!$connection->ping()) {
+    if (!$connection->isConnected()) {
       if (!$connection->connect()) {
         $this->logError('db cannot connect');
         return false;
@@ -1236,8 +1236,8 @@ class ConfigCheckService
       $selfOpened = true;
     }
 
-    if (!$connection->ping()) {
-      $this->logError('db cannot ping');
+    if (!$connection->isConnected()) {
+      $this->logError('db cannot connect');
       return false;
     }
 

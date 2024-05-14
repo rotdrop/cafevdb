@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2024 Claus-Justus Heine
+ * @copyright 2020, 2021, 2022, 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,31 +22,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFEVDB\Common;
-
-use Closure;
-
-use OCP\AppFramework\IAppContainer;
-use OCP\Files\Node as FileSystemNode;
-use OCP\Files\FileInfo;
-use OCP\Files;
-
-use OCA\CAFEVDB\Storage\UserStorage;
+namespace OCA\CAFEVDB\Database;
 
 /**
- * Remove the given node, which must be a regular file.
+ * Define some database specific constants like the desired character set and
+ * collation
  */
-class UndoableFileRemove extends UndoableFileSystemNodeRemove
+class Constants
 {
-  /**
-   * Undoable file remove.
-   *
-   * @param string|Closure $name
-   *
-   * @param bool $gracefully Do not complain if folders are non-empty or do not exist.
-   */
-  public function __construct(string|Closure $name, bool $gracefully = false)
-  {
-    parent::__construct($name, $gracefully, nodeType: FileInfo::TYPE_FILE);
-  }
+  public const CHARACTER_SET = 'utf8mb4';
+  public const SHORT_COLLATION = 'uca1400_ai_ci';
+  public const FULL_COLLATION = self::CHARACTER_SET . '_' . self::SHORT_COLLATION;
 }

@@ -39,6 +39,7 @@ use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
 use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\ConnectionException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\ConnectionEventArgs;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform as DatabasePlatform;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Types\Type;
@@ -413,14 +414,14 @@ class EntityManager extends EntityManagerDecorator
       return false;
     }
     try {
-      if (!$connection->ping()) {
+      if (!$connection->isConnected()) {
         if (!$connection->connect()) {
           $this->logError('db cannot connect');
           return false;
         }
       }
     } catch (\Throwable $t) {
-      $this->logException($t, 'Caught execption trying to ping database server ' . $params['user'] . '@' . $params['host'] . ':' . $params['dbname']);
+      $this->logException($t, 'Caught execption checking connection to database server ' . $params['user'] . '@' . $params['host'] . ':' . $params['dbname']);
       return false;
     }
     return true;
@@ -450,6 +451,7 @@ class EntityManager extends EntityManagerDecorator
       Types\EnumSepaTransaction::class => 'enum',
       Types\EnumTaxType::class => 'enum',
       Types\EnumVCalendarType::class => 'enum',
+      Types\EnumGnuCashSlotType::class => 'enum',
       // Ramsey\UuidType::class => null,
       // Ramsey\UuidBinaryType::class => 'binary',
       // Ramsey\UuidBinaryOrderedTimeType::class => 'binary',
@@ -511,8 +513,8 @@ class EntityManager extends EntityManagerDecorator
       'wrapperClass' => Connection::class,
     ];
     $charSetParams = [
-      'collate' => 'utf8mb4_bin',
-      'charset' => 'utf8mb4',
+      'collate' => Constants::FULL_COLLATION,
+      'charset' => Constants::CHARACTER_SET,
       'row_format' => 'compressed',
     ];
     !is_array($params) && ($params = []);
@@ -535,7 +537,7 @@ class EntityManager extends EntityManagerDecorator
     $this->annotationReader = $annotationReader;
 
     // mysql set names UTF-8 if required
-    $eventManager->addEventSubscriber(new DBALEventListeners\MysqlSessionInit($conParams['charset'], $conParams['collate']));
+    // $eventManager->addEventSubscriber(new DBALEventListeners\MysqlSessionInit($conParams['charset'], $conParams['collate']));
 
     $eventManager->addEventListener([
       ORM\Tools\ToolEvents::postGenerateSchema,
@@ -546,6 +548,7 @@ class EntityManager extends EntityManagerDecorator
       // ORM\Events::postPersist,
       // ORM\Events::preRemove,
       // ORM\Events::postRemove,
+      \Doctrine\DBAL\Events::postConnect,
       ORM\Events::postLoad, // still needed for __wakeup()
     ], $this);
 
@@ -762,6 +765,13 @@ class EntityManager extends EntityManagerDecorator
     $evm->addEventSubscriber($foreignKeyListener);
 
     return [ $config, $evm, $annotationReader ];
+  }
+
+  /** {@inheritdoc} */
+  public function postConnect(ConnectionEventArgs $args)
+  {
+    // not yet
+    // $args->getConnection()->executeStatement("SET @@character_set_collations = '" . Constants::CHARACTER_SET . "=" . Constants::SHORT_COLLATION . "'");
   }
 
   /**
@@ -1465,8 +1475,3 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

@@ -32,6 +32,7 @@ use OCP\AppFramework\IAppContainer;
 
 use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Database\Connection;
+use OCA\CAFEVDB\Database\Constants as DBConstants;
 use OCA\CAFEVDB\Exceptions;
 
 use OCA\CAFEVDB\Common\Util;
@@ -73,7 +74,7 @@ class CloudUserConnectorService
   const USER_SQL_GROUP_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT CONVERT((CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE ascii_bin) USING utf8mb4) AS gid,
+SELECT CONVERT((CONCAT(_ascii "' . self::GROUP_ID_PREFIX. '" , p.id) COLLATE ascii_bin) USING ' . DBConstants::CHARACTER_SET . ') AS gid,
        p.name AS display_name,
        0 AS is_admin
 FROM Projects p
@@ -84,7 +85,7 @@ WITH CHECK OPTION';
 SQL SECURITY DEFINER
 VIEW %1$s AS
 SELECT m.user_id_slug AS uid,
-       CONVERT((CONCAT(_ascii "%2$s' . self::GROUP_ID_SEPARATOR . '", p.id) COLLATE ascii_bin) USING utf8mb4) AS gid
+       CONVERT((CONCAT(_ascii "%2$s' . self::GROUP_ID_SEPARATOR . '", p.id) COLLATE ascii_bin) USING ' . DBConstants::CHARACTER_SET . ') AS gid
 FROM ProjectParticipants pp
 LEFT JOIN Musicians m ON m.id = pp.musician_id
 LEFT JOIN Projects p ON p.id = pp.project_id
@@ -103,11 +104,11 @@ WHERE pp.deleted IS NULL';
   const USER_SQL_USER_VIEW = 'CREATE OR REPLACE
 SQL SECURITY DEFINER
 VIEW %1$s AS
-SELECT CONVERT(m.user_id_slug USING utf8mb4) AS uid,
+SELECT CONVERT(m.user_id_slug USING ' . DBConstants::CHARACTER_SET . ') AS uid,
        m.user_passphrase AS password,
        CONCAT_WS(" ", IF(m.nick_name IS NULL
                          OR m.nick_name = "", m.first_name, m.nick_name), m.sur_name) AS name,
-       CONVERT(m.email USING utf8mb4) AS email,
+       CONVERT(m.email USING ' . DBConstants::CHARACTER_SET . ') AS email,
        NULL AS quota,
        NULL AS home,
        COALESCE(m.cloud_account_deactivated, 0) AS inactive,
@@ -133,7 +134,6 @@ WITH CHECK OPTION'; // But view is not updatable. Ok.
     // 'ProjectParticipantFieldsData' => 'musician_id', needs extra access controls
     'ProjectPayments' => 'musician_id',
     'CompositePayments' => 'musician_id',
-    'MusicianPhoto' => 'owner_id',
     'EncryptedFileOwners' => 'musician_id',
     'MusicianEmailAddresses' => 'musician_id',
   ];
@@ -748,10 +748,7 @@ VIEW " . $viewName . "
 AS
 SELECT t.*
   FROM " . $table . " t
-  WHERE t.id IN (
-    SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
-      UNION
-    SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
+  WHERE t.id IN (SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov)";
 
     $table = 'FileData';
     $viewName = $this->personalizedViewName($dataBaseName, $table);
@@ -774,8 +771,7 @@ SELECT t.*
   FROM " . $table . " t
   WHERE t.file_id IS NULL OR t.file_id IN (
     SELECT efov.encrypted_file_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'EncryptedFileOwners') . " efov
-      UNION
-    SELECT mpv.image_id AS file_id FROM " . $this->personalizedViewName($dataBaseName, 'MusicianPhoto') . " mpv)";
+)";
 
     foreach (self::UNRESTRICTED_TABLES as $table) {
       $viewName = $this->personalizedViewName($dataBaseName, $table);

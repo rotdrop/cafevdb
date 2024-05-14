@@ -767,9 +767,11 @@ class ProjectParticipantsController extends Controller
                 if ($dataType == FieldDataType::CLOUD_FOLDER || $multiplicity == FieldMultiplicity::PARALLEL) {
                   $readMe = Util::htmlToMarkDown($field->getTooltip());
                   // also place the tooltip as README.md
+                  // @todo There is also a listener which also installes the
+                  // tooltip ... so it should be safe to remove this.
                   $this->entityManager->registerPreCommitAction(
                     new Common\UndoableTextFileUpdate(
-                      basename($filePath) . Constants::PATH_SEP . Constants::README_NAME,
+                      dirname($filePath) . Constants::PATH_SEP . Constants::README_NAME,
                       content: $readMe,
                       gracefully: true,
                     )

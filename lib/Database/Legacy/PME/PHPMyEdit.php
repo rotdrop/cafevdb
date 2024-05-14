@@ -38,9 +38,9 @@ use OCP\IL10N;
 use OCP\IDateTimeZone;
 use OCP\IDateTimeFormatter;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Driver\ResultStatement;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Result;
 use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\FetchMode;
-use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\DBALException;
+use OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Exception\DriverException;
 
 use OCA\CAFEVDB\Database\EntityManager;
 use OCA\CAFEVDB\Database\Connection;
@@ -381,7 +381,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
   /** {@inheritdoc} */
   public function resultValid(&$stmt)
   {
-    return ($stmt instanceof ResultStatement);
+    return ($stmt instanceof Result);
     //return is_object($stmt);
   }
 
@@ -396,9 +396,11 @@ class PHPMyEdit extends LegacyPHPMyEdit
   public function sql_fetch(&$stmt, $type = 'a')
   {
     if (!$this->resultValid($stmt)) {
+      $this->logError('RESULT INVALID ' . get_class($stmt));
       return false;
     }
-    $this->dbh->getWrappedConnection()->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+    $pdo = $this->dbh->getWrappedConnection()->getNativeConnection();
+    $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
     $type = $type === 'n' ? FetchMode::NUMERIC : FetchMode::ASSOCIATIVE;
     $result = $stmt->fetch($type);
     // Work around bug https://jira.mariadb.org/browse/MDEV-27323
@@ -422,7 +424,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
         }
       }
     }
-    $this->dbh->getWrappedConnection()->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+    $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
 
     return $result;
   }
@@ -433,7 +435,7 @@ class PHPMyEdit extends LegacyPHPMyEdit
     if (!$this->resultValid($stmt)) {
       return false;
     }
-    return $stmt->closeCursor();
+    return $stmt->free();
   }
 
   /** {@inheritdoc} */
@@ -475,19 +477,19 @@ class PHPMyEdit extends LegacyPHPMyEdit
       $stmt = $this->dbh->executeQuery($query);
       $endTime = hrtime(true);
       $this->affectedRows = $stmt->rowCount();
-      $this->errorCode = $stmt->errorCode();
-      $this->errorInfo = $stmt->errorInfo();
       $logEntry['affectedRows'] = $this->affectedRows;
-      $logEntry['errorCode'] = $this->errorCode;
-      $logEntry['errorInfo'] = $this->errorInfo;
+      // $this->errorCode = $stmt->errorCode();
+      // $this->errorInfo = $stmt->errorInfo();
+      $logEntry['errorCode'] = 0;
+      $logEntry['errorInfo'] = null;
       $logEntry['duration'] = ($endTime - $startTime) / 1e6; // [ms]
       $this->queryLog[] = $logEntry;
-    } catch (DBALException $t) {
+    } catch (DriverException $t) {
       $endTime = hrtime(true);
       $this->logException($t);
       throw $t;
       $this->exception = $t;
-      $this->errorCode = $t->getCode();
+      $this->errorCode = $t->getSQLState();
       $this->errorInfo = $t->getMessage();
       $logEntry['affectedRows'] = $this->affectedRows;
       $logEntry['errorCode'] = $this->errorCode;

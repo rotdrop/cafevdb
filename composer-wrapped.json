@@ -20,8 +20,8 @@
     "bytestream/horde-imap-client": "*",
     "cjh/doctrine-on-update-extension": "dev-master",
     "doctrine/annotations": "*",
-    "doctrine/dbal": "^2.13.0",
-    "doctrine/orm": "dev-production/2.19.x/cafevdb",
+    "doctrine/dbal": "^3.2",
+    "doctrine/orm": "dev-production/2.20.x/cafevdb",
     "gedmo/doctrine-extensions": "3.15.x-dev",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
     "myclabs/php-enum": "^1.8",
@@ -73,6 +73,9 @@
       },
       "bytestream/horde-imap-client": {
         "Add an optional progress callback to the Horde IMAP Client": "../composer-patches/bytestream/horde-imap-client/write-progress-callback.patch"
+      },
+      "doctrine/dbal": {
+        "Handle collation changes in recent MariaDB versions": "../composer-patches/doctrine/dbal/mariadb-short-collation-names.patch"
       }
     }
   }

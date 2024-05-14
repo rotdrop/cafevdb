@@ -951,7 +951,7 @@ const pmeTableDialogOpen = function(tableOptions, post) {
               tableLoadCallback(template, containerSel, parameters, function(arg) {});
               break;
             case 'dialogOpen':
-              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor:enabled'), function() {
+              WysiwygEditor.addEditor(dialogHolder.find('textarea.wysiwyg-editor'/* :enabled' */), function() {
                 transposeReady(containerSel);
                 pmeQueryLogMenu(containerSel);
                 tableLoadCallback(template, containerSel, parameters, function(arg) {
