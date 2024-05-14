@@ -30,6 +30,7 @@ const productionMode = process.env.NODE_ENV === 'production';
 module.exports = {
   entry: Object.entries({
     app: './src/app.js',
+    'vue-app': './src/vue-app.js',
     'admin-settings': './src/admin-settings.js',
     settings: './src/settings.js',
     'background-jobs': './src/background-jobs.js',

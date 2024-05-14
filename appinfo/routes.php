@@ -139,6 +139,11 @@ $routes = [
   ],
   'routes' => [
     [
+      'name' => 'vueApp#index',
+      'url' => '/vue-app',
+      'verb' => 'GET',
+    ],
+    [
       'name' => 'page#index',
       'url' => '/',
       'verb' => 'GET',
