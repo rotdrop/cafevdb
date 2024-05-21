@@ -1186,7 +1186,6 @@ trait ParticipantFieldsTrait
                     $optionKey = $row[$this->queryField($k)] ?? null;
                     $tip = $valueTitles[$optionKey] ?? '';
                     $data = $valueData[$optionKey] ?? '';
-                    $this->logInfo('TIPDATA ' . $tip . ' ' . $data);
                     return $tip;
                   },
                   'prefix' => '<div class="allowed-option-wrapper"><span>',
