@@ -2175,7 +2175,9 @@ Whatever.',
 
       // Enable the cloud account when adding to the club-members or management project
       if ($project->getType() == ProjectType::PERMANENT) {
+        $this->logInfo('Enabling cloud account of ' . $musician->getPublicName() . ', ' . $musician->getUserIdSlug());
         $musician->setCloudAccountDisabled(null);
+        $musician->setCloudAccountDeactivated(null);
       }
 
       $this->flush();
