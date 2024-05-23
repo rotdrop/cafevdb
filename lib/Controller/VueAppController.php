@@ -27,6 +27,7 @@ namespace OCA\CAFEVDB\Controller;
 
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
 use OCP\Util;
 
@@ -40,6 +41,7 @@ class VueAppController extends Controller
     string $appName,
     IRequest $request,
     protected AssetService $assetService,
+    protected IInitialState $initialState,
   ) {
     parent::__construct($appName, $request);
   }
@@ -56,6 +58,10 @@ class VueAppController extends Controller
   public function index():TemplateResponse
   {
     Util::addScript($this->appName, $this->assetService->getJSAsset('vue-app')['asset']);
+
+    $this->initialState->provideInitialState('config', [
+      'orchestraName' => 'blah',
+    ]);
 
     return new TemplateResponse($this->appName, 'vue-app');
   }

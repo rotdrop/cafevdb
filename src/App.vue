@@ -23,8 +23,14 @@
   <NcContent :app-name="appId">
     <NcAppNavigation>
       <template #list>
-        <NcAppNavigationItem :to="{ name: '/projects' }"
+        <NcAppNavigationItem :to="{ name: 'projects' }"
                              :name="t(appId, 'All Projects')"
+                             icon="icon-home"
+                             exact
+                             @click="showSidebar = false"
+        />
+        <NcAppNavigationItem :to="{ name: 'musicians' }"
+                             :name="t(appId, 'All Musicians')"
                              icon="icon-home"
                              exact
                              @click="showSidebar = false"
@@ -40,7 +46,7 @@
     </NcAppNavigation>
     <NcAppContent :class="{ 'icon-loading': loading }" @show-sidebar="showSidebar = true">
       <router-view v-show="!loading && !error" :loading.sync="loading" @view-details="handleDetailsRequest" />
-      <NcEmptyContent v-if="isRoot || memberDataError" class="emp-content">
+      <NcEmptyContent v-if="isRoot || error" class="emp-content">
         {{ t(appId, '{orchestraName} Orchestra Portal', { orchestraName, }) }}
         <template #icon>
           <img :src="icon">
@@ -113,6 +119,8 @@ export default {
       orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
       icon: Icon,
       loading: true,
+      error: false,
+      debug: false,
     }
   },
   computed: {

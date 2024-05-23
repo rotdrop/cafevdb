@@ -144,6 +144,13 @@ $routes = [
       'verb' => 'GET',
     ],
     [
+      'name' => 'vueApp#index',
+      'url' => '/vue-app/f/{path}',
+      'verb' => 'GET',
+      'requirements' => [ 'path' => '.+' ],
+      'postfix' => 'front',
+    ],
+    [
       'name' => 'page#index',
       'url' => '/',
       'verb' => 'GET',

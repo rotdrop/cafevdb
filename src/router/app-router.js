@@ -28,7 +28,7 @@ import appRoutes from './routes.js';
 
 Vue.use(Router);
 
-const base = generateUrl('/apps/' + appName);
+const base = generateUrl('/apps/' + appName + '/vue-app');
 
 const router = new Router({
   mode: 'history',

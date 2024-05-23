@@ -29,11 +29,19 @@ const routes = [
     }),
   },
   {
-    path: '/projects',
+    path: '/vue-app/f/projects',
     component: () => import('../views/Projects.vue'),
     name: 'projects',
     props: router => ({
       rootTitle: t(appName, 'Projects'),
+    }),
+  },
+  {
+    path: '/vue-app/f/musicians',
+    component: () => import('../views/Musicians.vue'),
+    name: 'musicians',
+    props: router => ({
+      rootTitle: t(appName, 'Musicians'),
     }),
   },
 ];

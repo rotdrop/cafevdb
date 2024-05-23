@@ -21,10 +21,10 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div>Hello Projects!</div>
+  <div>Hello Musicians!</div>
 </template>
 <script>
 export default {
-  name: 'Projects',
+  name: 'Musicians',
 }
 </script>
