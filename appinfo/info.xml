@@ -24,7 +24,7 @@
   </sabre>
   <dependencies>
     <php min-version="8.1" max-version="8.3" />
-    <nextcloud min-version="28" max-version="28" />
+    <nextcloud min-version="29" max-version="29" />
   </dependencies>
   <repair-steps>
     <!-- <install>
