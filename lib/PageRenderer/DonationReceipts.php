@@ -185,7 +185,7 @@ class DonationReceipts extends PMETableViewBase
      *
      * @return array Array of css classes.
      */
-    $opts['css']['postfix'] = function(string $name, null $position, null $divider, ?array $row, PHPMyEdit $pme):array {
+    $opts['css']['postfix'] = function(string $name, null $position, null $divider, null|false|array $row, PHPMyEdit $pme):array {
       $classes = [
         self::TEMPLATE,
         self::CSS_TAG_PROJECT_PARTICIPANT_FIELDS_DISPLAY,
