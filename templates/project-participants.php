@@ -49,6 +49,7 @@ if ($roles->inTreasurerGroup()) {
   }
   if ($projectId == $appConfig->getConfigValue(ConfigService::EXECUTIVE_BOARD_PROJECT_ID_KEY, false)) {
     $nav .= $pageNavigation->pageControlElement('tax-exemption-notices', $projectName, $projectId);
+    $nav .= $pageNavigation->pageControlElement('donation-receipts', $projectName, $projectId);
   }
 }
 $nav .= $pageNavigation->pageControlElement('projects');
