@@ -38,6 +38,7 @@ use OCP\IDateTimeZone;
 use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Database\Cloud\Mapper\BlogMapper;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\RequestParameterService;
 use OCA\CAFEVDB\Service\ToolTipsService;
 
@@ -49,8 +50,8 @@ use OCA\CAFEVDB\Service\ToolTipsService;
  */
 class BlogController extends Controller
 {
+  use \OCA\CAFEVDB\Traits\ConfigTrait;
   use \OCA\CAFEVDB\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFEVDB\Toolkit\Traits\LoggerTrait;
 
   /** @var \OCP\IDateTimeZone */
   private $timeZone;
@@ -78,6 +79,7 @@ class BlogController extends Controller
     ?string $appName,
     IRequest $request,
     IURLGenerator $urlGenerator,
+    ConfigService $configService,
     RequestParameterService $parameterService,
     ToolTipsService $toolTipsService,
     BlogMapper $blogMapper,
@@ -89,6 +91,7 @@ class BlogController extends Controller
     parent::__construct($appName, $request);
 
     $this->urlGenerator = $urlGenerator;
+    $this->configService = $configService;
     $this->parameterService = $parameterService;
     $this->toolTipsService = $toolTipsService;
     $this->blogMapper = $blogMapper;
@@ -121,7 +124,7 @@ class BlogController extends Controller
       return self::grumble($this->l->t('Refusing to create blog entry without author identity.'));
     }
 
-    if (!empty($blogId) && empty($inReplyTo) && $content == '') {
+    if (!empty($blogId) && (empty($inReplyTo) || $inReplyTo <= 0) && $content == '') {
       // This is an edit attempt.
       try {
         $entry = $this->blogMapper->find($blogId);
@@ -134,6 +137,7 @@ class BlogController extends Controller
       }
 
       $content = $entry->getMessage();
+      $this->logInfo('CONTENT ' . $content);
       if ($entry->getInReplyTo() < 0) {
         $priority = $entry->getPriority();
       } else {

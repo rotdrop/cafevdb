@@ -72,7 +72,7 @@ class Registration
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . InsuranceRates::TEMPLATE, InsuranceRates::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . TaxExemptionNotices::TEMPLATE, TaxExemptionNotices::class);
     $context->registerServiceAlias(self::TEMPLATE_PREFIX . DonationReceipts::TEMPLATE, DonationReceipts::class);
-    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Blog::TEMPLATE, BlogMapper::class);
+    $context->registerServiceAlias(self::TEMPLATE_PREFIX . Blog::TEMPLATE, Blog::class);
 
     // @todo find a cleaner way for the following
 

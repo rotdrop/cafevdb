@@ -54,6 +54,18 @@ class BlogMapper extends Mapper
   // phpcs:enable
 
   /**
+   * Kludge: compat with Blog renderer.
+   *
+   * @return BlogMapper
+   *
+   * @todo Rework or abandon the blog.
+   */
+  public function getMapper():BlogMapper
+  {
+    return $this;
+  }
+
+  /**
    * Create a new note.
    *
    * @param string $author The author of this mess.

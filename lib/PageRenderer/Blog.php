@@ -70,6 +70,16 @@ class Blog extends Renderer
     echo '';
   }
 
+  /**
+   * Forward the blog-mapper to the caller.
+   *
+   * @return BlogMapper
+   */
+  public function getMapper():BlogMapper
+  {
+    return $this->blogMapper;
+  }
+
   /** {@inheritdoc} */
   public function cssClass():string
   {

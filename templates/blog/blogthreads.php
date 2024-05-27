@@ -26,7 +26,7 @@ namespace OCA\CAFEVDB;
 
 use OCA\CAFEVDB\Common\Util;
 
-$blog = $_['renderer']->findThreadDisplay();
+$blog = $renderer->getMapper()->findThreadDisplay();
 
 echo '<ul id="bloglist" class="bloglist">'."\n";
 $level = 0;
