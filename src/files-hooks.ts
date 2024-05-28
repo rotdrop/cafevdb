@@ -205,7 +205,6 @@ class SupportingDocumentEntry implements Entry
     this.displayName = t(appName, 'New Supporting Document');
   };
   public enabled(folder: Folder) {
-    console.trace('ENABLED HELLO');
     const projectName = getProjectNameFromProjectBalancesFolders(folder);
     const projectYear = getProjectYearFromProjectName(projectName);
 
