@@ -1017,31 +1017,41 @@ korrigieren.'),
 Short explanation: simply type somthing and press <code>ENTER</code>.
 <br/>
 In more detail: For numerical fields there is a select-box with comparison
-operators on the left. For text-fields there are `catch-all\' wild-cards
-`%%\' and `*\'. Text-fields allow (in particular) for the following
+operators on the left. For text-fields
+<ul>
+<li>there are `catch-all\' wildcards `%%\' and `*\'</li>
+<li>wildcards in quoted strings are ignored</li>
+<li>space around unquoted strings is removed</li>
+<li>single or double quotes have the same meaning</li>
+</ul>
+Text-fields allow (in particular) for the following
 filter possibilities (meaning that <code>SOMETHING</code> is your example
 search-string):
 <br/><br/>
 <dl>
 <dt>SOMETHING</dt>
 <dd>search for the wild-card expression %%SOMETHING%%</dd>
-<dt>"SOMETHING"</dt>
-<dd>search for exactly the expression SOMETHING</dd>
+<dt>SOME%%THING</dt>
+<dd>search for any expression starting with SOME and ending with THING</dd>
+<dt>"SOME*THING"</dt>
+<dd>search for exactly the expression SOME*THING, the wildcard "*" is not taken in to account</dd>
 <dt>!SOMETHING</dt>
 <dd>match everything not being matched by SOMETHING</dd>
 </dl>
 <br/>
-Single quotes are equivalent to double-quotes; instead of `!\' one may
-use as well use `!=\', instead of using quotes it is also possible to
-prefix the search expression by either `=\' or `==\'.
+Further
+<ul>
+<li>instead of `!\' one may use as well use `!=\'</li>
+<li>instead of using quotes it is also possible to prefix the search expression by either `=\' or `==\'</li>
+</ul>
 It is also possible to match empty fields, in particular:
 <br/>
 <dl>
-<dt>"%%"</dt>
+<dt>%%</dt>
 <dt>!""</dt>
 <dd>match any row with something non-empty in the search-field</dd>
 <dt>""</dt>
-<dt>!"%%"</dt>
+<dt>!%%</dt>
 <dd>match any row with empty search-field</dd>
 </dl>'),
           'numeric' => self::t('Field for filter/search criteria.

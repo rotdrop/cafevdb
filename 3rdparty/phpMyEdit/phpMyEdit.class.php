@@ -2063,7 +2063,7 @@ class phpMyEdit
 
 		if ($text) {
 			$where = str_replace([
-				'%',
+				// '%',
 				' AND ',
 				' OR ',
 				' LIKE ',
@@ -2071,7 +2071,7 @@ class phpMyEdit
 				' IN ',
 				' FIND_IN_SET ',
 			], [
-				'*',
+				// '*',
 				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
 				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
 				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
@@ -2255,7 +2255,7 @@ class phpMyEdit
 
 		if ($text) {
 			$having = str_replace([
-				'%',
+				// '%',
 				' AND ',
 				' OR ',
 				' LIKE ',
@@ -2263,7 +2263,7 @@ class phpMyEdit
 				' IN ',
 				' FIND_IN_SET ',
 			], [
-				'*',
+				// '*',
 				' ' . strtoupper($this->labels['and'] ?? 'and') . ' ',
 				' ' . strtoupper($this->labels['or'] ?? 'or') . ' ',
 				' ' . strtoupper($this->labels['like'] ?? 'like') . ' ',
@@ -2448,27 +2448,58 @@ class phpMyEdit
 					$ids  = array();
 					$ar	  = array();
 					$matches = array();
-					$compare = 'contains';
+					// A quoted string, if empty, matches the empty
+					// string or NULL, if not empty, matches
+					// itself. Un-quoted strings are trimmed to cope
+					// with accidentally injected white-space. Quoted
+					// strings are not trimmed in order to be able to
+					// search for whitespace. Wildcards in quoted
+					// strings are escaped in order to be able to
+					// search literally for them.
 					if (preg_match("/^'(.*)'$/", $m, $matches) ||
-						preg_match('/^"(.*)"$/', $m, $matches) ||
-						preg_match("/^==?'(.*)'$/", $m, $matches) ||
-						preg_match('/^==?"(.*)"$/', $m, $matches) ||
-						preg_match("/^==?(.*)$/", $m, $matches)) {
-						// A quoted string, if empty, matches the
-						// empty string or NULL, if not empty, matches
-						// itself. Un-quoted strings are trimmed to
-						// cope with accidentally injected
-						// white-space. Quoted strings are not trimmed
-						// in order to be able to search for
-						// whitespace.
+						preg_match('/^"(.*)"$/', $m, $matches)) {
+						// Escape wildcards, surround by wildcards, do not trim.
+						$afilter = $matches[1]; // no trim
+						$escapeWildcards = true;
+						$compare = 'contains';
+					} elseif (preg_match("/^==?'(.*)'$/", $m, $matches) ||
+							  preg_match('/^==?"(.*)"$/', $m, $matches)) {
+						// Escape wildcards, do not surround by wildcards.
+						$afilter = $matches[1]; // no trim
+						$escapeWildcards = true;
+						$compare = 'equal';
+					} elseif (preg_match("/^==?(.*)$/", $m, $matches)) {
+						// Do not escape wildcards, do not surround by wildcards, do trim.
 						$afilter = trim($matches[1]);
+						$escapeWildcards = false;
 						$compare = 'equal';
 					} else if (preg_match("/^!=?'(.*)'$/", $m, $matches) ||
-							   preg_match('/^!=?"(.*)"$/', $m, $matches) ||
-							   preg_match("/^!=?(.*)$/", $m, $matches)) {
-						// negated match
-						$afilter = trim($matches[1]);
+							   preg_match('/^!=?"(.*)"$/', $m, $matches)) {
+						// Escape wildcards, do not surround by wildcards, do not trim.
+						$afilter = $matches[1];
+						$escapeWildcards = true;
 						$compare = 'notequal';
+					} elseif (preg_match("/^!=?(.*)$/", $m, $matches)) {
+						// Do not escape wildcards, do not surround by wildcards, do trim.
+						$afilter = trim($matches[1]);
+						$escapeWildcards = false;
+						$compare = 'notequal';
+					} else if (str_contains($m, '*') || str_contains($m, '%')) {
+						// Do not escape wildcards, do not surround by wildcards, do trim.
+						$afilter = trim($m);
+						$escapeWildcards = false;
+						$compare = 'equal';
+					} else {
+						$afilter = trim($m);
+						$escapeWildcards = false;
+						$compare = 'contains';
+					}
+
+					if ($escapeWildcards) {
+						// * is ignored in this case.
+						$afilter = str_replace('%', '\\%', $afilter);
+					} else {
+						$afilter = str_replace('*', '%', $afilter);
 					}
 
 					$sqlKey = $this->fqn($k, $fqn_flags ?? self::COOKED);
@@ -2484,11 +2515,10 @@ class phpMyEdit
 							];
 						} else {
 							// Some match, but exclude also the empty string
-							$afilter = addslashes($matches[1]);
-							$afilter = str_replace('*', '%', $afilter);
+							$afilter = addslashes($afilter);
 							$ar[] = [
 								'fqn' => $sqlKey,
-								'fqnTemplate' => "IF(%s LIKE '', NULL, %s)",
+								'fqnTemplate' => "IF(%1\$s LIKE '', NULL, %1\$s)",
 								'oper' => 'LIKE',
 								'value' => "'$afilter'",
 							];
@@ -2503,10 +2533,10 @@ class phpMyEdit
 								'oper' => '>',
 								'value' => "''",
 							];
-						} else if ($afilter == '%' || $afilter == '*') {
-							// !='%' means: not something, so include
-							// !NULL and '' into the results. So this
-							// !is equivalent to =''
+						} elseif ($afilter == '%') {
+							// !=% means: not something, so include
+							// NULL and '' into the results. So this
+							// is equivalent to =''
 							$ar[] = [
 								'fqn' => $sqlKey,
 								'fqnTemplate' => "IFNULL(%s, '')",
@@ -2514,11 +2544,10 @@ class phpMyEdit
 								'value' => "''",
 							];
 						} else {
-							$afilter = addslashes($matches[1]);
-							$afilter = str_replace('*', '%', $afilter);
+							$afilter = addslashes($afilter);
 							$ar[] = [
 								'fqn' => $sqlKey,
-								'fqnTemplate' => "IF(%s LIKE '', NULL, %s)",
+								'fqnTemplate' => "IF(%1\$s LIKE '', NULL, %1\$s)",
 								'oper' => 'NOT LIKE',
 								'value' => "'$afilter'",
 							];
@@ -2526,8 +2555,8 @@ class phpMyEdit
 						break;
 					case 'contains':
 					default:
-						$afilter = addslashes($m);
-						$afilter = '%'.str_replace('*', '%', $afilter).'%';
+						$afilter = str_replace(['"', "'"], ['\\"', "\\'"], $afilter);
+						$afilter = '%' . $afilter . '%';
 						$ar[] = [
 							'fqn' => $sqlKey,
 							'fqnTemplate' => '%s',
@@ -2549,11 +2578,12 @@ class phpMyEdit
 									'value' => "''",
 								];
 							} else {
-								$afilter = addslashes($matches[1]);
-								$afilter = str_replace('*', '.*', $afilter);
+								// Do a PHP regexp match on the available set of values
+								$afilter = preg_quote($afilter);
 								$afilter = str_replace('%', '.*', $afilter);
+								$afilter = str_replace('\\.*', '\\%', $afilter); // undo for escaped wildcards
 								foreach ($this->fdd[$k][self::FDD_VALUES2] as $key => $val) {
-									if (strlen($val) > 0 && preg_match('/'.$afilter.'/', $val)) {
+									if (strlen($val) > 0 && preg_match('/' . $afilter . '/', $val)) {
 										$ids[] = $key;
 									}
 								}
@@ -2562,7 +2592,7 @@ class phpMyEdit
 										'fqn' => $sqlKey,
 										'fqnTemplate' => '%s',
 										'oper' => 'IN',
-										'value' => fn($values, $text = false) => '("'.implode('","', $text ? $value : array_map(fn($value) => addslashes($value), $values)).'")',
+										'value' => fn($values, $text = false) => '("' . implode('","', $text ? $value : array_map(fn($value) => addslashes($value), $values)) . '")',
 										'generatorValues' => $ids,
 									];
 								}
@@ -2577,7 +2607,7 @@ class phpMyEdit
 									'oper' => '>',
 									'value' => "''",
 								];
-							} else if ($afilter == '%' || $afilter == '*') {
+							} else if ($afilter == '%') {
 								$ar[] = [
 									'fqn' => $sqlKey,
 									'fqnTemplate' => "IFNULL(%s, '')",
@@ -2585,9 +2615,10 @@ class phpMyEdit
 									'value' => "''",
 								];
 							} else {
-								$afilter = addslashes($matches[1]);
-								$afilter = str_replace('*', '.*', $afilter);
+								// Do a PHP regexp match on the available set of values
+								$afilter = preg_quote($afilter);
 								$afilter = str_replace('%', '.*', $afilter);
+								$afilter = str_replace('\\.*', '\\%', $afilter); // undo for escaped wildcards
 								foreach ($this->fdd[$k][self::FDD_VALUES2] as $key => $val) {
 									if (preg_match('/'.$afilter.'/', $val) === false) {
 										$ids[] = $key;
@@ -2618,7 +2649,7 @@ class phpMyEdit
 									'fqn' => $sqlKey,
 									'fqnTemplate' => '%s',
 									'oper' => 'IN',
-									'value' => fn($values) => '("'.implode('","', array_map(fn($value) => addslashes($value), $values)).'")',
+									'value' => fn($values) => '("' .implode('","', array_map(fn($value) => addslashes($value), $values)) . '")',
 									'geneatorValues' => $ids,
 								];
 							}
@@ -4926,7 +4957,7 @@ EOT;
 				} else {
 					$css_second_class_name = $this->getCSSclass(self::OPERATION_FILTER . '-text', null, null);
 				}
-				$css_class_name = $css_second_class_name . ' ' . $css_class_name;
+				$css_class_name = $css_second_class_name . ' ' . $css_class_name . ' tooltip-wide';
 				$name = $this->cgi['prefix']['sys'].$l;
 				echo '<input class="',$css_class_name,'" value="',$this->enc(@$m);
 				echo '" type="text" name="'.$name.'"',$len_props;
