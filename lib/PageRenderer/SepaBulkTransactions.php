@@ -46,6 +46,7 @@ class SepaBulkTransactions extends PMETableViewBase
   use FieldTraits\CryptoTrait;
   use FieldTraits\MusicianInProjectTrait;
   use FieldTraits\MusicianPublicNameTrait;
+  use FieldTraits\QueryFieldTrait;
 
   const TEMPLATE = 'sepa-bulk-transactions';
   const TABLE = self::SEPA_BULK_TRANSACTIONS_TABLE;
