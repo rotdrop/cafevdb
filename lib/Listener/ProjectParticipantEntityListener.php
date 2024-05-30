@@ -34,12 +34,13 @@ use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 
+use OCA\CAFEVDB\Common\GenericUndoable;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant as Entity;
 use OCA\CAFEVDB\Database\EntityManager;
-use OCA\CAFEVDB\Common\GenericUndoable;
+use OCA\CAFEVDB\Events;
+use OCA\CAFEVDB\Service\AuthorizationService;
 use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFEVDB\Service\EncryptionService;
-use OCA\CAFEVDB\Service\AuthorizationService;
 
 /**
  * Entity listener for project participation.
